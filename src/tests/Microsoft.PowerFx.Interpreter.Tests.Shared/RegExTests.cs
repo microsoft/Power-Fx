@@ -50,15 +50,20 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config2.EnableRegExFunctions(TimeSpan.FromMilliseconds(50), 20);
         }
 
-        // First of these iss a dangerous Regex, will timeout (should take >2h on a fast CPU) - but only MatchOptions.NumberedSubMatches
+        // castrophic backtracking
+        // 1. short, will succeed with little backtracking
+        // 2. short, will fail due to the extra comma at the end of the input, more backtracking but short enough that it completes in a reasonable amount of time
+        // 3. long, will still succeed with little backtracking
+        // 4. long, will fail due to the extra comma at the end of the input, with a lot of backtracking for such a long input, which will timeout
         [Theory]
-        [InlineData("ababababababababababababababababababababababababababababababababababa", "^((ab)*)+$", true, true, true)]
-        [InlineData("ababababababababababababababababababababababababababababababababababa", "^((ab)*)+$", false, false, false)]
-        [InlineData("ababababababababababababababababababababababababababababababababababa", "^(<one>(<two>ab)*)+$", false, false, false)]
+        [InlineData("123,123,123,123,123", "^(\\d+,\\d+)+$", false, false, true)]
+        [InlineData("123,123,123,123,123,", "^(\\d+,\\d+)+$", false, false, false)]
+        [InlineData("123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123", "^(\\d+,\\d+)+$", false, false, true)]
+        [InlineData("123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,", "^(\\d+,\\d+)+$", false, true, false)]
         public void TestRegExTimeoutWorks(string subject, string pattern, bool subMatches, bool expError, bool expBoolean)
         {
             PowerFxConfig config = new PowerFxConfig();
-            config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
+            config.EnableRegExFunctions(new TimeSpan(0, 0, 3));
             RecalcEngine engine = new RecalcEngine(config);
 
             var formula = $"IsMatch(\"{subject}\", \"{pattern}\" {(subMatches ? ", MatchOptions.NumberedSubMatches" : string.Empty)})";

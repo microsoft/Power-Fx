@@ -15,9 +15,6 @@
 >> Match("Hello", "(\w)l(\w)", MatchOptions.NumberedSubMatches).SubMatches
 Table({Value:"e"},{Value:"l"})
 
->> Match("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete)
-Blank()
-
 >> Match("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete & MatchOptions.Multiline & MatchOptions.NumberedSubMatches)
 {FullMatch:"Joe 164",StartMatch:1,SubMatches:Table({Value:"Joe"},{Value:"164"})}
 
@@ -83,4 +80,4 @@ Blank()
 {FullMatch:"ab",StartMatch:1,SubMatches:Table({Value:"a"})}
 
 >> Match( "ab", "(a*)b\1" , MatchOptions.NumberedSubMatches )
-{FullMatch:"b",StartMatch:2,SubMatches:Table({Value:""})}
+Errors: Error 13-22: Invalid regular expression: Back reference "\1" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.

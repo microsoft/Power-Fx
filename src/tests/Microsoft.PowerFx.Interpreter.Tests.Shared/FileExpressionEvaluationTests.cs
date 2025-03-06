@@ -94,12 +94,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 #endif
 
 #if MATCHCOMPARE
-        // to enable, place this in Solution Items/Directiory.Build.Props:
-        //  <PropertyGroup>
-        //      <DefineConstants>$(DefineConstants);MATCHCOMPARE</DefineConstants>
-        //  </PropertyGroup>
+        /* to enable, place this in Solution Items/Directiory.Build.Props:  abc
+          <PropertyGroup>
+              <DefineConstants>$(DefineConstants);MATCHCOMPARE</DefineConstants>
+          </PropertyGroup>
+        */
 
-#if true // may not want to run this, even if MATCHCOMPARE is enabled
+#if true // may not want to run this, even if MATCHCOMPARE is enabled a
 
         // Runs only tests that have asked for RegEx setup. This test run will compare the regular expression results between
         // .NET (used in the C# interpreter), NodeJS with JavaScript (used in Canvas), and PCRE2 (used in Excel).
@@ -178,12 +179,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return false;
         }
 
-#if false
+#if true
         // Helper to run a single .txt
         [Fact]
         public void RunOne()
         {
-            var path = @"c:\temp\match_unicode.txt";
+            var path = @"c:\temp\match_comb.txt";
+
             var line = 0;
 
             var runner = new InterpreterRunner();
@@ -191,7 +193,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             testRunner.AddFile(new Dictionary<string, bool>(), null, path);
 
-            // We can filter to just cases we want, set line above a
+            // We can filter to just cases we want, set line above abcd
             if (line > 0)
             {
                 testRunner.Tests.RemoveAll(x => x.SourceLine != line);
@@ -214,7 +216,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void RunOneMatchCompare()
         {
             ExpressionEvaluationTests.RegExCompareNode = true;
-            ExpressionEvaluationTests.RegExComparePCRE2 = false;
+            ExpressionEvaluationTests.RegExComparePCRE2 = true;
             RunOne();
         }
 #endif

@@ -18,11 +18,11 @@ contributors:
 
 The [**IsMatch**, **Match**, and **MatchAll** functions](reference/function-ismatch.md) are used to extract and validate patterns in text. The pattern they use is called a [regular expression](https://en.wikipedia.org/wiki/Regular_expression). 
 
-Regular expressions have a long history, are very powerful, are available in many programming languages, and used for a wide variety of purposes. They also often look like a random sequence of punctuation marks. This article doesn't describe all aspects of regular expressions, but a wealth of information, tutorials, and tools are available online.
+Regular expressions are very powerful and are used for a wide variety of purposes. They also often look like a random sequence of punctuation marks. This article doesn't describe all aspects of regular expressions, but a wealth of information, tutorials, and tools are available online.
 
-Every programming language has its own dialect of regular expressions and there are few standards. As much as possible, we would like the same regular expression to give the same result across all Power Fx implementations. That isn't easy to accomplish as Power Fx runs on top of JavaScript and .NET which have significant differences. To accommodate running on different platforms, Power Fx regular expressions are limited to a subset of features that are widely supported across the industry.
+Regular expressions have a long history and are available in many programming languages. Every programming language has its own dialect of regular expressions and there are few standards. As much as possible, we would like the same regular expression to give the same result across all Power Fx implementations. That isn't easy to accomplish as Power Fx runs on top of JavaScript and .NET which have significant differences. To accommodate running on different platforms, Power Fx regular expressions are limited to a subset of features that are widely supported across the industry.
 
-Power Fx will produce an authoring time error when unsupported features are encountered. This is one of the reasons that the regular expression and options must be a authoring time constant and not dynamic (for example, provided in a variable).
+As a result, some regular expressions that may work in other environments will be blocked in Power Fx. Power Fx will produce an authoring time error when unsupported features are encountered. This is one of the reasons that the regular expression and options must be an authoring time constant and not dynamic (for example, provided in a variable).
 
 ## Supported features
 
@@ -36,7 +36,6 @@ The regular expression must be a constant and not calculated or stored in a vari
 |---------|---------|
 | Literal characters | Any Unicode character can be inserted directly, except `\`, `[`, `]`, `^`, `$`, `.`, `|`, `?`, `*`, `+`, `(`, `)`, `{`, and `}`. When using **MatchOptions.FreeSpacing**, `#`, ` `, and other `\s` space characters must be escaped as they have a different meaning. |
 | Escaped literal characters | `\` (backslash) followed by one of the direct literal characters, such as `\?` to insert a question mark. `\#` and `\ ` may also be used even when **MatchOptions.FreeSpacing** is disabled for consistency. | 
-| Control characters | `\cA`, where the control characters is `A` through `Z`, upper or lowercase. |
 | Hexadecimal and Unicode character codes | `\x20` with two hexadecimal digits, `\u2028` with four hexadecimal digits. |
 | Carriage return | `\r`, the same as `Char(13)`. |
 | Newline character | `\n`, the same as `Char(10)`. |
@@ -60,6 +59,8 @@ Assertions match a particular position in the text, but do not consume any chara
 | Word breaks | `\b` and `\B`, using the Unicode definition of letters `[\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Nd}\p{Pc}\p{Lm}]`. |
 
 `$` will match the end of a line, including any trailing `\r\n`, `\r` or `\n`.
+
+Lookahead and lookbehind assertions cannot contain submatches or unlimited quantifiers within, and cannot be used with a quantifier outside. 
 
 ### Character classes
 
@@ -108,14 +109,16 @@ Unicode character categories supported by `\p{}` and `\P{}`:
 
 Possessive quantifiers are not supported.
 
+Mixing submatches and quantifiers has limitations. See [Possibly empty submatches](#possibly-empty-submatches) for more information.
+
 ### Groups
 
 | Feature | Description |
 |---------|---------|
 | Group | `(` and `)` are used to group elements for quantifiers to be applied. For example `(abc)+` matches `abcabc`. |
 | Alternation | `a|b` matches "a" or "b", often used in a group. |
-| Named group and back reference | `(?<name>chars)` captures a sub-match with the name `name`, referenced with `\k<name>`. Cannot be used if **MatchOptions.NumberedSubMatches** is enabled. |
-| Numbered group and back reference | When **MatchOptions.NumberedSubMatches** is enabled, `(a)` captures a sub-match referenced with `\1`. |
+| Named sub-match and back reference | `(?<name>chars)` captures a sub-match with the name `name`, referenced with `\k<name>`. Cannot be used if **MatchOptions.NumberedSubMatches** is enabled. |
+| Numbered sub-match and back reference | When **MatchOptions.NumberedSubMatches** is enabled, `(a)` captures a sub-match referenced with `\1`. |
 | Non-capture group | `(?:a)`, creates group without capturing the result as a named or numbered sub-match. All groups are non-capturing unless **MatchOptions.NumberedSubMatches** is enabled. |
 
 Named and numbered sub-matches cannot be used together. By default, named sub-matches are enabled and are preferred for clarity and maintainability, while standard capture groups become non capture groups with improved performance. This can be changed with **MatchOptions.NumberedSubMatches** which provides for traditional capture groups but disables named captures groups. Some implementations treat a mix of numbered and named capture groups differently which is why Power Fx disallows it. 
@@ -124,9 +127,11 @@ Self referencing capture groups are not supported, for example the regular expre
 
 Two capture groups cannot share the same name, for example the regular expression `(?<id>\w+)|(?<id>\d+)` is not supported.
 
+The name of a named sub-match must begin with a `\p{L}` character or `_`, and can continue with those characters plus `\p{Nd}`. Names are limited in length to 62 UTF-16 code units.
+
 Some implementations offer an "explicit capture" option to improve performance which is unnecessary in Power Fx as it is effectively the default. **MatchOptions.NumberedSubMatches** disables it and enables implicit numbered captures.
 
-In some situations, in particular with 0 match allowed quantifiers, **SubMatchess** can return different results between two different Power Fx implementations. See [Differences between implementations](#differences-between-implementations) for more information.
+Mixing submatches and quantifiers has limitations. See [Possibly empty submatches](#possibly-empty-submatches) for more information.
 
 ### Comments
 
@@ -276,47 +281,21 @@ If you have an existing regular expression, it may depend on groups being captur
 
 Named and numbered sub-matches cannot be used together. Some implementations treat a mix of numbered and named capture groups differently which is why Power Fx disallows it. 
 
-## Differences between implementations
+## Possibly empty submatches
 
 As stated in the introduction, Power Fx's regular expressions are intentionally limited to features that can be consistently implemented on top of .NET, JavaScript, and other programming language regular expression engines. Authoring time errors prevent use of features that are not a part of this set. 
 
-Despite this, although a feature may be supported across all implementations of Power Fx, there may be small semantic differences in how each of the implementations behaves.
+One area that can be signficaintly different between implementations is how empty submatches are handled. For example, consdier the regular expression `(?<submatch>a*)+` asked to match the text `a`. On .NET, the submatch will result in an empty text string, while on JavaScript it will result in `a`. Both can be argued as  correct implementations, as the `+` quantifier can be satisfied with an empty string since the contents of the group has a `*` quantifier.
 
-In general, **FullMatch** will be consistent across all implementations. Differences emerge with **SubMatches**, either named or numbered, in particular when used with quantifiers that includes a zero match possibility (for example, `*`, `?`, and `{0,5}`) that could be satisfied in multiple ways. If a backreference is used to one of these, then the **FullMatch** may also be different. 
+To avoid different results across Power Fx implementations, submatches that could be empty cannot be used with a quantifier. Here are examples of how a submatch could be empty:
 
-To avoid these differences in your formulas:
-- Avoid quantifiers outside of a **SubMatch**.
-- Test your regular expressions thoroughly, especially those involving **SubMatches** and backreferences.
-- Be particularly careful if your Power Fx regular expression is used in a module across products.
+| Examples | Description |
+|==========|=============|
+| `(?<submatch>a{0,}b*)+` | All of the contents of the submatch are optional and so the entire submatch may be empty. |
+| `((<submatch>a)?b)+` | Due to the `?` outside the submatch, the submatch as a whole is optional. |
+| `(?<submatch>a|b*)+` | Alternation within the submatch with something that could be empty could result in the entire submatch being empty. |
+| `((?<submatch>a)|b)+` | Alternation outside the submatch could match `b` in which case the submatch would be empty.|
 
-Let's look at some examples:
+Note that the submatch in `(?<submatch>a+)+` cannot be empty, as there must be at leaset one `a` in he submatch, and is supported.
 
-```powerapps-dot
-Match( "ab", "(a*)+(b)" , MatchOptions.NumberedSubMatches )
-// returns with .NET: {FullMatch:"ab", StartMatch:1, SubMatches:["", "b"]}
-// returns with JavaScript: {FullMatch:"ab", StartMatch:1, SubMatches:["a", "b"]}
-```
-
-On a Power Fx implementation based on .NET, **Index( SubMatches, 2 )** will return an empty string `""`, while using JavaScript returns `"a"`. This difference is caused by how the different engines treat the `(a*)+`. In JavaScript it is satisfied by a single `a` as one iteration of the `+`, but on .NET it is satisfied by two iterations of the `+` with `a` followed by an empty string. The **FullMatch** is the same for both implementations as `"ax"` but we get there through two different paths.
-
-Here's an example with a backreference:
-
-```powerapps-dot
-Match( "ab", "(a)*b\1" , MatchOptions.NumberedSubMatches )
-// returns with .NET: Blank()
-// returns with JavaScript: {FullMatch:"b", StartMatch:2, SubMatches:[Blank()]}
-```
-
-Normally the engine is greedy and will match the `a` in the sub match. But this won't satisfy the full regular expression, and so .NET returns `blank`. JavaScript decides that the sub match isn't possible, so it chooses a different path where the sub match didn't happen at all. 
-
-Without the backreference, or with the `*` inside the sub match, we have consistency between implementations:
-
-```powerapps-dot
->> Match( "ab", "(a)*b" , MatchOptions.NumberedSubMatches )
-// returns: {FullMatch:"ab", StartMatch:1, SubMatches:["a"]}
-
->> Match( "ab", "(a*)b\1" , MatchOptions.NumberedSubMatches )
-// returns: {FullMatch:"b", StartMatch:2, SubMatches:[""]}
-```
-
-
+Backreferences to possibly empty submatches are also not supported. 

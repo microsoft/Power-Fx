@@ -1,0 +1,757 @@
+#SETUP: RegEx,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+
+// quantified capture groups
+
+>> Match( "aba", "^(a(b)?)+$", MatchOptions.NumberedSubMatches )  // node != .net, a known difference between PCRE2 and Perl too
+Errors: Error 14-26: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "^(a(b)?)+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aba", "^(a(?:b)?)+$", MatchOptions.NumberedSubMatches )  // node == .net
+{FullMatch:"aba",StartMatch:1,SubMatches:Table({Value:"a"})}
+
+>> Match( "aba", "^(a(b)?)+$" )  // node == .net
+{FullMatch:"aba",StartMatch:1}
+
+>> Match( "aba", "^(?<one>a(b)?)+$" )  // node == .net
+{FullMatch:"aba",StartMatch:1,one:"a"}
+
+>> Match( "b", "(a)?b\1", MatchOptions.NumberedSubMatches )  // node != .net
+Errors: Error 12-21: Invalid regular expression: Back reference "\1" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "b", "(?<cap>a)?b\k<cap>" )   // node != .net
+Errors: Error 12-32: Invalid regular expression: Back reference "\k<cap>" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(b*|.){2,}" )  // node != .net
+Errors: Error 12-24: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(b*|.){2,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(b*|.){2,2}" )  // node == .net
+Errors: Error 12-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(b*|.){2,2}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(b*|.){2,3}" )  // node != .net
+Errors: Error 12-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(b*|.){2,3}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(b*|.){2}" )  // node == .net
+Errors: Error 12-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(b*|.){2}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(b*|.)?" )  // node != .net
+Errors: Error 12-21: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(b*|.)?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(b*|.)+" )  // node != .net
+Errors: Error 12-21: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(b*|.)+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(b*|.)*" )  // node != .net
+Errors: Error 12-21: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(b*|.)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(((b*|.)))*" )  // node != .net
+Errors: Error 12-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(((b*|.)))*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(|.){2,}" )  // node != .net
+Errors: Error 12-22: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(|.){2,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(|.){2,2}" )  // node == .net
+Errors: Error 12-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(|.){2,2}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(|.){2}" )  // node == .net
+Errors: Error 12-21: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(|.){2}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(|.)?" )   // node != .net
+Errors: Error 12-19: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(|.)?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(|.)+" )   // node != .net
+Errors: Error 12-19: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(|.)+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(|.)*" )   // node != .net
+Errors: Error 12-19: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(|.)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(((|.)))*" )  // node != .net
+Errors: Error 12-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(((|.)))*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// alternation with capture and any quantifier
+
+>> Match( "%abc%", "(a|b|c)", MatchOptions.NumberedSubMatches )
+{FullMatch:"a",StartMatch:2,SubMatches:Table({Value:"a"})}
+
+>> Match( "%abc%", "(a|b|c)*", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "%abc%", "(a|b|c)?", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "%abc%", "(a|b|c)+", MatchOptions.NumberedSubMatches )
+{FullMatch:"abc",StartMatch:2,SubMatches:Table({Value:"c"})}
+
+>> Match( "%abc%", "(a|b|c)*?", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "%abc%", "(a|b|c)+?", MatchOptions.NumberedSubMatches )
+{FullMatch:"a",StartMatch:2,SubMatches:Table({Value:"a"})}
+
+>> Match( "%abc%", "(a|b|c){1}", MatchOptions.NumberedSubMatches )
+{FullMatch:"a",StartMatch:2,SubMatches:Table({Value:"a"})}
+
+>> Match( "%abc%", "(a|b|c){1,}", MatchOptions.NumberedSubMatches )
+{FullMatch:"abc",StartMatch:2,SubMatches:Table({Value:"c"})}
+
+>> Match( "%abc%", "(a|b|c){1,1}", MatchOptions.NumberedSubMatches )
+{FullMatch:"a",StartMatch:2,SubMatches:Table({Value:"a"})}
+
+>> Match( "%abc%", "((a)|b|c)", MatchOptions.NumberedSubMatches )
+{FullMatch:"a",StartMatch:2,SubMatches:Table({Value:"a"},{Value:"a"})}
+
+>> Match( "%abc%", "(a|(b)|c)", MatchOptions.NumberedSubMatches )
+{FullMatch:"a",StartMatch:2,SubMatches:Table({Value:"a"},{Value:Blank()})}
+
+>> Match( "%abc%", "(a|b|(c))", MatchOptions.NumberedSubMatches )
+{FullMatch:"a",StartMatch:2,SubMatches:Table({Value:"a"},{Value:Blank()})}
+
+>> Match( "%abc%", "(((a)|b|c))", MatchOptions.NumberedSubMatches )
+{FullMatch:"a",StartMatch:2,SubMatches:Table({Value:"a"},{Value:"a"},{Value:"a"})}
+
+>> Match( "%abc%", "(a|((b))|c)", MatchOptions.NumberedSubMatches )
+{FullMatch:"a",StartMatch:2,SubMatches:Table({Value:"a"},{Value:Blank()},{Value:Blank()})}
+
+>> Match( "%abc%", "(a|b|(((c))))", MatchOptions.NumberedSubMatches )
+{FullMatch:"a",StartMatch:2,SubMatches:Table({Value:"a"},{Value:Blank()},{Value:Blank()},{Value:Blank()})}
+
+>> Match( "%abc%", "((a)|b|c)*", MatchOptions.NumberedSubMatches )
+Errors: Error 16-28: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "((a)|b|c)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%abc%", "(a|(b)|c)*", MatchOptions.NumberedSubMatches )
+Errors: Error 16-28: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a|(b)|c)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%abc%", "((?:(a))|b|c)*", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()},{Value:Blank()})}
+
+>> Match( "%abc%", "(a|(?:(b))|c)*", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()},{Value:Blank()})}
+
+>> Match( "%abc%", "(a|b|(?:(c)))*", MatchOptions.NumberedSubMatches )    // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[Blank(), Blank()]}
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()},{Value:Blank()})}
+
+>> Match( "%abc%", "(?:(a|b|(c)))*", MatchOptions.NumberedSubMatches )    // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[Blank(), Blank()]}
+Errors: Error 16-32: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...:(a|b|(c)))*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%abc%", "((?:(a|b|(c))))*", MatchOptions.NumberedSubMatches )   // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[Blank(), Blank(), Blank()]}
+Errors: Error 16-34: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...(a|b|(c))))*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%abc%", "((a)|b|c)+", MatchOptions.NumberedSubMatches )     // .net != node
+Errors: Error 16-28: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "((a)|b|c)+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%abc%", "(a|(b)|c)+", MatchOptions.NumberedSubMatches )     // .net != node
+Errors: Error 16-28: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a|(b)|c)+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%abc%", "(a|b|(c))+", MatchOptions.NumberedSubMatches )     // .net == node, {FullMatch:"abc", StartMatch:2, SubMatches:["c", "c"]}
+Errors: Error 16-28: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a|b|(c))+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%abc%", "((a)|b|c){1}", MatchOptions.NumberedSubMatches )
+Errors: Error 16-30: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "((a)|b|c){1}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%abc%", "(a|(b)|c){1,}", MatchOptions.NumberedSubMatches )   // .net != node
+Errors: Error 16-31: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...a|(b)|c){1,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%abc%", "(a|b|(c)){1,2}", MatchOptions.NumberedSubMatches )  // .net == node
+Errors: Error 16-32: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...|b|(c)){1,2}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%abc%", "((a)|b|c){2}", MatchOptions.NumberedSubMatches )   // .net != node
+Errors: Error 16-30: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "((a)|b|c){2}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%abc%", "(a|(b)|c){2,}", MatchOptions.NumberedSubMatches )  // .net != node
+Errors: Error 16-31: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...a|(b)|c){2,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%abc%", "(a|b|(c)){2,3}", MatchOptions.NumberedSubMatches )  // .net == node
+Errors: Error 16-32: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...|b|(c)){2,3}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ab", "((a)|b)*", MatchOptions.NumberedSubMatches ) // .net != node, input text dependent
+Errors: Error 13-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "((a)|b)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "((a)|b)*", MatchOptions.NumberedSubMatches ) // .net == node, input text dependent
+Errors: Error 12-22: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "((a)|b)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ab", "(((?<first>a)|b))+" )  // .net != node, capture alone
+Errors: Error 13-33: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...irst>a)|b))+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aab", "(((?<first>a)a|b))+" )  // .net != node, capture not alone
+Errors: Error 14-35: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...rst>a)a|b))+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaab", "((a(?<first>a)a|b))+" )  // .net != node
+Errors: Error 15-37: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...rst>a)a|b))+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaab", "((a(?<first>a)a|b))*" )  // .net != node
+Errors: Error 15-37: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...rst>a)a|b))*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaabb", "((a(?<first>a)a|b))?" )  // .net == node
+Errors: Error 16-38: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...rst>a)a|b))?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaab", "((a(?<first>a)a|b))?" )  // .net == node, 1 iteration
+Errors: Error 15-37: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...rst>a)a|b))?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaa", "((a(?<first>a)a|b))?" )   // .net == node
+Errors: Error 14-36: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...rst>a)a|b))?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaabb", "((a(?<first>a)a|b))*" )  // .net != node
+Errors: Error 16-38: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...rst>a)a|b))*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaa", "((a(?<first>a)a|b))*" )  // .net == node
+Errors: Error 14-36: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...rst>a)a|b))*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaabb", "((a(?<first>a)a|b))+" )  // .net != node
+Errors: Error 16-38: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...rst>a)a|b))+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaa", "((a(?<first>a)a|b))+" )  // .net == node
+Errors: Error 14-36: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...rst>a)a|b))+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// alternation with possible zero length (doesn't need to be a capture) and any quantifier 
+
+>> Match( "%aaa%", "(a|b)*", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "%aaa%", "(a*|b)*", MatchOptions.NumberedSubMatches )  // .net != node without block
+Errors: Error 16-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a*|b)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a|b*)*", MatchOptions.NumberedSubMatches )  // .net != node without block
+Errors: Error 16-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a|b*)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a?|b)*", MatchOptions.NumberedSubMatches )  // .net != node without block
+Errors: Error 16-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a?|b)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a|b?)*", MatchOptions.NumberedSubMatches )  // .net != node without block
+Errors: Error 16-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a|b?)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a+|b)*", MatchOptions.NumberedSubMatches ) 
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "%aaa%", "(a|b+)*", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "%aaa%", "(aa*|b)*", MatchOptions.NumberedSubMatches )  
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "%aaa%", "(a|bb*)*", MatchOptions.NumberedSubMatches )  
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "%aaa%", "([a]*|b)*", MatchOptions.NumberedSubMatches )  // .net != node without block
+Errors: Error 16-27: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "([a]*|b)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a|[b]*)*", MatchOptions.NumberedSubMatches )  // .net != node without block
+Errors: Error 16-27: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a|[b]*)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "((?:a)*|b)*", MatchOptions.NumberedSubMatches )  // .net != node without block
+Errors: Error 16-29: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "((?:a)*|b)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a|(?:b)*)*", MatchOptions.NumberedSubMatches )  // .net != node without block
+Errors: Error 16-29: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a|(?:b)*)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// possible zero length capture inside any quantifier
+
+>> Match( "%aaa%", "()", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
+
+>> Match( "%aaa%", "()*", MatchOptions.NumberedSubMatches )   // .net != node without block
+Errors: Error 16-21: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "()*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(^)*", MatchOptions.NumberedSubMatches )  // .net != node without block, anchors are zero length
+Errors: Error 16-22: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(^)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "($)*", MatchOptions.NumberedSubMatches )  // .net == node, anchors are zero length
+Errors: Error 16-22: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "($)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a*)", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
+
+>> Match( "%aaa%", "([a]*)", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
+
+>> Match( "%aaa%", "((?:a)*)", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
+
+>> Match( "%aaa%", "(a*)*", MatchOptions.NumberedSubMatches )  // .net != node without block
+Errors: Error 16-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a*)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "([a]*)*", MatchOptions.NumberedSubMatches )  // .net != node
+Errors: Error 16-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "([a]*)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "((?:a)*)*", MatchOptions.NumberedSubMatches )  // .net != node
+Errors: Error 16-27: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "((?:a)*)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a?)*", MatchOptions.NumberedSubMatches )  // .net != node without block
+Errors: Error 16-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a?)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a+)*", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "%aaa%", "(a{1})*", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "%aaa%", "(a{1,})*", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "%aaa%", "(a{1,2})*", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "%aaa%", "(a*)+", MatchOptions.NumberedSubMatches )
+Errors: Error 16-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a*)+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a?)+", MatchOptions.NumberedSubMatches )
+Errors: Error 16-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a?)+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(aa*)+", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"aaa"})}
+
+>> Match( "%aaa%", "(aa?)+", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"a"})}
+
+>> Match( "%aaa%", "(a*a)+", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"aaa"})}
+
+>> Match( "%aaa%", "(a?a)+", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"a"})}
+
+>> Match( "%aaa%", "(a+)+", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"aaa"})}
+
+>> Match( "%aaa%", "(a{1})+", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"a"})}
+
+>> Match( "%aaa%", "(a{1,})+", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"aaa"})}
+
+>> Match( "%aaa%", "(a{1,2})+", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"a"})}
+
+>> Match( "%aaa%", "(a{0})+", MatchOptions.NumberedSubMatches )  
+Errors: Error 16-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0})+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a{0,})+", MatchOptions.NumberedSubMatches )
+Errors: Error 16-26: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0,})+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a{0,2})+", MatchOptions.NumberedSubMatches )
+Errors: Error 16-27: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0,2})+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(aa{0})+", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"a"})}
+
+>> Match( "%aaa%", "(aa{0,})+", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"aaa"})}
+
+>> Match( "%aaa%", "(aa{0,2})+", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"aaa"})}
+
+>> Match( "%aaa%", "(a{0}a)+", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"a"})}
+
+>> Match( "%aaa%", "(a{0,}a)+", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"aaa"})}
+
+>> Match( "%aaa%", "(a{0,2}a)+", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"aaa"})}
+
+>> Match( "%aaa%", "(a*)?", MatchOptions.NumberedSubMatches )  // .net != node without block
+Errors: Error 16-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a*)?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a?)?", MatchOptions.NumberedSubMatches )  // .net != node without block
+Errors: Error 16-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a?)?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a+)?", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "%aaa%", "(a{1})?", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "%aaa%", "(a{1,})?", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "%aaa%", "(a{1,2})?", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "%aaa%", "(a{0})?", MatchOptions.NumberedSubMatches )
+Errors: Error 16-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0})?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a{0,})?", MatchOptions.NumberedSubMatches )
+Errors: Error 16-26: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0,})?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a{0,2})?", MatchOptions.NumberedSubMatches )
+Errors: Error 16-27: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0,2})?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a*){1}", MatchOptions.NumberedSubMatches )
+Errors: Error 16-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a*){1}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a?){1}", MatchOptions.NumberedSubMatches )
+Errors: Error 16-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a?){1}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a+){1}", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"aaa"})}
+
+>> Match( "%aaa%", "(a{1}){1}", MatchOptions.NumberedSubMatches )
+{FullMatch:"a",StartMatch:2,SubMatches:Table({Value:"a"})}
+
+>> Match( "%aaa%", "(a{1,}){1}", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"aaa"})}
+
+>> Match( "%aaa%", "(a{1,2}){1}", MatchOptions.NumberedSubMatches )
+{FullMatch:"aa",StartMatch:2,SubMatches:Table({Value:"aa"})}
+
+>> Match( "%aaa%", "(a{0}){1}", MatchOptions.NumberedSubMatches )
+Errors: Error 16-27: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0}){1}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a{0,}){1}", MatchOptions.NumberedSubMatches )
+Errors: Error 16-28: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0,}){1}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a{0,2}){1}", MatchOptions.NumberedSubMatches )
+Errors: Error 16-29: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0,2}){1}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a*){1,1}", MatchOptions.NumberedSubMatches )
+Errors: Error 16-27: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a*){1,1}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a+){1,1}", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"aaa"})}
+
+>> Match( "%aaa%", "(a*){1,}", MatchOptions.NumberedSubMatches )
+Errors: Error 16-26: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a*){1,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a?){1,}", MatchOptions.NumberedSubMatches )
+Errors: Error 16-26: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a?){1,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a+){1,}", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"aaa"})}
+
+>> Match( "%aaa%", "(a{1}){1,}", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"a"})}
+
+>> Match( "%aaa%", "(a{1,}){1,}", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"aaa"})}
+
+>> Match( "%aaa%", "(a{1,2}){1,}", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"a"})}
+
+>> Match( "%aaa%", "(a{0}){1,}", MatchOptions.NumberedSubMatches )
+Errors: Error 16-28: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0}){1,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a{0,}){1,}", MatchOptions.NumberedSubMatches )
+Errors: Error 16-29: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0,}){1,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a{0,2}){1,}", MatchOptions.NumberedSubMatches )
+Errors: Error 16-30: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0,2}){1,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a*){1,2}", MatchOptions.NumberedSubMatches )
+Errors: Error 16-27: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a*){1,2}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a?){1,2}", MatchOptions.NumberedSubMatches )
+Errors: Error 16-27: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a?){1,2}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a+){1,2}", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"aaa"})}
+
+>> Match( "%aaa%", "(a{1}){1,2}", MatchOptions.NumberedSubMatches )
+{FullMatch:"aa",StartMatch:2,SubMatches:Table({Value:"a"})}
+
+>> Match( "%aaa%", "(a{1,}){1,2}", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"aaa"})}
+
+>> Match( "%aaa%", "(a{1,2}){1,2}", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"a"})}
+
+>> Match( "%aaa%", "(a{0}){1,2}", MatchOptions.NumberedSubMatches )
+Errors: Error 16-29: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0}){1,2}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a{0,}){1,2}", MatchOptions.NumberedSubMatches )
+Errors: Error 16-30: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0,}){1,2}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(a{0,2}){1,2}", MatchOptions.NumberedSubMatches )
+Errors: Error 16-31: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...a{0,2}){1,2}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "on", "((o)*){2}" , MatchOptions.NumberedSubMatches ) // .net != node
+Errors: Error 13-24: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "((o)*){2}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "on", "((o)+){2}" , MatchOptions.NumberedSubMatches ) // .net == node
+Blank()
+
+>> Match( "on", "((o){1}){2}" , MatchOptions.NumberedSubMatches )
+Blank()
+
+>> Match( "on", "((o){1,}){2}" , MatchOptions.NumberedSubMatches )
+Blank()
+
+>> Match( "oon", "((o)+){2}" , MatchOptions.NumberedSubMatches ) // .net == node
+{FullMatch:"oo",StartMatch:1,SubMatches:Table({Value:"o"},{Value:"o"})}
+
+>> Match( "on", "((o)?){2}" , MatchOptions.NumberedSubMatches ) // .net != node
+Errors: Error 13-24: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "((o)?){2}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "on", "(?:(o)*){2}" , MatchOptions.NumberedSubMatches ) // .net != node
+Errors: Error 13-26: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(?:(o)*){2}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "on", "((?<one>o)*){2}" )                            // .net != node
+Errors: Error 13-30: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...<one>o)*){2}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(?<cap>((a*b*)))*" )                       // .net != node
+Errors: Error 16-35: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...p>((a*b*)))*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "on", "(o+){2,}", MatchOptions.NumberedSubMatches )  // .net == node
+Blank()
+
+>> Match( "on", "(o?){2,}", MatchOptions.NumberedSubMatches )  // .net == node
+Errors: Error 13-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(o?){2,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "oo", "(o?){2,}", MatchOptions.NumberedSubMatches )  // .net != node
+Errors: Error 13-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(o?){2,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// non submatch with possible zero length alternation (note MatchOptions.NumberedSubMatches is off)
+
+>> Match( "ab", "(|.)*" )  // .net != node
+Errors: Error 13-20: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(|.)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ab", "((?=b)|.)*" )  // .net != node
+Errors: Error 13-25: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "((?=b)|.)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ab", "(c*|.)*" )  // .net != node
+Errors: Error 13-22: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(c*|.)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ab", "(.|)*" )  // .net == node, {FullMatch:"ab", StartMatch:1}
+Errors: Error 13-20: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(.|)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ab", "(.|(?=b))*" )  // .net == node, {FullMatch:"ab", StartMatch:1}
+Errors: Error 13-25: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "(.|(?=b))*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ab", "(.|c*)*" )  // .net == node, {FullMatch:"ab", StartMatch:1}
+Errors: Error 13-22: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(.|c*)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// backreference to capture that has possible zero length
+
+>> Match( "cb", "(a)?\1b", MatchOptions.NumberedSubMatches )
+Errors: Error 13-22: Invalid regular expression: Back reference "\1" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "cb", "(a)*\1b", MatchOptions.NumberedSubMatches )
+Errors: Error 13-22: Invalid regular expression: Back reference "\1" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "cb", "(?:(?:(a)))*\1b", MatchOptions.NumberedSubMatches )
+Errors: Error 13-30: Invalid regular expression: Back reference "\1" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aa", "(a)*?\1", MatchOptions.NumberedSubMatches )
+Errors: Error 13-22: Invalid regular expression: Back reference "\1" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "b", "(a)?b\1", MatchOptions.NumberedSubMatches )
+Errors: Error 12-21: Invalid regular expression: Back reference "\1" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aba", "(a(b)?)+", MatchOptions.NumberedSubMatches )
+Errors: Error 14-24: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a(b)?)+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(a|(b))\2", MatchOptions.NumberedSubMatches )
+Errors: Error 12-23: Invalid regular expression: Back reference "\2" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abc", "(b|a(?=(.)))*\2", MatchOptions.NumberedSubMatches )
+Errors: Error 14-31: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...b|a(?=(.)))*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "b", "(a)|\1", MatchOptions.NumberedSubMatches ) 
+Errors: Error 12-20: Invalid regular expression: Back reference "\1" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "b", "(a)?\1", MatchOptions.NumberedSubMatches )
+Errors: Error 12-20: Invalid regular expression: Back reference "\1" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ab", "((c)|a)\2", MatchOptions.NumberedSubMatches )  // .net != node
+Errors: Error 13-24: Invalid regular expression: Back reference "\2" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ab", "((c)|(\2))", MatchOptions.NumberedSubMatches )
+Errors: Error 13-25: Invalid regular expression: Back reference "\2" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ab", "(c)|\1", MatchOptions.NumberedSubMatches )
+Errors: Error 13-21: Invalid regular expression: Back reference "\1" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// non capture group tests (note no MatchOptions.NumberedSubMatches)
+
+>> Match( "a", "(a*?)*" )  // .net != node
+Errors: Error 12-20: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a*?)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "((((a*?))))*" )  // .net != node
+Errors: Error 12-26: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "((((a*?))))*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "((((a*?)))c)*" )   // .net == node
+Errors: Error 12-27: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...(((a*?)))c)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// JavaScript does not allow quantifiers on lookbehinds, we block lookahead as well for now
+
+>> Match( "%aaa%", "(?<=%)?a" )
+Errors: Error 16-26: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "(?<=%)?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(?<=%)*a" )
+Errors: Error 16-26: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "(?<=%)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(?<=%)+a" )
+Errors: Error 16-26: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "(?<=%)+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(?<=%){2}a" )
+Errors: Error 16-28: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "(?<=%){2}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(?<=%){2,}a" )
+Errors: Error 16-29: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "(?<=%){2,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(?<=%){1,2}a" )
+Errors: Error 16-30: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "(?<=%){1,2}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "((?<=%))?a" )
+Errors: Error 16-28: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "((?<=%))?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "((?<=%))*a" )
+Errors: Error 16-28: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "((?<=%))*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "((?<=%))+a" )
+Errors: Error 16-28: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "((?<=%))+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "((?<=%)){2}a" )
+Errors: Error 16-30: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "((?<=%)){2}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "((?<=%)){2,}a" )
+Errors: Error 16-31: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "((?<=%)){2,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "((?<=%)){1,2}a" )
+Errors: Error 16-32: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...(?<=%)){1,2}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// PCRE2 does not allow quantifiers inside the lookbehind, must be fixed length
+
+>> Match( "%aaa%", "(?<=%*)a" )
+Errors: Error 16-26: Invalid regular expression: Unlimited quantifiers are not supported in look behinds, found at the end of "(?<=%*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(?<=%{2,})a" )
+Errors: Error 16-29: Invalid regular expression: Unlimited quantifiers are not supported in look behinds, found at the end of "(?<=%{2,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(?<=%+)a" )
+Errors: Error 16-26: Invalid regular expression: Unlimited quantifiers are not supported in look behinds, found at the end of "(?<=%+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(?<=%{2})a" )
+Blank()
+
+>> Match( "%%aaa%", "(?<=%{2})a" )
+{FullMatch:"a",StartMatch:3}
+
+>> Match( "%a%%aaa%", "(?<=%{2,3})a" )
+{FullMatch:"a",StartMatch:5}
+
+// different lengths OK
+
+>> Match( "%abc%", "(?<=(%a|%%b|b|))b")
+{FullMatch:"b",StartMatch:3}
+
+>> Match( "%abc%", "(?<=(%z|%%b|b|))c")
+{FullMatch:"c",StartMatch:4}
+
+// captures in lookarounds
+
+>> Match( "%abc%", "(?<=(?<caught>%z|%%b|ab|%ab))c")  // .net != node
+Errors: Error 16-48: Invalid regular expression: Sub matches are not supported in look behinds, found at the beginning of "(?<caught>%z...".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%abc%", "(?<=(%z|%%b|ab|%ab))c", MatchOptions.NumberedSubMatches)
+Errors: Error 16-39: Invalid regular expression: Sub matches are not supported in look behinds, found at the beginning of "(%z|%%b|ab|%...".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "m%abc%", "m(?=(?<caught>%z|%%b|ab|%ab))")
+{FullMatch:"m",StartMatch:1,caught:"%ab"}
+
+>> Match( "m%abc%", "m(?=(%z|%%b|ab|%ab))", MatchOptions.NumberedSubMatches)
+{FullMatch:"m",StartMatch:1,SubMatches:Table({Value:"%ab"})}
+
+>> Match( "%abc%", "(?<=(%z|%%b|ab|%ab))c")  // non capture
+{FullMatch:"c",StartMatch:4}
+
+>> Match( "%abc%", "(?<caught>%z|%%b|ab|%ab)c")  // non lookaround
+{FullMatch:"%abc",StartMatch:1,caught:"%ab"}
+
+// backreferences in lookarounds
+
+>> Match( "aa", "((?<one>a)(?<=\k<one>))" )
+{FullMatch:"a",StartMatch:1,one:"a"}
+
+>> Match( "aa", "((a)(?<=\2))", MatchOptions.NumberedSubMatches )
+{FullMatch:"a",StartMatch:1,SubMatches:Table({Value:"a"},{Value:"a"})}
+
+// quantifiers on lookarounds
+
+>> Match( "ba", "b(?=a){1,1}" )
+Errors: Error 13-26: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "b(?=a){1,1}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ba", "b((?=a)){1,1}" )
+Errors: Error 13-28: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...((?=a)){1,1}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ba", "b(?<=a){1}" )
+Errors: Error 13-25: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "b(?<=a){1}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ba", "b((?<=a)){1}" )
+Errors: Error 13-27: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "b((?<=a)){1}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ba", "b(?<=a){1,}" )
+Errors: Error 13-26: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "b(?<=a){1,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ba", "b((?<=a)){1,}" )
+Errors: Error 13-28: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...((?<=a)){1,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ba", "b(?<=a){3,}" )
+Errors: Error 13-26: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "b(?<=a){3,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ba", "b((?<=a)){2,3}" )
+Errors: Error 13-29: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...(?<=a)){2,3}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ba", "b(?<=a){2,3}" )
+Errors: Error 13-27: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "b(?<=a){2,3}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ba", "b(?!a)*" )
+Errors: Error 13-22: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "b(?!a)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ba", "b((?!a))*" )
+Errors: Error 13-24: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "b((?!a))*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ba", "b(?<!a)?" )
+Errors: Error 13-23: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "b(?<!a)?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ba", "b((?<!a))?" )
+Errors: Error 13-25: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "b((?<!a))?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ba", "b(?<!a)+" )
+Errors: Error 13-23: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "b(?<!a)+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ba", "b((?<!a))+" )
+Errors: Error 13-25: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "b((?<!a))+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// quantifiers in lookarounds
+
+>> Match( "cccccbaaaaaaaaaab", "(?<=a+)b" )
+Errors: Error 28-38: Invalid regular expression: Unlimited quantifiers are not supported in look behinds, found at the end of "(?<=a+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "cccccbaaaaaaaaaab", "(?<=a*)b" )
+Errors: Error 28-38: Invalid regular expression: Unlimited quantifiers are not supported in look behinds, found at the end of "(?<=a*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "cccccbaaaaaaaaaab", "(?<=a?)b" )
+{FullMatch:"b",StartMatch:6}
+
+>> Match( "cccccbaaaaaaaaaab", "(?<=a{1})b" )
+{FullMatch:"b",StartMatch:17}
+
+>> Match( "cccccbaaaaaaaaaab", "(?<=a{1,})b" )
+Errors: Error 28-41: Invalid regular expression: Unlimited quantifiers are not supported in look behinds, found at the end of "(?<=a{1,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "cccccbaaaaaaaaaab", "(?<=a{1,1})b" )
+{FullMatch:"b",StartMatch:17}
+
+>> Match( "cccccbaabaaaaaaaaaab", "(?<=a{2})b" )
+{FullMatch:"b",StartMatch:9}
+
+>> Match( "cccccbaaaaaaaaaab", "(?<=a{2,})b" )
+Errors: Error 28-41: Invalid regular expression: Unlimited quantifiers are not supported in look behinds, found at the end of "(?<=a{2,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "cccccbaabaaaaaaaaaab", "(?<=a{2,3})b" )
+{FullMatch:"b",StartMatch:9}
+
+// group stack overflow
+
+>> Match( "a", "(((((((((((((((((((((((((((((((a)))))))))))))))))))))))))))))))" )
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "a", "((((((((((((((((((((((((((((((((a))))))))))))))))))))))))))))))))" )
+Errors: Error 12-79: Invalid regular expression: Too many nested groups, found at the beginning of "(a))))))))))...".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(((((((((((((((((((((((((((((((b)))))))))))))))))))))))))))))))?(((((((((((((((((((((((((((((((a)))))))))))))))))))))))))))))))?" )
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "babaabb", "(((((((((((((((((((((((((((((((?<cap>a|b)))))))))))))))))))))))))))))))\k<cap>" )
+{FullMatch:"aa",StartMatch:4,cap:"a"}
+
+>> Match( "babaabb", "((((((((((((((((((((((((((((((?<cap>(a|b)))))))))))))))))))))))))))))))\k<cap>" )
+{FullMatch:"aa",StartMatch:4,cap:"a"}
+
+>> Match( "babaabb", "(((((((((((((((((((((((((((((((?<cap>(a|b))))))))))))))))))))))))))))))))\k<cap>" )
+Errors: Error 18-100: Invalid regular expression: Too many nested groups, found at the beginning of "(a|b))))))))...".|Error 0-5: The function 'Match' has some invalid arguments.

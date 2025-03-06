@@ -80,6 +80,24 @@ Table({FullMatch:"1",StartMatch:1})
 >> MatchAll( "1a" & Char(13)&Char(10) & "2b" & Char(13)&Char(10) & "3c", "^\d", MatchOptions.Multiline )
 Table({FullMatch:"1",StartMatch:1},{FullMatch:"2",StartMatch:5},{FullMatch:"3",StartMatch:9})
 
+>> MatchAll( "a" & Char(13) & Char(10) & "a", "(?m)^(a|)" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"a",StartMatch:4})
+
+// >> MatchAll( "a" & Char(13) & Char(10), "(?m)^(a|)" )  // gives a different answer on PCRE2
+// ok
+
+>> MatchAll( Char(13) & Char(10) & "a", "(?m)^(a|)" )
+Table({FullMatch:"",StartMatch:1},{FullMatch:"a",StartMatch:3})
+
+>> MatchAll( "a" & Char(13) & Char(10) & "a", "(?m)(a|)$" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"a",StartMatch:4},{FullMatch:"",StartMatch:5})
+
+>> MatchAll( "a" & Char(13) & Char(10) , "(?m)(a|)$" )  // pcre2 repeated empty result
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"",StartMatch:4})
+
+>> MatchAll( Char(13) & Char(10) & "a", "(?m)(a|)$" )
+Table({FullMatch:"",StartMatch:1},{FullMatch:"a",StartMatch:3},{FullMatch:"",StartMatch:4})
+
 >> ForAll( MatchAll( "
  a
  b

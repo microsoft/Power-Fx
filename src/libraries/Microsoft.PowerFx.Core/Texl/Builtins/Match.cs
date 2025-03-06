@@ -4,11 +4,15 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -139,532 +143,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (returnType == DType.Boolean || TryCreateReturnType(regExNode, regularExpression, alteredOptions, errors, ref returnType));
         }
 
-        private static readonly IReadOnlyCollection<string> UnicodeCategories = new HashSet<string>()
-        {
-            "L", "Lu", "Ll", "Lt", "Lm", "Lo",
-            "M", "Mn", "Mc", "Me",
-            "N", "Nd", "Nl", "No",
-            "P", "Pc", "Pd", "Ps", "Pe", "Pi", "Pf", "Po",
-            "S", "Sm", "Sc", "Sk", "So",
-            "Z", "Zs", "Zl", "Zp",
-            "Cc", "Cf", 
-
-            // "C", "Cs", "Co", "Cn", are left out for now until we have a good scenario, as they differ between implementations
-        };
-
-        // Power Fx regular expressions are limited to features that can be transpiled to native .NET (C# Interpreter), ECMAScript (Canvas), or PCRE2 (Excel).
-        // We want the same results everywhere for Power Fx, even if the underlying implementation is different. Even with these limits in place there are some minor semantic differences but we get as close as we can.
-        // These tests can be run through all three engines and the results compared with by setting ExpressionEvaluationTests.RegExCompareEnabled, a PCRE2 DLL and NodeJS must be installed on the system.
-        //
-        // In short, we use the insersection of canonical .NET regular expressions and ECMAScript 2024's "v" flag for escaping rules. 
-        // Someday when "v" is more widely avaialble, we can support more of its features such as set subtraction.
-        // We chose to use canonical .NET instead of RegexOptions.ECMAScript because we wanted the unicode definitions for words. See https://learn.microsoft.com/dotnet/standard/base-types/regular-expression-options#ecmascript-matching-behavior
-        //
-        // In addition, Power Fx regular expressions are opinionated and try to eliminate some of the ambiguity in the common regular expression language:
-        //     Numbered capture groups are disabled by default, and cannot be mixed with named capture groups.
-        //     Octal character codes are not supported, use \x or \u instead.
-        //     Literal ^, -, [, ], {, and } must be escaped when used in a character class.
-        //     Escaping is only supported for special characters and unknown alphanumeric escape sequences are not supported.
-        //     Unicode characters are used throughout.
-        //     Newlines support Windows friendly \r\n as well as \r and \n.
-        //
-        // Features that are supported:
-        //     Literal characters. Any character except the special characters [ ] \ ^ $ . | ? * + ( ) can be inserted directly.
-        //     Escaped special characters. \ (backslash) followed by a special character to insert it directly, includes \- when in a character class.
-        //     Operators
-        //         Dot (.), matches everything except [\r\n] unless MatchOptions.DotAll is used.
-        //         Anchors, ^ and $, matches the beginning and end of the string, or of a line if MatchOptions.Multiline is used.
-        //     Quanitfiers
-        //         Greedy quantifiers. ? matches 0 or 1 times, + matches 1 or more times, * matches 0 or more times, {3} matches exactly 3 times, {1,} matches at least 1 time, {1,3} matches between 1 and 3 times. By default, matching is "greedy" and the match will be as large as possible.
-        //         Lazy quantifiers. Same as the greedy quantifiers followed by ?, for example *? or {1,3}?. With the lazy modifier, the match will be as small as possible.
-        //     Alternation. a|b matches "a" or "b".
-        //     Character classes
-        //         Custom character class. [abc] list of characters, [a-fA-f0-9] range of characters, [^a-z] everything but these characters. Character classes cannot be nested, subtracted, or intersected, and the same special character cannot be repeated in the character class.
-        //         Word characters and breaks. \w, \W, \b, \B, using the Unicode definition of letters [\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Nd}\p{Pc}\p{Lm}].
-        //         Digit characters. \d includes the digits 0-9 and \p{Nd}, \D matches everything except characters matched by \d.
-        //         Space characters. \s includes spacing characters [ \r\n\t\f\x0B\x85\p{Z}], \S which matches everything except characters matched by \s, \r carriage return, \n newline, \t tab, \f form feed.
-        //         Control characters. \cA, where the control character is [A-Za-z].
-        //         Hexadecimal and Unicode character codes. \x20 with two hexadecimal digits, \u2028 with four hexadecimal digits.
-        //         Unicode character class and property. \p{Ll} matches all Unicode lowercase letters, while \P{Ll} matches everything that is not a Unicode lowercase letter.
-        //     Capture groups
-        //         Non capture group. (?:a), group without capturing the result as a named or numbered sub-match.
-        //         Named group and back reference. (?<name>chars) captures a sub-match with the name name, referenced with \k<name>. Cannot be used if MatchOptions.NumberedSubMatches is enabled.
-        //         Numbered group and back referencs. (a|b) captures a sub-match, referenced with \1. MatchOptions.NumberedSubMatches must be enabled.
-        //     Lookahead and lookbehind. (?=a), (?!a), (?<=b), (?<!b).
-        //     Free spacing mode. Whitepsace within the regular expression is ignored and # starts an end of line comment.
-        //     Inline comments. (?# comment here), which is ignored as a comment. See MatchOptions.FreeSpacing for an alternative to formatting and commenting regular expressions.
-        //     Inline mode modifiers. (?im) is the same as using MatchOptions.IgnoreCase and MatchOptions.Multiline. Must be used at the beginning of the regular expression. Supported inline modes are [imsx], corresponding to MatchOptions.IgnoreCase, MatchOptions.Multiline, MatchOptions.DotAll, and MatchOptions.FreeSpacing, respectively.
-        //
-        // Significant features that are not supported:
-        //     Capture groups
-        //         Numbered capture groups are disable by default, use named captures or MatchOptions.NumberedSubMatches
-        //         Self-referncing groups, such as "(a\1)"
-        //         Single quoted named capture groups "(?'name'..." and "\k'name'"
-        //         Balancing capture groups
-        //         Recursion
-        //     Character classes
-        //         \W, \D, \P, \S are not supported inside character classes if the character class is negated (starts with [^...])
-        //         Use of ^, -, [, or ] without an escape inside a character class is not supported
-        //         Character class set operations, such as subraction or intersection
-        //         Empty character classes
-        //     Inline options
-        //         Turning options on or off
-        //         Changing options later in the expression
-        //         Setting options for a subexpression
-        //     Conditionals
-        //     Octal characters
-        //     \x{...} and \u{...} notation
-        //     Subroutines
-        //     Possessive quantifiers
-        //
-        // In addition, the Power Fx compiler uses the .NET regular expression engine to validate the expression and determine capture group names.
-        // So, any regular expression that does not compile with .NET is also automatically disallowed.
-        private bool IsSupportedRegularExpression(TexlNode regExNode, string regexPattern, string regexOptions, out string alteredOptions, IErrorContainer errors)
-        {
-            bool freeSpacing = regexOptions.Contains("x");          // can also be set with inline mode modifier
-            bool numberedCpature = regexOptions.Contains("N");      // can only be set here, no inline mode modifier
-
-            alteredOptions = regexOptions;
-
-            // Scans the regular expression for interesting constructs, ignoring other elements and constructs that are legal, such as letters and numbers.
-            // Order of alternation is important. .NET regular expressions are greedy and will match the first of these that it can.
-            // Many subexpressions here take advantage of this, matching something that is valid, before falling through to check for something that is invalid.
-            // 
-            // For example, consider testing "\\(\a)".  This will match <goodEscape> <openParen> <badEscape> <closeParen>.
-            // <badEscapeAlpha> will report an error and stop further processing.
-            // One might think that the "\a" could have matched <goodEscape>, but it will match <badEscapeAlpha> first because it is first in the RE.
-            // One might think that the "\(" could have matched <goodEscape>, but the double backslashes will be consumed first, which is why it is important
-            // to gather all the matches in a linear scan from the beginning to the end.
-            //
-            // Three regular expressions are utilized:
-            // - escapeRE is a regular expression fragment that is shared by the other two, included at the beginning each of the others
-            // - generalRE is used outside of a character class
-            // - characterClassRE is used inside a character class
-
-            const string escapeRE =
-                @"
-                    # leading backslash, escape sequences
-                    \\k<(?<backRefName>\w+)>                           | # named backreference
-                    (?<badOctal>\\0\d*)                                | # \0 and octal are not accepted, ambiguous and not needed (use \x instead)
-                    \\(?<backRefNumber>\d+)                            | # numeric backreference, must be enabled with MatchOptions.NumberedSubMatches
-                    (?<goodEscape>\\
-                           ([dfnrstw]                              |     # standard regex character classes, missing from .NET are aAeGzZv (no XRegExp support), other common are u{} and o
-                            [\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/]       |     # acceptable escaped characters with Unicode aware ECMAScript
-                            [\#\ ]                                 |     # added for free spacing, always accepted for conssitency even in character classes, escape needs to be removed on Unicode aware ECMAScript
-                            c[a-zA-Z]                              |     # Ctrl character classes
-                            x[0-9a-fA-F]{2}                        |     # hex character, must be exactly 2 hex digits
-                            u[0-9a-fA-F]{4}))                          | # Unicode characters, must be exactly 4 hex digits
-                    \\(?<goodUEscape>[pP])\{(?<UCategory>[\w=:-]+)\}   | # Unicode chaeracter classes, extra characters here for a better error message
-                    (?<goodEscapeOutsideCC>\\[bB])                     | # acceptable outside a character class, includes negative classes until we have character class subtraction, include \P for future MatchOptions.LocaleAware
-                    (?<goodEscapeOutsideAndInsideCCIfPositive>\\[DWS]) |
-                    (?<goodEscapeInsideCCOnly>\\[&\-!#%,;:<=>@`~\^])   | # https://262.ecma-international.org/#prod-ClassSetReservedPunctuator, others covered with goodEscape above
-                    (?<badEscape>\\.)                                  | # all other escaped characters are invalid and reserved for future use
-                ";
-
-            var generalRE = new Regex(
-                escapeRE +
-                @"
-                    # leading (?<, named captures
-                    \(\?<(?<goodNamedCapture>[a-zA-Z][a-zA-Z\d]*)>     | # named capture group, can only be letters and numbers and must start with a letter
-                    (?<goodLookaround>\(\?(=|!|<=|<!))                 | # lookahead and lookbehind
-                    (?<badBalancing>\(\?<\w*-\w*>)                     | # .NET balancing captures are not supported
-                    (?<badNamedCaptureName>\(\?<[^>]*>)                | # bad named capture name, didn't match goodNamedCapture
-                    (?<badSingleQuoteNamedCapture>\(\?'[^']*')         | # single quoted capture names are not supported
-
-                    # leading (?, misc
-                    (?<goodNonCapture>\(\?:)                           | # non-capture group, still need to track to match with closing paren
-                    \A\(\?(?<goodInlineOptions>[imnsx]+)\)             | # inline options
-                    (?<goodInlineComment>\(\?\#)                       | # inline comment
-                    (?<badInlineOptions>\(\?(\w+|\w*-\w+)[\:\)])       | # inline options, including disable of options
-                    (?<badConditional>\(\?\()                          | # .NET conditional alternations are not supported
-
-                    # leading (, used for other special purposes
-                    (?<badParen>\([\?\+\*].?)                          | # everything else unsupported that could start with a (, includes atomic groups, recursion, subroutines, branch reset, and future features
-
-                    # leading ?\*\+, quantifiers
-                    (?<badQuantifiers>[\?\*\+][\+\*])                  | # possessive (ends with +) and useless quantifiers (ends with *)
-                    (?<goodQuantifiers>[\?\*\+]\??)                    | # greedy and lazy quantifiers
-
-                    # leading {, limited quantifiers
-                    (?<badExact>{\d+}[\+\*\?])                         | # exact quantifier can't be used with a modifier
-                    (?<goodExact>{\d+})                                | # standard exact quantifier, no optional lazy
-                    (?<badLimited>{\d+,\d*}[\+|\*])                    | # possessive and useless quantifiers
-                    (?<goodLimited>{\d+,\d*}\??)                       | # standard limited quantifiers, with optional lazy
-                    (?<badCurly>[{}])                                  | # more constrained, blocks {,3} and Java/Rust semantics that does not treat this as a literal
-
-                    # character class
-                    (?<badEmptyCharacterClass>\[\]|\[^\])              | # some implementations support empty character class, with varying semantics; we do not
-                    \[(?<characterClass>(\\\]|\\\[|[^\]\[])+)\]        | # does not accept empty character class
-                    (?<badSquareBrackets>[\[\]])                       | # square brackets that are not escaped and didn't define a character class
-
-                    # open and close regions
-                    (?<openParen>\()                                   |
-                    (?<closeParen>\))                                  |
-                    (?<poundComment>\#)                                | # used in free spacing mode (to detect start of comment), ignored otherwise
-                    (?<newline>[\r\n])                                   # used in free spacing mode (to detect end of comment), ignored otherwise
-                ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
-
-            var characterClassRE = new Regex(
-                escapeRE +
-                @"
-                    (?<badHyphen>^-|-$)                                | # begin/end literal hyphen not allowed within character class, needs to be escaped (ECMAScript v)
-                    (?<badInCharClass>  \/ | \| | \\             |       # https://262.ecma-international.org/#prod-ClassSetSyntaxCharacter
-                        \{ | \} | \( | \) | \[ | \] | \^)              | # adding ^ for Power Fx, making it clear that the carets in [^^] have different meanings
-                    (?<badDoubleInCharClass> << | == | >> | ::   |       # reserved pairs, see https://262.ecma-international.org/#prod-ClassSetReservedDoublePunctuator 
-                        @@ | `` | ~~ | %% | && | ;; | ,, | !!    |       # and https://www.unicode.org/reports/tr18/#Subtraction_and_Intersection
-                        \|\| | \#\# | \$\$ | \*\* | \+\+ | \.\.  |       # includes set subtraction 
-                        \?\? | \^\^ | \-\-)                                                                
-                ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
-
-            int captureNumber = 0;                                  // last numbered capture encountered
-            var captureStack = new Stack<string>();                 // stack of all open capture groups, including null for non capturing groups, for detecting if a named group is closed
-            var captureNames = new List<string>();                  // list of seen named groups, does not included numbered groups or non capture groups
-
-            bool openPoundComment = false;                          // there is an open end-of-line pound comment, only in freeFormMode
-            bool openInlineComment = false;                         // there is an open inline comment
-
-            foreach (Match token in generalRE.Matches(regexPattern))
-            {
-                void RegExError(ErrorResourceKey errKey, Match errToken = null, bool context = false)
-                {
-                    if (errToken == null)
-                    {
-                        errToken = token;
-                    }
-
-                    if (context)
-                    {
-                        const int contextLength = 8;
-                        var tokenEnd = errToken.Index + errToken.Length;
-                        var found = tokenEnd >= contextLength ? "..." + regexPattern.Substring(tokenEnd - contextLength, contextLength) : regexPattern.Substring(0, tokenEnd);
-                        errors.EnsureError(regExNode, errKey, found);
-                    }
-                    else
-                    {
-                        errors.EnsureError(regExNode, errKey, errToken.Value);
-                    }
-                }
-
-                if (token.Groups["newline"].Success)
-                {
-                    openPoundComment = false;
-                }
-                else if (openInlineComment && (token.Groups["closeParen"].Success || token.Groups["goodEscape"].Value == "\\)"))
-                {
-                    openInlineComment = false;
-                }
-                else if (!openPoundComment && !openInlineComment)
-                {
-                    if (token.Groups["goodEscape"].Success || token.Groups["goodQuantifiers"].Success || token.Groups["goodExact"].Success || token.Groups["goodLimited"].Success || token.Groups["goodEscapeOutsideCC"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
-                    {
-                        // all is well, nothing to do
-                    }
-                    else if (token.Groups["characterClass"].Success)
-                    {
-                        bool characterClassNegative = token.Groups["characterClass"].Value[0] == '^';
-                        string ccString = characterClassNegative ? token.Groups["characterClass"].Value.Substring(1) : token.Groups["characterClass"].Value;
-
-                        foreach (Match ccToken in characterClassRE.Matches(ccString))
-                        {
-                            void CCRegExError(ErrorResourceKey errKey)
-                            {
-                                RegExError(errKey, errToken: ccToken);
-                            }
-
-                            if (ccToken.Groups["goodEscape"].Success || ccToken.Groups["goodEscapeInsideCCOnly"].Success)
-                            {
-                                // all good, nothing to do
-                            }
-                            else if (ccToken.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
-                            {
-                                if (characterClassNegative)
-                                {
-                                    CCRegExError(TexlStrings.ErrInvalidRegExBadEscapeInsideNegativeCharacterClass);
-                                    return false;
-                                }
-                            }
-                            else if (ccToken.Groups["goodUEscape"].Success)
-                            {
-                                if (ccToken.Groups["goodUEscape"].Value == "P" && characterClassNegative)
-                                {
-                                    // would be problematic for us to allow this if we wanted to implement MatchOptions.LocaleAware in the future
-                                    CCRegExError(TexlStrings.ErrInvalidRegExBadEscapeInsideNegativeCharacterClass);
-                                    return false;
-                                }
-
-                                if (!UnicodeCategories.Contains(ccToken.Groups["UCategory"].Value))
-                                {
-                                    CCRegExError(TexlStrings.ErrInvalidRegExBadUnicodeCategory);
-                                    return false;
-                                }
-                            }
-                            else if (ccToken.Groups["badEscape"].Success)
-                            {
-                                CCRegExError(TexlStrings.ErrInvalidRegExBadEscape);
-                                return false;
-                            }
-                            else if (ccToken.Groups["goodEscapeOutsideCC"].Success || ccToken.Groups["backRefName"].Success || ccToken.Groups["backRefNumber"].Success)
-                            {
-                                CCRegExError(TexlStrings.ErrInvalidRegExBadEscapeInsideCharacterClass);
-                                return false;
-                            }
-                            else if (ccToken.Groups["badOctal"].Success)
-                            {
-                                CCRegExError(TexlStrings.ErrInvalidRegExBadOctal);
-                                return false;
-                            }
-                            else if (ccToken.Groups["badInCharClass"].Success)
-                            {
-                                CCRegExError(TexlStrings.ErrInvalidRegExUnescapedCharInCharacterClass);
-                                return false;
-                            }
-                            else if (ccToken.Groups["badDoubleInCharClass"].Success)
-                            {
-                                CCRegExError(TexlStrings.ErrInvalidRegExRepeatInCharClass);
-                                return false;
-                            }
-                            else if (ccToken.Groups["badHyphen"].Success)
-                            {
-                                // intentionally RegExError to get the whole character class as this is on the ends
-                                RegExError(TexlStrings.ErrInvalidRegExLiteralHyphenInCharacterClass);
-                                return false;
-                            }
-                            else
-                            {
-                                // This should never be hit. It is here in case one of the names checked doesn't match the RE, in which case running tests would hit this.
-                                throw new NotImplementedException("Unknown character class regular expression match: CC = " + token.Value + ", ccToken = " + ccToken.Value);
-                            }
-                        }
-                    }
-                    else if (token.Groups["goodNamedCapture"].Success)
-                    {
-                        var namedCapture = token.Groups["goodNamedCapture"].Value;
-
-                        if (numberedCpature)
-                        {
-                            RegExError(TexlStrings.ErrInvalidRegExMixingNamedAndNumberedSubMatches);
-                            return false;
-                        }
-
-                        if (captureNames.Contains(namedCapture))
-                        {
-                            RegExError(TexlStrings.ErrInvalidRegExBadNamedCaptureAlreadyExists);
-                            return false;
-                        }
-
-                        captureStack.Push(namedCapture);
-                        captureNames.Add(namedCapture);
-                    }
-                    else if (token.Groups["goodNonCapture"].Success || token.Groups["goodLookaround"].Success)
-                    {
-                        captureStack.Push(null);
-                    }
-                    else if (token.Groups["openParen"].Success)
-                    {
-                        if (numberedCpature)
-                        {
-                            captureNumber++;
-                            captureStack.Push(captureNumber.ToString(CultureInfo.InvariantCulture));
-                        }
-                        else
-                        {
-                            captureStack.Push(null);
-                        }
-                    }
-                    else if (token.Groups["closeParen"].Success)
-                    {
-                        if (captureStack.Count == 0)
-                        {
-                            RegExError(TexlStrings.ErrInvalidRegExUnopenedCaptureGroups, context: true);
-                            return false;
-                        }
-                        else
-                        {
-                            captureStack.Pop();
-                        }
-                    }
-                    else if (token.Groups["backRefName"].Success)
-                    {
-                        var backRefName = token.Groups["backRefName"].Value;
-
-                        if (numberedCpature)
-                        {
-                            RegExError(TexlStrings.ErrInvalidRegExMixingNamedAndNumberedSubMatches);
-                            return false;
-                        }
-
-                        // group isn't defined, or not defined yet
-                        if (!captureNames.Contains(backRefName))
-                        {
-                            RegExError(TexlStrings.ErrInvalidRegExBadBackRefNotDefined);
-                            return false;
-                        }
-
-                        // group is not closed and thus self referencing
-                        if (captureStack.Contains(backRefName))
-                        {
-                            RegExError(TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing);
-                            return false;
-                        }
-                    }
-                    else if (token.Groups["backRefNumber"].Success)
-                    {
-                        var backRef = token.Groups["backRefNumber"].Value;
-                        var backRefNumber = Convert.ToInt32(backRef, CultureInfo.InvariantCulture);
-
-                        if (!numberedCpature)
-                        {
-                            RegExError(TexlStrings.ErrInvalidRegExNumberedSubMatchesDisabled);
-                            return false;
-                        }
-
-                        // back ref number has not yet been defined
-                        if (backRefNumber < 1 || backRefNumber > captureNumber)
-                        {
-                            RegExError(TexlStrings.ErrInvalidRegExBadBackRefNotDefined);
-                            return false;
-                        }
-
-                        // group is not closed and thus self referencing
-                        if (captureStack.Contains(backRef))
-                        {
-                            RegExError(TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing);
-                            return false;
-                        }
-                    }
-                    else if (token.Groups["goodUEscape"].Success)
-                    {
-                        if (!UnicodeCategories.Contains(token.Groups["UCategory"].Value))
-                        {
-                            RegExError(TexlStrings.ErrInvalidRegExBadUnicodeCategory);
-                            return false;
-                        }
-                    }
-                    else if (token.Groups["goodInlineOptions"].Success)
-                    {
-                        var inlineOptions = token.Groups["goodInlineOptions"].Value;
-
-                        if (Regex.IsMatch(inlineOptions, @"(?<char>.).*\k<char>"))
-                        {
-                            RegExError(TexlStrings.ErrInvalidRegExRepeatedInlineOption);
-                            return false;
-                        }
-
-                        if (inlineOptions.Contains("n") && numberedCpature)
-                        {
-                            RegExError(TexlStrings.ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches);
-                            return false;
-                        }
-
-                        if (inlineOptions.Contains("x"))
-                        {
-                            freeSpacing = true;
-                        }
-                    }
-                    else if (token.Groups["goodInlineComment"].Success)
-                    {
-                        openInlineComment = true;
-                    }
-                    else if (token.Groups["poundComment"].Success)
-                    {
-                        openPoundComment = freeSpacing;
-                    }
-                    else if (token.Groups["badNamedCaptureName"].Success)
-                    {
-                        RegExError(TexlStrings.ErrInvalidRegExBadNamedCaptureName);
-                        return false;
-                    }
-                    else if (token.Groups["badOctal"].Success)
-                    {
-                        RegExError(TexlStrings.ErrInvalidRegExBadOctal);
-                        return false;
-                    }
-                    else if (token.Groups["badBalancing"].Success)
-                    {
-                        RegExError(TexlStrings.ErrInvalidRegExBadBalancing);
-                        return false;
-                    }
-                    else if (token.Groups["badInlineOptions"].Success)
-                    {
-                        RegExError(token.Groups["badInlineOptions"].Index > 0 ? TexlStrings.ErrInvalidRegExInlineOptionNotAtStart : TexlStrings.ErrInvalidRegExBadInlineOptions);
-                        return false;
-                    }
-                    else if (token.Groups["badSingleQuoteNamedCapture"].Success)
-                    {
-                        RegExError(TexlStrings.ErrInvalidRegExBadSingleQuoteNamedCapture);
-                        return false;
-                    }
-                    else if (token.Groups["badConditional"].Success)
-                    {
-                        RegExError(TexlStrings.ErrInvalidRegExBadConditional);
-                        return false;
-                    }
-                    else if (token.Groups["badEscape"].Success)
-                    {
-                        RegExError(TexlStrings.ErrInvalidRegExBadEscape);
-                        return false;
-                    }
-                    else if (token.Groups["goodEscapeInsideCCOnly"].Success)
-                    {
-                        RegExError(TexlStrings.ErrInvalidRegExBadEscapeOutsideCharacterClass);
-                        return false;
-                    }
-                    else if (token.Groups["badQuantifiers"].Success || token.Groups["badLimited"].Success)
-                    {
-                        RegExError(TexlStrings.ErrInvalidRegExBadQuantifier);
-                        return false;
-                    }
-                    else if (token.Groups["badExact"].Success)
-                    {
-                        RegExError(TexlStrings.ErrInvalidRegExBadExactQuantifier);
-                        return false;
-                    }
-                    else if (token.Groups["badCurly"].Success)
-                    {
-                        RegExError(TexlStrings.ErrInvalidRegExBadCurly);
-                        return false;
-                    }
-                    else if (token.Groups["badParen"].Success)
-                    {
-                        RegExError(TexlStrings.ErrInvalidRegExBadParen, context: true);
-                        return false;
-                    }
-                    else if (token.Groups["badSquareBrackets"].Success)
-                    {
-                        RegExError(TexlStrings.ErrInvalidRegExBadSquare, context: true);
-                        return false;
-                    }
-                    else if (token.Groups["badEmptyCharacterClass"].Success)
-                    {
-                        RegExError(TexlStrings.ErrInvalidRegExEmptyCharacterClass);
-                        return false;
-                    }
-                    else
-                    {
-                        // This should never be hit. It is here in case one of the Groups names checked doesn't match the RE, in which case running tests would hit this.
-                        throw new NotImplementedException("Unknown general regular expression match: " + token.Value);
-                    }
-                }
-            }
-
-            if (openInlineComment)
-            {
-                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExUnclosedInlineComment);
-                return false;
-            }
-
-            if (captureStack.Count > 0)
-            {
-                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExUnclosedCaptureGroups);
-                return false;
-            }
-
-            // may be modifed by inline options; we only care about x and N in the next stage
-            alteredOptions = (freeSpacing ? "x" : string.Empty) + (numberedCpature ? "N" : string.Empty);
-
-            return true;
-        }
-
         // Creates a typed result: [Match:s, Captures:*[Value:s], NamedCaptures:r[<namedCaptures>:s]]
         private bool TryCreateReturnType(TexlNode regExNode, string regexPattern, string alteredOptions, IErrorContainer errors, ref DType returnType)
         {
@@ -790,6 +268,947 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (hidesStartMatch)
             {
                 errors.EnsureError(DocumentErrorSeverity.Suggestion, regExNode, TexlStrings.InfoRegExCaptureNameHidesPredefinedStartMatchField, ColumnName_StartMatch.Value);
+            }
+        }
+
+        // Power Fx regular expressions are limited to features that can be transpiled to native .NET (C# Interpreter), ECMAScript (Canvas), or PCRE2 (Excel).
+        // We want the same results everywhere for Power Fx, even if the underlying implementation is different. Even with these limits in place there are some minor semantic differences but we get as close as we can.
+        // These tests can be run through all three engines and the results compared with by setting ExpressionEvaluationTests.RegExCompareEnabled, a PCRE2 DLL and NodeJS must be installed on the system.
+        //
+        // In short, we use the insersection of canonical .NET regular expressions and ECMAScript 2024's "v" flag for escaping rules. 
+        // Someday when "v" is more widely avaialble, we can support more of its features such as set subtraction.
+        // We chose to use canonical .NET instead of RegexOptions.ECMAScript because we wanted the unicode definitions for words. See https://learn.microsoft.com/dotnet/standard/base-types/regular-expression-options#ecmascript-matching-behavior
+        //
+        // In addition, Power Fx regular expressions are opinionated and try to eliminate some of the ambiguity in the common regular expression language:
+        //     Numbered capture groups are disabled by default, and cannot be mixed with named capture groups.
+        //     Octal character codes are not supported, use \x or \u instead.
+        //     Literal ^, -, [, ], {, and } must be escaped when used in a character class.
+        //     Escaping is only supported for special characters and unknown alphanumeric escape sequences are not supported.
+        //     Unicode characters are used throughout.
+        //     Newlines support Windows friendly \r\n as well as \r and \n.
+        //
+        // There are significant differences between how possibly empty groups are handled between implementations, therefore in certain situations they are blocked.
+        // See Match_CaptureQuant.txt for test cases, which is important to run through both .net and node to determine coverage of the block (See #if MATCHCOMPARE).
+        // 
+        // See docs/regular-expressions.md for more details on the language supported.
+        //
+        // In addition, the Power Fx compiler uses the .NET regular expression engine to validate the expression and determine capture group names.
+        // So, any regular expression that does not compile with .NET is also automatically disallowed.
+
+        // Configurable constants
+        public const int MaxNamedCaptureNameLength = 62;            // maximum length of a capture name, in UTF-16 code units. PCRE2 has a 128 limit, cut in half for possible UFT-8 usage.
+        public const int MaxLookBehindPossibleCharacters = 250;     // maximum possible number of characters in a look behind. PCRE2 has a 255 limit.
+        public const int MaxGroupStackDepth = 32;                   // maximum number of nested grouping levels, avoids performance issues with a complex group tree.
+        public const int ErrorContextLength = 12;                   // number of characters to include in error message context excerpt from formula.
+
+        private bool IsSupportedRegularExpression(TexlNode regExNode, string regexPattern, string regexOptions, out string alteredOptions, IErrorContainer errors)
+        {
+            bool freeSpacing = regexOptions.Contains("x");          // can also be set with inline mode modifier
+            bool numberedCpature = regexOptions.Contains("N");      // can only be set here, no inline mode modifier
+
+            alteredOptions = regexOptions;
+
+            // Scans the regular expression for interesting constructs, ignoring other elements and constructs that are legal, such as letters and numbers.
+            // Order of alternation is important. .NET regular expressions are greedy and will match the first of these that it can.
+            // Many subexpressions here take advantage of this, matching something that is valid, before falling through to check for something that is invalid.
+            // 
+            // For example, consider testing "\\(\a)".  This will match <goodEscape> <openParen> <badEscape> <closeParen>.
+            // <badEscapeAlpha> will report an error and stop further processing.
+            // One might think that the "\a" could have matched <goodEscape>, but it will match <badEscapeAlpha> first because it is first in the RE.
+            // One might think that the "\(" could have matched <goodEscape>, but the double backslashes will be consumed first, which is why it is important
+            // to gather all the matches in a linear scan from the beginning to the end.
+            //
+            // Three regular expressions are utilized:
+            // - escapeRE is a regular expression fragment that is shared by the other two, included at the beginning each of the others
+            // - generalRE is used outside of a character class
+            // - characterClassRE is used inside a character class
+
+            const string escapeRE =
+                @"
+                    # leading backslash, escape sequences
+                    (?<badOctal>\\0\d*)                                | # \0 and octal are not accepted, ambiguous and not needed (use \x instead)
+                    \\k<(?<backRefName>\w+)>                           | # named backreference
+                    \\(?<backRefNumber>[1-9]\d*)                       | # numeric backreference, must be enabled with MatchOptions.NumberedSubMatches
+                    (?<goodEscape>\\
+                           ([dfnrstw]                              |     # standard regex character classes, missing from .NET are aAeGzZv (no XRegExp support), other common are u{} and o
+                            [\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/]       |     # acceptable escaped characters with Unicode aware ECMAScript
+                            [\#\ ]                                 |     # added for free spacing, always accepted for conssitency even in character classes, escape needs to be removed on Unicode aware ECMAScript
+                            x[0-9a-fA-F]{2}                        |     # hex character, must be exactly 2 hex digits
+                            u[0-9a-fA-F]{4}))                          | # Unicode characters, must be exactly 4 hex digits
+                    \\(?<goodUEscape>[pP])\{(?<UCategory>[\w=:-]+)\}   | # Unicode chaeracter classes, extra characters here for a better error message
+                    (?<goodEscapeOutsideCC>\\[bB])                     | # acceptable outside a character class, includes negative classes until we have character class subtraction, include \P for future MatchOptions.LocaleAware
+                    (?<goodEscapeOutsideAndInsideCCIfPositive>\\[DWS]) |
+                    (?<goodEscapeInsideCCOnly>\\[&\-!#%,;:<=>@`~\^])   | # https://262.ecma-international.org/#prod-ClassSetReservedPunctuator, others covered with goodEscape above
+                    (?<badEscape>\\.)                                  | # all other escaped characters are invalid and reserved for future use
+                ";
+
+            var generalRE = new Regex(
+                escapeRE +
+                @"
+                    # leading (?<, named captures
+                    \(\?<(?<goodNamedCapture>[_\p{L}][_\p{L}\p{Nd}]*)> | # named capture group, name characters are the lowest common denonminator with Unicode PCRE2
+                                                                         # .NET uses \w with \u200c and \u200d allowing a number in the first character (seems like it could be confused with numbered captures),
+                                                                         # while JavaScript uses identifer characters, including $, and does not allow a number for the first character
+                    (?<goodLookAhead>\(\?(=|!))                        |
+                    (?<goodLookBehind>\(\?(<=|<!))                     | # Look behind has many limitations
+                    (?<badBalancing>\(\?<\w*-\w*>)                     | # .NET balancing captures are not supported
+                    (?<badNamedCaptureName>\(\?<[^>]*>)                | # bad named capture name, didn't match goodNamedCapture
+                    (?<badSingleQuoteNamedCapture>\(\?'[^']*')         | # single quoted capture names are not supported
+
+                    # leading (?, misc
+                    (?<goodNonCapture>\(\?:)                           | # non-capture group, still need to track to match with closing paren
+                    \A\(\?(?<goodInlineOptions>[imnsx]+)\)             | # inline options
+                    (?<goodInlineComment>\(\?\#)                       | # inline comment
+                    (?<badInlineOptions>\(\?(\w+|\w*-\w+)[\:\)])       | # inline options, including disable of options
+                    (?<badConditional>\(\?\()                          | # .NET conditional alternations are not supported
+
+                    # leading (, used for other special purposes
+                    (?<badParen>\([\?\+\*].?)                          | # everything else unsupported that could start with a (, includes atomic groups, recursion, subroutines, branch reset, and future features
+
+                    # leading ?\*\+, quantifiers
+                    (?<badQuantifiers>[\*\+\?][\+\*])                  | # possessive (ends with +) and useless quantifiers (ends with *)
+                    (?<goodOneOrMore>[\+]\??)                          | # greedy and lazy quantifiers
+                    (?<goodZeroOrMore>[\*]\??)                         |
+                    (?<goodZeroOrOne>[\?]\??)                          |
+
+                    # leading {, exact and limited quantifiers
+                    (?<badExact>{\d+}[\+\*\?])                         | # exact quantifier can't be used with a modifier
+                    {(?<goodExact>\d+)}                                | # standard exact quantifier, no optional lazy
+                    (?<badLimited>{\d+,\d+}[\+|\*])                    | # possessive and useless quantifiers
+                    {(?<goodLimitedL>\d+),(?<goodLimitedH>\d+)}\??     | # standard limited quantifiers, with optional lazy
+                    (?<badUnlimited>{\d+,}[\+|\*])                     |
+                    {(?<goodUnlimited>\d+),}\??                        |
+                    (?<badCurly>[{}])                                  | # more constrained, blocks {,3} and Java/Rust semantics that does not treat this as a literal
+
+                    # character class
+                    (?<badEmptyCharacterClass>\[\]|\[^\])              | # some implementations support empty character class, with varying semantics; we do not
+                    \[(?<characterClass>(\\\]|\\\[|[^\]\[])+)\]        | # does not accept empty character class
+                    (?<badSquareBrackets>[\[\]])                       | # square brackets that are not escaped and didn't define a character class
+
+                    # open and close regions
+                    (?<openParen>\()                                   |
+                    (?<closeParen>\))                                  |                                      
+                    (?<alternation>\|)                                 |
+                    (?<anchors>[\^\$])                                 |
+                    (?<poundComment>\#)                                | # used in free spacing mode (to detect start of comment), ignored otherwise
+                    (?<newline>[\r\n])                                 | # used in free spacing mode (to detect end of comment), ignored otherwise
+                    (?<else>.)
+                ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
+
+            var characterClassRE = new Regex(
+                escapeRE +
+                @"
+                    (?<badHyphen>^-|-$)                                | # begin/end literal hyphen not allowed within character class, needs to be escaped (ECMAScript v)
+                    (?<badInCharClass>  \/ | \| | \\             |       # https://262.ecma-international.org/#prod-ClassSetSyntaxCharacter
+                        \{ | \} | \( | \) | \[ | \] | \^)              | # adding ^ for Power Fx, making it clear that the carets in [^^] have different meanings
+                    (?<badDoubleInCharClass> << | == | >> | ::   |       # reserved pairs, see https://262.ecma-international.org/#prod-ClassSetReservedDoublePunctuator 
+                        @@ | `` | ~~ | %% | && | ;; | ,, | !!    |       # and https://www.unicode.org/reports/tr18/#Subtraction_and_Intersection
+                        \|\| | \#\# | \$\$ | \*\* | \+\+ | \.\.  |       # includes set subtraction 
+                        \?\? | \^\^ | \-\-)                                                                
+                ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
+
+            int captureNumber = 0;                                  // last numbered capture encountered
+            var groupTracker = new GroupTracker();
+
+            bool openPoundComment = false;                          // there is an open end-of-line pound comment, only in freeFormMode
+            bool openInlineComment = false;                         // there is an open inline comment
+
+            foreach (Match token in generalRE.Matches(regexPattern))
+            {
+                void RegExError(ErrorResourceKey errKey, Match errToken = null, bool startContext = false, bool endContext = false, string postContext = null)
+                {
+                    if (errToken == null)
+                    {
+                        errToken = token;
+                    }
+
+                    if (endContext)
+                    {
+                        var tokenEnd = errToken.Index + errToken.Length;
+                        var found = tokenEnd > ErrorContextLength ? "..." + regexPattern.Substring(tokenEnd - ErrorContextLength, ErrorContextLength) : regexPattern.Substring(0, tokenEnd);
+                        errors.EnsureError(regExNode, errKey, found + postContext);
+                    }
+                    else if (startContext)
+                    {
+                        var found = errToken.Index + ErrorContextLength >= regexPattern.Length ? regexPattern.Substring(errToken.Index) : regexPattern.Substring(errToken.Index, ErrorContextLength) + "...";
+                        errors.EnsureError(regExNode, errKey, found + postContext);
+                    }
+                    else
+                    {
+                        errors.EnsureError(regExNode, errKey, errToken.Value + postContext);
+                    }
+                }
+
+                if (token.Groups["newline"].Success)
+                {
+                    openPoundComment = false;
+                }
+                else if (openInlineComment && (token.Groups["closeParen"].Success || token.Groups["goodEscape"].Value == "\\)"))
+                {
+                    openInlineComment = false;
+                }
+                else if (!openPoundComment && !openInlineComment)
+                {
+                    if (token.Groups["anchors"].Success)
+                    {
+                        // nothing to do
+                    }
+                    else if (token.Groups["goodZeroOrMore"].Success)
+                    {
+                        if (!groupTracker.SeenQuantifier(0, -1, out var error))
+                        {
+                            RegExError((ErrorResourceKey)error, endContext: true);
+                            return false;
+                        }
+                    }
+                    else if (token.Groups["goodZeroOrOne"].Success)
+                    {
+                        if (!groupTracker.SeenQuantifier(0, 1, out var error))
+                        {
+                            RegExError((ErrorResourceKey)error, endContext: true);
+                            return false;
+                        }
+                    }
+                    else if (token.Groups["goodExact"].Success)
+                    {
+                        var exact = Convert.ToInt32(token.Groups["goodExact"].Value, CultureInfo.InvariantCulture);
+
+                        if (!groupTracker.SeenQuantifier(exact, exact, out var error))
+                        {
+                            RegExError((ErrorResourceKey)error, endContext: true);
+                            return false;
+                        }
+                    }
+                    else if (token.Groups["goodLimitedL"].Success)
+                    {
+                        var low = Convert.ToInt32(token.Groups["goodLimitedL"].Value, CultureInfo.InvariantCulture);
+                        var high = Convert.ToInt32(token.Groups["goodLimitedH"].Value, CultureInfo.InvariantCulture);
+
+                        if (!groupTracker.SeenQuantifier(low, high, out var error))
+                        {
+                            RegExError((ErrorResourceKey)error, endContext: true);
+                            return false;
+                        }
+                    }
+                    else if (token.Groups["goodOneOrMore"].Success)
+                    {
+                        if (!groupTracker.SeenQuantifier(1, -1, out var error))
+                        {
+                            RegExError((ErrorResourceKey)error, endContext: true);
+                            return false;
+                        }
+                    }
+                    else if (token.Groups["goodUnlimited"].Success)
+                    {
+                        var low = Convert.ToInt32(token.Groups["goodUnlimited"].Value, CultureInfo.InvariantCulture);
+
+                        if (!groupTracker.SeenQuantifier(low, -1, out var error))
+                        {
+                            RegExError((ErrorResourceKey)error, endContext: true);
+                            return false;
+                        }
+                    }
+                    else if (token.Groups["else"].Success || token.Groups["goodEscape"].Success || token.Groups["goodEscapeOutsideCC"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
+                    {
+                        groupTracker.SeenNonGroup();
+                    }
+                    else if (token.Groups["characterClass"].Success)
+                    {
+                        bool characterClassNegative = token.Groups["characterClass"].Value[0] == '^';
+                        string ccString = characterClassNegative ? token.Groups["characterClass"].Value.Substring(1) : token.Groups["characterClass"].Value;
+
+                        foreach (Match ccToken in characterClassRE.Matches(ccString))
+                        {
+                            void CCRegExError(ErrorResourceKey errKey)
+                            {
+                                RegExError(errKey, errToken: ccToken);
+                            }
+
+                            if (ccToken.Groups["goodEscape"].Success || ccToken.Groups["goodEscapeInsideCCOnly"].Success)
+                            {
+                                // all good, nothing to do
+                            }
+                            else if (ccToken.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
+                            {
+                                if (characterClassNegative)
+                                {
+                                    CCRegExError(TexlStrings.ErrInvalidRegExBadEscapeInsideNegativeCharacterClass);
+                                    return false;
+                                }
+                            }
+                            else if (ccToken.Groups["goodUEscape"].Success)
+                            {
+                                if (ccToken.Groups["goodUEscape"].Value == "P" && characterClassNegative)
+                                {
+                                    // would be problematic for us to allow this if we wanted to implement MatchOptions.LocaleAware in the future
+                                    CCRegExError(TexlStrings.ErrInvalidRegExBadEscapeInsideNegativeCharacterClass);
+                                    return false;
+                                }
+
+                                if (!UnicodeCategories.Contains(ccToken.Groups["UCategory"].Value))
+                                {
+                                    CCRegExError(TexlStrings.ErrInvalidRegExBadUnicodeCategory);
+                                    return false;
+                                }
+                            }
+                            else if (ccToken.Groups["badEscape"].Success)
+                            {
+                                CCRegExError(TexlStrings.ErrInvalidRegExBadEscape);
+                                return false;
+                            }
+                            else if (ccToken.Groups["goodEscapeOutsideCC"].Success || ccToken.Groups["backRefName"].Success || ccToken.Groups["backRefNumber"].Success)
+                            {
+                                CCRegExError(TexlStrings.ErrInvalidRegExBadEscapeInsideCharacterClass);
+                                return false;
+                            }
+                            else if (ccToken.Groups["badOctal"].Success)
+                            {
+                                CCRegExError(TexlStrings.ErrInvalidRegExBadOctal);
+                                return false;
+                            }
+                            else if (ccToken.Groups["badInCharClass"].Success)
+                            {
+                                CCRegExError(TexlStrings.ErrInvalidRegExUnescapedCharInCharacterClass);
+                                return false;
+                            }
+                            else if (ccToken.Groups["badDoubleInCharClass"].Success)
+                            {
+                                CCRegExError(TexlStrings.ErrInvalidRegExRepeatInCharClass);
+                                return false;
+                            }
+                            else if (ccToken.Groups["badHyphen"].Success)
+                            {
+                                // intentionally RegExError to get the whole character class as this is on the ends
+                                RegExError(TexlStrings.ErrInvalidRegExLiteralHyphenInCharacterClass);
+                                return false;
+                            }
+                            else
+                            {
+                                // This should never be hit. It is here in case one of the names checked doesn't match the RE, in which case running tests would hit this.
+                                throw new NotImplementedException("Unknown character class regular expression match: CC = " + token.Value + ", ccToken = " + ccToken.Value);
+                            }
+                        }
+
+                        groupTracker.SeenNonGroup();
+                    }
+                    else if (token.Groups["goodNamedCapture"].Success)
+                    {
+                        var namedCapture = token.Groups["goodNamedCapture"].Value;
+
+                        if (numberedCpature)
+                        {
+                            RegExError(TexlStrings.ErrInvalidRegExMixingNamedAndNumberedSubMatches);
+                            return false;
+                        }
+
+                        if (namedCapture.Length > MaxNamedCaptureNameLength)
+                        {
+                            RegExError(TexlStrings.ErrInvalidRegExNamedCaptureNameTooLong);
+                            return false;
+                        }
+
+                        if (!groupTracker.SeenOpen(out var error, name: namedCapture))
+                        {
+                            RegExError((ErrorResourceKey)error, startContext: true);
+                            return false;
+                        }
+                    }
+                    else if (token.Groups["goodNonCapture"].Success)
+                    {
+                        if (!groupTracker.SeenOpen(out var error))
+                        {
+                            RegExError((ErrorResourceKey)error, startContext: true);
+                            return false;
+                        }
+                    }
+                    else if (token.Groups["goodLookBehind"].Success)
+                    {
+                        if (!groupTracker.SeenOpen(out var error, isLookBehind: true))
+                        {
+                            RegExError((ErrorResourceKey)error, startContext: true);
+                            return false;
+                        }
+                    }
+                    else if (token.Groups["goodLookAhead"].Success)
+                    {
+                        if (!groupTracker.SeenOpen(out var error, isLookAhead: true))
+                        {
+                            RegExError((ErrorResourceKey)error, startContext: true);
+                            return false;
+                        }
+                    }
+                    else if (token.Groups["alternation"].Success)
+                    {
+                        groupTracker.SeenAlternation();
+                    }
+                    else if (token.Groups["openParen"].Success)
+                    {
+                        if (numberedCpature)
+                        {
+                            captureNumber++;
+                            if (!groupTracker.SeenOpen(out var error, name: captureNumber.ToString(CultureInfo.InvariantCulture)))
+                            {
+                                RegExError((ErrorResourceKey)error, startContext: true);
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            if (!groupTracker.SeenOpen(out var error))
+                            {
+                                RegExError((ErrorResourceKey)error, startContext: true);
+                                return false;
+                            }
+                        }
+                    }
+                    else if (token.Groups["closeParen"].Success)
+                    {
+                        if (!groupTracker.SeenClose(out var error))
+                        {
+                            RegExError((ErrorResourceKey)error, endContext: true);
+                            return false;
+                        }
+                    }
+                    else if (token.Groups["backRefName"].Success || token.Groups["backRefNumber"].Success)
+                    {
+                        string backRefName;
+
+                        if (token.Groups["backRefName"].Success)
+                        {
+                            backRefName = token.Groups["backRefName"].Value;
+
+                            if (numberedCpature)
+                            {
+                                RegExError(TexlStrings.ErrInvalidRegExMixingNamedAndNumberedSubMatches);
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            backRefName = token.Groups["backRefNumber"].Value;
+
+                            if (!numberedCpature)
+                            {
+                                RegExError(TexlStrings.ErrInvalidRegExNumberedSubMatchesDisabled);
+                                return false;
+                            }
+                        }
+
+                        if (!groupTracker.SeenBackRef(backRefName, out var error))
+                        {
+                            RegExError((ErrorResourceKey)error);
+                            return false;
+                        }
+                    }
+                    else if (token.Groups["goodUEscape"].Success)
+                    {
+                        if (!UnicodeCategories.Contains(token.Groups["UCategory"].Value))
+                        {
+                            RegExError(TexlStrings.ErrInvalidRegExBadUnicodeCategory);
+                            return false;
+                        }
+                    }
+                    else if (token.Groups["goodInlineOptions"].Success)
+                    {
+                        var inlineOptions = token.Groups["goodInlineOptions"].Value;
+
+                        if (Regex.IsMatch(inlineOptions, @"(?<char>.).*\k<char>"))
+                        {
+                            RegExError(TexlStrings.ErrInvalidRegExRepeatedInlineOption);
+                            return false;
+                        }
+
+                        if (inlineOptions.Contains("n") && numberedCpature)
+                        {
+                            RegExError(TexlStrings.ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches);
+                            return false;
+                        }
+
+                        if (inlineOptions.Contains("x"))
+                        {
+                            freeSpacing = true;
+                        }
+                    }
+                    else if (token.Groups["goodInlineComment"].Success)
+                    {
+                        openInlineComment = true;
+                    }
+                    else if (token.Groups["poundComment"].Success)
+                    {
+                        openPoundComment = freeSpacing;
+                    }
+                    else if (token.Groups["badNamedCaptureName"].Success)
+                    {
+                        RegExError(TexlStrings.ErrInvalidRegExBadNamedCaptureName);
+                        return false;
+                    }
+                    else if (token.Groups["badOctal"].Success)
+                    {
+                        RegExError(TexlStrings.ErrInvalidRegExBadOctal);
+                        return false;
+                    }
+                    else if (token.Groups["badBalancing"].Success)
+                    {
+                        RegExError(TexlStrings.ErrInvalidRegExBadBalancing);
+                        return false;
+                    }
+                    else if (token.Groups["badInlineOptions"].Success)
+                    {
+                        RegExError(token.Groups["badInlineOptions"].Index > 0 ? TexlStrings.ErrInvalidRegExInlineOptionNotAtStart : TexlStrings.ErrInvalidRegExBadInlineOptions);
+                        return false;
+                    }
+                    else if (token.Groups["badSingleQuoteNamedCapture"].Success)
+                    {
+                        RegExError(TexlStrings.ErrInvalidRegExBadSingleQuoteNamedCapture);
+                        return false;
+                    }
+                    else if (token.Groups["badConditional"].Success)
+                    {
+                        RegExError(TexlStrings.ErrInvalidRegExBadConditional);
+                        return false;
+                    }
+                    else if (token.Groups["badEscape"].Success)
+                    {
+                        RegExError(TexlStrings.ErrInvalidRegExBadEscape);
+                        return false;
+                    }
+                    else if (token.Groups["goodEscapeInsideCCOnly"].Success)
+                    {
+                        RegExError(TexlStrings.ErrInvalidRegExBadEscapeOutsideCharacterClass);
+                        return false;
+                    }
+                    else if (token.Groups["badQuantifiers"].Success || token.Groups["badLimited"].Success || token.Groups["badUnlimited"].Success)
+                    {
+                        RegExError(TexlStrings.ErrInvalidRegExBadQuantifier);
+                        return false;
+                    }
+                    else if (token.Groups["badExact"].Success)
+                    {
+                        RegExError(TexlStrings.ErrInvalidRegExBadExactQuantifier);
+                        return false;
+                    }
+                    else if (token.Groups["badCurly"].Success)
+                    {
+                        RegExError(TexlStrings.ErrInvalidRegExBadCurly);
+                        return false;
+                    }
+                    else if (token.Groups["badParen"].Success)
+                    {
+                        RegExError(TexlStrings.ErrInvalidRegExBadParen);
+                        return false;
+                    }
+                    else if (token.Groups["badSquareBrackets"].Success)
+                    {
+                        RegExError(TexlStrings.ErrInvalidRegExBadSquare, endContext: true);
+                        return false;
+                    }
+                    else if (token.Groups["badEmptyCharacterClass"].Success)
+                    {
+                        RegExError(TexlStrings.ErrInvalidRegExEmptyCharacterClass);
+                        return false;
+                    }
+                    else
+                    {
+                        // This should never be hit. It is here in case one of the Groups names checked doesn't match the RE, in which case running tests would hit this.
+                        throw new NotImplementedException("Unknown general regular expression match: " + token.Value);
+                    }
+                }
+            }
+
+            if (!groupTracker.Complete(out var completeError, out var completeErrorArg))
+            {
+                errors.EnsureError(regExNode, (ErrorResourceKey)completeError, completeErrorArg);
+                return false;
+            }
+
+            if (openInlineComment)
+            {
+                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExUnclosedInlineComment);
+                return false;
+            }
+
+            // may be modifed by inline options; we only care about x and N in the next stage
+            alteredOptions = (freeSpacing ? "x" : string.Empty) + (numberedCpature ? "N" : string.Empty);
+
+            return true;
+        }
+
+        private static readonly IReadOnlyCollection<string> UnicodeCategories = new HashSet<string>()
+        {
+            "L", "Lu", "Ll", "Lt", "Lm", "Lo",
+            "M", "Mn", "Mc", "Me",
+            "N", "Nd", "Nl", "No",
+            "P", "Pc", "Pd", "Ps", "Pe", "Pi", "Pf", "Po",
+            "S", "Sm", "Sc", "Sk", "So",
+            "Z", "Zs", "Zl", "Zp",
+            "Cc", "Cf", 
+
+            // "C", "Cs", "Co", "Cn", are left out for now until we have a good scenario, as they differ between implementations
+        };
+
+        // Tracks the groups in the regular expression.  Groups includes named and numbered capture groups, non-capture groups, and look arounds.
+        // Groups that have been closed, even though they aren't still on the stack, may still have references through GroupInfo.Parent, captures, and backRefs lists.
+        // The depth is limited so that the tree walk in GroupInfo.IsPossibleZeroCapture() is limited.
+        private class GroupTracker
+        {
+            private readonly Stack<GroupInfo> _groupStack = new Stack<GroupInfo>();         // current stack of open groups
+            private GroupInfo _quantTarget = new GroupInfo();                               // pointer to the literal or group seen, to apply quantifiers to
+            private GroupInfo _inLookBehind;                                                // are we in a look behind?  they have special rules
+            private readonly Dictionary<string, GroupInfo> _captureNames = new Dictionary<string, GroupInfo>();       // named and numbered group lookup
+            private readonly List<string> _backRefs = new List<string>();                   // backrefs seen, processed in Complete to ensure they are non empty
+
+            public GroupTracker()
+            {
+                // We add a base level for stuff at the root of the regular expression, for example "a|b|c".
+                // This level is analyzed for backreferences, where "(a)|\1" should be an error
+                SeenOpen(out _);
+            }
+
+            public bool SeenOpen(out ErrorResourceKey? error, string name = null, bool isLookBehind = false, bool isLookAhead = false)
+            {
+                if (_groupStack.Count >= MaxGroupStackDepth)
+                {
+                    error = TexlStrings.ErrInvalidRegExGroupTrackerOverflow;
+                    return false;
+                }
+
+                if (_inLookBehind != null && isLookBehind)
+                {
+                    error = TexlStrings.ErrInvalidRegExNestedLookAround;
+                    return false;
+                }
+
+                var groupInfo = new GroupInfo { IsNonCapture = name == null, IsGroup = true, IsLookAround = isLookBehind || isLookAhead };
+
+                if (name != null)
+                {
+                    if (_inLookBehind != null)
+                    {
+                        error = TexlStrings.ErrInvalidRegExCaptureInLookAround;
+                        return false;
+                    }
+
+                    if (_captureNames.ContainsKey(name))
+                    {
+                        error = TexlStrings.ErrInvalidRegExBadNamedCaptureAlreadyExists;
+                        return false;
+                    }
+
+                    _captureNames.Add(name, groupInfo);
+                }
+
+                if (isLookBehind)
+                {
+                    _inLookBehind = groupInfo;
+                }
+
+                if (_groupStack.Count != 0)
+                {
+                    groupInfo.Parent = _groupStack.Peek();
+                }
+
+                _groupStack.Push(groupInfo);
+
+                error = null;
+                return true;
+            }
+
+            public void SeenAlternation()
+            {
+                _groupStack.Peek().SeenAlternation();
+            }
+
+            public void SeenNonGroup(int min = 1, int max = 1)
+            {
+                _quantTarget = _groupStack.Peek().SeenNonGroup(min, max);
+            }
+
+            public bool SeenQuantifier(int min, int max, out ErrorResourceKey? error)
+            {
+                // look behinds cannot contain an unlimited qunatifier
+                if (_inLookBehind != null && max == -1)
+                {
+                    error = TexlStrings.ErrInvalidRegExUnlimitedQuantifierInLookAround;
+                    return false;
+                }
+
+                return _groupStack.Peek().SeenQuantifier(_quantTarget, min, max, out error);
+            }
+
+            public bool SeenClose(out ErrorResourceKey? error)
+            {
+                if (_groupStack.Count <= 1)
+                {
+                    error = TexlStrings.ErrInvalidRegExUnopenedCaptureGroups;
+                    return false;
+                }
+
+                _quantTarget = _groupStack.Pop();
+                
+                // Look behinds are limited in number of characters, PCRE2 doesn't support more than 255.
+                // This is why we track the MaxSize on all groups and literal characters.
+                // Can't just check the look around group, could be on a containing group, for example "((?=a))*".
+                if (_inLookBehind == _quantTarget)
+                {
+                    if (_quantTarget.MaxSize > MaxLookBehindPossibleCharacters)
+                    {
+                        error = TexlStrings.ErrInvalidRegExLookbehindTooManyChars;
+                        return false;
+                    }
+
+                    _inLookBehind = null;
+                }
+
+                // Look behinds can never have quantification, JavaScript doesn't support this.
+                if (_quantTarget.IsLookAround)
+                {
+                    _quantTarget.ErrorOnQuant_LookBehind = true;
+                }
+
+                return _quantTarget.SeenClose(out error);
+            }
+
+            public bool SeenBackRef(string name, out ErrorResourceKey? error)
+            {
+                if (!_captureNames.ContainsKey(name))
+                {
+                    error = TexlStrings.ErrInvalidRegExBadBackRefNotDefined;
+                    return false;
+                }
+
+                // group is not closed and thus self referencing
+                if (!_captureNames[name].IsClosed)
+                {
+                    error = TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing;
+                    return false;
+                }
+
+                if (_inLookBehind != null && _captureNames[name].MaxSize == -1)
+                {
+                    error = TexlStrings.ErrInvalidRegExUnlimitedQuantifierInLookAround;
+                    return false;
+                }
+
+                // Backref maxsize is based on the size inside the capture, not any quantifiers on the capture
+                SeenNonGroup(_captureNames[name].MinSize, _captureNames[name].MaxSize);
+
+                _backRefs.Add(name);
+
+                error = null;
+                return true;
+            }
+
+            public bool Complete(out ErrorResourceKey? error, out string errorArg)
+            {
+                _groupStack.Peek().SeenEnd();
+
+                if (_groupStack.Count != 1)
+                {
+                    error = TexlStrings.ErrInvalidRegExUnclosedCaptureGroups;
+                    errorArg = null;
+                    return false;
+                }
+
+                // for caompatibility reasons, back refs can't reference something that is posibly empty
+                foreach (var backRef in _backRefs)
+                {
+                    if (_captureNames[backRef].IsPossibleZeroLength())
+                    {
+                        error = TexlStrings.ErrInvalidRegExBackRefToZeroCapture;
+                        errorArg = CharacterUtils.IsDigit(backRef[0]) ? "\\" + backRef : "\\k<" + backRef + ">";
+                        return false;
+                    }
+                }
+
+                error = null;
+                errorArg = null;
+                return true;
+            }
+
+            // Information tracked for each group and its parent
+            private class GroupInfo
+            {
+                public bool IsNonCapture;               // this group is a non-capture group
+                public bool IsLookAround;               // is this gruop a look around? if so, limitations on quantifiers
+                public bool IsGroup;                    // is this an actual group, vs a group created for literal characters, escapes, character classes, etc.
+                public bool IsClosed;                   // this group is closed (we've seen the ending paren), ok to use for backref
+                public bool ErrorOnQuant;               // we have a possibly empty capture group which has already seen a quantifier, next quantifier gets an error
+                public bool ErrorOnQuant_LookBehind;    // used for more specific error message for look behinds
+                public bool HasZeroQuant;               // this group has a quantifier
+                public bool HasAlternation;             // this group has an alternation within
+                public bool ContainsCapture;            // this gruop contains a cpature, perhaps nested down
+                public bool KnownNonZero;               // we've checked previously; this group is known not to be zero sized
+                public int MaxSize;                     // maximum size of this group, -1 for unlimited
+                public int MinSize;                     // minimum size of this group, 0 being the minimum
+                public int MaxSizeAlternation;          // maximum size of the largest alternation option
+                public int MinSizeAlternation;          // minimim size of the smallest alternation option
+                public GroupInfo Parent;                // reference to the next level down
+
+                // for characters that aren't in a group, such as literal characters, anchors, escapes, character classes, etc.
+                public GroupInfo SeenNonGroup(int minSize = 1, int maxSize = 1)
+                {
+                    MinSize += minSize;
+                    MaxSize += maxSize;
+
+                    return new GroupInfo()
+                    {
+                        MinSize = minSize,
+                        MaxSize = maxSize
+                    };
+                }
+
+                public bool SeenQuantifier(GroupInfo lastGroup, int low, int high, out ErrorResourceKey? error)
+                {
+                    // high can't be less than low, unless high is unlimited
+                    if (high < low && high != -1)
+                    {
+                        error = TexlStrings.ErrInvalidRegExLowHighQuantifierFlip;
+                        return false;
+                    }
+
+                    if (lastGroup.IsGroup)
+                    {
+                        if (lastGroup.ErrorOnQuant_LookBehind)
+                        {
+                            error = TexlStrings.ErrInvalidRegExQuantifierOursideLookAround;
+                            return false;
+                        }
+
+                        if (lastGroup.ErrorOnQuant)
+                        {
+                            error = TexlStrings.ErrInvalidRegExQuantifiedCapture;
+                            return false;
+                        }
+
+                        lastGroup.HasZeroQuant = low == 0;
+
+                        if (low <= 1 && lastGroup.ErrorOnQuant)
+                        {
+                            error = TexlStrings.ErrInvalidRegExQuantifiedCapture;
+                            return false;
+                        }
+
+                        if ((low == 0 || (low > 0 && (lastGroup.MinSize == 0 || lastGroup.ContainsCapture))) && (!lastGroup.IsNonCapture || lastGroup.ContainsCapture))
+                        {
+                            ErrorOnQuant = true;
+                        }
+                    }
+
+                    MaxSize = MaxSize == -1 || high == -1 ? -1 : MaxSize + (lastGroup.MaxSize * (high - 1));
+                    MinSize += lastGroup.MinSize * (low - 1);
+
+                    error = null;
+                    return true;
+                }
+
+                public void SeenAlternation()
+                {
+                    // we need to examine each part of the alternation for a potential empty result
+                    // PossibleEmpty is reset and PossibleEmptyAlternation is the accumulator for any empty parts
+                    // HasAlternation is important because 
+                    if (HasAlternation)
+                    {
+                        MinSizeAlternation = Math.Min(MinSizeAlternation, MinSize);
+                        MaxSizeAlternation = MaxSizeAlternation == -1 || MaxSize == -1 ? -1 : Math.Max(MaxSizeAlternation, MaxSize);
+                    }
+                    else
+                    {
+                        MinSizeAlternation = MinSize;
+                        MaxSizeAlternation = MaxSize;
+                    }
+
+                    HasAlternation = true;
+
+                    MinSize = 0;
+                    MaxSize = 0;
+                }
+
+                // broken out from SeenClose for the end of the regular expression which may not have a closing paren
+                public void SeenEnd()
+                {
+                    if (HasAlternation)
+                    {
+                        SeenAlternation();                                // closes the last part of the alternation, the "c" in "(a|b|c)"
+                        MinSize = MinSizeAlternation;
+                        MaxSize = MaxSizeAlternation;
+
+                        // an alternation with a capture can effectively be empty, for example "(a|(b)|c)".
+                        // The capture group "b" in this case is not empty, but it is a capture in an alternation.
+                        ErrorOnQuant = ErrorOnQuant || ContainsCapture;
+                    }
+                }
+
+                public bool SeenClose(out ErrorResourceKey? error)
+                {
+                    SeenEnd();
+
+                    IsClosed = true;
+
+                    // If we are possibly empty, we can't suport a zero quantifier.
+                    if (MinSize == 0)
+                    {
+                        ErrorOnQuant = true;
+                    }
+
+                    if (Parent != null)
+                    {
+                        Parent.ErrorOnQuant |= ErrorOnQuant;
+                        Parent.ErrorOnQuant_LookBehind |= ErrorOnQuant_LookBehind;
+
+                        if (!IsNonCapture)
+                        {
+                            Parent.ContainsCapture = true;
+                        }
+
+                        // Look arounds have no size with respect to their parent
+                        if (!IsLookAround)
+                        {
+                            Parent.MaxSize = Parent.MaxSize == -1 || MaxSize == -1 ? -1 : Parent.MaxSize + MaxSize;
+                            Parent.MinSize += MinSize;
+                        }
+                    }
+
+                    error = null;
+                    return true;
+                }
+
+                // used to determine if a backref is acceptable
+                public bool IsPossibleZeroLength()
+                {
+                    // short circuit in case we are asked about the same capture
+                    if (KnownNonZero)
+                    {
+                        return false;
+                    }
+
+                    int maxDepth = MaxGroupStackDepth;
+
+                    // ok to have alternation in the capture group itself, unless it is empty that PossibleEmpty would detect
+                    if (HasZeroQuant || MinSize == 0)
+                    {
+                        return true;
+                    }
+
+                    // walk nested groups up to the base
+                    // stop at a a lookaround, as it will appear to be zero below and quantifiers are not allowed on lookarounds and below
+                    for (var ptr = this.Parent; ptr != null && maxDepth-- >= 0 && !ptr.IsLookAround; ptr = ptr.Parent)
+                    {
+                        if (ptr.HasZeroQuant || ptr.HasAlternation || ptr.MinSize == 0)
+                        {
+                            return true;
+                        }
+                    }
+
+                    // failsafe, should never happen
+                    if (maxDepth < 0)
+                    {
+                        throw new IndexOutOfRangeException("regular expression maximum GroupTracker depth exceeded");
+                    }
+
+                    KnownNonZero = true;
+
+                    return false;
+                }
             }
         }
     }

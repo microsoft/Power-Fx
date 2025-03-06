@@ -16,54 +16,10 @@
 //     Unicode characters are used throughout.
 //     Newlines support Windows friendly \r\n as well as \r and \n.
 //
-// Features that are supported:
-//     Literal characters. Any character except the special characters [ ] \ ^ $ . | ? * + ( ) can be inserted directly.
-//     Escaped special characters. \ (backslash) followed by a special character to insert it directly, includes \- when in a character class.
-//     Operators
-//         Dot (.), matches everything except [\r\n] unless MatchOptions.DotAll is used.
-//         Anchors, ^ and $, matches the beginning and end of the string, or of a line if MatchOptions.Multiline is used.
-//     Quanitfiers
-//         Greedy quantifiers. ? matches 0 or 1 times, + matches 1 or more times, * matches 0 or more times, {3} matches exactly 3 times, {1,} matches at least 1 time, {1,3} matches between 1 and 3 times. By default, matching is "greedy" and the match will be as large as possible.
-//         Lazy quantifiers. Same as the greedy quantifiers followed by ?, for example *? or {1,3}?. With the lazy modifier, the match will be as small as possible.
-//     Alternation. a|b matches "a" or "b".
-//     Character classes
-//         Custom character class. [abc] list of characters, [a-fA-f0-9] range of characters, [^a-z] everything but these characters. Character classes cannot be nested, subtracted, or intersected, and the same special character cannot be repeated in the character class.
-//         Word characters and breaks. \w, \W, \b, \B, using the Unicode definition of letters [\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Nd}\p{Pc}\p{Lm}].
-//         Digit characters. \d includes the digits 0-9 and \p{Nd}, \D matches everything except characters matched by \d.
-//         Space characters. \s includes spacing characters [ \r\n\t\f\x0B\x85\p{Z}], \S which matches everything except characters matched by \s, \r carriage return, \n newline, \t tab, \f form feed.
-//         Control characters. \cA, where the control character is [A-Za-z].
-//         Hexadecimal and Unicode character codes. \x20 with two hexadecimal digits, \u2028 with four hexadecimal digits.
-//         Unicode character class and property. \p{Ll} matches all Unicode lowercase letters, while \P{Ll} matches everything that is not a Unicode lowercase letter.
-//     Capture groups
-//         Non capture group. (?:a), group without capturing the result as a named or numbered sub-match.
-//         Named group and back reference. (?<name>chars) captures a sub-match with the name name, referenced with \k<name>. Cannot be used if MatchOptions.NumberedSubMatches is enabled.
-//         Numbered group and back referencs. (a|b) captures a sub-match, referenced with \1. MatchOptions.NumberedSubMatches must be enabled.
-//     Lookahead and lookbehind. (?=a), (?!a), (?<=b), (?<!b).
-//     Free spacing mode. Whitepsace within the regular expression is ignored and # starts an end of line comment.
-//     Inline comments. (?# comment here), which is ignored as a comment. See MatchOptions.FreeSpacing for an alternative to formatting and commenting regular expressions.
-//     Inline mode modifiers. (?im) is the same as using MatchOptions.IgnoreCase and MatchOptions.Multiline. Must be used at the beginning of the regular expression. Supported inline modes are [imsx], corresponding to MatchOptions.IgnoreCase, MatchOptions.Multiline, MatchOptions.DotAll, and MatchOptions.FreeSpacing, respectively.
-//
-// Significant features that are not supported:
-//     Capture groups
-//         Numbered capture groups are disable by default, use named captures or MatchOptions.NumberedSubMatches
-//         Self-referncing groups, such as "(a\1)"
-//         Single quoted named capture groups "(?'name'..." and "\k'name'"
-//         Balancing capture groups
-//         Recursion
-//     Character classes
-//         \W, \D, \P, \S are not supported inside character classes if the character class is negated (starts with [^...])
-//         Use of ^, -, [, or ] without an escape inside a character class is not supported
-//         Character class set operations, such as subraction or intersection
-//         Empty character classes
-//     Inline options
-//         Turning options on or off
-//         Changing options later in the expression
-//         Setting options for a subexpression
-//     Conditionals
-//     Octal characters
-//     \x{...} and \u{...} notation
-//     Subroutines
-//     Possessive quantifiers
+// There are significant differences between how possibly empty capture groups are handled between implementations which are blocked.
+// See Match_CaptureQuant.txt for test cases, which is important to run through both .net and node to determine coverage of the block.
+// 
+// See docs/regular-expressions.md for more details on the language supported.
 //
 // In addition, the Power Fx compiler uses the .NET regular expression engine to validate the expression and determine capture group names.
 // So, any regular expression that does not compile with .NET is also automatically disallowed.
@@ -93,19 +49,19 @@ Errors: Error 13-20: Invalid regular expression: Use named captures with "(?<nam
 
 // ErrInvalidRegExBadBackRefSelfReferencing
 >> Match( "aa", "(a\1)", MatchOptions.NumberedSubMatches )
-Errors: Error 13-20: Invalid regular expression: Self-referencing capture groups are not supported, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 13-20: Invalid regular expression: Self-referencing sub matches are not supported, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "aa", "(?<first>a\k<first>)" )
-Errors: Error 13-35: Invalid regular expression: Self-referencing capture groups are not supported, found "\k<first>".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 13-35: Invalid regular expression: Self-referencing sub matches are not supported, found "\k<first>".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "aa aaaa aaaaaa ", "((a+)(\1) ?)+" )
 Errors: Error 26-41: Invalid regular expression: Use named captures with "(?<name>...)" and "\k<name>" or enable MatchOptions.NumberedSubMatches, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "aa aaaa aaaaaa ", "((a+)(\1) ?)+", MatchOptions.NumberedSubMatches )
-Errors: Error 26-41: Invalid regular expression: Self-referencing capture groups are not supported, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 26-41: Invalid regular expression: Self-referencing sub matches are not supported, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "aa aaaa aaaaaa ", "(?<first>(a+)(\k<first>) ?)+" )
-Errors: Error 26-56: Invalid regular expression: Self-referencing capture groups are not supported, found "\k<first>".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 26-56: Invalid regular expression: Self-referencing sub matches are not supported, found "\k<first>".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // Backreferences without a group are disallowed
 
@@ -114,7 +70,7 @@ Errors: Error 22-34: Invalid regular expression: Use named captures with "(?<nam
 
 // ErrInvalidRegExBadBackRefNotDefined
 >> Match( "hello howdy", "([hi]).*\k<1>" )
-Errors: Error 22-37: Invalid regular expression: Capture group "\k<1>" not defined.|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 22-37: Invalid regular expression: Sub match "\k<1>" not defined or is an unsupported forward reference.|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello howdy", "(?<first>[hi]).*\k<first>" )
 {FullMatch:"hello h",StartMatch:1,first:"h"}
@@ -130,7 +86,7 @@ Errors: Error 22-42: Invalid regular expression: Use named captures with "(?<nam
 {FullMatch:"hello h",StartMatch:1,SubMatches:Table({Value:"h"})}
 
 >> Match( "hello howdy", "(?<first>[hi]).*\k<second>" )
-Errors: Error 22-50: Invalid regular expression: Capture group "\k<second>" not defined.|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 22-50: Invalid regular expression: Sub match "\k<second>" not defined or is an unsupported forward reference.|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello world", "(((((((((((?<eleven>l))))))))))).*\k<eleven>")  // 11 parens
 {FullMatch:"llo worl",StartMatch:3,eleven:"l"}
@@ -145,7 +101,7 @@ Errors: Error 22-52: Invalid regular expression: Use named captures with "(?<nam
 Errors: Error 22-67: Invalid regular expression: Unclosed groups, too few closing parenthesis.|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello world", "(?<first>((((((((((?<eleven>l)))))))))).*\k<first>")   // unclosed 11th paren
-Errors: Error 22-74: Invalid regular expression: Self-referencing capture groups are not supported, found "\k<first>".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 22-74: Invalid regular expression: Self-referencing sub matches are not supported, found "\k<first>".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello world", "(?<a>(?<b>(?<c>(?<d>(?<e>(?<f>(?<g>(?<h>(?<i>(?<j>(l))))))))))).*\k<f>")  // 11 parens
 {FullMatch:"llo worl",StartMatch:3,a:"l",b:"l",c:"l",d:"l",e:"l",f:"l",g:"l",h:"l",i:"l",j:"l"}
@@ -159,14 +115,16 @@ Errors: Error 22-51: Invalid regular expression: Use named captures with "(?<nam
 >> Match( "hello world", "(((((((((((l))))))))))).*\1", MatchOptions.NumberedSubMatches)   // 11 parens
 {FullMatch:"llo worl",StartMatch:3,SubMatches:Table({Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"})}
 
->> Match( "hello world", "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "(?<hundredone>l)" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & ".*\k<hundredone>" )
-{FullMatch:"llo worl",StartMatch:3,hundredone:"l"}
+// Power Fx group nesting is limited, see match.cs for groupTracker.MaxStackDepth
 
->> Match( "hello world", "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "(l)" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & ".*\101", MatchOptions.NumberedSubMatches )
-{FullMatch:"llo worl",StartMatch:3,SubMatches:Table({Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"})}
+>> Match( "hello world", "((((((((((" & "((((((((((" & "((((((((((" & "(?<thirtyone>l)" & "))))))))))" & "))))))))))" & "))))))))))" & ".*\k<thirtyone>" )
+{FullMatch:"llo worl",StartMatch:3,thirtyone:"l"}
 
->> Match( "hello world", "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "(?<hundredone>l"  & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & ".*\k<hundredone>" ) // missing paren
-Errors: Error 341-342: Invalid regular expression: Unclosed groups, too few closing parenthesis.|Error 0-5: The function 'Match' has some invalid arguments.
+>> Match( "hello world", "((((((((((" & "((((((((((" & "((((((((((" & "(l)" & "))))))))))" & "))))))))))" & "))))))))))" & ".*\31", MatchOptions.NumberedSubMatches )
+{FullMatch:"llo worl",StartMatch:3,SubMatches:Table({Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"})}
+
+>> Match( "hello world", "((((((((((" & "((((((((((" & "((((((((((" & "(?<thirtyone>l"  & "))))))))))" & "))))))))))" & "))))))))))" & ".*\k<thirtyone>" ) // missing paren
+Errors: Error 130-131: Invalid regular expression: Unclosed groups, too few closing parenthesis.|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello world", "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(?<hundredone>l)" & ".*\k<hundredone>" )
 {FullMatch:"llo worl",StartMatch:3,hundredone:"l"} 
@@ -190,10 +148,10 @@ Errors: Error 22-82: Invalid regular expression: Named captures cannot be used w
 
 // ErrInvalidRegExBadBalancing
 >> Match( "(hello world)", "(?<s-e>)a")
-Errors: Error 24-35: Invalid regular expression: Balancing capture groups are not supported, found "(?<s-e>".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 24-35: Invalid regular expression: Balancing sub matches are not supported, found "(?<s-e>".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "(hello world)", "(?<s>)a(?<-s>)b")
-Errors: Error 24-41: Invalid regular expression: Balancing capture groups are not supported, found "(?<-s>".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 24-41: Invalid regular expression: Balancing sub matches are not supported, found "(?<-s>".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // groups with single ticks
 
@@ -226,12 +184,37 @@ Errors: Error 16-22: Invalid regular expression: Octal \0 character codes are no
 
 // ErrInvalidRegExBadNamedCaptureAlreadyExists
 >> Match( "test", "(?<one>t).*(?<one>t)" )
-Errors: Error 15-37: Invalid regular expression: Named capture group "(?<one>" defined more than once.|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 15-37: Invalid regular expression: Named sub match defined more than once, found at the beginning of "(?<one>t)".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "test", "((?<one>t)|(?<one>t))" )
-Errors: Error 15-38: Invalid regular expression: Named capture group "(?<one>" defined more than once.|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 15-38: Invalid regular expression: Named sub match defined more than once, found at the beginning of "(?<one>t))".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // Bad named capture group names
+
+// Matchs .NET unicode \w without \Nd [\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Pc}\p{Lm}], followed by any number of \w [\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Pc}\p{Lm}]
+// digits can't lead capture name in JavaScript, and would be confusing with numbered sub matches
+// doesn't include zero-width non-joiner (ZWNJ) \u200c and zero-width joiner (ZWJ) \u200d appears to have problems with pcre2, can add later if desired
+
+>> Match( "abc", "a(?<ß>b)c" )
+{FullMatch:"abc",StartMatch:1,ß:"b"}
+
+>> Match( "abc", "a(?<５>b)c" )
+Errors: Error 14-25: Invalid regular expression: Sub match name must be a combination of word characters and not begin with a number, found "(?<５>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abc", "a(?<_>b)c" )
+{FullMatch:"abc",StartMatch:1,_:"b"}
+
+>> Match( "abc", "a(?<ß５>b)c" )
+{FullMatch:"abc",StartMatch:1,ß５:"b"}
+
+>> Match( "abc", "a(?<_５>b)c" )
+{FullMatch:"abc",StartMatch:1,_５:"b"}
+
+>> Match( "abc", "a(?<_ß５>b)c" )
+{FullMatch:"abc",StartMatch:1,_ß５:"b"}
+
+>> Match( "abc", "a(?<$>b)c" )   // JavaScript supports $ but .NET does not
+Errors: Error 14-25: Invalid regular expression: Sub match name must be a combination of word characters and not begin with a number, found "(?<$>".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "test", "(?<a>s).*" )
 {FullMatch:"st",StartMatch:3,a:"s"}
@@ -241,16 +224,16 @@ Errors: Error 15-38: Invalid regular expression: Named capture group "(?<one>" d
 
 // ErrInvalidRegExBadNamedCaptureName
 >> Match( "test", "(?<1>s).*" )
-Errors: Error 15-26: Invalid regular expression: Named capture group name must be a combination of letters and digits and begin with a letter, found "(?<1>".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 15-26: Invalid regular expression: Sub match name must be a combination of word characters and not begin with a number, found "(?<1>".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "test", "(?<1a>s).*" )
-Errors: Error 15-27: Invalid regular expression: Named capture group name must be a combination of letters and digits and begin with a letter, found "(?<1a>".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 15-27: Invalid regular expression: Sub match name must be a combination of word characters and not begin with a number, found "(?<1a>".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "test", "(?<a_>s).*" )
-Errors: Error 15-27: Invalid regular expression: Named capture group name must be a combination of letters and digits and begin with a letter, found "(?<a_>".|Error 0-5: The function 'Match' has some invalid arguments.
+{FullMatch:"st",StartMatch:3,a_:"s"}
 
 >> Match( "test", "(?<a!>s).*" )
-Errors: Error 15-27: Invalid regular expression: Named capture group name must be a combination of letters and digits and begin with a letter, found "(?<a!>".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 15-27: Invalid regular expression: Sub match name must be a combination of word characters and not begin with a number, found "(?<a!>".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // Group name case sensitivity
 
@@ -258,10 +241,18 @@ Errors: Error 15-27: Invalid regular expression: Named capture group name must b
 {FullMatch:"test",StartMatch:1,a:"t"}
 
 >> Match( "test", "(?<a>t).*\k<A>")
-Errors: Error 15-31: Invalid regular expression: Capture group "\k<A>" not defined.|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 15-31: Invalid regular expression: Sub match "\k<A>" not defined or is an unsupported forward reference.|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "test", "(?<A>t).*\k<a>")
-Errors: Error 15-31: Invalid regular expression: Capture group "\k<a>" not defined.|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 15-31: Invalid regular expression: Sub match "\k<a>" not defined or is an unsupported forward reference.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// maximum length of capture name is 62 characters (limit is 128 code units in pcre2, less than half for multi-code unit characters if UTF-16 was used)
+
+>> Match( "abc", "a(?<a2345678901234567890123456789012345678901234567890123456789012>b)c" )
+{FullMatch:"abc",StartMatch:1,a2345678901234567890123456789012345678901234567890123456789012:"b"}
+
+>> Match( "abc", "a(?<a23456789012345678901234567890123456789012345678901234567890123>b)c" )
+Errors: Error 14-87: Invalid regular expression: Name of submatch is too long, found "(?<a23456789012345678901234567890123456789012345678901234567890123>".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // conditional alternation
 
@@ -287,26 +278,6 @@ Errors: Error 22-36: Invalid regular expression: Conditional alternation is not 
 
 >> ShowColumns( Match( "ab", "a # " & Char(10) & " (?<capture>b)", MatchOptions.FreeSpacing ), capture )
 {capture:"b"}
-
-// quantified capture groups
-
-// Node != Net for this test ("b" is empty for Node), a known difference between PCRE2 and Perl too
-// >> Match( "aba", "^(a(b)?)+$", MatchOptions.NumberedSubMatches )
-// {FullMatch:"aba",StartMatch:1,SubMatches:Table({Value:"a"},{Value:"b"})}
-
->> Match( "aba", "^(a(?:b)?)+$", MatchOptions.NumberedSubMatches )
-{FullMatch:"aba",StartMatch:1,SubMatches:Table({Value:"a"})}
-
->> Match( "aba", "^(a(b)?)+$" )
-{FullMatch:"aba",StartMatch:1}
-
-// Node != Net for this test
-// >> Match( "b", "(a)?b\1", MatchOptions.NumberedSubMatches )
-// Blank()
-
-// Node != Net for this test
-// >> Match( "b", "(?<cap>a)?b\k<cap>", MatchOptions.NumberedSubMatches )
-// Blank()
 
 // difference between null and empty string
 
@@ -354,7 +325,7 @@ Errors: Error 12-17: Invalid regular expression: Literal square braces must be e
 Errors: Error 23-32: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "[\w]\w]".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "abcdef]ghijk", "asdfasdfasdfsadf[\w]\w]" )
-Errors: Error 23-48: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "...f[\w]\w]".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 23-48: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "...fsadf[\w]\w]".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "a]", "[a]]" )
 Errors: Error 13-19: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "[a]]".|Error 0-5: The function 'Match' has some invalid arguments.
@@ -492,17 +463,20 @@ Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\A"
 >> Match( "$test atest test", "\Btest" )
 {FullMatch:"test",StartMatch:8}
 
->> DropColumns( Match( "test" & Char(10) & "bed", "\cj" ), FullMatch )
-{StartMatch:5}
+>> Match( "test" & Char(10) & "bed", "\c" )
+Errors: Error 34-38: Invalid regular expression: Invalid escape code, found "\c".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> DropColumns( Match( "test" & Char(10) & "bed", "\cJ" ), FullMatch )
-{StartMatch:5}
+>> Match( "test" & Char(10) & "bed", "\cJ" )
+Errors: Error 34-39: Invalid regular expression: Invalid escape code, found "\c".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> DropColumns( Match( "test" & Char(13) & "bed", "\cm" ), FullMatch )
-{StartMatch:5}
+>> Match( "test" & Char(10) & "bed", "\cj" )
+Errors: Error 34-39: Invalid regular expression: Invalid escape code, found "\c".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> DropColumns( Match( "test" & Char(13) & "bed", "\cM" ), FullMatch )
-{StartMatch:5}
+>> Match( "test" & Char(10) & "bed", "\cm" )
+Errors: Error 34-39: Invalid regular expression: Invalid escape code, found "\c".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test" & Char(10) & "bed", "\cM" )
+Errors: Error 34-39: Invalid regular expression: Invalid escape code, found "\c".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "test", "\C" )
 Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\C".|Error 0-5: The function 'Match' has some invalid arguments.
@@ -1018,6 +992,67 @@ Errors: Error 17-26: Invalid regular expression: Possessive quantifiers are not 
 >> Match( "abcdef", "\w{2,4}*" ).FullMatch  // in case * is used someday in the future as a quantifier modifier
 Errors: Error 17-27: Invalid regular expression: Possessive quantifiers are not supported, found "{2,4}*".|Error 0-5: The function 'Match' has some invalid arguments.|Error 29-39: Name isn't valid. 'FullMatch' isn't recognized.
 
+// spaces in fixed range quantifiers not supported (supported in pcre2, not in JavaScript)
+
+>> Match( "abc", "a{ 1,2 }")
+Errors: Error 14-24: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abc", "a{1, 2}")
+Errors: Error 14-23: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abc", "a{ 1 , 2 }")
+Errors: Error 14-26: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abc", "a{1,2 }")
+Errors: Error 14-23: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abc", "a{ 1,2}")
+Errors: Error 14-23: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abc", "a{ 1,}")
+Errors: Error 14-22: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abc", "a{ 1, }")
+Errors: Error 14-23: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// leading zeros are ok
+
+>> Match( "abc", "a{01,02}")
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "abc", "a{000001,000002}")
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "abc", "a{01,}")
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "abc", "a{01,2}")
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "abc", "a{1,02}")
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "abc", "a{00,02}")
+{FullMatch:"a",StartMatch:1}
+
+// implied zero low value for fixed range quantifiers not supported (supported in pcre2, not in JavaScript)
+
+>> Match( "abc", "a{,2}")
+Errors: Error 14-21: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abc", "a{,}")
+Errors: Error 14-20: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// low larger than high
+
+>> Match( "baaaaaaaaaaaaaabc", "a{8,9}")
+{FullMatch:"aaaaaaaaa",StartMatch:2}
+
+>> Match( "baaaaaaaaaaaaaabc", "a{8,8}")
+{FullMatch:"aaaaaaaa",StartMatch:2}
+
+>> Match( "baaaaaaaaaaaaaabc", "a{9,8}")
+Errors: Error 28-36: Invalid regular expression: Quantifier range low number is greater than high number, found "a{9,8}".|Error 0-5: The function 'Match' has some invalid arguments.
 
 //
 // UNICODE
@@ -1413,3 +1448,117 @@ Errors: Error 17-31: Regular expression must be a constant value.|Error 0-7: The
 // ErrVariableRegExOptions
 >> IsMatch( "asdf", "asdf", If( Int(4) > -1, MatchOptions.IgnoreCase, MatchOptions.Contains ) )
 Errors: Error 25-90: MatchOptions must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// leading zeros on quant support
+
+>> Match( "aaaaaa", "a{00002,}" )
+{FullMatch:"aaaaaa",StartMatch:1}
+
+>> Match( "aaaaaa", "a{00002,000003}" )
+{FullMatch:"aaa",StartMatch:1}
+
+>> Match( "aa", "a{00002,000003}" )
+{FullMatch:"aa",StartMatch:1}
+
+>> Match( "a", "a{00002,000003}" )
+Blank()
+
+// look behind character count
+
+>> Match ( "a", "(?<=a{1,250})")
+{FullMatch:"",StartMatch:2}
+
+>> Match ( "a", "(?<=a{1,251})")
+Errors: Error 13-28: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...?<=a{1,251})".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=(bc((a{1,2})b){2,4}d){5,16}0123456789)" )
+Blank()
+
+>> Match( "a", "(?<=(bc((a{1,3})b){2,4}d){5,16}0123456789)" )
+Errors: Error 12-56: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=(bc((a{1,2})b){2,5}d){5,16}0123456789)" )
+Errors: Error 12-56: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=(bc((a{1,2})b){2,4}d){5,17}0123456789)" )
+Errors: Error 12-56: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=a(bc((a{1,2})b){2,4}d){5,17}0123456789)" )
+Errors: Error 12-57: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=(bc((a{1,2})b){2,4}d){5,17}0123456789a)" )
+Errors: Error 12-57: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...0123456789a)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=(1234567890){25})")
+Blank()
+
+>> Match( "a", "(?<=(1234567890){26})")
+Errors: Error 12-35: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...567890){26})".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=((1234567890){1,12}){1,2}1234567890)")
+Blank()
+
+>> Match( "12345678901234567890", "(?<=((1234567890){1,12}){1,2}1234567890)")
+{FullMatch:"",StartMatch:21}
+
+>> Match( "12345678901234567890", "(?<=((1234567890){1,12}){1,2}1234567890a)")
+Errors: Error 31-74: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...1234567890a)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaaaaaaaaaaaaaaaaaab", "((aa){2,10})(?<=\1{2,12}aaaaaaaaaa)b", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaaab",StartMatch:18,SubMatches:Table({Value:"aaaa"},{Value:"aa"})}
+
+>> Match( "aaaaaaaaaaaaaaaaaaaaab", "((aa){2,10})(?<=\1{2,12}aaaaaaaaaaa)b", MatchOptions.NumberedSubMatches )
+Errors: Error 33-72: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...aaaaaaaaaaa)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaaaaaaaaaaaaaaaaaab", "((aa){2,})(?<=\1{2,12}aaaaaaaaaa)b", MatchOptions.NumberedSubMatches )
+Errors: Error 33-69: Invalid regular expression: Unlimited quantifiers are not supported in look behinds, found at the end of "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match ( "a", "(?<!a{1,250})")
+{FullMatch:"",StartMatch:1}
+
+>> Match( "a", "(?<!a{1,251})")
+Errors: Error 12-27: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...?<!a{1,251})".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!(bc((a{1,2})b){2,4}d){5,16}0123456789)" )
+{FullMatch:"",StartMatch:1}
+
+>> Match( "a", "(?<!(bc((a{1,3})b){2,4}d){5,16}0123456789)" )
+Errors: Error 12-56: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!(bc((a{1,2})b){2,5}d){5,16}0123456789)" )
+Errors: Error 12-56: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!(bc((a{1,2})b){2,4}d){5,17}0123456789)" )
+Errors: Error 12-56: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!a(bc((a{1,2})b){2,4}d){5,17}0123456789)" )
+Errors: Error 12-57: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!(bc((a{1,2})b){2,4}d){5,17}0123456789a)" )
+Errors: Error 12-57: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...0123456789a)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!(1234567890){25})")
+{FullMatch:"",StartMatch:1}
+
+>> Match( "a", "(?<!(1234567890){26})")
+Errors: Error 12-35: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...567890){26})".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!((1234567890){1,12}){1,2}1234567890)")
+{FullMatch:"",StartMatch:1}
+
+>> Match( "12345678901234567890", "(?<!((1234567890){1,12}){1,2}1234567890)")
+{FullMatch:"",StartMatch:1}
+
+>> Match( "12345678901234567890", "(?<!((1234567890){1,12}){1,2}1234567890a)")
+Errors: Error 31-74: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...1234567890a)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaaaaaaaaaaaaaaaaaab", "((aa){2,10})(?<!\1{2,12}aaaaaaaaaa)b", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaaaaaaaaaaaaaaaaaaab",StartMatch:2,SubMatches:Table({Value:"aaaaaaaaaaaaaaaaaaaa"},{Value:"aa"})}
+
+>> Match( "aaaaaaaaaaaaaaaaaaaaab", "((aa){2,10})(?<!\1{2,12}aaaaaaaaaaa)b", MatchOptions.NumberedSubMatches )
+Errors: Error 33-72: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...aaaaaaaaaaa)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaaaaaaaaaaaaaaaaaab", "((aa){2,})(?<!\1{2,12}aaaaaaaaaa)b", MatchOptions.NumberedSubMatches )
+Errors: Error 33-69: Invalid regular expression: Unlimited quantifiers are not supported in look behinds, found at the end of "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+
+
