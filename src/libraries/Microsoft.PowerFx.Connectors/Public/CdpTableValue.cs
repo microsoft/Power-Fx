@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Connectors
     {
         public bool IsDelegable => _tabularService.IsDelegable;
 
-        protected internal readonly CdpService _tabularService;        
+        protected internal readonly CdpService _tabularService;
 
         internal readonly IReadOnlyDictionary<string, Relationship> Relationships;
 
@@ -27,12 +27,12 @@ namespace Microsoft.PowerFx.Connectors
         internal readonly HttpClient HttpClient;
 
         public RecordType RecordType => _tabularService?.RecordType;
-        
+
         internal CdpTableValue(CdpService tabularService, IReadOnlyDictionary<string, Relationship> relationships)
             : base(IRContext.NotInSource(tabularService.TableType))
         {
             _tabularService = tabularService;
-            Relationships = relationships;                        
+            Relationships = relationships;
             HttpClient = tabularService.HttpClient;
         }
 
@@ -44,10 +44,18 @@ namespace Microsoft.PowerFx.Connectors
 
         public override IEnumerable<DValue<RecordValue>> Rows => GetRowsAsync(null, null, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
 
-        public DelegationParameterFeatures SupportedFeatures => DelegationParameterFeatures.Filter |
+#pragma warning disable SA1025 // CodeMustNotContainMultipleWhitespaceInARow
+
+        public DelegationParameterFeatures SupportedFeatures =>
+                DelegationParameterFeatures.Filter |
                 DelegationParameterFeatures.Top |
-                DelegationParameterFeatures.Columns | // $select
-                DelegationParameterFeatures.Sort; // $orderby
+                DelegationParameterFeatures.Columns |      // $select
+                DelegationParameterFeatures.Sort |         // $orderby
+                DelegationParameterFeatures.ApplyGroupBy | // $groupby
+                DelegationParameterFeatures.ApplyJoin |    // $apply
+                DelegationParameterFeatures.Expand;        // $expand
+
+#pragma warning restore SA1025
 
         public async Task<IReadOnlyCollection<DValue<RecordValue>>> GetRowsAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel)
         {
@@ -76,26 +84,35 @@ namespace Microsoft.PowerFx.Connectors
         {
             throw new NotImplementedException();
         }
-    }   
+    }
 
     internal static class ODataParametersExtensions
     {
+#pragma warning disable SA1025 // CodeMustNotContainMultipleWhitespaceInARow
+
         public static ODataParameters ToOdataParameters(this DelegationParameters parameters)
         {
-            DelegationParameterFeatures allowedFeatures = 
-                DelegationParameterFeatures.Filter | 
-                DelegationParameterFeatures.Top | 
-                DelegationParameterFeatures.Columns | // $select
-                DelegationParameterFeatures.Sort;     // $orderby
+            DelegationParameterFeatures allowedFeatures =
+                DelegationParameterFeatures.Filter |
+                DelegationParameterFeatures.Top |
+                DelegationParameterFeatures.Columns |      // $select
+                DelegationParameterFeatures.Sort |         // $orderby
+                DelegationParameterFeatures.ApplyGroupBy | // $groupby
+                DelegationParameterFeatures.ApplyJoin |    // $apply
+                DelegationParameterFeatures.Expand;        // $expand
+#pragma warning restore SA1025
 
             parameters.EnsureOnlyFeatures(allowedFeatures);
+
+            string expand = parameters.GetExpand();
 
             ODataParameters op = new ODataParameters()
             {
                 Filter = parameters.GetOdataFilter(),
                 Top = parameters.Top.GetValueOrDefault(),
-                Select = parameters.GetColumns(),
-                OrderBy = parameters.GetOrderBy()
+                Select = string.IsNullOrEmpty(expand) ? parameters.GetColumns() : null,
+                OrderBy = parameters.GetOrderBy(),
+                Expand = expand
             };
 
             return op;

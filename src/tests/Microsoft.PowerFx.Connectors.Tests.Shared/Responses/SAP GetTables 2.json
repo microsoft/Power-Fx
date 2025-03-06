@@ -1,0 +1,165 @@
+{
+  "@odata.context": "https://49970107-0806-e5a7-be5e-7c60e2750f01.12.common.firstrelease.azure-apihub.net/apim/sapodata/b5097592f2ae498ea32458b1035634a9/datasets/https%253A%252F%252Fsapes5.sapdevcenter.com%252Fsap%252Fopu%252Fodata%252Fiwbep%252FGWSAMPLE_BASIC%252F/tables",
+  "value": [
+    {
+      "Name": "BusinessPartnerSet",
+      "DisplayName": "BusinessPartnerSet",
+      "tables": [
+      ],
+      "procedures": [
+      ],
+      "query": [
+      ]
+    },
+    {
+      "Name": "ProductSet",
+      "DisplayName": "ProductSet",
+      "tables": [
+      ],
+      "procedures": [
+      ],
+      "query": [
+      ]
+    },
+    {
+      "Name": "SalesOrderSet",
+      "DisplayName": "SalesOrderSet",
+      "tables": [
+      ],
+      "procedures": [
+      ],
+      "query": [
+      ]
+    },
+    {
+      "Name": "SalesOrderLineItemSet",
+      "DisplayName": "SalesOrderLineItemSet",
+      "tables": [
+      ],
+      "procedures": [
+      ],
+      "query": [
+      ]
+    },
+    {
+      "Name": "ContactSet",
+      "DisplayName": "ContactSet",
+      "tables": [
+      ],
+      "procedures": [
+      ],
+      "query": [
+      ]
+    },
+    {
+      "Name": "VH_SexSet",
+      "DisplayName": "VH_SexSet",
+      "tables": [
+      ],
+      "procedures": [
+      ],
+      "query": [
+      ]
+    },
+    {
+      "Name": "VH_CountrySet",
+      "DisplayName": "VH_CountrySet",
+      "tables": [
+      ],
+      "procedures": [
+      ],
+      "query": [
+      ]
+    },
+    {
+      "Name": "VH_AddressTypeSet",
+      "DisplayName": "VH_AddressTypeSet",
+      "tables": [
+      ],
+      "procedures": [
+      ],
+      "query": [
+      ]
+    },
+    {
+      "Name": "VH_CategorySet",
+      "DisplayName": "VH_CategorySet",
+      "tables": [
+      ],
+      "procedures": [
+      ],
+      "query": [
+      ]
+    },
+    {
+      "Name": "VH_CurrencySet",
+      "DisplayName": "VH_CurrencySet",
+      "tables": [
+      ],
+      "procedures": [
+      ],
+      "query": [
+      ]
+    },
+    {
+      "Name": "VH_UnitQuantitySet",
+      "DisplayName": "VH_UnitQuantitySet",
+      "tables": [
+      ],
+      "procedures": [
+      ],
+      "query": [
+      ]
+    },
+    {
+      "Name": "VH_UnitWeightSet",
+      "DisplayName": "VH_UnitWeightSet",
+      "tables": [
+      ],
+      "procedures": [
+      ],
+      "query": [
+      ]
+    },
+    {
+      "Name": "VH_UnitLengthSet",
+      "DisplayName": "VH_UnitLengthSet",
+      "tables": [
+      ],
+      "procedures": [
+      ],
+      "query": [
+      ]
+    },
+    {
+      "Name": "VH_ProductTypeCodeSet",
+      "DisplayName": "VH_ProductTypeCodeSet",
+      "tables": [
+      ],
+      "procedures": [
+      ],
+      "query": [
+      ]
+    },
+    {
+      "Name": "VH_BPRoleSet",
+      "DisplayName": "VH_BPRoleSet",
+      "tables": [
+      ],
+      "procedures": [
+      ],
+      "query": [
+      ]
+    },
+    {
+      "Name": "VH_LanguageSet",
+      "DisplayName": "VH_LanguageSet",
+      "tables": [
+      ],
+      "procedures": [
+      ],
+      "query": [
+      ]
+    }
+  ]
+}

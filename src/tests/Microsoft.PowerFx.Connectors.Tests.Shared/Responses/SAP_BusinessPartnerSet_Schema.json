@@ -1,0 +1,507 @@
+{
+  "name": "BusinessPartnerSet",
+  "title": "BusinessPartnerSet",
+  "x-ms-permission": "read-write",
+  "x-ms-capabilities": {
+    "sortRestrictions": {
+      "sortable": true,
+      "unsortableProperties": [],
+      "ascendingOnlyProperties": []
+    },
+    "filterRestrictions": {
+      "filterable": true,
+      "nonFilterableProperties": [],
+      "requiredProperties": []
+    },
+    "selectRestrictions": { "selectable": true },
+    "isOnlyServerPagable": true,
+    "supportsJoin": true,
+    "filterFunctionSupport": [ "eq", "ne", "joinleft", "odataexpand" ],
+    "serverPagingOptions": [ "skiptoken" ]
+  },
+  "schema": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "properties": {
+        "Address": {
+          "type": "object",
+          "properties": {
+            "City": {
+              "title": "City",
+              "description": "City",
+              "type": "string"
+            },
+            "PostalCode": {
+              "title": "PostalCode",
+              "description": "Postal Code",
+              "type": "string"
+            },
+            "Street": {
+              "title": "Street",
+              "description": "Street",
+              "type": "string"
+            },
+            "Building": {
+              "title": "Building",
+              "description": "Building",
+              "type": "string"
+            },
+            "Country": {
+              "title": "Country",
+              "description": "Country",
+              "type": "string"
+            },
+            "AddressType": {
+              "title": "AddressType",
+              "description": "Address Type",
+              "type": "string"
+            }
+          }
+        },
+        "BusinessPartnerID": {
+          "title": "BusinessPartnerID",
+          "description": "Bus. Part. ID",
+          "type": "string",
+          "required": [
+            "BusinessPartnerID"
+          ],
+          "x-ms-keyType": "primary",
+          "x-ms-keyOrder": 0,
+          "x-ms-capabilities": { "filterFunctions": [ "eq" ] }
+        },
+        "CompanyName": {
+          "title": "CompanyName",
+          "description": "Company Name",
+          "type": "string",
+          "required": [
+            "CompanyName"
+          ]
+        },
+        "WebAddress": {
+          "title": "WebAddress",
+          "description": "Web Address",
+          "type": "string"
+        },
+        "EmailAddress": {
+          "title": "EmailAddress",
+          "description": "E-Mail Address",
+          "type": "string",
+          "required": [
+            "EmailAddress"
+          ]
+        },
+        "PhoneNumber": {
+          "title": "PhoneNumber",
+          "description": "Phone No.",
+          "type": "string"
+        },
+        "FaxNumber": {
+          "title": "FaxNumber",
+          "description": "Fax Number",
+          "type": "string"
+        },
+        "LegalForm": {
+          "title": "LegalForm",
+          "description": "Legal Form",
+          "type": "string"
+        },
+        "CurrencyCode": {
+          "title": "CurrencyCode",
+          "description": "Currency",
+          "type": "string",
+          "required": [
+            "CurrencyCode"
+          ]
+        },
+        "BusinessPartnerRole": {
+          "title": "BusinessPartnerRole",
+          "description": "Bus. Part. Role",
+          "type": "string",
+          "required": [
+            "BusinessPartnerRole"
+          ]
+        },
+        "CreatedAt": {
+          "title": "CreatedAt",
+          "description": "Time Stamp",
+          "type": "string"
+        },
+        "ChangedAt": {
+          "title": "ChangedAt",
+          "description": "Time Stamp",
+          "type": "string"
+        },
+        "ToSalesOrders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "SalesOrderID": {
+                "title": "SalesOrderID",
+                "description": "Sa. Ord. ID",
+                "type": "string",
+                "required": [
+                  "SalesOrderID"
+                ]
+              },
+              "Note": {
+                "title": "Note",
+                "description": "Description",
+                "type": "string"
+              },
+              "NoteLanguage": {
+                "title": "NoteLanguage",
+                "description": "Language",
+                "type": "string"
+              },
+              "CustomerID": {
+                "title": "CustomerID",
+                "description": "Bus. Part. ID",
+                "type": "string",
+                "required": [
+                  "CustomerID"
+                ]
+              },
+              "CustomerName": {
+                "title": "CustomerName",
+                "description": "Company Name",
+                "type": "string"
+              },
+              "CurrencyCode": {
+                "title": "CurrencyCode",
+                "description": "Currency",
+                "type": "string"
+              },
+              "GrossAmount": {
+                "title": "GrossAmount",
+                "description": "Gross Amt.",
+                "type": "number"
+              },
+              "NetAmount": {
+                "title": "NetAmount",
+                "description": "Net Amt.",
+                "type": "number"
+              },
+              "TaxAmount": {
+                "title": "TaxAmount",
+                "description": "Tax Amt.",
+                "type": "number"
+              },
+              "LifecycleStatus": {
+                "title": "LifecycleStatus",
+                "description": "PO Lifecycle",
+                "type": "string"
+              },
+              "LifecycleStatusDescription": {
+                "title": "LifecycleStatusDescription",
+                "description": "Lifecycle Descript.",
+                "type": "string"
+              },
+              "BillingStatus": {
+                "title": "BillingStatus",
+                "description": "PO Confirmation",
+                "type": "string"
+              },
+              "BillingStatusDescription": {
+                "title": "BillingStatusDescription",
+                "description": "Billing Description",
+                "type": "string"
+              },
+              "DeliveryStatus": {
+                "title": "DeliveryStatus",
+                "description": "PO Ordering",
+                "type": "string"
+              },
+              "DeliveryStatusDescription": {
+                "title": "DeliveryStatusDescription",
+                "description": "Delivery Description",
+                "type": "string"
+              },
+              "CreatedAt": {
+                "title": "CreatedAt",
+                "description": "Time Stamp",
+                "type": "string"
+              },
+              "ChangedAt": {
+                "title": "ChangedAt",
+                "description": "Time Stamp",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "ToContacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Address": {
+                "type": "object",
+                "properties": {
+                  "City": {
+                    "title": "City",
+                    "description": "City",
+                    "type": "string"
+                  },
+                  "PostalCode": {
+                    "title": "PostalCode",
+                    "description": "Postal Code",
+                    "type": "string"
+                  },
+                  "Street": {
+                    "title": "Street",
+                    "description": "Street",
+                    "type": "string"
+                  },
+                  "Building": {
+                    "title": "Building",
+                    "description": "Building",
+                    "type": "string"
+                  },
+                  "Country": {
+                    "title": "Country",
+                    "description": "Country",
+                    "type": "string"
+                  },
+                  "AddressType": {
+                    "title": "AddressType",
+                    "description": "Address Type",
+                    "type": "string"
+                  }
+                }
+              },
+              "ContactGuid": {
+                "title": "ContactGuid",
+                "description": "Contact GUID",
+                "type": "string",
+                "required": [
+                  "ContactGuid"
+                ]
+              },
+              "BusinessPartnerID": {
+                "title": "BusinessPartnerID",
+                "description": "Bus. Part. ID",
+                "type": "string",
+                "required": [
+                  "BusinessPartnerID"
+                ]
+              },
+              "Title": {
+                "title": "Title",
+                "description": "Title",
+                "type": "string"
+              },
+              "FirstName": {
+                "title": "FirstName",
+                "description": "First Name",
+                "type": "string",
+                "required": [
+                  "FirstName"
+                ]
+              },
+              "MiddleName": {
+                "title": "MiddleName",
+                "description": "Middle Name",
+                "type": "string"
+              },
+              "LastName": {
+                "title": "LastName",
+                "description": "Last Name",
+                "type": "string"
+              },
+              "Nickname": {
+                "title": "Nickname",
+                "description": "Nickname",
+                "type": "string"
+              },
+              "Initials": {
+                "title": "Initials",
+                "description": "Initials",
+                "type": "string"
+              },
+              "Sex": {
+                "title": "Sex",
+                "description": "Sex",
+                "type": "string",
+                "required": [
+                  "Sex"
+                ]
+              },
+              "PhoneNumber": {
+                "title": "PhoneNumber",
+                "description": "Phone No.",
+                "type": "string"
+              },
+              "FaxNumber": {
+                "title": "FaxNumber",
+                "description": "Fax Number",
+                "type": "string"
+              },
+              "EmailAddress": {
+                "title": "EmailAddress",
+                "description": "E-Mail Address",
+                "type": "string"
+              },
+              "Language": {
+                "title": "Language",
+                "description": "Language Key",
+                "type": "string"
+              },
+              "DateOfBirth": {
+                "title": "DateOfBirth",
+                "description": "Date of Birth",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "ToProducts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ProductID": {
+                "title": "ProductID",
+                "description": "Product ID",
+                "type": "string",
+                "required": [
+                  "ProductID"
+                ]
+              },
+              "TypeCode": {
+                "title": "TypeCode",
+                "description": "Prod. Type Code",
+                "type": "string",
+                "required": [
+                  "TypeCode"
+                ]
+              },
+              "Category": {
+                "title": "Category",
+                "description": "Prod. Cat.",
+                "type": "string",
+                "required": [
+                  "Category"
+                ]
+              },
+              "Name": {
+                "title": "Name",
+                "description": "Product Name",
+                "type": "string",
+                "required": [
+                  "Name"
+                ]
+              },
+              "NameLanguage": {
+                "title": "NameLanguage",
+                "description": "Language",
+                "type": "string"
+              },
+              "Description": {
+                "title": "Description",
+                "description": "Prod.Descrip.",
+                "type": "string"
+              },
+              "DescriptionLanguage": {
+                "title": "DescriptionLanguage",
+                "description": "Language",
+                "type": "string"
+              },
+              "SupplierID": {
+                "title": "SupplierID",
+                "description": "Bus. Part. ID",
+                "type": "string",
+                "required": [
+                  "SupplierID"
+                ]
+              },
+              "SupplierName": {
+                "title": "SupplierName",
+                "description": "Company Name",
+                "type": "string"
+              },
+              "TaxTarifCode": {
+                "title": "TaxTarifCode",
+                "description": "Prod. Tax Code",
+                "type": "integer",
+                "required": [
+                  "TaxTarifCode"
+                ]
+              },
+              "MeasureUnit": {
+                "title": "MeasureUnit",
+                "description": "Qty. Unit",
+                "type": "string",
+                "required": [
+                  "MeasureUnit"
+                ]
+              },
+              "WeightMeasure": {
+                "title": "WeightMeasure",
+                "description": "Wt. Measure",
+                "type": "number"
+              },
+              "WeightUnit": {
+                "title": "WeightUnit",
+                "description": "Qty. Unit",
+                "type": "string"
+              },
+              "CurrencyCode": {
+                "title": "CurrencyCode",
+                "description": "Currency",
+                "type": "string",
+                "required": [
+                  "CurrencyCode"
+                ]
+              },
+              "Price": {
+                "title": "Price",
+                "description": "Unit Price",
+                "type": "number"
+              },
+              "Width": {
+                "title": "Width",
+                "description": "Dimensions",
+                "type": "number"
+              },
+              "Depth": {
+                "title": "Depth",
+                "description": "Dimensions",
+                "type": "number"
+              },
+              "Height": {
+                "title": "Height",
+                "description": "Dimensions",
+                "type": "number"
+              },
+              "DimUnit": {
+                "title": "DimUnit",
+                "description": "Dim. Unit",
+                "type": "string"
+              },
+              "CreatedAt": {
+                "title": "CreatedAt",
+                "description": "Time Stamp",
+                "type": "string"
+              },
+              "ChangedAt": {
+                "title": "ChangedAt",
+                "description": "Time Stamp",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "BusinessPartnerID",
+        "CompanyName",
+        "EmailAddress",
+        "CurrencyCode",
+        "BusinessPartnerRole"
+      ]
+    }
+  },
+  "webUrl": "https://49970107-0806-e5a7-be5e-7c60e2750f01.12.common.firstrelease.azure-apihub.net/apim/sapodata/b5097592f2ae498ea32458b1035634a9/$metadata.json/datasets/https%253A%252F%252Fsapes5.sapdevcenter.com%252Fsap%252Fopu%252Fodata%252Fiwbep%252FGWSAMPLE_BASIC%252F/tables/BusinessPartnerSet?api-version=2015-09-01"
+}

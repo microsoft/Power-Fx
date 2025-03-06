@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var asm = typeof(Parser.TexlParser).Assembly;
 
-            // The goal for public namespaces is to make the SDK easy for the consumer. 
+            // The goal for public namespaces is to make the SDK easy for the consumer.
             // Namespace principles for public classes:
             // - prefer fewer namespaces. See C# for example: https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis
             // - For easy discovery, but Engine in "Microsoft.PowerFx".
@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var allowed = new HashSet<string>()
             {
-                // Core namespace. 
+                // Core namespace.
                 "Microsoft.PowerFx.CheckResult",
                 "Microsoft.PowerFx.DefinitionsCheckResult",
                 "Microsoft.PowerFx.CheckContextSummary",
@@ -58,8 +58,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.SymbolProperties",
                 "Microsoft.PowerFx.SymbolEntry",
                 "Microsoft.PowerFx.DeferredSymbolPlaceholder",
-                
-                // Lexer                
+
+                // Lexer
                 "Microsoft.PowerFx.Syntax.BinaryOp",
                 "Microsoft.PowerFx.Syntax.CommentToken",
                 "Microsoft.PowerFx.Syntax.DecLitToken",
@@ -101,13 +101,13 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Syntax.VariadicBase",
                 "Microsoft.PowerFx.Syntax.VariadicOpNode",
                 "Microsoft.PowerFx.Syntax.TypeLiteralNode",
-                              
+
                 // Visitors
                 "Microsoft.PowerFx.Syntax.IdentityTexlVisitor",
                 "Microsoft.PowerFx.Syntax.TexlFunctionalVisitor`2",
                 "Microsoft.PowerFx.Syntax.TexlVisitor",
 
-                // Power Fx Type system and Values. 
+                // Power Fx Type system and Values.
                 "Microsoft.PowerFx.Types.AggregateType",
                 "Microsoft.PowerFx.Types.BindingErrorType",
                 "Microsoft.PowerFx.Types.BlankType",
@@ -168,9 +168,9 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.ValidFormulaValue",
                 "Microsoft.PowerFx.Types.Void",
                 "Microsoft.PowerFx.Types.VoidValue",
-                
+
                 // Intellisense classes. Used primarily by the Language Service Provider.
-                // Most evaluators should never need these. 
+                // Most evaluators should never need these.
                 "Microsoft.PowerFx.Intellisense.CodeFixHandler",
                 "Microsoft.PowerFx.Intellisense.CodeFixSuggestion",
                 "Microsoft.PowerFx.Intellisense.ConnectorSuggestion",
@@ -199,7 +199,9 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Entities.ColumnCapabilitiesDefinition",
                 "Microsoft.PowerFx.Core.Entities.FilterRestrictions",
                 "Microsoft.PowerFx.Core.Entities.GroupRestrictions",
-                "Microsoft.PowerFx.Core.Entities.IRefreshable",                
+                "Microsoft.PowerFx.Core.Entities.INavigationProperty",
+                "Microsoft.PowerFx.Core.Entities.IRefreshable",
+                "Microsoft.PowerFx.Core.Entities.ISupportsNavigationProperties",
                 "Microsoft.PowerFx.Core.Entities.SelectionRestrictions",
                 "Microsoft.PowerFx.Core.Entities.SortRestrictions",
                 "Microsoft.PowerFx.Core.Entities.CountCapabilities",
@@ -235,7 +237,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.True(count == 0, $"Unexpected public types: {sb}");
 
-            // Types we expect to be in the assembly are all there. 
+            // Types we expect to be in the assembly are all there.
             Assert.Empty(allowed);
         }
 
@@ -265,7 +267,7 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
-        // Assert DocumentErrorSeverity and ErrorSeverity are in sync. 
+        // Assert DocumentErrorSeverity and ErrorSeverity are in sync.
         [Fact]
         public void ErrorSeverityEnumsMatch()
         {

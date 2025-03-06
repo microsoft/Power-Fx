@@ -16,7 +16,7 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Core.Entities
 {
     // Implements a base data source, used in DType.AssociatedDataSources, itself in RecordType constructor to host a CDP record type
-    internal class DataSourceInfo : IExternalTabularDataSource
+    internal class DataSourceInfo : IExternalTabularDataSource, ISupportsNavigationProperties
     {
         // Key = field logical name, Value = foreign table logical name
         public readonly IReadOnlyDictionary<string, string> ColumnsWithRelationships;
@@ -156,13 +156,13 @@ namespace Microsoft.PowerFx.Core.Entities
 
             FilterOpMetadata filterOpMetadata = new CdpFilterOpMetadata(recordType, delegationInfo);
             GroupOpMetadata groupOpMetadata = new GroupOpMetadata(type, groupByRestrictions);
-            ODataOpMetadata oDataOpMetadata = new ODataOpMetadata(type, oDataReplacements);
+            ODataOpMetadata oDataOpMetadata = new ODataOpMetadata(type, oDataReplacements);            
 
             List<OperationCapabilityMetadata> metadataList = new List<OperationCapabilityMetadata>()
             {
                 filterOpMetadata,
                 groupOpMetadata,
-                oDataOpMetadata
+                oDataOpMetadata                
             };
 
             if (delegationInfo?.SortRestriction != null)
@@ -211,6 +211,11 @@ namespace Microsoft.PowerFx.Core.Entities
                 // Task 5593666: This is temporary to not cause regressions while sharepoint switches to using full query param
                 return currentColumnPath.Append(new DName(alias));
             }
+        }
+
+        public virtual IReadOnlyList<INavigationProperty> GetNavigationProperties(string fieldName)
+        {
+            return _delegationInfo.GetNavigationProperties(fieldName);
         }
     }
 }

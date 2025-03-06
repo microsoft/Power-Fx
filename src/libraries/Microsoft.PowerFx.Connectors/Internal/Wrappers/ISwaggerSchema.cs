@@ -38,6 +38,12 @@ namespace Microsoft.PowerFx.Connectors
         // SalesForce specific
         string RelationshipName { get; }
 
+        string ForeignKey { get; }
+
+        string SourceField { get; }
+
+        string RelationshipType { get; }
+
         // SalesForce specific
         string DataType { get; }
     }
