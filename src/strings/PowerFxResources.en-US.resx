@@ -4682,7 +4682,11 @@
   <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Name of submatch is too long, found "{0}".</value>
     <comment>Error Message.</comment>
-  </data>  
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Number is too large, found "{0}".</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regular expression must be a constant value.</value>
     <comment>Error Message.</comment>

@@ -1561,4 +1561,21 @@ Errors: Error 33-72: Invalid regular expression: Lookbehind exceeded maximum pos
 >> Match( "aaaaaaaaaaaaaaaaaaaaab", "((aa){2,})(?<!\1{2,12}aaaaaaaaaa)b", MatchOptions.NumberedSubMatches )
 Errors: Error 33-69: Invalid regular expression: Unlimited quantifiers are not supported in look behinds, found at the end of "\1".|Error 0-5: The function 'Match' has some invalid arguments.
 
+// number of repetitions overflow
+// very unlikely for standard use to hit signed 32-bit max, but someone may test the boundaries...
+// back refs are never converted to a number, instead compared as strings against the capture group's index converted to a string, so not an issue
 
+>> Match( "a", "a{1111111111111111111111111111111111,}" )
+Errors: Error 12-52: Invalid regular expression: Number is too large, found "{1111111111111111111111111111111111,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "a{1111111111111111111111111111111111,111111111111111111111111111111111111111111111}" )
+Errors: Error 12-97: Invalid regular expression: Number is too large, found "{1111111111111111111111111111111111,111111111111111111111111111111111111111111111}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "a{1,111111111111111111111111111111111111111111111}" )
+Errors: Error 12-64: Invalid regular expression: Number is too large, found "{1,111111111111111111111111111111111111111111111}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "a{11111111111111111111111111111111111111,1}" )
+Errors: Error 12-57: Invalid regular expression: Number is too large, found "{11111111111111111111111111111111111111,1}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "a{11111111111111111111111111111111111111}" )
+Errors: Error 12-55: Invalid regular expression: Number is too large, found "{11111111111111111111111111111111111111}".|Error 0-5: The function 'Match' has some invalid arguments.

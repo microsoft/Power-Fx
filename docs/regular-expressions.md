@@ -121,7 +121,7 @@ Mixing submatches and quantifiers has limitations. See [Possibly empty submatche
 | Numbered sub-match and back reference | When **MatchOptions.NumberedSubMatches** is enabled, `(a)` captures a sub-match referenced with `\1`. |
 | Non-capture group | `(?:a)`, creates group without capturing the result as a named or numbered sub-match. All groups are non-capturing unless **MatchOptions.NumberedSubMatches** is enabled. |
 
-Named and numbered sub-matches cannot be used together. By default, named sub-matches are enabled and are preferred for clarity and maintainability, while standard capture groups become non capture groups with improved performance. This can be changed with **MatchOptions.NumberedSubMatches** which provides for traditional capture groups but disables named captures groups. Some implementations treat a mix of numbered and named capture groups differently which is why Power Fx disallows it. 
+Named and numbered sub-matches cannot be used together. By default, named sub-matches are enabled and are preferred for clarity and maintainability, while standard capture groups become non capture groups with improved performance. This can be changed with **MatchOptions.NumberedSubMatches** which provides for traditional capture groups but disables named capture groups. Some implementations treat a mix of numbered and named capture groups differently which is why Power Fx disallows it. 
 
 Self referencing capture groups are not supported, for example the regular expression `(a\1)`.
 
@@ -154,7 +154,7 @@ Inline options cannot be used to disable an option or set an option for a sub-ex
 ## Options
 
 Match options change the behavior of regular expression matching. There are two ways to enable options, which can be mixed so long as there is no conflict:
-- **MatchOptions** enum value passed as the third argument to **Match**, **MatchAll**, and **IsMatch**.  Options can be combined with the `&` operator or `Concatenate` function, for example `MatchOptions.DotAll & MatchOptions.FreeSpacing`. All of the regular expression functions requires that **MatchOptions** is a constant value, it cannot be calculated or stored in a variable. 
+- **MatchOptions** enum value passed as the third argument to **Match**, **MatchAll**, and **IsMatch**.  Options can be combined with the `&` operator or `Concatenate` function, for example `MatchOptions.DotAll & MatchOptions.FreeSpacing`. All of the regular expression functions require that **MatchOptions** is a constant value, it cannot be calculated or stored in a variable. 
 - `(?...)` prefix at the very beginning of the regular expression.  Options can be combined with multiple letters in the `(?...)` construct, for example `(?sx)`.  Some options do not have a `(?...)` equivalent but may have other ways to get the same effect, for example **MatchOptions.BeginsWith** is the equivalent of `^` at the beginning of the regular expression.
 
 ### Contains
@@ -275,17 +275,17 @@ MatchAll( "Hello" & Char(13) & Char(10) & "World", "^.+$" )
 
 Enabled with **MatchOptions.NumberedSubMatches** with no inline option. `(?n)` is supported as the opposite of this option for compatibility and is the default.
 
-By default, `(...)` does not capture, the equivalent of what most systems call "explicit capture". To capture, use a named capture with `(?<name>...)` with backreference `\k<name>`. This improves performance of the regular expression by not capturing gruops that do not need to be captures and improving clarity by using names instead of numbers that can change.
+By default, `(...)` does not capture, the equivalent of what most systems call "explicit capture". To capture, use a named capture with `(?<name>...)` with backreference `\k<name>`. This improves performance of the regular expression by not capturing groups that do not need to be captures and improving clarity by using names instead of numbers that can change.
 
-If you have an existing regular expression, it may depend on groups being captured automatically and numbered, including numbered back references. This is available by using the **MatchOptions.NumberedSubMaches** option.
+If you have an existing regular expression, it may depend on groups being captured automatically and numbered, including numbered back references. This is available by using the **MatchOptions.NumberedSubMatches** option.
 
 Named and numbered sub-matches cannot be used together. Some implementations treat a mix of numbered and named capture groups differently which is why Power Fx disallows it. 
 
 ## Possibly empty submatches
 
-As stated in the introduction, Power Fx's regular expressions are intentionally limited to features that can be consistently implemented on top of .NET, JavaScript, and other programming language regular expression engines. Authoring time errors prevent use of features that are not a part of this set. 
+As stated in the introduction, Power Fx's regular expressions are intentionally limited to features that can be consistently implemented on top of .NET, JavaScript, and other programming language regular expression engines. Authoring time errors prevent the use of features that are not a part of this set. 
 
-One area that can be signficaintly different between implementations is how empty submatches are handled. For example, consdier the regular expression `(?<submatch>a*)+` asked to match the text `a`. On .NET, the submatch will result in an empty text string, while on JavaScript it will result in `a`. Both can be argued as  correct implementations, as the `+` quantifier can be satisfied with an empty string since the contents of the group has a `*` quantifier.
+One area that can be significantly different between implementations is how empty submatches are handled. For example, consider the regular expression `(?<submatch>a*)+` asked to match the text `a`. On .NET, the submatch will result in an empty text string, while on JavaScript it will result in `a`. Both can be argued as  correct implementations, as the `+` quantifier can be satisfied with an empty string since the contents of the group has a `*` quantifier.
 
 To avoid different results across Power Fx implementations, submatches that could be empty cannot be used with a quantifier. Here are examples of how a submatch could be empty:
 
@@ -296,6 +296,6 @@ To avoid different results across Power Fx implementations, submatches that coul
 | `(?<submatch>a|b*)+` | Alternation within the submatch with something that could be empty could result in the entire submatch being empty. |
 | `((?<submatch>a)|b)+` | Alternation outside the submatch could match `b` in which case the submatch would be empty.|
 
-Note that the submatch in `(?<submatch>a+)+` cannot be empty, as there must be at leaset one `a` in he submatch, and is supported.
+Note that the submatch in `(?<submatch>a+)+` cannot be empty, as there must be at least one `a` in he submatch, and is supported.
 
 Backreferences to possibly empty submatches are also not supported. 

@@ -276,7 +276,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // These tests can be run through all three engines and the results compared with by setting ExpressionEvaluationTests.RegExCompareEnabled, a PCRE2 DLL and NodeJS must be installed on the system.
         //
         // In short, we use the insersection of canonical .NET regular expressions and ECMAScript 2024's "v" flag for escaping rules. 
-        // Someday when "v" is more widely avaialble, we can support more of its features such as set subtraction.
+        // Someday when "v" is more widely available, we can support more of its features such as set subtraction.
         // We chose to use canonical .NET instead of RegexOptions.ECMAScript because we wanted the unicode definitions for words. See https://learn.microsoft.com/dotnet/standard/base-types/regular-expression-options#ecmascript-matching-behavior
         //
         // In addition, Power Fx regular expressions are opinionated and try to eliminate some of the ambiguity in the common regular expression language:
@@ -335,7 +335,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             [\#\ ]                                 |     # added for free spacing, always accepted for conssitency even in character classes, escape needs to be removed on Unicode aware ECMAScript
                             x[0-9a-fA-F]{2}                        |     # hex character, must be exactly 2 hex digits
                             u[0-9a-fA-F]{4}))                          | # Unicode characters, must be exactly 4 hex digits
-                    \\(?<goodUEscape>[pP])\{(?<UCategory>[\w=:-]+)\}   | # Unicode chaeracter classes, extra characters here for a better error message
+                    \\(?<goodUEscape>[pP])\{(?<UCategory>[\w=:-]+)\}   | # Unicode character classes, extra characters here for a better error message
                     (?<goodEscapeOutsideCC>\\[bB])                     | # acceptable outside a character class, includes negative classes until we have character class subtraction, include \P for future MatchOptions.LocaleAware
                     (?<goodEscapeOutsideAndInsideCCIfPositive>\\[DWS]) |
                     (?<goodEscapeInsideCCOnly>\\[&\-!#%,;:<=>@`~\^])   | # https://262.ecma-international.org/#prod-ClassSetReservedPunctuator, others covered with goodEscape above
@@ -471,7 +471,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["goodExact"].Success)
                     {
-                        var exact = Convert.ToInt32(token.Groups["goodExact"].Value, CultureInfo.InvariantCulture);
+                        if (!int.TryParse(token.Groups["goodExact"].Value, out var exact))
+                        {
+                            RegExError(TexlStrings.ErrInvalidRegExNumberOverflow);
+                            return false;
+                        }
 
                         if (!groupTracker.SeenQuantifier(exact, exact, out var error))
                         {
@@ -481,8 +485,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["goodLimitedL"].Success)
                     {
-                        var low = Convert.ToInt32(token.Groups["goodLimitedL"].Value, CultureInfo.InvariantCulture);
-                        var high = Convert.ToInt32(token.Groups["goodLimitedH"].Value, CultureInfo.InvariantCulture);
+                        if (!int.TryParse(token.Groups["goodLimitedL"].Value, out var low))
+                        {
+                            RegExError(TexlStrings.ErrInvalidRegExNumberOverflow);
+                            return false;
+                        }
+
+                        if (!int.TryParse(token.Groups["goodLimitedH"].Value, out var high))
+                        {
+                            RegExError(TexlStrings.ErrInvalidRegExNumberOverflow);
+                            return false;
+                        }
 
                         if (!groupTracker.SeenQuantifier(low, high, out var error))
                         {
@@ -500,7 +513,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["goodUnlimited"].Success)
                     {
-                        var low = Convert.ToInt32(token.Groups["goodUnlimited"].Value, CultureInfo.InvariantCulture);
+                        if (!int.TryParse(token.Groups["goodUnlimited"].Value, out var low))
+                        {
+                            RegExError(TexlStrings.ErrInvalidRegExNumberOverflow);
+                            return false;
+                        }
 
                         if (!groupTracker.SeenQuantifier(low, -1, out var error))
                         {

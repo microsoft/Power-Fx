@@ -235,7 +235,7 @@ namespace Microsoft.PowerFx.Functions
                 bool matchEnd = options.Contains("$");
                 bool numberedSubMatches = options.Contains("N");
 
-                // Can't add options ^ and $ too early as there may be freespacing comments, centalize the logic here and call subfunctions
+                // Can't add options ^ and $ too early as there may be freespacing comments, centralize the logic here and call subfunctions
                 string AlterStart()
                 {
                     // ^ doesn't require any translation if not in multilline, only matches the start of the string

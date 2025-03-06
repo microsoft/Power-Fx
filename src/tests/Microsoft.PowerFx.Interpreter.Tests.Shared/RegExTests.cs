@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config2.EnableRegExFunctions(TimeSpan.FromMilliseconds(50), 20);
         }
 
-        // castrophic backtracking
+        // catastrophic backtracking
         // 1. short, will succeed with little backtracking
         // 2. short, will fail due to the extra comma at the end of the input, more backtracking but short enough that it completes in a reasonable amount of time
         // 3. long, will still succeed with little backtracking
