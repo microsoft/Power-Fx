@@ -329,7 +329,7 @@ namespace Microsoft.PowerFx.Functions
                         break;
                     }
 
-                    Dictionary<string, NamedValue> fields = new();
+                    Dictionary<string, NamedValue> fields = new ();
 
                     var sc = NativeMethods.pcre2_get_startchar_32(md);
                     fields.Add(STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New((double)sc + 1)));

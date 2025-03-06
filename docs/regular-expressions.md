@@ -67,7 +67,7 @@ Lookahead and lookbehind assertions cannot contain submatches or unlimited quant
 | Feature | Description |
 |---------|---------|
 | Dot | `.`, matches everything except `\r` and `\n` unless **MatchOptions.DotAll** is used. |
-| Character class | `[abc]` list of characters, `[a-fA-f0-9]` range of characters, `[^a-z]` everything but these characters. Character classes cannot be nested, subtracted, or intersected, and the same character cannot appear twice in the character class (except for a hyphen). |  
+| Character class | `[abc]` list of characters, `[a-fA-f0-9]` range of characters, `[^a-z]` everything but these characters. Character classes cannot be nested, subtracted, or intersected, and many punctuation marks may not appear twice in a row (`@@`, `%%`, `!!`, etc). |  
 | Word characters | `\w` and `\W` using the Unicode definition of letters `[\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Nd}\p{Pc}\p{Lm}]`. `\W` cannot be used in a negative character class.|
 | Digit characters | `\d` includes the digits `0` to`9` and `\p{Nd}`, `\D` matches everything except characters matched by `\d`. `\D` cannot be used in a negative character class.|
 | Space characters | `\s` includes spacing characters `[ \r\n\t\f\x0B\x85\p{Z}]`, `\S` which matches everything except characters matched by `\s`, `\r` carriage return, `\n` newline, `\t` tab, `\f` form feed. `\S` cannot be used in a negative character class.|
@@ -103,8 +103,8 @@ Unicode character categories supported by `\p{}` and `\P{}`:
 | Lazy zero or one | `??` matches 0 or 1 times, with as *small* a match as possible. |
 | Lazy zero or more | `*?` matches 0 or more times, with as *small* a match as possible. |
 | Lazy one or more | `+?` matches 1 or more times, with as *small* a match as possible. |
-| Lazy at least n | `{n,}?` matches at least *n* times, with as *small* a match as possible. For example, `a{3,}` will match the first three characters in `aaaaa`. |
-| Lazy between n and m | `{n,m}?` matches between *n* and *m* times, with as *small* a match as possible. For example, `a{1,3}` will match the first character of `aaaaa`. |
+| Lazy at least n | `{n,}?` matches at least *n* times, with as *small* a match as possible. For example, `a{3,}?` will match only the first three characters in `aaaaa`. |
+| Lazy between n and m | `{n,m}?` matches between *n* and *m* times, with as *small* a match as possible. For example, `a{1,3}?` will match only the first character of `aaaaa`. |
 | Exact n | `{n}` matches *n* times, exactly. For example, `a{3}` will match exactly 3 characters of `aaaaa`. |
 
 Possessive quantifiers are not supported.

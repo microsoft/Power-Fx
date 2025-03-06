@@ -191,7 +191,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var runner = new InterpreterRunner();
             var testRunner = new TestRunner(runner);
 
-            testRunner.AddFile(new Dictionary<string, bool>(), null, path);
+            testRunner.AddFile(new Dictionary<string, bool>(), path);
 
             // We can filter to just cases we want, set line above
             if (line > 0)
@@ -272,7 +272,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var testRunner = new TestRunner(runner);
 
-            testRunner.AddFile(TestRunner.ParseSetupString(setup), null, path);
+            testRunner.AddFile(TestRunner.ParseSetupString(setup), path);
 
             if (testRunner.Tests.Count > 0 && testRunner.Tests[0].SetupHandlerName.Contains("MutationFunctionsTestSetup"))
             {
@@ -333,7 +333,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var runner = new TestRunner();
 
             // Verify this runs without throwing an exception.
-            runner.AddDir(new Dictionary<string, bool>(), null, path);
+            runner.AddDir(new Dictionary<string, bool>(), path);
 
             // Ensure that we actually found tests and not pointed to an empty directory
             Assert.True(runner.Tests.Count > 10);

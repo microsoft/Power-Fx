@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                             if (file.EndsWith(".txt", StringComparison.InvariantCultureIgnoreCase))
                             {
-                                parser.AddFile(_setup, _requiredSetup, file);
+                                parser.AddFile(_setup, file, _requiredSetup);
                             }
                         }
                     }

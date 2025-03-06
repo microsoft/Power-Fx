@@ -136,25 +136,25 @@ namespace Microsoft.PowerFx.Core.Tests
             return settings;
         }
 
-        public void AddDir(Dictionary<string, bool> setup, Dictionary<string, bool> requiredSetup, string directory = "")
+        public void AddDir(Dictionary<string, bool> setup, string directory = "")
         {         
             directory = GetFullPath(directory, TestRoot);
             var allFiles = Directory.EnumerateFiles(directory);
 
-            AddFile(setup, requiredSetup, allFiles);
+            AddFile(setup, allFiles);
         }
 
-        public void AddFile(Dictionary<string, bool> setup, Dictionary<string, bool> requiredSetup, params string[] files)
+        public void AddFile(Dictionary<string, bool> setup, params string[] files)
         {
             var x = (IEnumerable<string>)files;
-            AddFile(setup, requiredSetup, x);
+            AddFile(setup, x);
         }
 
-        public void AddFile(Dictionary<string, bool> setup, Dictionary<string, bool> requiredSetup, IEnumerable<string> files)
+        public void AddFile(Dictionary<string, bool> setup, IEnumerable<string> files)
         {
             foreach (var file in files)
             {
-                AddFile(setup, requiredSetup, file);
+                AddFile(setup, file);
             }
         }
 
@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
-        public void AddFile(Dictionary<string, bool> setup, Dictionary<string, bool> requiredSetup, string thisFile)
+        public void AddFile(Dictionary<string, bool> setup, string thisFile, Dictionary<string, bool> requiredSetup = null)
         {            
             thisFile = GetFullPath(thisFile, TestRoot);
 
