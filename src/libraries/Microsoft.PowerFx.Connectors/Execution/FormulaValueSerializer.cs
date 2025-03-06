@@ -153,13 +153,13 @@ namespace Microsoft.PowerFx.Connectors.Execution
                 return;
             }
 
-            if (propertySchema == null)
+            if (propertySchema == null && !_schemaLessBody)
             {
                 throw new PowerFxConnectorException($"Missing schema for property {propertyName}");
             }
 
             // if connector has null as a type but "array" is provided, let's write it down. this is possible in case of x-ms-dynamic-properties
-            if (fv is TableValue tableValue && ((propertySchema.Type ?? "array") == "array"))
+            if (fv is TableValue tableValue && ((propertySchema?.Type ?? "array") == "array"))
             {
                 StartArray(propertyName);
 
@@ -169,9 +169,15 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     RecordValue rva = item.Value;
 
                     // If we have an object schema, we will try to follow it
-                    if (propertySchema.Items?.Type == "object" || propertySchema.Items?.Type == "array")
+                    if (propertySchema?.Items?.Type == "object" || propertySchema?.Items?.Type == "array")
                     {
                         await WritePropertyAsync(null, propertySchema.Items, rva).ConfigureAwait(false);
+                        continue;
+                    }
+
+                    if (propertySchema?.Items?.Type == null && _schemaLessBody)
+                    {
+                        await WritePropertyAsync(null, null, rva).ConfigureAwait(false);
                         continue;
                     }
 
@@ -190,6 +196,64 @@ namespace Microsoft.PowerFx.Connectors.Execution
                 }
 
                 EndArray();
+                return;
+            }
+
+            if (_schemaLessBody && propertySchema?.Type == null)
+            {
+                if (propertyName != null)
+                {
+                    WritePropertyName(propertyName);
+                }
+
+                if (fv is NumberValue numberValue)
+                {
+                    WriteNumberValue(numberValue.Value);
+                }
+                else if (fv is DecimalValue decimalValue)
+                {
+                    WriteDecimalValue(decimalValue.Value);
+                }
+                else if (fv is BooleanValue booleanValue)
+                {
+                    WriteBooleanValue(booleanValue.Value);
+                }
+                else if (fv is StringValue stringValue)
+                {
+                    WriteStringValue(stringValue.Value);
+                }
+                else if (fv is DateTimeValue dtv)
+                {                    
+                    WriteDateTimeValue(_utcConverter.ToUTC(dtv));                                        
+                }
+                else if (fv is DateValue dv)
+                {
+                    WriteDateValue(dv.GetConvertedValue(null));
+                }                
+                else if (fv is BlobValue bv)
+                {
+                    await WriteBlobValueAsync(bv).ConfigureAwait(false);
+                }
+                else if (fv is OptionSetValue optionSetValue)
+                {
+                    WriteStringValue(optionSetValue.Option);
+                }
+                else if (fv is RecordValue recordValue)
+                {
+                    StartObject();
+
+                    foreach (NamedValue field in recordValue.Fields)
+                    {
+                        await WritePropertyAsync(field.Name, null, field.Value).ConfigureAwait(false);
+                    }
+
+                    EndObject();
+                }
+                else
+                {
+                    throw new NotImplementedException($"Unsupported type {fv.GetType().FullName} for schemaless body");
+                }
+
                 return;
             }
 

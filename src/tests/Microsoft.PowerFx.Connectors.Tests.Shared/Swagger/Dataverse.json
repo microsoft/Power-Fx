@@ -4683,6 +4683,78 @@
         }
       }
     },
+    "/{connectionId}/flow/api/data/v9.1.0/{actionName}/v2-fake": {
+      "post": {
+        "tags": [
+          "PerformUnboundAction-Fake",
+          "Runtime"
+        ],
+        "summary": "Perform an unbound action (Preview)",
+        "description": "Run a global Dataverse action in a Power Platform environment, including custom actions.",
+        "operationId": "PerformUnboundActionWithOrganizationV2",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "organization",
+            "in": "header",
+            "description": "Choose an environment",
+            "required": true,           
+            "x-ms-summary": "Environment",
+            "x-ms-visibility": "important",
+            "type": "string"
+          },
+          {
+            "name": "actionName",
+            "in": "path",
+            "description": "Choose an action",
+            "required": true,
+            "x-ms-url-encoding": "double",           
+            "x-ms-summary": "Action Name",
+            "type": "string"
+          },
+          {
+            "name": "item",
+            "in": "body",
+            "description": "Action parameters",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "x-ms-internal-dev-comment": "There is no description of the fields here!"
+              }
+            },
+            "x-ms-summary": "Action parameters"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"              
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "important",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/commondataserviceforapps/#perform-an-unbound-action-(preview)"
+        }
+      }
+    },
     "/{connectionId}/api/data/v9.1/{entityName}({recordId})/{actionName}": {
       "post": {
         "tags": [
