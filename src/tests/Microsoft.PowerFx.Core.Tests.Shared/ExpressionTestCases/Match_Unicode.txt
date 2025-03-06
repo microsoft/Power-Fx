@@ -1,0 +1,44 @@
+﻿#SETUP: RegEx,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers,DisableMemChecks
+
+// Unicode character behavior in Power Fx regular expressions.
+//
+//  Effective                                        Usage                 .NET        ECMAScript       PCRE2         Power Fx
+// =====================================================================================================================================
+//  \p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{Nd}\p{Pc}       \w, \W, \b, \B        Yes         No               Yes           Yes
+//  \p{Nd}                                           \d, \D                Yes         No               Yes           Yes
+//  \p{Category}                                     \p, \P                Yes         Yes              Yes           Yes
+//  \p{Script}                                       \p, \P                Yes         Yes              Yes           No (syntax varies)
+//
+// We chose to use canonical .NET instead of RegexOptions.ECMAScript because we wanted the unicode definitions for words.
+// See https://learn.microsoft.com/dotnet/standard/base-types/regular-expression-options#ecmascript-matching-behavior for more details
+
+// Changes in case insensitive matching in .NET 7 causes different answers that are consistent with PCRE2 and Node
+// See https://devblogs.microsoft.com/dotnet/regular-expression-improvements-in-dotnet-7/#case-insensitive-matching-and-regexoptions-ignorecase
+
+>> Match( UniChar(Hex2Dec("03a9")), "\u03c9", MatchOptions.IgnoreCase ).FullMatch
+"Ω"
+
+>> Match( UniChar(Hex2Dec("03c9")), "\u03a9", MatchOptions.IgnoreCase ).FullMatch
+"ω"
+
+#DISABLE.NET:462
+>> Match( UniChar(Hex2Dec("03a9")), "\u2126", MatchOptions.IgnoreCase ).FullMatch
+"Ω"
+
+#DISABLE.NET:462
+>> Match( UniChar(Hex2Dec("03c9")), "\u2126", MatchOptions.IgnoreCase ).FullMatch
+"ω"
+
+#DISABLE.NET:462
+>> Match( UniChar(Hex2Dec("2126")), "\u03c9", MatchOptions.IgnoreCase ).FullMatch
+"Ω"
+
+#DISABLE.NET:462
+>> Match( UniChar(Hex2Dec("2126")), "\u03a9", MatchOptions.IgnoreCase ).FullMatch
+"Ω"
+
+// newline characters not matched by "."
+>> JSON( MatchAll( Char(13) & Char(10) & Char(Hex2Dec("85")) & UniChar(Hex2Dec("2028")) & UniChar(Hex2Dec("2029")) & Char(Hex2Dec("C")) & Char(Hex2Dec("B")), "." ) )
+"[{""FullMatch"":""\u0085"",""StartMatch"":3},{""FullMatch"":""\u2028"",""StartMatch"":4},{""FullMatch"":""\u2029"",""StartMatch"":5},{""FullMatch"":""\f"",""StartMatch"":6},{""FullMatch"":""\u000B"",""StartMatch"":7}]"
+
+
