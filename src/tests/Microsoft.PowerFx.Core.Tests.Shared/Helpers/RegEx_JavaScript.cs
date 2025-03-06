@@ -15,87 +15,14 @@ namespace Microsoft.PowerFx.Functions
         // For example, no affodance is made for nested character classes or inline options on a subexpression, as those would have already been blocked.
         // Stick to single ticks for strings to keep this easier to read and maintain here in C#.
         public const string AlterRegex_JavaScript = @"
-            function AlterRegex_NeedToMapNewlines(regex, flags)
-            {
-                var index = 0;
-
-                const inlineFlagsRE = /^\(\?(?<flags>[imnsx]+)\)/;
-                const inlineFlags = inlineFlagsRE.exec( regex );
-                if (inlineFlags != null)
-                {
-                    flags = flags.concat(inlineFlags.groups['flags']);
-                    index = inlineFlags[0].length;
-                }
-
-                const multiline = flags.includes('m');
-                const freeSpacing = flags.includes('x');
-
-                var openCharacterClass = false; 
-
-                for ( ; index < regex.length; index++)
-                {
-                    switch (regex.charAt(index) )
-                    {
-                        case '[':
-                            openCharacterClass = true;
-                            break;
-
-                        case ']':
-                            openCharacterClass = false;
-                            break;
-
-                        case '\\':
-                            index++;
-                            break;
-
-                        case '^':
-                            if (!openCharacterClass)
-                                return true;
-                            break;
-
-                        case '$':
-                            if (!openCharacterClass)
-                                return true;
-                            break;
-
-                        case '(':
-                            if (regex.length - index > 2 && regex.charAt(index+1) == '?' && regex.charAt(index+2) == '#')
-                            {
-                                // inline comment
-                                for ( index++; index < regex.length && regex.charAt(index) != ')'; index++)
-                                {
-                                    // eat characters until a close paren, it doesn't matter if it is escaped (consistent with .NET)
-                                }
-                            }
-                            break;
-
-                        case '#':
-                            if (freeSpacing && !openCharacterClass)
-                            {
-                                for ( index++; index < regex.length && regex.charAt(index) != '\r' && regex.charAt(index) != '\n'; index++)
-                                {
-                                    // eat characters until the end of the line
-                                    // leaving dangling whitespace characters will be eaten on next iteration
-                                }
-                            }
-                            break;
-                    }
-                }
-
-                return false;
-            }
-
             function AlterRegex_JavaScript(regex, flags, crCode, nlCode)
             {
                 const otherNewLines = '';
 
                 var index = 0;
 
-                if (crCode > 0xffff || nlCode > 0xffff)
-                    return [undefined, undefined];
-
-                const cr = '\\u'.concat(crCode.toString(16).padStart(4,'0'));
-                const nl = '\\u'.concat(nlCode.toString(16).padStart(4,'0')); 
+                const cr = '\\r';
+                const nl = '\\n';
 
                 const inlineFlagsRE = /^\(\?(?<flags>[imnsx]+)\)/;
                 const inlineFlags = inlineFlagsRE.exec( regex );
@@ -117,7 +44,8 @@ namespace Microsoft.PowerFx.Functions
 
                 // rebuilding from booleans avoids possible duplicate letters
                 // x has been handled in this function and does not need to be passed on (and would cause an error)
-                const alteredFlags = 'v'.concat((ignoreCase ? 'i' : ''), (multiline ? 'm' : ''), (dotAll ? 's' : ''));  
+                // multiline is excluded as the definitions for caret and dollar above take this into account
+                const alteredFlags = 'v'.concat((ignoreCase ? 'i' : ''), (dotAll ? 's' : ''));
 
                 var openCharacterClass = false;       // are we defining a character class?
                 var altered = '';
@@ -198,34 +126,6 @@ namespace Microsoft.PowerFx.Functions
                                     // needed for free spacing, needs to be unescaped to avoid /v error
                                     case '#': case ' ':
                                         alteredToken = regex.charAt(index);
-                                        break;
-
-                                    case 'r':
-                                        alteredToken = cr;
-                                        break;
-
-                                    case 'n':
-                                        alteredToken = nl;
-                                        break;
-
-                                    case 'x':
-                                        xCode = regex.charAt(++index) + regex.charAt(++index);
-                                        if (xCode == '0d' || xCode == '0D' )
-                                            alteredToken = cr;
-                                        else if (xCode == '0a' || xCode == '0A' )
-                                            alteredToken = nl;
-                                        else 
-                                            alteredToken = '\\x'.concat( xCode );
-                                        break;
-
-                                    case 'u':
-                                        xCode = regex.charAt(++index) + regex.charAt(++index) + regex.charAt(++index) + regex.charAt(++index);
-                                        if (xCode == '000d' || xCode == '000D' )
-                                            alteredToken = cr;
-                                        else if (xCode == '000a' || xCode == '000A' )
-                                            alteredToken = nl;
-                                        else 
-                                            alteredToken = '\\u'.concat( xCode );
                                         break;
 
                                     default:

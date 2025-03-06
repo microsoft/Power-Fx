@@ -100,23 +100,11 @@ namespace Microsoft.PowerFx.Functions
                         string js2 = @"
                         function MatchTest( subject, pattern, flags, matchAll )
                         {
-                            const newLineMap = AlterRegex_NeedToMapNewlines( pattern, flags );
-                            console.log( 'need to map: ' + newLineMap );
-
-                            const nlCode = newLineMap ? 0xf8f0 : 10;
-                            const crCode = newLineMap ? 0xf8f1 : 13;
-                            const nl = String.fromCharCode( nlCode );
-                            const cr = String.fromCharCode( crCode );
-
-                            if (crCode != 13 || nlCode != 10)
-                                subject = subject.replaceAll( '\r', cr ).replaceAll( '\n', nl );
-                               
-                            const [alteredPattern, alteredFlags, endGuards] = AlterRegex_JavaScript( pattern, flags, crCode, nlCode );
-
+                            const [alteredPattern, alteredFlags, endGuards] = AlterRegex_JavaScript( pattern, flags );
                             const regex = RegExp(alteredPattern, alteredFlags.concat(matchAll ? 'g' : ''));
                             const matches = matchAll ? [...subject.matchAll(regex)] : [subject.match(regex)];
-                            console.log(alteredPattern);  // useful to debug AlterRegex_JavaScript
-                            console.log(encodeURI(subject));
+                            // console.log(alteredPattern);       // useful to debug AlterRegex_JavaScript
+                            // console.log(encodeURI(subject));
                             console.log('%%begin%%');
                             if (matches.length != 0 && matches[0] != null)
                             {
@@ -125,16 +113,8 @@ namespace Microsoft.PowerFx.Functions
                                 {
                                     var o = new Object();
                                     o.Index = match.index;
-                                    o.Named = new Object();
-                                  	for (const prop in match.groups)
-                                    {
-                                        o.Named[prop] = (match.groups[prop] == undefined ? undefined : newLineMap ? match.groups[prop].replaceAll( cr, '\r' ).replaceAll( nl, '\n' ) : match.groups[prop] );
-                                    }
-                                    o.Numbered = new Array();
-                                    for (const subMatch of match)
-                                    {
-                                  	    o.Numbered.push( subMatch == undefined ? undefined : newLineMap ? subMatch.replaceAll( cr, '\r' ).replaceAll( nl, '\n' ) : subMatch );
-                                    }
+                                    o.Named = match.groups;
+                                    o.Numbered = match;
                                     arr.push(o);
                                 }
                                 console.log(JSON.stringify(arr));

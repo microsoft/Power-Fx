@@ -80,11 +80,13 @@ Table({FullMatch:"1",StartMatch:1})
 >> MatchAll( "1a" & Char(13)&Char(10) & "2b" & Char(13)&Char(10) & "3c", "^\d", MatchOptions.Multiline )
 Table({FullMatch:"1",StartMatch:1},{FullMatch:"2",StartMatch:5},{FullMatch:"3",StartMatch:9})
 
+// tests for matching between a \r and \n
+
 >> MatchAll( "a" & Char(13) & Char(10) & "a", "(?m)^(a|)" )  // matches after the \r and \n in JavaScript, not in PCRE2
 Table({FullMatch:"a",StartMatch:1},{FullMatch:"a",StartMatch:4})
 
-// >> MatchAll( "a" & Char(13) & Char(10), "(?m)^(a|)" )  // gives a different answer on PCRE2
-// ok
+// >> MatchAll( "a" & Char(13) & Char(10), "(?m)^(a|)" )  // gives a different answer on PCRE2 (doesn't include last empty match), but not on Excel?
+// Table({FullMatch:"a",StartMatch:Float(1)},{FullMatch:"",StartMatch:Float(4)})
 
 >> MatchAll( Char(13) & Char(10) & "a", "(?m)^(a|)" )
 Table({FullMatch:"",StartMatch:1},{FullMatch:"a",StartMatch:3})
@@ -97,6 +99,100 @@ Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"",Sta
 
 >> MatchAll( Char(13) & Char(10) & "a", "(?m)(a|)$" )
 Table({FullMatch:"",StartMatch:1},{FullMatch:"a",StartMatch:3},{FullMatch:"",StartMatch:4})
+
+>> MatchAll( "a" & Char(13) & Char(10) & "a", "^(a|)" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:1})
+
+>> MatchAll( "a" & Char(13) & Char(10), "^(a|)" )
+Table({FullMatch:"a",StartMatch:1})
+
+>> MatchAll( Char(13) & Char(10) & "a", "^(a|)" )
+Table({FullMatch:"",StartMatch:1})
+
+>> MatchAll( "a" & Char(13) & Char(10) & "a", "(a|)$" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:4},{FullMatch:"",StartMatch:5})
+
+>> MatchAll( "a" & Char(13) & Char(10) , "(a|)$" )  // pcre2 repeated empty result
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"",StartMatch:4})
+
+>> MatchAll( Char(13) & Char(10) & "a", "(a|)$" )
+Table({FullMatch:"a",StartMatch:3},{FullMatch:"",StartMatch:4})
+
+// same tests with single newline \n
+
+>> MatchAll( "a" & Char(10) & "a", "(?m)^(a|)" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"a",StartMatch:3})
+
+// >> MatchAll( "a" & Char(10), "(?m)^(a|)" )  // gives a different answer on PCRE2 (doesn't include last empty match), but not on Excel?
+// Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:4})
+
+>> MatchAll( Char(10) & "a", "(?m)^(a|)" )
+Table({FullMatch:"",StartMatch:1},{FullMatch:"a",StartMatch:2})
+
+>> MatchAll( "a" & Char(10) & "a", "(?m)(a|)$" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"a",StartMatch:3},{FullMatch:"",StartMatch:4})
+
+>> MatchAll( "a" & Char(10), "(?m)(a|)$" )  // pcre2 repeated empty result
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"",StartMatch:3})
+
+>> MatchAll( Char(10) & "a", "(?m)(a|)$" )
+Table({FullMatch:"",StartMatch:1},{FullMatch:"a",StartMatch:2},{FullMatch:"",StartMatch:3})
+
+>> MatchAll( "a" & Char(10) & "a", "^(a|)" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:1})
+
+>> MatchAll( "a" & Char(10), "^(a|)" )
+Table({FullMatch:"a",StartMatch:1})
+
+>> MatchAll( Char(10) & "a", "^(a|)" )
+Table({FullMatch:"",StartMatch:1})
+
+>> MatchAll( "a" & Char(10) & "a", "(a|)$" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:3},{FullMatch:"",StartMatch:4})
+
+>> MatchAll( "a" & Char(10) , "(a|)$" )  // pcre2 repeated empty result
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"",StartMatch:3})
+
+>> MatchAll( Char(10) & "a", "(a|)$" )
+Table({FullMatch:"a",StartMatch:2},{FullMatch:"",StartMatch:3})
+
+// same tests with single newline \r
+
+>> MatchAll( "a" & Char(13) & "a", "(?m)^(a|)" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"a",StartMatch:3})
+
+// >> MatchAll( "a" & Char(13), "(?m)^(a|)" )  // gives a different answer on PCRE2 (doesn't include last empty match), but not on Excel?
+// Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:4})
+
+>> MatchAll( Char(13) & "a", "(?m)^(a|)" )
+Table({FullMatch:"",StartMatch:1},{FullMatch:"a",StartMatch:2})
+
+>> MatchAll( "a" & Char(13) & "a", "(?m)(a|)$" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"a",StartMatch:3},{FullMatch:"",StartMatch:4})
+
+>> MatchAll( "a" & Char(13) , "(?m)(a|)$" )  // pcre2 repeated empty result
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"",StartMatch:3})
+
+>> MatchAll( Char(13) & "a", "(?m)(a|)$" )
+Table({FullMatch:"",StartMatch:1},{FullMatch:"a",StartMatch:2},{FullMatch:"",StartMatch:3})
+
+>> MatchAll( "a" & Char(13) & "a", "^(a|)" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:1})
+
+>> MatchAll( "a" & Char(13), "^(a|)" )
+Table({FullMatch:"a",StartMatch:1})
+
+>> MatchAll( Char(13) & "a", "^(a|)" )
+Table({FullMatch:"",StartMatch:1})
+
+>> MatchAll( "a" & Char(13) & "a", "(a|)$" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:3},{FullMatch:"",StartMatch:4})
+
+>> MatchAll( "a" & Char(13), "(a|)$" )  // pcre2 repeated empty result
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"",StartMatch:3})
+
+>> MatchAll( Char(13) & "a", "(a|)$" )
+Table({FullMatch:"a",StartMatch:2},{FullMatch:"",StartMatch:3})
 
 >> ForAll( MatchAll( "
  a

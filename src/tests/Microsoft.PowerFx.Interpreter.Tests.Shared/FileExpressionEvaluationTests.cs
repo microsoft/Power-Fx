@@ -193,7 +193,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             testRunner.AddFile(new Dictionary<string, bool>(), null, path);
 
-            // We can filter to just cases we want, set line above abcd
+            // We can filter to just cases we want, set line above
             if (line > 0)
             {
                 testRunner.Tests.RemoveAll(x => x.SourceLine != line);
