@@ -16,6 +16,7 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Core.Texl.Builtins.BaseMatchFunction;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -227,13 +228,13 @@ namespace Microsoft.PowerFx.Functions
                     index = inlineOptions.Length;
                 }
 
-                bool freeSpacing = options.Contains("x");
-                bool multiline = options.Contains("m");
-                bool ignoreCase = options.Contains("i");
-                bool dotAll = options.Contains("s");
-                bool matchStart = options.Contains("^");
-                bool matchEnd = options.Contains("$");
-                bool numberedSubMatches = options.Contains("N");
+                bool freeSpacing = options.Contains(MatchOptionCodes.FreeSpacing);
+                bool multiline = options.Contains(MatchOptionCodes.Multiline);
+                bool ignoreCase = options.Contains(MatchOptionCodes.IgnoreCase);
+                bool dotAll = options.Contains(MatchOptionCodes.DotAll);
+                bool matchStart = options.Contains(MatchOptionCodes.BeginsWith);
+                bool matchEnd = options.Contains(MatchOptionCodes.EndsWith);
+                bool numberedSubMatches = options.Contains(MatchOptionCodes.NumberedSubMatches);
 
                 // Can't add options ^ and $ too early as there may be freespacing comments, centralize the logic here and call subfunctions
                 string AlterStart()
@@ -331,8 +332,8 @@ namespace Microsoft.PowerFx.Functions
                     }
                 }
 
+                // multiline is not included as it is handled with the definitions of ^ and $ above
                 RegexOptions alteredOptions = RegexOptions.CultureInvariant |
-                    (multiline ? RegexOptions.Multiline : 0) |
                     (ignoreCase ? RegexOptions.IgnoreCase : 0) |
                     (dotAll ? RegexOptions.Singleline : 0) |
                     (freeSpacing ? RegexOptions.IgnorePatternWhitespace : 0) |

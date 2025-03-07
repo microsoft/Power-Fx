@@ -115,8 +115,8 @@ Errors: Error 27-44: Regular expression must be a constant value.|Error 0-7: The
 >> IsMatch("Hello 123 world", $"Hello {Sqrt(1)}{Sqrt(4)}{Sqrt(9)} world")
 Errors: Error 27-69: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
 
->> IsMatch("Hello 123 world", $"Hello")
-Errors: Error 27-35: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+>> IsMatch("Hello 123 world", $"Hello", MatchOptions.Contains)
+true
 
 >> IsMatch("Hello", "Hello", MatchOptions.IgnoreCase)
 true

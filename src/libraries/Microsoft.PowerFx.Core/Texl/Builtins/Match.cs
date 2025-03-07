@@ -61,6 +61,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
+    // These start with the codes that can come after a regular expression definition in Perl/JavaScript with "/a+/misx" and can also be used in "(?misx)a+".
+    // If possible, do not add lower case letters that are Power Fx specific to avoid future conflicts with the industry. We added ^, $, and N as Power Fx specific.
+    public class MatchOptionCodes
+    {
+        public const char BeginsWith = '^';          // invented by us, adds a '^' at the front of the regex
+        public const char EndsWith = '$';            // invented by us, adds a '$' at the end of the regex
+        public const char IgnoreCase = 'i';
+        public const char Multiline = 'm';
+        public const char FreeSpacing = 'x';         // we don't support the double 'xx' mode
+        public const char DotAll = 's';              // otherwise known as "singleline" in other flavors, hence the 's', but note is not the opposite of "multiline"
+        public const char ExplicitCapture = 'n';     // default for Power Fx, can be asserted too for compatibility
+        public const char NumberedSubMatches = 'N';  // invented by us, opposite of ExplicitCapture and can't be used together
+        public const char Contains = 'c';            // invented by us, something to wrap ^ and $ around
+    }
+
     internal class BaseMatchFunction : BuiltinFunction
     {
         private readonly ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>> _regexTypeCache;
@@ -133,7 +148,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (!context.Features.PowerFxV1CompatibilityRules)
             {
                 // only used for the following analysis and type creation, not modified in the IR
-                regularExpressionOptions += "N";
+                regularExpressionOptions += MatchOptionCodes.NumberedSubMatches;
             }
 
             string alteredOptions = regularExpressionOptions;
@@ -176,7 +191,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             try
             {
                 var regexDotNetOptions = RegexOptions.None;
-                if (alteredOptions.Contains("x"))
+                if (alteredOptions.Contains(MatchOptionCodes.FreeSpacing))
                 {
                     regexDotNetOptions |= RegexOptions.IgnorePatternWhitespace;
 
@@ -218,7 +233,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     propertyNames.Add(new TypedName(DType.String, ColumnName_FullMatch));
                 }
 
-                if (!subMatchesHidden && alteredOptions.Contains("N"))
+                if (!subMatchesHidden && alteredOptions.Contains(MatchOptionCodes.NumberedSubMatches))
                 {
                     propertyNames.Add(new TypedName(DType.CreateTable(new TypedName(DType.String, ColumnName_Value)), ColumnName_SubMatches));
                 }
@@ -303,8 +318,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         private bool IsSupportedRegularExpression(TexlNode regExNode, string regexPattern, string regexOptions, out string alteredOptions, IErrorContainer errors)
         {
-            bool freeSpacing = regexOptions.Contains("x");          // can also be set with inline mode modifier
-            bool numberedCpature = regexOptions.Contains("N");      // can only be set here, no inline mode modifier
+            bool freeSpacing = regexOptions.Contains(MatchOptionCodes.FreeSpacing);                 // can also be set with inline mode modifier
+            bool numberedCpature = regexOptions.Contains(MatchOptionCodes.NumberedSubMatches);      // can only be set here, no inline mode modifier
 
             alteredOptions = regexOptions;
 
@@ -735,13 +750,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             return false;
                         }
 
-                        if (inlineOptions.Contains("n") && numberedCpature)
+                        if (inlineOptions.Contains(MatchOptionCodes.ExplicitCapture) && numberedCpature)
                         {
                             RegExError(TexlStrings.ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches);
                             return false;
                         }
 
-                        if (inlineOptions.Contains("x"))
+                        if (inlineOptions.Contains(MatchOptionCodes.FreeSpacing))
                         {
                             freeSpacing = true;
                         }

@@ -81,15 +81,15 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             DType.String,
             new Dictionary<string, object>()
             {
-                { "BeginsWith", "^c" },
-                { "EndsWith", "$c" },
-                { "Complete", "^c$" },
-                { "Contains", "c" },
-                { "IgnoreCase", "i" },
-                { "Multiline", "m" },
-                { "FreeSpacing", "x" },
-                { "DotAll", "s" },
-                { "NumberedSubMatches", "N" }
+                { "BeginsWith", MatchOptionCodes.BeginsWith + MatchOptionCodes.Contains },
+                { "EndsWith", MatchOptionCodes.Contains + MatchOptionCodes.EndsWith },
+                { "Complete", MatchOptionCodes.BeginsWith + MatchOptionCodes.Contains + MatchOptionCodes.EndsWith },
+                { "Contains", MatchOptionCodes.Contains },
+                { "IgnoreCase", MatchOptionCodes.IgnoreCase },
+                { "Multiline", MatchOptionCodes.Multiline },
+                { "FreeSpacing", MatchOptionCodes.FreeSpacing },
+                { "DotAll", MatchOptionCodes.DotAll },
+                { "NumberedSubMatches", MatchOptionCodes.NumberedSubMatches }
             },
             canConcatenateStronglyTyped: true);
 

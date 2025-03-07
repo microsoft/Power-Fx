@@ -1505,6 +1505,9 @@ namespace Microsoft.PowerFx.Core.Binding
             nodeValue = null;
             switch (node.Kind)
             {
+                case NodeKind.StrLit:
+                    nodeValue = node.AsStrLit().Value;
+                    return true;
                 case NodeKind.StrInterp:
                     var strInterpNode = node.AsStrInterp();
                     var segments = new List<string>();
@@ -1527,9 +1530,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     break;
-                case NodeKind.StrLit:
-                    nodeValue = node.AsStrLit().Value;
-                    return true;
                 case NodeKind.BinaryOp:
                     var binaryOpNode = node.AsBinaryOp();
                     if (binaryOpNode.Op == BinaryOp.Concat)

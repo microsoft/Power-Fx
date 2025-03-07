@@ -214,14 +214,18 @@ Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 15-37
 
 // The thousands separator in the fi-FI locale is the no-break space (U+00A0)
 >> Text(12345.6789, $"[$-fi-FI]#{Char(160)}##0.00", "en-US")
-Error({Kind:ErrorKind.InvalidArgument})
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 17-47: Incorrect format specifier for 'Text'.
 
 >> Text(12345.6789, $"[$-fi-FI]#{Char(160)}##0.00", "fi-FI")
-Error({Kind:ErrorKind.InvalidArgument})
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 17-47: Incorrect format specifier for 'Text'.
 
 // The thousands separator in the fr-FR locale is the narrow no-break space (U+202F)
 >> Text(12345.6789, $"[$-fr-FR]#{ParseJSON("""\u202F""")}##0.00", "en-US")
 Error({Kind:ErrorKind.InvalidArgument})
+
+// The thousands separator in the fr-FR locale is the narrow no-break space (U+202F)
+>> Text(12345.6789, $"[$-fr-FR]#{UniChar(8239)}##0.00", "en-US")
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 17-51: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$-en-US]", "en-US")
 Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-27: Incorrect format specifier for 'Text'.
