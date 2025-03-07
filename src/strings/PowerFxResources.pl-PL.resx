@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1807,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Zwraca wartość prawda, jeśli beztypowa wartość jest danego typu.</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>typ</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>Beztypowa wartość do sprawdzenia, czy można ją rzutować jako określony typ.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>Typ, którego wartość untypedValue chcemy sprawdzić.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Używa podanej wartości jako danego typu.</value>
     
@@ -1824,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>Tabela jednostki reprezentująca typ, jako który ma być używana wartość.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Sprawdza, czy używa podanej beztypowej wartości jako danego typu.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>typ</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>Beztypowa wartość do rzutowania jako nowy typ.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>Typ, jako którego chcemy użyć wartości.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Wykonuje formułę podaną jako drugi parametr przy użyciu zakresu podanego w pierwszym parametrze.</value>
@@ -1879,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>„{0}” to nieznana lub nieobsługiwana funkcja.</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>Element „{0}” rozpoznano jako funkcję pomocnika typu; tego elementu można używać tylko w ramach funkcji Type.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -2673,6 +2713,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Ciąg w formacie JSON do przetworzenia.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>Konwertuje ciąg w formacie JSON na obiekt z typem.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>ciąg</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>Ciąg w formacie JSON do przekonwertowania na obiekt z typem.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>typ</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>Definicja typu w tekście lub globalnie określony, nazwany typ.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Zwraca rekord znajdujący się pod podanym indeksem w tabeli.</value>
     
@@ -2690,6 +2748,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Indeks rekordu, który ma zostać pobrany.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2710,6 +2780,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Typ kodu kreskowego</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2826,6 +2928,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Wartość do przetestowania.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Konwertuje datę i godzinę w postaci tekstu na liczbę reprezentującą datę w kodzie daty/godziny usługi Power Apps.</value>
@@ -3113,14 +3219,11 @@
     
   </data>
   <data name="CollectArg2" xml:space="preserve">
-    <value>element</value>
+    <value>pozycja</value>
     
   </data>
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Nowa lub istniejąca kolekcja do rozszerzenia.</value>
-  </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Najpierw czyści kolekcję, a następnie dodaje co najmniej jeden element do określonej kolekcji. Elementy mogą pochodzić z innej tabeli lub kolekcji (np. ClearCollect(collection, source_collection)) lub co najmniej jednego rekordu ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
@@ -3266,6 +3369,10 @@
     <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Na pozycji „{1}” w formule znaleziono nieoczekiwany znak „{0}”.</value>
     
@@ -3278,6 +3385,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3295,6 +3406,10 @@
     <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Nieoczekiwane znaki. Formuła zawiera znak „{0}” w miejscu, gdzie oczekiwany jest znak „{1}”.</value>
     
@@ -3308,6 +3423,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3325,6 +3444,10 @@
     <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Nazwa jest nieprawidłowa. Ten identyfikator nie został rozpoznany.</value>
     
@@ -3338,6 +3461,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3355,6 +3482,10 @@
     <value>Artykuł: Dokumentacja formuł usługi PowerApps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>Odwołanie „Parent” nie jest prawidłowe. Nie można odwoływać się do kontrolki nadrzędnej w tym kontekście.</value>
     
@@ -3368,6 +3499,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Artykuł: Dodawanie i konfigurowanie kontrolki aplikacji kanwy w usłudze Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3407,6 +3542,10 @@
     <value>Moduł: Używanie podstawowych formuł</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Oczekiwano liczby. W tym miejscu w formule oczekujemy liczby.</value>
     
@@ -3420,6 +3559,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3437,6 +3580,10 @@
     <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Oczekiwano dwukropka. W tym miejscu w formule oczekujemy dwukropka (:).</value>
     
@@ -3452,6 +3599,10 @@
     <value>Artykuł: Wyświetlanie tekstu, dat i godzin w usłudze Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Funkcja zachowania we właściwości innej niż właściwość zachowania. Nie można używać tej właściwości do zmiany wartości w innym miejscu aplikacji.</value>
     
@@ -3465,6 +3616,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Artykuł: Informacje o formułach zachowania dla aplikacji kanwy w usłudze Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Funkcja zachowania w zdefiniowanej przez użytkownika funkcji (UDF) innej niż funkcja zachowania. Umieść treść zdefiniowanej przez użytkownika funkcji w nawiasach klamrowych ({...}), aby zadeklarować zdefiniowaną przez użytkownika funkcję zachowania.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Funkcje zachowania zmieniają bieżący stan aplikacji. „Clear”, „Collect”, „Patch” i „Refresh” to często używane funkcje zachowania.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Edytuj wyrażenie funkcji zdefiniowane przez użytkownika w taki sposób, aby znajdowało się ono wewnątrz nawiasów klamrowych ({...}).</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3504,6 +3671,10 @@
     <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Oczekiwano tekstu lub liczby. W tym miejscu w formule oczekujemy tekstu lub liczby.</value>
     
@@ -3519,6 +3690,10 @@
     <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Oczekiwano nawiasu zamykającego. W tym miejscu w formule oczekujemy nawiasu zamykającego (}).</value>
     
@@ -3530,12 +3705,23 @@
     <value>Edytuj formułę tak, aby zawierała nawias.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Oczekiwano symbolu zamykającego identyfikator. W tym miejscu w formule oczekiwany jest symbol zamykający (').</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Pojedynczy zamykający cudzysłów wskazuje koniec identyfikatora (na przykład 'Imię').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Edytuj formułę tak, aby zawierała pojedynczy zamykający cudzysłów.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Identyfikator nie ma prawidłowego tekstu.</value>
+    <value>Identyfikator jest pusty lub zawiera nieprawidłowy znak, taki jak tabulator lub znak końca wiersza.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Upewnij się, że podano tekst dla identyfikatora. Ten błąd występuje, gdy identyfikator zawiera same wartości puste lub spacje.</value>
+    <value>Upewnij się, że identyfikator zawiera prawidłowy tekst. Ten błąd występuje, gdy identyfikator jest pusty, zawiera same spacje lub tabulator albo znak końca wiersza.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3561,8 +3747,16 @@
     <value>Moduł: Używanie podstawowych formuł</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Moduł: Tworzenie podstawowych formuł przy użyciu tabel i rekordów</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3577,6 +3771,10 @@
     <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Niezgodny typ. Kolumna „{0}” w aktualizowanym źródle danych oczekuje typu „{1}”, a używany jest typ „{2}”.</value>
     
@@ -3589,8 +3787,16 @@
     <value>Moduł: Używanie podstawowych formuł</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Moduł: Tworzenie podstawowych formuł przy użyciu tabel i rekordów</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3603,6 +3809,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3621,8 +3831,16 @@
     <value>Moduł: Używanie podstawowych formuł</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Moduł: Tworzenie podstawowych formuł przy użyciu tabel i rekordów</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3640,8 +3858,16 @@
     <value>Moduł: Używanie podstawowych formuł</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Moduł: Tworzenie podstawowych formuł przy użyciu tabel i rekordów</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3657,6 +3883,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3682,8 +3912,16 @@
     <value>Artykuł: Informacje o delegowaniu w aplikacji kanwy</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Blog: Limity liczby wierszy danych w przypadku delegowania</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3709,8 +3947,16 @@
     <value>Artykuł: Informacje o delegowaniu w aplikacji kanwy</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Blog: Limity liczby wierszy danych w przypadku delegowania</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3740,8 +3986,16 @@
     <value>Artykuł: Informacje o delegowaniu w aplikacji kanwy</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Blog: Limity liczby wierszy danych w przypadku delegowania</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3773,8 +4027,70 @@
     <value>Artykuł: Informacje o delegowaniu w aplikacji kanwy</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Blog: Limity liczby wierszy danych w przypadku delegowania</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Ostrzeżenie dotyczące delegowania. Nazwana formuła {0} jest niedelegowalna, w związku z czym jej użycie w tej formule może skutkować niepoprawnym działaniem w dużych zestawach danych. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Źródło danych może nie być w stanie przetworzyć formuły i może zwrócić niekompletny zestaw danych. Twoja aplikacja może nie zwrócić prawidłowych wyników lub zachowywać się nieprawidłowo, jeśli zestaw danych będzie niekompletny.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Spróbuj uprościć definicję nazwanej formuły.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Artykuł: Informacje o delegowaniu w aplikacji kanwy</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Limity liczby wierszy danych w przypadku delegowania</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Ostrzeżenie dotyczące delegowania. Zdefiniowana przez użytkownika funkcja {0} jest niedelegowalna, w związku z czym jej użycie w tej formule może skutkować niepoprawnym działaniem w dużych zestawach danych. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Źródło danych może nie być w stanie przetworzyć formuły i może zwrócić niekompletny zestaw danych. Twoja aplikacja może nie zwrócić prawidłowych wyników lub zachowywać się nieprawidłowo, jeśli zestaw danych będzie niekompletny.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Spróbuj uprościć definicję funkcji zdefiniowanej przez użytkownika.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Artykuł: Informacje o delegowaniu w aplikacji kanwy</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Limity liczby wierszy danych w przypadku delegowania</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3801,8 +4117,16 @@
     <value>Artykuł: Informacje o delegowaniu w aplikacji kanwy</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Blog: Limity liczby wierszy danych w przypadku delegowania</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3831,6 +4155,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Odwołanie: ConfirmExit dla aplikacji kanwy</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3863,6 +4191,10 @@
   </data>
   <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
     <value>Nazwana formuła musi być wyrażeniem.</value>
+    
+  </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Deklaracja nazwanego typu musi być prawidłowym wyrażeniem typu.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4082,6 +4414,10 @@
     <value>Nie można wydelegować operacji {0}: zawiera funkcję zachowania „{1}”.</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>Wartość CountRows może zwracać buforowaną wartość. Użyj funkcji CountIf(DataSource, true), aby uzyskać najnowszą liczbę.</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Określa, czy podany tekst ma odpowiednik w postaci formatu podanego tekstu.</value>
     
@@ -4228,16 +4564,20 @@
     <value>Ustawienie zmiennej z wartością źródła danych online (tabelą lub rekordem) może spowodować wysłanie wielu żądań do serwera. Wkrótce to zostanie zablokowane.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Deklaracja literału typu jest nieprawidłowa. W definicji typu nie można użyć wyrażenia „{0}”.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie typu. W wyrażeniu typu nie można użyć wyrażenia „{0}”.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definicja typu {0} jest nieprawidłowa.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Nieobsługiwane użycie: funkcji Type można używać tylko w argumentach typu i deklaracjach typu.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Deklaracja typu {0} jest nieprawidłowa.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definicja typu {0} jest nieprawidłowa i może zawierać cykle.</value>
+    <value>Deklaracja typu {0} jest nieprawidłowa i może zawierać cykle.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4445,7 +4785,7 @@
     <value>Rekord lub tabela do zebrania. Rekord zostanie dołączony do źródła danych. Wiersze tabeli zostaną dołączone do źródła danych.</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
-    <value>element</value>
+    <value>pozycja</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
@@ -4490,8 +4830,96 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Źródło do wyczyszczenia.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Pobiera dane obejmujące wiele tabel z relacjami.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>źródło1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>źródło2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>mianownik</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Lewa tabela lub kolekcja.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Prawa tabela lub kolekcja.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Kryteria sprzężenia między dwiema tabelami lub kolekcjami.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Typ sprzężenia między dwiema tabelami lub kolekcjami.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Argumenty służące do zmieniania nazwy istniejącej kolumny w jednym ze źródeł.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Określonego źródła danych nie można użyć z tą funkcją.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Nieprawidłowy argument „{0}”. Oczekiwano prawidłowej nazwy typu lub wyrażenia typu w tekście.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Nieobsługiwany typ „{0}” w argumencie typu.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Osiągnięto maksymalną głębokość podczas realizacji procesu przechodzenia w odniesieniu do ładunku JSON.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Osiągnięto maksymalną długość w funkcji JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Funkcja eksperymentalna „Typy zdefiniowane przez użytkownika” nie jest włączona.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Niepoprawna składnia: nie można użyć „=” do zadeklarowania typów zdefiniowanych przez użytkownika. Zamiast tego użyj „:=”.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>Nie można dodać/zmienić nazwy kolumny „{0}” ze względu na konflikt z inną kolumną o takiej samej nazwie.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Oczekiwana zwykła wartość wyliczenia „JoinType”. Inne wyliczenia oraz przekazywanie tej wartości przez inną funkcję, Join(..., If(true, JoinType.Inner, JoinType.Full)), nie są obsługiwane.</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argumenty zaczynające się od pozycji 5. mają na celu zmianę nazwy kolumn i powinny być argumentami węzła „As”, tj. LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Aby można było zredagować wynik sprzężenia, należy zadeklarować co najmniej jedną kolumnę „{0}”.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Wartość „{0}” jest nieprawidłowa w tym kontekście. Powinna być odwołaniem do nazwy zakresu „{1}” lub „{2}”.</value>
     
   </data>
 </root>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -169,7 +169,7 @@
     
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
-    <value>要對每個「符合_值」比較的值。</value>
+    <value>要對每個「比對_值」比較的值。</value>
     
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
@@ -1546,11 +1546,11 @@
     <value>傳回指定之 x 及 y 座標的反正切值 (以弧度為單位)。</value>
   </data>
   <data name="AboutAtan2Arg1" xml:space="preserve">
-    <value>X_座標</value>
+    <value>x_座標</value>
     
   </data>
   <data name="AboutAtan2Arg2" xml:space="preserve">
-    <value>Y_座標</value>
+    <value>y_座標</value>
     
   </data>
   <data name="AboutAtan2_x_coordinate" xml:space="preserve">
@@ -1807,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>如果提供的非類型化值是指定類型，則回傳 True。</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>類型</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>要檢查是否可以轉換為指定類型的未類型值。</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>我們希望檢查 untypedValue 的類型。</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>依指定類型使用提供的值。</value>
     
@@ -1824,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>代表所希望值之使用類型的實體資料表。</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>檢查並使用所提供的非類型化值作為提供的類型。</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>類型</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>要轉換成新類型的未類型值。</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>我們希望值使用的類型。</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>使用第一個參數所提供的範圍執行提供作為第二個參數的公式。</value>
@@ -1879,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>'{0}' 為未知或不支援的函式。</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>「{0}」已識別為類型協助程式函式，所以只能用於 Type 函式內。</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -2305,7 +2345,7 @@
     
   </data>
   <data name="WeekdayArg2" xml:space="preserve">
-    <value>一週_開始</value>
+    <value>一週開始</value>
     
   </data>
   <data name="AboutWeekday_date" xml:space="preserve">
@@ -2656,7 +2696,7 @@
     
   </data>
   <data name="CharTArg1" xml:space="preserve">
-    <value>數值_資料行</value>
+    <value>數值資料行</value>
     
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
@@ -2672,6 +2712,24 @@
   </data>
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>要處理的 JSON 字串。</value>
+  </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>將 JSON 字串轉換成類型化物件。</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>字串</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>要轉換為類型化物件的 JSON 字串。</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>類型</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>內嵌的類型定義或全域定義的命名類型。</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>在指定索引處傳回資料表中的資料。</value>
@@ -2692,6 +2750,18 @@
     <value>要擷取之記錄的索引。</value>
     
   </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
+    
+  </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>名稱</value>
     
@@ -2710,6 +2780,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>條碼類型</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2826,6 +2928,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>要測試的值。</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>將文字格式的日期與時間，轉換為在 Power Apps 日期時間代碼中代表日期的數字。</value>
@@ -3119,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>要增加的新集合或現有集合。</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>先清除集合，然後將一或多個項目新增至指定的集合。項目可來自不同的資料表或集合 (例如 ClearCollect(collection, source_collection))，或是一或多筆記錄 ClearCollect(collection, {key1: val1, key2: val2, ...}, ...)。</value>
     
@@ -3130,7 +3233,7 @@
     <value>要增加的新集合或現有集合。</value>
   </data>
   <data name="AboutClearCollect_item" xml:space="preserve">
-    <value>要收集的記錄或資料表。會對該集合附加一筆記錄。若是資料表，則會對該集合附加其資料列。</value>
+    <value>要收集的記錄或資料表。系統會對該集合附加一筆記錄。若是資料表，則會對該集合附加其資料列。</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>將更新套用至指定的資料列，並變更指定資料來源中的資料列。傳回更新後的資料列。</value>
@@ -3266,6 +3369,10 @@
     <value>文章: Power Apps 的公式參考</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>公式中位置 '{1}' 處出現未預期的字元 '{0}'。</value>
     
@@ -3278,6 +3385,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>文章: Power Apps 的公式參考</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3295,6 +3406,10 @@
     <value>文章: Power Apps 的公式參考</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>非預期性字元。公式包含 '{0}'，但應為 '{1}'。</value>
     
@@ -3308,6 +3423,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>文章: Power Apps 的公式參考</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3325,6 +3444,10 @@
     <value>文章: Power Apps 的公式參考</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>名稱無效。無法辨識此識別碼。</value>
     
@@ -3338,6 +3461,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>文章: Power Apps 的公式參考</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3355,6 +3482,10 @@
     <value>文章: PowerApps 的公式參考</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>'Parent' 參考無效。在此內容中，您無法參考父控制項。</value>
     
@@ -3368,6 +3499,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>文章: 在 Power Apps 中新增並設定畫布應用程式控制項</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3407,6 +3542,10 @@
     <value>課程模組: 使用基本公式</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>應為數字。公式中的此位置應為數字。</value>
     
@@ -3420,6 +3559,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>文章: Power Apps 的公式參考</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3437,6 +3580,10 @@
     <value>文章: Power Apps 的公式參考</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>應為冒號。公式中的此位置應為冒號 (:)。</value>
     
@@ -3452,6 +3599,10 @@
     <value>文章: 在 Power Apps 中顯示文字、日期與時間</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>非行為屬性中的行為函式。您無法使用此屬性在應用程式的其他位置變更值。</value>
     
@@ -3465,6 +3616,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>文章: 了解 Power Apps 中畫布應用程式的行為公式</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>非行為使用者定義函式 (UDF) 中的行為函式。請用大括弧 ({...}) 包住使用者定義函式主體，以宣告行為 UDF。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>行為函式會改變目前的工作階段狀態。『Clear』、『Collect』、『Patch』和『Refresh』是常見的行為函式。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>編輯使用者定義的函數表達式，使其位於大括弧內 ({...})。</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3504,6 +3671,10 @@
     <value>文章: Power Apps 的公式參考</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>應為文字或數字。公式中的此位置應為文字或數字。</value>
     
@@ -3519,6 +3690,10 @@
     <value>文章: Power Apps 的公式參考</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>應為右中括號。公式中的此位置應為右中括號 (})。</value>
     
@@ -3530,12 +3705,23 @@
     <value>編輯公式，以便其包含括號。</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>預期識別碼需要結束。在公式的此處需要一個結尾單引號 (')。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>結尾的單引號表示識別碼的結束 (例如: '名字')。</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>請編輯您的公式，確保包含結尾的單引號。</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>識別碼沒有有效的文字。</value>
+    <value>識別碼為空或包含無效字元，例如定位字元或換行符號。</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>請確認您為識別碼提供了文字。若識別碼完全為空白或空格，就會發生此錯誤。</value>
+    <value>請確保您的識別碼包含有效的文字。當識別碼為空白、只有空格，或包含定位字元或換行符號時，就會發生此錯誤。</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3561,8 +3747,16 @@
     <value>課程模組: 使用基本公式</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>課程模組: 撰寫具有資料表及記錄的基本公式</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3577,6 +3771,10 @@
     <value>文章: Power Apps 的公式參考</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>不相容的類型。您正在更新之資料來源中的 '{0}' 資料行應為 '{1}' 類型，但您使用了 '{2}' 類型。</value>
     
@@ -3589,8 +3787,16 @@
     <value>課程模組: 使用基本公式</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>課程模組: 撰寫具有資料表及記錄的基本公式</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3603,6 +3809,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>文章: Power Apps 的公式參考</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3621,8 +3831,16 @@
     <value>課程模組: 使用基本公式</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>課程模組: 撰寫具有資料表及記錄的基本公式</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3640,8 +3858,16 @@
     <value>課程模組: 使用基本公式</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>課程模組: 撰寫具有資料表及記錄的基本公式</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3657,6 +3883,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>文章: Power Apps 的公式參考</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3682,8 +3912,16 @@
     <value>文章: 了解畫布應用程式中的委派</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>部落格: 委派的資料列限制</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3709,8 +3947,16 @@
     <value>文章: 了解畫布應用程式中的委派</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>部落格: 委派的資料列限制</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3740,8 +3986,16 @@
     <value>文章: 了解畫布應用程式中的委派</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>部落格: 委派的資料列限制</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3757,7 +4011,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>若您的資料集超過了 500 個記錄的限制，但包含的記錄少於 2,000 個，請嘗試重設限制。
+    <value>若您的資料集超過了 500 個記錄的限制，但包含的記錄少於 2,000 個，請嘗試重新設定限制。
       </value>
     
   </data>
@@ -3773,8 +4027,70 @@
     <value>文章: 了解畫布應用程式中的委派</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>部落格: 委派的資料列限制</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>委派警告。無法委派命名公式 {0}，因此它在此公式中的使用方式可能無法正確用於大型資料集。</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>資料來源可能無法處理此公式，而且可能會傳回不完整的資料集。若資料集不完整，您的應用程式可能無法傳回正確結果，或無法正確運作。</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>嘗試縮小命名公式的定義。</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>文章: 了解畫布應用程式中的委派</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>部落格: 委派的資料列限制</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>委派警告。無法委派使用者定義函式 {0}，因此它在此公式中的使用方式可能無法正確用於大型資料集。</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>資料來源可能無法處理此公式，而且可能會傳回不完整的資料集。若資料集不完整，您的應用程式可能無法傳回正確結果，或無法正確運作。</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>嘗試自訂使用者定義函數的定義。</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>文章: 了解畫布應用程式中的委派</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>部落格: 委派的資料列限制</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3801,8 +4117,16 @@
     <value>文章: 了解畫布應用程式中的委派</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>部落格: 委派的資料列限制</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3831,6 +4155,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>參考: 畫布應用程式的 ConfirmExit</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3865,6 +4193,10 @@
     <value>命名公式必須是運算式。</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>具名類型宣告必須是有效的類型運算式。</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>使用者定義的函式必須有主體。</value>
     
@@ -3890,7 +4222,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>指定的函式傳回類型 '{0}' 與函式主體的傳回類型 '{1}' 不相符。</value>
+    <value>指定的函式傳回類型「{0}」與函式主體的傳回類型「{1}」不相符。</value>
     
   </data>
   <data name="ErrUDF_TooManyParameters" xml:space="preserve">
@@ -3921,7 +4253,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>'{1}' 無法以 '{0}' 進行修改，或與現有範圍變數、資料來源或其他物件的名稱衝突。</value>
+    <value>「{1}」無法以「{0}」進行修改，或與現有範圍變數、資料來源或其他物件的名稱衝突。</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4082,6 +4414,10 @@
     <value>無法委派 {0}: 包含行為函式 '{1}'。</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows 可能會回傳快取值。使用 CountIf(DataSource, true) 取得最新的計數。</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>決定提供的文字是否與提供的格式相符。</value>
     
@@ -4228,16 +4564,20 @@
     <value>使用線上資料來源值 (資料表或記錄) 來設定變數可能導致向伺服器提出多個要求。這很快就會被封鎖。</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>類型常值聲明無效。運算式 '{0}' 不能用於類型定義。</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>類型運算式無效。「{0}」不能用於類型運算式。</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>類型 {0} 定義無效。</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>不支援的使用方式: Type 函式只能用在類型引數和類型宣告中。</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>類型 {0} 宣告無效。</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>類型定義 {0} 無效並可能包含迴圈。</value>
+    <value>類型 {0} 宣告無效並可能包含週期。</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4490,8 +4830,96 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>要清除的來源。</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>擷取跨越多個具有關係的資料表的資料。</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>來源 1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>來源 2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>分母</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>左側資料表或資料集。</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>右側資料表或資料集。</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>兩個資料表或資料集中的聯結條件。</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>兩個資料表或資料集之間的聯結類型。</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>重新命名其中一個來源中現有資料欄的參數。</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>指定的資料來源無法與此函數一起使用。</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>無效引數「{0}」。預期為有效的類型名稱或內嵌類型運算式。</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>類型參數中有不支援的『{0}』類型。</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>遍歷 JSON 承載時達到的最大深度。</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>在 JSON 函式中達到的最大長度。</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>未啟用『使用者定義型別』實驗功能。</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>語法不正確:『=』不能用來宣告使用者定義型別。請使用『:=』代替。</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>『{0}』不能因與同名的另一資料欄結合而新增/重新命名。</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>預期是普通的『JoinType』列舉值。不支援不同的列舉或透過其他函數傳送，例如 Join(..., If(true, JoinType.Inner, JoinType.Full))。</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>從第 5 個位置開始的參數是用來重新命名資料欄，並預期是『As』節點參數，例如 LeftRecord.Name As NewName。</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>必須至少宣告一列『{0}』來組成聯結結果。</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>在這種情況下，『{0}』值是無效的。它應該是對『{1}』或『{2}』範圍名稱的參考。</value>
     
   </data>
 </root>

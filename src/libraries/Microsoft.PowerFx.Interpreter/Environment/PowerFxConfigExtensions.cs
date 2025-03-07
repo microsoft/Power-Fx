@@ -7,6 +7,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
@@ -20,6 +21,12 @@ namespace Microsoft.PowerFx
         public static void AddFunction(this SymbolTable symbolTable, ReflectionFunction function)
         {
             symbolTable.AddFunction(function.GetTexlFunction());
+        }
+
+        public static void AddEnvironmentVariables(this SymbolValues symbolValues, RecordValue recordValue)
+        {
+            var variablesRecordValue = FormulaValue.NewRecordFromFields(new NamedValue("Variables", recordValue));
+            symbolValues.Add("Environment", variablesRecordValue);
         }
 
         /// <summary>
@@ -63,14 +70,20 @@ namespace Microsoft.PowerFx
 
             foreach (KeyValuePair<TexlFunction, IAsyncTexlFunction> func in Library.RegexFunctions(regExTimeout, regexTypeCache))
             {
-                if (config.SymbolTable.Functions.AnyWithName(func.Key.Name))
+                if (config.ComposedConfigSymbols.Functions.AnyWithName(func.Key.Name))
                 {
                     throw new InvalidOperationException("Cannot add RegEx functions more than once.");
                 }
 
-                config.SymbolTable.AddFunction(func.Key);
+                config.InternalConfigSymbols.AddFunction(func.Key);
                 config.AdditionalFunctions.Add(func.Key, func.Value);
             }
+        }
+
+        [Obsolete("Join is still in preview.")]
+        public static void EnableJoinFunction(this PowerFxConfig config)
+        {
+            config.SymbolTable.AddFunction(new JoinImpl());
         }
 
         [Obsolete("OptionSetInfo function is deprecated. Use the Value function on an option set backed by a number and the Boolean function on an option set backed by a Boolean instead. A new ChoiceInfo function is in the works for access to logical names.")]

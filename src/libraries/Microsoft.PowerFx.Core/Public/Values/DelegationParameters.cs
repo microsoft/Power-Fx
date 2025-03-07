@@ -70,35 +70,42 @@ namespace Microsoft.PowerFx.Types
         // $orderBy
         Sort = 1 << 3,
 
+        // $apply = join(table As name)
+        ApplyJoin = 1 << 4,
+
+        // $apply = groupby((field1, ..), field with sum as TotalSum)
+        ApplyGroupBy = 1 << 5,
+
+        // $count
+        Count = 1 << 6,
+
         /*
           To be implemented later when needed
          
         // $compute
-        Compute = 1 << 4,
-
-        // $count
-        Count = 1 << 5,
+        Compute = 1 << 5,
 
         // $expand
-        Expand = 1 << 6,
+        Expand = 1 << 7,
 
         // $format
-        Format = 1 << 7,
+        Format = 1 << 8,
 
         // $index
-        Index = 1 << 8,
+        Index = 1 << 9,
 
         // $levels
-        Levels = 1 << 9,
+        Levels = 1 << 10,
 
         // $schemaversion
-        SchemaVersion = 1 << 10,
+        SchemaVersion = 1 << 11,
 
         // $search
-        Search = 1 << 11,
+        Search = 1 << 12,
 
         // $skip
-        Skip = 1 << 12
+        Skip = 1 << 13
+
         */
     }
 }

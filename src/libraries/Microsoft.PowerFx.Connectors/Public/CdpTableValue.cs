@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Entities; 
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
@@ -18,22 +18,21 @@ namespace Microsoft.PowerFx.Connectors
     {
         public bool IsDelegable => _tabularService.IsDelegable;
 
-        protected internal readonly CdpService _tabularService;
+        protected internal readonly CdpService _tabularService;        
 
-        protected internal readonly ConnectorType _connectorType;
+        internal readonly IReadOnlyDictionary<string, Relationship> Relationships;
 
         private IReadOnlyCollection<DValue<RecordValue>> _cachedRows;
 
         internal readonly HttpClient HttpClient;
 
-        public RecordType TabularRecordType => _tabularService?.TabularRecordType;
+        public RecordType RecordType => _tabularService?.RecordType;
         
-        public CdpTableValue(CdpService tabularService, ConnectorType connectorType)
-            : base(IRContext.NotInSource(new CdpTableType(tabularService.TableType)))
+        internal CdpTableValue(CdpService tabularService, IReadOnlyDictionary<string, Relationship> relationships)
+            : base(IRContext.NotInSource(tabularService.TableType))
         {
             _tabularService = tabularService;
-            _connectorType = connectorType;
-            
+            Relationships = relationships;                        
             HttpClient = tabularService.HttpClient;
         }
 
@@ -44,6 +43,11 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         public override IEnumerable<DValue<RecordValue>> Rows => GetRowsAsync(null, null, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+
+        public DelegationParameterFeatures SupportedFeatures => DelegationParameterFeatures.Filter |
+                DelegationParameterFeatures.Top |
+                DelegationParameterFeatures.Columns | // $select
+                DelegationParameterFeatures.Sort; // $orderby
 
         public async Task<IReadOnlyCollection<DValue<RecordValue>>> GetRowsAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel)
         {
@@ -66,6 +70,11 @@ namespace Microsoft.PowerFx.Connectors
         public void Refresh()
         {
             _cachedRows = null;
+        }
+
+        public Task<FormulaValue> ExecuteQueryAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel)
+        {
+            throw new NotImplementedException();
         }
     }   
 

@@ -167,6 +167,7 @@ namespace Microsoft.PowerFx.Types
 
         internal static ErrorValue OverflowError(IRContext irContext)
         {
+            // https://github.com/microsoft/Power-Fx/issues/2618
             return new ErrorValue(irContext, new ExpressionError()
             {
                 Message = "Overflow",

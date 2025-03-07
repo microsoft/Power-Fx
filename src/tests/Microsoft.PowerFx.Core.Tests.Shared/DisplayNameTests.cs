@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
@@ -786,6 +787,40 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 Assert.Equal(expected, renamer.ApplyRename(expr));
             }
+        }
+
+        [Fact]
+        public void SummarizeDisplayNameTest()
+        {
+            var expression = "First(Summarize(DS, logicalField, logicalField2)).";
+            var record = RecordType.Empty().Add("logicalField", FormulaType.Number, "DisplayField").Add("logicalField2", FormulaType.String, "DisplayFiled2");
+
+            var symbol = new SymbolTable();
+            symbol.AddVariable("DS", record.ToTable());
+            symbol.AddFunction(new SummarizeFunction());
+
+            var config = new PowerFxConfig
+            {
+                SymbolTable = symbol
+            };
+
+            var engine = new Engine(config);
+
+            var logicalCheck = engine.Check(expression + "logicalField");
+            var displayCheck = engine.Check(expression + "DisplayField");
+
+            Assert.True(logicalCheck.IsSuccess);
+            Assert.True(displayCheck.IsSuccess);
+
+            // Check if intellisense suggests the display name.
+            var intellisenseResult = engine.Suggest(expression, RecordType.Empty(), expression.Length);
+
+            Assert.NotNull(intellisenseResult);
+            Assert.NotNull(intellisenseResult.Suggestions);
+
+            var suggestions = intellisenseResult.Suggestions.Select(sugg => sugg.DisplayText.Text);
+            Assert.Contains("DisplayField", suggestions);
+            Assert.Contains("DisplayFiled2", suggestions);
         }
     }
 }

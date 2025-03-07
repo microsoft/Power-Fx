@@ -1,0 +1,436 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ErrDivByZero" xml:space="preserve">
+    <value>Neplatná operace: dělení nulou.</value>
+    
+  </data>
+  <data name="ErrRuntimeTypeMismatch" xml:space="preserve">
+    <value>Runtime type modulu runtime.</value>
+    
+  </data>
+  <data name="ErrArgumentOutOfRange" xml:space="preserve">
+    <value>Argument mimo rozsah.</value>
+    
+  </data>
+  <data name="ErrInvalidCharValue" xml:space="preserve">
+    <value>Neplatná číselná hodnota, musí být v rozsahu 1…255.</value>
+    
+  </data>
+  <data name="ErrBadLanguageCode" xml:space="preserve">
+    <value>Kód jazyka {0} není podporovaný.</value>
+    
+  </data>
+  <data name="ErrNonFiniteArgument" xml:space="preserve">
+    <value>Argument funkce „{0}“ musí být konečný.</value>
+    
+  </data>
+  <data name="ErrNonFiniteResult" xml:space="preserve">
+    <value>Funkce „{0}“ vrátila nekonečné číslo.</value>
+    
+  </data>
+  <data name="ErrInvalidDateTimeParsingError" xml:space="preserve">
+    <value>Hodnotu data nebo času nelze analyzovat.</value>
+    
+  </data>
+  <data name="ErrInvalidDateTimeError" xml:space="preserve">
+    <value>Neplatná hodnota data nebo času.</value>
+    
+  </data>
+  <data name="ErrInvalidBooleanFormatError" xml:space="preserve">
+    <value>Hodnotu nelze interpretovat jako logickou hodnotu.</value>
+    
+  </data>
+  <data name="ErrInvalidColorFormatError" xml:space="preserve">
+    <value>Hodnotu nelze interpretovat jako barvu.</value>
+    
+  </data>
+  <data name="ErrUnreachableCodeError" xml:space="preserve">
+    <value>Neznámá chyba.</value>
+    
+  </data>
+  <data name="ErrNotYetImplementedFunctionError" xml:space="preserve">
+    <value>Dosud neimplementovaná funkce: {0}.</value>
+    
+  </data>
+  <data name="ErrNotYetImplementedUnaryOperatorError" xml:space="preserve">
+    <value>Dosud neimplementovaný unární operátor: {0}.</value>
+    
+  </data>
+  <data name="ErrInvalidChain" xml:space="preserve">
+    <value>Neplatný řetězec: {0}.</value>
+    
+  </data>
+  <data name="ErrMaxCallDepth" xml:space="preserve">
+    <value>Překročena maximální hloubka volání.</value>
+    
+  </data>
+  <data name="ErrRecordNotFound" xml:space="preserve">
+    <value>Záznam nebyl nalezen</value>
+    
+  </data>
+  <data name="ErrOnlyPrimitiveValuesAllowed" xml:space="preserve">
+    <value>Pro operaci jsou povoleny pouze primitivní hodnoty.</value>
+    
+  </data>
+  <data name="ErrCanNotConvertToNumber" xml:space="preserve">
+    <value>Hodnotu '{0}' nelze převést na číslo.</value>
+    
+  </data>
+  <data name="ErrStartOfWeekInvalid" xml:space="preserve">
+    <value>Očekávala se hodnota z výčtu StartOfWeek, která označuje, jak se mají číslovat všední dny.</value>
+    
+  </data>
+  <data name="ErrRuntimeExceptionError" xml:space="preserve">
+    <value>Výjimka byla vyvolána: {0}</value>
+    
+  </data>
+  <data name="ErrNameIsNotValid" xml:space="preserve">
+    <value>Název není platný. Identifikátor '{0}' se nerozpoznal.</value>
+    
+  </data>
+  <data name="ErrMondayZeroValueNotSupported" xml:space="preserve">
+    <value>Hodnota MondayZero z výčtu StartOfWeek není ve funkci WeekNum podporována.</value>
+    
+  </data>
+  <data name="ErrAggregateArgsSameNumberOfRecords" xml:space="preserve">
+    <value>Oba agregované argumenty musí mít stejný počet záznamů.</value>
+    
+  </data>
+  <data name="ErrInvalidArgument" xml:space="preserve">
+    <value>Neplatný argument</value>
+    
+  </data>
+  <data name="ErrUntypedObjectDoesNotImplementSetProperty" xml:space="preserve">
+    <value>Třída „{0}“ neimplementuje hodnotu „SetProperty“.</value>
+    
+  </data>
+  <data name="ErrLowerValueGreaterThanUpperValue" xml:space="preserve">
+    <value>Nižší hodnota nesmí být větší než horní hodnota.</value>
+    
+  </data>
+  <data name="ErrUntypedObjectNotArray" xml:space="preserve">
+    <value>UntypedObject nepředstavuje pole.</value>
+    
+  </data>
+  <data name="ErrNotApplicable" xml:space="preserve">
+    <value>Nepoužije se</value>
+    
+  </data>
+  <data name="ErrAccessingFieldNotValidValue" xml:space="preserve">
+    <value>Přístup k poli není pro tuto hodnotu platný.</value>
+    
+  </data>
+  <data name="ErrSystemNoError" xml:space="preserve">
+    <value>Systém bez chyby</value>
+    
+  </data>
+  <data name="ErrSystemError" xml:space="preserve">
+    <value>Systémová chyba</value>
+    
+  </data>
+  <data name="ErrMissingRequiredField" xml:space="preserve">
+    <value>Chybí povinné pole</value>
+    
+  </data>
+  <data name="ErrCreateRecordPermissionDenied" xml:space="preserve">
+    <value>Oprávnění k vytvoření záznamu bylo odepřeno</value>
+    
+  </data>
+  <data name="ErrUpdateRecordPermissionDenied" xml:space="preserve">
+    <value>Oprávnění k aktualizaci záznamu bylo odepřeno</value>
+    
+  </data>
+  <data name="ErrDeleteRecordPermissionDenied" xml:space="preserve">
+    <value>Oprávnění k odstranění záznamu bylo odepřeno</value>
+    
+  </data>
+  <data name="ErrColumnServerGenerated" xml:space="preserve">
+    <value>Sloupec je generován serverem a nelze jej měnit</value>
+    
+  </data>
+  <data name="ErrRecordUpdateConflict" xml:space="preserve">
+    <value>Zaznamenejte konflikt aktualizací, obnovte záznam a znovu aplikujte změnu</value>
+    
+  </data>
+  <data name="ErrValidationError" xml:space="preserve">
+    <value>Chyba ověření</value>
+    
+  </data>
+  <data name="ErrColumnReadOnly" xml:space="preserve">
+    <value>Sloupec je jen pro čtení</value>
+    
+  </data>
+  <data name="ErrInvalidRecord" xml:space="preserve">
+    <value>Záznam je neplatný</value>
+    
+  </data>
+  <data name="DivisionByZero" xml:space="preserve">
+    <value>Dělení nulou</value>
+    
+  </data>
+  <data name="ErrBadLanguage" xml:space="preserve">
+    <value>Chybný kód jazyka nebo neplatná hodnota</value>
+    
+  </data>
+  <data name="ErrRegexSyntaxError" xml:space="preserve">
+    <value>Chyba syntaxe v regulárním výrazu</value>
+    
+  </data>
+  <data name="ErrInvalidFunctionUsage" xml:space="preserve">
+    <value>Neplatné použití funkce</value>
+    
+  </data>
+  <data name="ErrFileNotFound" xml:space="preserve">
+    <value>Soubor nebyl nalezen</value>
+    
+  </data>
+  <data name="ErrSystemAnalysisError" xml:space="preserve">
+    <value>Chyba systémové analýzy</value>
+    
+  </data>
+  <data name="ErrReadRecordPermissionDenied" xml:space="preserve">
+    <value>Oprávnění ke čtení záznamu bylo odepřeno</value>
+    
+  </data>
+  <data name="ErrOperationNotSupportedByPlayerDevice" xml:space="preserve">
+    <value>Operace, kterou tento přehrávač nebo zařízení nepodporuje</value>
+    
+  </data>
+  <data name="ErrInsufficientMemoryStorage" xml:space="preserve">
+    <value>Nedostatek paměti nebo úložiště zařízení</value>
+    
+  </data>
+  <data name="ErrStorageQuotaExceeded" xml:space="preserve">
+    <value>Překročena kvóta úložiště</value>
+    
+  </data>
+  <data name="ErrNetworkError" xml:space="preserve">
+    <value>Chyba sítě</value>
+    
+  </data>
+  <data name="ErrNumericError" xml:space="preserve">
+    <value>Číselná chyba</value>
+    
+  </data>
+  <data name="ErrTimeoutError" xml:space="preserve">
+    <value>Chyba: Vypršel časový limit</value>
+    
+  </data>
+  <data name="ErrOnlineServiceNotAvailable" xml:space="preserve">
+    <value>Připojení k online službě není k dispozici</value>
+    
+  </data>
+  <data name="ErrInvalidJsonFormat" xml:space="preserve">
+    <value>Neplatný formát JSON</value>
+    
+  </data>
+  <data name="ErrCustomError" xml:space="preserve">
+    <value>Vlastní chyba</value>
+    
+  </data>
+  <data name="ErrCustomErrorArg" xml:space="preserve">
+    <value>Vlastní chyba ({0})</value>
+    
+  </data>
+  <data name="ErrReservedErrorArg" xml:space="preserve">
+    <value>Vyhrazená chyba ({0})</value>
+    
+  </data>
+  <data name="ErrOverflow" xml:space="preserve">
+    <value>Přetečení.</value>
+    
+  </data>
+  <data name="ErrFilterPredicate" xml:space="preserve">
+    <value>Filter() podporuje pouze jeden predikát.</value>
+    
+  </data>
+  <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
+    <value>Argument netypového objektu funkce „{0}“ má nesprávný typ. Očekávaný: {1}, skutečný: {2}.</value>
+    
+  </data>
+  <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">
+    <value>Argument míst musí být dostatečně velký, aby se do něj vešel výsledek.</value>
+    
+  </data>
+  <data name="ErrInvalidSortColumn" xml:space="preserve">
+    <value>Zadaný sloupec {0} neexistuje nebo je neplatným typem sloupce řazení.</value>
+    
+  </data>
+  <data name="ErrOrderTableDuplicateValues" xml:space="preserve">
+    <value>Tabulka pořadí nemůže obsahovat duplicitní hodnoty</value>
+    
+  </data>
+  <data name="ErrManagedConnRefreshOnly" xml:space="preserve">
+    <value>Obnovit lze jen spravovaná připojení.</value>
+    
+  </data>
+  <data name="ErrUntypedNumberNotValidDecimal" xml:space="preserve">
+    <value>Netypové číslo není platná desetinná hodnota, může dojít k přetečení.</value>
+    
+  </data>
+  <data name="ErrSingleColumnTableAccessNodeNotYetImplemented" xml:space="preserve">
+    <value>Přístup k tabulce s jedním sloupcem dosud nebyl implementován.</value>
+    
+  </data>
+  <data name="ErrReturnTypeDifference" xml:space="preserve">
+    <value>Návratový typ by měl být „{0}“, nalezen „{1}“.</value>
+    
+  </data>
+  <data name="ErrThirdArgumentIsInvalid" xml:space="preserve">
+    <value>Třetí argument funkce {0} je neplatný.</value>
+    
+  </data>
+  <data name="ErrReturnedNonFiniteNumber" xml:space="preserve">
+    <value>Výraz vrátil nekonečné číslo.</value>
+    
+  </data>
+  <data name="ErrReturnedNumberBeyondDecimalValues" xml:space="preserve">
+    <value>Výraz vrátil číslo, které je mimo rozsah desetinných hodnot.</value>
+    
+  </data>
+  <data name="ErrPlacesBetweenRange" xml:space="preserve">
+    <value>Počet míst by měl být od 1 do 10.</value>
+    
+  </data>
+  <data name="ErrInvalidOperatorForTypes" xml:space="preserve">
+    <value>Operátor je pro tyto typy neplatný.</value>
+    
+  </data>
+  <data name="ErrRegexTimeoutException" xml:space="preserve">
+    <value>Časový limit regulárního výrazu (nad {0} ms) – {1}</value>
+    
+  </data>
+  <data name="ErrInvalidRegexException" xml:space="preserve">
+    <value>Neplatný regulární výraz – {rexParseEx.Message}</value>
+    
+  </data>
+  <data name="ErrInputOutsideRange" xml:space="preserve">
+    <value>Vstupní hodnota {0} je mimo povolený rozsah.</value>
+    
+  </data>
+  <data name="ErrInvalidNumberInput" xml:space="preserve">
+    <value>Vstupní hodnota {0} je neplatný vstup.</value>
+    
+  </data>
+  <data name="ErrUnrecognizedSymbol" xml:space="preserve">
+    <value>Nerozpoznaný symbol {0}.</value>
+    
+  </data>
+</root>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1807,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Retorna true si el valor sense tipus proporcionat és del tipus especificat.</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>tipus</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>El valor sense tipus per comprovar si es pot convertir com a tipus especificat.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>El tipus per al qual volem comprovar l'untypedValue.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Utilitza el valor proporcionat com a tipus especificat.</value>
     
@@ -1824,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>Taula d'entitat que representa el tipus per al qual volem utilitzar el valor.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Comprova i utilitza el valor sense tipus proporcionat com a tipus especificat.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>tipus</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>El valor sense tipus per a la conversió com a tipus nou.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>El tipus per al qual volem utilitzar el valor.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Executa la fórmula proporcionada com a segon paràmetre amb l'àmbit proporcionat pel primer.</value>
@@ -1879,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>"{0}" és una funció desconeguda o no admesa.</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>"{0}" es reconeix com a funció d'ajuda de tipus i només es pot utilitzar dins de la funció Type.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -2673,6 +2713,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Cadena JSON per processar.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>Converteix una cadena JSON en un objecte amb tipus.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>cadena</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>Una cadena JSON per convertir en un objecte amb tipus.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>tipus</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>Definició amb tipus entre línies o tipus amb nom definit globalment.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Retorna el registre d'una taula en un índex determinat.</value>
     
@@ -2690,6 +2748,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Índex del registre que s'ha de recuperar.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2710,6 +2780,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Tipus de codi de barres</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2826,6 +2928,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Valor que es provarà.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Converteix una data i una hora en format de text en un nombre que representa la data en el codi de data i hora del Power Apps.</value>
@@ -3119,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Col·lecció nova o existent que s'augmentarà.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Esborra la col·lecció i, després, afegeix un o més elements a la col·lecció especificada. Els elements poden ser d'una taula o d'una col·lecció diferent (p. ex., ClearCollect(collection, source_collection)) o d'un o més registres ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3266,6 +3369,10 @@
     <value>Article: Referència de fórmules del Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Caràcter inesperat "{0}" a la posició "{1}" a la fórmula.</value>
     
@@ -3278,6 +3385,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Article: Referència de fórmules del Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3295,6 +3406,10 @@
     <value>Article: Referència de fórmules del Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Caràcters inesperats. La fórmula conté "{0}", però s'espera "{1}".</value>
     
@@ -3308,6 +3423,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Article: Referència de fórmules del Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3325,6 +3444,10 @@
     <value>Article: Referència de fórmules del Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>El nom no és vàlid. Aquest identificador no es reconeix.</value>
     
@@ -3338,6 +3461,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Article: Referència de fórmules del Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3355,6 +3482,10 @@
     <value>Article: Referència de fórmules del PowerApps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>La referència "Parent" no és vàlida. No podeu fer referència a un control principal en aquest context.</value>
     
@@ -3368,6 +3499,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Article: Addició i configuració d'un control d'una aplicació de llenç al Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3407,6 +3542,10 @@
     <value>Mòdul: Ús de fórmules bàsiques</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>S'esperava un nombre. S'espera un nombre en aquest punt de la fórmula.</value>
     
@@ -3420,6 +3559,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Article: Referència de fórmules del Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3437,6 +3580,10 @@
     <value>Article: Referència de fórmules del Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>S'esperaven dos punts. S'esperen dos punts en aquest punt de la fórmula.</value>
     
@@ -3452,6 +3599,10 @@
     <value>Article: Visualització del text, les dates i les hores al Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Hi ha una funció de comportament en una propietat que no és de comportament. No podeu utilitzar aquesta propietat per canviar valors d'altres llocs de l’aplicació.</value>
     
@@ -3465,6 +3616,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Article: Comprensió de les fórmules de comportament per a les aplicacions de llenç al Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Funció de comportament en una funció definida per l'usuari (UDF) que no és de no comportament. Per declarar un comportament UDF, incloeu la funció definida per l'usuari entre claus ({...}).</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Les funcions de comportament canvien l'estat de la sessió actual. "Clear", "Collect", "Patch" i "Refresh" són funcions de comportament comunes.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Editeu l'expressió de la funció definida per l'usuari de tal manera que quedi entre les claus ({...}).</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3504,6 +3671,10 @@
     <value>Article: Referència de fórmules del Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>S'esperava text o un nombre. S'espera text o un nombre en aquest punt de la fórmula.</value>
     
@@ -3519,6 +3690,10 @@
     <value>Article: Referència de fórmules del Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>S'esperava un claudàtor de tancament. S'espera un claudàtor de tancament (}) en aquest punt de la fórmula.</value>
     
@@ -3530,12 +3705,23 @@
     <value>Editeu la fórmula perquè inclogui un claudàtor.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>S'esperava el tancament de l'identificador. S'espera una cometa de tancament (') en aquest punt de la fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Una cometa simple de tancament indica el final d'un identificador (per exemple, 'Nom').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Editeu la fórmula perquè inclogui un cometa simple de tancament.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>L'identificador no conté text vàlid.</value>
+    <value>L'identificador està buit o conté un caràcter no vàlid, com ara una tabulació o un salt de línia.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Assegureu-vos que teniu text per a l'identificador. Aquest error es produeix quan l'identificador està buit o només conté espais.</value>
+    <value>Assegureu-vos que teniu text vàlid a l'identificador. Aquest error es produeix quan l'identificador està en blanc, només conté espais o conté una tabulació o un salt de línia.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3561,8 +3747,16 @@
     <value>Mòdul: Ús de fórmules bàsiques</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Mòdul: Creació de fórmules bàsiques amb taules i registres</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3577,6 +3771,10 @@
     <value>Article: Referència de fórmules del Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>El tipus no és compatible. La columna "{0}" de la font de dades que esteu actualitzant espera un tipus "{1}", però utilitzeu un tipus "{2}".</value>
     
@@ -3589,8 +3787,16 @@
     <value>Mòdul: Ús de fórmules bàsiques</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Mòdul: Creació de fórmules bàsiques amb taules i registres</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3603,6 +3809,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Article: Referència de fórmules del Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3621,8 +3831,16 @@
     <value>Mòdul: Ús de fórmules bàsiques</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Mòdul: Creació de fórmules bàsiques amb taules i registres</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3640,8 +3858,16 @@
     <value>Mòdul: Ús de fórmules bàsiques</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Mòdul: Creació de fórmules bàsiques amb taules i registres</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3657,6 +3883,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Article: Referència de fórmules del Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3682,8 +3912,16 @@
     <value>Article: Comprensió de la delegació en una aplicació de llenç</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Blog: Data row limits for delegation (Límits de les files de dades per a la delegació)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3709,8 +3947,16 @@
     <value>Article: Comprensió de la delegació en una aplicació de llenç</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Blog: Data row limits for delegation (Límits de les files de dades per a la delegació)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3740,8 +3986,16 @@
     <value>Article: Comprensió de la delegació en una aplicació de llenç</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Blog: Data row limits for delegation (Límits de les files de dades per a la delegació)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3773,8 +4027,70 @@
     <value>Article: Comprensió de la delegació en una aplicació de llenç</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Blog: Data row limits for delegation (Límits de les files de dades per a la delegació)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Advertiment de delegació. La fórmula amb nom {0} no es pot delegar i, per tant, és possible que el seu ús en aquesta fórmula no funcioni correctament en conjunts de dades grans. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>És possible que la font de dades no pugui processar la fórmula i retorni un conjunt de dades incomplet. Així mateix, és possible que l'aplicació no retorni resultats correctes o que es comporti incorrectament si el conjunt de dades està incomplet.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Proveu de simplificar la definició de la fórmula amb nom.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Article: Comprensió de la delegació en una aplicació de llenç</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Data row limits for delegation (Límits de les files de dades per a la delegació)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Advertiment de delegació. La funció definida per l'usuari {0} no es pot delegar i, per tant, és possible que el seu ús en aquesta fórmula no funcioni correctament en conjunts de dades grans. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>És possible que la font de dades no pugui processar la fórmula i retorni un conjunt de dades incomplet. Així mateix, és possible que l'aplicació no retorni resultats correctes o que es comporti incorrectament si el conjunt de dades està incomplet.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Proveu de simplificar la definició de la funció definida per l'usuari.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Article: Comprensió de la delegació en una aplicació de llenç</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Data row limits for delegation (Límits de les files de dades per a la delegació)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3801,8 +4117,16 @@
     <value>Article: Comprensió de la delegació en una aplicació de llenç</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Blog: Data row limits for delegation (Límits de les files de dades per a la delegació)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3831,6 +4155,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Referència: ConfirmExit per a aplicacions de llenç</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3863,6 +4191,10 @@
   </data>
   <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
     <value>La fórmula amb nom ha de ser una expressió.</value>
+    
+  </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Una declaració de tipus amb nom ha de ser una expressió de tipus vàlida.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4082,6 +4414,10 @@
     <value>No es pot delegar {0}: conté una funció de comportament "{1}".</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows pot tornar un valor emmagatzemat a la memòria cau. Utilitzeu CountIf(DataSource, true) per obtenir el recompte més recent.</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Determina si el text proporcionat coincideix amb el format de text proporcionat.</value>
     
@@ -4228,16 +4564,20 @@
     <value>Definir una variable amb un valor de font de dades en línia (taula o registre) pot provocar diverses sol·licituds al servidor. Aviat es bloquejarà.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>La declaració literal de tipus no és vàlida. L'expressió "{0}" no es pot utilitzar en una definició de tipus.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>L'expressió de tipus no és vàlida. "{0}" no es pot utilitzar en una expressió de tipus.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>La definició de tipus {0} no és vàlida.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Ús no admès: la funció Type només es pot utilitzar en arguments de tipus i declaracions de tipus.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>La declaració de tipus {0} no és vàlida.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>La definició de tipus {0} no és vàlida i pot contenir cicles.</value>
+    <value>La declaració de tipus {0} no és vàlida i pot contenir cicles.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4490,8 +4830,96 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Origen que s'ha d'esborrar.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Recupera dades que abasten diverses taules amb relacions.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>origen1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>origen2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>denominador</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>La taula o col·lecció de l'esquerra.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>La taula o col·lecció de la dreta.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Criteris d'unió entre les dues taules o col·leccions.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>El tipus d'unió entre les dues taules o col·leccions.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Els arguments per canviar el nom d'una columna existent en una de les fonts.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>No es pot utilitzar l'origen de dades especificat amb aquesta funció.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Argument "{0}" no vàlid. S'esperava un nom de tipus vàlid o una expressió de tipus en línia.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Tipus no admès "{0}" a l'argument del tipus.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>S'ha assolit la profunditat màxima mentre es recorria la càrrega útil de JSON.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>S'ha assolit la longitud màxima a la funció JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>La característica experimental "Tipus definits per l'usuari" no està habilitada.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Sintaxi incorrecta: "=" no es pot utilitzar per declarar els tipus definits per l'usuari. Utilitzeu ":=" en el seu lloc.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>"{0}" no es pot afegir ni canviar de nom a causa de la col·lisió amb una altra columna amb el mateix nom.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Valor d'enumeració de "JoinType" sense format esperat. No s'admeten diferents enumeracions ni passar-ho a través d'una altra funció, és a dir, Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Els arguments que comencen a partir de la cinquena posició tenen com a finalitat canviar els noms de les columnes i s'espera que siguin arguments de node "As", per exemple, LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>S'ha de declarar com a mínim una columna "{0}" per compondre el resultat de la unió.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>El valor "{0}" no és vàlid en aquest context. Ha de ser una referència al nom de l'àmbit "{1}" o "{2}".</value>
     
   </data>
 </root>

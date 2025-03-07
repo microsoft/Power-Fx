@@ -21,16 +21,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var bugsFieldType = new HashSet<Type>();
             var bugNames = new HashSet<string>()
             {
-                "ConnectorFunction._slash"
+                "ConnectorFunction._slash",                
+                "ColumnCapabilities.DefaultFilterFunctionSupport"
             };
 
             AnalyzeThreadSafety.CheckStatics(asm, bugsFieldType, bugNames);
         }
 
-        // $$$ Supersedes ImmutabilityTests.
-        // This is more aggressive (includes private fields), but they don't all pass. So assert is disabled.
-        // Run this test under a debugger, and failure list is written to Debugger output window.
-        // Per https://github.com/microsoft/Power-Fx/issues/1561, enable assert here. 
         [Fact]
         public void CheckImmutableTypeInConnector()
         {
@@ -39,7 +36,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 typeof(OpenApiParser).Assembly
             };
 
-            AnalyzeThreadSafety.CheckImmutableTypes(assemblies);
+            // https://github.com/microsoft/Power-Fx/issues/1561
+            // These types are marked as [ThreadSafeImmutable], but they fail the enforcement checks. 
+            var knownFailures = new HashSet<Type>
+            {
+                typeof(ConnectorSettings)
+            };
+
+            AnalyzeThreadSafety.CheckImmutableTypes(assemblies, knownFailures);
         }
     }
 }

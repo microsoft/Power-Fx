@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging;
 using Microsoft.PowerFx.Core.Public;
@@ -483,6 +484,23 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Compute the dependencies. Called after binding. 
         /// </summary>
+        [Obsolete("Preview")]
+        public DependencyInfo ApplyDependencyInfoScan()
+        {
+            var ir = ApplyIR(); //throws on errors
+
+            var ctx = new DependencyVisitor.DependencyContext();
+            var visitor = new DependencyVisitor();
+
+            // Using the original node without transformations. This simplifies the dependency analysis for PFx.DV side.
+            ir.TopOriginalNode.Accept(visitor, ctx);
+
+            return visitor.Info;
+        }
+
+        /// <summary>
+        /// Compute the dependencies. Called after binding. 
+        /// </summary>
         public void ApplyDependencyAnalysis()
         {
             var binding = this.Binding; // will throw if binding wasn't run
@@ -539,6 +557,8 @@ namespace Microsoft.PowerFx
                 this.ThrowOnErrors();
                 (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(binding);
 
+                var originalIRNode = irnode;
+
                 var list = _engine.IRTransformList;
                 if (list != null)
                 {
@@ -555,6 +575,7 @@ namespace Microsoft.PowerFx
                 _irresult = new IRResult
                 {
                     TopNode = irnode,
+                    TopOriginalNode = originalIRNode,
                     RuleScopeSymbol = ruleScopeSymbol
                 };
             }
@@ -591,7 +612,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="node"></param>
         /// <returns>Null if the node is not bound.</returns>
-        public FunctionInfo GetFunctionInfo(CallNode node)
+        public FunctionInfo GetFunctionInfo(Syntax.CallNode node)
         {
             if (node == null)
             {
@@ -707,7 +728,7 @@ namespace Microsoft.PowerFx
             var summary = new CheckContextSummary
             {
                 AllowsSideEffects = allowSideEffects,
-                IsPreV1Semantics = isV1,
+                IsPreV1Semantics = !isV1,
                 ExpectedReturnType = this._expectedReturnTypes,
                 SuggestedSymbols = symbolEntries
             };

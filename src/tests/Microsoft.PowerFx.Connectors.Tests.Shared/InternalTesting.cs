@@ -1373,7 +1373,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public static string GetString(this OpenApiSchema schema)
         {
             StringBuilder sb = new StringBuilder();
-            schema.GetStringInternal(new ConnectorTypeGetterSettings(0), sb);
+            SymbolTable optionSets = new SymbolTable();
+            schema.GetStringInternal(new ConnectorTypeGetterSettings(new ConnectorSettings(null), null, optionSets), sb);
             return sb.ToString();
         }
 

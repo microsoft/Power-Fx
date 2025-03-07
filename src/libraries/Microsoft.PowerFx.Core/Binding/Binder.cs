@@ -893,63 +893,6 @@ namespace Microsoft.PowerFx.Core.Binding
             return overloads.Any(overload => overload.IsSelfContained) && overloads.Any(overload => !overload.IsSelfContained);
         }
 
-        private bool IsDataComponentDataSource(NameLookupInfo lookupInfo)
-        {
-            return lookupInfo.Kind == BindKind.Data &&
-                _glue.IsComponentDataSource(lookupInfo.Data);
-        }
-
-        private bool IsDataComponentDefinition(NameLookupInfo lookupInfo)
-        {
-            return lookupInfo.Kind == BindKind.Control &&
-                   _glue.IsDataComponentDefinition(lookupInfo.Data);
-        }
-
-        private bool IsDataComponentInstance(NameLookupInfo lookupInfo)
-        {
-            return lookupInfo.Kind == BindKind.Control &&
-                   _glue.IsDataComponentInstance(lookupInfo.Data);
-        }
-
-        private IExternalControl GetDataComponentControl(DottedNameNode dottedNameNode, INameResolver nameResolver, TexlVisitor visitor)
-        {
-            Contracts.AssertValue(dottedNameNode);
-            Contracts.AssertValueOrNull(nameResolver);
-            Contracts.AssertValueOrNull(visitor);
-
-            if (nameResolver == null || !(dottedNameNode.Left is FirstNameNode lhsNode))
-            {
-                return null;
-            }
-
-            if (!nameResolver.LookupGlobalEntity(lhsNode.Ident.Name, out var lookupInfo) ||
-                (!IsDataComponentDataSource(lookupInfo) &&
-                !IsDataComponentDefinition(lookupInfo) &&
-                !IsDataComponentInstance(lookupInfo)))
-            {
-                return null;
-            }
-
-            if (GetInfo(lhsNode) == null)
-            {
-                lhsNode.Accept(visitor);
-            }
-
-            var lhsInfo = GetInfo(lhsNode);
-            if (lhsInfo?.Data is IExternalControl dataCtrlInfo)
-            {
-                return dataCtrlInfo;
-            }
-
-            if (lhsInfo?.Kind == BindKind.Data &&
-                _glue.TryGetCdsDataSourceByBind(lhsInfo.Data, out var info))
-            {
-                return info;
-            }
-
-            return null;
-        }
-
         private DPath GetFunctionNamespace(CallNode node, TexlVisitor visitor)
         {
             Contracts.AssertValue(node);
@@ -960,7 +903,6 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 ParentNode parentNode => GetParentControl(parentNode, NameResolver),
                 SelfNode selfNode => GetSelfControl(selfNode, NameResolver),
-                FirstNameNode firstNameNode => GetDataComponentControl(node.HeadNode.AsDottedName(), NameResolver, visitor),
                 _ => null,
             };
 
@@ -1002,7 +944,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     return Enumerable.Empty<string>();
                 }
 
-                var ruleQueryOptions = Rule.Binding.QueryOptions.GetQueryOptions(ds);
+                var ruleQueryOptions = Rule.HasValidBinding ? Rule.Binding.QueryOptions.GetQueryOptions(ds) : null;
                 if (ruleQueryOptions != null)
                 {
                     foreach (var nodeQO in Rule.TexlNodeQueryOptions)
@@ -1024,36 +966,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         ds.QueryOptions.AddRelatedColumns();
                         return ds.QueryOptions.Selects;
-                    }
-                }
-            }
-
-            return Enumerable.Empty<string>();
-        }
-
-        internal IEnumerable<string> GetExpandQuerySelects(TexlNode node, string expandEntityLogicalName)
-        {
-            if (Document.Properties.EnabledFeatures.IsProjectionMappingEnabled
-                && TryGetDataQueryOptions(node, true, out var tabularDataQueryOptionsMap))
-            {
-                var currNodeQueryOptions = tabularDataQueryOptionsMap.GetQueryOptions();
-
-                foreach (var qoItem in currNodeQueryOptions)
-                {
-                    foreach (var expandQueryOptions in qoItem.Expands)
-                    {
-                        if (expandQueryOptions.Value.ExpandInfo.Identity == expandEntityLogicalName)
-                        {
-                            if (!expandQueryOptions.Value.SelectsEqualKeyColumns() &&
-                                (!(Document?.Properties?.UserFlags?.EnforceSelectPropagationLimit ?? false) || expandQueryOptions.Value.Selects.Count() <= MaxSelectsToInclude))
-                            {
-                                return expandQueryOptions.Value.Selects;
-                            }
-                            else
-                            {
-                                return Enumerable.Empty<string>();
-                            }
-                        }
                     }
                 }
             }
@@ -2514,7 +2426,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 public readonly DType Type;
                 public readonly bool CreatesRowScope;
                 public readonly bool SkipForInlineRecords;
-                public readonly DName ScopeIdentifier;
+                public readonly DName[] ScopeIdentifiers;
                 public readonly bool RequireScopeIdentifier;
 
                 // Optional data associated with scope. May be null.
@@ -2526,7 +2438,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     Type = type;
                 }
 
-                public Scope(CallNode call, Scope parent, DType type, DName scopeIdentifier = default, bool requireScopeIdentifier = false, object data = null, bool createsRowScope = true, bool skipForInlineRecords = false)
+                public Scope(CallNode call, Scope parent, DType type, DName[] scopeIdentifiers = default, bool requireScopeIdentifier = false, object data = null, bool createsRowScope = true, bool skipForInlineRecords = false)
                 {
                     Contracts.Assert(type.IsValid);
                     Contracts.AssertValueOrNull(data);
@@ -2537,7 +2449,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     Data = data;
                     CreatesRowScope = createsRowScope;
                     SkipForInlineRecords = skipForInlineRecords;
-                    ScopeIdentifier = scopeIdentifier;
+                    ScopeIdentifiers = scopeIdentifiers;
                     RequireScopeIdentifier = requireScopeIdentifier;
 
                     Nest = parent?.Nest ?? 0;
@@ -2580,7 +2492,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _nameResolver = resolver;
                 _features = features;
 
-                _topScope = new Scope(null, null, topScope ?? DType.Error, useThisRecordForRuleScope ? TexlBinding.ThisRecordDefaultName : default);
+                _topScope = new Scope(null, null, topScope ?? DType.Error, useThisRecordForRuleScope ? new[] { ThisRecordDefaultName } : default);
                 _currentScope = _topScope;
                 _currentScopeDsNodeId = -1;
             }
@@ -2645,7 +2557,22 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetType(node, DType.ObjNull);
             }
 
+            // Binding TypeLiteralNode from anywhere other than valid type context should be an error.
+            // This ensures that binding of unintended use of TypeLiteralNode eg: "If(Type(Boolean), 1, 2)" will result in an error.
+            // VisitType method is used to resolve the type of TypeLiteralNode from valid context. 
             public override void Visit(TypeLiteralNode node)
+            {
+                AssertValid();
+                Contracts.AssertValue(node);
+                
+                _txb.SetType(node, DType.Error);
+                _txb.ErrorContainer.Error(node, TexlStrings.ErrTypeFunction_UnsupportedUsage);
+            }
+
+            // Method to bind TypeLiteralNode from valid context where a type is expected.
+            // Binding TypeLiteralNode in an expression where a type is not expected invokes the Visit method
+            // from normal visitor pattern and results in error.
+            private void VisitType(TypeLiteralNode node)
             {
                 AssertValid();
                 Contracts.AssertValue(node);
@@ -2658,14 +2585,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var type = DTypeVisitor.Run(node.TypeRoot, _nameResolver);
 
-                if (type.IsValid) 
+                if (type.IsValid)
                 {
                     _txb.SetType(node, type);
                 }
                 else
                 {
                     _txb.SetType(node, DType.Error);
-                    _txb.ErrorContainer.Error(node, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString());
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString());
                 }
             }
 
@@ -2882,7 +2809,21 @@ namespace Microsoft.PowerFx.Core.Binding
                         return;
                     }
 
-                    var nodeType = scope.Type;
+                    DType nodeType = null;
+
+                    if (scope.ScopeIdentifiers == null || scope.ScopeIdentifiers.Length == 1)
+                    {
+                        nodeType = scope.Type;
+                    }
+                    else
+                    {
+                        // If scope.ScopeIdentifier.Length > 1, it meant the function creates more than 1 scope and the scope types are contained within a record.
+                        // Example: Join(t1, t2, LeftRecord.a = RightRecord.a, ...)
+                        //      The expression above will create LeftRecord and RightRecord scopes. The scope type will be ![LeftRecord:![...],RightRecord:![...]]
+                        // Example: Join(t1 As X1, t2 As X2, X1.a = X2.a, ...)
+                        //      The expression above will create LeftRecord and RightRecord scopes. The scope type will be ![X1:![...],X2:![...]]
+                        nodeType = scope.Type.GetType(nodeName);
+                    }
 
                     if (!isWholeScope)
                     {
@@ -2941,6 +2882,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (lookupInfo.Data is IExternalNamedFormula formula)
                     {
                         isConstantNamedFormula = formula.IsConstant;
+
+                        // If the definition of the named formula has a delegation warning, every use should also inherit this warning
+                        if (formula.HasDelegationWarning)
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.SuggestRemoteExecutionHint_NF, node.Ident.Name);
+                        }
                     }
                 }
                 else if (lookupInfo.Kind == BindKind.Data)
@@ -3071,6 +3018,14 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrInvalidControlReference);
                     }
+                }
+
+                if (_txb.BindingConfig.MarkAsAsyncOnLazilyLoadedControlRef && 
+                    lookupType.IsControl && 
+                    lookupInfo.Data is IExternalControl control &&
+                    !control.IsAppGlobalControl)
+                {
+                    _txb.FlagPathAsAsync(_txb.Top);
                 }
 
                 // Update _usesGlobals, _usesResources, etc.
@@ -3221,14 +3176,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
                                 var expandedEntityType = GetExpandedEntityType(typeTmp, parentEntityPath);
                                 var type = scope.Type.SetType(ref fError, DPath.Root.Append(nodeName), expandedEntityType);
-                                scope = new Scope(scope.Call, scope.Parent, type, scope.ScopeIdentifier, scope.RequireScopeIdentifier, expandedEntityType.ExpandInfo);
+                                scope = new Scope(scope.Call, scope.Parent, type, scope.ScopeIdentifiers, scope.RequireScopeIdentifier, expandedEntityType.ExpandInfo);
                             }
 
                             return true;
                         }
                     }
 
-                    if (scope.ScopeIdentifier == nodeName)
+                    if (scope.ScopeIdentifiers?.Any(dname => dname.Value == nodeName) ?? false)
                     {
                         isWholeScope = true;
                         return true;
@@ -3604,7 +3559,8 @@ namespace Microsoft.PowerFx.Core.Binding
                     // If the reference is to Control.Property and the rule for that Property is a constant,
                     // we need to mark the node as constant, and save the control info so we may look up the
                     // rule later.
-                    if (controlInfo?.GetRule(property.InvariantName) is { HasErrorsOrWarnings: false } rule && rule.Binding.IsConstant(rule.Binding.Top))
+                    if (controlInfo?.GetRule(property.InvariantName) is IExternalRule rule &&
+                        rule.IsInvariantExpression)
                     {
                         value = controlInfo;
                         isConstant = true;
@@ -4150,14 +4106,13 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     if (_txb._glue.IsComponentScopedPropertyFunction(infoTexlFunction))
                     {
-                        // We only have to check the property's rule and the calling arguments for purity as scoped variables
-                        // (default values) are by definition data rules and therefore always pure.
-                        if (_txb.Document != null && _txb.Document.TryGetControlByUniqueId(infoTexlFunction.Namespace.Name.Value, out var ctrl) &&
-                            ctrl.TryGetRule(new DName(infoTexlFunction.Name), out var rule))
-                        {
-                            hasSideEffects |= rule.Binding.HasSideEffects(rule.Binding.Top);
-                            isStateFul |= rule.Binding.IsStateful(rule.Binding.Top);
-                        }
+                        // Behavior only component properties should be treated as stateful.
+                        hasSideEffects |= infoTexlFunction.IsBehaviorOnly;
+
+                        // At the moment, we're going to treat all invocations of component scoped property functions as stateful. 
+                        // This ensures that we don't lift these function invocations in loops, and that they are re-evaluated every time they are called,
+                        // which is always correct, although less efficient in some cases. 
+                        isStateFul |= true;
                     }
                     else
                     {
@@ -4371,6 +4326,10 @@ namespace Microsoft.PowerFx.Core.Binding
                         {
                             _txb.ErrorContainer.Error(node, TexlStrings.ErrUnimplementedFunction, node.Head.Name.Value);
                         }
+                        else if (BuiltinFunctionsCore.TypeHelperFunctions.Contains(node.Head.Name.Value, StringComparer.OrdinalIgnoreCase))
+                        {
+                            _txb.ErrorContainer.Error(node, TexlStrings.ErrKnownTypeHelperFunction, node.Head.Name.Value);
+                        }
                         else
                         {
                             _txb.ErrorContainer.Error(node, TexlStrings.ErrUnknownFunction, node.Head.Name.Value);
@@ -4507,47 +4466,54 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         var scope = DType.Invalid;
                         var required = false;
-                        DName scopeIdentifier = default;
+                        DName[] scopeIdentifiers = default;
                         if (scopeInfo.ScopeType != null)
                         {
                             scopeNew = new Scope(node, _currentScope, scopeInfo.ScopeType, skipForInlineRecords: maybeFunc.SkipScopeForInlineRecords);
                         }
                         else if (carg > 0)
                         {
-                            // Visit the first arg. This will give us the scope type for any subsequent lambda/predicate args.
-                            var nodeInp = node.Args.Children[0];
-                            nodeInp.Accept(this);
+                            // Gets the lesser number between the CallNode chidl args and func.ScopeArgs.
+                            // There reason why is that the intellisense can visit this code and provide a number of args less than the func.ScopeArgs.
+                            // Example: Join(|
+                            var argsCount = Math.Min(node.Args.Children.Count, maybeFunc.ScopeArgs);
+                            var types = new DType[argsCount];
+
+                            for (int i = 0; i < argsCount; i++)
+                            {
+                                node.Args.Children[i].Accept(this);
+                            }
 
                             // At this point we know the type of the first argument, so we can check for untyped objects
-                            if (overloadWithUntypedObjectLambda != null && _txb.GetType(nodeInp) == DType.UntypedObject)
+                            if (overloadWithUntypedObjectLambda != null && _txb.GetType(node.Args.Children[0]) == DType.UntypedObject)
                             {
                                 maybeFunc = overloadWithUntypedObjectLambda;
                                 scopeInfo = maybeFunc.ScopeInfo;
                             }
 
-                            // Determine the Scope Identifier using the 1st arg
-                            required = _txb.GetScopeIdent(nodeInp, _txb.GetType(nodeInp), out scopeIdentifier);
+                            // Determine the Scope Identifier using the func.ScopeArgs arg
+                            required = scopeInfo.GetScopeIdent(node.Args.Children.ToArray(), out scopeIdentifiers);
 
-                            if (scopeInfo.CheckInput(_txb.Features, node, nodeInp, _txb.GetType(nodeInp), out scope))
+                            if (scopeInfo.CheckInput(_txb.Features, node, node.Args.Children.ToArray(), out scope, GetScopeArgsTypes(node.Args.Children, argsCount)))
                             {
-                                if (_txb.TryGetEntityInfo(nodeInp, out expandInfo))
+                                if (_txb.TryGetEntityInfo(node.Args.Children[0], out expandInfo))
                                 {
-                                    scopeNew = new Scope(node, _currentScope, scope, scopeIdentifier, required, expandInfo, skipForInlineRecords: maybeFunc.SkipScopeForInlineRecords);
+                                    scopeNew = new Scope(node, _currentScope, scope, scopeIdentifiers, required, expandInfo, skipForInlineRecords: maybeFunc.SkipScopeForInlineRecords);
                                 }
                                 else
                                 {
                                     maybeFunc.TryGetDelegationMetadata(node, _txb, out metadata);
-                                    scopeNew = new Scope(node, _currentScope, scope, scopeIdentifier, required, metadata, skipForInlineRecords: maybeFunc.SkipScopeForInlineRecords);
+                                    scopeNew = new Scope(node, _currentScope, scope, scopeIdentifiers, required, metadata, skipForInlineRecords: maybeFunc.SkipScopeForInlineRecords);
                                 }
                             }
 
-                            argCountVisited = 1;
+                            argCountVisited = argsCount;
                         }
 
                         // If there is only one function with this name and its arity doesn't match,
                         // that means the invocation is erroneous.
                         ArityError(maybeFunc.MinArity, maybeFunc.MaxArity, node, carg, _txb.ErrorContainer);
-                        _txb.SetInfo(node, new CallInfo(maybeFunc, node, scope, scopeIdentifier, required, _currentScope.Nest));
+                        _txb.SetInfo(node, new CallInfo(maybeFunc, node, scope, scopeIdentifiers, required, _currentScope.Nest));
                         _txb.SetType(node, maybeFunc.ReturnType);
                     }
 
@@ -4604,13 +4570,14 @@ namespace Microsoft.PowerFx.Core.Binding
                     _currentScopeDsNodeId = dsNode.Id;
                 }
 
-                var typeInput = argTypes[0] = _txb.GetType(nodeInput);
+                argTypes[0] = _txb.GetType(nodeInput);
 
                 // Get the cursor type for this arg. Note we're not adding document errors at this point.
                 DType typeScope;
-                DName scopeIdent = default;
+                DName[] scopeIdent = default;
                 var identRequired = false;
                 var fArgsValid = true;
+
                 if (scopeInfo.ScopeType != null)
                 {
                     typeScope = scopeInfo.ScopeType;
@@ -4619,10 +4586,17 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
                 else
                 {
-                    fArgsValid = scopeInfo.CheckInput(_txb.Features, node, nodeInput, typeInput, out typeScope);
+                    // Starting from 1 since 0 was visited above.
+                    for (int i = 1; i < maybeFunc.ScopeArgs; i++)
+                    {
+                        _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));
+                        args[i].Accept(this);
+                    }
+
+                    fArgsValid = scopeInfo.CheckInput(_txb.Features, node, args, out typeScope, GetScopeArgsTypes(node.Args.Children, maybeFunc.ScopeArgs));
 
                     // Determine the scope identifier using the first node for lambda params
-                    identRequired = _txb.GetScopeIdent(nodeInput, typeScope, out scopeIdent);
+                    identRequired = scopeInfo.GetScopeIdent(args, out scopeIdent);
                 }
 
                 if (!fArgsValid)
@@ -4695,8 +4669,12 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     if (!isIdentifier || maybeFunc.GetIdentifierParamStatus(args[i], _features, i) == TexlFunction.ParamIdentifierStatus.PossiblyIdentifier)
                     {
-                        args[i].Accept(this);
-                        _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));
+                        if (_txb.GetTypeAllowInvalid(args[i]) != null && !_txb.GetTypeAllowInvalid(args[i]).IsValid)
+                        {
+                            args[i].Accept(this);
+                            _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));
+                        }
+
                         argTypes[i] = _txb.GetType(args[i]);
 
                         Contracts.Assert(argTypes[i].IsValid);
@@ -4767,6 +4745,17 @@ namespace Microsoft.PowerFx.Core.Binding
                 return false;
             }
 
+            /// <summary>
+            /// Get all DType used to compose the scope of the function (func.ScopeArgs).
+            /// </summary>
+            /// <param name="args">Call child nodes.</param>
+            /// <param name="scopeArgs">TexlFunction ScopeArgs property.</param>
+            /// <returns>DType array.</returns>
+            private DType[] GetScopeArgsTypes(IReadOnlyList<TexlNode> args, int scopeArgs)
+            {
+                return args.Take(scopeArgs).Select(node => _txb.GetType(node)).ToArray();
+            }
+
             private void FinalizeCall(CallNode node)
             {
                 Contracts.AssertValue(node);
@@ -4820,7 +4809,14 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Invalid datasources always result in error
                 if (func.IsBehaviorOnly && !_txb.BindingConfig.AllowsSideEffects)
                 {
-                    _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrBehaviorPropertyExpected);
+                    if (_txb.BindingConfig.UserDefinitionsMode)
+                    {
+                        _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrBehaviorFunctionInDataUDF);
+                    }
+                    else
+                    {
+                        _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrBehaviorPropertyExpected);
+                    }
                 }
 
                 // Test-only functions can only be used within test cases.
@@ -4859,6 +4855,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                 }
 
+                // If the definition of the user-defined function has a delegation warning, every usage should also inherit this warning
+                if (func is UserDefinedFunction udf && udf.HasDelegationWarning)
+                {
+                    _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.SuggestRemoteExecutionHint_UDF, udf.Name);
+                }
+
                 _txb.CheckAndMarkAsDelegatable(node);
                 _txb.CheckAndMarkAsPageable(node, func);
 
@@ -4891,7 +4893,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var call = _txb.GetInfo(node).VerifyValue();
                 var func = call.Function;
-                if (func == null || func.IsSelfContained)
+                if (func == null || func.IsSelfContained || (func is UserDefinedFunction udf && udf.Binding == null))
                 {
                     return false;
                 }
@@ -5060,7 +5062,10 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        args[i].Accept(this);
+                        if (_txb.GetTypeAllowInvalid(args[i]) != null && !_txb.GetTypeAllowInvalid(args[i]).IsValid)
+                        {
+                            args[i].Accept(this);
+                        }
                     }
 
                     if (args[i].Kind == NodeKind.As)
@@ -5133,6 +5138,14 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
+                if (!_features.IsUserDefinedTypesEnabled)
+                {
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrUserDefinedTypesDisabled);
+                    _txb.SetInfo(node, new CallInfo(func, node));
+                    _txb.SetType(node, DType.Error);
+                    return;
+                }
+
                 Contracts.Assert(argCount > 1);
                 Contracts.AssertValue(args[1]);
 
@@ -5156,7 +5169,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
                 else if (args[1] is TypeLiteralNode typeLiteral)
                 {
-                    typeLiteral.Accept(this);
+                    VisitType(typeLiteral);
                 }
                 else
                 {
@@ -5265,7 +5278,10 @@ namespace Microsoft.PowerFx.Core.Binding
                         _txb.AddVolatileVariables(args[i], volatileVariables);
                     }
 
-                    args[i].Accept(this);
+                    if (_txb.GetTypeAllowInvalid(args[i]) != null && !_txb.GetTypeAllowInvalid(args[i]).IsValid)
+                    {
+                        args[i].Accept(this);
+                    }
 
                     // In case weight was added during visitation
                     _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));

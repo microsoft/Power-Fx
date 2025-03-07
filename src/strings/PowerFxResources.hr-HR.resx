@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -377,7 +377,7 @@
     <value>Naziv stupca koji se uklanja.</value>
   </data>
   <data name="AboutRenameColumns" xml:space="preserve">
-    <value>Vraća kopiju tablice navedene tablice "izvora" sa stupcem "stari_stupac" preimenovanim u "novi_stupac".</value>
+    <value>Vraća kopiju tablice navedene tablice 'izvora' sa stupcem 'stari stupac' preimenovanim u 'novi_stupac'.</value>
     
   </data>
   <data name="RenameColumnsArg1" xml:space="preserve">
@@ -1807,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Vraća true ako je navedena netipizirana vrijednost odabrane vrste.</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>vrsta</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>Netipizirana vrijednost za provjeru može li se konvertirati u navedeni tip.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>Vrstu za koju želimo provjeriti untypedValue.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Upotrebljava navedenu vrijednost kao odabranu vrstu.</value>
     
@@ -1824,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>Tablica entiteta predstavlja vrstu za koju želimo koristiti određenu vrijednost.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Provjerava i koristi navedenu vrijednost Netipizirano kao odabranu vrstu.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>vrsta</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>Netipizirana vrijednost za konverziju kao nova vrsta.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>Vrstu za koju želimo koristiti određenu vrijednost.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Izvršava formulu koja je navedena kao drugi parametar pomoću dosega navedenog prvim.</value>
@@ -1879,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>„{0}” je nepoznata ili nepodržana funkcija.</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' se prepoznaje kao pomoćna funkcija vrste i može se koristiti samo unutar funkcije Type.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -2433,7 +2473,7 @@
     
   </data>
   <data name="FindTArg2" xml:space="preserve">
-    <value>unutar_tekst_ili_stupca</value>
+    <value>u_tekstu_ili_stupcu</value>
     
   </data>
   <data name="FindTArg3" xml:space="preserve">
@@ -2673,6 +2713,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>JSON niz za obradu.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>Pretvara JSON niz u tipizirani objekt.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>niz</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>Niz JSON za pretvaranje u tipizirani objekt.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>vrsta</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>Definicija uokvirene vrste ili globalno definirani imenovani tip.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Vraća zapis u tablici na određenom indeksu.</value>
     
@@ -2690,6 +2748,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Indeks zapisa koji treba dohvatiti.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2710,6 +2780,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Vrsta crtičnog koda</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2826,6 +2928,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Vrijednost koja se testira.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Pretvara datum i vrijeme u obliku teksta u broj koji predstavlja datum u kodu vremena i datuma za Power Apps.</value>
@@ -3117,17 +3223,14 @@
     
   </data>
   <data name="AboutCollect_collection" xml:space="preserve">
-    <value>Nova ili postojeća zbirka koja se proširuje.</value>
-  </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
+    <value>Nova ili postojeća zbirka za povećanje.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Najprije briše zbirku i dodaje jednu ili više stavki u navedenu zbirku. Stavke mogu potjecati iz različitih tablica ili zbirki (npr. ClearCollect(collection, source_collection)) ili pak jednog ili više zapisa ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
-    <value>Nova ili postojeća zbirka koja se proširuje.</value>
+    <value>Nova ili postojeća zbirka za povećanje.</value>
   </data>
   <data name="AboutClearCollect_item" xml:space="preserve">
     <value>Zapis ili tablica za prikupljanje. Zapis će se dodati u zbirku. Reci tablice dodat će se u zbirku.</value>
@@ -3266,6 +3369,10 @@
     <value>Članak: referenca formule za Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Neočekivani znak „{0}” na položaju „{1}” u formuli.</value>
     
@@ -3278,6 +3385,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Članak: referenca formule za Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3295,6 +3406,10 @@
     <value>Članak: referenca formule za Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Neočekivani znakovi. Formula sadrži "{0}", gdje se očekuje "{1}".</value>
     
@@ -3308,6 +3423,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Članak: referenca formule za Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3325,6 +3444,10 @@
     <value>Članak: referenca formule za Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Naziv nije valjan. Identifikator nije prepoznat.</value>
     
@@ -3338,6 +3461,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Članak: referenca formule za Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3355,6 +3482,10 @@
     <value>Članak: Referenca za formule za PowerApps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>"Nadređena" referenca nije valjana. Nije moguće referencirati nadređenu kontrolu u tom kontekstu.</value>
     
@@ -3368,6 +3499,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Članak: Dodavanje i konfiguriranje kontrole aplikacije radnog područja na servisu Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3407,6 +3542,10 @@
     <value>Modul: upotreba jednostavnih formula</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Očekuje se broj. Na tom mjestu u formuli očekujemo broj.</value>
     
@@ -3420,6 +3559,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Članak: referenca formule za Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3437,6 +3580,10 @@
     <value>Članak: referenca formule za Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Očekuje se dvotočka. Na tom mjestu u formuli očekujemo dvotočku (:).</value>
     
@@ -3452,6 +3599,10 @@
     <value>Članak: Prikazivanje teksta, datuma i vremena na servisu Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Funkcija ponašanja u svojstvo koje nije svojstvo ponašanja. To svojstvo nije moguće koristiti za promjenu vrijednosti na drugim mjestima u aplikaciji.</value>
     
@@ -3465,6 +3616,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Članak: Ponašanje formula za aplikacije od gotovih gradivnih elemenata na servisu Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Funkcija ponašanja u korisnički definiranoj funkciji (UDF) koja nije ponašanje. Ogradite tijelo korisnički definirane funkcije u vitičaste zagrade ({...}) da biste deklarirali ponašanje UDF-a.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Funkcija ponašanja mijenja trenutačno stanje sesije. Uobičajene funkcije ponašanja uključuju 'Clear', 'Collect', 'Patch' i 'Refresh'.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Uredite izraz korisnički definirane funkcije tako da bude u vitičastim zagradama ({...}).</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3504,6 +3671,10 @@
     <value>Članak: referenca formule za Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Očekuje se tekst ili broj. Na tom mjestu u formuli očekujemo tekst ili broj.</value>
     
@@ -3519,6 +3690,10 @@
     <value>Članak: referenca formule za Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Očekuje se desna zagrada. Na tom mjestu u formuli očekujemo desnu zagradu (}).</value>
     
@@ -3530,12 +3705,23 @@
     <value>Uredite formulu tako da sadrži zagradu.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Očekuje se da će se identifikator zatvoriti. Na ovom mjestu u formuli očekuje se zatvaranje (').</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Završni jednostruki navodnik označava kraj identifikatora (na primjer, 'Ime').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Uredite svoju formulu tako da uključuje završni jednostruki navodnik.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Identifikator ne sadrži valjan tekst.</value>
+    <value>Identifikator je prazan ili sadrži znak koji nije valjan, kao što je kartica ili novi redak.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Provjerite imate li tekst za identifikator. Ta se pogreška pojavljuje kada se identifikator sastoji samo od praznina ili razmaka.</value>
+    <value>Provjerite sadrži li identifikator važeći tekst. Ova se pogreška javlja kada je identifikator prazan, sadrži samo razmak ili tabulator ili novi red.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3561,8 +3747,16 @@
     <value>Modul: upotreba jednostavnih formula</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Modul: Stvaranje jednostavnih formula s tablicama i zapisima</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3577,6 +3771,10 @@
     <value>Članak: referenca formule za Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Vrsta nije kompatibilna. U stupcu "{0}" u izvoru podatka koji ažurirate očekuje se vrsta "{1}", a koristite vrstu "{2}".</value>
     
@@ -3589,8 +3787,16 @@
     <value>Modul: upotreba jednostavnih formula</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Modul: Stvaranje jednostavnih formula s tablicama i zapisima</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3603,6 +3809,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Članak: referenca formule za Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3621,8 +3831,16 @@
     <value>Modul: upotreba jednostavnih formula</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Modul: Stvaranje jednostavnih formula s tablicama i zapisima</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3640,8 +3858,16 @@
     <value>Modul: upotreba jednostavnih formula</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Modul: Stvaranje jednostavnih formula s tablicama i zapisima</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3657,6 +3883,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Članak: referenca formule za Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3682,8 +3912,16 @@
     <value>Članak: razumijevanje delegiranja u aplikaciji od gotovih gradivnih elemenata</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Blog: ograničenja retka podataka za delegiranje</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3709,8 +3947,16 @@
     <value>Članak: razumijevanje delegiranja u aplikaciji od gotovih gradivnih elemenata</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Blog: ograničenja retka podataka za delegiranje</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3740,8 +3986,16 @@
     <value>Članak: razumijevanje delegiranja u aplikaciji od gotovih gradivnih elemenata</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Blog: ograničenja retka podataka za delegiranje</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3773,8 +4027,70 @@
     <value>Članak: razumijevanje delegiranja u aplikaciji od gotovih gradivnih elemenata</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Blog: ograničenja retka podataka za delegiranje</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Obavijest o delegiranju. Formulu pod nazivom {0} nije moguće delegirati, pa upotreba ove formule možda neće ispravno raditi u velikim skupovima podataka. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Izvor podataka možda neće moći obraditi formulu, pa će vratiti nepotpun skup podataka. Ako skup podataka nije potpun, vaša aplikacija možda neće vratiti točne rezultate ni pravilno funkcionirati.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Pokušajte pojednostavniti definiciju imenovane formule.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Članak: razumijevanje delegiranja u aplikaciji od gotovih gradivnih elemenata</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: ograničenja retka podataka za delegiranje</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Obavijest o delegiranju. Korisnički definiranu funkciju {0} nije moguće delegirati, pa upotreba ove formule možda neće ispravno raditi u velikim skupovima podataka. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Izvor podataka možda neće moći obraditi formulu, pa će vratiti nepotpun skup podataka. Ako skup podataka nije potpun, vaša aplikacija možda neće vratiti točne rezultate ni pravilno funkcionirati.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Pokušajte pojednostavniti definiciju za korisnički definiranu funkciju.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Članak: razumijevanje delegiranja u aplikaciji od gotovih gradivnih elemenata</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: ograničenja retka podataka za delegiranje</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3801,8 +4117,16 @@
     <value>Članak: razumijevanje delegiranja u aplikaciji od gotovih gradivnih elemenata</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Blog: ograničenja retka podataka za delegiranje</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3831,6 +4155,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Referenca: ConfirmExit za aplikacije od gotovih gradivnih elemenata</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3863,6 +4191,10 @@
   </data>
   <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
     <value>Imenovana formula mora biti izraz.</value>
+    
+  </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Imenovana vrsta deklaracije mora biti valjani izraz vrste.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4082,6 +4414,10 @@
     <value>{0} se ne može delegirati: sadrži funkciju ponašanja „{1}”.</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows može vratiti predmemoriranu vrijednost. Upotrijebite CountIf(DataSource, true) za dobivanje posljednjeg zbroja.</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Utvrđuje podudara li se navedeni tekst s navedenim oblikom teksta.</value>
     
@@ -4228,16 +4564,20 @@
     <value>Postavljanje varijable s vrijednošću online izvora podataka (tablica ili zapis) može uzrokovati više zahtjeva poslužitelju. To će se uskoro blokirati.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Vrsta doslovne vrijednosti nije valjana. Izraz „{0}” ne može se upotrijebiti u definiciji vrste.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Vrsta izraza nije valjana. '{0}' ne može se upotrijebiti u izrazu vrste.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definicija vrste {0} nije valjana.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Nepodržana iskorištenost: funkcija Type može se koristiti samo u argumentima vrste i deklaracijama vrste.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Deklaracija vrste {0} nije valjana.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definicija vrste {0} nije valjana i možda sadrži cikluse.</value>
+    <value>Deklaracija vrste {0} nije valjana i možda sadrži cikluse.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4490,8 +4830,96 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Izvor koji treba očistiti.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Dohvaća podatke koji se protežu u više tablica s odnosima.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>izvor1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>izvor2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>nazivnik</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Lijeva tablica ili zbirka.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Desna tablica ili zbirka.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Kriteriji pridruživanja između dvije tablice ili zbirke.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Vrsta pridruživanja između dvije tablice ili zbirke.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Argumenti za preimenovanje postojećeg stupca u jednom od izvora.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Navedeni se izvor podataka ne može koristiti s tom funkcijom.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Nevažeći argument '{0}'. Očekivao se važeći naziv tipa ili umetnuti izraz tipa.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Nepodržana vrsta '{0}' u argumentu vrste.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Dosegnuta je maksimalna dubina tijekom prelaska korisnih podataka JSON.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Dosegnuta je maksimalna duljina u funkciji JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Eksperimentalna značajka 'Korisnički definirate vrste' nije omogućena.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Neispravna sintaksa: '=' se ne smije koristiti za određivanje korisnički definirane vrste. Umjesto toga upotrijebite ':='.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>Nije moguće dodati/preimenovati '{0}' zbog sukoba s drugim stupcem s istim nazivom.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Očekivana vrijednost enumeracije 'JoinType'. Različita enumeracija ili njihovo propuštanje kroz drugu funkciju nije podržano, tj. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argumenti koji počinju na poziciji 5 namijenjeni su preimenovanju stupaca i očekuje se da budu argumenti čvora 'As' tj. LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Najmanje jedan stupac '{0}' mora biti deklariran da bi se stvorio rezultat pridruživanja.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Vrijednost '{0}' nije važeća u ovom kontekstu. To bi trebala biti referenca na naziv djelokruga '{1}' ili '{2}'.</value>
     
   </data>
 </root>

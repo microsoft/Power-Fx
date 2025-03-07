@@ -1,0 +1,436 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ErrDivByZero" xml:space="preserve">
+    <value>Ogiltig åtgärd: division med noll.</value>
+    
+  </data>
+  <data name="ErrRuntimeTypeMismatch" xml:space="preserve">
+    <value>Körningstypen matchar inte.</value>
+    
+  </data>
+  <data name="ErrArgumentOutOfRange" xml:space="preserve">
+    <value>Argument utanför intervall.</value>
+    
+  </data>
+  <data name="ErrInvalidCharValue" xml:space="preserve">
+    <value>Ogiltigt numeriskt värde. Värdet måste ligga inom intervallet 1...255.</value>
+    
+  </data>
+  <data name="ErrBadLanguageCode" xml:space="preserve">
+    <value>Språkkoden {0} stöds inte.</value>
+    
+  </data>
+  <data name="ErrNonFiniteArgument" xml:space="preserve">
+    <value>Argument till funktionen {0} måste vara ändliga.</value>
+    
+  </data>
+  <data name="ErrNonFiniteResult" xml:space="preserve">
+    <value>Funktionen {0} returnerade ett icke-ändligt tal.</value>
+    
+  </data>
+  <data name="ErrInvalidDateTimeParsingError" xml:space="preserve">
+    <value>Det går inte att parsa värdet för datum eller tid.</value>
+    
+  </data>
+  <data name="ErrInvalidDateTimeError" xml:space="preserve">
+    <value>Ogiltigt datum- eller tidvärde.</value>
+    
+  </data>
+  <data name="ErrInvalidBooleanFormatError" xml:space="preserve">
+    <value>Värdet kunde inte tolkas som en boolesk.</value>
+    
+  </data>
+  <data name="ErrInvalidColorFormatError" xml:space="preserve">
+    <value>Värdet kunde inte tolkas som en färg.</value>
+    
+  </data>
+  <data name="ErrUnreachableCodeError" xml:space="preserve">
+    <value>Okänt fel.</value>
+    
+  </data>
+  <data name="ErrNotYetImplementedFunctionError" xml:space="preserve">
+    <value>Funktionen har inte implementerats ännu: {0}.</value>
+    
+  </data>
+  <data name="ErrNotYetImplementedUnaryOperatorError" xml:space="preserve">
+    <value>Den unära operatorn har inte implementerats ännu: {0}.</value>
+    
+  </data>
+  <data name="ErrInvalidChain" xml:space="preserve">
+    <value>Ogiltig kedja: {0}.</value>
+    
+  </data>
+  <data name="ErrMaxCallDepth" xml:space="preserve">
+    <value>Största samtalsdjupet överskreds.</value>
+    
+  </data>
+  <data name="ErrRecordNotFound" xml:space="preserve">
+    <value>Det gick inte att hitta posten</value>
+    
+  </data>
+  <data name="ErrOnlyPrimitiveValuesAllowed" xml:space="preserve">
+    <value>Endast primitiva värden är tillåtna för åtgärden.</value>
+    
+  </data>
+  <data name="ErrCanNotConvertToNumber" xml:space="preserve">
+    <value>Värdet {0} kan inte konverteras till ett tal.</value>
+    
+  </data>
+  <data name="ErrStartOfWeekInvalid" xml:space="preserve">
+    <value>Förväntade ett värde från StartOfWeek-uppräkningen som anger hur veckodagarna ska numreras.</value>
+    
+  </data>
+  <data name="ErrRuntimeExceptionError" xml:space="preserve">
+    <value>Ett undantag uppstod: {0}</value>
+    
+  </data>
+  <data name="ErrNameIsNotValid" xml:space="preserve">
+    <value>Namnet är inte giltigt. {0} kan inte identifieras.</value>
+    
+  </data>
+  <data name="ErrMondayZeroValueNotSupported" xml:space="preserve">
+    <value>Värdet MondayZero, från uppräkningen av StartOfWeek, stöds inte i funktionen WeekNum.</value>
+    
+  </data>
+  <data name="ErrAggregateArgsSameNumberOfRecords" xml:space="preserve">
+    <value>Båda aggregeringsargumenten måste ha samma antal poster.</value>
+    
+  </data>
+  <data name="ErrInvalidArgument" xml:space="preserve">
+    <value>Ogiltigt argument</value>
+    
+  </data>
+  <data name="ErrUntypedObjectDoesNotImplementSetProperty" xml:space="preserve">
+    <value>Klassen {0} implementerar inte 'SetProperty'.</value>
+    
+  </data>
+  <data name="ErrLowerValueGreaterThanUpperValue" xml:space="preserve">
+    <value>Det lägsta värdet kan inte vara större än det övre värdet.</value>
+    
+  </data>
+  <data name="ErrUntypedObjectNotArray" xml:space="preserve">
+    <value>UntypedObject representerar inte en matris.</value>
+    
+  </data>
+  <data name="ErrNotApplicable" xml:space="preserve">
+    <value>Ej tillämpligt</value>
+    
+  </data>
+  <data name="ErrAccessingFieldNotValidValue" xml:space="preserve">
+    <value>Det går inte att komma åt ett fält med det här värdet.</value>
+    
+  </data>
+  <data name="ErrSystemNoError" xml:space="preserve">
+    <value>Inget systemfel</value>
+    
+  </data>
+  <data name="ErrSystemError" xml:space="preserve">
+    <value>Systemfel</value>
+    
+  </data>
+  <data name="ErrMissingRequiredField" xml:space="preserve">
+    <value>Obligatoriskt fält saknas</value>
+    
+  </data>
+  <data name="ErrCreateRecordPermissionDenied" xml:space="preserve">
+    <value>Behörighet att skapa post nekad</value>
+    
+  </data>
+  <data name="ErrUpdateRecordPermissionDenied" xml:space="preserve">
+    <value>Behörighet att uppdatera post nekad</value>
+    
+  </data>
+  <data name="ErrDeleteRecordPermissionDenied" xml:space="preserve">
+    <value>Behörighet att ta bort post nekad</value>
+    
+  </data>
+  <data name="ErrColumnServerGenerated" xml:space="preserve">
+    <value>Kolumnen genereras av servern och kan inte ändras</value>
+    
+  </data>
+  <data name="ErrRecordUpdateConflict" xml:space="preserve">
+    <value>Postuppdateringskonflikt, uppdatera posten och tillämpa ändringen igen</value>
+    
+  </data>
+  <data name="ErrValidationError" xml:space="preserve">
+    <value>Valideringsfel</value>
+    
+  </data>
+  <data name="ErrColumnReadOnly" xml:space="preserve">
+    <value>Kolumnen är skrivskyddad</value>
+    
+  </data>
+  <data name="ErrInvalidRecord" xml:space="preserve">
+    <value>Posten är ogiltig</value>
+    
+  </data>
+  <data name="DivisionByZero" xml:space="preserve">
+    <value>Division med noll</value>
+    
+  </data>
+  <data name="ErrBadLanguage" xml:space="preserve">
+    <value>Felaktig språkkod eller ogiltigt värde</value>
+    
+  </data>
+  <data name="ErrRegexSyntaxError" xml:space="preserve">
+    <value>Syntaxfel i reguljärt uttryck</value>
+    
+  </data>
+  <data name="ErrInvalidFunctionUsage" xml:space="preserve">
+    <value>Ogiltig funktionsanvändning</value>
+    
+  </data>
+  <data name="ErrFileNotFound" xml:space="preserve">
+    <value>Filen hittades inte</value>
+    
+  </data>
+  <data name="ErrSystemAnalysisError" xml:space="preserve">
+    <value>Systemanalysfel</value>
+    
+  </data>
+  <data name="ErrReadRecordPermissionDenied" xml:space="preserve">
+    <value>Behörighet att läsa post nekad</value>
+    
+  </data>
+  <data name="ErrOperationNotSupportedByPlayerDevice" xml:space="preserve">
+    <value>Åtgärden stöds inte av den här spelaren eller enheten</value>
+    
+  </data>
+  <data name="ErrInsufficientMemoryStorage" xml:space="preserve">
+    <value>Otillräckligt minne eller otillräcklig enhetslagring</value>
+    
+  </data>
+  <data name="ErrStorageQuotaExceeded" xml:space="preserve">
+    <value>Lagringskvot överskriden</value>
+    
+  </data>
+  <data name="ErrNetworkError" xml:space="preserve">
+    <value>Nätverksfel</value>
+    
+  </data>
+  <data name="ErrNumericError" xml:space="preserve">
+    <value>Numeriskt fel</value>
+    
+  </data>
+  <data name="ErrTimeoutError" xml:space="preserve">
+    <value>Timeoutfel</value>
+    
+  </data>
+  <data name="ErrOnlineServiceNotAvailable" xml:space="preserve">
+    <value>Anslutningen till onlinetjänsten är inte tillgänglig</value>
+    
+  </data>
+  <data name="ErrInvalidJsonFormat" xml:space="preserve">
+    <value>Ogiltigt JSON-format</value>
+    
+  </data>
+  <data name="ErrCustomError" xml:space="preserve">
+    <value>Anpassat fel</value>
+    
+  </data>
+  <data name="ErrCustomErrorArg" xml:space="preserve">
+    <value>Anpassat fel ({0})</value>
+    
+  </data>
+  <data name="ErrReservedErrorArg" xml:space="preserve">
+    <value>Reserverat fel ({0})</value>
+    
+  </data>
+  <data name="ErrOverflow" xml:space="preserve">
+    <value>Spill.</value>
+    
+  </data>
+  <data name="ErrFilterPredicate" xml:space="preserve">
+    <value>Filter() stöder endast ett predikat.</value>
+    
+  </data>
+  <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
+    <value>Argumentet för typlöst objekt till {0} har fel typ. Förväntat: {1}, Faktisk: {2}.</value>
+    
+  </data>
+  <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">
+    <value>Platsargumentet måste vara tillräckligt stort för att innehålla resultatet.</value>
+    
+  </data>
+  <data name="ErrInvalidSortColumn" xml:space="preserve">
+    <value>Den angivna kolumnen {0} finns inte eller är en felaktig sorteringskolumntyp.</value>
+    
+  </data>
+  <data name="ErrOrderTableDuplicateValues" xml:space="preserve">
+    <value>Sorteringstabellen kan inte ha duplicerade värden</value>
+    
+  </data>
+  <data name="ErrManagedConnRefreshOnly" xml:space="preserve">
+    <value>Bara hanterade anslutningar kan uppdateras.</value>
+    
+  </data>
+  <data name="ErrUntypedNumberNotValidDecimal" xml:space="preserve">
+    <value>Otypat tal är inte ett giltigt decimalvärde, möjligt spill.</value>
+    
+  </data>
+  <data name="ErrSingleColumnTableAccessNodeNotYetImplemented" xml:space="preserve">
+    <value>Åtkomst till tabell med en kolumn har inte implementerats ännu.</value>
+    
+  </data>
+  <data name="ErrReturnTypeDifference" xml:space="preserve">
+    <value>Returtypen skulle ha varit. {0}. {1} hittades.</value>
+    
+  </data>
+  <data name="ErrThirdArgumentIsInvalid" xml:space="preserve">
+    <value>Det tredje argumentet till funktionen {0} är ogiltigt.</value>
+    
+  </data>
+  <data name="ErrReturnedNonFiniteNumber" xml:space="preserve">
+    <value>Uttrycket returnerade ett icke-ändligt tal.</value>
+    
+  </data>
+  <data name="ErrReturnedNumberBeyondDecimalValues" xml:space="preserve">
+    <value>Uttrycket returnerade ett tal som ligger utanför decimalvärdesintervallet.</value>
+    
+  </data>
+  <data name="ErrPlacesBetweenRange" xml:space="preserve">
+    <value>Decimaler ska vara mellan 1 och 10.</value>
+    
+  </data>
+  <data name="ErrInvalidOperatorForTypes" xml:space="preserve">
+    <value>Operatorn är ogiltig för de här typerna.</value>
+    
+  </data>
+  <data name="ErrRegexTimeoutException" xml:space="preserve">
+    <value>Timeout för reguljärt uttryck (över {0} ms) – {1}</value>
+    
+  </data>
+  <data name="ErrInvalidRegexException" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck – {rexParseEx.Message}</value>
+    
+  </data>
+  <data name="ErrInputOutsideRange" xml:space="preserve">
+    <value>Indatavärdet {0} ligger utanför det tillåtna intervallet.</value>
+    
+  </data>
+  <data name="ErrInvalidNumberInput" xml:space="preserve">
+    <value>Indatavärdet {0} är ogiltigt.</value>
+    
+  </data>
+  <data name="ErrUnrecognizedSymbol" xml:space="preserve">
+    <value>Okänd symbol {0}.</value>
+    
+  </data>
+</root>

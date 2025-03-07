@@ -133,7 +133,7 @@ namespace Microsoft.PowerFx.Core.Utils
                     }
                 }
 
-                // !!! This is a tactical fix for the case where we have a boolean option set and a boolean value.
+                // This is a tactical fix for the case where we have a boolean option set and a boolean value.
                 // PA allows this but we don't. We should remove this once we have a better way to handle this.
                 if (dsNameType.IsOptionSet &&
                     DType.Boolean.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) &&

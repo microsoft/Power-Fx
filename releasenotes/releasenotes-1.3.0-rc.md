@@ -25,6 +25,17 @@
 `Patch(DS, table_of_rows_with_updates)`\
 `Patch(Record, Updates1, Updates2,…)`
 
+  - ParseJSON, IsType, AsType (https://github.com/microsoft/Power-Fx/pull/2569): ParseJSON, IsType, AsType functions now supports in-lined and user-defined types as argument.\
+  `ParseJSON(Text, Type)`\
+  `IsType(UntypedObject, Type)`\
+  `AsType(UntypedObject, Type)` 
+
+## Updated function behaviors:
+  - TimeValue function (https://github.com/microsoft/Power-Fx/pull/2731)
+    - Support for am/pm designators: `TimeValue("6:00pm")` now works (used to return an error)
+    - Better validation: `TimeValue("1")` would return a time value (equivalent to `Time(0,0,0)`), now returns an error
+    - Better support for wrapping times around the 24-hour mark: `TimeValue("27:00:00")` now returns the same as `Time(3,0,0)`, consistent with Excel's behavior.
+
 ## Other:  
   - Untyped object
     - Read a field from an untyped object by index (https://github.com/microsoft/Power-Fx/pull/2555):  
@@ -34,4 +45,4 @@
     - Setting an untyped object via deep mutation is now supported (https://github.com/microsoft/Power-Fx/pull/2548):  
       `Set(untypedObject.Field, 99)`      
       `Set(Index(untypedObject, 1).Field, 99)  // Reference field by name`  
-      `Set(Index(Index(untypedObject, 1), 1), 99) // Reference field by index`   
+      `Set(Index(Index(untypedObject, 1), 1), 99) // Reference field by index`

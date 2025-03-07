@@ -3,15 +3,21 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
+using CallNode = Microsoft.PowerFx.Syntax.CallNode;
+using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -239,7 +245,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             for (var i = 1; i < args.Count - 1; i += 2)
             {
                 base.TryGetColumnLogicalName(dsType, binding.Features.SupportColumnNamesAsIdentifiers, args[i], DefaultErrorContainer, out var columnName, out var columnType).Verify();
-                Contracts.Assert(dsType.Contains(columnName));
+                Contracts.Assert(dsType.Kind == DKind.LazyTable || dsType.Contains(columnName));
 
                 retval |= dsType.AssociateDataSourcesToSelect(dataSourceToQueryOptionsMap, columnName, columnType, true);
             }
@@ -264,6 +270,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     ColumnType = type
                 };
             }
+        }
+
+        public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
+        {
+            node.FunctionSupportColumnNamesAsIdentifiersDependencyUtil(visitor);
+
+            return true;
         }
     }
 }

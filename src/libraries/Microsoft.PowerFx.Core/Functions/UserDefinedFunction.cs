@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Functions
     /// This includings the binding (and hence IR for evaluation) - 
     /// This is conceptually immutable after initialization - if the body or signature changes, you need to create a new instance.
     /// </summary>
-    internal class UserDefinedFunction : TexlFunction, IExternalPageableSymbol, IExternalDelegatableSymbol
+    internal class UserDefinedFunction : TexlFunction, IExternalPageableSymbol
     {
         private readonly bool _isImperative;
         private readonly IEnumerable<UDFArg> _args;
@@ -44,15 +44,23 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public bool IsPageable => _binding.IsPageable(_binding.Top);
 
-        public bool IsDelegatable => _binding.IsDelegatable(_binding.Top);
-
         public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
             Contracts.Assert(binding.GetInfo(callNode).Function is UserDefinedFunction udf && udf.Binding != null);
 
-            return base.IsServerDelegatable(callNode, binding) || IsDelegatable;
+            if (base.IsServerDelegatable(callNode, binding) || _binding.IsDelegatable(_binding.Top))
+            {
+                return true;
+            }
+
+            if (_binding.Top.Kind == NodeKind.FirstName && ArgValidators.DelegatableDataSourceInfoValidator.TryGetValidValue(_binding.Top, _binding, out _))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public override bool SupportsParamCoercion => true;
@@ -69,6 +77,13 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             return ArgValidators.DelegatableDataSourceInfoValidator.TryGetValidValue(_binding.Top, _binding, out dataSource);
         }
+
+        public override bool TryGetDataSource(CallNode callNode, TexlBinding binding, out IExternalDataSource dsInfo)
+        {
+            return TryGetExternalDataSource(out dsInfo);
+        }
+
+        public bool HasDelegationWarning => _binding?.ErrorContainer.GetErrors().Any(error => error.MessageKey.Contains("SuggestRemoteExecutionHint")) ?? false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserDefinedFunction"/> class.
@@ -124,8 +139,9 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <param name="bindingConfig">Configuration for an invocation of the binder.</param>
         /// <param name="features">PowerFx features.</param>
         /// <param name="rule"></param>
+        /// <param name="updateDisplayNames">If true, the binder will update the display names of the nodes in the parse tree.</param>
         /// <returns>Returns binding for the function body.</returns>
-        public TexlBinding BindBody(INameResolver nameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig = null, Features features = null, IExternalRule rule = null)
+        public TexlBinding BindBody(INameResolver nameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig = null, Features features = null, IExternalRule rule = null, bool updateDisplayNames = false)
         {
             if (nameResolver is null)
             {
@@ -142,8 +158,8 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new InvalidOperationException($"Body should only get bound once: {this.Name}");
             }
 
-            bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative);
-            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, ParamTypes), bindingConfig, features: features, rule: rule);
+            bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative, userDefinitionsMode: true);
+            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, ParamTypes), bindingConfig, features: features, rule: rule, updateDisplayNames: updateDisplayNames);
 
             CheckTypesOnDeclaration(_binding.CheckTypesContext, _binding.ResultType, _binding);
 
@@ -167,7 +183,8 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
                 else
                 {
-                    binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, UdfBody, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch, ReturnType.GetKindString(), actualBodyReturnType.GetKindString());
+                    var node = UdfBody is VariadicOpNode variadicOpNode ? variadicOpNode.Children.Last() : UdfBody;
+                    binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch, ReturnType.GetKindString(), actualBodyReturnType.GetKindString());
                 }
             }
         }
@@ -191,7 +208,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// Clones and binds a user defined function.
         /// </summary>
         /// <returns>Returns a new functions.</returns>
-        public UserDefinedFunction WithBinding(INameResolver nameResolver, IBinderGlue binderGlue, out TexlBinding binding, BindingConfig bindingConfig = null, Features features = null, IExternalRule rule = null)
+        public UserDefinedFunction WithBinding(INameResolver nameResolver, IBinderGlue binderGlue, out TexlBinding binding, BindingConfig bindingConfig = null, Features features = null, IExternalRule rule = null, bool updateDisplayNames = false)
         {
             if (nameResolver is null)
             {
@@ -204,7 +221,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), ParamTypes);
-            binding = func.BindBody(nameResolver, binderGlue, bindingConfig, features, rule);
+            binding = func.BindBody(nameResolver, binderGlue, bindingConfig, features, rule, updateDisplayNames);
 
             return func;
         }

@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyProperties2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BaseConnectorTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BasicRestTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CompatibilityTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConnectorWizardTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DynamicTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileTabularConnector.cs" />
@@ -41,12 +42,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)SafeDTypeToStringTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shims462.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SwaggerFailureTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SymbolTableTryAddTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestConnectorRuntimeContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ThreadingTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Helpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\LoggingTestServer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server Get First Customers_Aßþ.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server Load Customers_Aßþ.json" />
     <None Include="$(MSBuildThisFileDirectory)Owl.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -70,6 +74,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Bing Maps GetRouteV3.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\CardsForPowerApps_CreateCardInstance.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\CardsForPowerApps_Suggestions.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Compatibility GetSchema.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Dataverse_Response_1.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Dataverse_Response_2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Dataverse_Response_3.json" />
@@ -223,6 +228,10 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Users_UserProfileV2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Users_UserProfileV2A.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_ServiceNowReturnType.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP GetData.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP GetDataSetMetadata.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP GetTable Schema.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP GetTables.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetData.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetDatasetsMetadata.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetSchema Users.json" />
@@ -240,6 +249,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetDatasetsMetadata.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetTables.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetSchema ProductModel.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetSchema Products v2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetSchema Products.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetTables SampleDB.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetRelationships SampleDB.json" />
@@ -258,11 +268,14 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server TestAllFunctions.jsonSet" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Teams_GetMessageDetails_GetSuggestionsForChannel.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Teams_GetMessageDetails_InputType.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Teams_GetMessageLocations.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\TestConnectorDateTimeFormatResponse.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\ZD GetDatasetsMetadata.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\ZD GetTables.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\ZD Users GetRows.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\ZD Users GetSchema.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\ZD Tickets GetSchema.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\ZD Tickets GetRows.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Azure Cognitive Service for Language v2.1.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Azure Cognitive Service for Language v2.2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Azure Cognitive Service for Language.json" />
@@ -276,6 +289,8 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Dataverse 3.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Dataverse.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\DataverseSample.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Dime.Scheduler.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\DocuSign.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Eden AI.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\ExcelOnlineBusiness.swagger.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Language - Question Answering.json" />
@@ -287,6 +302,8 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\PetStore.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\PowerAppsForMakers.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\PowerPlatformForAdmins.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SendMail.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SendMail_Modified.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SQL Server.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SalesForce.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\ServiceNow.json" />
@@ -296,6 +313,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestConnector12.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestConnectorDateTimeFormat.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestOpenAPI.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestSwagger1.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\ZenDesk.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\shared_sendmail.json" />
   </ItemGroup>

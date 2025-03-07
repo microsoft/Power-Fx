@@ -1,0 +1,436 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ErrDivByZero" xml:space="preserve">
+    <value>Opération non valide : division par zéro.</value>
+    
+  </data>
+  <data name="ErrRuntimeTypeMismatch" xml:space="preserve">
+    <value>Incompatibilité de type de runtime.</value>
+    
+  </data>
+  <data name="ErrArgumentOutOfRange" xml:space="preserve">
+    <value>Argument en dehors de la plage.</value>
+    
+  </data>
+  <data name="ErrInvalidCharValue" xml:space="preserve">
+    <value>Valeur numérique non valide, doit être comprise entre 1 et 255.</value>
+    
+  </data>
+  <data name="ErrBadLanguageCode" xml:space="preserve">
+    <value>Code de langue « {0} » non pris en charge.</value>
+    
+  </data>
+  <data name="ErrNonFiniteArgument" xml:space="preserve">
+    <value>Les arguments vers la fonction « {0} » doivent être limités.</value>
+    
+  </data>
+  <data name="ErrNonFiniteResult" xml:space="preserve">
+    <value>La fonction « {0} » a retourné un nombre non-limité.</value>
+    
+  </data>
+  <data name="ErrInvalidDateTimeParsingError" xml:space="preserve">
+    <value>Impossible d’analyser la valeur de date ou d’heure.</value>
+    
+  </data>
+  <data name="ErrInvalidDateTimeError" xml:space="preserve">
+    <value>Valeur de date ou d’heure non valide.</value>
+    
+  </data>
+  <data name="ErrInvalidBooleanFormatError" xml:space="preserve">
+    <value>La valeur n’a pas pu être interprétée comme une valeur booléenne.</value>
+    
+  </data>
+  <data name="ErrInvalidColorFormatError" xml:space="preserve">
+    <value>La valeur n’a pas pu être interprétée comme une couleur.</value>
+    
+  </data>
+  <data name="ErrUnreachableCodeError" xml:space="preserve">
+    <value>Erreur inconnue.</value>
+    
+  </data>
+  <data name="ErrNotYetImplementedFunctionError" xml:space="preserve">
+    <value>Fonction pas encore mise en œuvre : {0}.</value>
+    
+  </data>
+  <data name="ErrNotYetImplementedUnaryOperatorError" xml:space="preserve">
+    <value>Opérateur unaire pas encore mis en œuvre : {0}.</value>
+    
+  </data>
+  <data name="ErrInvalidChain" xml:space="preserve">
+    <value>Chaîne non valide : {0}.</value>
+    
+  </data>
+  <data name="ErrMaxCallDepth" xml:space="preserve">
+    <value>Profondeur d’appel maximale dépassée.</value>
+    
+  </data>
+  <data name="ErrRecordNotFound" xml:space="preserve">
+    <value>Enregistrement introuvable</value>
+    
+  </data>
+  <data name="ErrOnlyPrimitiveValuesAllowed" xml:space="preserve">
+    <value>Seules les valeurs primitives sont autorisées pour l’opération.</value>
+    
+  </data>
+  <data name="ErrCanNotConvertToNumber" xml:space="preserve">
+    <value>Impossible de convertir la valeur « {0} » en nombre.</value>
+    
+  </data>
+  <data name="ErrStartOfWeekInvalid" xml:space="preserve">
+    <value>Valeur de l’énumération StartOfWeek attendue pour indiquer le mode de numérotation des jours de la semaine.</value>
+    
+  </data>
+  <data name="ErrRuntimeExceptionError" xml:space="preserve">
+    <value>Une exception a été entraînée : {0}</value>
+    
+  </data>
+  <data name="ErrNameIsNotValid" xml:space="preserve">
+    <value>Le nom n’est pas valide. « {0} » n’est pas reconnu.</value>
+    
+  </data>
+  <data name="ErrMondayZeroValueNotSupported" xml:space="preserve">
+    <value>La valeur MondayZero, provenant de l’énumération StartOfWeek, n’est pas prise en charge dans la fonction WeekNum.</value>
+    
+  </data>
+  <data name="ErrAggregateArgsSameNumberOfRecords" xml:space="preserve">
+    <value>Les deux arguments agrégés doivent avoir le même nombre d’enregistrements.</value>
+    
+  </data>
+  <data name="ErrInvalidArgument" xml:space="preserve">
+    <value>Argument non valide</value>
+    
+  </data>
+  <data name="ErrUntypedObjectDoesNotImplementSetProperty" xml:space="preserve">
+    <value>La classe « {0} » ne met pas en œuvre « SetProperty ».</value>
+    
+  </data>
+  <data name="ErrLowerValueGreaterThanUpperValue" xml:space="preserve">
+    <value>La valeur inférieure ne peut pas être supérieure à la valeur supérieure.</value>
+    
+  </data>
+  <data name="ErrUntypedObjectNotArray" xml:space="preserve">
+    <value>L’untypedObject ne représente pas un tableau.</value>
+    
+  </data>
+  <data name="ErrNotApplicable" xml:space="preserve">
+    <value>Non applicable</value>
+    
+  </data>
+  <data name="ErrAccessingFieldNotValidValue" xml:space="preserve">
+    <value>L’accès à un champ n’est pas valide sur cette valeur.</value>
+    
+  </data>
+  <data name="ErrSystemNoError" xml:space="preserve">
+    <value>Aucune erreur système</value>
+    
+  </data>
+  <data name="ErrSystemError" xml:space="preserve">
+    <value>Erreur système</value>
+    
+  </data>
+  <data name="ErrMissingRequiredField" xml:space="preserve">
+    <value>Champ obligatoire manquant</value>
+    
+  </data>
+  <data name="ErrCreateRecordPermissionDenied" xml:space="preserve">
+    <value>Autorisation de création d’enregistrement refusée</value>
+    
+  </data>
+  <data name="ErrUpdateRecordPermissionDenied" xml:space="preserve">
+    <value>Autorisation de mise à jour d’enregistrement refusée</value>
+    
+  </data>
+  <data name="ErrDeleteRecordPermissionDenied" xml:space="preserve">
+    <value>Autorisation de suppression d’enregistrement refusée</value>
+    
+  </data>
+  <data name="ErrColumnServerGenerated" xml:space="preserve">
+    <value>La colonne est générée par le serveur et ne peut pas être modifiée</value>
+    
+  </data>
+  <data name="ErrRecordUpdateConflict" xml:space="preserve">
+    <value>Conflit de mise à jour de l’enregistrement, actualisez l’enregistrement et appliquez votre modification à nouveau</value>
+    
+  </data>
+  <data name="ErrValidationError" xml:space="preserve">
+    <value>Erreur de validation</value>
+    
+  </data>
+  <data name="ErrColumnReadOnly" xml:space="preserve">
+    <value>La colonne est en lecture seule</value>
+    
+  </data>
+  <data name="ErrInvalidRecord" xml:space="preserve">
+    <value>Enregistrement non valide</value>
+    
+  </data>
+  <data name="DivisionByZero" xml:space="preserve">
+    <value>Division par zéro</value>
+    
+  </data>
+  <data name="ErrBadLanguage" xml:space="preserve">
+    <value>Mauvais code de langue ou valeur non valide</value>
+    
+  </data>
+  <data name="ErrRegexSyntaxError" xml:space="preserve">
+    <value>Erreur de syntaxe dans l’expression régulière</value>
+    
+  </data>
+  <data name="ErrInvalidFunctionUsage" xml:space="preserve">
+    <value>Utilisation de fonction non valide</value>
+    
+  </data>
+  <data name="ErrFileNotFound" xml:space="preserve">
+    <value>Fichier introuvable</value>
+    
+  </data>
+  <data name="ErrSystemAnalysisError" xml:space="preserve">
+    <value>Erreur d’analyse système</value>
+    
+  </data>
+  <data name="ErrReadRecordPermissionDenied" xml:space="preserve">
+    <value>Autorisation de lecture d’enregistrement refusée</value>
+    
+  </data>
+  <data name="ErrOperationNotSupportedByPlayerDevice" xml:space="preserve">
+    <value>Opération non prise en charge par ce lecteur ou cet appareil</value>
+    
+  </data>
+  <data name="ErrInsufficientMemoryStorage" xml:space="preserve">
+    <value>Mémoire ou périphérique de stockage insuffisant</value>
+    
+  </data>
+  <data name="ErrStorageQuotaExceeded" xml:space="preserve">
+    <value>Quota de stockage dépassé</value>
+    
+  </data>
+  <data name="ErrNetworkError" xml:space="preserve">
+    <value>Erreur réseau</value>
+    
+  </data>
+  <data name="ErrNumericError" xml:space="preserve">
+    <value>Erreur numérique</value>
+    
+  </data>
+  <data name="ErrTimeoutError" xml:space="preserve">
+    <value>Erreur de temporisation</value>
+    
+  </data>
+  <data name="ErrOnlineServiceNotAvailable" xml:space="preserve">
+    <value>Connexion au service en ligne non disponible</value>
+    
+  </data>
+  <data name="ErrInvalidJsonFormat" xml:space="preserve">
+    <value>Format JSON non valide</value>
+    
+  </data>
+  <data name="ErrCustomError" xml:space="preserve">
+    <value>Erreur personnalisée</value>
+    
+  </data>
+  <data name="ErrCustomErrorArg" xml:space="preserve">
+    <value>Erreur personnalisée ({0})</value>
+    
+  </data>
+  <data name="ErrReservedErrorArg" xml:space="preserve">
+    <value>Erreur réservée ({0})</value>
+    
+  </data>
+  <data name="ErrOverflow" xml:space="preserve">
+    <value>Débordement.</value>
+    
+  </data>
+  <data name="ErrFilterPredicate" xml:space="preserve">
+    <value>Filter() ne prend en charge qu’un seul prédicat.</value>
+    
+  </data>
+  <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
+    <value>L’argument d’objet sans type pour la fonction « {0} » a un type incorrect. Prévu : {1}, réel : {2}.</value>
+    
+  </data>
+  <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">
+    <value>L’argument de lieux doit être assez grand pour contenir le résultat.</value>
+    
+  </data>
+  <data name="ErrInvalidSortColumn" xml:space="preserve">
+    <value>La colonne spécifiée « {0} » n’existe pas, ou le type de colonne de tri n’est pas valide.</value>
+    
+  </data>
+  <data name="ErrOrderTableDuplicateValues" xml:space="preserve">
+    <value>La table utilisée pour ordonner les données ne peut pas contenir de valeurs en double</value>
+    
+  </data>
+  <data name="ErrManagedConnRefreshOnly" xml:space="preserve">
+    <value>Seules des connexions gérées peuvent être actualisées.</value>
+    
+  </data>
+  <data name="ErrUntypedNumberNotValidDecimal" xml:space="preserve">
+    <value>Le nombre sans type n’est pas une valeur décimale valide, dépassement possible.</value>
+    
+  </data>
+  <data name="ErrSingleColumnTableAccessNodeNotYetImplemented" xml:space="preserve">
+    <value>L’accès à la table à une seule colonne n’a pas encore été mis en œuvre.</value>
+    
+  </data>
+  <data name="ErrReturnTypeDifference" xml:space="preserve">
+    <value>Le type de retour aurait dû être « {0} », trouvé « {1} ».</value>
+    
+  </data>
+  <data name="ErrThirdArgumentIsInvalid" xml:space="preserve">
+    <value>Le troisième argument pour la fonction {0} n’est pas valide.</value>
+    
+  </data>
+  <data name="ErrReturnedNonFiniteNumber" xml:space="preserve">
+    <value>L’expression a retourné un nombre non-limité.</value>
+    
+  </data>
+  <data name="ErrReturnedNumberBeyondDecimalValues" xml:space="preserve">
+    <value>L’expression a retourné un nombre qui dépasse la plage de valeurs décimale.</value>
+    
+  </data>
+  <data name="ErrPlacesBetweenRange" xml:space="preserve">
+    <value>Les décimales doivent être comprises entre 1 et 10.</value>
+    
+  </data>
+  <data name="ErrInvalidOperatorForTypes" xml:space="preserve">
+    <value>L’opérateur n’est pas valide pour ces types.</value>
+    
+  </data>
+  <data name="ErrRegexTimeoutException" xml:space="preserve">
+    <value>Délai d’expiration de l’expression régulière (supérieur à {0} ms) - {1}</value>
+    
+  </data>
+  <data name="ErrInvalidRegexException" xml:space="preserve">
+    <value>Expression régulière non valide - {rexParseEx.Message}</value>
+    
+  </data>
+  <data name="ErrInputOutsideRange" xml:space="preserve">
+    <value>La valeur d’entrée {0} est en dehors de la plage autorisée.</value>
+    
+  </data>
+  <data name="ErrInvalidNumberInput" xml:space="preserve">
+    <value>La valeur d’entrée {0} est une entrée non valide.</value>
+    
+  </data>
+  <data name="ErrUnrecognizedSymbol" xml:space="preserve">
+    <value>Symbole non reconnu {0}.</value>
+    
+  </data>
+</root>

@@ -1,0 +1,436 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ErrDivByZero" xml:space="preserve">
+    <value>अमान्य ऑपरेशन: शून्य से विभाजन.</value>
+    
+  </data>
+  <data name="ErrRuntimeTypeMismatch" xml:space="preserve">
+    <value>रनटाइम प्रकार बेमेल.</value>
+    
+  </data>
+  <data name="ErrArgumentOutOfRange" xml:space="preserve">
+    <value>तर्क सीमा से बाहर है.</value>
+    
+  </data>
+  <data name="ErrInvalidCharValue" xml:space="preserve">
+    <value>अमान्य संख्यात्मक मान, 1...255 श्रेणी में होना चाहिए.</value>
+    
+  </data>
+  <data name="ErrBadLanguageCode" xml:space="preserve">
+    <value>भाषा कोड '{0}' समर्थित नहीं है.</value>
+    
+  </data>
+  <data name="ErrNonFiniteArgument" xml:space="preserve">
+    <value>'{0}' फ़ंक्शन के तर्क सीमित होने चाहिए.</value>
+    
+  </data>
+  <data name="ErrNonFiniteResult" xml:space="preserve">
+    <value>फ़ंक्शन '{0}' एक गैर-सीमित संख्या लौटाई है.</value>
+    
+  </data>
+  <data name="ErrInvalidDateTimeParsingError" xml:space="preserve">
+    <value>दिनांक या समय मान पार्स नहीं किया जा सकता.</value>
+    
+  </data>
+  <data name="ErrInvalidDateTimeError" xml:space="preserve">
+    <value>अमान्य दिनांक या समय मान.</value>
+    
+  </data>
+  <data name="ErrInvalidBooleanFormatError" xml:space="preserve">
+    <value>मान की व्याख्या बूलियन के रूप में नहीं की जा सकती.</value>
+    
+  </data>
+  <data name="ErrInvalidColorFormatError" xml:space="preserve">
+    <value>मान को रंग के रूप में नहीं समझा जा सका.</value>
+    
+  </data>
+  <data name="ErrUnreachableCodeError" xml:space="preserve">
+    <value>अज्ञात त्रुटि.</value>
+    
+  </data>
+  <data name="ErrNotYetImplementedFunctionError" xml:space="preserve">
+    <value>अभी तक क्रियान्वित नहीं किया गया फ़ंक्शन: {0}.</value>
+    
+  </data>
+  <data name="ErrNotYetImplementedUnaryOperatorError" xml:space="preserve">
+    <value>अभी तक यूनरी ऑपरेटर लागू नहीं किया गया: {0}.</value>
+    
+  </data>
+  <data name="ErrInvalidChain" xml:space="preserve">
+    <value>अमान्य श्रृंखला: {0}.</value>
+    
+  </data>
+  <data name="ErrMaxCallDepth" xml:space="preserve">
+    <value>अधिकतम कॉल गहराई पार हो गई.</value>
+    
+  </data>
+  <data name="ErrRecordNotFound" xml:space="preserve">
+    <value>रिकॉर्ड ढूँढा नहीं जा सका</value>
+    
+  </data>
+  <data name="ErrOnlyPrimitiveValuesAllowed" xml:space="preserve">
+    <value>ऑपरेशन के लिए केवल आदिम मान की अनुमति है.</value>
+    
+  </data>
+  <data name="ErrCanNotConvertToNumber" xml:space="preserve">
+    <value>मान '{0}' को दिनांक या समय मान में रूपांतरित नहीं किया जा सकता.</value>
+    
+  </data>
+  <data name="ErrStartOfWeekInvalid" xml:space="preserve">
+    <value>StartOfWeek प्रगणना से सप्ताह के दिनों की संख्या दर्शाने वाले मान की अपेक्षा थी.</value>
+    
+  </data>
+  <data name="ErrRuntimeExceptionError" xml:space="preserve">
+    <value>एक अपवाद फेंक दिया गया है: {0}</value>
+    
+  </data>
+  <data name="ErrNameIsNotValid" xml:space="preserve">
+    <value>नाम मान्य नहीं है. '{0}' को पहचाना नहीं गया है.</value>
+    
+  </data>
+  <data name="ErrMondayZeroValueNotSupported" xml:space="preserve">
+    <value>WeekNum फ़ंक्शन में, StartOfWeek गणना से MondayZero मान समर्थित नहीं है.</value>
+    
+  </data>
+  <data name="ErrAggregateArgsSameNumberOfRecords" xml:space="preserve">
+    <value>दोनों एकीकृत तर्कों में रिकॉर्ड की समान संख्या होनी चाहिए.</value>
+    
+  </data>
+  <data name="ErrInvalidArgument" xml:space="preserve">
+    <value>अमान्य तर्क</value>
+    
+  </data>
+  <data name="ErrUntypedObjectDoesNotImplementSetProperty" xml:space="preserve">
+    <value>क्लास '{0}', 'SetProperty' लागू नहीं करता है.</value>
+    
+  </data>
+  <data name="ErrLowerValueGreaterThanUpperValue" xml:space="preserve">
+    <value>निम्नतम मान उच्चतर मान से अधिक नहीं हो सकता.</value>
+    
+  </data>
+  <data name="ErrUntypedObjectNotArray" xml:space="preserve">
+    <value>UntypedObject किसी सरणी का प्रतिनिधित्व नहीं करता.</value>
+    
+  </data>
+  <data name="ErrNotApplicable" xml:space="preserve">
+    <value>लागू नहीं है</value>
+    
+  </data>
+  <data name="ErrAccessingFieldNotValidValue" xml:space="preserve">
+    <value>इस मान पर फ़ील्ड पर पहुँच मान्य नहीं है.</value>
+    
+  </data>
+  <data name="ErrSystemNoError" xml:space="preserve">
+    <value>सिस्टम कोई त्रुटि नहीं</value>
+    
+  </data>
+  <data name="ErrSystemError" xml:space="preserve">
+    <value>सिस्टम त्रुटि</value>
+    
+  </data>
+  <data name="ErrMissingRequiredField" xml:space="preserve">
+    <value>अनुपलब्ध आवश्यक फ़ील्ड</value>
+    
+  </data>
+  <data name="ErrCreateRecordPermissionDenied" xml:space="preserve">
+    <value>रिकॉर्ड अनुमति बनाने से इनकार किया गया</value>
+    
+  </data>
+  <data name="ErrUpdateRecordPermissionDenied" xml:space="preserve">
+    <value>अद्यतन रिकॉर्ड अनुमति अस्वीकृत</value>
+    
+  </data>
+  <data name="ErrDeleteRecordPermissionDenied" xml:space="preserve">
+    <value>रिकॉर्ड हटाने की अनुमति अस्वीकृत</value>
+    
+  </data>
+  <data name="ErrColumnServerGenerated" xml:space="preserve">
+    <value>स्तंभ सर्वर द्वारा उत्पन्न होता है और इसे संशोधित नहीं किया जा सकता</value>
+    
+  </data>
+  <data name="ErrRecordUpdateConflict" xml:space="preserve">
+    <value>अपडेट में टकराव को रिकॉर्ड करें, रिकॉर्ड रिफ़्रेश करें और अपना परिवर्तन पुनः लागू करें</value>
+    
+  </data>
+  <data name="ErrValidationError" xml:space="preserve">
+    <value>प्रमाणीकरण त्रुटि</value>
+    
+  </data>
+  <data name="ErrColumnReadOnly" xml:space="preserve">
+    <value>स्तंभ केवल-पढ़ने के लिए है</value>
+    
+  </data>
+  <data name="ErrInvalidRecord" xml:space="preserve">
+    <value>रिकॉर्ड अमान्य है</value>
+    
+  </data>
+  <data name="DivisionByZero" xml:space="preserve">
+    <value>शून्य से विभाजित है</value>
+    
+  </data>
+  <data name="ErrBadLanguage" xml:space="preserve">
+    <value>खराब भाषा कोड या अमान्य मान</value>
+    
+  </data>
+  <data name="ErrRegexSyntaxError" xml:space="preserve">
+    <value>नियमित अभिव्यक्ति में सिंटैक्स त्रुटि</value>
+    
+  </data>
+  <data name="ErrInvalidFunctionUsage" xml:space="preserve">
+    <value>अमान्य फ़ंक्शन उपयोग</value>
+    
+  </data>
+  <data name="ErrFileNotFound" xml:space="preserve">
+    <value>फ़ाइल नहीं मिली</value>
+    
+  </data>
+  <data name="ErrSystemAnalysisError" xml:space="preserve">
+    <value>सिस्टम विश्लेषण त्रुटि</value>
+    
+  </data>
+  <data name="ErrReadRecordPermissionDenied" xml:space="preserve">
+    <value>रिकॉर्ड पढ़ने की अनुमति अस्वीकृत</value>
+    
+  </data>
+  <data name="ErrOperationNotSupportedByPlayerDevice" xml:space="preserve">
+    <value>कार्रवाई इस प्लेयर या डिवाइस द्वारा समर्थित नहीं है</value>
+    
+  </data>
+  <data name="ErrInsufficientMemoryStorage" xml:space="preserve">
+    <value>अपर्याप्त स्मृति या डिवाइस संग्रहण</value>
+    
+  </data>
+  <data name="ErrStorageQuotaExceeded" xml:space="preserve">
+    <value>संग्रहण कोटा पार हो गया</value>
+    
+  </data>
+  <data name="ErrNetworkError" xml:space="preserve">
+    <value>नेटवर्क त्रुटि</value>
+    
+  </data>
+  <data name="ErrNumericError" xml:space="preserve">
+    <value>सांख्यिक त्रुटि</value>
+    
+  </data>
+  <data name="ErrTimeoutError" xml:space="preserve">
+    <value>टाइमआउट त्रुटि</value>
+    
+  </data>
+  <data name="ErrOnlineServiceNotAvailable" xml:space="preserve">
+    <value>ऑनलाइन सेवा कनेक्शन उपलब्ध नहीं है</value>
+    
+  </data>
+  <data name="ErrInvalidJsonFormat" xml:space="preserve">
+    <value>अमान्य JSON स्वरूप</value>
+    
+  </data>
+  <data name="ErrCustomError" xml:space="preserve">
+    <value>कस्टम संबंधी त्रुटि संदेश</value>
+    
+  </data>
+  <data name="ErrCustomErrorArg" xml:space="preserve">
+    <value>कस्टम त्रुटि ({0})</value>
+    
+  </data>
+  <data name="ErrReservedErrorArg" xml:space="preserve">
+    <value>आरक्षित त्रुटि ({0})</value>
+    
+  </data>
+  <data name="ErrOverflow" xml:space="preserve">
+    <value>ओवरफ्लो.</value>
+    
+  </data>
+  <data name="ErrFilterPredicate" xml:space="preserve">
+    <value>Filter() केवल एक विधेय का समर्थन करता है.</value>
+    
+  </data>
+  <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
+    <value>{0}' फ़ंक्शन के अनटाइप्ड ऑब्जेक्ट तर्क का प्रकार गलत है. अपेक्षित: {1}, वास्तविक: {2}.</value>
+    
+  </data>
+  <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">
+    <value>परिणाम को धारण करने के लिए स्थान तर्क काफी बड़ा होना चाहिए.</value>
+    
+  </data>
+  <data name="ErrInvalidSortColumn" xml:space="preserve">
+    <value>निर्दिष्ट स्तंभ '{0}' मौजूद नहीं है या वह एक अमान्य सॉर्ट स्तंभ प्रकार है.</value>
+    
+  </data>
+  <data name="ErrOrderTableDuplicateValues" xml:space="preserve">
+    <value>ऑर्डर तालिका में डुप्लिकेट मान नहीं हो सकते हैं</value>
+    
+  </data>
+  <data name="ErrManagedConnRefreshOnly" xml:space="preserve">
+    <value>केवल प्रबंधित कनेक्शन ही रिफ़्रेश किए जा सकते हैं.</value>
+    
+  </data>
+  <data name="ErrUntypedNumberNotValidDecimal" xml:space="preserve">
+    <value>अलिखित संख्या वैध दशमलव मान नहीं है, सम्भवतः ओवरफ़्लो हो सकता है.</value>
+    
+  </data>
+  <data name="ErrSingleColumnTableAccessNodeNotYetImplemented" xml:space="preserve">
+    <value>एकल स्तंभ तालिका पहुँच अभी तक कार्यान्वित नहीं की गई है.</value>
+    
+  </data>
+  <data name="ErrReturnTypeDifference" xml:space="preserve">
+    <value>रिटर्न प्रकार '{0}' होना चाहिए था, पाया गया '{1}'.</value>
+    
+  </data>
+  <data name="ErrThirdArgumentIsInvalid" xml:space="preserve">
+    <value>{0} फ़ंक्शन का तीसरा तर्क अमान्य है.</value>
+    
+  </data>
+  <data name="ErrReturnedNonFiniteNumber" xml:space="preserve">
+    <value>व्यंजक ने एक गैर-परिमित संख्या लौटाई.</value>
+    
+  </data>
+  <data name="ErrReturnedNumberBeyondDecimalValues" xml:space="preserve">
+    <value>व्यंजक ने एक संख्या लौटाई जो दशमलव मानों की सीमा से परे है.</value>
+    
+  </data>
+  <data name="ErrPlacesBetweenRange" xml:space="preserve">
+    <value>स्थान 1 से 10 के बीच होने चाहिए.</value>
+    
+  </data>
+  <data name="ErrInvalidOperatorForTypes" xml:space="preserve">
+    <value>इन प्रकारों के लिए ऑपरेटर अमान्य है.</value>
+    
+  </data>
+  <data name="ErrRegexTimeoutException" xml:space="preserve">
+    <value>नियमित उक्ति समय समाप्त ({0} ms से ऊपर) - {1}</value>
+    
+  </data>
+  <data name="ErrInvalidRegexException" xml:space="preserve">
+    <value>नियमित उक्ति अमान्य है - {rexParseEx.Message}</value>
+    
+  </data>
+  <data name="ErrInputOutsideRange" xml:space="preserve">
+    <value>इनपुट मान {0} स्वीकार्य सीमा के बाहर आता है.</value>
+    
+  </data>
+  <data name="ErrInvalidNumberInput" xml:space="preserve">
+    <value>इनपुट मान {0} एक अमान्य इनपुट है.</value>
+    
+  </data>
+  <data name="ErrUnrecognizedSymbol" xml:space="preserve">
+    <value>अपरिचित प्रतीक {0}.</value>
+    
+  </data>
+</root>

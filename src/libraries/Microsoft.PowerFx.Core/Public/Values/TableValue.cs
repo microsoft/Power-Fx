@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Functions;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -28,7 +27,21 @@ namespace Microsoft.PowerFx.Types
         /// <param name="parameters">delegation parameters.</param>
         /// <param name="cancel"></param>
         /// <returns></returns>
+        [Obsolete($"Use  {nameof(ExecuteQueryAsync)} instead.")]
         Task<IReadOnlyCollection<DValue<RecordValue>>> GetRowsAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel);
+
+        /// <summary>
+        /// Evaluation will invoke this method on aggregation calls where return value is scaler.
+        /// </summary>
+        /// <param name="services">Pre-eval services.</param>
+        /// <param name="parameters">Delegation parameters.</param>
+        /// <param name="cancel"></param>
+        Task<FormulaValue> ExecuteQueryAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel);
+
+        /// <summary>
+        /// Supported features for delegation to verify correct Features are delegated at runtime.
+        /// </summary>
+        DelegationParameterFeatures SupportedFeatures { get; }
     }
 
     /// <summary>
@@ -254,7 +267,15 @@ namespace Microsoft.PowerFx.Types
         /// <returns></returns>
         protected virtual async Task<DValue<RecordValue>> PatchSingleRecordCoreAsync(RecordValue recordValue, CancellationToken cancellationToken)
         {
-            return DValue<RecordValue>.Of(CommonErrors.NotYetImplementedError(IRContext, "Patch single record is invalid for tables/records with no primary key."));
+            // https://github.com/microsoft/Power-Fx/issues/2618
+            return DValue<RecordValue>.Of(new ErrorValue(
+                IRContext, 
+                new ExpressionError()
+                {
+                    Message = $"Not implemented: Patch single record is invalid for tables/records with no primary key.",
+                    Span = IRContext.SourceContext,
+                    Kind = ErrorKind.NotSupported
+                }));
         }
 
         /// <summary>

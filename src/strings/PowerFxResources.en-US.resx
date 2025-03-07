@@ -1817,7 +1817,7 @@
   </data>
   <data name="IsTypeUOArg2" xml:space="preserve">
     <value>type</value>
-    <comment>function_parameter - Second argument of the IsTypeUO function - Type value - either a typeliteral or global named type.</comment>
+    <comment>function_parameter - Second argument of the IsTypeUO function - Type value - either a inline type expression or a type name.</comment>
   </data>
   <data name="AboutIsType_untypedValue" xml:space="preserve">
     <value>The untyped value to check if it can be casted as specified type.</value>
@@ -1916,6 +1916,10 @@
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>'{0}' is an unknown or unsupported function.</value>
     <comment>Error Message.</comment>
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' is recognized as type helper function and it can only be used within the Type function.</value>
+    <comment>{Locked=Type} Error message shown when a type helper is used outside of Type function. Example of valid usage: "Type(RecordOf(Accounts))"</comment>
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>'{0}' is an unknown or unsupported function in namespace '{1}'.</value>
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>A new or existing collection to augment.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     <comment>{Locked=ClearCollect(collection, source_collection)} {Locked=ClearCollect(collection, {key1: val1, key2: val2, ...}, ...)} Description of 'ClearCollect' function.</comment>
@@ -3621,6 +3622,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     <comment>{Locked}</comment>
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Behavior function in a non-behavior user-defined function (UDF). Please wrap the user-defined function body with curly braces ({...}) to declare a behavior UDF.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Behavior functions change the current session state. 'Clear', 'Collect', 'Patch', and 'Refresh' are common behavior functions.</value>
+    <comment>{Locked=Clear}{Locked=Collect}{Locked=Patch}{Locked=Refresh}</comment>
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Edit the user-defined function expression so that it is inside curly braces ({...}).</value>
+    <comment>1 How to fix the error. </comment>
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Test function in a non-test property. You can't use this property to invoke test-only functions.</value>
     <comment>Error Message. The term 'Test' is an adjective ('Test function' = 'function for testing').</comment>
@@ -3692,12 +3705,23 @@
     <value>Edit your formula so that it includes a bracket.</value>
     <comment>1 How to fix the error. </comment>
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Expected closing of identifier. We expect a closing (') at this point in the formula.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>A closing single quote indicates the end of an identifier (for example, 'First Name').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Edit your formula so that it includes a closing single quote.</value>
+    <comment>1 How to fix the error. </comment>
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>The identifier has no valid text.</value>
+    <value>The identifier is empty or contains an invalid character, such as a tab or newline.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Ensure you have text for your identifier. This error occurs when the identifier is all blanks or spaces.</value>
+    <value>Ensure you have valid text in your your identifier. This error occurs when the identifier is blank, only has spaces, or contains a tab or newline.</value>
     <comment>1 How to fix the error. </comment>
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4015,6 +4039,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     <comment>{Locked}</comment>
   </data>
+    <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Delegation warning. The named formula {0} is not delegable so its usage in this formula might not work correctly on large data sets. </value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>The data source might not be able to process the formula and might return an incomplete data set. Your application might not return correct results or behave correctly if the data set is incomplete.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Try simplifying the definition for the named formula.</value>
+    <comment>1 How to fix the error. </comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Article: Understand delegation in a canvas app</value>
+    <comment>Article on delegation</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    <comment>{Locked}</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Data row limits for delegation</value>
+    <comment>Blog: Data row limits for delegation</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    <comment>{Locked}</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Delegation warning. The user-defined function {0} is not delegable so its usage in this formula might not work correctly on large data sets. </value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>The data source might not be able to process the formula and might return an incomplete data set. Your application might not return correct results or behave correctly if the data set is incomplete.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Try simplifying the definition for the user-defined function.</value>
+    <comment>1 How to fix the error. </comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Article: Understand delegation in a canvas app</value>
+    <comment>Article on delegation</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    <comment>{Locked}</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Data row limits for delegation</value>
+    <comment>Blog: Data row limits for delegation</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    <comment>{Locked}</comment>
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Delegation warning. The highlighted part of this formula might not work correctly on large data sets. The "{0}" operation is not supported by this connector.</value>
     <comment>Error Message.</comment>
@@ -4115,6 +4193,14 @@
     <value>Named formula must be an expression.</value>
     <comment>This error message shows up when Named formula is not an expression. For example, a = ;</comment>
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>A named type declaration must be a valid type expression.</value>
+    <comment>
+      This error message shows up when a named type declaration is not valid a type expression. A valid type expression is of syntax "Type(Expression)". 
+      Some examples for valid named type declarations - "Point := Type({x: Number, y: Number});" , "T1 := Type(Number);" , "T2 := Type([Boolean]);".
+      Some examples for invalid named type declarations - "T1 := 5;" , "T2 := ;" , "T3 := [1, 2, 3];".
+    </comment>
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>User-defined function must have a body.</value>
     <comment>This error message shows up when user-defined function does not have a body</comment>
@@ -4127,7 +4213,7 @@
     <value>Warning: User-defined function {0} will shadow the existing built-in function {0}.</value>
     <comment>This error message shows up when user tries to define a function that shares the same unrestricted name as a built-in function. The argument {0} will be replaced with a function name: e.g.: User-defined function Count will shadow the existing built-in function Count.</comment>
   </data>
-    <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Function name {0} is restricted.</value>
     <comment>This error message shows up when user tries to define a function with a restricted name.</comment>
   </data>
@@ -4332,6 +4418,10 @@
     <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     <comment>Warning message.</comment>
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows may return a cached value. Use CountIf(DataSource, true) to get the latest count.</value>
+    <comment>{Locked=CountRows}. Warning message when an expression with the CountRows function is used with a data source that caches its size.</comment>
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Determines if the supplied text has a match of the supplied text format.</value>
     <comment>Description of 'IsMatch' function.</comment>
@@ -4478,17 +4568,21 @@
     <value>Set a variable with an online datasource value (table or record) can cause multiple requests to the server. Soon this will be blocked.</value>
     <comment>Warning for makers that a certain capability should be avoided.</comment>
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
-    <comment>Error message when validation of type literal fails.</comment>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Type expression is invalid. '{0}' cannot be used in a type expression.</value>
+    <comment>Error message when validation of type expression fails.</comment>
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definition of type {0} is invalid.</value>
-    <comment>Error message when type binding is invalid.</comment>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Unsupported usage: Type function can only be used in type arguments and type declarations.</value>
+    <comment>{Locked=Type}Error message shown when Type function is used in an unsupported expression.</comment>
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Declaration of type {0} is invalid.</value>
+    <comment>Error message when type declaration is invalid.</comment>
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definition of type {0} is invalid and may contain cycles.</value>
-    <comment>Error message when type binding may have cycles.</comment>
+    <value>Declaration of type {0} is invalid and may contain cycles.</value>
+    <comment>Error message when type declaration may contain cycles.</comment>
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
     <value>Restricted type name {0} cannot be used.</value>
@@ -4744,16 +4838,99 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>The source to clear.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Retrieves data that spans across multiple tables with relationships.</value>
+    <comment>Description of 'Join' function.</comment>
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>source1</value>
+    <comment>function_parameter - First argument to the Join function - the data source (table / collection) to operate as the left source.</comment>
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>source2</value>
+    <comment>function_parameter - Second argument to the Join function - the data source (table / collection) to operate as the right source.</comment>
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>denominator</value>
+    <comment>function_parameter - Third argument to the Join function - defines the records matching criteria.</comment>
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    <comment>function_parameter - Fourth argument to the Join function - the join type between the two tables.</comment>
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    <comment>function_parameter - Fifth and on argument to the Join function - the join type between the two tables.</comment>
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>The left table or collection.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>The right table or collection.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Join criteria between the two tables or collections.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>The join type between the two tables or collections.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>The arguments to rename an existing column in one of the sources.</value>
+    <comment>Description for this parameter</comment>
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>The specified data source cannot be used with this function.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Invalid argument '{0}'. Expected valid type name or type literal.</value>
-    <comment>Error Message shown to user when a value other name or type literal is passed into AsType, IsType and ParseJSON functions.</comment>
+    <value>Invalid argument '{0}'. Expected valid type name or inline type expression.</value>
+    <comment>Error Message shown to user when a value other name or inline type expression is passed into AsType, IsType and ParseJSON functions.</comment>
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Unsupported untyped/JSON conversion type '{0}' in argument.</value>
+    <value>Unsupported type '{0}' in type argument.</value>
     <comment>Error Message shown to user when a unsupported type is passed in type argument of AsType, IsType and ParseJSON functions.</comment>
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Maximum depth reached while traversing JSON payload.</value>
+    <comment>Error message returned by the JSON function when a document that is too deeply nested is passed to it. The term JSON in the error refers to the data format described in www.json.org.</comment>
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Maximum length reached in JSON function.</value>
+    <comment>Error message returned by the {Locked=JSON} function when the result generated by this function would be too long.</comment>
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>The 'User-defined types' experimental feature is not enabled.</value>
+    <comment>Error message returned when user uses User-defined types with the User-defined types feature flag turned off.</comment>
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Incorrect syntax: '=' cannot be used to declare user-defined types. Use ':=' instead.</value>
+    <comment>
+      Error message returned when user uses '=' syntax to define User-defined type.
+      Some examples for valid named type declarations - "Point := Type({x: Number, y: Number});" , "T1 := Type(Number);" , "T2 := Type([Boolean]);".
+    </comment>
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>'{0}' can not be added/renamed due to colission with another column with same name.</value>
+    <comment>Error message returned when user tries to join two data sources with duplicated columns between them.</comment>
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Expected plain 'JoinType' enum value. Different enums or passing it throught another function is not supported i.e. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    <comment>Error message returned when user tries to give anything different than a plain 'JoinType' enum value as argument.</comment>
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Arguments starting from the 5th position are meant to rename columns and are expected to be 'As' node arguments i.e LeftRecord.Name As NewName.</value>
+    <comment>{Locked='As'}{Locked='LeftRecord.Name As NewName'}</comment>
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>At least one '{0}' column must be declared to compose the join result.</value>
+    <comment>{Locked='RightRecord'}</comment>
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>The '{0}' value is invalid in this context. It should be a reference to either '{1}' or '{2}' scope name.</value>
+    <comment>{Locked='RightRecord'}</comment>
   </data>
 </root>

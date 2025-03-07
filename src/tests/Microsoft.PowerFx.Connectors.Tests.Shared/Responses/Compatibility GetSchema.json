@@ -1,0 +1,53 @@
+{
+  "name": "User",
+  "title": "Users",  
+  "schema": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "title": "User",
+      "properties": {
+        "Id1": {
+          "title": "User ID 1",
+          "type": "string"
+        },
+        "Id2": {
+          "title": "User ID 2",
+          "type": "string",
+          "x-ms-visibility": "internal"
+        },
+        "Id3": {
+          "title": "User ID 3",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "Id4": {
+          "title": "User ID 4",
+          "type": "string",
+          "x-ms-visibility": "important"
+        },
+        "priority": {
+          "title": "Priority",
+          "type": "string",
+          "enum": [
+            "low",
+            "normal",
+            "high",
+            "urgent"
+          ]
+        },
+        "priority2": {
+          "title": "Priority 2",
+          "type": "string",
+          "format":  "enum",
+          "enum": [
+            "low",
+            "normal",
+            "high",
+            "urgent"
+          ]
+        }
+      }
+    }
+  }
+}

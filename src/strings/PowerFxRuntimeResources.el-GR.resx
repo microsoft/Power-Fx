@@ -1,0 +1,436 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ErrDivByZero" xml:space="preserve">
+    <value>Μη έγκυρη λειτουργία: διαίρεση με το μηδέν.</value>
+    
+  </data>
+  <data name="ErrRuntimeTypeMismatch" xml:space="preserve">
+    <value>Αναντιστοιχία τύπου περιβάλλοντος εκτέλεσης.</value>
+    
+  </data>
+  <data name="ErrArgumentOutOfRange" xml:space="preserve">
+    <value>Όρισμα εκτός εύρους.</value>
+    
+  </data>
+  <data name="ErrInvalidCharValue" xml:space="preserve">
+    <value>Μη έγκυρη αριθμητική τιμή, πρέπει να είναι στην περιοχή 1...255.</value>
+    
+  </data>
+  <data name="ErrBadLanguageCode" xml:space="preserve">
+    <value>Ο κωδικός γλώσσας "{0}" δεν υποστηρίζεται.</value>
+    
+  </data>
+  <data name="ErrNonFiniteArgument" xml:space="preserve">
+    <value>Τα ορίσματα στη συνάρτηση '{0}' πρέπει να είναι πεπερασμένα.</value>
+    
+  </data>
+  <data name="ErrNonFiniteResult" xml:space="preserve">
+    <value>Η συνάρτηση '{0}' επέστρεψε έναν αριθμό που δεν είναι πεπερασμένος.</value>
+    
+  </data>
+  <data name="ErrInvalidDateTimeParsingError" xml:space="preserve">
+    <value>Δεν είναι δυνατή η ανάλυση της τιμής ημερομηνίας ή ώρας.</value>
+    
+  </data>
+  <data name="ErrInvalidDateTimeError" xml:space="preserve">
+    <value>Μη έγκυρη ημερομηνία ή τιμή ώρας.</value>
+    
+  </data>
+  <data name="ErrInvalidBooleanFormatError" xml:space="preserve">
+    <value>Η τιμή δεν ήταν δυνατό να ερμηνευθεί ως δυαδική τιμή.</value>
+    
+  </data>
+  <data name="ErrInvalidColorFormatError" xml:space="preserve">
+    <value>Η τιμή δεν ήταν δυνατό να ερμηνευθεί ως χρώμα.</value>
+    
+  </data>
+  <data name="ErrUnreachableCodeError" xml:space="preserve">
+    <value>Άγνωστο σφάλμα.</value>
+    
+  </data>
+  <data name="ErrNotYetImplementedFunctionError" xml:space="preserve">
+    <value>Η συνάρτηση δεν έχει υλοποιηθεί ακόμα: {0}.</value>
+    
+  </data>
+  <data name="ErrNotYetImplementedUnaryOperatorError" xml:space="preserve">
+    <value>Δεν έχει εφαρμοστεί ακόμη μονομελής τελεστής: {0}.</value>
+    
+  </data>
+  <data name="ErrInvalidChain" xml:space="preserve">
+    <value>Μη έγκυρη αλυσίδα: {0}.</value>
+    
+  </data>
+  <data name="ErrMaxCallDepth" xml:space="preserve">
+    <value>Υπέρβαση μέγιστου βάθους κλήσης.</value>
+    
+  </data>
+  <data name="ErrRecordNotFound" xml:space="preserve">
+    <value>Δεν ήταν δυνατή η εύρεση της καρτέλας</value>
+    
+  </data>
+  <data name="ErrOnlyPrimitiveValuesAllowed" xml:space="preserve">
+    <value>Για τη λειτουργία επιτρέπονται μόνο στοιχειώδεις τιμές.</value>
+    
+  </data>
+  <data name="ErrCanNotConvertToNumber" xml:space="preserve">
+    <value>Η τιμή '{0}' δεν είναι δυνατό να μετατραπεί σε έναν αριθμό.</value>
+    
+  </data>
+  <data name="ErrStartOfWeekInvalid" xml:space="preserve">
+    <value>Αναμενόταν μια τιμή από την απαρίθμηση StartOfWeek που υποδεικνύει τον τρόπο αρίθμησης των ημερών της εβδομάδας.</value>
+    
+  </data>
+  <data name="ErrRuntimeExceptionError" xml:space="preserve">
+    <value>Παρουσιάστηκε εξαίρεση: {0}</value>
+    
+  </data>
+  <data name="ErrNameIsNotValid" xml:space="preserve">
+    <value>Το όνομα δεν είναι έγκυρο. Το '{0}' δεν αναγνωρίζεται.</value>
+    
+  </data>
+  <data name="ErrMondayZeroValueNotSupported" xml:space="preserve">
+    <value>Η τιμή MondayZero, από την απαρίθμηση StartOfWeek, δεν υποστηρίζεται στη λειτουργία WeekNum.</value>
+    
+  </data>
+  <data name="ErrAggregateArgsSameNumberOfRecords" xml:space="preserve">
+    <value>Και τα δύο συγκεντρωτικά ορίσματα πρέπει να έχουν τον ίδιο αριθμό καρτελών.</value>
+    
+  </data>
+  <data name="ErrInvalidArgument" xml:space="preserve">
+    <value>Μη έγκυρο όρισμα</value>
+    
+  </data>
+  <data name="ErrUntypedObjectDoesNotImplementSetProperty" xml:space="preserve">
+    <value>Η κλάση '{0}' δεν υλοποιεί 'SetProperty'.</value>
+    
+  </data>
+  <data name="ErrLowerValueGreaterThanUpperValue" xml:space="preserve">
+    <value>Η χαμηλότερη τιμή δεν μπορεί να είναι μεγαλύτερη από την ανώτατη τιμή.</value>
+    
+  </data>
+  <data name="ErrUntypedObjectNotArray" xml:space="preserve">
+    <value>Το UntypedObject δεν αντιπροσωπεύει πίνακα.</value>
+    
+  </data>
+  <data name="ErrNotApplicable" xml:space="preserve">
+    <value>Δεν ισχύει</value>
+    
+  </data>
+  <data name="ErrAccessingFieldNotValidValue" xml:space="preserve">
+    <value>Η πρόσβαση σε ένα πεδίο δεν είναι έγκυρη σε αυτήν την τιμή.</value>
+    
+  </data>
+  <data name="ErrSystemNoError" xml:space="preserve">
+    <value>Δεν υπάρχει σφάλμα στο σύστημα</value>
+    
+  </data>
+  <data name="ErrSystemError" xml:space="preserve">
+    <value>Σφάλμα συστήματος</value>
+    
+  </data>
+  <data name="ErrMissingRequiredField" xml:space="preserve">
+    <value>Λείπει υποχρεωτικό πεδίο</value>
+    
+  </data>
+  <data name="ErrCreateRecordPermissionDenied" xml:space="preserve">
+    <value>Το δικαίωμα δημιουργίας καρτέλας απορρίφθηκε</value>
+    
+  </data>
+  <data name="ErrUpdateRecordPermissionDenied" xml:space="preserve">
+    <value>Το δικαίωμα ενημέρωσης καρτέλας απορρίφθηκε</value>
+    
+  </data>
+  <data name="ErrDeleteRecordPermissionDenied" xml:space="preserve">
+    <value>Το δικαίωμα διαγραφής καρτέλας απορρίφθηκε</value>
+    
+  </data>
+  <data name="ErrColumnServerGenerated" xml:space="preserve">
+    <value>Η στήλη δημιουργείται από το διακομιστή και δεν είναι δυνατό να τροποποιηθεί</value>
+    
+  </data>
+  <data name="ErrRecordUpdateConflict" xml:space="preserve">
+    <value>Διένεξη ενημέρωσης καρτελών, ανανέωση καρτέλας και εκ νέου εφαρμογή της αλλαγής σας</value>
+    
+  </data>
+  <data name="ErrValidationError" xml:space="preserve">
+    <value>Σφάλμα επικύρωσης</value>
+    
+  </data>
+  <data name="ErrColumnReadOnly" xml:space="preserve">
+    <value>Η στήλη είναι μόνο για ανάγνωση</value>
+    
+  </data>
+  <data name="ErrInvalidRecord" xml:space="preserve">
+    <value>Η καρτέλα δεν είναι έγκυρη</value>
+    
+  </data>
+  <data name="DivisionByZero" xml:space="preserve">
+    <value>Διαίρεση με το μηδέν</value>
+    
+  </data>
+  <data name="ErrBadLanguage" xml:space="preserve">
+    <value>Εσφαλμένος κωδικός γλώσσας ή μη έγκυρη τιμή</value>
+    
+  </data>
+  <data name="ErrRegexSyntaxError" xml:space="preserve">
+    <value>Σφάλμα σύνταξης στην κανονική παράσταση</value>
+    
+  </data>
+  <data name="ErrInvalidFunctionUsage" xml:space="preserve">
+    <value>Μη έγκυρη χρήση συνάρτησης</value>
+    
+  </data>
+  <data name="ErrFileNotFound" xml:space="preserve">
+    <value>Το αρχείο δεν βρέθηκε</value>
+    
+  </data>
+  <data name="ErrSystemAnalysisError" xml:space="preserve">
+    <value>Σφάλμα ανάλυσης συστήματος</value>
+    
+  </data>
+  <data name="ErrReadRecordPermissionDenied" xml:space="preserve">
+    <value>Το δικαίωμα ανάγνωσης καρτέλας απορρίφθηκε</value>
+    
+  </data>
+  <data name="ErrOperationNotSupportedByPlayerDevice" xml:space="preserve">
+    <value>Η λειτουργία δεν υποστηρίζεται από αυτόν τον παίκτη ή τη συσκευή</value>
+    
+  </data>
+  <data name="ErrInsufficientMemoryStorage" xml:space="preserve">
+    <value>Ανεπαρκής μνήμη ή χώρος αποθήκευσης συσκευών</value>
+    
+  </data>
+  <data name="ErrStorageQuotaExceeded" xml:space="preserve">
+    <value>Υπέρβαση στόχων πωλήσεων χώρου αποθήκευσης</value>
+    
+  </data>
+  <data name="ErrNetworkError" xml:space="preserve">
+    <value>Σφάλμα δικτύου</value>
+    
+  </data>
+  <data name="ErrNumericError" xml:space="preserve">
+    <value>Αριθμητικό σφάλμα</value>
+    
+  </data>
+  <data name="ErrTimeoutError" xml:space="preserve">
+    <value>Σφάλμα ορίου λήξης</value>
+    
+  </data>
+  <data name="ErrOnlineServiceNotAvailable" xml:space="preserve">
+    <value>Η σύνδεση με την ηλεκτρονική υπηρεσία δεν είναι διαθέσιμη</value>
+    
+  </data>
+  <data name="ErrInvalidJsonFormat" xml:space="preserve">
+    <value>Μη έγκυρη μορφή JSON</value>
+    
+  </data>
+  <data name="ErrCustomError" xml:space="preserve">
+    <value>Προσαρμοσμένο σφάλμα</value>
+    
+  </data>
+  <data name="ErrCustomErrorArg" xml:space="preserve">
+    <value>Προσαρμοσμένο σφάλμα ({0})</value>
+    
+  </data>
+  <data name="ErrReservedErrorArg" xml:space="preserve">
+    <value>Δεσμευμένο σφάλμα ({0})</value>
+    
+  </data>
+  <data name="ErrOverflow" xml:space="preserve">
+    <value>Υπερχείλιση.</value>
+    
+  </data>
+  <data name="ErrFilterPredicate" xml:space="preserve">
+    <value>Το Filter() υποστηρίζει μόνο ένα κατηγόρημα.</value>
+    
+  </data>
+  <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
+    <value>Το όρισμα μη τυπολογημένου αντικειμένου στη συνάρτησης '{0}' έχει εσφαλμένο τύπο. Αναμενόμενο: {1}, Πραγματικό: {2}.</value>
+    
+  </data>
+  <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">
+    <value>Το όρισμα τοποθεσιών πρέπει να είναι αρκετά μεγάλο ώστε να μπορεί να κρατά το αποτέλεσμα.</value>
+    
+  </data>
+  <data name="ErrInvalidSortColumn" xml:space="preserve">
+    <value>Η καθορισμένη στήλη '{0}' δεν υπάρχει ή είναι μη έγκυρος τύπος στήλης ταξινόμησης.</value>
+    
+  </data>
+  <data name="ErrOrderTableDuplicateValues" xml:space="preserve">
+    <value>Ο πίνακας κατάταξης δεν μπορεί να έχει διπλότυπες τιμές</value>
+    
+  </data>
+  <data name="ErrManagedConnRefreshOnly" xml:space="preserve">
+    <value>Είναι δυνατή η ανανέωση μόνο διαχειριζόμενων συνδέσεων.</value>
+    
+  </data>
+  <data name="ErrUntypedNumberNotValidDecimal" xml:space="preserve">
+    <value>Ο μη πληκτρολογημένος αριθμός δεν είναι έγκυρη δεκαδική τιμή, πιθανή υπερχείλιση.</value>
+    
+  </data>
+  <data name="ErrSingleColumnTableAccessNodeNotYetImplemented" xml:space="preserve">
+    <value>Η πρόσβαση πίνακα μίας στήλης δεν έχει εφαρμοστεί ακόμα.</value>
+    
+  </data>
+  <data name="ErrReturnTypeDifference" xml:space="preserve">
+    <value>Ο τύπος επιστροφής θα έπρεπε να ήταν '{0}', βρέθηκε '{1}'.</value>
+    
+  </data>
+  <data name="ErrThirdArgumentIsInvalid" xml:space="preserve">
+    <value>Το τρίτο όρισμα της συνάρτησης {0} δεν είναι έγκυρο.</value>
+    
+  </data>
+  <data name="ErrReturnedNonFiniteNumber" xml:space="preserve">
+    <value>Η παράσταση επέστρεψε έναν αριθμό που δεν είναι πεπερασμένος.</value>
+    
+  </data>
+  <data name="ErrReturnedNumberBeyondDecimalValues" xml:space="preserve">
+    <value>Η παράσταση επέστρεψε έναν αριθμό που βρίσκεται πέρα από την περιοχή των δεκαδικών τιμών.</value>
+    
+  </data>
+  <data name="ErrPlacesBetweenRange" xml:space="preserve">
+    <value>Οι τοποθεσίες πρέπει να είναι μεταξύ 1 και 10.</value>
+    
+  </data>
+  <data name="ErrInvalidOperatorForTypes" xml:space="preserve">
+    <value>Ο τελεστής δεν είναι έγκυρος για αυτούς τους τύπους.</value>
+    
+  </data>
+  <data name="ErrRegexTimeoutException" xml:space="preserve">
+    <value>Χρονικό όριο κανονικής παράστασης (πάνω από {0} ms) - {1}</value>
+    
+  </data>
+  <data name="ErrInvalidRegexException" xml:space="preserve">
+    <value>Η κανονική παράσταση δεν είναι έγκυρη - {rexParseEx.Message}</value>
+    
+  </data>
+  <data name="ErrInputOutsideRange" xml:space="preserve">
+    <value>Η τιμή εισόδου {0} βρίσκεται εκτός της επιτρεπόμενης περιοχής.</value>
+    
+  </data>
+  <data name="ErrInvalidNumberInput" xml:space="preserve">
+    <value>Η τιμή εισόδου {0} δεν είναι έγκυρη.</value>
+    
+  </data>
+  <data name="ErrUnrecognizedSymbol" xml:space="preserve">
+    <value>Μη αναγνωρίσιμο σύμβολο {0}.</value>
+    
+  </data>
+</root>

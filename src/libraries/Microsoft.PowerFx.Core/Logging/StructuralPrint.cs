@@ -6,6 +6,7 @@ using System.Globalization;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -122,6 +123,15 @@ namespace Microsoft.PowerFx.Core.Logging
             Contracts.AssertValue(node);
 
             var separator = TexlParser.GetTokString(node.Token.Kind);
+            var nodeType = _binding?.GetType(node);
+
+            // If default enum, show it plain.
+            if (nodeType != null && 
+                nodeType.OptionSetInfo != null &&
+                EnumStoreBuilder.DefaultEnumSymbols.ContainsKey(nodeType.OptionSetInfo.EntityName.Value))
+            {
+                return LazyList<string>.Of(node.ToString());
+            }
 
             var values = node.Left.Accept(this, Precedence.Primary);
             values = values.With(separator);
@@ -337,6 +347,22 @@ namespace Microsoft.PowerFx.Core.Logging
             }
 
             return ApplyPrecedence(parentPrecedence, Precedence.Primary, result);
+        }
+
+        public override LazyList<string> Visit(TypeLiteralNode node, Precedence context)
+        {
+            Contracts.AssertValue(node);
+
+            var result = LazyList<string>.Empty;
+
+            result = result
+                .With(
+                    LanguageConstants.TypeLiteralInvariantName,
+                    TexlLexer.PunctuatorParenOpen)
+                .With(node.TypeRoot.Accept(this, Precedence.None))
+                .With(TexlLexer.PunctuatorParenClose);
+
+            return result;
         }
 
         public override LazyList<string> Visit(ListNode node, Precedence parentPrecedence)

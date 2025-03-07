@@ -43,7 +43,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var features = new Features()
             {
                 TableSyntaxDoesntWrapRecords = true,
-                ConsistentOneColumnTableResult = true
+                ConsistentOneColumnTableResult = true,
+                IsUserDefinedTypesEnabled = true,
             };
 
             RunExpressionTestCase(t, features, numberIsFloat: true, Console);
@@ -60,6 +61,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 TableSyntaxDoesntWrapRecords = true,
                 ConsistentOneColumnTableResult = true,
                 PowerFxV1CompatibilityRules = true,
+                IsUserDefinedTypesEnabled = true,
             };
 
             RunExpressionTestCase(t, features, numberIsFloat: true, Console);
@@ -218,6 +220,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var config = new PowerFxConfig(features) { SymbolTable = UserInfoTestSetup.GetUserInfoSymbolTable() };
             config.SymbolTable.EnableMutationFunctions();
+#pragma warning disable CS0618 // Type or member is obsolete
+            config.EnableJoinFunction();
+#pragma warning restore CS0618 // Type or member is obsolete
             var engine = new RecalcEngine(config);
 
             var rc = new RuntimeConfig();

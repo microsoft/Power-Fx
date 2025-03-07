@@ -8,13 +8,14 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
     // Implements CDP protocol for Tabular connectors
-    public sealed class CdpTable : CdpService
+    public class CdpTable : CdpService
     {
         public string TableName { get; private set; }
 
@@ -24,21 +25,25 @@ namespace Microsoft.PowerFx.Connectors
 
         public override HttpClient HttpClient => _httpClient;
 
-        public override bool IsDelegable => TableCapabilities?.IsDelegable ?? false;
+        public override bool IsDelegable => (DelegationInfo?.SortRestriction != null) || (DelegationInfo?.FilterRestriction != null) || (DelegationInfo?.FilterSupportedFunctions != null);
 
-        public override ConnectorType ConnectorType => TabularTableDescriptor.ConnectorType;
+        public IEnumerable<OptionSet> OptionSets { get; private set; }
 
-        internal ServiceCapabilities TableCapabilities => TabularTableDescriptor.TableCapabilities;
+        internal TableDelegationInfo DelegationInfo => ((DataSourceInfo)TabularTableDescriptor.FormulaType._type.AssociatedDataSources.First()).DelegationInfo;
+
+        internal override IReadOnlyDictionary<string, Relationship> Relationships => _relationships;
 
         internal DatasetMetadata DatasetMetadata;
 
-        internal CdpTableDescriptor TabularTableDescriptor;
+        internal ConnectorType TabularTableDescriptor;
 
         internal IReadOnlyCollection<RawTable> Tables;
 
         private string _uriPrefix;
 
         private HttpClient _httpClient;
+
+        private IReadOnlyDictionary<string, Relationship> _relationships;
 
         internal CdpTable(string dataset, string table, IReadOnlyCollection<RawTable> tables)
         {
@@ -55,7 +60,7 @@ namespace Microsoft.PowerFx.Connectors
 
         //// TABLE METADATA SERVICE
         // GET: /$metadata.json/datasets/{datasetName}/tables/{tableName}?api-version=2015-09-01
-        public async Task InitAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
+        public virtual async Task InitAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -66,14 +71,6 @@ namespace Microsoft.PowerFx.Connectors
 
             _httpClient = httpClient;
 
-            // $$$ This is a hack to generate ADS
-            bool adsHack = false;
-            if (uriPrefix.StartsWith("*", StringComparison.Ordinal))
-            {
-                adsHack = true;
-                uriPrefix = uriPrefix.Substring(1);
-            }
-
             if (DatasetMetadata == null)
             {
                 await InitializeDatasetMetadata(httpClient, uriPrefix, logger, cancellationToken).ConfigureAwait(false);
@@ -81,17 +78,19 @@ namespace Microsoft.PowerFx.Connectors
 
             _uriPrefix = uriPrefix;
 
-            CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, logger) { GenerateADS = adsHack };
+            CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, logger);
             TabularTableDescriptor = await tableResolver.ResolveTableAsync(TableName, cancellationToken).ConfigureAwait(false);
 
-            SetRecordType((RecordType)TabularTableDescriptor.ConnectorType?.FormulaType);
+            _relationships = TabularTableDescriptor.Relationships;
+            OptionSets = tableResolver.OptionSets;
+
+            RecordType = (RecordType)TabularTableDescriptor.FormulaType;
         }
 
         private async Task InitializeDatasetMetadata(HttpClient httpClient, string uriPrefix, ConnectorLogger logger, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-
-            CdpDataSource cds = new CdpDataSource(DatasetName);
+            
             DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(httpClient, uriPrefix, cancellationToken, logger).ConfigureAwait(false);
 
             DatasetMetadata = dm ?? throw new InvalidOperationException("Dataset metadata is not available");
@@ -111,16 +110,13 @@ namespace Microsoft.PowerFx.Connectors
 
             string queryParams = (odataParameters != null) ? "&" + odataParameters.ToQueryString() : string.Empty;
 
-            Uri uri = new Uri(
-                   (_uriPrefix ?? string.Empty) +
-                   (IsSql() ? "/v2" : string.Empty) +
-                   $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : DatasetName)}/tables/{HttpUtility.UrlEncode(TableName)}/items?api-version=2015-09-01" + queryParams, UriKind.Relative);
+            var uri = (_uriPrefix ?? string.Empty) +
+                   (CdpTableResolver.UseV2(_uriPrefix) ? "/v2" : string.Empty) +
+                   $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : SingleEncode(DatasetName))}/tables/{Uri.EscapeDataString(TableName)}/items?api-version=2015-09-01" + queryParams;
 
-            string text = await GetObject(_httpClient, $"List items ({nameof(GetItemsInternalAsync)})", uri.ToString(), null, cancellationToken, executionLogger).ConfigureAwait(false);
+            string text = await GetObject(_httpClient, $"List items ({nameof(GetItemsInternalAsync)})", uri, null, cancellationToken, executionLogger).ConfigureAwait(false);
             return !string.IsNullOrWhiteSpace(text) ? GetResult(text) : Array.Empty<DValue<RecordValue>>();
-        }
-
-        private bool IsSql() => _uriPrefix.Contains("/sql/");
+        }        
 
         private IReadOnlyCollection<DValue<RecordValue>> GetResult(string text)
         {

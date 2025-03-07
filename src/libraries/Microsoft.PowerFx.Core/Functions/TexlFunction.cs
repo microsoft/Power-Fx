@@ -21,6 +21,7 @@ using Microsoft.PowerFx.Core.Functions.DLP;
 using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
 using Microsoft.PowerFx.Core.Functions.Publish;
 using Microsoft.PowerFx.Core.Functions.TransportSchemas;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
@@ -31,6 +32,7 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Core.IR.DependencyVisitor;
 using static Microsoft.PowerFx.Core.IR.IRTranslator;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
@@ -169,6 +171,14 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual bool CanSuggestInputColumns => false;
 
         /// <summary>
+        /// Identifies which args (1-based) to use to compose the scope type for subsequent lambdas.
+        /// Example:
+        ///     Filter(t1, ...) => ScopeArgs is 1.
+        ///     Join(t1, t2, ...) => ScopeArgs is 2.
+        /// </summary>
+        public virtual int ScopeArgs => 1;
+
+        /// <summary>
         /// If this returns false, the Intellisense will use Arg[0] type to suggest the type of the argument.
         /// e.g. Collect(), Remove(), etc.
         /// </summary>
@@ -233,6 +243,9 @@ namespace Microsoft.PowerFx.Core.Functions
 
         /// <summary>Indicates whether table and record param types require all columns to be specified in the input argument.</summary>
         public virtual bool RequireAllParamColumns => false;
+
+        // Indicates the base type of the function. The base type can differ if the function extends multiple base classes i.e. Join function.
+        public virtual Type DeclarationType => this.GetType();
 
         /// <summary>
         /// Indicates whether the function will propagate the mutability of its first argument.
@@ -520,6 +533,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public virtual bool ArgIsType(int argIndex)
         {
+            Contracts.Assert(!HasTypeArgs);
             return false;
         }
 
@@ -1654,7 +1668,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return _cachedFunctionInfo = new TransportSchemas.FunctionInfo()
             {
                 Label = Name,
-                Detail = Description,
+                Detail = GetDescription(locale),
                 Signatures = GetSignatures().Select(signature => new FunctionSignature()
                 {
                     // $$$ can't use current culture
@@ -1725,6 +1739,26 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             return ArgPreprocessor.None;
+        }
+
+        /// <summary>
+        /// Visit all function nodes to compose dependency info.
+        /// </summary>
+        /// <param name="node">IR CallNode.</param>
+        /// <param name="visitor">Dependency visitor.</param>
+        /// <param name="context">Dependency context.</param>
+        /// <returns></returns>
+        public virtual bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyContext context)
+        {
+            foreach (var arg in node.Args)
+            {
+                arg.Accept(visitor, context);
+            }
+
+            // The return value is used by DepedencyScanFunctionTests test case.
+            // Returning false to indicate that the function runs a basic dependency scan.
+            // Other functions can override this method to return true if they have a custom dependency scan.
+            return false;
         }
     }
 }

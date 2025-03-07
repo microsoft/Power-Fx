@@ -5,15 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -69,6 +67,19 @@ namespace Microsoft.PowerFx.Functions
             var result = element[0];
 
             return new UntypedObjectValue(irContext, result);
+        }
+
+        public static FormulaValue IsEmpty_UO(IRContext irContext, UntypedObjectValue[] args)
+        {
+            var element = args[0].Impl;
+            var len = element.GetArrayLength();
+
+            if (len == 0)
+            {
+                return FormulaValue.New(true);
+            }
+
+            return FormulaValue.New(false);
         }
 
         public static FormulaValue Last_UO(IRContext irContext, UntypedObjectValue[] args)
@@ -220,7 +231,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return new ErrorValue(irContext, new ExpressionError()
                     {
-                        Message = "Untyped number is not a valid Decimal value, possible overflow",
+                        ResourceKey = RuntimeStringResources.ErrUntypedNumberNotValidDecimal,
                         Span = irContext.SourceContext,
                         Kind = ErrorKind.InvalidArgument
                     });
@@ -283,7 +294,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return new ErrorValue(irContext, new ExpressionError()
                     {
-                        Message = "Untyped number is not a valid Decimal value, possible overflow",
+                        ResourceKey = RuntimeStringResources.ErrUntypedNumberNotValidDecimal,
                         Span = irContext.SourceContext,
                         Kind = ErrorKind.InvalidArgument
                     });
@@ -387,7 +398,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return new ErrorValue(irContext, new ExpressionError()
                     {
-                        Message = "The UntypedObject does not represent an array",
+                        ResourceKey = RuntimeStringResources.ErrUntypedObjectNotArray,
                         Span = irContext.SourceContext,
                         Kind = ErrorKind.InvalidArgument
                     });
@@ -425,7 +436,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var impl = args[0].Impl;
 
-            if (impl.Type is ExternalType externalType && externalType.Kind == ExternalTypeKind.Array)
+            if (impl.Type is ExternalType externalType && (externalType.Kind == ExternalTypeKind.Array || externalType.Kind == ExternalTypeKind.ArrayAndObject))
             {
                 return new NumberValue(irContext, impl.GetArrayLength());
             }
@@ -454,7 +465,7 @@ namespace Microsoft.PowerFx.Functions
             var impl = (args[0] as UntypedObjectValue).Impl;
             var propertyName = (args[1] as StringValue).Value;
 
-            if (impl.Type is ExternalType externalType && externalType.Kind == ExternalTypeKind.Object)
+            if (impl.Type is ExternalType externalType && (externalType.Kind == ExternalTypeKind.Object || externalType.Kind == ExternalTypeKind.ArrayAndObject))
             {
                 if (impl.TryGetProperty(propertyName, out var propertyValue))
                 {
@@ -550,11 +561,13 @@ namespace Microsoft.PowerFx.Functions
 
         private static ErrorValue GetTypeMismatchError(IRContext irContext, string functionName, string expectedType, IUntypedObject actualValue)
         {
+            var actualType = actualValue.Type is ExternalType et ? et.Kind.ToString() : actualValue.Type.ToString();
             return new ErrorValue(irContext, new ExpressionError
             {
+                ResourceKey = RuntimeStringResources.ErrUntypedObjectIncorrectTypeArg,
                 Kind = ErrorKind.InvalidArgument,
                 Span = irContext.SourceContext,
-                Message = $"The untyped object argument to the '{functionName}' function has an incorrect type. Expected: {expectedType}, Actual: {actualValue.Type}."
+                MessageArgs = new[] { functionName, expectedType, actualType }
             });
         }
 

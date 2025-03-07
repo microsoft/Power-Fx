@@ -21,14 +21,13 @@ namespace Microsoft.PowerFx.Json.Tests
 {
     public class AsTypeIsTypeParseJSONTests
     {
-        private static readonly ParserOptions ParseType = new ParserOptions
+        private RecalcEngine SetupEngine(bool udtFeaturedEnabled = true)
         {
-            AllowParseAsTypeLiteral = true,
-        };
-
-        private RecalcEngine SetupEngine()
-        {
-            var config = new PowerFxConfig();
+            var features = new Features(Features.PowerFxV1)
+            {
+                IsUserDefinedTypesEnabled = udtFeaturedEnabled,
+            };
+            var config = new PowerFxConfig(features);
             config.EnableJsonFunctions();
             return new RecalcEngine(config);
         }
@@ -39,7 +38,7 @@ namespace Microsoft.PowerFx.Json.Tests
             var engine = SetupEngine();
 
             // custom-type type alias
-            engine.AddUserDefinitions("T = Type(Number);");
+            engine.AddUserDefinitions("T := Type(Number);");
 
             // Positive tests
             CheckIsTypeAsTypeParseJSON(engine, "\"42\"", "Number", 42D);
@@ -51,7 +50,7 @@ namespace Microsoft.PowerFx.Json.Tests
             CheckIsTypeAsTypeParseJSON(engine, "\"false\"", "Boolean", false);
             CheckIsTypeAsTypeParseJSON(engine, "\"1234.56789\"", "Decimal", 1234.56789m);
             CheckIsTypeAsTypeParseJSON(engine, "\"42\"", "T", 42D);
-            CheckIsTypeAsTypeParseJSON(engine, "\"\"\"Power Fx\"\"\"", "Type(Text)", "Power Fx", options: ParseType);
+            CheckIsTypeAsTypeParseJSON(engine, "\"\"\"Power Fx\"\"\"", "Type(Text)", "Power Fx");
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"2000-01-01T00:00:01.100Z\"\"\"", "DateTimeTZInd", new DateTime(2000, 1, 1, 0, 0, 1, 100));
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"11:59:59\"\"\"", "Time", new TimeSpan(11, 59, 59));
 
@@ -74,7 +73,7 @@ namespace Microsoft.PowerFx.Json.Tests
         {
             var engine = SetupEngine();
 
-            engine.AddUserDefinitions("T = Type({a: Number});");
+            engine.AddUserDefinitions("T := Type({a: Number});");
 
             dynamic obj1 = new ExpandoObject();
             obj1.a = 5D;
@@ -88,14 +87,15 @@ namespace Microsoft.PowerFx.Json.Tests
             obj3.a = new object[] { 1m, 2m, 3m, 4m };
 
             CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5}\"", "T", obj1);
-            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5}\"", "Type({a: Number})", obj1, options: ParseType);
-            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": { \"\"b\"\": {\"\"c\"\":  false}}}\"", "Type({a: {b: {c: Boolean }}})", obj2, options: ParseType);
-            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": [1, 2, 3, 4]}\"", "Type({a: [Decimal]})", obj3, options: ParseType);
+            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5}\"", "Type({a: Number})", obj1);
+            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": { \"\"b\"\": {\"\"c\"\":  false}}}\"", "Type({a: {b: {c: Boolean }}})", obj2);
+            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": [1, 2, 3, 4]}\"", "Type({a: [Decimal]})", obj3);
 
             // Negative Tests
-            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5}\"", "Type({a: Text})", obj1, isValid: false, options: ParseType);
-            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5, \"\"b\"\": 6}\"", "Type({a: Number})", obj1, false, options: ParseType);
-            CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"{\"\"a\"\": \"\"foo/bar/uri\"\"}\"", "Type({a: Void})", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key, options: ParseType);
+            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5}\"", "Type({a: Text})", obj1, isValid: false);
+            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5, \"\"b\"\": 6}\"", "Type({a: Number})", obj1, false);
+            CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"{\"\"a\"\": \"\"foo/bar/uri\"\"}\"", "Type({a: Void})", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key);
+            CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"{\"\"a\"\": \"\"foo/bar/uri\"\"}\"", "Type(RecordOf(T))", TexlStrings.ErrTypeFunction_InvalidTypeExpression.Key);
         }
 
         [Fact]
@@ -103,49 +103,69 @@ namespace Microsoft.PowerFx.Json.Tests
         {
             var engine = SetupEngine();
 
-            engine.AddUserDefinitions("T = Type([{a: Number}]);");
+            engine.AddUserDefinitions("T := Type([{a: Number}]);");
 
             var t1 = new object[] { 5D };
             var t2 = new object[] { 1m, 2m, 3m, 4m };
             var t3a = new object[] { true, true, false, true };
             var t3 = new object[] { t3a };
 
+            dynamic obj1 = new ExpandoObject();
+            obj1.a = 5D;
+
             CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": 5}]\"", "T", t1);
-            CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": 5}]\"", "Type([{a: Number}])", t1, options: ParseType);
-            CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": [true, true, false, true]}]\"", "Type([{a: [Boolean]}])", t3, options: ParseType);
-            CheckIsTypeAsTypeParseJSON(engine, "\"[1, 2, 3, 4]\"", "Type([Decimal])", t2, options: ParseType);
+            CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": 5}]\"", "Type([{a: Number}])", t1);
+            CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": 5}]\"", "Type([RecordOf(T)])", t1);
+            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5}\"", "Type(RecordOf(T))", obj1);
+            CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": [true, true, false, true]}]\"", "Type([{a: [Boolean]}])", t3);
+            CheckIsTypeAsTypeParseJSON(engine, "\"[1, 2, 3, 4]\"", "Type([Decimal])", t2);
 
             // Negative tests
-            CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": 5, \"\"b\"\": 6}]\"", "Type([{a: Number}])", t1, false, options: ParseType);
-            CheckIsTypeAsTypeParseJSON(engine, "\"[1, 2, 3, 4]\"", "Type([Text])", t2, false, options: ParseType);
-            CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"[\"\"foo/bar/uri\"\"]\"", "Type([Color])", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key, options: ParseType);
+            CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": 5, \"\"b\"\": 6}]\"", "Type([{a: Number}])", t1, false);
+            CheckIsTypeAsTypeParseJSON(engine, "\"[1, 2, 3, 4]\"", "Type([Text])", t2, false);
+            CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"[\"\"foo/bar/uri\"\"]\"", "Type([Color])", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key);
         }
 
         [Theory]
-        [InlineData("\"42\"", "SomeType", true, "ErrInvalidName")]
-        [InlineData("\"42\"", "Type(5)", true, "ErrTypeLiteral_InvalidTypeDefinition")]
-        [InlineData("\"42\"", "Text(42)", true, "ErrInvalidArgumentExpectedType")]
-        [InlineData("\"\"\"Hello\"\"\"", "\"Hello\"", true, "ErrInvalidArgumentExpectedType")]
-        [InlineData("\"{}\"", "Type([{a: 42}])", true, "ErrTypeLiteral_InvalidTypeDefinition")]
-        [InlineData("AsType(ParseJSON(\"42\"))", "", false, "ErrBadArity")]
-        [InlineData("IsType(ParseJSON(\"42\"))", "", false, "ErrBadArity")]
-        [InlineData("AsType(ParseJSON(\"42\"), Number , Text(5))", "", false, "ErrBadArity")]
-        [InlineData("IsType(ParseJSON(\"42\"), Number, 5)", "", false, "ErrBadArity")]
-        [InlineData("AsType(ParseJSON(\"123\"), 1)", "", false, "ErrInvalidArgumentExpectedType")]
-        public void TestCompileErrors(string expression, string type, bool testAllFunctions, string expectedError)
+        [InlineData("\"42\"", "SomeType", "ErrInvalidName")]
+        [InlineData("\"42\"", "Type(5)", "ErrTypeFunction_InvalidTypeExpression")]
+        [InlineData("\"42\"", "Text(42)", "ErrInvalidArgumentExpectedType")]
+        [InlineData("\"\"\"Hello\"\"\"", "\"Hello\"", "ErrInvalidArgumentExpectedType")]
+        [InlineData("\"{}\"", "Type([{a: 42}])", "ErrTypeFunction_InvalidTypeExpression")]
+        public void TestCompileErrorsAllStronglyTypedOverloads(string expression, string type, string expectedError)
+        {
+            var engine = SetupEngine();
+            CheckIsTypeAsTypeParseJSONCompileErrors(engine, expression, type, expectedError);
+        }
+
+        [Theory]
+        [InlineData("AsType(ParseJSON(\"42\"))", "ErrBadArity")]
+        [InlineData("IsType(ParseJSON(\"42\"))", "ErrBadArity")]
+        [InlineData("AsType(ParseJSON(\"42\"), Number , Text(5))", "ErrBadArity")]
+        [InlineData("IsType(ParseJSON(\"42\"), Number, 5)", "ErrBadArity")]
+        [InlineData("AsType(ParseJSON(\"123\"), 1)", "ErrInvalidArgumentExpectedType")]
+        [InlineData("AsType(Type(UntypedObject), ParseJSON(\"123\"))", "ErrTypeFunction_UnsupportedUsage")]
+        [InlineData("IsType(Type(UntypedObject), Type(Boolean))", "ErrTypeFunction_UnsupportedUsage")]
+        [InlineData("ParseJSON(Type(Text), Type(Text))", "ErrTypeFunction_UnsupportedUsage")]
+        public void TestCompileErrors(string expression, string expectedError)
         {
             var engine = SetupEngine();
 
-            if (testAllFunctions)
-            {
-                CheckIsTypeAsTypeParseJSONCompileErrors(engine, expression, type, expectedError, ParseType);
-            }
-            else
-            {
-                var result = engine.Check(expression, options: ParseType);
-                Assert.False(result.IsSuccess);
-                Assert.Contains(result.Errors, e => e.MessageKey == expectedError);
-            }
+            var result = engine.Check(expression);
+            Assert.False(result.IsSuccess);
+            Assert.Contains(result.Errors, e => e.MessageKey == expectedError);
+        }
+
+        [Theory]
+        [InlineData("AsType(ParseJSON(\"123\"), Number)")]
+        [InlineData("IsType(ParseJSON(\"123\"), Type(Number))")]
+        [InlineData("ParseJSON(\"\"\"Hello\"\"\", Type(Text))")]
+        public void TestCompileErrorsWithUDTFeatureDisabled(string expression)
+        {
+            var engine = SetupEngine(udtFeaturedEnabled: false);
+            var result = engine.Check(expression);
+            Assert.False(result.IsSuccess);
+            Assert.Contains(result.Errors, e => e.MessageKey == "ErrUserDefinedTypesDisabled");
         }
 
         [Fact]

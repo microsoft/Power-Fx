@@ -12,13 +12,14 @@ using Microsoft.PowerFx.Core.Functions.Publish;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Connectors.ConnectorHelperFunctions;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class ConnectorTexlFunction : TexlFunction, IAsyncConnectorTexlFunction, IHasUnsupportedFunctions
+    internal class ConnectorTexlFunction : TexlFunction, IFunctionInvoker, IHasUnsupportedFunctions
     {
         public ConnectorFunction ConnectorFunction { get; }
 
@@ -85,21 +86,23 @@ namespace Microsoft.PowerFx.Connectors
 
         public override bool HasSuggestionsForParam(int argumentIndex) => argumentIndex <= MaxArity;
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
         {
+            var serviceProvider = invokeInfo.FunctionServices;
+
             cancellationToken.ThrowIfCancellationRequested();
             BaseRuntimeConnectorContext runtimeContext = serviceProvider.GetService(typeof(BaseRuntimeConnectorContext)) as BaseRuntimeConnectorContext ?? throw new InvalidOperationException("RuntimeConnectorContext is missing from service provider");
 
             try
             {
-                runtimeContext.ExecutionLogger?.LogInformation($"Entering in [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} with {LogArguments(args)}");
-                FormulaValue formulaValue = await ConnectorFunction.InvokeInternalAsync(args, runtimeContext, cancellationToken).ConfigureAwait(false);
+                runtimeContext.ExecutionLogger?.LogInformation($"Entering in [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} with {LogArguments(invokeInfo.Args)}");
+                FormulaValue formulaValue = await ConnectorFunction.InvokeInternalAsync(invokeInfo.Args, runtimeContext, cancellationToken).ConfigureAwait(false);
                 runtimeContext.ExecutionLogger?.LogInformation($"Exiting [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} returning from {nameof(ConnectorFunction.InvokeInternalAsync)} with {LogFormulaValue(formulaValue)}");
                 return formulaValue;
             }
             catch (Exception ex)
             {
-                runtimeContext.ExecutionLogger?.LogException(ex, $"Exception in [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} with {LogArguments(args)} {LogException(ex)}");
+                runtimeContext.ExecutionLogger?.LogException(ex, $"Exception in [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} with {LogArguments(invokeInfo.Args)} {LogException(ex)}");
                 throw;
             }
         }

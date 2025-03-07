@@ -7,7 +7,6 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Annotations;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
@@ -175,7 +174,7 @@ namespace Microsoft.PowerFx
             // Compose all the symbol tables most likely to have functions into a single 
             // symbol table and then cache that. 
             // That will cache unifying into a single TexlFunctionSet - which is the most expensive part. 
-            var functionList = _functionListCache.GetComposedCached(SupportedFunctions, Config.SymbolTable);
+            var functionList = _functionListCache.GetComposedCached(SupportedFunctions, Config.ComposedConfigSymbols);
 
             var symbols = ReadOnlySymbolTable.Compose(EngineSymbols, functionList, PrimitiveTypes);
 
@@ -546,10 +545,10 @@ namespace Microsoft.PowerFx
             return ExpressionLocalizationHelper.ConvertExpression(expressionText, ruleScope, GetDefaultBindingConfig(), CreateResolverInternal(symbolTable), CreateBinderGlue(), culture, Config.Features, toDisplay: true);
         }
 
-        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, bool allowSideEffects = false)
+        public DefinitionsCheckResult AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, bool allowSideEffects = false)
         {
-            var engineTypesAndFunctions = ReadOnlySymbolTable.Compose(PrimitiveTypes, SupportedFunctions);
-            Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, engineTypesAndFunctions, symbolTable, allowSideEffects);
+            var engineTypesAndFunctions = ReadOnlySymbolTable.Compose(PrimitiveTypes, SupportedFunctions, Config.InternalConfigSymbols);
+            return Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, engineTypesAndFunctions, symbolTable, allowSideEffects);
         }
     }
 }

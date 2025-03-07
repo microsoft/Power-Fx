@@ -1,0 +1,6 @@
+Imports:
+- File: basic1.fx.yml
+- File: basic1_dup.fx.yml
+
+Formulas: |
+    Run() : Number = DoubleIt(5);    

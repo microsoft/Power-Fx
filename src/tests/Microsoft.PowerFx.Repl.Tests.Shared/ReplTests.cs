@@ -34,6 +34,8 @@ namespace Microsoft.PowerFx.Repl.Tests
                 Engine = engine,
                 Output = _output,
                 AllowSetDefinitions = true,
+                AllowUserDefinedFunctions = true,
+                ParserOptions = new ParserOptions() { AllowsSideEffects = true }
             };
         }
 
@@ -193,6 +195,21 @@ Notify(z)
         }
 
         [Fact]
+        public void TestCIR()
+        {
+            _repl.AddPseudoFunction(new CIRPseudoFunction());
+
+            // CIR() function is a meta-function that
+            // circumvents eval and dumps the compact IR. 
+            _repl.HandleLine("CIR(1+2)");
+
+            Assert.Empty(_output.Get(OutputKind.Error));
+
+            var log = _output.Get(OutputKind.Repl);
+            Assert.Equal("AddDecimals(1,2)", log);
+        }
+
+        [Fact]
         public void ExtraSymols()
         {
             SymbolValues extraValues = new SymbolValues("ExtraValues");
@@ -266,6 +283,29 @@ Notify(z)
 
             var log = _output.Get(OutputKind.Error);
             Assert.True(log.Length > 0);
+        }
+
+        [Fact]
+        public void UserDefinedFunctions()
+        {
+            _repl.HandleLine("F(x: Number): Number = x;");
+            _repl.HandleLine("F(42)");
+            var log = _output.Get(OutputKind.Repl);
+            Assert.Equal("42", log);
+
+            // we do not have a clear semantics defined yet for the below test
+            // should be addressed in future
+            /*
+            _repl.HandleLine("F(x: Text): Text = x;");
+            var error1 = _output.Get(OutputKind.Error);
+            Assert.Equal("Error 0-1: Function F is already defined.", error1);
+            */
+
+            _repl.HandleLine("G(x: Currency): Currency = x;");
+            var error2 = _output.Get(OutputKind.Error);
+            Assert.Equal(
+                @"Error 5-13: Unknown type Currency.
+Error 16-24: Unknown type Currency.", error2);
         }
 
         // test that Exit() informs the host that an exit has been requested

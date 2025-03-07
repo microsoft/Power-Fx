@@ -54,6 +54,11 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         /// <inheritdoc />
+        public override void Visit(TypeLiteralNode node)
+        {
+        }
+
+        /// <inheritdoc />
         public override void PostVisit(DottedNameNode node)
         {
         }

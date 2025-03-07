@@ -34,6 +34,16 @@ namespace Microsoft.PowerFx
         // Allow repl to create new definitions, such as Set(). 
         public bool AllowSetDefinitions { get; set; }
 
+        // Allow repl to create new UserDefinedFunctions. 
+        public bool AllowUserDefinedFunctions { get; set; }
+
+        /// <summary>
+        /// Enable the Import() function for importing modules. 
+        /// Defaults to false. 
+        /// </summary>
+        [Obsolete("preview")]
+        public bool AllowImport { get; set; }
+
         // Do we print each command before evaluation?
         // Useful if we're running a file and are debugging, or if input UI is separated from output UI. 
         public bool Echo { get; set; } = false;
@@ -73,6 +83,11 @@ namespace Microsoft.PowerFx
         /// </summary>
         public ReadOnlySymbolValues ExtraSymbolValues { get; set; }
 
+        // Map from Module full path to Module.
+        private readonly Dictionary<string, Module> _loadedModules = new Dictionary<string, Module>(StringComparer.OrdinalIgnoreCase);
+
+        internal IEnumerable<Module> Modules => _loadedModules.Values;
+
         /// <summary>
         /// Get sorted names of all functions. This includes functions from the <see cref="Engine"/> as well as <see cref="MetaFunctions"/>.
         /// </summary>
@@ -89,6 +104,68 @@ namespace Microsoft.PowerFx
                 
                 return list;
             }
+        }
+
+        // Get combined symbol values (extra, modules, etc)
+        public ReadOnlySymbolValues GetCombined()
+        {
+            // Combine with symbols from modules. 
+            var list = new List<ReadOnlySymbolTable>();
+
+            foreach (var module in _loadedModules.Values)
+            {
+                list.Add(module.Symbols);
+            }
+
+            if (this.ExtraSymbolValues != null)
+            {
+                list.Add(this.ExtraSymbolValues.SymbolTable);
+            }
+
+            var m1 = ReadOnlySymbolTable.Compose(list.ToArray());
+
+            var values = m1.CreateValues(this.ExtraSymbolValues);
+
+            return values;
+        }
+
+        internal bool TryResolveModule(string path, out Module module)
+        {
+            if (_loadedModules.TryGetValue(path, out module))
+            {
+                return true;
+            }
+
+            // can we resolve by short name?
+            List<Module> list = new List<Module>();
+
+            foreach (var m in _loadedModules.Values)
+            {
+                string shortName = System.IO.Path.GetFileName(m.FullPath);
+                if (string.Equals(shortName, path, StringComparison.OrdinalIgnoreCase))
+                {
+                    list.Add(m);                    
+                }
+            }
+
+            if (list.Count == 1)
+            {
+                module = list[0];
+                return true;
+            }
+
+            return false;
+        }
+
+        internal void DeleteModule(Module module)
+        {
+            _loadedModules.Remove(module.FullPath);
+        }
+
+        internal void AddModule(Module module)
+        {
+            string id = module.FullPath;
+            _loadedModules[id] = module;
         }
 
         // Interpreter should normally not throw.
@@ -119,6 +196,8 @@ namespace Microsoft.PowerFx
             this.MetaFunctions.AddFunction(new Help0Function(this));
             this.MetaFunctions.AddFunction(new Help1Function(this));
         }
+
+        private bool _finishInit = false;
 
         private bool _userEnabled = false;
 
@@ -214,6 +293,22 @@ namespace Microsoft.PowerFx
             }
         }
 
+        // Property ctor is run before Init properties are set. 
+        // So apply final initialization after property initializers but before we execute commands. 
+        private void FinishInit()
+        {
+            if (!_finishInit)
+            {
+                _finishInit = true;
+                if (this.AllowImport)
+                {   
+                    this.MetaFunctions.AddFunction(new ImportFunction(this));
+                    this.MetaFunctions.AddFunction(new ListModulesFunction(this));
+                    this.MetaFunctions.AddFunction(new DeleteModuleFunction(this));
+                }
+            }
+        }
+
         /// <summary>
         /// Directly invoke a command. This skips multiline handling. 
         /// </summary>
@@ -236,6 +331,8 @@ namespace Microsoft.PowerFx
                 return new ReplResult();
             }
 
+            FinishInit();
+
             if (this.Echo)
             {
                 await this.WritePromptAsync(cancel);
@@ -244,9 +341,10 @@ namespace Microsoft.PowerFx
                 await this.Output.WriteLineAsync(expression.TrimEnd(), OutputKind.Repl, cancel);
             }
 
-            var extraSymbolTable = this.ExtraSymbolValues?.SymbolTable;
+            var extraValues = this.GetCombined();
+            var extraSymbolTable = extraValues.SymbolTable;
             
-            var runtimeConfig = new RuntimeConfig(this.ExtraSymbolValues)
+            var runtimeConfig = new RuntimeConfig(extraValues)
             {
                  ServiceProvider = new BasicServiceProvider(this.InnerServices)
             };
@@ -360,7 +458,7 @@ namespace Microsoft.PowerFx
                         // Get the type. 
                         var rhsExpr = declare._rhs.GetCompleteSpan().GetFragment(expression);
 
-                        var setCheck = this.Engine.Check(rhsExpr, ParserOptions, this.ExtraSymbolValues?.SymbolTable);
+                        var setCheck = this.Engine.Check(rhsExpr, ParserOptions, this.GetCombined().SymbolTable);
                         if (!setCheck.IsSuccess)
                         {
                             await this.Output.WriteLineAsync($"Error: Failed to initialize '{name}'.", OutputKind.Error, cancel)
@@ -405,6 +503,30 @@ namespace Microsoft.PowerFx
             var errors = check.ApplyErrors();
             if (!check.IsSuccess)
             {
+                var definitionsCheckResult = new DefinitionsCheckResult(this.Engine.Config.Features);
+
+                definitionsCheckResult.SetText(expression, this.ParserOptions)
+                    .ApplyParseErrors();
+
+                if (this.AllowUserDefinedFunctions && definitionsCheckResult.IsSuccess && definitionsCheckResult.ContainsUDF)
+                {
+                    var defCheckResult = this.Engine.AddUserDefinedFunction(expression, this.ParserOptions.Culture, extraSymbolTable);
+
+                    if (!defCheckResult.IsSuccess)
+                    {
+                        foreach (var error in defCheckResult.Errors)
+                        {
+                            var kind = error.IsWarning ? OutputKind.Warning : OutputKind.Error;
+                            var msg = error.ToString();
+
+                            await this.Output.WriteLineAsync(lineError + msg, kind, cancel)
+                                .ConfigureAwait(false);
+                        }
+                    }
+
+                    return new ReplResult();
+                }
+
                 foreach (var error in check.Errors)
                 {
                     var kind = error.IsWarning ? OutputKind.Warning : OutputKind.Error;

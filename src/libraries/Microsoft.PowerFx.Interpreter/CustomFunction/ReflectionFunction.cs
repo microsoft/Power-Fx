@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
@@ -15,8 +14,8 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx
 {
@@ -197,7 +196,7 @@ namespace Microsoft.PowerFx
             {
                 return new CustomSetPropertyFunction(info.NameSpace, info.Name, info.ArgNames)
                 {
-                    _impl = args => InvokeAsync(null, args, CancellationToken.None)
+                    _impl = args => InvokeAsync(null, (IReadOnlyList<FormulaValue>)args, CancellationToken.None)
                 };
             }
 
@@ -218,12 +217,24 @@ namespace Microsoft.PowerFx
             return _info.Name;
         }
 
+        [Obsolete("Soon to be removed.")]
         public FormulaValue Invoke(IServiceProvider serviceProvider, FormulaValue[] args)
+        {
+            return InvokeAsync(serviceProvider, (IReadOnlyList<FormulaValue>)args, CancellationToken.None).Result;
+        }
+
+        public FormulaValue Invoke(IServiceProvider serviceProvider, IReadOnlyList<FormulaValue> args)
         {
             return InvokeAsync(serviceProvider, args, CancellationToken.None).Result;
         }
 
+        [Obsolete("Soon to be removed.")]
         public async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
+        {
+            return await InvokeAsync(serviceProvider, (IReadOnlyList<FormulaValue>)args, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, IReadOnlyList<FormulaValue> args, CancellationToken cancellationToken)
         {
             var info = Scan();
 
@@ -242,7 +253,7 @@ namespace Microsoft.PowerFx
             }
 
             List<ErrorValue> errors = null;
-            for (var i = 0; i < args.Length; i++)
+            for (var i = 0; i < args.Count; i++)
             {
                 object arg = args[i];
 
@@ -306,7 +317,7 @@ namespace Microsoft.PowerFx
             {
                 if (e.InnerException is CustomFunctionErrorException customFunctionErrorException)
                 {
-                    return CommonErrors.CustomError(IRContext.NotInSource(info.RetType), customFunctionErrorException.Message);
+                    return CommonErrors.RuntimeExceptionError(IRContext.NotInSource(info.RetType), customFunctionErrorException.Message);
                 }
 
                 throw;
@@ -326,7 +337,7 @@ namespace Microsoft.PowerFx
                         return FormulaValue.NewError(customFunctionErrorException.ExpressionError);
                     }
 
-                    return CommonErrors.CustomError(IRContext.NotInSource(info.RetType), customFunctionErrorException.Message);
+                    return CommonErrors.RuntimeExceptionError(IRContext.NotInSource(info.RetType), customFunctionErrorException.Message);
                 }
             }
 
@@ -372,7 +383,15 @@ namespace Microsoft.PowerFx
 
                 if (!isValid)
                 {
-                    return CommonErrors.CustomError(formulaResult.IRContext, string.Format(CultureInfo.InvariantCulture, "Return type should have been {0}, found {1}", retType, formulaResultType));
+                    return new ErrorValue(
+                        formulaResult.IRContext, 
+                        new ExpressionError()
+                        {
+                            ResourceKey = RuntimeStringResources.ErrReturnTypeDifference,
+                            Span = formulaResult.IRContext.SourceContext,
+                            Kind = ErrorKind.InvalidArgument,
+                            MessageArgs = new[] { retType.ToString(), formulaResultType.ToString() }
+                        });
                 }
             }
 

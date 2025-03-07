@@ -1,5 +1,5 @@
 {
-  "@odata.context": "https://zendesk-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#datasets('default')/tables",
+  "@odata.context": "https://zendesk-dfwus.azconn-dfwus-001.p.azurewebsites.net/$metadata#datasets('default')/tables",
   "value": [
     {
       "Name": "activities",

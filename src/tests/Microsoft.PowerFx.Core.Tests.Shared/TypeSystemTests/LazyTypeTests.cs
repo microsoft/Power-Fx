@@ -268,6 +268,27 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(3, _getter1CalledCount);
 
             Assert.Equal("![Bar:s, Baz:b, Foo:n, Test:O]", type1.ToString());
+
+            // test Add overload without path 
+            // using lazy record
+            var type2 = _lazyRecord1._type.Add(new DName("ThisRecord"), TestUtils.DT("![a: n]"));
+            Assert.Equal("r!", _lazyRecord1._type.ToString());
+            Assert.Equal("![Bar:s, Baz:b, Foo:n, ThisRecord:![a:n]]", type2.ToString());
+
+            // using lazy table
+            var type3 = _lazyTable2._type.Add(new DName("ThisRecord"), TestUtils.DT("![Value:O]"));
+            Assert.Equal("r*", _lazyTable2._type.ToString());
+            Assert.Equal(2, _getter2CalledCount);
+            Assert.Equal("*[Nested:r!, Qux:n, ThisRecord:![Value:O]]", type3.ToString());
+
+            // test Add overload with path and LazyType as field
+            // using lazy record
+            var type4 = _lazyRecord2._type.Add(ref fError, DPath.Root.Append(new DName("Nested")), new DName("New"), DType.Number);
+            Assert.Equal("![Nested:![Bar:s, Baz:b, Foo:n, New:n], Qux:n]", type4.ToString());
+
+            // using lazy table
+            var type5 = _lazyTable2._type.Add(ref fError, DPath.Root.Append(new DName("Nested")), new DName("NewCol"), TestUtils.DT("![a:n]"));
+            Assert.Equal("*[Nested:![Bar:s, Baz:b, Foo:n, NewCol:![a:n]], Qux:n]", type5.ToString());
         }
 
         [Fact]

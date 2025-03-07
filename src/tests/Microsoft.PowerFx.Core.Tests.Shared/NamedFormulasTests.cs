@@ -17,32 +17,30 @@ namespace Microsoft.PowerFx.Core.Tests
         private readonly ParserOptions _parseOptions = new ParserOptions() { AllowsSideEffects = true };
 
         [Theory]
-        [InlineData("Foo = Type(Number);")]
+        [InlineData("Foo := Type(Number);")]
         public void DefSimpleTypeTest(string script)
         {
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true,
             };
 
-            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
+            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions, Features.PowerFxV1);
             Assert.False(parsedNamedFormulasAndUDFs.HasErrors);
             Assert.Equal("Number", parsedNamedFormulasAndUDFs.DefinedTypes.First().Type.TypeRoot.AsFirstName().Ident.Name.ToString());
             Assert.Equal("Foo", parsedNamedFormulasAndUDFs.DefinedTypes.First().Ident.Name.ToString());
         }
 
         [Theory]
-        [InlineData("Foo = Type({ Age: Number });")]
+        [InlineData("Foo := Type({ Age: Number });")]
         public void DefRecordTypeTest(string script)
         {
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true,
             };
 
-            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
+            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions, Features.PowerFxV1);
             Assert.False(parsedNamedFormulasAndUDFs.HasErrors);
             var record = parsedNamedFormulasAndUDFs.DefinedTypes.First().Type.TypeRoot.AsRecord();
             Assert.Equal("Age", record.Ids.First().Name.ToString());
@@ -56,22 +54,20 @@ namespace Microsoft.PowerFx.Core.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true,
             };
-            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
+            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions, Features.PowerFxV1);
             Assert.False(parsedNamedFormulasAndUDFs.HasErrors);
         }
 
         [Theory]
-        [InlineData("Foo = Type({Age: Number}; Bar(x: Number): Number = Abs(x);")]
+        [InlineData("Foo := Type({Age: Number}; Bar(x: Number): Number = Abs(x);")]
         public void FailParsingTest(string script)
         {
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true,
             };
-            var result = UserDefinitions.Parse(script, parserOptions);
+            var result = UserDefinitions.Parse(script, parserOptions, Features.PowerFxV1);
             Assert.True(result.HasErrors);
             var udf = result.UDFs.First();
             Assert.Equal("Bar", udf.Ident.ToString());

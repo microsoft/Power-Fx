@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1807,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Returnerer Sand, hvis den angivne ikke-indtastede værdi er af den givne type.</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>type</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>Den ikke-indtastede værdi for at kontrollere, om den kan angives som angivet type.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>Den type, vi ønsker, at kontrollere som untypedValue.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Bruger den angivne værdi som den givne type.</value>
     
@@ -1824,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>Enhedstabellen, der repræsenterer den type, vi ønsker, at værdien skal bruges som.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Kontrollere og bruger den angivne ikke-indtastede værdi som den givne type.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>type</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>Den ikke-indtastede værdi, der skal angives som en ny type.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>Den type, vi ønsker, at værdien skal bruges som.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Udfører den formel, der er angivet som anden parameter, i det område, der er angivet af den første.</value>
@@ -1879,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>"{0}" er en ukendt eller ikke-understøttet funktion.</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' genkendes som typehjælperfunktion, og den kan kun bruges i funktionen Type.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -2578,7 +2618,7 @@
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
-    <value>start_dato</value>
+    <value>slut_dato</value>
     
   </data>
   <data name="DateDiffArg2" xml:space="preserve">
@@ -2673,6 +2713,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>En JSON-streng, der skal behandles.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>Konverterer en JSON-streng til et angivet objekt.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>streng</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>En JSON-streng til at konvertere til angivet objekt.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>type</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>En forfalden typedefinition eller en navngiven type, der er defineret globalt.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Returnerer posten i en tabel ved et givent indeks.</value>
     
@@ -2690,6 +2748,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Indekset for den post, der skal hentes.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2710,6 +2780,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Stregkodetype</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2826,6 +2928,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Værdien, der skal testes.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Konverterer dato og klokkeslæt i form af tekst til et tal, der repræsenterer datoen i Power Apps-koden for dato/klokkeslæt.</value>
@@ -3101,7 +3207,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Føjer et eller flere elementer til den angivne samling. Genstandene kan være fra en anden tabel eller samling (f.eks. Collect(collection, source_collection)), eller en eller flere poster Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Et eller flere elementer føjes til den angivne samling. Elementerne kan være fra en anden tabel eller samling (f.eks. Collect(collection, source_collection)), eller en eller flere poster Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3119,18 +3225,15 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>En ny eller eksisterende samling, der skal forøges.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Rydder først samlingen og føjer et eller flere elementer til den angivne samling. Elementerne kan være fra en anden tabel eller samling (f.eks. ClearCollect(collection, source_collection)), eller en eller flere poster ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Rydder først samlingen og føjer et eller flere elementer til den angivne samling. Elementerne kan være fra en anden tabel eller samling (f.eks. ClearCollect(collection, source_collection)) eller en eller flere poster ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
     <value>En ny eller eksisterende samling, der skal forøges.</value>
   </data>
   <data name="AboutClearCollect_item" xml:space="preserve">
-    <value>En post eller tabel, som skal samles. En post vil blive føjet til samlingen. En tabel får vedhæftet sine rækker til samlingen.</value>
+    <value>En post eller tabel, som skal samles. Der føjes en post til samlingen. En tabel får vedhæftet sine rækker til samlingen.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Anvender opdateringerne til den angivne række og ændrer rækken i den angivne datakilde. Returnerer den opdaterede række.</value>
@@ -3266,6 +3369,10 @@
     <value>Artikel: Formelreference til Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Uventet tegn '{0}' på placeringen '{1}' i formlen.</value>
     
@@ -3278,6 +3385,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikel: Formelreference til Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3295,6 +3406,10 @@
     <value>Artikel: Formelreference til Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Uventede tegn. Formlen indeholder "{0}", hvor "{1}" forventes.</value>
     
@@ -3308,6 +3423,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Artikel: Formelreference til Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3325,6 +3444,10 @@
     <value>Artikel: Formelreference til Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Navnet er ikke gyldigt. Denne identifikator kan ikke genkendes.</value>
     
@@ -3338,6 +3461,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artikel: Formelreference til Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3355,6 +3482,10 @@
     <value>Artikel: Formelreference til PowerApps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>Referencen til det overordnede kontrolelement er ikke gyldig. Du kan ikke referere til et overordnet kontrolelement i denne kontekst.</value>
     
@@ -3368,6 +3499,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Artikel: Tilføj og konfigurer en lærredapp-kontrol i Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3407,6 +3542,10 @@
     <value>Modul: Brug grundlæggende formler</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Antal forventet. Vi forventer et tal på dette sted i formlen.</value>
     
@@ -3420,6 +3559,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Artikel: Formelreference til Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3437,6 +3580,10 @@
     <value>Artikel: Formelreference til Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Kolon forventet. Vi forventer et kolon (:) på dette sted i formlen.</value>
     
@@ -3452,6 +3599,10 @@
     <value>Artikel: Vis tekst, datoer og klokkeslæt i Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Funktionsmåde i en ikke-funktionsmåde-egenskab. Du kan bruge denne egenskab til at ændre værdier et andet sted i appen.</value>
     
@@ -3465,6 +3616,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Artikel: Forstå funktionsmådeformler for lærredapps i Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Funktionsmåde i en ikke-adfærdsmæssig brugerdefineret funktion (UDF). Pak den brugerdefinerede funktionstekst ind med krøllede klammeparenteser ({...}) for at erklære en UDF for funktionsmåde.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Funktionsmåder ændrer den aktuelle sessionstilstand. 'Clear', 'Collect', 'Patch' og 'Refresh' er almindelige funktionsmåder.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Rediger det brugerdefinerede funktionsudtryk, så det er inden i klammeparenteser ({...}).</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3504,6 +3671,10 @@
     <value>Artikel: Formelreference til Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Tekst eller tal forventet. Vi forventer tekst eller et tal på dette sted i formlen.</value>
     
@@ -3519,6 +3690,10 @@
     <value>Artikel: Formelreference til Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Højreparentes forventet. Vi forventer en højreparentes (}) på dette sted i formlen.</value>
     
@@ -3530,12 +3705,23 @@
     <value>Rediger din formel, så den indeholder en parentes.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Forventede afslutning af id. Vi forventer et afsluttende (') på dette sted i formlen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Et afsluttende enkelt anførselstegn angiver slutningen af et id (f.eks. 'Fornavn').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Rediger din formel, så den indeholder et afsluttende enkelt anførselstegn.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Identifikatoren har ikke nogen gyldig tekst.</value>
+    <value>Id'et er tomt eller indeholder et ugyldigt tegn, f.eks. et tabulatortegn eller tegn for ny linje.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Sørg for, at du har tekst til din identifikator. Denne fejl opstår, når identifikatoren udelukkende består af tomme celler eller mellemrum.</value>
+    <value>Sørg for, at du har gyldig tekst i dit id. Denne fejl opstår, når id'et er tomt, kun indeholder mellemrum eller indeholder et tabulatortegn eller tegn for ny linje.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3561,8 +3747,16 @@
     <value>Modul: Brug grundlæggende formler</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Modul: Forfat grundlæggende formler med tabeller og poster</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3577,6 +3771,10 @@
     <value>Artikel: Formelreference til Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Inkompatibel type. Kolonnen '{0}' i den datakilde, du opdaterer, forventer en '{1}' type, og du bruger en '{2}' type.</value>
     
@@ -3589,8 +3787,16 @@
     <value>Modul: Brug grundlæggende formler</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Modul: Forfat grundlæggende formler med tabeller og poster</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3603,6 +3809,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Artikel: Formelreference til Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3621,8 +3831,16 @@
     <value>Modul: Brug grundlæggende formler</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Modul: Forfat grundlæggende formler med tabeller og poster</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3640,8 +3858,16 @@
     <value>Modul: Brug grundlæggende formler</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Modul: Forfat grundlæggende formler med tabeller og poster</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3657,6 +3883,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Artikel: Formelreference til Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3682,8 +3912,16 @@
     <value>Artikel: Forstå delegering i en lærredapp</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Blog: Datarækkegrænser for delegering</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3709,8 +3947,16 @@
     <value>Artikel: Forstå delegering i en lærredapp</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Blog: Datarækkegrænser for delegering</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3740,8 +3986,16 @@
     <value>Artikel: Forstå delegering i en lærredapp</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Blog: Datarækkegrænser for delegering</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3773,8 +4027,70 @@
     <value>Artikel: Forstå delegering i en lærredapp</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Blog: Datarækkegrænser for delegering</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Delegeringsadvarsel. Den navngivne formel {0} kan ikke delegeres, så dens anvendelse i denne formel fungerer muligvis ikke korrekt på store datasæt. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Datakilden kan måske ikke behandle formlen og vil måske returnere et ufuldstændigt datasæt. Programmet kan måske ikke returnere korrekte resultater eller fungere korrekt, hvis datasættet er ufuldstændigt.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Prøv at forenkle definitionen for den navngivne formel.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Artikel: Forstå delegering i en lærredapp</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Datarækkegrænser for delegering</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Delegeringsadvarsel. Den brugerdefinerede funktion {0} kan ikke delegeres, så dens anvendelse i denne formel fungerer muligvis ikke korrekt på store datasæt. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Datakilden kan måske ikke behandle formlen og vil måske returnere et ufuldstændigt datasæt. Programmet kan måske ikke returnere korrekte resultater eller fungere korrekt, hvis datasættet er ufuldstændigt.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Prøv at forenkle definitionen af den brugerdefinerede funktion.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Artikel: Forstå delegering i en lærredapp</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Datarækkegrænser for delegering</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3801,8 +4117,16 @@
     <value>Artikel: Forstå delegering i en lærredapp</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Blog: Datarækkegrænser for delegering</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3831,6 +4155,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Reference: ConfirmExit til lærredapps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3865,6 +4193,10 @@
     <value>Den navngivne formel skal være et udtryk.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>En navngivet typeerklæring skal være et gyldigt typeudtryk.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Brugerdefineret funktion skal have en brødtekst.</value>
     
@@ -3890,7 +4222,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Den angivne funktionsreturtype '{0}' matcher ikke returtypen af funktionens brødtekst '{1}'.</value>
+    <value>Den angivne funktionsreturtype '{0}' matcher ikke returtypen for funktionens brødtekst '{1}'.</value>
     
   </data>
   <data name="ErrUDF_TooManyParameters" xml:space="preserve">
@@ -3921,7 +4253,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>'{1}' kan ikke ændres med '{0}' eller er i konflikt med navnet på en eksisterende omfangsvariabel, datakilde eller et andet objekt.</value>
+    <value>'{1}' kan ikke ændres med '{0}' eller er i konflikt med navnet på en eksisterende omfangsvariabel, en datakilde eller et andet objekt.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4082,6 +4414,10 @@
     <value>Kan ikke uddelegere {0}: indeholder en adfærdsfunktion '{1}'.</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows returnerer muligvis en cachelagret værdi. Brug CountIf(DataSource, true) for at hente den seneste optælling.</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Fastslår, om den angivne tekst har en forekomst af det angivne tekstformat.</value>
     
@@ -4228,16 +4564,20 @@
     <value>Angiv en variabel med en værdi i onlinedatakilde (tabel eller post) kan medføre flere anmodninger til serveren. Snart blokeres dette.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Erklæringen af typekonstant er ugyldig. Udtrykket "{0}" kan ikke bruges i en typedefinition.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Typeudtrykket er ugyldigt. '{0}' kan ikke bruges i et typeudtryk.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definitionen af typen {0} er ugyldig.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Ikke-understøttet brug: Funktionen Type kan kun bruges i typeargumenter og typeerklæringer.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Erklæringen af typen {0} er ugyldig.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definitionen af typen {0} er ugyldig og kan indeholde cyklusser.</value>
+    <value>Erklæringen af typen {0} er ugyldig og kan indeholde cyklusser.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4442,7 +4782,7 @@
     <value>Den datakilde, som data skal føjes til.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>En post eller tabel, som skal samles. En post vil blive føjet til datakilden. En tabel får vedhæftet sine rækker til datakilden.</value>
+    <value>En post eller tabel, som skal indsamles. Der føjes en post til datakilden. En tabel får vedhæftet sine rækker til datakilden.</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
     <value>element</value>
@@ -4490,8 +4830,96 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Den kilde, der skal ryddes.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Henter data, der spænder over flere tabeller med relationer.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>kilde1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>kilde2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>nævner</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Den venstre tabel eller samling.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Den højre tabel eller samling.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Joinkriterier mellem de to tabeller eller samlinger.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Jointypen mellem de to tabeller eller samlinger.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Argumenterne for at omdøbe en eksisterende kolonne i én af kilderne.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Den angivne datakilde kan ikke bruges med denne funktion.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Ugyldigt argument '{0}'. Forventet gyldigt typenavn eller udtryk af typen udtryk.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Ikke-understøttet type '{0}' i typeargument.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Maksimal dybde nået under gennemgang af JSON-nyttedata.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Maksimal længde nået i JSON-funktion.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Den eksperimentelle funktion 'Brugerdefinerede typer' er ikke aktiveret.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Forkert syntaks: '=' må ikke bruges til at angive brugerdefinerede typer. Brug ':=' i stedet.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>'{0}' kan ikke tilføjes/omdøbes på grund af kollision med en anden kolonne med samme navn.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Forventede almindelig 'JoinType'-enum-værdi. Forskellige enum'er eller overførsel af det gennem en anden funktion understøttes ikke, dvs. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argumenter, der starter fra 5. position, er beregnet til at omdøbe kolonner og forventes at være 'As'-nodeargumenter, dvs LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Der skal erklæres mindst én '{0}'-kolonne for at komponere join-resultatet.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Værdien '{0}' er ugyldig i denne sammenhæng. Det skal være en reference til omfangsnavnet enten '{1}' eller '{2}'.</value>
     
   </data>
 </root>

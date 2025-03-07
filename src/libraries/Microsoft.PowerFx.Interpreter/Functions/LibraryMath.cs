@@ -7,7 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -777,7 +777,7 @@ namespace Microsoft.PowerFx.Functions
         {
             decimal arg0 = arg0dv.Value;
             decimal arg1 = arg1dv.Value;
-            
+
             // Both decimal zero and negative zero will satisfy this test
             if (arg1 == 0m)
             {
@@ -842,7 +842,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     yield return new ErrorValue(irContext, new ExpressionError()
                     {
-                        Message = $"The expression returned a non-finite number.",
+                        ResourceKey = RuntimeStringResources.ErrReturnedNonFiniteNumber,
                         Span = irContext.SourceContext,
                         Kind = ErrorKind.Numeric
                     });
@@ -851,7 +851,7 @@ namespace Microsoft.PowerFx.Functions
                 if (isValid)
                 {
                     x += step;
-                    isValid = !double.IsInfinity(x);                   
+                    isValid = !double.IsInfinity(x);
                 }
             }
         }
@@ -861,7 +861,7 @@ namespace Microsoft.PowerFx.Functions
             var x = start;
             bool isValid = true;
             for (var i = 1; i <= records; i++)
-            {                
+            {
                 if (isValid)
                 {
                     yield return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), x);
@@ -870,7 +870,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     yield return new ErrorValue(irContext, new ExpressionError()
                     {
-                        Message = $"The expression returned a number that is beyond the range of decimal values.",
+                        ResourceKey = RuntimeStringResources.ErrReturnedNumberBeyondDecimalValues,
                         Span = irContext.SourceContext,
                         Kind = ErrorKind.Numeric
                     });
@@ -993,8 +993,8 @@ namespace Microsoft.PowerFx.Functions
             var sign = signedNumber < 0 ? -1m : 1m;
             var unsignedNumber = Math.Abs(signedNumber);
 
-            int digits = doubleDigs > int.MaxValue ? int.MaxValue : 
-                               doubleDigs < int.MinValue ? int.MinValue : 
+            int digits = doubleDigs > int.MaxValue ? int.MaxValue :
+                               doubleDigs < int.MinValue ? int.MinValue :
                                     (int)doubleDigs;
 
             if (digits < -28)
@@ -1158,7 +1158,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (numberBase == 1)
             {
-                return GetDiv0Error(irContext);
+                return CommonErrors.DivByZeroError(irContext);
             }
 
             return new NumberValue(irContext, Math.Log(number, numberBase));
@@ -1186,7 +1186,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 if (exponent < 0)
                 {
-                    return GetDiv0Error(irContext);
+                    return CommonErrors.DivByZeroError(irContext);
                 }
                 else if (exponent == 0)
                 {
@@ -1269,12 +1269,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (lower > upper)
             {
-                return new ErrorValue(irContext, new ExpressionError()
-                {
-                    Message = $"Lower value cannot be greater than Upper value",
-                    Span = irContext.SourceContext,
-                    Kind = ErrorKind.Numeric
-                });
+                return CommonErrors.LowerValueGreaterThanUpperValue(irContext);
             }
 
             lower = Math.Ceiling(lower);
@@ -1311,12 +1306,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (lower > upper)
             {
-                return new ErrorValue(irContext, new ExpressionError()
-                {
-                    Message = $"Lower value cannot be greater than Upper value",
-                    Span = irContext.SourceContext,
-                    Kind = ErrorKind.Numeric
-                });
+                return CommonErrors.LowerValueGreaterThanUpperValue(irContext);
             }
 
             lower = Math.Ceiling(lower);
@@ -1363,7 +1353,7 @@ namespace Microsoft.PowerFx.Functions
             var tan = Math.Tan(arg);
             if (tan == 0)
             {
-                return GetDiv0Error(irContext);
+                return CommonErrors.DivByZeroError(irContext);
             }
 
             var cot = 1 / tan;
@@ -1386,7 +1376,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (x == 0 && y == 0)
             {
-                return GetDiv0Error(irContext);
+                return CommonErrors.DivByZeroError(irContext);
             }
 
             // Unlike Excel, C#'s Math.Atan2 expects 'y' as first argument and 'x' as second.
@@ -1401,16 +1391,6 @@ namespace Microsoft.PowerFx.Functions
                 var result = function(arg);
                 return new NumberValue(irContext, result);
             };
-        }
-
-        private static ErrorValue GetDiv0Error(IRContext irContext)
-        {
-            return new ErrorValue(irContext, new ExpressionError
-            {
-                Kind = ErrorKind.Div0,
-                Span = irContext.SourceContext,
-                Message = "Division by zero"
-            });
         }
 
         // Functions that return an integer result, such as Len, will return a Decimal by default or
@@ -1499,7 +1479,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
-                    Message = $"Places should be between 1 and 10",
+                    ResourceKey = RuntimeStringResources.ErrPlacesBetweenRange,
                     Span = irContext.SourceContext,
                     Kind = ErrorKind.Numeric
                 });
@@ -1526,7 +1506,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
-                    Message = $"Places argument must be big enough to hold the result",
+                    ResourceKey = RuntimeStringResources.ErrArgumentMustBeBigEnough,
                     Span = irContext.SourceContext,
                     Kind = ErrorKind.Numeric
                 });

@@ -73,6 +73,7 @@
     "IsNumeric",
     "IsToday",
     "IsType",
+    "Join",
     "JSON",
     "Language",
     "Last",
