@@ -44,7 +44,7 @@ The regular expression must be a constant and not calculated or stored in a vari
 
 Octal codes for characters, such as `\044` or `\o{044}` are disallowed, as they can be ambiguous with numbered back references. Use `\x` or `\u` instead. 
 
-`\v` is not supported as it ambiguous across regular expression languages. Use `\x0b` for a vertical tab or `[\x0b\f\r\n\u2028\u2029]` for vertical whitespace.
+`\v` is not supported as it ambiguous across regular expression languages. Use `\x0b` for a vertical tab or `[\x0b\f\r\n\x85\u2028\u2029]` for vertical whitespace.
 
 ### Assertions
 

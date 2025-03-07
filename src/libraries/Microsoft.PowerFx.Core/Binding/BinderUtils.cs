@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -1508,12 +1507,12 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 case NodeKind.StrInterp:
                     var strInterpNode = node.AsStrInterp();
-                    StringBuilder strInterpValue = new StringBuilder();
+                    var segments = new List<string>();
                     foreach (var segmentNode in strInterpNode.Children)
                     {
                         if (TryGetConstantValue(context, segmentNode, out var segmentValue))
                         {
-                            strInterpValue.Append(segmentValue);
+                            segments.Append(segmentValue);
                         }
                         else
                         {
@@ -1521,8 +1520,13 @@ namespace Microsoft.PowerFx.Core.Binding
                         }
                     }
 
-                    nodeValue = strInterpValue.ToString();
-                    return true;
+                    if (segments.Count == strInterpNode.Children.Count)
+                    {
+                        nodeValue = string.Join(string.Empty, segments);
+                        return true;
+                    }
+
+                    break;
                 case NodeKind.StrLit:
                     nodeValue = node.AsStrLit().Value;
                     return true;
