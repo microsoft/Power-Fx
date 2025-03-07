@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -310,6 +311,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Explicit don't enumerate fields
             public override IEnumerable<string> FieldNames => throw new NotImplementedException();
 
+            [SuppressMessage("Design", "CA1065: Do not raise exceptions in unexpected locations", Justification = "Tests")]
             public override bool Equals(object other) => throw new NotImplementedException();
 
             public override int GetHashCode() => throw new NotImplementedException();
