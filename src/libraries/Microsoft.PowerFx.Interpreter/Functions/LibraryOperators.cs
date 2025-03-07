@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
@@ -720,9 +719,9 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // See in_SS in JScript membershipReplacementFunctions
-        public static Func<IServiceProvider, IRContext, FormulaValue[], FormulaValue> StringInOperator(bool exact)
+        public static Func<IRContext, FormulaValue[], FormulaValue> StringInOperator(bool exact)
         {
-            return (services, irContext, args) =>
+            return (irContext, args) =>
             {
                 var left = args[0];
                 var right = args[1];
@@ -739,24 +738,22 @@ namespace Microsoft.PowerFx.Functions
                 var leftStr = (StringValue)left;
                 var rightStr = (StringValue)right;
 
-                return new BooleanValue(irContext, services.GetService<CultureInfo>().CompareInfo.IndexOf(rightStr.Value, leftStr.Value, exact ? CompareOptions.Ordinal : CompareOptions.IgnoreCase) >= 0);
+                return new BooleanValue(irContext, rightStr.Value.IndexOf(leftStr.Value, exact ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase) >= 0);
             };
         }
 
         // Left is a scalar. Right is a single-column table.
         // See in_ST()
-        public static Func<IServiceProvider, IRContext, FormulaValue[], FormulaValue> InScalarTableOperator(bool exact)
+        public static Func<IRContext, FormulaValue[], FormulaValue> InScalarTableOperator(bool exact)
         {
-            return (services, irContext, args) =>
+            return (irContext, args) =>
             {
                 var left = args[0];
                 var right = args[1];
 
-                var cultureInfo = services.GetService<CultureInfo>();
-
                 if (!exact && left is StringValue strLhs)
                 {
-                    left = new StringValue(IRContext.NotInSource(FormulaType.String), cultureInfo.TextInfo.ToLower(strLhs.Value));
+                    left = strLhs.ToLower();
                 }
 
                 var source = (TableValue)right;
@@ -769,7 +766,7 @@ namespace Microsoft.PowerFx.Functions
 
                         if (!exact && rhs is StringValue strRhs)
                         {
-                            rhs = new StringValue(IRContext.NotInSource(FormulaType.String), cultureInfo.TextInfo.ToLower(strRhs.Value));
+                            rhs = strRhs.ToLower();
                         }
 
                         if (RuntimeHelpers.AreEqual(left, rhs))
