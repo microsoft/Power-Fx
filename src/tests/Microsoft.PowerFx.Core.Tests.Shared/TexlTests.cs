@@ -1815,6 +1815,53 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("Match(\"a\", \"a\")", "![FullMatch:s, StartMatch:n]")]
+        [InlineData("Match(\"a\", \"(a)\")", "![FullMatch:s, StartMatch:n]")]
+        [InlineData("Match(\"a\", \"(?<one>a)\")", "![FullMatch:s, StartMatch:n, one:s]")]
+        [InlineData("Match(\"a\", \"(a)\", MatchOptions.NumberedSubMatches)", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        [InlineData("MatchAll(\"a\", \"a\")", "*[FullMatch:s, StartMatch:n]")]
+        [InlineData("MatchAll(\"a\", \"(a)\")", "*[FullMatch:s, StartMatch:n]")]
+        [InlineData("MatchAll(\"a\", \"(?<one>a)\")", "*[FullMatch:s, StartMatch:n, one:s]")]
+        [InlineData("MatchAll(\"a\", \"(a)\", MatchOptions.NumberedSubMatches)", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        public void TexlFunctionTypeSemanticsMatch_V1Enabled(string script, string expectedType)
+        {
+            var features = new Features
+            {
+                PowerFxV1CompatibilityRules = true
+            };
+            var config = new PowerFxConfig(features);
+
+            RegexTypeCache regexCache = new (-1);
+            config.InternalConfigSymbols.AddFunction(new MatchFunction(regexCache));
+            config.InternalConfigSymbols.AddFunction(new MatchAllFunction(regexCache));
+
+            var expectedDType = TestUtils.DT(expectedType);
+            TestSimpleBindingSuccess(script, expectedDType, config: config);
+        }
+
+        [Theory]
+        [InlineData("Match(\"a\", \"a\")", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        [InlineData("Match(\"a\", \"(a)\")", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        [InlineData("Match(\"a\", \"(?<one>a)\")", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s], one:s]")]
+        [InlineData("Match(\"a\", \"(a)\", MatchOptions.NumberedSubMatches)", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        [InlineData("MatchAll(\"a\", \"a\")", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        [InlineData("MatchAll(\"a\", \"(a)\")", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        [InlineData("MatchAll(\"a\", \"(?<one>a)\")", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s], one:s]")]
+        [InlineData("MatchAll(\"a\", \"(a)\", MatchOptions.NumberedSubMatches)", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        public void TexlFunctionTypeSemanticsMatch_V1Disabled(string script, string expectedType)
+        {
+            var features = new Features();
+            var config = new PowerFxConfig(features);
+
+            RegexTypeCache regexCache = new (-1);
+            config.InternalConfigSymbols.AddFunction(new MatchFunction(regexCache));
+            config.InternalConfigSymbols.AddFunction(new MatchAllFunction(regexCache));
+
+            var expectedDType = TestUtils.DT(expectedType);
+            TestSimpleBindingSuccess(script, expectedDType, config: config);
+        }
+
+        [Theory]
         [InlineData("SortByColumns(T, \"a\")", "*[a:![b:n]]")]
         [InlineData("SortByColumns(T, \"a\")", "*[a:*[b:n]]")]
         [InlineData("SortByColumns(T, \"a\")", "*[a:O]")]
@@ -4474,19 +4521,25 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
-        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null, bool numberIsFloat = true, OptionSet[] optionSets = null, Features features = null)
+        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null, bool numberIsFloat = true, OptionSet[] optionSets = null, Features features = null, PowerFxConfig config = null)
         {
-            features = features ?? Features.None;
-            var config = new PowerFxConfig(features)
+            if (config == null)
             {
-                SymbolTable = symbolTable
-            };
-
-            if (optionSets != null)
-            {
-                foreach (var optionSet in optionSets)
+                features = features ?? Features.None;
+                config = new PowerFxConfig(features)
                 {
-                    config.AddOptionSet(optionSet);
+                    SymbolTable = symbolTable
+                };
+            }
+
+            if (symbolTable != null)
+            {
+                if (optionSets != null)
+                {
+                    foreach (var optionSet in optionSets)
+                    {
+                        config.AddEntity(optionSet);
+                    }
                 }
             }
 
@@ -4498,13 +4551,16 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
-        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = null, bool numberIsFloat = true, IExternalOptionSet[] optionSets = null)
+        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = null, bool numberIsFloat = true, IExternalOptionSet[] optionSets = null, PowerFxConfig config = null)
         {
-            features ??= Features.None;
-            var config = new PowerFxConfig(features)
+            if (config == null)
             {
-                SymbolTable = symbolTable
-            };
+                features = features ?? Features.None;
+                config = new PowerFxConfig(features)
+                {
+                    SymbolTable = symbolTable
+                };
+            }
 
             if (symbolTable != null)
             {
