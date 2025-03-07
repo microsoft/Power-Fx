@@ -4521,7 +4521,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Inline options are limited to a combination of the letters [imnsx], cannot disable options, and cannot be used on a subexpression, found "{0}".</value>
-    <comment>Error message indicating that the regular expression has bad inline options.</comment>
+    <comment>{Locked=[imnsx]}Error message indicating that the regular expression has bad inline options.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Octal \0 character codes are not supported, use hexadecimal \x or Unicode \u instead, found "{0}".</value>
@@ -4561,11 +4561,11 @@
   </data>
   <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Unclosed inline comment, starts with "(?#...".</value>
-    <comment>Error message indicating that the regular expression includes an unclosed inline comment.</comment>
+    <comment>{Locked=(?#...} Error message indicating that the regular expression includes an unclosed inline comment.</comment>
   </data>  
   <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Inline option is incompatible with MatchOptions.NumberedSubMatches, found "{0}".</value>
-    <comment>Error message indicating that the regular expression includes an inline option that is incompatible with numbered sub matches.</comment>
+    <comment>{Locked=MatchOptions.NumberedSubMatches} Error message indicating that the regular expression includes an inline option that is incompatible with numbered sub matches.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Possessive quantifiers are not supported, found "{0}".</value>
@@ -4573,7 +4573,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Exact quantifiers cannot be used with quantifier modifiers such as ? for lazy, found "{0}".</value>
-    <comment>Error message indicating that the regular expression does not support modifiers for exact quantifiers.</comment>
+    <comment>{Locked=?}Error message indicating that the regular expression does not support modifiers for exact quantifiers.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Invalid escape code, found "{0}".</value>
@@ -4641,7 +4641,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Using single quoted named captures is not supported, use (?&lt;...&gt;) syntax instead, found "{0}".</value>
-    <comment>Error message indicating that the regular expression has single quoted named capture.</comment>
+    <comment>{Locked=(?&lt;...&gt;)} Error message indicating that the regular expression has single quoted named capture.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Conditional alternation is not supported, found "{0}".</value>
@@ -4649,15 +4649,15 @@
   </data>
   <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Named captures cannot be used with MatchOptions.NumberedSubMatches enabled, found "{0}".</value>
-    <comment>Error message indicating that the regular expression is mixing named and numbered captures.</comment>
+    <comment>{Locked=MatchOptions.NumberedSubMatches}Error message indicating that the regular expression is mixing named and numbered captures.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Use named captures with "(?&lt;name&gt;...)" and "\k&lt;name&gt;" or enable MatchOptions.NumberedSubMatches, found "{0}".</value>
-    <comment>Error message indicating that the regular expression is not enabled for numbered captures.</comment>
+    <comment>{Locked=(?&lt;name&gt;...)}{Locked=\k&lt;name&gt;} Error message indicating that the regular expression is not enabled for numbered captures.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "{0}".</value>
-    <comment>Error message indicating that the regular expression has a hyphen in a character class.</comment>
+    <comment>{Locked=\-}Error message indicating that the regular expression has a hyphen in a character class.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "{0}".</value>

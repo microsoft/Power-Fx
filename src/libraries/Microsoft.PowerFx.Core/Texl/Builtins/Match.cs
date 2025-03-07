@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // These start with the codes that can come after a regular expression definition in Perl/JavaScript with "/a+/misx" and can also be used in "(?misx)a+".
     // If possible, do not add lower case letters that are Power Fx specific to avoid future conflicts with the industry. We added ^, $, and N as Power Fx specific.
-    public class MatchOptionCodes
+    internal class MatchOptionCodes
     {
         public const char BeginsWith = '^';          // invented by us, adds a '^' at the front of the regex
         public const char EndsWith = '$';            // invented by us, adds a '$' at the end of the regex
