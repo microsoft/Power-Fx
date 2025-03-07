@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -1505,6 +1506,23 @@ namespace Microsoft.PowerFx.Core.Binding
             nodeValue = null;
             switch (node.Kind)
             {
+                case NodeKind.StrInterp:
+                    var strInterpNode = node.AsStrInterp();
+                    StringBuilder strInterpValue = new StringBuilder();
+                    foreach (var segmentNode in strInterpNode.Children)
+                    {
+                        if (TryGetConstantValue(context, segmentNode, out var segmentValue))
+                        {
+                            strInterpValue.Append(segmentValue);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    nodeValue = strInterpValue.ToString();
+                    return true;
                 case NodeKind.StrLit:
                     nodeValue = node.AsStrLit().Value;
                     return true;

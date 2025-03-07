@@ -28,7 +28,7 @@ As a result, some regular expressions that may work in other environments will b
 
 Power Fx supports the following regular expression features, with notes on how Power Fx behavior may differ from other systems.
 
-The regular expression must be a constant and not calculated or stored in a variable. Using the `&` operator and the `Concatenate`, `Char`, and `UniChar` functions with constant arguments is supported.
+The regular expression must be a constant and not calculated or stored in a variable. Using the `&` operator, string interpolation `$"{...}"`, and the `Concatenate`, `Char`, and `UniChar` functions with constant arguments is supported.
 
 ### Literal characters
 

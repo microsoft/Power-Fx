@@ -1449,6 +1449,19 @@ Errors: Error 17-31: Regular expression must be a constant value.|Error 0-7: The
 >> IsMatch( "asdf", "asdf", If( Int(4) > -1, MatchOptions.IgnoreCase, MatchOptions.Contains ) )
 Errors: Error 25-90: MatchOptions must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
 
+// String interpolation is supported
+>> Match( "asdf", $"a{ Char(115) }{ UniChar(100) }f" )
+{FullMatch:"asdf",StartMatch:1}
+
+>> Match( "asdf", $"a{$"s{$"d{$"f"}"}"}" )
+{FullMatch:"asdf",StartMatch:1}
+
+>> Match( "asdf", $"a{ Char(115) }" & $"{ UniChar(100) }f" )
+{FullMatch:"asdf",StartMatch:1}
+
+>> Match( "asdf", "a" & $"{Char(115)}" & $"{UniChar(100)}" & "f" )
+{FullMatch:"asdf",StartMatch:1}
+
 // leading zeros on quant support
 
 >> Match( "aaaaaa", "a{00002,}" )
