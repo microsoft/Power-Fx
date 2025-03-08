@@ -36,3 +36,17 @@ Table({Value:"e"},{Value:"l"})
 >> Match("Hi", "Hi", MatchOptions.Multiline)
 {FullMatch:"Hi",StartMatch:1,SubMatches:Table()}
 
+>> Match( "Hi", ".", MatchOptions.DotAll )
+Errors: Error 30-37: Invalid regular expression: MatchOptions.DotAll and MatchOptions.FreeSpacing are only available with Power Fx V1, found "MatchOptions.DotAll".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "Hi", " H # a comment " & Char(10) & " i ", MatchOptions.FreeSpacing )
+Errors: Error 63-75: Invalid regular expression: MatchOptions.DotAll and MatchOptions.FreeSpacing are only available with Power Fx V1, found "MatchOptions.FreeSpacing".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "Hi", " H # a comment " & Char(10) & " I ", MatchOptions.IgnoreCase & MatchOptions.FreeSpacing )
+Errors: Error 75-76: Invalid regular expression: MatchOptions.DotAll and MatchOptions.FreeSpacing are only available with Power Fx V1, found "MatchOptions.IgnoreCase & MatchOptions.FreeSpacing".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// does no harm to use NumberedSubMatches
+>> Match( "Hi", "(H)([Ii])", MatchOptions.NumberedSubMatches )
+{FullMatch:"Hi",StartMatch:1,SubMatches:Table({Value:"H"},{Value:"i"})}
+
+

@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Functions
 
             return new Dictionary<TexlFunction, IAsyncTexlFunction>()
             {
-                { new IsMatchFunction(), new Compare_IsMatchImplementation(regexTimeout, includeNode, includePCRE2) },
+                { new IsMatchFunction(regexCache), new Compare_IsMatchImplementation(regexTimeout, includeNode, includePCRE2) },
                 { new MatchFunction(regexCache), new Compare_MatchImplementation(regexTimeout, includeNode, includePCRE2) },
                 { new MatchAllFunction(regexCache), new Compare_MatchAllImplementation(regexTimeout, includeNode, includePCRE2) }
             };

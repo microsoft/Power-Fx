@@ -121,13 +121,13 @@ namespace Microsoft.PowerFx
             {
                 // requires PCRE2 DLL (pcre2-16d.dll) on the path and Node.JS installed
                 // can also use RegEx_PCRE2 and RegEx_NodeJS directly too
-                Functions.RegEx_Compare.EnableRegExFunctions(config, new TimeSpan(0, 0, 5));
+                Functions.RegEx_Compare.EnableRegExFunctions(config, new TimeSpan(0, 0, 5), regexCacheSize: 100);
             }
             else
 #endif
             {
 #pragma warning disable CS0618 // Type or member is obsolete
-                config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
+                config.EnableRegExFunctions(new TimeSpan(0, 0, 5), regexCacheSize: 100);
 #pragma warning restore CS0618 // Type or member is obsolete
             }
 

@@ -103,8 +103,8 @@ namespace Microsoft.PowerFx.Functions
                             const [alteredPattern, alteredFlags, endGuards] = AlterRegex_JavaScript( pattern, flags );
                             const regex = RegExp(alteredPattern, alteredFlags.concat(matchAll ? 'g' : ''));
                             const matches = matchAll ? [...subject.matchAll(regex)] : [subject.match(regex)];
-                            // console.log(alteredPattern);       // useful to debug AlterRegex_JavaScript
-                            // console.log(encodeURI(subject));
+                             console.log(alteredPattern);       // useful to debug AlterRegex_JavaScript
+                             console.log(encodeURI(subject));
                             console.log('%%begin%%');
                             if (matches.length != 0 && matches[0] != null)
                             {
@@ -267,7 +267,7 @@ namespace Microsoft.PowerFx.Functions
 
             return new Dictionary<TexlFunction, IAsyncTexlFunction>()
             {
-                { new IsMatchFunction(), new NodeJS_IsMatchImplementation(regexTimeout) },
+                { new IsMatchFunction(regexCache), new NodeJS_IsMatchImplementation(regexTimeout) },
                 { new MatchFunction(regexCache), new NodeJS_MatchImplementation(regexTimeout) },
                 { new MatchAllFunction(regexCache), new NodeJS_MatchAllImplementation(regexTimeout) }
             };

@@ -1,4 +1,4 @@
 #SETUP: RegEx,disable:PowerFxV1CompatibilityRules
 
 >> IsMatch("Foo", "J(")
-Error({Kind:ErrorKind.BadRegex})
+Errors: Error 15-19: Invalid regular expression.|Error 0-7: The function 'IsMatch' has some invalid arguments.

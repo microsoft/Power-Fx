@@ -13,7 +13,8 @@ namespace Microsoft.PowerFx
     /// </summary>
     internal class RegexTypeCache
     {
-        // Key is ("tbl_" or "rec_" + regex expression)
+        // Key is ("tbl_" or "rec_" + schema altering options + regex expression)
+        // DType can be null if we have validated the regular expression, but didn't need the type for IsMatch
         // See Match.cs code for details
         internal ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>> Cache { get; }
 

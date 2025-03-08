@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Entities;
@@ -1859,6 +1860,69 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var expectedDType = TestUtils.DT(expectedType);
             TestSimpleBindingSuccess(script, expectedDType, config: config);
+        }
+
+        [Fact]
+        public void TexlFunctionTypeSemantics_RegexTypeCache()
+        {
+            var features = new Features
+            {
+                PowerFxV1CompatibilityRules = true
+            };
+            var config = new PowerFxConfig(features);
+
+            RegexTypeCache regexCache = new (30);
+            config.InternalConfigSymbols.AddFunction(new IsMatchFunction(regexCache));
+            config.InternalConfigSymbols.AddFunction(new MatchFunction(regexCache));
+            config.InternalConfigSymbols.AddFunction(new MatchAllFunction(regexCache));
+
+            var engine = new Engine(config);
+            var opts = new ParserOptions();
+
+            // Cache entry can vary on:
+            // - Table (MatchAll) vs. Record (Match)
+            // - Regular expression pattern
+            // - NumberedSubMatches vs. Not
+            // if another MatchOption is added which impacts the return type, this will need to be updated
+
+            // all these tests cases need to be within the same test, so that the same cache is used for all
+            var a = engine.Check("Match(\"a\", \"(a)\")", opts);
+            Assert.Equal(TestUtils.DT("![FullMatch:s, StartMatch:n]"), a.Binding.ResultType);
+            Assert.False(a.Binding.ErrorContainer.HasErrors());
+            Assert.True(a.IsSuccess);
+
+            var b = engine.Check("Match(\"a\", \"(a)\", MatchOptions.NumberedSubMatches)", opts);
+            Assert.Equal(TestUtils.DT("![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]"), b.Binding.ResultType);
+            Assert.False(b.Binding.ErrorContainer.HasErrors());
+            Assert.True(b.IsSuccess);
+
+            // Match and MatchAll should not collide
+            var c = engine.Check("MatchAll(\"a\", \"(a)\")", opts);
+            Assert.Equal(TestUtils.DT("*[FullMatch:s, StartMatch:n]"), c.Binding.ResultType);
+            Assert.False(c.Binding.ErrorContainer.HasErrors());
+            Assert.True(c.IsSuccess);
+
+            var d = engine.Check("MatchAll(\"a\", \"(a)\", MatchOptions.NumberedSubMatches)", opts);
+            Assert.Equal(TestUtils.DT("*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]"), d.Binding.ResultType);
+            Assert.False(d.Binding.ErrorContainer.HasErrors());
+            Assert.True(d.IsSuccess);
+
+            var e = engine.Check("IsMatch(\"a\", \"(a)\")", opts);
+            Assert.Equal(TestUtils.DT("b"), e.Binding.ResultType);
+            Assert.False(e.Binding.ErrorContainer.HasErrors());
+            Assert.True(e.IsSuccess);
+
+            // check the first cache entry again
+            var f = engine.Check("Match(\"a\", \"(a)\")", opts);
+            Assert.Equal(TestUtils.DT("![FullMatch:s, StartMatch:n]"), f.Binding.ResultType);
+            Assert.False(f.Binding.ErrorContainer.HasErrors());
+            Assert.True(f.IsSuccess);
+
+            // check a different regular expression
+            var g = engine.Check("Match(\"a\", \"a\")", opts);
+            Assert.Equal(TestUtils.DT("![FullMatch:s, StartMatch:n]"), g.Binding.ResultType);
+            Assert.False(g.Binding.ErrorContainer.HasErrors());
+            Assert.True(g.IsSuccess);
         }
 
         [Theory]

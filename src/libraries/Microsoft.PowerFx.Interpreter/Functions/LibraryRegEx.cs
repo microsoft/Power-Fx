@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Functions
 
             return new Dictionary<TexlFunction, IAsyncTexlFunction>()
             {
-                { new IsMatchFunction(), new IsMatchImplementation(regexTimeout) },
+                { new IsMatchFunction(regexCache), new IsMatchImplementation(regexTimeout) },
                 { new MatchFunction(regexCache), new MatchImplementation(regexTimeout) },
                 { new MatchAllFunction(regexCache), new MatchAllImplementation(regexTimeout) }
             };

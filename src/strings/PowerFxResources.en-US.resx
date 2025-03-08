@@ -4687,6 +4687,10 @@
     <value>Invalid regular expression: Number is too large, found "{0}".</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: MatchOptions.DotAll and MatchOptions.FreeSpacing are only available with Power Fx V1, found "{0}".</value>
+    <comment>{Locked=Power Fx V1}{Locked=MatchOptions.DotAll}{Locked=MatchOptions.FreeSpacing}Error Message.</comment>
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regular expression must be a constant value.</value>
     <comment>Error Message.</comment>

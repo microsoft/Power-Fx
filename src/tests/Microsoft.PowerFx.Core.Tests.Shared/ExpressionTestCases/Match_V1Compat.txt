@@ -54,7 +54,8 @@ Blank()
 >> Match( "c", "(?<whole>(?<alpha>a)|(?<beta>b))" )
 Blank()
 
-// Match( "a", "(b*)*", MatchOptions.NumberedSubMatches ) is ambiguous, with different results for .NET and JavaScript
+>> Match( "a", "(b*)*", MatchOptions.NumberedSubMatches )
+Errors: Error 12-19: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(b*)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "a", "(b)*", MatchOptions.NumberedSubMatches )
 {FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
@@ -74,10 +75,24 @@ Blank()
 >> Match( "a", "(b{0,4})", MatchOptions.NumberedSubMatches )
 {FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
 
-//  Match( "ab", "(a)*b\1" , MatchOptions.NumberedSubMatches ) is ambiguous, with different results for .NET and JavaScript
+>> Match( "ab", "(a)*b\1" , MatchOptions.NumberedSubMatches )
+Errors: Error 13-22: Invalid regular expression: Back reference "\1" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "ab", "(a)*b" , MatchOptions.NumberedSubMatches )
 {FullMatch:"ab",StartMatch:1,SubMatches:Table({Value:"a"})}
 
 >> Match( "ab", "(a*)b\1" , MatchOptions.NumberedSubMatches )
 Errors: Error 13-22: Invalid regular expression: Back reference "\1" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "Hi", ".", MatchOptions.DotAll )
+{FullMatch:"H",StartMatch:1}
+
+>> Match( "Hi", " H # a comment " & Char(10) & " i ", MatchOptions.FreeSpacing )
+{FullMatch:"Hi",StartMatch:1}
+
+>> Match( "Hi", " H # a comment " & Char(10) & " I ", MatchOptions.IgnoreCase & MatchOptions.FreeSpacing )
+{FullMatch:"Hi",StartMatch:1}
+
+// does no harm to use NumberedSubMatches with or without V1
+>> Match( "Hi", "(H)([Ii])", MatchOptions.NumberedSubMatches )
+{FullMatch:"Hi",StartMatch:1,SubMatches:Table({Value:"H"},{Value:"i"})}

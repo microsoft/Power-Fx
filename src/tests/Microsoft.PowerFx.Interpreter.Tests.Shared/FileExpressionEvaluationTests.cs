@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 #endif
 
 #if MATCHCOMPARE
-        /* to enable, place this in Solution Items/Directiory.Build.Props:
+        /* to enable, place this in Solution Items/Directiory.Build.Props: abcd
           <PropertyGroup>
               <DefineConstants>$(DefineConstants);MATCHCOMPARE</DefineConstants>
           </PropertyGroup>

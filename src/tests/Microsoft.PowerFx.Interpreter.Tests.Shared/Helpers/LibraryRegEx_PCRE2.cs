@@ -455,7 +455,7 @@ namespace Microsoft.PowerFx.Functions
 
             return new Dictionary<TexlFunction, IAsyncTexlFunction>()
             {
-                { new IsMatchFunction(), new PCRE2_IsMatchImplementation(regexTimeout) },
+                { new IsMatchFunction(regexCache), new PCRE2_IsMatchImplementation(regexTimeout) },
                 { new MatchFunction(regexCache), new PCRE2_MatchImplementation(regexTimeout) },
                 { new MatchAllFunction(regexCache), new PCRE2_MatchAllImplementation(regexTimeout) }
             };

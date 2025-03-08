@@ -2,67 +2,67 @@
 
 // quantified capture groups
 
->> Match( "aba", "^(a(b)?)+$", MatchOptions.NumberedSubMatches )  // node != .net, a known difference between PCRE2 and Perl too
+>> Match( "aba", "^(a(b)?)+$", MatchOptions.NumberedSubMatches )  // node != .net, submatch[2] null vs. "b", a known difference between PCRE2 and Perl too
 Errors: Error 14-26: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "^(a(b)?)+".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "aba", "^(a(?:b)?)+$", MatchOptions.NumberedSubMatches )  // node == .net
+>> Match( "aba", "^(a(?:b)?)+$", MatchOptions.NumberedSubMatches )
 {FullMatch:"aba",StartMatch:1,SubMatches:Table({Value:"a"})}
 
->> Match( "aba", "^(a(b)?)+$" )  // node == .net
+>> Match( "aba", "^(a(b)?)+$" )
 {FullMatch:"aba",StartMatch:1}
 
->> Match( "aba", "^(?<one>a(b)?)+$" )  // node == .net
+>> Match( "aba", "^(?<one>a(b)?)+$" )
 {FullMatch:"aba",StartMatch:1,one:"a"}
 
->> Match( "b", "(a)?b\1", MatchOptions.NumberedSubMatches )  // node != .net
+>> Match( "b", "(a)?b\1", MatchOptions.NumberedSubMatches )  // node != .net, fullmatch "b" vs null
 Errors: Error 12-21: Invalid regular expression: Back reference "\1" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "b", "(?<cap>a)?b\k<cap>" )   // node != .net
+>> Match( "b", "(?<cap>a)?b\k<cap>" )   // node != .net, fullmatch "b" vs null
 Errors: Error 12-32: Invalid regular expression: Back reference "\k<cap>" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "a", "(b*|.){2,}" )  // node != .net
+>> Match( "a", "(b*|.){2,}" )  // node != .net, fullmatch "a" vs ""
 Errors: Error 12-24: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(b*|.){2,}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "a", "(b*|.){2,2}" )  // node == .net
+>> Match( "a", "(b*|.){2,2}" )  // node == .net, {FullMatch:"", StartMatch:1}
 Errors: Error 12-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(b*|.){2,2}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "a", "(b*|.){2,3}" )  // node != .net
+>> Match( "a", "(b*|.){2,3}" )  // node != .net, fullmatch "a" vs ""
 Errors: Error 12-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(b*|.){2,3}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "a", "(b*|.){2}" )  // node == .net
+>> Match( "a", "(b*|.){2}" )  // node == .net, {FullMatch:"", StartMatch:1}
 Errors: Error 12-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(b*|.){2}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "a", "(b*|.)?" )  // node != .net
+>> Match( "a", "(b*|.)?" )  // node != .net, fullmatch "a" vs ""
 Errors: Error 12-21: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(b*|.)?".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "a", "(b*|.)+" )  // node != .net
+>> Match( "a", "(b*|.)+" )  // node != .net, fullmatch "a" vs ""
 Errors: Error 12-21: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(b*|.)+".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "a", "(b*|.)*" )  // node != .net
+>> Match( "a", "(b*|.)*" )  // node != .net, fullmatch "a" vs ""
 Errors: Error 12-21: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(b*|.)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "a", "(((b*|.)))*" )  // node != .net
+>> Match( "a", "(((b*|.)))*" )  // node != .net, fullmatch "a" vs ""
 Errors: Error 12-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(((b*|.)))*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "a", "(|.){2,}" )  // node != .net
+>> Match( "a", "(|.){2,}" )  // node != .net, fullmatch "a" vs ""
 Errors: Error 12-22: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(|.){2,}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "a", "(|.){2,2}" )  // node == .net
+>> Match( "a", "(|.){2,2}" )  // node == .net, {FullMatch:"", StartMatch:1}
 Errors: Error 12-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(|.){2,2}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "a", "(|.){2}" )  // node == .net
+>> Match( "a", "(|.){2}" )  // node == .net, {FullMatch:"", StartMatch:1}
 Errors: Error 12-21: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(|.){2}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "a", "(|.)?" )   // node != .net
+>> Match( "a", "(|.)?" )   // node != .net, fullmatch "a" vs ""
 Errors: Error 12-19: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(|.)?".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "a", "(|.)+" )   // node != .net
+>> Match( "a", "(|.)+" )   // node != .net, fullmatch "a" vs ""
 Errors: Error 12-19: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(|.)+".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "a", "(|.)*" )   // node != .net
+>> Match( "a", "(|.)*" )   // node != .net, fullmatch "a" vs ""
 Errors: Error 12-19: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(|.)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "a", "(((|.)))*" )  // node != .net
+>> Match( "a", "(((|.)))*" )  // node != .net, fullmatch "a" vs ""
 Errors: Error 12-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(((|.)))*".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // alternation with capture and any quantifier
@@ -112,10 +112,10 @@ Errors: Error 12-23: Invalid regular expression: Quantifier on a group containin
 >> Match( "%abc%", "(a|b|(((c))))", MatchOptions.NumberedSubMatches )
 {FullMatch:"a",StartMatch:2,SubMatches:Table({Value:"a"},{Value:Blank()},{Value:Blank()},{Value:Blank()})}
 
->> Match( "%abc%", "((a)|b|c)*", MatchOptions.NumberedSubMatches )
+>> Match( "%abc%", "((a)|b|c)*", MatchOptions.NumberedSubMatches ) // node == .net, {FullMatch:"", StartMatch:1, SubMatches:[Blank(), Blank()]}
 Errors: Error 16-28: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "((a)|b|c)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%abc%", "(a|(b)|c)*", MatchOptions.NumberedSubMatches )
+>> Match( "%abc%", "(a|(b)|c)*", MatchOptions.NumberedSubMatches ) // node == .net, {FullMatch:"", StartMatch:1, SubMatches:[Blank(), Blank()]}
 Errors: Error 16-28: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a|(b)|c)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%abc%", "((?:(a))|b|c)*", MatchOptions.NumberedSubMatches )
@@ -133,70 +133,70 @@ Errors: Error 16-32: Invalid regular expression: Quantifier on a group containin
 >> Match( "%abc%", "((?:(a|b|(c))))*", MatchOptions.NumberedSubMatches )   // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[Blank(), Blank(), Blank()]}
 Errors: Error 16-34: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...(a|b|(c))))*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%abc%", "((a)|b|c)+", MatchOptions.NumberedSubMatches )     // .net != node
+>> Match( "%abc%", "((a)|b|c)+", MatchOptions.NumberedSubMatches )     // .net != node, SubMatch[1] = "a" vs null
 Errors: Error 16-28: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "((a)|b|c)+".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%abc%", "(a|(b)|c)+", MatchOptions.NumberedSubMatches )     // .net != node
+>> Match( "%abc%", "(a|(b)|c)+", MatchOptions.NumberedSubMatches )     // .net != node, SubMatch[1] = "b" vs null
 Errors: Error 16-28: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a|(b)|c)+".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%abc%", "(a|b|(c))+", MatchOptions.NumberedSubMatches )     // .net == node, {FullMatch:"abc", StartMatch:2, SubMatches:["c", "c"]}
 Errors: Error 16-28: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a|b|(c))+".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%abc%", "((a)|b|c){1}", MatchOptions.NumberedSubMatches )
+>> Match( "%abc%", "((a)|b|c){1}", MatchOptions.NumberedSubMatches )   // .net == node, {FullMatch:"a", StartMatch:2, SubMatches:["a", "a"]}
 Errors: Error 16-30: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "((a)|b|c){1}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%abc%", "(a|(b)|c){1,}", MatchOptions.NumberedSubMatches )   // .net != node
+>> Match( "%abc%", "(a|(b)|c){1,}", MatchOptions.NumberedSubMatches )   // .net != node, SubMatch[1] = "b" vs null
 Errors: Error 16-31: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...a|(b)|c){1,}".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%abc%", "(a|b|(c)){1,2}", MatchOptions.NumberedSubMatches )  // .net == node
 Errors: Error 16-32: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...|b|(c)){1,2}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%abc%", "((a)|b|c){2}", MatchOptions.NumberedSubMatches )   // .net != node
+>> Match( "%abc%", "((a)|b|c){2}", MatchOptions.NumberedSubMatches )   // .net != node, SubMatch[1] = "a" vs null
 Errors: Error 16-30: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "((a)|b|c){2}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%abc%", "(a|(b)|c){2,}", MatchOptions.NumberedSubMatches )  // .net != node
+>> Match( "%abc%", "(a|(b)|c){2,}", MatchOptions.NumberedSubMatches )  // .net != node, SubMatch[1] = "b" vs null
 Errors: Error 16-31: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...a|(b)|c){2,}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%abc%", "(a|b|(c)){2,3}", MatchOptions.NumberedSubMatches )  // .net == node
+>> Match( "%abc%", "(a|b|(c)){2,3}", MatchOptions.NumberedSubMatches )  // .net == node, {FullMatch:"abc", StartMatch:2, SubMatches:["c", "c"]}
 Errors: Error 16-32: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...|b|(c)){2,3}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "ab", "((a)|b)*", MatchOptions.NumberedSubMatches ) // .net != node, input text dependent
+>> Match( "ab", "((a)|b)*", MatchOptions.NumberedSubMatches ) // .net != node, SubMatch[1] = "a" vs null, input text dependent
 Errors: Error 13-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "((a)|b)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "a", "((a)|b)*", MatchOptions.NumberedSubMatches ) // .net == node, input text dependent
+>> Match( "a", "((a)|b)*", MatchOptions.NumberedSubMatches ) // .net == node, {FullMatch:"a", StartMatch:1, SubMatches:["a", "a"]}, input text dependent
 Errors: Error 12-22: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "((a)|b)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "ab", "(((?<first>a)|b))+" )  // .net != node, capture alone
+>> Match( "ab", "(((?<first>a)|b))+" )  // .net != node, first = "a" vs null, capture alone
 Errors: Error 13-33: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...irst>a)|b))+".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "aab", "(((?<first>a)a|b))+" )  // .net != node, capture not alone
+>> Match( "aab", "(((?<first>a)a|b))+" )  // .net != node, first = "a" vs null, capture not alone
 Errors: Error 14-35: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...rst>a)a|b))+".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "aaab", "((a(?<first>a)a|b))+" )  // .net != node
+>> Match( "aaab", "((a(?<first>a)a|b))+" )  // .net != node, first = "a" vs null
 Errors: Error 15-37: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...rst>a)a|b))+".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "aaab", "((a(?<first>a)a|b))*" )  // .net != node
+>> Match( "aaab", "((a(?<first>a)a|b))*" )  // .net != node, first = "a" vs null
 Errors: Error 15-37: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...rst>a)a|b))*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "aaabb", "((a(?<first>a)a|b))?" )  // .net == node
+>> Match( "aaabb", "((a(?<first>a)a|b))?" )  // .net == node, {FullMatch:"aaa", StartMatch:1, first:"a"}
 Errors: Error 16-38: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...rst>a)a|b))?".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "aaab", "((a(?<first>a)a|b))?" )  // .net == node, 1 iteration
+>> Match( "aaab", "((a(?<first>a)a|b))?" )  // .net == node, {FullMatch:"aaa", StartMatch:1, first:"a"}, 1 iteration
 Errors: Error 15-37: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...rst>a)a|b))?".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "aaa", "((a(?<first>a)a|b))?" )   // .net == node
+>> Match( "aaa", "((a(?<first>a)a|b))?" )   // .net == node, {FullMatch:"aaa", StartMatch:1, first:"a"}
 Errors: Error 14-36: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...rst>a)a|b))?".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "aaabb", "((a(?<first>a)a|b))*" )  // .net != node
+>> Match( "aaabb", "((a(?<first>a)a|b))*" )  // .net != node, first = "a" vs null
 Errors: Error 16-38: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...rst>a)a|b))*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "aaa", "((a(?<first>a)a|b))*" )  // .net == node
+>> Match( "aaa", "((a(?<first>a)a|b))*" )  // .net == node, {FullMatch:"aaa", StartMatch:1, first:"a"}
 Errors: Error 14-36: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...rst>a)a|b))*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "aaabb", "((a(?<first>a)a|b))+" )  // .net != node
+>> Match( "aaabb", "((a(?<first>a)a|b))+" )  // .net != node, first = "a" vs null
 Errors: Error 16-38: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...rst>a)a|b))+".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "aaa", "((a(?<first>a)a|b))+" )  // .net == node
+>> Match( "aaa", "((a(?<first>a)a|b))+" )  // .net == node, {FullMatch:"aaa", StartMatch:1, first:"a"}
 Errors: Error 14-36: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...rst>a)a|b))+".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // alternation with possible zero length (doesn't need to be a capture) and any quantifier 
@@ -204,16 +204,16 @@ Errors: Error 14-36: Invalid regular expression: Quantifier on a group containin
 >> Match( "%aaa%", "(a|b)*", MatchOptions.NumberedSubMatches )
 {FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
 
->> Match( "%aaa%", "(a*|b)*", MatchOptions.NumberedSubMatches )  // .net != node without block
+>> Match( "%aaa%", "(a*|b)*", MatchOptions.NumberedSubMatches )  // .net != node, submatch "" vs null
 Errors: Error 16-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a*|b)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a|b*)*", MatchOptions.NumberedSubMatches )  // .net != node without block
+>> Match( "%aaa%", "(a|b*)*", MatchOptions.NumberedSubMatches )  // .net != node, submatch "" vs null
 Errors: Error 16-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a|b*)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a?|b)*", MatchOptions.NumberedSubMatches )  // .net != node without block
+>> Match( "%aaa%", "(a?|b)*", MatchOptions.NumberedSubMatches )  // .net != node, submatch "" vs null
 Errors: Error 16-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a?|b)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a|b?)*", MatchOptions.NumberedSubMatches )  // .net != node without block
+>> Match( "%aaa%", "(a|b?)*", MatchOptions.NumberedSubMatches )  // .net != node, submatch "" vs null
 Errors: Error 16-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a|b?)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%aaa%", "(a+|b)*", MatchOptions.NumberedSubMatches ) 
@@ -228,16 +228,16 @@ Errors: Error 16-25: Invalid regular expression: Quantifier on a group containin
 >> Match( "%aaa%", "(a|bb*)*", MatchOptions.NumberedSubMatches )  
 {FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
 
->> Match( "%aaa%", "([a]*|b)*", MatchOptions.NumberedSubMatches )  // .net != node without block
+>> Match( "%aaa%", "([a]*|b)*", MatchOptions.NumberedSubMatches )  // .net != node, submatch "" vs null
 Errors: Error 16-27: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "([a]*|b)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a|[b]*)*", MatchOptions.NumberedSubMatches )  // .net != node without block
+>> Match( "%aaa%", "(a|[b]*)*", MatchOptions.NumberedSubMatches )  // .net != node, submatch "" vs null
 Errors: Error 16-27: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a|[b]*)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "((?:a)*|b)*", MatchOptions.NumberedSubMatches )  // .net != node without block
+>> Match( "%aaa%", "((?:a)*|b)*", MatchOptions.NumberedSubMatches )  // .net != node, submatch "" vs null
 Errors: Error 16-29: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "((?:a)*|b)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a|(?:b)*)*", MatchOptions.NumberedSubMatches )  // .net != node without block
+>> Match( "%aaa%", "(a|(?:b)*)*", MatchOptions.NumberedSubMatches )  // .net != node, submatch "" vs null
 Errors: Error 16-29: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a|(?:b)*)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // possible zero length capture inside any quantifier
@@ -245,13 +245,13 @@ Errors: Error 16-29: Invalid regular expression: Quantifier on a group containin
 >> Match( "%aaa%", "()", MatchOptions.NumberedSubMatches )
 {FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
 
->> Match( "%aaa%", "()*", MatchOptions.NumberedSubMatches )   // .net != node without block
+>> Match( "%aaa%", "()*", MatchOptions.NumberedSubMatches )   // .net != node, submatch "" vs null
 Errors: Error 16-21: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "()*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(^)*", MatchOptions.NumberedSubMatches )  // .net != node without block, anchors are zero length
+>> Match( "%aaa%", "(^)*", MatchOptions.NumberedSubMatches )  // .net != node, submatch "" vs null, anchors are zero length
 Errors: Error 16-22: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(^)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "($)*", MatchOptions.NumberedSubMatches )  // .net == node, anchors are zero length
+>> Match( "%aaa%", "($)*", MatchOptions.NumberedSubMatches )  // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[Blank()]}, anchors are zero length
 Errors: Error 16-22: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "($)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%aaa%", "(a*)", MatchOptions.NumberedSubMatches )
@@ -263,16 +263,16 @@ Errors: Error 16-22: Invalid regular expression: Quantifier on a group containin
 >> Match( "%aaa%", "((?:a)*)", MatchOptions.NumberedSubMatches )
 {FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
 
->> Match( "%aaa%", "(a*)*", MatchOptions.NumberedSubMatches )  // .net != node without block
+>> Match( "%aaa%", "(a*)*", MatchOptions.NumberedSubMatches )  // .net != node, submatch "" vs null
 Errors: Error 16-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a*)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "([a]*)*", MatchOptions.NumberedSubMatches )  // .net != node
+>> Match( "%aaa%", "([a]*)*", MatchOptions.NumberedSubMatches )  // .net != node, submatch "" vs null
 Errors: Error 16-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "([a]*)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "((?:a)*)*", MatchOptions.NumberedSubMatches )  // .net != node
+>> Match( "%aaa%", "((?:a)*)*", MatchOptions.NumberedSubMatches )  // .net != node, submatch "" vs null
 Errors: Error 16-27: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "((?:a)*)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a?)*", MatchOptions.NumberedSubMatches )  // .net != node without block
+>> Match( "%aaa%", "(a?)*", MatchOptions.NumberedSubMatches )  // .net != node, submatch "" vs null
 Errors: Error 16-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a?)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%aaa%", "(a+)*", MatchOptions.NumberedSubMatches )
@@ -287,10 +287,10 @@ Errors: Error 16-23: Invalid regular expression: Quantifier on a group containin
 >> Match( "%aaa%", "(a{1,2})*", MatchOptions.NumberedSubMatches )
 {FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
 
->> Match( "%aaa%", "(a*)+", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a*)+", MatchOptions.NumberedSubMatches ) // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[""]}
 Errors: Error 16-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a*)+".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a?)+", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a?)+", MatchOptions.NumberedSubMatches ) // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[""]}
 Errors: Error 16-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a?)+".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%aaa%", "(aa*)+", MatchOptions.NumberedSubMatches )
@@ -317,13 +317,13 @@ Errors: Error 16-23: Invalid regular expression: Quantifier on a group containin
 >> Match( "%aaa%", "(a{1,2})+", MatchOptions.NumberedSubMatches )
 {FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"a"})}
 
->> Match( "%aaa%", "(a{0})+", MatchOptions.NumberedSubMatches )  
+>> Match( "%aaa%", "(a{0})+", MatchOptions.NumberedSubMatches )   // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[""]}
 Errors: Error 16-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0})+".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a{0,})+", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a{0,})+", MatchOptions.NumberedSubMatches )  // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[""]}
 Errors: Error 16-26: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0,})+".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a{0,2})+", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a{0,2})+", MatchOptions.NumberedSubMatches )  // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[""]}
 Errors: Error 16-27: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0,2})+".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%aaa%", "(aa{0})+", MatchOptions.NumberedSubMatches )
@@ -344,10 +344,10 @@ Errors: Error 16-27: Invalid regular expression: Quantifier on a group containin
 >> Match( "%aaa%", "(a{0,2}a)+", MatchOptions.NumberedSubMatches )
 {FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"aaa"})}
 
->> Match( "%aaa%", "(a*)?", MatchOptions.NumberedSubMatches )  // .net != node without block
+>> Match( "%aaa%", "(a*)?", MatchOptions.NumberedSubMatches )  // .net != node, submatch "" vs null
 Errors: Error 16-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a*)?".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a?)?", MatchOptions.NumberedSubMatches )  // .net != node without block
+>> Match( "%aaa%", "(a?)?", MatchOptions.NumberedSubMatches )  // .net != node, submatch "" vs null
 Errors: Error 16-23: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a?)?".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%aaa%", "(a+)?", MatchOptions.NumberedSubMatches )
@@ -362,19 +362,19 @@ Errors: Error 16-23: Invalid regular expression: Quantifier on a group containin
 >> Match( "%aaa%", "(a{1,2})?", MatchOptions.NumberedSubMatches )
 {FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
 
->> Match( "%aaa%", "(a{0})?", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a{0})?", MatchOptions.NumberedSubMatches )  // .net != node, submatch "" vs null
 Errors: Error 16-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0})?".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a{0,})?", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a{0,})?", MatchOptions.NumberedSubMatches )  // .net != node, submatch "" vs null
 Errors: Error 16-26: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0,})?".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a{0,2})?", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a{0,2})?", MatchOptions.NumberedSubMatches )  // .net != node, submatch "" vs null
 Errors: Error 16-27: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0,2})?".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a*){1}", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a*){1}", MatchOptions.NumberedSubMatches )  // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[""]}
 Errors: Error 16-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a*){1}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a?){1}", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a?){1}", MatchOptions.NumberedSubMatches )   // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[""]}
 Errors: Error 16-25: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a?){1}".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%aaa%", "(a+){1}", MatchOptions.NumberedSubMatches )
@@ -389,25 +389,25 @@ Errors: Error 16-25: Invalid regular expression: Quantifier on a group containin
 >> Match( "%aaa%", "(a{1,2}){1}", MatchOptions.NumberedSubMatches )
 {FullMatch:"aa",StartMatch:2,SubMatches:Table({Value:"aa"})}
 
->> Match( "%aaa%", "(a{0}){1}", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a{0}){1}", MatchOptions.NumberedSubMatches )   // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[""]}
 Errors: Error 16-27: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0}){1}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a{0,}){1}", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a{0,}){1}", MatchOptions.NumberedSubMatches )   // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[""]}
 Errors: Error 16-28: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0,}){1}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a{0,2}){1}", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a{0,2}){1}", MatchOptions.NumberedSubMatches )   // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[""]}
 Errors: Error 16-29: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0,2}){1}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a*){1,1}", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a*){1,1}", MatchOptions.NumberedSubMatches )   // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[""]}
 Errors: Error 16-27: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a*){1,1}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a+){1,1}", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a+){1,1}", MatchOptions.NumberedSubMatches )  
 {FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"aaa"})}
 
->> Match( "%aaa%", "(a*){1,}", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a*){1,}", MatchOptions.NumberedSubMatches )  // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[""]}
 Errors: Error 16-26: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a*){1,}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a?){1,}", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a?){1,}", MatchOptions.NumberedSubMatches )  // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[""]}
 Errors: Error 16-26: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a?){1,}".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%aaa%", "(a+){1,}", MatchOptions.NumberedSubMatches )
@@ -422,19 +422,19 @@ Errors: Error 16-26: Invalid regular expression: Quantifier on a group containin
 >> Match( "%aaa%", "(a{1,2}){1,}", MatchOptions.NumberedSubMatches )
 {FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"a"})}
 
->> Match( "%aaa%", "(a{0}){1,}", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a{0}){1,}", MatchOptions.NumberedSubMatches )  // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[""]}
 Errors: Error 16-28: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0}){1,}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a{0,}){1,}", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a{0,}){1,}", MatchOptions.NumberedSubMatches )  // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[""]}
 Errors: Error 16-29: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0,}){1,}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a{0,2}){1,}", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a{0,2}){1,}", MatchOptions.NumberedSubMatches )  // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[""]}
 Errors: Error 16-30: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a{0,2}){1,}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a*){1,2}", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a*){1,2}", MatchOptions.NumberedSubMatches )   // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[""]}
 Errors: Error 16-27: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a*){1,2}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(a?){1,2}", MatchOptions.NumberedSubMatches )
+>> Match( "%aaa%", "(a?){1,2}", MatchOptions.NumberedSubMatches )   // .net == node, {FullMatch:"", StartMatch:1, SubMatches:[""]}
 Errors: Error 16-27: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a?){1,2}".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%aaa%", "(a+){1,2}", MatchOptions.NumberedSubMatches )

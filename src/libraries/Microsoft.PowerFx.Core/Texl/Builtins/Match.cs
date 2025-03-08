@@ -31,8 +31,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // IsMatch(text:s, regular_expression:s, [options:s])
     internal class IsMatchFunction : BaseMatchFunction
     {
-        public IsMatchFunction()
-            : base("IsMatch", TexlStrings.AboutIsMatch, DType.Boolean, null)
+        public IsMatchFunction(RegexTypeCache regexTypeCache)
+            : base("IsMatch", TexlStrings.AboutIsMatch, DType.Boolean, regexTypeCache)
         {
         }
 
@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             if (regexTypeCache != null)
             {
-                _cachePrefix = returnType.IsTable ? "tbl_" : "rec_";
+                _cachePrefix = returnType == DType.Boolean ? "bol_" : (returnType.IsTable ? "tbl_" : "rec_");
                 _regexTypeCache = regexTypeCache.Cache;
                 _regexCacheSize = regexTypeCache.CacheSize;
             }
@@ -129,7 +129,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             bool fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsRecord || returnType.IsTable || returnType == DType.Boolean);
 
-            string regularExpressionOptions = string.Empty;
             var regExNode = args[1];
 
             if ((argTypes[1].Kind != DKind.String && argTypes[1].Kind != DKind.OptionSetValue) || !BinderUtils.TryGetConstantValue(context, regExNode, out var regularExpression))
@@ -138,11 +137,29 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            if (context.Features.PowerFxV1CompatibilityRules && args.Length == 3 &&
-                ((argTypes[2].Kind != DKind.String && argTypes[2].Kind != DKind.OptionSetValue) || !BinderUtils.TryGetConstantValue(context, args[2], out regularExpressionOptions)))
+            string regularExpressionOptions = string.Empty;
+
+            if (args.Length == 3)
             {
-                errors.EnsureError(args[2], TexlStrings.ErrVariableRegExOptions);
-                return false;
+                var goodTypeAndConstant = false;
+
+                if (argTypes[2].Kind == DKind.String || argTypes[2].Kind == DKind.OptionSetValue)
+                {
+                    goodTypeAndConstant = BinderUtils.TryGetConstantValue(context, args[2], out regularExpressionOptions);
+                }
+
+                if (context.Features.PowerFxV1CompatibilityRules && !goodTypeAndConstant)
+                {
+                    errors.EnsureError(args[2], TexlStrings.ErrVariableRegExOptions);
+                    return false;
+                }
+                else if (!context.Features.PowerFxV1CompatibilityRules && goodTypeAndConstant && (regularExpressionOptions.Contains(MatchOptionCodes.DotAll) || regularExpressionOptions.Contains(MatchOptionCodes.FreeSpacing)))
+                {
+                    // some options are not available pre-V1, we leave the enum value in place and compile time error
+                    // we can't detect this if not a constant string, which is supported by pre-V1 but is very uncommon
+                    errors.EnsureError(args[2], TexlStrings.ErrInvalidRegExV1Options, args[2]);
+                    return false;
+                }
             }
 
             if (!context.Features.PowerFxV1CompatibilityRules)
@@ -153,20 +170,38 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             string alteredOptions = regularExpressionOptions;
 
-            return fValid &&
-                    (!context.Features.PowerFxV1CompatibilityRules || IsSupportedRegularExpression(regExNode, regularExpression, regularExpressionOptions, out alteredOptions, errors)) &&
-                    (returnType == DType.Boolean || TryCreateReturnType(regExNode, regularExpression, alteredOptions, errors, ref returnType));
+            if (!fValid)
+            {
+                return false;
+            }
+
+            // Cache entry can vary on:
+            // - Table (MatchAll) vs. Record (Match)
+            // - Regular expression pattern
+            // - NumberedSubMatches vs. Not
+            // if another MatchOption is added which impacts the return type, this will need to be updated
+            string regexCacheKey = this._cachePrefix + (alteredOptions.Contains(MatchOptionCodes.NumberedSubMatches) ? "N_" : "-_") + regularExpression;
+
+            // if the key is found in the cache, then the regular expression must have previously passed IsSupportedRegularExpression (or we are pre V1 and we don't check)
+            if (RegexCacheTypeLookup(regExNode, regexCacheKey, errors, ref returnType))
+            {
+                return true;
+            }
+
+            // cache miss, validate the regular expression, create the return type, and cache
+            if (!context.Features.PowerFxV1CompatibilityRules || IsSupportedRegularExpression(regExNode, regularExpression, regularExpressionOptions, out alteredOptions, errors))
+            {
+                return RegexCacheTypeCreate(regExNode, regexCacheKey, regularExpression, alteredOptions, errors, ref returnType);
+            }
+
+            return false;
         }
 
-        // Creates a typed result: [Match:s, Captures:*[Value:s], NamedCaptures:r[<namedCaptures>:s]]
-        private bool TryCreateReturnType(TexlNode regExNode, string regexPattern, string alteredOptions, IErrorContainer errors, ref DType returnType)
+        private bool RegexCacheTypeLookup(TexlNode regExNode, string regexCacheKey, IErrorContainer errors, ref DType returnType)
         {
-            Contracts.AssertValue(regexPattern);
-            string prefixedRegexPattern = this._cachePrefix + regexPattern;
-
-            if (_regexTypeCache != null && _regexTypeCache.ContainsKey(prefixedRegexPattern))
+            if (_regexTypeCache != null && _regexTypeCache.ContainsKey(regexCacheKey))
             {
-                var cachedType = _regexTypeCache[prefixedRegexPattern];
+                var cachedType = _regexTypeCache[regexCacheKey];
                 if (cachedType != null)
                 {
                     returnType = cachedType.Item1;
@@ -180,6 +215,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
+            return false;
+        }
+
+        // Creates a typed result: [Match:s, Captures:*[Value:s], NamedCaptures:r[<namedCaptures>:s]]
+        private bool RegexCacheTypeCreate(TexlNode regExNode, string regexCacheKey, string regexPattern, string alteredOptions, IErrorContainer errors, ref DType returnType)
+        {
             if (_regexTypeCache != null && _regexTypeCache.Count >= _regexCacheSize)
             {
                 // To preserve memory during authoring, we clear the cache if it gets
@@ -199,59 +240,70 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     regexPattern = regexPattern.Replace('\r', '\n');
                 }
 
+                // always .NET compile the regular expression, even if we don't need the return type (boolean), to ensure it is legal in .NET
                 var regex = new Regex(regexPattern, regexDotNetOptions);
 
-                List<TypedName> propertyNames = new List<TypedName>();
-                bool fullMatchHidden = false, subMatchesHidden = false, startMatchHidden = false;
-
-                foreach (var captureName in regex.GetGroupNames())
+                if (returnType == DType.Boolean)
                 {
-                    if (int.TryParse(captureName, out _))
+                    if (_regexTypeCache != null)
                     {
-                        // Unnamed captures are returned as integers, ignoring them
-                        continue;
+                        _regexTypeCache[regexCacheKey] = Tuple.Create((DType)null, false, false, false);
+                    }
+                }
+                else
+                { 
+                    List<TypedName> propertyNames = new List<TypedName>();
+                    bool fullMatchHidden = false, subMatchesHidden = false, startMatchHidden = false;
+
+                    foreach (var captureName in regex.GetGroupNames())
+                    {
+                        if (int.TryParse(captureName, out _))
+                        {
+                            // Unnamed captures are returned as integers, ignoring them
+                            continue;
+                        }
+
+                        if (captureName == ColumnName_FullMatch.Value)
+                        {
+                            fullMatchHidden = true;
+                        }
+                        else if (captureName == ColumnName_SubMatches.Value)
+                        {
+                            subMatchesHidden = true;
+                        }
+                        else if (captureName == ColumnName_StartMatch.Value)
+                        {
+                            startMatchHidden = true;
+                        }
+
+                        propertyNames.Add(new TypedName(DType.String, DName.MakeValid(captureName, out _)));
                     }
 
-                    if (captureName == ColumnName_FullMatch.Value)
+                    if (!fullMatchHidden)
                     {
-                        fullMatchHidden = true;
-                    }
-                    else if (captureName == ColumnName_SubMatches.Value)
-                    {
-                        subMatchesHidden = true;
-                    }
-                    else if (captureName == ColumnName_StartMatch.Value)
-                    {
-                        startMatchHidden = true;
+                        propertyNames.Add(new TypedName(DType.String, ColumnName_FullMatch));
                     }
 
-                    propertyNames.Add(new TypedName(DType.String, DName.MakeValid(captureName, out _)));
-                }
+                    if (!subMatchesHidden && alteredOptions.Contains(MatchOptionCodes.NumberedSubMatches))
+                    {
+                        propertyNames.Add(new TypedName(DType.CreateTable(new TypedName(DType.String, ColumnName_Value)), ColumnName_SubMatches));
+                    }
 
-                if (!fullMatchHidden)
-                {
-                    propertyNames.Add(new TypedName(DType.String, ColumnName_FullMatch));
-                }
+                    if (!startMatchHidden)
+                    {
+                        propertyNames.Add(new TypedName(DType.Number, ColumnName_StartMatch));
+                    }
 
-                if (!subMatchesHidden && alteredOptions.Contains(MatchOptionCodes.NumberedSubMatches))
-                {
-                    propertyNames.Add(new TypedName(DType.CreateTable(new TypedName(DType.String, ColumnName_Value)), ColumnName_SubMatches));
-                }
+                    returnType = returnType.IsRecord
+                        ? DType.CreateRecord(propertyNames)
+                        : DType.CreateTable(propertyNames);
 
-                if (!startMatchHidden)
-                {
-                    propertyNames.Add(new TypedName(DType.Number, ColumnName_StartMatch));
-                }
+                    AddWarnings(regExNode, errors, hidesFullMatch: fullMatchHidden, hidesSubMatches: subMatchesHidden, hidesStartMatch: startMatchHidden);
 
-                returnType = returnType.IsRecord
-                    ? DType.CreateRecord(propertyNames)
-                    : DType.CreateTable(propertyNames);
-
-                AddWarnings(regExNode, errors, hidesFullMatch: fullMatchHidden, hidesSubMatches: subMatchesHidden, hidesStartMatch: startMatchHidden);
-
-                if (_regexTypeCache != null)
-                {
-                    _regexTypeCache[prefixedRegexPattern] = Tuple.Create(returnType, fullMatchHidden, subMatchesHidden, startMatchHidden);
+                    if (_regexTypeCache != null)
+                    {
+                        _regexTypeCache[regexCacheKey] = Tuple.Create(returnType, fullMatchHidden, subMatchesHidden, startMatchHidden);
+                    }
                 }
 
                 return true;
@@ -261,7 +313,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegEx);
                 if (_regexTypeCache != null)
                 {
-                    _regexTypeCache[prefixedRegexPattern] = null; // Cache to avoid evaluating again
+                    _regexTypeCache[regexCacheKey] = null; // Cache to avoid evaluating again
                 }
 
                 return false;
