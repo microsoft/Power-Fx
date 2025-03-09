@@ -71,6 +71,7 @@ true
 "Iabc"
 
 // VALUE, DECIMAL, FLOAT
+// Comma decimal seperator
 
 >> Value( "123,456" )
 123.456
@@ -153,10 +154,10 @@ Table({Value:"a"},{Value:"A"},{Value:"h"},{Value:"H"},{Value:"ı"},{Value:"I"},{
 >> SortByColumns( [ "Z", "İ", "z", "I", "J", "j", "ı", "a", "h", "i", "A", "H"], "Value" )
 Table({Value:"a"},{Value:"A"},{Value:"h"},{Value:"H"},{Value:"ı"},{Value:"I"},{Value:"i"},{Value:"İ"},{Value:"j"},{Value:"J"},{Value:"z"},{Value:"Z"})
 
->> Concat( Sort( Split( "j J k K l L m M n N o O p P r R s S t T u U v V y Y z Z Ç ç Ş ş Ü ü Ö ö İ ı Ğ ğ a A b B c C d D e E f F g G h H i I", " " ), Value ), Value, " " )
+>> Concat( Sort( Split( "t R Ç Ü n P U h f J M N u ı o v y g ö V L Ö d O Z r ğ E T c D ç k ü Ğ s F S j G i I C A K İ e a l H Y Ş ş B p b z m", " " ), Value ), Value, " " )
 "a A b B c C ç Ç d D e E f F g G ğ Ğ h H ı I i İ j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
 
->> Concat( SortByColumns( Split( "d D e E f F g G h H i I j J k K l L m M n N o O p P r R s S t T u U v V y Y z Z Ç ç Ş ş Ü ü Ö ö İ ı Ğ ğ a A b B c C", " " ), "Value" ), Value, " " )
+>> Concat( SortByColumns( Split( "P Y h K i I y Ş L ı a J H s D U Z v C T n E ş ö ğ N d u m O r l z c Ö S g f p e M R F İ b V ü Ç A B t Ğ ç G j o k Ü", " " ), "Value" ), Value, " " )
 "a A b B c C ç Ç d D e E f F g G ğ Ğ h H ı I i İ j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
 
 // REGULAR EXPRESSIONS

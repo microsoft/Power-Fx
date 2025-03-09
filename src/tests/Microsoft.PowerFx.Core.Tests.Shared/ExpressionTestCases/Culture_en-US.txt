@@ -117,36 +117,45 @@ true
 true
 
 // SORT
-// Relative order of i, I, ı, İ are different between en-US and tr-TR
 
->> Sort( [ "Z", "İ", "z", "I", "J", "j", "ı", "a", "h", "i", "A", "H"], Value )
-Table({Value:"a"},{Value:"A"},{Value:"h"},{Value:"H"},{Value:"i"},{Value:"I"},{Value:"İ"},{Value:"ı"},{Value:"j"},{Value:"J"},{Value:"z"},{Value:"Z"})
+>> Concat( Sort( Split( "U m F M Z A j K P N k v C D T R V B u p a t c l G o f O J y I d i S b H e s z g Y h E r L n", " " ), Value ), Value, " " )
+"a A b B c C d D e E f F g G h H i I j J k K l L m M n N o O p P r R s S t T u U v V y Y z Z"
 
->> SortByColumns( [ "Z", "İ", "z", "I", "J", "j", "ı", "a", "h", "i", "A", "H"], "Value" )
-Table({Value:"a"},{Value:"A"},{Value:"h"},{Value:"H"},{Value:"i"},{Value:"I"},{Value:"İ"},{Value:"ı"},{Value:"j"},{Value:"J"},{Value:"z"},{Value:"Z"})
+>> Concat( SortByColumns( Split( "M v E H h t Z n V l Y O N r C z D K R G U j o I b y p k a e S d A F g s B L m c T P f u J i", " " ), "Value" ), Value, " " )
+"a A b B c C d D e E f F g G h H i I j J k K l L m M n N o O p P r R s S t T u U v V y Y z Z"
 
->> Concat( Sort( Split( "j J k K l L m M n N o O p P r R s S t T u U v V y Y z Z a A b B c C d D e E f F g G h H i I", " " ), Value ), Value, " " )
-"a A b B c C ç Ç d D e E f F g G ğ Ğ h H i I İ ı j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
+// tr-TR alphabet, should not necessarily match
 
->> Concat( SortByColumns( Split( "d D e E f F g G h H i I j J k K l L m M n N o O p P r R s S t T u U v V y Y z Z a A b B c C", " " ), "Value" ), Value, " " )
-"a A b B c C ç Ç d D e E f F g G ğ Ğ h H i I İ ı j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
+>> "         " & Concat( Sort( Split( "j J k K l L m M n N o O p P r R s S t T u U v V y Y z Z Ç ç Ş ş Ü ü Ö ö İ ı Ğ ğ a A b B c C d D e E f F g G h H i I", " " ), Value ), Value, " " )
+"         a A b B c C ç Ç d D e E f F g G ğ Ğ h H i I İ ı j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
+// tr-TR: a A b B c C ç Ç d D e E f F g G ğ Ğ h H ı I i İ j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z
 
-// is-IS alphabet, should not match the results with is-IS set
->> Concat( Sort( Split( "K L M N A B D E Ý F G Ö Ú Ó H I J O P R S T U V X Y Z Þ Æ Í É Ð Á s ý æ a á b í ó d ð e é f g h j k l m n o p r t u ú v x i y z þ ö", " " ), Value ), Value, " " )
-"A Á B D Ð E É F G H I Í J K L M N O Ó P R S T U Ú V X Y Ý Z Þ Æ Ö"
+>> "         " & Concat( SortByColumns( Split( "d D e E f F g G h H i I j J k K l L m M n N o O p P r R s S t T u U v V y Y z Z Ç ç Ş ş Ü ü Ö ö İ ı Ğ ğ a A b B c C", " " ), "Value" ), Value, " " )
+"         a A b B c C ç Ç d D e E f F g G ğ Ğ h H i I İ ı j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
+// tr-TR: a A b B c C ç Ç d D e E f F g G ğ Ğ h H ı I i İ j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z
 
->> Concat( SortByColumns( Split( "K L M N A B D E Ý F G Ö Ú Ó H I J O P R S T U V X Y Z Þ Æ Í É Ð Á s ý æ a á b í ó d ð e é f g h j k l m n o p r t u ú v x i y z þ ö", " " ), "Value" ), Value, " " )
-"A Á B D Ð E É F G H I Í J K L M N O Ó P R S T U Ú V X Y Ý Z Þ Æ Ö"
+// da-DK alphabet, should not necessarily match
 
-// tr-TR alphabet, should not match the results with tr-TR set
->> Concat( Sort( Split( "j J k K l L m M n N o O p P r R s S t T u U v V y Y z Z Ç ç Ş ş Ü ü Ö ö İ ı Ğ ğ a A b B c C d D e E f F g G h H i I", " " ), Value ), Value, " " )
-"a A b B c C ç Ç d D e E f F g G ğ Ğ h H ı I i İ j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
+>> "         " & Concat( Sort( Split( "n F X W o i j x B m I R G S h Ø L p K t A k l y J æ u v s T a ø N D z Æ e O U E H r Z å g b q Å P d f C M c Y w V Q", " " ), Value ), Value, " " )
+"         a A å Å æ Æ b B c C d D e E f F g G h H i I j J k K l L m M n N o O ø Ø p P q Q r R s S t T u U v V w W x X y Y z Z"
+// da-DK: A a B b C c D d E e F f G g H h I i J j K k L l M m N n O o P p Q q R r S s T t U u V v W w X x Y y Z z Æ æ Ø ø Å å
 
->> Concat( SortByColumns( Split( "d D e E f F g G h H i I j J k K l L m M n N o O p P r R s S t T u U v V y Y z Z Ç ç Ş ş Ü ü Ö ö İ ı Ğ ğ a A b B c C", " " ), "Value" ), Value, " " )
-"a A b B c C ç Ç d D e E f F g G ğ Ğ h H ı I i İ j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
+>> "         " & Concat( SortByColumns( Split( "U c q s X Å P L i I u d J å M E l k W v j Æ n a B K C D e ø æ f O y m Ø r Q R A x h T H N Z F V w o S g t p G Y b z", " " ), "Value" ), Value, " " )
+"         a A å Å æ Æ b B c C d D e E f F g G h H i I j J k K l L m M n N o O ø Ø p P q Q r R s S t T u U v V w W x X y Y z Z"
+// da-DK: A a B b C c D d E e F f G g H h I i J j K k L l M m N n O o P p Q q R r S s T t U u V v W w X x Y y Z z Æ æ Ø ø Å å
+
+// sv-SE alphabet, should not necessarily match
+
+>> "         " & Concat( Sort( Split( "H C å n N P X c j F Q O r A D s L ä K t b ö g k Ö z m l x U e y w S Å f p I Y W Z J B o u d G v E T i R Ä V a q M h", " " ), Value ), Value, " " )
+"         a A å Å ä Ä b B c C d D e E f F g G h H i I j J k K l L m M n N o O ö Ö p P q Q r R s S t T u U v V w W x X y Y z Z"
+// sv-SE: a A b B c C d D e E f F g G h H i I j J k K l L m M n N o O p P q Q r R s S t T u U v V w W x X y Y z Z å Å ä Ä ö Ö
+
+>> "         " & Concat( SortByColumns( Split( "B I Ö p M Y h a A X V w z J Z t l k x G Ä e f v y T W E i Å R N Q K n C u F b H L q c r d m g o S j O P å D U ö s ä", " " ), "Value" ), Value, " " )
+"         a A å Å ä Ä b B c C d D e E f F g G h H i I j J k K l L m M n N o O ö Ö p P q Q r R s S t T u U v V w W x X y Y z Z"
+// sv-SE: a A b B c C d D e E f F g G h H i I j J k K l L m M n N o O p P q Q r R s S t T u U v V w W x X y Y z Z å Å ä Ä ö Ö
 
 // REGULAR EXPRESSIONS
-// Always uses invariant even though tr-TR is set, subject of https://github.com/microsoft/Power-Fx/issues/2538
+// C# invariant culture is always used, even thgouth tr-TR is set.  This is an industry standard for regular expressions, somewhat to prevent differences matching system strings (such as file name parsing).
 
 // Results when using C#                                  // Invariant   tr-TR    en-US
 
