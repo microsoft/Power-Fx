@@ -1,4 +1,4 @@
-﻿#SETUP: RegEx,CultureInfo("tr-TR"),PowerFxV1CompatibilityRules,ConsistentOneColumnTableResult
+﻿#SETUP: RegEx,CultureInfo("tr-TR"),PowerFxV1CompatibilityRules,ConsistentOneColumnTableResult,SupportColumnNamesAsIdentifiers
 
 // Four types of letter I
 //        Dotted     Dotless
@@ -160,7 +160,7 @@ Table({Value:"a"},{Value:"A"},{Value:"h"},{Value:"H"},{Value:"ı"},{Value:"I"},{
 "a A b B c C ç Ç d D e E f F g G ğ Ğ h H ı I i İ j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
 
 // REGULAR EXPRESSIONS
-// Always uses invariant even though tr-TR is set, subject of https://github.com/microsoft/Power-Fx/issues/2538
+// Always uses invariant in all locales, even in en-US and tr-TR (industry standard)
 
 // Results when using C#                                  // Invariant   tr-TR    en-US
 
@@ -200,8 +200,8 @@ false
 >> IsMatch( "İ", "ı", MatchOptions.IgnoreCase )           // false       false    false
 false
 
->> Match( "hiIıİİıIhi", "\u0130+" )
-{FullMatch:"İİ",StartMatch:5,SubMatches:Table()}
+>> ShowColumns( Match( "hiIıİİıIhi", "\u0130+" ), FullMatch, StartMatch )
+{FullMatch:"İİ",StartMatch:5}
 
 >> IsMatch( "Sıgh", "\u0131", MatchOptions.Contains )
 true

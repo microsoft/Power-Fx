@@ -1,13 +1,7 @@
-﻿#SETUP: RegEx,CultureInfo("en-US"),PowerFxV1CompatibilityRules,ConsistentOneColumnTableResult,SupportColumnNamesAsIdentifiers
-
-// Compared against tr-TR here, as that is one of the harder languages to get right. This should NOT be the case in en-US:
-//     Four types of letter I
-//            Dotted     Dotless
-//     Upper  İ U+0130   I U+0049
-//     Lower  i U+0069   ı U+0131
+﻿#SETUP: RegEx,CultureInfo("is-IS"),PowerFxV1CompatibilityRules,ConsistentOneColumnTableResult,SupportColumnNamesAsIdentifiers
 
 >> Language()
-"en-US"
+"is-IS"
 
 >> "İ" = UniChar( Hex2Dec( "0130") )
 true
@@ -125,28 +119,14 @@ Table({Value:"a"},{Value:"A"},{Value:"h"},{Value:"H"},{Value:"i"},{Value:"I"},{V
 >> SortByColumns( [ "Z", "İ", "z", "I", "J", "j", "ı", "a", "h", "i", "A", "H"], "Value" )
 Table({Value:"a"},{Value:"A"},{Value:"h"},{Value:"H"},{Value:"i"},{Value:"I"},{Value:"İ"},{Value:"ı"},{Value:"j"},{Value:"J"},{Value:"z"},{Value:"Z"})
 
->> Concat( Sort( Split( "j J k K l L m M n N o O p P r R s S t T u U v V y Y z Z a A b B c C d D e E f F g G h H i I", " " ), Value ), Value, " " )
-"a A b B c C ç Ç d D e E f F g G ğ Ğ h H i I İ ı j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
-
->> Concat( SortByColumns( Split( "d D e E f F g G h H i I j J k K l L m M n N o O p P r R s S t T u U v V y Y z Z a A b B c C", " " ), "Value" ), Value, " " )
-"a A b B c C ç Ç d D e E f F g G ğ Ğ h H i I İ ı j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
-
-// is-IS alphabet, should not match the results with is-IS set
->> Concat( Sort( Split( "K L M N A B D E Ý F G Ö Ú Ó H I J O P R S T U V X Y Z Þ Æ Í É Ð Á s ý æ a á b í ó d ð e é f g h j k l m n o p r t u ú v x i y z þ ö", " " ), Value ), Value, " " )
-"A Á B D Ð E É F G H I Í J K L M N O Ó P R S T U Ú V X Y Ý Z Þ Æ Ö"
-
->> Concat( SortByColumns( Split( "K L M N A B D E Ý F G Ö Ú Ó H I J O P R S T U V X Y Z Þ Æ Í É Ð Á s ý æ a á b í ó d ð e é f g h j k l m n o p r t u ú v x i y z þ ö", " " ), "Value" ), Value, " " )
-"A Á B D Ð E É F G H I Í J K L M N O Ó P R S T U Ú V X Y Ý Z Þ Æ Ö"
-
-// tr-TR alphabet, should not match the results with tr-TR set
 >> Concat( Sort( Split( "j J k K l L m M n N o O p P r R s S t T u U v V y Y z Z Ç ç Ş ş Ü ü Ö ö İ ı Ğ ğ a A b B c C d D e E f F g G h H i I", " " ), Value ), Value, " " )
-"a A b B c C ç Ç d D e E f F g G ğ Ğ h H ı I i İ j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
+"a A b B c C ç Ç d D e E f F g G ğ Ğ h H i I İ ı j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
 
 >> Concat( SortByColumns( Split( "d D e E f F g G h H i I j J k K l L m M n N o O p P r R s S t T u U v V y Y z Z Ç ç Ş ş Ü ü Ö ö İ ı Ğ ğ a A b B c C", " " ), "Value" ), Value, " " )
-"a A b B c C ç Ç d D e E f F g G ğ Ğ h H ı I i İ j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
+"a A b B c C ç Ç d D e E f F g G ğ Ğ h H i I İ ı j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
 
 // REGULAR EXPRESSIONS
-// Always uses invariant even though tr-TR is set, subject of https://github.com/microsoft/Power-Fx/issues/2538
+// Always uses invariant in all locales, even in en-US and tr-TR (industry standard)
 
 // Results when using C#                                  // Invariant   tr-TR    en-US
 

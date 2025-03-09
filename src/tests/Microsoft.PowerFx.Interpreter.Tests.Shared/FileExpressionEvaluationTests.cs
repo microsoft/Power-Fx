@@ -160,7 +160,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RunOne()
         {
-            var path = @"D:\repos\osp1\src\tests\Microsoft.PowerFx.Core.Tests\ExpressionTestCases\StronglyTypedEnum_TestEnums_PreV1.txt";
+            var path = @"D:\repos\culture-tr\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\Culture_en-US.txt";
             var line = 0;
 
             var runner = new InterpreterRunner();
