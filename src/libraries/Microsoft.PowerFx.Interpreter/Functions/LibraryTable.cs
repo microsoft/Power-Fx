@@ -1298,10 +1298,9 @@ namespace Microsoft.PowerFx.Functions
 
                 var n1 = a.sortValue as TPFxPrimitive;
                 var n2 = b.sortValue as TPFxPrimitive;
-                CultureInfo culture;
-                if (n1.Value is string n1s && n2.Value is string n2s && (culture = runner.GetService<CultureInfo>()) != null)
+                if (n1.Value is string n1s && n2.Value is string n2s && runner.CultureInfo != null)
                 {
-                    return culture.CompareInfo.Compare(n1s, n2s) * compareToResultModifier;
+                    return runner.CultureInfo.CompareInfo.Compare(n1s, n2s) * compareToResultModifier;
                 }
                 else
                 {
