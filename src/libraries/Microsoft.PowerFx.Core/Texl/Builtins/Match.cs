@@ -92,6 +92,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public const string Complete = "^c$";                     // invented by us, with the ^ and $ around
     }
 
+    internal class MatchNewlines
+    {
+        public const string EscapeChars = @"\n\x0b\f\r\x85\u2028\u2029";
+    }
+
     internal class BaseMatchFunction : BuiltinFunction
     {
         private readonly ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>> _regexTypeCache;

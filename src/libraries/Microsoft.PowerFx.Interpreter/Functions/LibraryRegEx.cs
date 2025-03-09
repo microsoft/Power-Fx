@@ -238,8 +238,8 @@ namespace Microsoft.PowerFx.Functions
                 bool multiline = options.Contains(MatchOptionChar.Multiline);
                 bool ignoreCase = options.Contains(MatchOptionChar.IgnoreCase);
                 bool dotAll = options.Contains(MatchOptionChar.DotAll);
-                bool matchStart = options.Contains(MatchOptionChar.BeginsWith);
-                bool matchEnd = options.Contains(MatchOptionChar.EndsWith);
+                bool matchStart = options.Contains(MatchOptionChar.Begins);
+                bool matchEnd = options.Contains(MatchOptionChar.Ends);
                 bool numberedSubMatches = options.Contains(MatchOptionChar.NumberedSubMatches);
 
                 // Can't add options ^ and $ too early as there may be freespacing comments, centralize the logic here and call subfunctions
