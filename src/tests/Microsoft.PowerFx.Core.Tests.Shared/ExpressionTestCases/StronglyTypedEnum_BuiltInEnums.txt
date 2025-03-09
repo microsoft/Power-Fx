@@ -49,7 +49,7 @@
 Table({Value:1},{Value:2},{Value:3})
 
 >> Match( "info@contoso.com", Match.Email )
-{FullMatch:"info@contoso.com",StartMatch:1,SubMatches:Table()}
+{FullMatch:"info@contoso.com",StartMatch:1}
 
 >> JSON( [1,2,3], JSONFormat.FlattenValueTables )
 "[1,2,3]"
@@ -418,22 +418,28 @@ Errors: Error 0-7: The function 'Boolean' has some invalid arguments.
 // Match (and friends) allows coercion from the backing kind for the regular expression
 
 >> Match( "a3d4", Match.Digit )
-{FullMatch:"3",StartMatch:2,SubMatches:Table()}
+{FullMatch:"3",StartMatch:2}
 
 >> Match( "a3d4", "\d")
-{FullMatch:"3",StartMatch:2,SubMatches:Table()}
+{FullMatch:"3",StartMatch:2}
 
->> IsMatch( "a3d4", Match.Digit )
+>> IsMatch( "a3d4", Match.Digit, MatchOptions.Complete )
 false
 
->> IsMatch( "a3d4", "\d")
+>> IsMatch( "a3d4", Match.Digit, MatchOptions.Contains )
+true
+
+>> IsMatch( "a3d4", "\d", MatchOptions.Complete )
 false
+
+>> IsMatch( "a3d4", "\d", MatchOptions.Contains )
+true
 
 >> MatchAll( "a3d4", Match.Digit )
-Table({FullMatch:"3",StartMatch:2,SubMatches:Table()},{FullMatch:"4",StartMatch:4,SubMatches:Table()})
+Table({FullMatch:"3",StartMatch:2},{FullMatch:"4",StartMatch:4})
 
 >> MatchAll( "a3d4", "\d")
-Table({FullMatch:"3",StartMatch:2,SubMatches:Table()},{FullMatch:"4",StartMatch:4,SubMatches:Table()})
+Table({FullMatch:"3",StartMatch:2},{FullMatch:"4",StartMatch:4})
 
 >> Match.Digit = "\d"
 true
@@ -531,7 +537,7 @@ Errors: Error 34-35: Invalid argument type (Text). Expecting a Enum (JSONFormat)
 
 // Since the Match supports CanCoerceBackingKind, any concatenation combination is supported
 >> Match( "334", Match.Digit & Match.Digit & JSONFormat.IndentFour )
-{FullMatch:"334",StartMatch:1,SubMatches:Table()}
+{FullMatch:"334",StartMatch:1}
 
 // Concatenation can be allowed between members of the option set and still retain strong typing with IExternalOptionSet.CanConcatenateStronglyTyped
 
@@ -553,16 +559,16 @@ Errors: Error 15-18: Invalid argument type (Text). Expecting a Enum (JSONFormat)
 // Concatenation can be allowed with text strings and still retain strong typing with IExternalOptionSet.CanCoerceBackingKind
 
 >> Match( "33this is ok", Concatenate( Match.Digit, Match.Digit, "this is ok" ) )
-{FullMatch:"33this is ok",StartMatch:1,SubMatches:Table()}
+{FullMatch:"33this is ok",StartMatch:1}
 
 >> Match( "33this is ok", Match.Digit & Match.Digit & "this is ok" )
-{FullMatch:"33this is ok",StartMatch:1,SubMatches:Table()}
+{FullMatch:"33this is ok",StartMatch:1}
 
 >> Match( "33this is ok", "\d\dthis is ok" )
-{FullMatch:"33this is ok",StartMatch:1,SubMatches:Table()}
+{FullMatch:"33this is ok",StartMatch:1}
 
 >> Match( "33this is ok", "\d" & "\d" & "this is ok" )
-{FullMatch:"33this is ok",StartMatch:1,SubMatches:Table()}
+{FullMatch:"33this is ok",StartMatch:1}
 
 // Strongly typed concatenated results can be compared
 
@@ -617,16 +623,16 @@ true
 //
 
 >> Match( "a34d", Match.Digit & "\d" )
-{FullMatch:"34",StartMatch:2,SubMatches:Table()}
+{FullMatch:"34",StartMatch:2}
 
 >> Match( "a34d", "\d" & Match.Digit )
-{FullMatch:"34",StartMatch:2,SubMatches:Table()}
+{FullMatch:"34",StartMatch:2}
 
 >> Match( "a34d", Concatenate( Match.Digit, "\d" ) )
-{FullMatch:"34",StartMatch:2,SubMatches:Table()}
+{FullMatch:"34",StartMatch:2}
 
 >> Match( "a34d", Concatenate( "\d", Match.Digit ) )
-{FullMatch:"34",StartMatch:2,SubMatches:Table()}
+{FullMatch:"34",StartMatch:2}
 
 >> Text(Match.Digit) & Text(SortOrder.Ascending)
 "\dascending"

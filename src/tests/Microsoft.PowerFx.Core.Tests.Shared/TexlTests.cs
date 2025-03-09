@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Entities;
@@ -1812,6 +1813,116 @@ namespace Microsoft.PowerFx.Core.Tests
                 var expectedDType = TestUtils.DT(expectedType);
                 TestBindingErrors(script, expectedDType, features: features);
             }
+        }
+
+        [Theory]
+        [InlineData("Match(\"a\", \"a\")", "![FullMatch:s, StartMatch:n]")]
+        [InlineData("Match(\"a\", \"(a)\")", "![FullMatch:s, StartMatch:n]")]
+        [InlineData("Match(\"a\", \"(?<one>a)\")", "![FullMatch:s, StartMatch:n, one:s]")]
+        [InlineData("Match(\"a\", \"(a)\", MatchOptions.NumberedSubMatches)", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        [InlineData("MatchAll(\"a\", \"a\")", "*[FullMatch:s, StartMatch:n]")]
+        [InlineData("MatchAll(\"a\", \"(a)\")", "*[FullMatch:s, StartMatch:n]")]
+        [InlineData("MatchAll(\"a\", \"(?<one>a)\")", "*[FullMatch:s, StartMatch:n, one:s]")]
+        [InlineData("MatchAll(\"a\", \"(a)\", MatchOptions.NumberedSubMatches)", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        public void TexlFunctionTypeSemanticsMatch_V1Enabled(string script, string expectedType)
+        {
+            var features = new Features
+            {
+                PowerFxV1CompatibilityRules = true
+            };
+            var config = new PowerFxConfig(features);
+
+            RegexTypeCache regexCache = new (-1);
+            config.InternalConfigSymbols.AddFunction(new MatchFunction(regexCache));
+            config.InternalConfigSymbols.AddFunction(new MatchAllFunction(regexCache));
+
+            var expectedDType = TestUtils.DT(expectedType);
+            TestSimpleBindingSuccess(script, expectedDType, config: config);
+        }
+
+        [Theory]
+        [InlineData("Match(\"a\", \"a\")", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        [InlineData("Match(\"a\", \"(a)\")", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        [InlineData("Match(\"a\", \"(?<one>a)\")", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s], one:s]")]
+        [InlineData("Match(\"a\", \"(a)\", MatchOptions.NumberedSubMatches)", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        [InlineData("MatchAll(\"a\", \"a\")", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        [InlineData("MatchAll(\"a\", \"(a)\")", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        [InlineData("MatchAll(\"a\", \"(?<one>a)\")", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s], one:s]")]
+        [InlineData("MatchAll(\"a\", \"(a)\", MatchOptions.NumberedSubMatches)", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        public void TexlFunctionTypeSemanticsMatch_V1Disabled(string script, string expectedType)
+        {
+            var features = new Features();
+            var config = new PowerFxConfig(features);
+
+            RegexTypeCache regexCache = new (-1);
+            config.InternalConfigSymbols.AddFunction(new MatchFunction(regexCache));
+            config.InternalConfigSymbols.AddFunction(new MatchAllFunction(regexCache));
+
+            var expectedDType = TestUtils.DT(expectedType);
+            TestSimpleBindingSuccess(script, expectedDType, config: config);
+        }
+
+        [Fact]
+        public void TexlFunctionTypeSemantics_RegexTypeCache()
+        {
+            var features = new Features
+            {
+                PowerFxV1CompatibilityRules = true
+            };
+            var config = new PowerFxConfig(features);
+
+            RegexTypeCache regexCache = new (30);
+            config.InternalConfigSymbols.AddFunction(new IsMatchFunction(regexCache));
+            config.InternalConfigSymbols.AddFunction(new MatchFunction(regexCache));
+            config.InternalConfigSymbols.AddFunction(new MatchAllFunction(regexCache));
+
+            var engine = new Engine(config);
+            var opts = new ParserOptions();
+
+            // Cache entry can vary on:
+            // - Table (MatchAll) vs. Record (Match)
+            // - Regular expression pattern
+            // - NumberedSubMatches vs. Not
+            // if another MatchOption is added which impacts the return type, this will need to be updated
+
+            // all these tests cases need to be within the same test, so that the same cache is used for all
+            var a = engine.Check("Match(\"a\", \"(a)\")", opts);
+            Assert.Equal(TestUtils.DT("![FullMatch:s, StartMatch:n]"), a.Binding.ResultType);
+            Assert.False(a.Binding.ErrorContainer.HasErrors());
+            Assert.True(a.IsSuccess);
+
+            var b = engine.Check("Match(\"a\", \"(a)\", MatchOptions.NumberedSubMatches)", opts);
+            Assert.Equal(TestUtils.DT("![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]"), b.Binding.ResultType);
+            Assert.False(b.Binding.ErrorContainer.HasErrors());
+            Assert.True(b.IsSuccess);
+
+            // Match and MatchAll should not collide
+            var c = engine.Check("MatchAll(\"a\", \"(a)\")", opts);
+            Assert.Equal(TestUtils.DT("*[FullMatch:s, StartMatch:n]"), c.Binding.ResultType);
+            Assert.False(c.Binding.ErrorContainer.HasErrors());
+            Assert.True(c.IsSuccess);
+
+            var d = engine.Check("MatchAll(\"a\", \"(a)\", MatchOptions.NumberedSubMatches)", opts);
+            Assert.Equal(TestUtils.DT("*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]"), d.Binding.ResultType);
+            Assert.False(d.Binding.ErrorContainer.HasErrors());
+            Assert.True(d.IsSuccess);
+
+            var e = engine.Check("IsMatch(\"a\", \"(a)\")", opts);
+            Assert.Equal(TestUtils.DT("b"), e.Binding.ResultType);
+            Assert.False(e.Binding.ErrorContainer.HasErrors());
+            Assert.True(e.IsSuccess);
+
+            // check the first cache entry again
+            var f = engine.Check("Match(\"a\", \"(a)\")", opts);
+            Assert.Equal(TestUtils.DT("![FullMatch:s, StartMatch:n]"), f.Binding.ResultType);
+            Assert.False(f.Binding.ErrorContainer.HasErrors());
+            Assert.True(f.IsSuccess);
+
+            // check a different regular expression
+            var g = engine.Check("Match(\"a\", \"a\")", opts);
+            Assert.Equal(TestUtils.DT("![FullMatch:s, StartMatch:n]"), g.Binding.ResultType);
+            Assert.False(g.Binding.ErrorContainer.HasErrors());
+            Assert.True(g.IsSuccess);
         }
 
         [Theory]
@@ -4474,19 +4585,25 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
-        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null, bool numberIsFloat = true, OptionSet[] optionSets = null, Features features = null)
+        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null, bool numberIsFloat = true, OptionSet[] optionSets = null, Features features = null, PowerFxConfig config = null)
         {
-            features = features ?? Features.None;
-            var config = new PowerFxConfig(features)
+            if (config == null)
             {
-                SymbolTable = symbolTable
-            };
-
-            if (optionSets != null)
-            {
-                foreach (var optionSet in optionSets)
+                features = features ?? Features.None;
+                config = new PowerFxConfig(features)
                 {
-                    config.AddOptionSet(optionSet);
+                    SymbolTable = symbolTable
+                };
+            }
+
+            if (symbolTable != null)
+            {
+                if (optionSets != null)
+                {
+                    foreach (var optionSet in optionSets)
+                    {
+                        config.AddEntity(optionSet);
+                    }
                 }
             }
 
@@ -4498,13 +4615,16 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
-        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = null, bool numberIsFloat = true, IExternalOptionSet[] optionSets = null)
+        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = null, bool numberIsFloat = true, IExternalOptionSet[] optionSets = null, PowerFxConfig config = null)
         {
-            features ??= Features.None;
-            var config = new PowerFxConfig(features)
+            if (config == null)
             {
-                SymbolTable = symbolTable
-            };
+                features = features ?? Features.None;
+                config = new PowerFxConfig(features)
+                {
+                    SymbolTable = symbolTable
+                };
+            }
 
             if (symbolTable != null)
             {

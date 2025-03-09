@@ -1,0 +1,98 @@
+﻿#SETUP: RegEx,PowerFxV1CompatibilityRules
+
+>> Match("Hello", "\w")
+{FullMatch:"H",StartMatch:1}
+
+>> Index(Match("Hello", "(\w)l(\w)", MatchOptions.NumberedSubMatches).SubMatches, 1).Value
+"e"
+
+>> Index(Match("Hello", "(\w)l(\w)", MatchOptions.NumberedSubMatches).SubMatches, 2).Value
+"l"
+
+>> Concat(ForAll(Match("Hello", "(\w)l(\w)", MatchOptions.NumberedSubMatches).SubMatches, With({x:Value}, x)), Value, ", ")
+"e, l"
+
+>> Match("Hello", "(\w)l(\w)", MatchOptions.NumberedSubMatches).SubMatches
+Table({Value:"e"},{Value:"l"})
+
+>> Match("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete & MatchOptions.Multiline & MatchOptions.NumberedSubMatches)
+{FullMatch:"Joe 164",StartMatch:1,SubMatches:Table({Value:"Joe"},{Value:"164"})}
+
+>> Match("JohnDoe@microsoft.com", Match.Email)
+{FullMatch:"JohnDoe@microsoft.com",StartMatch:1}
+
+>> Match("(555) 123-4567", "^[\+]?[\(]?[0-9]{3}[\)]?[\-\s\.]?[0-9]{3}[\-\s\.]?[0-9]{4,6}$")
+{FullMatch:"(555) 123-4567",StartMatch:1}
+
+>> Match("Hello", "Hello", MatchOptions.IgnoreCase)
+{FullMatch:"Hello",StartMatch:1}
+
+>> Match("Hi", "Hi", MatchOptions.Multiline)
+{FullMatch:"Hi",StartMatch:1}
+
+>> Match("28", "28", Blank())
+Errors: Error 18-25: MatchOptions must be a constant value.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match("28", "28", 28)
+Errors: Error 18-20: MatchOptions must be a constant value.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "((a)|(b))", MatchOptions.NumberedSubMatches )
+{FullMatch:"a",StartMatch:1,SubMatches:Table({Value:"a"},{Value:"a"},{Value:Blank()})}
+
+>> Match( "b", "((a)|(b))", MatchOptions.NumberedSubMatches )
+{FullMatch:"b",StartMatch:1,SubMatches:Table({Value:"b"},{Value:Blank()},{Value:"b"})}
+
+>> Match( "c", "((a)|(b))", MatchOptions.NumberedSubMatches )
+Blank()
+
+>> Match( "a", "(?<whole>(?<alpha>a)|(?<beta>b))" )
+{FullMatch:"a",StartMatch:1,alpha:"a",beta:Blank(),whole:"a"}
+
+>> Match( "b", "(?<whole>(?<alpha>a)|(?<beta>b))" )
+{FullMatch:"b",StartMatch:1,alpha:Blank(),beta:"b",whole:"b"}
+
+>> Match( "c", "(?<whole>(?<alpha>a)|(?<beta>b))" )
+Blank()
+
+>> Match( "a", "(b*)*", MatchOptions.NumberedSubMatches )
+Errors: Error 12-19: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(b*)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(b)*", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "a", "(b*)", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
+
+>> Match( "a", "(b)?", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "a", "(b?)", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
+
+>> Match( "a", "(b){0,4}", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "a", "(b{0,4})", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
+
+>> Match( "ab", "(a)*b\1" , MatchOptions.NumberedSubMatches )
+Errors: Error 13-22: Invalid regular expression: Back reference "\1" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ab", "(a)*b" , MatchOptions.NumberedSubMatches )
+{FullMatch:"ab",StartMatch:1,SubMatches:Table({Value:"a"})}
+
+>> Match( "ab", "(a*)b\1" , MatchOptions.NumberedSubMatches )
+Errors: Error 13-22: Invalid regular expression: Back reference "\1" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "Hi", ".", MatchOptions.DotAll )
+{FullMatch:"H",StartMatch:1}
+
+>> Match( "Hi", " H # a comment " & Char(10) & " i ", MatchOptions.FreeSpacing )
+{FullMatch:"Hi",StartMatch:1}
+
+>> Match( "Hi", " H # a comment " & Char(10) & " I ", MatchOptions.IgnoreCase & MatchOptions.FreeSpacing )
+{FullMatch:"Hi",StartMatch:1}
+
+// does no harm to use NumberedSubMatches with or without V1
+>> Match( "Hi", "(H)([Ii])", MatchOptions.NumberedSubMatches )
+{FullMatch:"Hi",StartMatch:1,SubMatches:Table({Value:"H"},{Value:"i"})}

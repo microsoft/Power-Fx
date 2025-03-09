@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Xunit.Sdk;
 
@@ -21,13 +22,18 @@ namespace Microsoft.PowerFx.Core.Tests
         private readonly string _filePathSpecific;
         private readonly string _engineName;
         private readonly Dictionary<string, bool> _setup;
+        private readonly Dictionary<string, bool> _requiredSetup;
 
-        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName, string setup)
+        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName, string setup, string requiredSetup = null)
         {
             _filePathCommon = filePathCommon;
             _filePathSpecific = filePathSpecific;
             _engineName = engineName;
             _setup = TestRunner.ParseSetupString(setup);
+            if (requiredSetup != null)
+            {
+                _requiredSetup = TestRunner.ParseSetupString(requiredSetup);
+            }
         }
 
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
@@ -58,7 +64,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                             if (file.EndsWith(".txt", StringComparison.InvariantCultureIgnoreCase))
                             {
-                                parser.AddFile(_setup, file);
+                                parser.AddFile(_setup, file, _requiredSetup);
                             }
                         }
                     }
