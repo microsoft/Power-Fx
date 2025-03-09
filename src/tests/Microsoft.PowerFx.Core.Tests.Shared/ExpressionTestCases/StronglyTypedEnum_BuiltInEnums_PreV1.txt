@@ -380,11 +380,17 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Match( "a3d4", "\d").FullMatch
 "3"
 
->> IsMatch( "a3d4", Match.Digit )
+>> IsMatch( "a3d4", Match.Digit, MatchOptions.Complete )
 false
 
->> IsMatch( "a3d4", "\d")
+>> IsMatch( "a3d4", Match.Digit, MatchOptions.Contains )
+true
+
+>> IsMatch( "a3d4", "\d", MatchOptions.Complete )
 false
+
+>> IsMatch( "a3d4", "\d", MatchOptions.Contains )
+true
 
 >> ForAll( MatchAll( "a3d4", Match.Digit ), {fm:FullMatch} )
 Table({fm:"3"},{fm:"4"})

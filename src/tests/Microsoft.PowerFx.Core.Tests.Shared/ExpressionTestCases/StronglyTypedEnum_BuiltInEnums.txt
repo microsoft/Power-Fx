@@ -423,11 +423,17 @@ Errors: Error 0-7: The function 'Boolean' has some invalid arguments.
 >> Match( "a3d4", "\d")
 {FullMatch:"3",StartMatch:2}
 
->> IsMatch( "a3d4", Match.Digit )
+>> IsMatch( "a3d4", Match.Digit, MatchOptions.Complete )
 false
 
->> IsMatch( "a3d4", "\d")
+>> IsMatch( "a3d4", Match.Digit, MatchOptions.Contains )
+true
+
+>> IsMatch( "a3d4", "\d", MatchOptions.Complete )
 false
+
+>> IsMatch( "a3d4", "\d", MatchOptions.Contains )
+true
 
 >> MatchAll( "a3d4", Match.Digit )
 Table({FullMatch:"3",StartMatch:2},{FullMatch:"4",StartMatch:4})

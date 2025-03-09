@@ -134,9 +134,9 @@ namespace Microsoft.PowerFx.Functions
             protected const string STARTMATCH = "StartMatch";
             protected const string SUBMATCHES = "SubMatches";
 
-            protected const string DefaultIsMatchOptions = "^c$";
-            protected const string DefaultMatchOptions = "c";
-            protected const string DefaultMatchAllOptions = "c";
+            protected const string DefaultIsMatchOptions = MatchOptionString.Contains;
+            protected const string DefaultMatchOptions = MatchOptionString.Contains;
+            protected const string DefaultMatchAllOptions = MatchOptionString.Contains;
 
             public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
             {
@@ -175,6 +175,12 @@ namespace Microsoft.PowerFx.Functions
                             break;
                         default:
                             return Task.FromResult<FormulaValue>(args[2] is ErrorValue ? args[2] : CommonErrors.InvalidArgumentError(args[2].IRContext, RuntimeStringResources.ErrInvalidArgument));
+                    }
+
+                    // don't override complete/contains/beginswith/endswith if already given, all these options include Contains ("c")
+                    if (!matchOptions.Contains(MatchOptionChar.ContainsBeginsEndsComplete))
+                    {
+                        matchOptions += DefaultRegexOptions;
                     }
                 }
                 else
@@ -228,13 +234,13 @@ namespace Microsoft.PowerFx.Functions
                     index = inlineOptions.Length;
                 }
 
-                bool freeSpacing = options.Contains(MatchOptionCodes.FreeSpacing);
-                bool multiline = options.Contains(MatchOptionCodes.Multiline);
-                bool ignoreCase = options.Contains(MatchOptionCodes.IgnoreCase);
-                bool dotAll = options.Contains(MatchOptionCodes.DotAll);
-                bool matchStart = options.Contains(MatchOptionCodes.BeginsWith);
-                bool matchEnd = options.Contains(MatchOptionCodes.EndsWith);
-                bool numberedSubMatches = options.Contains(MatchOptionCodes.NumberedSubMatches);
+                bool freeSpacing = options.Contains(MatchOptionChar.FreeSpacing);
+                bool multiline = options.Contains(MatchOptionChar.Multiline);
+                bool ignoreCase = options.Contains(MatchOptionChar.IgnoreCase);
+                bool dotAll = options.Contains(MatchOptionChar.DotAll);
+                bool matchStart = options.Contains(MatchOptionChar.BeginsWith);
+                bool matchEnd = options.Contains(MatchOptionChar.EndsWith);
+                bool numberedSubMatches = options.Contains(MatchOptionChar.NumberedSubMatches);
 
                 // Can't add options ^ and $ too early as there may be freespacing comments, centralize the logic here and call subfunctions
                 string AlterStart()

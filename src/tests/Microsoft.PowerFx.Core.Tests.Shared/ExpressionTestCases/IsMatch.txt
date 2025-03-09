@@ -1,6 +1,6 @@
 ﻿#SETUP: RegEx
 
->> IsMatch("Hi", "H")
+>> IsMatch("Hi", "H", MatchOptions.Complete)
 false
 
 >> IsMatch("Hi", "Hi")
@@ -63,15 +63,25 @@ false
 >> IsMatch(Blank(), Blank())
 Errors: Error 17-24: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
 
->> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` A 1234567890", "\p{L}")
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` A 1234567890", "\p{L}", MatchOptions.Complete)
 false
 
->> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~`  1234567890", "\p{L}")
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~`  1234567890", "\p{L}", MatchOptions.Complete)
 false
 
 // With Icelandic Eth
->> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` Ð 1234567890", "\p{L}")
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` Ð 1234567890", "\p{L}", MatchOptions.Complete)
 false
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` A 1234567890", "\p{L}", MatchOptions.Contains)
+true
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~`  1234567890", "\p{L}", MatchOptions.Contains)
+false
+
+// With Icelandic Eth
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` Ð 1234567890", "\p{L}", MatchOptions.Contains)
+true
 
 >> IsMatch( "28", Concat( [2,8], Value ) )
 Errors: Error 15-37: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
@@ -139,11 +149,21 @@ false
 >> IsMatch("Hi", "I", MatchOptions.EndsWith & MatchOptions.IgnoreCase)
 true
 
->> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` A 1234567890", "\p{L}", MatchOptions.Contains)
+>> IsMatch( "abcba", "abcba", MatchOptions.Complete )
 true
 
->> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~`  1234567890", "\p{L}", MatchOptions.Contains)
+>> IsMatch( "abcba", "abcba", MatchOptions.BeginsWith & MatchOptions.EndsWith )
+true
+
+>> IsMatch( "abcba", "bcba", MatchOptions.BeginsWith & MatchOptions.EndsWith )
 false
 
->> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` Ð 1234567890", "\p{L}", MatchOptions.Contains)
+>> IsMatch( "abcba", "bcba", MatchOptions.EndsWith )
 true
+
+>> IsMatch( "abcba", "abcb", MatchOptions.BeginsWith & MatchOptions.EndsWith )
+false
+
+>> IsMatch( "abcba", "abcb", MatchOptions.BeginsWith )
+true
+

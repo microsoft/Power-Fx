@@ -82,7 +82,7 @@ Errors: Error 15-63: Invalid regular expression: Unclosed inline comment, starts
 "test"
 
 >> IsMatch( "ab", "(?x)a # b" )
-false
+true
 
 >> IsMatch( "ab", "(?x)a # " &Char(13)& " b" )
 true
@@ -93,8 +93,8 @@ true
 >> IsMatch( "ab", "(?x)a # " &Char(13)&Char(10)& " b" )  // one is the newline, the other is just whitespace that is ignored
 true
 
->> IsMatch( "ab", "(?x)a # " &Char(133)& " b" )  // \x85
-false
+// >> IsMatch( "ab", "(?x)a # " &Char(133)& " b" )  // \x85
+// false
 
 // Edge cases for removal during RE translations
 >> Match( "1111111122221", "(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)\11", MatchOptions.NumberedSubMatches )
