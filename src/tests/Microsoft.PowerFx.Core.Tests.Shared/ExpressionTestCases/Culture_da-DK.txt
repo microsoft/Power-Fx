@@ -1,0 +1,144 @@
+﻿#SETUP: RegEx,CultureInfo("da-DK"),PowerFxV1CompatibilityRules,ConsistentOneColumnTableResult,SupportColumnNamesAsIdentifiers
+
+>> Language()
+"da-DK"
+
+>> "Ø" = UniChar( Hex2Dec( "00d8") )
+true
+
+>> "ø" = UniChar( Hex2Dec( "00f8") )
+true
+
+// UPPER, LOWER, PROPER
+
+>> Upper( "ø" )
+"Ø"
+
+>> Lower( "Ø" )
+"ø"
+
+>> Upper( "ø" ) = "Ø"
+true
+
+>> Lower( "Ø" ) = "ø"
+true
+
+>> Lower( "ørkesløse" ) = Lower( "ØRKESLØSE" )
+true
+
+>> Upper( "ørkesløse" ) = Upper( "ØRKESLØSE" )
+true
+
+>> Proper( "ørkesløse" )
+"Ørkesløse"
+
+>> Proper( "ØRKESLØSE" )
+"Ørkesløse"
+
+// VALUE, DECIMAL, FLOAT
+// Comma decimal seperator
+
+>> Value( "123,456" )
+123.456
+
+>> Value( "123,456", "da-DK" )
+123.456
+
+>> Decimal( "123,456" )
+123.456
+
+>> Decimal( "123,456", "da-DK" )
+123.456
+
+>> Float( "123,456" )
+123.456
+
+>> Float( "123,456", "da-DK" )
+123.456
+
+// TEXT
+
+>> Text( DateTime(2010,1,1,14,0,0,0), "mmm ddd yyyy AM/PM" )
+"jan. fre. 2010 PM"
+
+>> Text( DateTime(2020,1,1,2,0,0,0), "mmmm dddd yyyy AM/PM" )
+"januar onsdag 2020 AM"
+
+>> Text( 123456789, "#,###.00" )
+"123456789,00000"
+
+>> Text( 123456789, "#.###,00" )
+"123.456.789,00"
+
+// IN AND EXACTIN
+
+>> "å" in "ømtåligt"
+true
+
+>> "å" in "ØMTÅLIGT"
+true
+
+>> "Å" in "ømtåligt"
+true
+
+>> "Å" in "ØMTÅLIGT"
+true
+
+>> "å" exactin "ømtåligt"
+true
+
+>> "å" exactin "ØMTÅLIGT"
+false
+
+>> "Å" exactin "ØMTÅLIGT"
+true
+
+>> "ØMtålIGT" in ["ømtåligt","bcde"]
+true
+
+>> "ømtålIgt" in ["bcde", "ØMTÅLiGT"]
+true
+
+>> "ømtålIgt" in ["bcde", "MTÅLiGT"]
+false
+
+// SORT
+
+>> Concat( Sort( Split( "n F X W o i j x B m I R G S h Ø L p K t A k l y J æ u v s T a ø N D z Æ e O U E H r Z å g b q Å P d f C M c Y w V Q", " " ), Value ), Value, " " )
+"A a B b C c D d E e F f G g H h I i J j K k L l M m N n O o P p Q q R r S s T t U u V v W w X x Y y Z z Æ æ Ø ø Å å"
+
+>> Concat( SortByColumns( Split( "U c q s X Å P L i I u d J å M E l k W v j Æ n a B K C D e ø æ f O y m Ø r Q R A x h T H N Z F V w o S g t p G Y b z", " " ), "Value" ), Value, " " )
+"A a B b C c D d E e F f G g H h I i J j K k L l M m N n O o P p Q q R r S s T t U u V v W w X x Y y Z z Æ æ Ø ø Å å"
+
+// REGULAR EXPRESSIONS
+// Always uses invariant in all locales, even in en-US and tr-TR (industry standard)
+
+>> IsMatch( "å", "Å", MatchOptions.IgnoreCase )           
+true
+
+>> IsMatch( "Å", "å", MatchOptions.IgnoreCase )           
+true
+
+>> IsMatch( "Å", "A", MatchOptions.IgnoreCase )           
+false
+
+>> IsMatch( "Å", "a", MatchOptions.IgnoreCase )           
+false
+
+>> IsMatch( "ø", "Ø", MatchOptions.IgnoreCase )
+true
+
+>> IsMatch( "Ø", "ø", MatchOptions.IgnoreCase )
+true
+
+>> IsMatch( "æ", "Æ", MatchOptions.IgnoreCase )
+true
+
+>> IsMatch( "Æ", "æ", MatchOptions.IgnoreCase )
+true
+
+>> ShowColumns( Match( "ØMTÅÅLIGT", "\u00c5+" ), FullMatch, StartMatch )
+{FullMatch:"ÅÅ",StartMatch:4}
+
+>> IsMatch( "ØMTÅÅLIGT", "Ø", MatchOptions.Contains )
+true
