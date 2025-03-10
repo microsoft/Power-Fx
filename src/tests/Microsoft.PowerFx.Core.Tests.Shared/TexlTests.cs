@@ -9,6 +9,7 @@ using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
@@ -4325,13 +4326,16 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 Assert.True(result.IsSuccess);
 
+                // Filter function can produce a 'WarnCheckPredicateUsage' warning. Any other warnings are unexpected.
+                var filteredErrors = result.Errors.Where(err => err.MessageKey != "WarnCheckPredicateUsage").ToList();
+
                 if (warnings)
                 {
-                    Assert.True(result.Errors.Count() > 0, "Expected warnings in original function");
+                    Assert.True(filteredErrors.Count() > 0, "Expected warnings in original function");
                 }
                 else
                 {
-                    Assert.False(result.Errors.Count() > 0, "No warnings expected in original function");
+                    Assert.False(filteredErrors.Count() > 0, "No warnings expected in original function");
                 }
 
                 // then run with the mock filter function that does silent delgation checks
@@ -4500,7 +4504,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Table(Search(DS, \"Foo\", Name), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 1)]
 
         // existing warning due to sqrt should propagate, no new warnigns on table
-        [InlineData("Table(Filter(DS, Sqrt(Age) > 5), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 1)]
+        [InlineData("Table(Filter(DS, Sqrt(Age) > 5), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 2)]
         public void TexlFunctionTypeSemanticsTable_PageableInputs(string script, string expectedSchema, int errorCount)
         {
             var dataSourceSchema = TestUtils.DT("*[Id:n, Name:s, Age:n]");
@@ -4544,6 +4548,53 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT(expectedSchema),
                 features: Features.PowerFxV1);
+        }
+
+        [Theory]
+        [InlineData("Filter(t1, a = 1)", false)]
+        [InlineData("Sum(t1, a)", false)]
+        [InlineData("Average(t1, a)", false)]
+        [InlineData("Min(t1, a)", false)]
+        [InlineData("Max(t1, a)", false)]
+        [InlineData("Join(t1, t2, LeftRecord.a = RightRecord.x, JoinType.Inner, RightRecord.z As Z)", false)]
+        [InlineData("Summarize(t1, a)", false)]
+        [InlineData("Summarize(t1, a, CountRows(ThisGroup) As Counter)", false)]
+        [InlineData("LookUp(t1, 1=1)", false)] // The 'LookUp' wont produce any warning because it has not been set to analyse the predicate.
+
+        [InlineData("Filter(t1, Abs(a) = 1)", true)]
+        [InlineData("Summarize(t1, a, CountRows(Filter(ThisGroup, b = \"test\")) As Counter)", true)]
+        [InlineData("Sum(t1, 1)", true)]
+        [InlineData("Sum(t1, Abs(a))", true)]
+        [InlineData("Average(t1, 1)", true)]
+        [InlineData("Average(t1, Abs(a))", true)]
+        [InlineData("Min(t1, 1)", true)]
+        [InlineData("Min(t1, Abs(a))", true)]
+        [InlineData("Max(t1, 1)", true)]
+        [InlineData("Max(t1, Abs(a))", true)]
+
+        public void TestScopePredicate(string expression, bool expectingWarning)
+        {
+            var symbolTable = new SymbolTable();
+
+            symbolTable.AddVariable("t1", new TableType(TestUtils.DT("*[a:w,b:s,c:b]")));
+            symbolTable.AddVariable("t2", new TableType(TestUtils.DT("*[x:w,y:s,z:b]")));
+            symbolTable.AddFunction(new JoinFunction());
+            symbolTable.AddFunction(new SummarizeFunction());
+
+            var engine = new Engine();
+            var check = engine.Check(expression, symbolTable: symbolTable);
+
+            // The predicate checking should never fail, but it may produce a warning.
+            Assert.True(check.IsSuccess, string.Join("\n", check.Errors.Select(err => err.ToString())));
+
+            if (expectingWarning)
+            {
+                Assert.Contains(check.Errors, err => err.MessageKey == "WarnCheckPredicateUsage");
+            }
+            else
+            {
+                Assert.DoesNotContain(check.Errors, err => err.MessageKey == "WarnCheckPredicateUsage");
+            }
         }
 
         private void TestBindingPurity(string script, bool isPure, SymbolTable symbolTable = null)
@@ -4652,8 +4703,10 @@ namespace Microsoft.PowerFx.Core.Tests
             var opts = new ParserOptions() { NumberIsFloat = numberIsFloat };
             var result = engine.Check(script, opts);
             Assert.Equal(expectedType, result.Binding.ResultType);
-            Assert.False(result.Binding.ErrorContainer.HasErrors());
             Assert.True(result.IsSuccess);
+
+            // Some functions (like Filter) may produce warnings related to the predicate. We don't want to fail the test in that case.
+            Assert.False(result.Binding.ErrorContainer.HasErrors(DocumentErrorSeverity.Moderate));
         }
     }
 }
