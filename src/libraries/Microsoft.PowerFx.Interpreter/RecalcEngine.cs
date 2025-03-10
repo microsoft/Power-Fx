@@ -8,17 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Parser;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -463,9 +460,11 @@ namespace Microsoft.PowerFx
 
                 List<TexlError> bindErrors = new List<TexlError>();
 
-                if (binding.ErrorContainer.GetErrors(ref bindErrors))
+                var onlyErrors = binding.ErrorContainer.GetErrors(DocumentErrorSeverity.Moderate);
+
+                if (onlyErrors.Count() > 0)
                 {
-                    sb.AppendLine(string.Join(", ", bindErrors.Select(err => err.ToString())));
+                    sb.AppendLine(string.Join(", ", onlyErrors.Select(err => err.ToString())));
                 }
                 else
                 {

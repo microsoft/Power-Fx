@@ -617,7 +617,6 @@ namespace Microsoft.PowerFx.Core.IR
                 }
 
                 var concatenatedNode = new CallNode(irContext, BuiltinFunctionsCore.Concatenate, concatenateArgs);
-                throw new Exception("CHECKPOINT!");
                 return concatenatedNode;
             }
 

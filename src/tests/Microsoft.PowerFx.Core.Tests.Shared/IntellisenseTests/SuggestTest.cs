@@ -315,32 +315,6 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         }
 
         [Theory]
-        [InlineData("in", "in_text")]
-        [InlineData("or", "or_text")]
-        [InlineData("and", "and_text")]
-        [InlineData("In", "In_text")]
-        [InlineData("Or", "Or_text")]
-        [InlineData("And", "And_text")]
-        public void TesafdghghffgnfrghhhhhhhhhhhhhhhhhhhhhhhhhhhhpedEnumName(string expr, string varName)
-        {
-            var engine = new Engine();
-            engine.Config.SymbolTable.AddVariable(varName, FormulaType.String);
-
-            var test = Features.PowerFxV1.GetType();
-            var tese = test.GetProperty("SkipExpandableSetSemantics", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
-            foreach (var textFirst in new[] { false, true })
-            {
-                expr = textFirst ? "=" + expr : expr;
-
-                var check = engine.Check(expr, options: new ParserOptions() { TextFirst = textFirst });
-                var suggestions = engine.Suggest(check, expr.Length);
-
-                Assert.Equal(textFirst ? 1 : 0, suggestions.ReplacementStartIndex);
-            }
-        }
-
-        [Theory]
         [InlineData("SortByColumns(|", 3, "The table to sort.", "SortByColumns(source, column, ...)")]
         [InlineData("SortByColumns(tbl1,|", 3, "A unique column name.", "SortByColumns(source, column, ...)")]
         [InlineData("SortByColumns(tbl1,col1,|", 2, "SortOrder.Ascending or SortOrder.Descending", "SortByColumns(source, column, order, ...)")]

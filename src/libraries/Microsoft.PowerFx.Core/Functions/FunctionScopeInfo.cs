@@ -251,7 +251,7 @@ namespace Microsoft.PowerFx.Core.Functions
         public static DName ThisGroup => new DName("ThisGroup");
 
         public FunctionThisGroupScopeInfo(TexlFunction function)
-            : base(function, appliesToArgument: (argIndex) => argIndex > 0)
+            : base(function, appliesToArgument: (argIndex) => argIndex > 0, checkPredicateUsage: true)
         {
         }
 
@@ -288,6 +288,26 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             return ret;
+        }
+
+        public override void CheckPredicates(TexlNode[] inputNodes, DType typeScope, IErrorContainer errors)
+        {
+            GetScopeIdent(inputNodes, out DName[] idents);            
+
+            for (int i = 0; i < inputNodes.Length; i++)
+            {
+                if (_function.IsLambdaParam(inputNodes[i], i))
+                {
+                    // We create a new visitor object for each iteration since lambda parms can appear at any place in the expression.
+                    var visitor = new ScopePredicateVisitor(typeScope, new[] { ThisGroup }, true);
+                    inputNodes[i].Accept(visitor);
+
+                    if (!visitor.InUsePredicates.Contains(ThisGroup))
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Warning, inputNodes[i], TexlStrings.WarnCheckPredicateUsage, string.Join("/", idents.Select(id => id.Value)));
+                    }
+                }
+            }
         }
     }
 
@@ -354,7 +374,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public override void CheckPredicates(TexlNode[] inputNodes, DType typeScope, IErrorContainer errors)
         {
-            var wholeScope = GetScopeIdent(inputNodes, out DName[] idents);
+            GetScopeIdent(inputNodes, out DName[] idents);
+
             var visitor = new ScopePredicateVisitor(typeScope, idents);
 
             inputNodes[2].Accept(visitor);
