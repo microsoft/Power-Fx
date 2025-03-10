@@ -28,6 +28,10 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly bool _doubleEncoding;
 
+#if DEBUG
+        internal Func<string, string, string> UpdateShema = null;
+#endif
+
         public CdpTableResolver(CdpTable tabularTable, HttpClient httpClient, string uriPrefix, bool doubleEncoding, ConnectorLogger logger = null)
         {
             _tabularTable = tabularTable;
@@ -56,6 +60,14 @@ namespace Microsoft.PowerFx.Connectors
             string uri = (_uriPrefix ?? string.Empty) + (UseV2(_uriPrefix) ? "/v2" : string.Empty) + $"/$metadata.json/datasets/{dataset}/tables/{CdpServiceBase.DoubleEncode(tableName)}?api-version=2015-09-01";
 
             string text = await CdpServiceBase.GetObject(_httpClient, $"Get table metadata", uri, null, cancellationToken, Logger).ConfigureAwait(false);
+
+#if DEBUG
+            // Used to return an alternate result
+            if (UpdateShema != null)
+            {
+                text = UpdateShema(tableName, text);
+            }
+#endif
 
             if (string.IsNullOrWhiteSpace(text))
             {

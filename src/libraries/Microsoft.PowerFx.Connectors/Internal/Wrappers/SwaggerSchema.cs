@@ -87,14 +87,17 @@ namespace Microsoft.PowerFx.Connectors
 
         public ISwaggerReference Reference => SwaggerReference.New(_schema?.Reference);
 
-        // SalesForce specific
         public ISet<string> ReferenceTo => null;
 
-        // SalesForce specific
         public string RelationshipName => null;
 
-        // SalesForce specific
         public string DataType => null;
+
+        public string ForeignKey => throw new NotImplementedException();
+
+        public string SourceField => throw new NotImplementedException();
+
+        public string RelationshipType => throw new NotImplementedException();
 
         private static string GetTypeFromExtension(OpenApiSchema schema)
         {
@@ -104,8 +107,8 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             // OpenAI special extension to indicate the type of the property
-            if (schema.Extensions.TryGetValue("x-oaiTypeLabel", out IOpenApiExtension ext) && 
-                ext is OpenApiString str && 
+            if (schema.Extensions.TryGetValue("x-oaiTypeLabel", out IOpenApiExtension ext) &&
+                ext is OpenApiString str &&
                 !string.IsNullOrEmpty(str.Value))
             {
                 return str.Value;

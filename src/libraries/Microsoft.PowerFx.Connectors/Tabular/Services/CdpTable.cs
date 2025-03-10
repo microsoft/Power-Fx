@@ -7,7 +7,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
@@ -62,6 +61,14 @@ namespace Microsoft.PowerFx.Connectors
         // GET: /$metadata.json/datasets/{datasetName}/tables/{tableName}?api-version=2015-09-01
         public virtual async Task InitAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {
+#if DEBUG
+            cancellationToken.ThrowIfCancellationRequested();
+            await InitAsync(httpClient, uriPrefix, cancellationToken, null, logger).ConfigureAwait(false);
+        }
+
+        public virtual async Task InitAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, Func<string, string, string> updateSchema, ConnectorLogger logger = null)
+        {
+#endif            
             cancellationToken.ThrowIfCancellationRequested();
 
             if (IsInitialized)
@@ -78,7 +85,14 @@ namespace Microsoft.PowerFx.Connectors
 
             _uriPrefix = uriPrefix;
 
-            CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, logger);
+            CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, logger)
+#if DEBUG
+            { 
+                UpdateShema = updateSchema 
+            }
+#endif
+            ;
+
             TabularTableDescriptor = await tableResolver.ResolveTableAsync(TableName, cancellationToken).ConfigureAwait(false);
 
             _relationships = TabularTableDescriptor.Relationships;

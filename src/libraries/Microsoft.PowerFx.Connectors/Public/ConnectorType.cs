@@ -10,6 +10,7 @@ using System.Text.Json;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -21,7 +22,7 @@ namespace Microsoft.PowerFx.Connectors
     // FormulaType is used to represent the type of the parameter in the Power Fx expression as used in Power Apps
     // ConnectorType contains more details information coming from the swagger file and extensions
     [DebuggerDisplay("{FormulaType._type}")]
-    public class ConnectorType : SupportsConnectorErrors
+    public class ConnectorType : SupportsConnectorErrors, ISupportsNavigationProperties
     {
         // "name"
         public string Name { get; internal set; }
@@ -119,11 +120,19 @@ namespace Microsoft.PowerFx.Connectors
         internal ISwaggerSchema Schema { get; private set; } = null;
 
         // Relationships to external tables
-        internal List<string> ExternalTables { get; set; }
+        internal List<string> ExternalTables { get; set; } = null;
 
-        internal string RelationshipName { get; set; }
+        internal string RelationshipName { get; set; } = null;
 
-        internal string ForeignKey { get; set; }
+        internal string ForeignKey { get; set; } = null;
+
+        internal string SourceField { get; set; } = null;
+
+        internal string RelationshipType { get; set; } = null;
+
+        internal IReadOnlyList<ConnectorType> NavigationPropertyReferences => _navigationPropertyReferences;
+
+        private List<ConnectorType> _navigationPropertyReferences = null;
 
         internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, FormulaType formulaType, ErrorResourceKey warning = default, IEnumerable<KeyValuePair<DName, DName>> list = null, bool isNumber = false)
         {
@@ -150,13 +159,14 @@ namespace Microsoft.PowerFx.Connectors
             KeyOrder = schema.GetKeyOrder();
             Permission = schema.GetPermission();
 
-            // We only support one reference for now
-            // SalesForce only
+            // We only support one reference for now            
             if (schema.ReferenceTo != null && schema.ReferenceTo.Count == 1)
             {
                 ExternalTables = new List<string>(schema.ReferenceTo);
                 RelationshipName = schema.RelationshipName;
-                ForeignKey = null; // SalesForce doesn't provide it, defaults to "Id"
+                ForeignKey = schema.ForeignKey; // SalesForce doesn't provide it, defaults to "Id"
+                SourceField = schema.SourceField;
+                RelationshipType = schema.RelationshipType;
             }
 
             Fields = Array.Empty<ConnectorType>();
@@ -312,6 +322,12 @@ namespace Microsoft.PowerFx.Connectors
             _warnings = connectorType._warnings;
         }
 
+        internal void AddNavigationProperty(ConnectorType navigationProperty)
+        {
+            _navigationPropertyReferences ??= new List<ConnectorType>();
+            _navigationPropertyReferences.Add(navigationProperty);
+        }
+
         internal DisplayNameProvider DisplayNameProvider
         {
             get
@@ -360,6 +376,32 @@ namespace Microsoft.PowerFx.Connectors
             string[] enumDisplayNames = EnumDisplayNames ?? enumValues.Select(ev => ev.ToObject().ToString()).ToArray();
 
             return enumDisplayNames.Zip(enumValues, (dn, ev) => new KeyValuePair<string, FormulaValue>(dn, ev)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+
+        public IReadOnlyList<INavigationProperty> GetNavigationProperties(string fieldName)
+        {
+            ConnectorType field = Fields.FirstOrDefault(ct => ct.Name == fieldName);
+
+            if (field?.NavigationPropertyReferences?.Any() != true)
+            {
+                return null;
+            }
+
+            List<INavigationProperty> navProps = new List<INavigationProperty>();
+
+            foreach (ConnectorType navPropRef in field.NavigationPropertyReferences)
+            {
+                navProps.Add(new NavigationProperty()
+                {
+                    Name = navPropRef.Name,
+                    SourceField = navPropRef.SourceField,
+                    ForeignKey = navPropRef.ForeignKey,
+                    RelationshipName = navPropRef.RelationshipName,
+                    RelationshipType = navPropRef.RelationshipType,
+                });
+            }
+
+            return navProps;
         }
     }
 }
