@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx
 
             TimeZoneInfo = GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local;
             Governor = GetService<Governor>() ?? new Governor();
-            CultureInfo = GetService<CultureInfo>();
+            CultureInfo = GetService<CultureInfo>() ?? throw new ArgumentNullException("Missing CultureInfo");
         }
 
         /// <summary>
