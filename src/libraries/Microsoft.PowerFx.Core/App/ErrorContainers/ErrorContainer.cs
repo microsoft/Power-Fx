@@ -37,6 +37,16 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
             return CollectionUtils.Size(_errors) > 0;
         }
 
+        public bool HasErrors(DocumentErrorSeverity severity)
+        {
+            if (_errors == null)
+            {
+                return false;
+            }
+
+            return CollectionUtils.Size(_errors.Where(err => err.Severity >= severity)) > 0;
+        }
+
         public bool HasErrors(TexlNode node, DocumentErrorSeverity severity = DocumentErrorSeverity.Suggestion)
         {
             Contracts.AssertValue(node);
@@ -118,6 +128,17 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
             if (_errors != null)
             {
                 foreach (var err in _errors)
+                {
+                    yield return err;
+                }
+            }
+        }
+
+        public IEnumerable<TexlError> GetErrors(DocumentErrorSeverity severity)
+        {
+            if (_errors != null)
+            {
+                foreach (var err in _errors.Where(err => err.Severity >= severity))
                 {
                     yield return err;
                 }

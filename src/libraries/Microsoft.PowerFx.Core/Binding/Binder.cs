@@ -5326,7 +5326,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // If PreVisit resulted in errors for the node (and a non-null CallInfo),
                 // we're done -- we have a match and appropriate errors logged already.
-                if (_txb.ErrorContainer.HasErrors(node) || _txb.ErrorContainer.HasErrors(node.Head.Token))
+                if (_txb.ErrorContainer.HasErrors(node, DocumentErrorSeverity.Moderate) || _txb.ErrorContainer.HasErrors(node.Head.Token))
                 {
                     Contracts.Assert(info != null);
 
