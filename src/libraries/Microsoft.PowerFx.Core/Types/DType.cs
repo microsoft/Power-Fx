@@ -1862,12 +1862,13 @@ namespace Microsoft.PowerFx.Core.Types
         /// <param name="useLegacyDateTimeAccepts">Legacy rules for accepting date/time types.</param>
         /// <param name="usePowerFxV1CompatibilityRules">Use PFx v1 compatibility rules if enabled (less
         /// permissive Accepts relationships).</param>
+        /// <param name="restrictiveAggregateTypes">Flag to restrict using aggregate types with more fields than expected.</param>
         /// <returns>
         /// True if <see cref="DType"/> accepts <paramref name="type"/>, false otherwise.
         /// </returns>
-        public bool Accepts(DType type, bool exact, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules)
+        public bool Accepts(DType type, bool exact, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules, bool restrictiveAggregateTypes = false)
         {
-            return Accepts(type, out _, out _, exact, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules);
+            return Accepts(type, out _, out _, exact, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules, restrictiveAggregateTypes);
         }
 
         /// <summary>
@@ -1896,10 +1897,11 @@ namespace Microsoft.PowerFx.Core.Types
         /// <param name="useLegacyDateTimeAccepts">Legacy rules for accepting date/time types.</param>
         /// <param name="usePowerFxV1CompatibilityRules">Use PFx v1 compatibility rules if enabled (less
         /// permissive Accepts relationships).</param>
+        /// <param name="restrictiveAggregateTypes">Flag to restrict using aggregate types with more fields than expected.</param>
         /// <returns>
         /// True if <see cref="DType"/> accepts <paramref name="type"/>, false otherwise.
         /// </returns>
-        public virtual bool Accepts(DType type, out KeyValuePair<string, DType> schemaDifference, out DType schemaDifferenceType, bool exact, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules)
+        public virtual bool Accepts(DType type, out KeyValuePair<string, DType> schemaDifference, out DType schemaDifferenceType, bool exact, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules, bool restrictiveAggregateTypes = false)
         {
             AssertValid();
             type.AssertValid();
@@ -1952,7 +1954,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                     if (Kind == type.Kind)
                     {
-                        return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+                        return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules, restrictiveAggregateTypes);
                     }
 
                     accepts = type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
@@ -1966,7 +1968,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                     if (Kind == type.Kind || type.IsExpandEntity)
                     {
-                        return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+                        return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules, restrictiveAggregateTypes);
                     }
 
                     accepts = (IsMultiSelectOptionSet() && TypeTree.GetPairs().First().Value.OptionSetInfo == type.OptionSetInfo) || type.Kind == DKind.Unknown || type.Kind == DKind.Deferred;
@@ -2186,7 +2188,7 @@ namespace Microsoft.PowerFx.Core.Types
         }
 
         // Implements Accepts for Record and Table types.
-        private static bool TreeAccepts(DType parentType, TypeTree treeDst, TypeTree treeSrc, out KeyValuePair<string, DType> schemaDifference, out DType treeSrcSchemaDifferenceType, bool exact = true, bool useLegacyDateTimeAccepts = false, bool usePowerFxV1CompatibilityRules = false)
+        private static bool TreeAccepts(DType parentType, TypeTree treeDst, TypeTree treeSrc, out KeyValuePair<string, DType> schemaDifference, out DType treeSrcSchemaDifferenceType, bool exact = true, bool useLegacyDateTimeAccepts = false, bool usePowerFxV1CompatibilityRules = false, bool restrictiveAggregateTypes = false)
         {
             treeDst.AssertValid();
             treeSrc.AssertValid();
@@ -2226,7 +2228,7 @@ namespace Microsoft.PowerFx.Core.Types
                     return false;
                 }
 
-                if (!pairDst.Value.Accepts(type, out var recursiveSchemaDifference, out var recursiveSchemaDifferenceType, exact, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+                if (!pairDst.Value.Accepts(type, out var recursiveSchemaDifference, out var recursiveSchemaDifferenceType, exact, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules, restrictiveAggregateTypes))
                 {
                     if (!TryGetDisplayNameForColumn(parentType, pairDst.Key, out var colName))
                     {
@@ -2245,6 +2247,17 @@ namespace Microsoft.PowerFx.Core.Types
                     }
 
                     return false;
+                }
+            }
+
+            if (restrictiveAggregateTypes)
+            {
+                foreach (var pairSrc in treeSrc)
+                {
+                    if (!treeDst.Contains(pairSrc.Key))
+                    {
+                        return false;
+                    }
                 }
             }
 
@@ -3152,17 +3165,17 @@ namespace Microsoft.PowerFx.Core.Types
                 (n.Type.IsAggregate && n.Type.ContainsControlType(DPath.Root)));
         }
 
-        public bool CoercesTo(DType typeDest, bool aggregateCoercion, bool isTopLevelCoercion, Features features)
+        public bool CoercesTo(DType typeDest, bool aggregateCoercion, bool isTopLevelCoercion, Features features, bool restrictiveAggregateTypes = false)
         {
-            return CoercesTo(typeDest, out _, aggregateCoercion, isTopLevelCoercion, features);
+            return CoercesTo(typeDest, out _, aggregateCoercion, isTopLevelCoercion, features, restrictiveAggregateTypes);
         }
 
-        public bool CoercesTo(DType typeDest, out bool isSafe, bool aggregateCoercion, bool isTopLevelCoercion, Features features)
+        public bool CoercesTo(DType typeDest, out bool isSafe, bool aggregateCoercion, bool isTopLevelCoercion, Features features, bool restrictiveAggregateTypes = false)
         {
-            return CoercesTo(typeDest, out isSafe, out _, out _, out _, aggregateCoercion, isTopLevelCoercion, features);
+            return CoercesTo(typeDest, out isSafe, out _, out _, out _, aggregateCoercion, isTopLevelCoercion, features, restrictiveAggregateTypes);
         }
 
-        public bool AggregateCoercesTo(DType typeDest, out bool isSafe, out DType coercionType, out KeyValuePair<string, DType> schemaDifference, out DType schemaDifferenceType, Features features, bool aggregateCoercion = true)
+        public bool AggregateCoercesTo(DType typeDest, out bool isSafe, out DType coercionType, out KeyValuePair<string, DType> schemaDifference, out DType schemaDifferenceType, Features features, bool aggregateCoercion = true, bool restrictiveAggregateTypes = false)
         {
             Contracts.Assert(IsAggregate);
 
@@ -3207,7 +3220,8 @@ namespace Microsoft.PowerFx.Core.Types
                     out schemaDifferenceType,
                     aggregateCoercion: true,
                     isTopLevelCoercion: false,
-                    features);
+                    features,
+                    restrictiveAggregateTypes);
             }
 
             if (Kind != typeDest.Kind)
@@ -3242,7 +3256,8 @@ namespace Microsoft.PowerFx.Core.Types
                         out var fieldSchemaDifferenceType,
                         aggregateCoercion,
                         isTopLevelCoercion: false,
-                        features);
+                        features,
+                        restrictiveAggregateTypes);
 
                     // This is the attempted coercion type.  If we fail, we need to know this for error handling
                     coercionType = coercionType.Add(typedName.Name, fieldCoercionType);
@@ -3270,6 +3285,17 @@ namespace Microsoft.PowerFx.Core.Types
                 isSafe &= fieldIsSafe;
             }
 
+            if (restrictiveAggregateTypes)
+            {
+                foreach (var typedName in GetNames(DPath.Root))
+                {
+                    if (!typeDest.TryGetType(typedName.Name, out _))
+                    {
+                        return false;
+                    }
+                }
+            }
+
             return isValid;
         }
 
@@ -3284,7 +3310,8 @@ namespace Microsoft.PowerFx.Core.Types
             out DType schemaDifferenceType,
             bool aggregateCoercion,
             bool isTopLevelCoercion,
-            Features features)
+            Features features,
+            bool restrictiveAggregateTypes = false)
         {
             AssertValid();
             Contracts.Assert(typeDest.IsValid);
@@ -3301,7 +3328,7 @@ namespace Microsoft.PowerFx.Core.Types
                 return false;
             }
 
-            if (typeDest.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+            if (typeDest.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules, restrictiveAggregateTypes))
             {
                 coercionType = typeDest;
                 return true;
@@ -3346,7 +3373,8 @@ namespace Microsoft.PowerFx.Core.Types
                     out schemaDifference,
                     out schemaDifferenceType,
                     features,
-                    aggregateCoercion);
+                    aggregateCoercion,
+                    restrictiveAggregateTypes);
             }
 
             var subtypeCoerces = SubtypeCoercesTo(
