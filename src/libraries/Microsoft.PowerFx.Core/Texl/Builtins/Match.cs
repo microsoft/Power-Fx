@@ -92,9 +92,30 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public const string Complete = "^c$";                     // invented by us, with the ^ and $ around
     }
 
-    internal class MatchNewlines
+    // What we consider a newline character for the definition of non-dotall . and multiline ^ $
+    // We follow the Unicode recommendations in https://unicode.org/reports/tr13/tr13-9.html and https://www.unicode.org/reports/tr18/#RL1.6.
+    // \n, \r, and \r\n are obvious, covering Unix and Windows, Power Apps uses \r\n, and supported by Excel with PCRE2 (ANYCRLF)
+    // \u2028 and \u2029 are supported by JavaScript and are generally recommended as unambiguous line and paragraph separators
+    // \x85 is supported by many regular expression languages
+    // \v and \f were debated, but ultimatly supported since it is the Unicode recommendation, Microsoft Word uses \v for line seperation, and it is compatible with PCRE2 (ANY).
+    // We transpile these on .NET and JavaScript into a character class
+    internal class MatchWhiteSpace
     {
-        public const string EscapeChars = @"\n\x0b\f\r\x85\u2028\u2029";
+        public const string NewLineEscapesWithoutCRLF = @"\x0b\x0c\x85\u2028\u2029";
+        public const string NewLineDoubleEscapesWithoutCRLF = @"\\x0b\\x0c\\x85\\u2028\\u2029";
+
+        public const string NewLineEscapes = @"\r\n" + NewLineEscapesWithoutCRLF;
+        public const string NewLineDoubleEscapes = @"\\r\\n" + NewLineDoubleEscapesWithoutCRLF;
+
+        public const string SpaceEscapes = @"\x09\p{Z}";                                // must use with /u or /v modifier flag on JavaScript
+        public const string SpaceDoubleEscapes = @"\\x09\\p{Z}";                        // must use with /u or /v modifier flag on JavaScript
+
+        public const string SpaceNewLineEscapes = @"\p{Z}\x09-\x0d\x85";                // must use with /u or /v modifier flag on JavaScript
+        public const string SpaceNewLineDoubleEscapes = @"\\p{Z}\\x09-\\x0d\\x85";      // must use with /u or /v modifier flag on JavaScript
+
+        public static bool IsSpaceNewLine(char c) => char.IsWhiteSpace(c);  // matches NewLineEscapes + SpaceEscapes
+
+        public static bool IsNewLine(char c) => c == '\r' || c == '\n' || c == '\x0b' || c == '\x0c' || c == '\x85' || c == '\u2028' || c == '\u2029';
     }
 
     internal class BaseMatchFunction : BuiltinFunction
@@ -201,7 +222,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // - Regular expression pattern
             // - NumberedSubMatches vs. Not
             // if another MatchOption is added which impacts the return type, this will need to be updated
-            string regexCacheKey = this._cachePrefix + (alteredOptions.Contains(MatchOptionChar.NumberedSubMatches) ? "N_" : "-_") + regularExpression;
+            string regexCacheKey = RegexCacheKeyGen(this._cachePrefix, alteredOptions, regularExpression);
 
             // if the key is found in the cache, then the regular expression must have previously passed IsSupportedRegularExpression (or we are pre V1 and we don't check)
             if (RegexCacheTypeLookup(regExNode, regexCacheKey, errors, ref returnType))
@@ -216,6 +237,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return false;
+        }
+
+        private string RegexCacheKeyGen(string prefix, string options, string regex)
+        {
+            // include any options that could impact the output schema or change the way the regular expression is parsed for validation
+            return prefix + (options.Contains(MatchOptionChar.NumberedSubMatches) ? "N_" : "-_") + (options.Contains(MatchOptionChar.FreeSpacing) ? "X_" : "~_") + regex;
         }
 
         private bool RegexCacheTypeLookup(TexlNode regExNode, string regexCacheKey, IErrorContainer errors, ref DType returnType)
@@ -257,8 +284,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     regexDotNetOptions |= RegexOptions.IgnorePatternWhitespace;
 
-                    // In x mode, comment line endings are [\r\n], but .NET only supports \n.  For our purposes here, we can just replace the \r.
-                    regexPattern = regexPattern.Replace('\r', '\n');
+                    // In x mode, comment line endings are any newline character (as per PCRE2), but .NET only supports \n.
+                    // For our purposes here to determine the type, we can just replace the other newline characters wtih \n.
+                    var regexPatternWhitespace = new Regex("[" + MatchWhiteSpace.NewLineEscapes + "]");
+                    regexPattern = regexPatternWhitespace.Replace(regexPattern, "\n");
                 }
 
                 // always .NET compile the regular expression, even if we don't need the return type (boolean), to ensure it is legal in .NET
@@ -430,7 +459,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<badEscape>\\.)                                  | # all other escaped characters are invalid and reserved for future use
                 ";
 
-            var generalRE = new Regex(
+            Regex generalRE = new Regex(
                 escapeRE +
                 @"
                     # leading (?<, named captures
@@ -478,12 +507,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<closeParen>\))                                  |                                      
                     (?<alternation>\|)                                 |
                     (?<anchors>[\^\$])                                 |
-                    (?<poundComment>\#)                                | # used in free spacing mode (to detect start of comment), ignored otherwise
-                    (?<newline>[\r\n])                                 | # used in free spacing mode (to detect end of comment), ignored otherwise
+                    (?<poundComment>\#)                                | # used in free spacing mode (to detect start of comment), treated as else otherwise
+                    (?<newline>[" + MatchWhiteSpace.NewLineEscapes + @"])    | # used in free spacing mode (to detect end of comment), treated as else otherwise
                     (?<else>.)
                 ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
 
-            var characterClassRE = new Regex(
+            Regex characterClassRE = new Regex(
                 escapeRE +
                 @"
                     (?<badHyphen>^-|-$)                                | # begin/end literal hyphen not allowed within character class, needs to be escaped (ECMAScript v)
@@ -527,7 +556,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                 }
 
-                if (token.Groups["newline"].Success)
+                if (openPoundComment && token.Groups["newline"].Success)
                 {
                     openPoundComment = false;
                 }
@@ -613,7 +642,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             return false;
                         }
                     }
-                    else if (token.Groups["else"].Success || token.Groups["goodEscape"].Success || token.Groups["goodEscapeOutsideCC"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
+                    else if (token.Groups["else"].Success || token.Groups["newline"].Success || token.Groups["goodEscape"].Success || token.Groups["goodEscapeOutsideCC"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
                     {
                         groupTracker.SeenNonGroup();
                     }
@@ -840,7 +869,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["poundComment"].Success)
                     {
-                        openPoundComment = freeSpacing;
+                        if (freeSpacing)
+                        {
+                            openPoundComment = true;
+                        }
+                        else
+                        {
+                            groupTracker.SeenNonGroup();
+                        }
                     }
                     else if (token.Groups["badNamedCaptureName"].Success)
                     {

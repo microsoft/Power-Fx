@@ -38,7 +38,7 @@
 "Ω"
 
 // newline characters not matched by "."
->> JSON( MatchAll( Char(13) & Char(10) & Char(Hex2Dec("85")) & UniChar(Hex2Dec("2028")) & UniChar(Hex2Dec("2029")) & Char(Hex2Dec("C")) & Char(Hex2Dec("B")), "." ) )
-"[{""FullMatch"":""\u0085"",""StartMatch"":3},{""FullMatch"":""\u2028"",""StartMatch"":4},{""FullMatch"":""\u2029"",""StartMatch"":5},{""FullMatch"":""\f"",""StartMatch"":6},{""FullMatch"":""\u000B"",""StartMatch"":7}]"
+>> JSON( MatchAll( Char(9) & Char(13) & Char(10) & Char(Hex2Dec("85")) & UniChar(Hex2Dec("2028")) & UniChar(Hex2Dec("2029")) & Char(Hex2Dec("C")) & Char(Hex2Dec("B")) & Char(14), "." ) )
+"[{""FullMatch"":""\t"",""StartMatch"":1},{""FullMatch"":""\u000E"",""StartMatch"":9}]"
 
 

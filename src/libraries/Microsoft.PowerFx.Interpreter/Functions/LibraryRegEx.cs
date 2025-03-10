@@ -243,98 +243,99 @@ namespace Microsoft.PowerFx.Functions
                 bool numberedSubMatches = options.Contains(MatchOptionChar.NumberedSubMatches);
 
                 // Can't add options ^ and $ too early as there may be freespacing comments, centralize the logic here and call subfunctions
-                string AlterStart()
-                {
-                    // ^ doesn't require any translation if not in multilline, only matches the start of the string
-                    // MatchAll( "1a3" & Char(13) & "2b4", "(?m)^\d" ) would not match "2" without translation
-                    return openCharacterClass ? "^" : (multiline ? @"(?:(?<=\A|\r\n|\n)|(?<=\r)(?!\n))" : "^");
-                }
+                // ^ doesn't require any translation if not in multilline, only matches the start of the string
+                // MatchAll( "1a3" & Char(13) & "2b4", "(?m)^\d" ) would not match "2" without translation
+                string AlterStart() => openCharacterClass ? "^" : (multiline ? @"(?:(?<=\A|\r\n|[\n" + MatchWhiteSpace.NewLineEscapesWithoutCRLF + @"])|(?<=\r)(?!\n))" : "^");
 
-                string AlterEnd()
-                {
-                    // $ does require translation if not in multilline, as $ does look past newlines to the end in .NET but it doesn't take into account \r
-                    // MatchAll( "1a3" & Char(13) & "2b4" & Char(13), "(?m)\d$" ) would not match "3" or "4" without translation
-                    // Match( "1a3" & Char(13), "\d$" ) would also not match "3" without translation
-                    return openCharacterClass ? "$" : (multiline ? @"(?:(?=\r\n|[\r]|\z)|(?<!\r)(?=\n))" : @"(?:(?=\r\n\z|[\r]?\z)|(?<!\r)(?=\n\z))");
-                }
+                // $ does require translation if not in multilline, as $ does look past newlines to the end in .NET but it doesn't take into account \r
+                // MatchAll( "1a3" & Char(13) & "2b4" & Char(13), "(?m)\d$" ) would not match "3" or "4" without translation
+                // Match( "1a3" & Char(13), "\d$" ) would also not match "3" without translation
+                string AlterEnd() => openCharacterClass ? "$" : (multiline ? @"(?:(?=\r\n|[\r" + MatchWhiteSpace.NewLineEscapesWithoutCRLF + @"]|\z)|(?<!\r)(?=\n))" : @"(?:(?=\r\n\z|[\r" + MatchWhiteSpace.NewLineEscapesWithoutCRLF + @"]?\z)|(?<!\r)(?=\n\z))");
 
                 for (; index < regex.Length; index++)
                 {
-                    switch (regex[index])
+                    if (freeSpacing && !openCharacterClass && MatchWhiteSpace.IsSpaceNewLine(regex[index]))
                     {
-                        case '[':
-                            openCharacterClass = true;
-                            altered.Append('[');
-                            break;
+                        altered.Append(' ');
+                    }
+                    else
+                    {
+                        switch (regex[index])
+                        {
+                            case '[':
+                                openCharacterClass = true;
+                                altered.Append('[');
+                                break;
 
-                        case ']':
-                            openCharacterClass = false;
-                            altered.Append(']');
-                            break;
+                            case ']':
+                                openCharacterClass = false;
+                                altered.Append(']');
+                                break;
 
-                        case '#':
-                            if (freeSpacing && !openCharacterClass)
-                            {
-                                for (index++; index < regex.Length && regex[index] != '\r' && regex[index] != '\n'; index++)
+                            case '#':
+                                if (freeSpacing && !openCharacterClass)
                                 {
-                                    // skip the comment characters until the next newline, in case it includes [ ] 
+                                    for (index++; index < regex.Length && !MatchWhiteSpace.IsNewLine(regex[index]); index++)
+                                    {
+                                        // skip the comment characters until the next newline, in case it includes [ ] 
+                                    }
+
+                                    // need something to be emitted to avoid "\1#" & Char(10) & "1" being interpreted as "\11"
+                                    // need to replace a \r ending comment (supported by Power Fx) with a \n ending comment (supported by .NET)
+                                    // also need to make sure the comment terminates with a newline in case we add a "$" below
+                                    altered.Append("\n");
+                                }
+                                else
+                                {
+                                    altered.Append('#');
                                 }
 
-                                // need something to be emitted to avoid "\1#" & Char(10) & "1" being interpreted as "\11"
-                                // need to replace a \r ending comment (supported by Power Fx) with a \n ending comment (supported by .NET)
-                                // also need to make sure the comment terminates with a newline in case we add a "$" below
-                                altered.Append("\n");
-                            }
-                            else
-                            {
-                                altered.Append('#');
-                            }
+                                break;
 
-                            break;
-
-                        case '(':
-                            // inline comment
-                            if (regex.Length - index > 2 && regex[index + 1] == '?' && regex[index + 2] == '#')
-                            {
-                                for (index++; index < regex.Length && regex[index] != ')'; index++)
+                            case '(':
+                                // inline comment
+                                if (regex.Length - index > 2 && regex[index + 1] == '?' && regex[index + 2] == '#')
                                 {
-                                    // skip the comment characters until the next closing paren, in case it includes [ ] 
+                                    for (index++; index < regex.Length && regex[index] != ')'; index++)
+                                    {
+                                        // skip the comment characters until the next closing paren, in case it includes [ ] 
+                                    }
+
+                                    // need something to be emitted to avoid "\1(?#)1" being interpreted as "\11"
+                                    altered.Append("(?#)");
+                                }
+                                else
+                                {
+                                    altered.Append(regex[index]);
                                 }
 
-                                // need something to be emitted to avoid "\1(?#)1" being interpreted as "\11"
-                                altered.Append("(?#)");
-                            }
-                            else
-                            { 
+                                break;
+
+                            case '\\':
+                                altered.Append("\\");
+                                if (++index < regex.Length)
+                                {
+                                    altered.Append(regex[index]);
+                                }
+
+                                break;
+
+                            case '.':
+                                altered.Append(!openCharacterClass && !dotAll ? @"[^" + MatchWhiteSpace.NewLineEscapes + "]" : ".");
+                                break;
+
+                            case '^':
+                                altered.Append(AlterStart());
+                                break;
+
+                            case '$':
+                                altered.Append(AlterEnd());
+                                break;
+
+                            default:
                                 altered.Append(regex[index]);
-                            }
-
-                            break;
-
-                        case '\\':
-                            altered.Append("\\");
-                            if (++index < regex.Length)
-                            {
-                                altered.Append(regex[index]);
-                            }
-
-                            break;
-
-                        case '.':
-                            altered.Append(!openCharacterClass && !dotAll ? @"[^\r\n]" : ".");
-                            break;
-
-                        case '^':
-                            altered.Append(AlterStart());
-                            break;
-
-                        case '$':
-                            altered.Append(AlterEnd());
-                            break;
-
-                        default:
-                            altered.Append(regex[index]);
-                            break;
+                                break;
+                        }
                     }
                 }
 

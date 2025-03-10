@@ -63,6 +63,9 @@ Errors: Error 15-63: Invalid regular expression: Unclosed inline comment, starts
  ").FullMatch
 "test"
 
+>> Match( "atestz", "(?x)" &Char(10)& "# this is free spacing!" &Char(10)&Char(10)& "t" &Char(10)&Char(10) & "e # e is for elephant" &Char(10)&Char(10)& "s" &Char(10)&Char(10)& "t # t is for terminte" &Char(10)&Char(10)).FullMatch
+"test"
+
 >> Match( "atestz", "(?x)" &Char(13)& "# this is free spacing!" &Char(13)&Char(13)& "t" &Char(13)&Char(13) & "e # e is for elephant" &Char(13)&Char(13)& "s" &Char(13)&Char(13)& "t # t is for terminte" &Char(13)&Char(13)).FullMatch
 "test"
 
@@ -81,6 +84,21 @@ Errors: Error 15-63: Invalid regular expression: Unclosed inline comment, starts
 >> Match( "atestz", "(?x)" &Char(13)&Char(10)& "# this is free spacing!" &Char(13)&Char(10)& "t" &Char(13)&Char(10)& "e # e is for elephant" &Char(13)&Char(10)& "s" &Char(13)&Char(10)& "t # t is for terminte" &Char(13)&Char(10)).FullMatch
 "test"
 
+>> Match( "atestz", "(?x)" &Char(11)& "# this is free spacing!" &Char(11)&Char(11)& "t" &Char(11)&Char(11) & "e # e is for elephant" &Char(11)&Char(11)& "s" &Char(11)&Char(11)& "t # t is for terminte" &Char(11)&Char(11)).FullMatch
+"test"
+
+>> Match( "atestz", "(?x)" &Char(12)& "# this is free spacing!" &Char(12)&Char(12)& "t" &Char(12)&Char(12) & "e # e is for elephant" &Char(12)&Char(12)& "s" &Char(12)&Char(12)& "t # t is for terminte" &Char(12)&Char(12)).FullMatch
+"test"
+
+>> Match( "atestz", "(?x)" &Char(Hex2Dec("85"))& "# this is free spacing!" &Char(Hex2Dec("85"))&Char(Hex2Dec("85"))& "t" &Char(Hex2Dec("85"))&Char(Hex2Dec("85")) & "e # e is for elephant" &Char(Hex2Dec("85"))&Char(Hex2Dec("85"))& "s" &Char(Hex2Dec("85"))&Char(Hex2Dec("85"))& "t # t is for terminte" &Char(Hex2Dec("85"))&Char(Hex2Dec("85"))).FullMatch
+"test"
+
+>> Match( "atestz", "(?x)" &UniChar(Hex2Dec("2028"))& "# this is free spacing!" &UniChar(Hex2Dec("2028"))&UniChar(Hex2Dec("2028"))& "t" &UniChar(Hex2Dec("2028"))&UniChar(Hex2Dec("2028")) & "e # e is for elephant" &UniChar(Hex2Dec("2028"))&UniChar(Hex2Dec("2028"))& "s" &UniChar(Hex2Dec("2028"))&UniChar(Hex2Dec("2028"))& "t # t is for terminte" &UniChar(Hex2Dec("2028"))&UniChar(Hex2Dec("2028"))).FullMatch
+"test"
+
+>> Match( "atestz", "(?x)" &UniChar(Hex2Dec("2029"))& "# this is free spacing!" &UniChar(Hex2Dec("2029"))&UniChar(Hex2Dec("2029"))& "t" &UniChar(Hex2Dec("2029"))&UniChar(Hex2Dec("2029")) & "e # e is for elephant" &UniChar(Hex2Dec("2029"))&UniChar(Hex2Dec("2029"))& "s" &UniChar(Hex2Dec("2029"))&UniChar(Hex2Dec("2029"))& "t # t is for terminte" &UniChar(Hex2Dec("2029"))&UniChar(Hex2Dec("2029"))).FullMatch
+"test"
+
 >> IsMatch( "ab", "(?x)a # b" )
 true
 
@@ -93,8 +111,8 @@ true
 >> IsMatch( "ab", "(?x)a # " &Char(13)&Char(10)& " b" )  // one is the newline, the other is just whitespace that is ignored
 true
 
-// >> IsMatch( "ab", "(?x)a # " &Char(133)& " b" )  // \x85
-// false
+>> IsMatch( "ab", "(?x)a # " &Char(133)& " b" )  // \x85
+true
 
 // Edge cases for removal during RE translations
 >> Match( "1111111122221", "(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)\11", MatchOptions.NumberedSubMatches )
@@ -105,8 +123,6 @@ Blank()
 
 >> Match( "1111111122221", "(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)\1#asdf" & Char(13) & "1", MatchOptions.NumberedSubMatches & MatchOptions.FreeSpacing )
 Blank()
-
-// MatchOptions.Contains doesn't strip free spacing on PCRE2, good to compare results
 
 >> IsMatch( "ab", "(?x)a # c", MatchOptions.Contains )
 true
@@ -121,27 +137,27 @@ false
 false
 
 >> IsMatch( "ab", "(?x)a # " &Char(133)& " c", MatchOptions.Contains )  // \x85
-true
+false
 
 >> IsMatch( "ab", "(?x)a # " &Char(12)& " c", MatchOptions.Contains )   // \f
-true
+false
 
 >> IsMatch( "ab", "(?x)a # " &Char(11)& " c", MatchOptions.Contains )   // \v
-true
+false
 
 >> IsMatch( "ab", "(?x)a # " &Char(9)& " c", MatchOptions.Contains )    // \t
 true
 
->> IsMatch( "ab", "(?x)a # " &UniChar(2028)& " c", MatchOptions.Contains )  // \u2028
+>> IsMatch( "ab", "(?x)a # " &UniChar(Hex2Dec("2028"))& " c", MatchOptions.Contains )  // \u2028
+false
+
+>> IsMatch( "ab", "(?x)a # " &UniChar(Hex2Dec("2029"))& " c", MatchOptions.Contains )  // \u2029
+false
+
+>> IsMatch( "ac", "(?x)a # \n b" & Char(10) & "c", MatchOptions.Contains )  // "\n" (spelled out, not the character) doesn't terminate comment
 true
 
->> IsMatch( "ab", "(?x)a # " &UniChar(2029)& " c", MatchOptions.Contains )  // \u2029
-true
-
->> IsMatch( "ac", "(?x)a # \n b" & Char(10) & "c", MatchOptions.Contains )  // \n doesn't terminate comment
-true
-
->> IsMatch( "ac", "(?x)a # \r b" & Char(10) & "c", MatchOptions.Contains )  // \r doesn't terminate comment
+>> IsMatch( "ac", "(?x)a # \r b" & Char(10) & "c", MatchOptions.Contains )  // "\r" (spelled out, not the character) doesn't terminate comment
 true
 
 // ESCAPED #
@@ -196,9 +212,18 @@ Blank()
 >> Match( "ab cd", "a" & Char(10) & " b [\ ] c" & Char(10) & "d", MatchOptions.FreeSpacing )
 {FullMatch:"ab cd",StartMatch:1}
 
-// FREE SPACING IGNORED SPACE CHARACTERS
+// FREE SPACING IGNORES SPACE CHARACTERS IN REGEX
+
+>> IsMatch( "ab", "axb", MatchOptions.FreeSpacing)
+false
 
 >> IsMatch( "ab", "a b", MatchOptions.FreeSpacing) // space
+true
+
+>> IsMatch( "ab", "a\tb", MatchOptions.FreeSpacing) // space
+true
+
+>> IsMatch( "ab", "a\x0009b", MatchOptions.FreeSpacing) // space
 true
 
 >> IsMatch( "ab", "a" &UniChar(9)& "b", MatchOptions.FreeSpacing)  // \t
@@ -207,71 +232,157 @@ true
 >> IsMatch( "ab", "a" &UniChar(10)& "b", MatchOptions.FreeSpacing) // \n
 true
 
->> IsMatch( "ab", "a" &UniChar(13)& "b", MatchOptions.FreeSpacing) // \r
+>> IsMatch( "ab", "a" &UniChar(11)& "b", MatchOptions.FreeSpacing) // \v
 true
 
 >> IsMatch( "ab", "a" &UniChar(12)& "b", MatchOptions.FreeSpacing) // \f
 true
 
->> IsMatch( "ab", "a" &UniChar(11)& "b", MatchOptions.FreeSpacing) // \v
-false
+>> IsMatch( "ab", "a" &UniChar(13)& "b", MatchOptions.FreeSpacing) // \r
+true
 
 >> IsMatch( "ab", "a" &UniChar(160)& "b", MatchOptions.FreeSpacing) // \u00a0
-false
+true
 
 >> IsMatch( "ab", "a" &UniChar(5760)& "b", MatchOptions.FreeSpacing) // \u1680
-false
+true
 
 >> IsMatch( "ab", "a" &UniChar(8192)& "b", MatchOptions.FreeSpacing) // \u2000
-false
+true
 
 >> IsMatch( "ab", "a" &UniChar(8193)& "b", MatchOptions.FreeSpacing) // \u2001
-false
+true
 
 >> IsMatch( "ab", "a" &UniChar(8194)& "b", MatchOptions.FreeSpacing) // \u2002
-false
+true
 
 >> IsMatch( "ab", "a" &UniChar(8195)& "b", MatchOptions.FreeSpacing) // \u2003
-false
+true
 
 >> IsMatch( "ab", "a" &UniChar(8196)& "b", MatchOptions.FreeSpacing) // \u2004
-false
+true
 
 >> IsMatch( "ab", "a" &UniChar(8197)& "b", MatchOptions.FreeSpacing) // \u2005
-false
+true
 
 >> IsMatch( "ab", "a" &UniChar(8198)& "b", MatchOptions.FreeSpacing) // \u2006
-false
+true
 
 >> IsMatch( "ab", "a" &UniChar(8199)& "b", MatchOptions.FreeSpacing) // \u2007
-false
+true
 
 >> IsMatch( "ab", "a" &UniChar(8200)& "b", MatchOptions.FreeSpacing) // \u2008
-false
+true
 
 >> IsMatch( "ab", "a" &UniChar(8201)& "b", MatchOptions.FreeSpacing) // \u2009
-false
+true
 
 >> IsMatch( "ab", "a" &UniChar(8202)& "b", MatchOptions.FreeSpacing) // \u200a
-false
+true
 
 >> IsMatch( "ab", "a" &UniChar(8232)& "b", MatchOptions.FreeSpacing) // \u2028
-false
+true
 
 >> IsMatch( "ab", "a" &UniChar(8233)& "b", MatchOptions.FreeSpacing) // \u2029
-false
+true
 
 >> IsMatch( "ab", "a" &UniChar(8239)& "b", MatchOptions.FreeSpacing) // \u202f
-false
+true
 
 >> IsMatch( "ab", "a" &UniChar(8287)& "b", MatchOptions.FreeSpacing) // \u205f
-false
+true
 
 >> IsMatch( "ab", "a" &UniChar(12288)& "b", MatchOptions.FreeSpacing) // \u3000
-false
+true
 
 >> IsMatch( "ab", "a" &UniChar(65279)& "b", MatchOptions.FreeSpacing) // \ufeff
 false
+
+// FREE SPACING INCLUDES SPACE CHARACTERS IN CHARACTER CLASS
+
+>> IsMatch( "axb", "a[x]b", MatchOptions.FreeSpacing)
+true
+
+>> IsMatch( "a#b", "a[#]b", MatchOptions.FreeSpacing) // pound
+true
+
+>> IsMatch( "a b", "a[ ]b", MatchOptions.FreeSpacing) // space
+true
+
+>> IsMatch( "a" & Char(9) & " b", "a[\t]b", MatchOptions.FreeSpacing) // space
+true
+
+>> IsMatch( "a" & UniChar(9) & "b", "a[" &UniChar(9)& "]b", MatchOptions.FreeSpacing)  // \t
+true
+
+>> IsMatch( "a" & UniChar(10) & "b", "a[" &UniChar(10)& "]b", MatchOptions.FreeSpacing) // \n
+true
+
+>> IsMatch( "a" & UniChar(11) & "b", "a[" &UniChar(11)& "]b", MatchOptions.FreeSpacing) // \v
+true
+
+>> IsMatch( "a" & UniChar(12) & "b", "a[" &UniChar(12)& "]b", MatchOptions.FreeSpacing) // \f
+true
+
+>> IsMatch( "a" & UniChar(13) & "b", "a[" &UniChar(13)& "]b", MatchOptions.FreeSpacing) // \r
+true
+
+>> IsMatch( "a" & UniChar(160) & "b", "a[" &UniChar(160)& "]b", MatchOptions.FreeSpacing) // \u00a0
+true
+
+>> IsMatch( "a" & UniChar(Hex2Dec("1680")) & "b", "a[" &UniChar(Hex2Dec("1680"))& "]b", MatchOptions.FreeSpacing) // \u1680
+true
+
+>> IsMatch( "a" & UniChar(Hex2Dec("2000")) & "b", "a[" &UniChar(Hex2Dec("2000"))& "]b", MatchOptions.FreeSpacing) // \u2000
+true
+
+>> IsMatch( "a" & UniChar(Hex2Dec("2001")) & "b", "a[" &UniChar(Hex2Dec("2001"))& "]b", MatchOptions.FreeSpacing) // \u2001
+true
+
+>> IsMatch( "a" & UniChar(Hex2Dec("2002")) & "b", "a[" &UniChar(Hex2Dec("2002"))& "]b", MatchOptions.FreeSpacing) // \u2002
+true
+
+>> IsMatch( "a" & UniChar(Hex2Dec("2003")) & "b", "a[" &UniChar(Hex2Dec("2003"))& "]b", MatchOptions.FreeSpacing) // \u2003
+true
+
+>> IsMatch( "a" & UniChar(Hex2Dec("2004")) & "b", "a[" &UniChar(Hex2Dec("2004"))& "]b", MatchOptions.FreeSpacing) // \u2004
+true
+
+>> IsMatch( "a" & UniChar(Hex2Dec("2005")) & "b", "a[" &UniChar(Hex2Dec("2005"))& "]b", MatchOptions.FreeSpacing) // \u2005
+true
+
+>> IsMatch( "a" & UniChar(Hex2Dec("2006")) & "b", "a[" &UniChar(Hex2Dec("2006"))& "]b", MatchOptions.FreeSpacing) // \u2006
+true
+
+>> IsMatch( "a" & UniChar(Hex2Dec("2007")) & "b", "a[" &UniChar(Hex2Dec("2007"))& "]b", MatchOptions.FreeSpacing) // \u2007
+true
+
+>> IsMatch( "a" & UniChar(Hex2Dec("2008")) & "b", "a[" &UniChar(Hex2Dec("2008"))& "]b", MatchOptions.FreeSpacing) // \u2008
+true
+
+>> IsMatch( "a" & UniChar(Hex2Dec("2009")) & "b", "a[" &UniChar(Hex2Dec("2009"))& "]b", MatchOptions.FreeSpacing) // \u2009
+true
+
+>> IsMatch( "a" & UniChar(Hex2Dec("200a")) & "b", "a[" &UniChar(Hex2Dec("200a"))& "]b", MatchOptions.FreeSpacing) // \u200a
+true
+
+>> IsMatch( "a" & UniChar(Hex2Dec("2028")) & "b", "a[" &UniChar(Hex2Dec("2028"))& "]b", MatchOptions.FreeSpacing) // \u2028
+true
+
+>> IsMatch( "a" & UniChar(Hex2Dec("2029")) & "b", "a[" &UniChar(Hex2Dec("2029"))& "]b", MatchOptions.FreeSpacing) // \u2029
+true
+
+>> IsMatch( "a" & UniChar(Hex2Dec("202f")) & "b", "a[" &UniChar(Hex2Dec("202f"))& "]b", MatchOptions.FreeSpacing) // \u202f
+true
+
+>> IsMatch( "a" & UniChar(Hex2Dec("205f")) & "b", "a[" &UniChar(Hex2Dec("205f"))& "]b", MatchOptions.FreeSpacing) // \u205f
+true
+
+>> IsMatch( "a" & UniChar(Hex2Dec("3000")) & "b", "a[" &UniChar(Hex2Dec("3000"))& "]b", MatchOptions.FreeSpacing) // \u3000
+true
+
+>> IsMatch( "a" & UniChar(Hex2Dec("feff")) & "b", "a[" &UniChar(Hex2Dec("feff"))& "]b", MatchOptions.FreeSpacing) // \ufeff
+true
 
 // spaces are not merely removed, they are no-ops and regular expression tokens still end at them
 

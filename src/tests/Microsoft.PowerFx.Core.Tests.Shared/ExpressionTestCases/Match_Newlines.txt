@@ -23,7 +23,7 @@ Blank()
 >> AddColumns( Match( "test" & Char(13) & Char(10), "^test$" ), len, Len(FullMatch) )
 {FullMatch:"test",StartMatch:1,len:4}
 
-// .NET treats dot as [^\n], XRegExp and JavaScript use [^\n\r\u2028\u2029]
+// dot doesn't include newline characters
 
 >> DropColumns( Match( "te" & " " & "t", "te.t" ), FullMatch )
 {StartMatch:1}
@@ -35,10 +35,19 @@ Blank()
 Blank()
 
 >> DropColumns( Match( "te" & UniChar(Hex2Dec("2028")) & "t", "te.t" ), FullMatch )
-{StartMatch:1}
+Blank()
 
 >> DropColumns( Match( "te" & UniChar(Hex2Dec("2029")) & "t", "te.t" ), FullMatch )
-{StartMatch:1}
+Blank()
+
+>> DropColumns( Match( "te" & UniChar(Hex2Dec("85")) & "t", "te.t" ), FullMatch )
+Blank()
+
+>> DropColumns( Match( "te" & Char(11) & "t", "te.t" ), FullMatch )
+Blank()
+
+>> DropColumns( Match( "te" & Char(12) & "t", "te.t" ), FullMatch )
+Blank()
 
 // $ end anchor, multiline, and newline characters
 
@@ -424,4 +433,77 @@ true
 
 >> IsMatch( "h" & UniChar(Hex2Dec("00a0")) & "d", "h\Sd") 
 false
+
+// newline terminators in free spacing
+
+>> Match( "aB", "(?x)a # a B" )
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a " & Char(8) & " B+" )
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a " & Char(9) & " B+" )  // \t
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a " & Char(10) & " B+" )  // \n
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a " & Char(11) & " B+" )  // \v
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a " & Char(12) & " B+" )  // \f
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a " & Char(13) & " B+" )  // \r
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a " & Char(14) & " B+" )
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a " & UniChar(Hex2Dec("85")) & " B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a " & UniChar(160) & " B+" ) // Non breaking space
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a " & UniChar(Hex2Dec("2028")) & " B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a" & UniChar(Hex2Dec("2029")) & " B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+// ignored spaces in free spacing
+
+>> Match( "aBBB", "(?x)a B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a " & Char(9) & " B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a " & Char(10) & " B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a " & Char(11) & " B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a " & Char(12) & " B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a " & Char(13) & " B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a " & Char(14) & " B+" )
+Blank()
+
+>> Match( "aBBB", "(?x)a " & UniChar(Hex2Dec("85")) & " B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a " & UniChar(160) & " B+" ) // Non breaking space
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a " & UniChar(Hex2Dec("2028")) & " B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a " & UniChar(Hex2Dec("2029")) & " B+" ) 
+{FullMatch:"aBBB",StartMatch:1}
 

@@ -1565,7 +1565,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             return true;
                         }
                     }
-                    else if (callNode.Head.Name.Value == BuiltinFunctionsCore.Char.Name && callNode.Args.Children.Count == 1)
+                    else if ((callNode.Head.Name.Value == BuiltinFunctionsCore.Char.Name || callNode.Head.Name.Value == BuiltinFunctionsCore.UniChar.Name) && callNode.Args.Children.Count == 1)
                     {
                         int val = -1;
 
@@ -1577,30 +1577,20 @@ namespace Microsoft.PowerFx.Core.Binding
                         {
                             val = (int)((NumLitNode)callNode.Args.Children[0]).ActualNumValue;
                         }
-
-                        if (val < 1 || val > 255)
+                        else if (callNode.Args.Children[0].Kind == NodeKind.Call)
                         {
-                            return false;
+                            var hexCallNode = callNode.Args.Children[0].AsCall();
+                            if (hexCallNode.Head.Name.Value == BuiltinFunctionsCore.Hex2Dec.Name && hexCallNode.Args.Children[0].Kind == NodeKind.StrLit)
+                            {
+                                var hexStr = hexCallNode.Args.Children[0].AsStrLit().Value;
+                                if (hexStr.Length <= 7) // must be 32-bit positive
+                                {
+                                    int.TryParse(hexStr, System.Globalization.NumberStyles.HexNumber, null, out val);
+                                }
+                            }
                         }
 
-                        nodeValue = ((char)val).ToString();
-                        return true;
-                    }
-                    else if (callNode.Head.Name.Value == BuiltinFunctionsCore.UniChar.Name && callNode.Args.Children.Count == 1)
-                    {
-                        int val = -1;
-
-                        if (callNode.Args.Children[0].Kind == NodeKind.DecLit)
-                        {
-                            val = (int)((DecLitNode)callNode.Args.Children[0]).ActualDecValue;
-                        }
-                        else if (callNode.Args.Children[0].Kind == NodeKind.NumLit)
-                        {
-                            val = (int)((NumLitNode)callNode.Args.Children[0]).ActualNumValue;
-                        }
-
-                        // partial surrogate pair not supported, consistent with interpreter UniChar implementation
-                        if (val < 1 || val > 0x10FFFF || (val >= 0xD800 && val <= 0xDFFF))
+                        if (val < 1 || (val > 255 && callNode.Head.Name.Value == BuiltinFunctionsCore.Char.Name) || val > 0x10FFFF || (val >= 0xD800 && val <= 0xDFFF))
                         {
                             return false;
                         }

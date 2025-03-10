@@ -108,7 +108,7 @@ true
 true
 
 >> IsMatch("👽Hello world", UniChar(Hex2Dec("1F47D")) & "Hello", MatchOptions.Contains)
-Errors: Error 51-52: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+true
 
 >> IsMatch("👽Hello world", UniChar(128125) & "Hello", MatchOptions.Contains)
 true

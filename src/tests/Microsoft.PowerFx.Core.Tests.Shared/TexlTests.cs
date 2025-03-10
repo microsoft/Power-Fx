@@ -1871,7 +1871,7 @@ namespace Microsoft.PowerFx.Core.Tests
             };
             var config = new PowerFxConfig(features);
 
-            RegexTypeCache regexCache = new (30);
+            RegexTypeCache regexCache = new (100);
             config.InternalConfigSymbols.AddFunction(new IsMatchFunction(regexCache));
             config.InternalConfigSymbols.AddFunction(new MatchFunction(regexCache));
             config.InternalConfigSymbols.AddFunction(new MatchAllFunction(regexCache));
@@ -1879,50 +1879,61 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new Engine(config);
             var opts = new ParserOptions();
 
+            void Test(string regex, string type)
+            {
+                var result = engine.Check(regex, opts);
+
+                if (type == "*ERROR*")
+                {
+                    Assert.True(result.Binding.ErrorContainer.HasErrors());
+                    Assert.False(result.IsSuccess);
+                }
+                else
+                {
+                    Assert.Equal(TestUtils.DT(type), result.Binding.ResultType);
+                    Assert.False(result.Binding.ErrorContainer.HasErrors());
+                    Assert.True(result.IsSuccess);
+                }
+            }
+
             // Cache entry can vary on:
-            // - Table (MatchAll) vs. Record (Match)
+            // - Table (MatchAll) vs. Record (Match) vs. Boolean (IsMatch)
             // - Regular expression pattern
-            // - NumberedSubMatches vs. Not
-            // if another MatchOption is added which impacts the return type, this will need to be updated
+            // - NumberedSubMatches and FreeSpacing which impact parse validation results and output schema.
+            //   If another MatchOption is added which impacts the return type, this will need to be updated
 
-            // all these tests cases need to be within the same test, so that the same cache is used for all
-            var a = engine.Check("Match(\"a\", \"(a)\")", opts);
-            Assert.Equal(TestUtils.DT("![FullMatch:s, StartMatch:n]"), a.Binding.ResultType);
-            Assert.False(a.Binding.ErrorContainer.HasErrors());
-            Assert.True(a.IsSuccess);
+            // all these test cases need to be run within the same test, so that the same cache is used for all
 
-            var b = engine.Check("Match(\"a\", \"(a)\", MatchOptions.NumberedSubMatches)", opts);
-            Assert.Equal(TestUtils.DT("![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]"), b.Binding.ResultType);
-            Assert.False(b.Binding.ErrorContainer.HasErrors());
-            Assert.True(b.IsSuccess);
+            Test("   Match(\"a\", \"a # (b)\")                                                             ", "![FullMatch:s, StartMatch:n]");
+            Test("   Match(\"a\", \"a # (b)\", MatchOptions.NumberedSubMatches)                            ", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]");
+            Test("   Match(\"a\", \"a # (b)\", MatchOptions.NumberedSubMatches & MatchOptions.FreeSpacing) ", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]");
+            Test("MatchAll(\"a\", \"a # (b)\")                                                             ", "*[FullMatch:s, StartMatch:n]");
+            Test("MatchAll(\"a\", \"a # (b)\", MatchOptions.NumberedSubMatches)                            ", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]");
+            Test("MatchAll(\"a\", \"a # (b)\", MatchOptions.NumberedSubMatches & MatchOptions.FreeSpacing) ", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]");
+            Test(" IsMatch(\"a\", \"a # (b)\")                                                             ", "b");
+            Test(" IsMatch(\"a\", \"a # (b)\", MatchOptions.NumberedSubMatches)                            ", "b");
+            Test(" IsMatch(\"a\", \"a # (b)\", MatchOptions.NumberedSubMatches & MatchOptions.FreeSpacing) ", "b");
 
-            // Match and MatchAll should not collide
-            var c = engine.Check("MatchAll(\"a\", \"(a)\")", opts);
-            Assert.Equal(TestUtils.DT("*[FullMatch:s, StartMatch:n]"), c.Binding.ResultType);
-            Assert.False(c.Binding.ErrorContainer.HasErrors());
-            Assert.True(c.IsSuccess);
+            // check that previous positive validation doesn't impact validation with options that would make the regex illegal
 
-            var d = engine.Check("MatchAll(\"a\", \"(a)\", MatchOptions.NumberedSubMatches)", opts);
-            Assert.Equal(TestUtils.DT("*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]"), d.Binding.ResultType);
-            Assert.False(d.Binding.ErrorContainer.HasErrors());
-            Assert.True(d.IsSuccess);
+            Test(" IsMatch(\"a\", \"a # (?<cap>b\", MatchOptions.FreeSpacing) ", "b");
+            Test(" IsMatch(\"a\", \"a # (?<cap>b\")", "*ERROR*");
 
-            var e = engine.Check("IsMatch(\"a\", \"(a)\")", opts);
-            Assert.Equal(TestUtils.DT("b"), e.Binding.ResultType);
-            Assert.False(e.Binding.ErrorContainer.HasErrors());
-            Assert.True(e.IsSuccess);
-
-            // check the first cache entry again
-            var f = engine.Check("Match(\"a\", \"(a)\")", opts);
-            Assert.Equal(TestUtils.DT("![FullMatch:s, StartMatch:n]"), f.Binding.ResultType);
-            Assert.False(f.Binding.ErrorContainer.HasErrors());
-            Assert.True(f.IsSuccess);
-
-            // check a different regular expression
-            var g = engine.Check("Match(\"a\", \"a\")", opts);
-            Assert.Equal(TestUtils.DT("![FullMatch:s, StartMatch:n]"), g.Binding.ResultType);
-            Assert.False(g.Binding.ErrorContainer.HasErrors());
-            Assert.True(g.IsSuccess);
+            Test("   Match(\"a\", \"a # (?<cap>b)\")                                                             ", "![FullMatch:s, StartMatch:n, cap:s]");
+            Test("   Match(\"a\", \"a # (?<cap>b)\", MatchOptions.FreeSpacing)                                   ", "![FullMatch:s, StartMatch:n]");
+            Test("   Match(\"a\", \"a # (?<cap>b)\", MatchOptions.NumberedSubMatches & MatchOptions.FreeSpacing) ", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]");
+            Test("   Match(\"a\", \"a # (?<cap>b)\", MatchOptions.NumberedSubMatches)                            ", "*ERROR*");
+            Test("   Match(\"a\", \"a # (?<one>b)\")                                                             ", "![FullMatch:s, StartMatch:n, one:s]");
+            Test("MatchAll(\"a\", \"a # (?<cap>b)\")                                                             ", "*[FullMatch:s, StartMatch:n, cap:s]");
+            Test("MatchAll(\"a\", \"a # (?<cap>b)\", MatchOptions.FreeSpacing)                                   ", "*[FullMatch:s, StartMatch:n]");
+            Test("MatchAll(\"a\", \"a # (?<cap>b)\", MatchOptions.NumberedSubMatches & MatchOptions.FreeSpacing) ", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]");
+            Test("MatchAll(\"a\", \"a # (?<cap>b)\", MatchOptions.NumberedSubMatches)                            ", "*ERROR*");
+            Test("MatchAll(\"a\", \"a # (?<one>b)\")                                                             ", "*[FullMatch:s, StartMatch:n, one:s]");
+            Test(" IsMatch(\"a\", \"a # (?<cap>b)\")                                                             ", "b");
+            Test(" IsMatch(\"a\", \"a # (?<cap>b)\", MatchOptions.FreeSpacing)                                   ", "b");
+            Test(" IsMatch(\"a\", \"a # (?<cap>b)\", MatchOptions.NumberedSubMatches & MatchOptions.FreeSpacing) ", "b");
+            Test(" IsMatch(\"a\", \"a # (?<cap>b)\", MatchOptions.NumberedSubMatches)                            ", "*ERROR*");
+            Test(" IsMatch(\"a\", \"a # (?<one>b)\")                                                             ", "b");
         }
 
         [Theory]

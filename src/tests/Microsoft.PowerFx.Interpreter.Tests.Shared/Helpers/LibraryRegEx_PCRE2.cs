@@ -215,9 +215,34 @@ namespace Microsoft.PowerFx.Functions
 
                 if (flags.Contains('x'))
                 {
-                    // replace the three characters that PCRE2 recognizes as white space that Power Fx does not
+                    var inCharacterClass = false;
+                    var alteredPattern = new StringBuilder();
+
+                    foreach (char p in pattern)
+                    {
+                        if (p == '[')
+                        {
+                            inCharacterClass = true;
+                        }
+                        else if (p == ']')
+                        {
+                            inCharacterClass = false;
+                        }
+
+                        // replace whitespace characters that PCRE2 doesn't support with a simple ' '; all newlines, space, and tab are fine
+                        if (!inCharacterClass && MatchWhiteSpace.IsSpaceNewLine(p) && !MatchWhiteSpace.IsNewLine(p) && p != ' ' && p != '\t')
+                        {
+                            alteredPattern.Append(' ');
+                        }
+                        else
+                        {
+                            alteredPattern.Append(p);
+                        }
+                    }
+
                     // add a \n so that we can add a $ at the end, in case there is an unterminated pound comment
-                    pattern = pattern.Replace("\u000b", "\\u000b").Replace("\u2028", "\\u2028").Replace("\u2029", "\\u2029") + '\n';
+                    pattern = alteredPattern + "#\n";
+
                     pcreOptions |= PCRE2_OPTIONS.EXTENDED;
                     options |= RegexOptions.IgnorePatternWhitespace;
                 }
@@ -265,7 +290,7 @@ namespace Microsoft.PowerFx.Functions
                 PCRE2Mutex.WaitOne();
 
                 var context = NativeMethods.pcre2_compile_context_create_32(generalContext);
-                NativeMethods.pcre2_set_newline_32(context, (uint)PCRE2_NEWLINE.ANYCRLF);
+                NativeMethods.pcre2_set_newline_32(context, (uint)PCRE2_NEWLINE.ANY);
 
 #if false
                 // not needed as we convert out of surrogate pairs above
