@@ -83,9 +83,9 @@ namespace Microsoft.PowerFx.Tests
                 rtConfig.AddService(setup.TimeZoneInfo);
             }
 
-            if (setup.CultureInfo != null)
+            if (setup.Language != null)
             {
-                rtConfig.AddService(setup.CultureInfo);
+                rtConfig.AddService(new CultureInfo(setup.Language));
             }
 
             var task = engine.EvalAsync(expr, CancellationToken.None, options: setup.Flags.ToParserOptions(new CultureInfo("en-US")), runtimeConfig: rtConfig);

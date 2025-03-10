@@ -963,9 +963,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     runtimeConfig.AddService(iSetup.TimeZoneInfo);
                 }
 
-                if (iSetup.CultureInfo != null)
+                if (iSetup.Language != null)
                 {
-                    runtimeConfig.AddService(iSetup.CultureInfo);
+                    runtimeConfig.AddService(new CultureInfo(iSetup.Language));
                 }
 
                 if (engine.TryGetByName("traceRecord", out _))

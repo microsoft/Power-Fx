@@ -1,4 +1,4 @@
-﻿#SETUP: RegEx,CultureInfo("en-US"),PowerFxV1CompatibilityRules,ConsistentOneColumnTableResult,SupportColumnNamesAsIdentifiers
+﻿#SETUP: RegEx,Language("en-US"),PowerFxV1CompatibilityRules,ConsistentOneColumnTableResult,SupportColumnNamesAsIdentifiers
 
 // Compared against tr-TR here, as that is one of the harder languages to get right. This should NOT be the case in en-US:
 //     Four types of letter I

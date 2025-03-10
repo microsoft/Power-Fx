@@ -95,6 +95,7 @@ namespace Microsoft.PowerFx.Core.Tests
             possible.Add("Default");
             possible.Add("DisableMemChecks");
             possible.Add("EnableJsonFunctions");
+            possible.Add("Language");
             possible.Add("MutationFunctionsTestSetup");
             possible.Add("OptionSetSortTestSetup");
             possible.Add("OptionSetTestSetup");
@@ -102,7 +103,6 @@ namespace Microsoft.PowerFx.Core.Tests
             possible.Add("RegEx");
             possible.Add("TimeZoneInfo");
             possible.Add("TraceSetup");
-            possible.Add("CultureInfo");
 
             foreach (Match match in Regex.Matches(setup, @"(disable:)?(([\w]+|//)(\([^\)]*\))?)"))
             {

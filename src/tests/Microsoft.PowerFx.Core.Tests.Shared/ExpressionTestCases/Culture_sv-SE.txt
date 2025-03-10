@@ -1,4 +1,4 @@
-﻿#SETUP: RegEx,CultureInfo("sv-SE"),PowerFxV1CompatibilityRules,ConsistentOneColumnTableResult,SupportColumnNamesAsIdentifiers
+﻿#SETUP: RegEx,Language("sv-SE"),PowerFxV1CompatibilityRules,ConsistentOneColumnTableResult,SupportColumnNamesAsIdentifiers
 
 >> Language()
 "sv-SE"

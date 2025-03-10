@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal TimeZoneInfo TimeZoneInfo { get; set; }
 
-        internal CultureInfo CultureInfo { get; set; }
+        internal string Language { get; set; }
 
         /// <summary>
         /// By default, we run expressions with a memory governor to enforce a limited amount of memory. 
@@ -147,21 +147,18 @@ namespace Microsoft.PowerFx.Core.Tests
                         throw new ArgumentException("Invalid TimeZoneInfo setup!");
                     }
                 }
-                else if (part.StartsWith("CultureInfo", StringComparison.OrdinalIgnoreCase))
+                else if (part.StartsWith("Language", StringComparison.OrdinalIgnoreCase))
                 {
-                    var m = new Regex(@"CultureInfo\(""(?<culture>[^)]+)""\)", RegexOptions.IgnoreCase).Match(part);
+                    var m = new Regex(@"Language\(""(?<language>\w{2,3}-\w{2,3}(-\w{2,4})?)""\)", RegexOptions.IgnoreCase).Match(part);
 
                     if (m.Success)
                     {
-                        var culture = m.Groups["culture"].Value;
-
-                        // This call will throw if the Language tag in invalid
-                        iSetup.CultureInfo = new CultureInfo(culture);
+                        iSetup.Language = m.Groups["language"].Value;
                         parts.Remove(part);
                     }
                     else
                     {
-                        throw new ArgumentException("Invalid TimeZoneInfo setup!");
+                        throw new ArgumentException("Invalid Language setup!");
                     }
                 }
             }           
