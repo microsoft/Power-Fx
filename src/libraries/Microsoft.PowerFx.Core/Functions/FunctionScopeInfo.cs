@@ -304,7 +304,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
                     if (!visitor.InUsePredicates.Contains(ThisGroup))
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Warning, inputNodes[i], TexlStrings.WarnCheckPredicateUsage, string.Join("/", idents.Select(id => id.Value)));
+                        errors.EnsureError(DocumentErrorSeverity.Warning, inputNodes[i], TexlStrings.WarnCheckPredicateUsage, ThisGroup);
                     }
                 }
             }
