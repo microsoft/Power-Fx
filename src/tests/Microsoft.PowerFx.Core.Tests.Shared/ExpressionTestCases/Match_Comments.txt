@@ -160,6 +160,9 @@ true
 >> IsMatch( "ac", "(?x)a # \r b" & Char(10) & "c", MatchOptions.Contains )  // "\r" (spelled out, not the character) doesn't terminate comment
 true
 
+>> IsMatch( "ab", "(?x)a\tb", MatchOptions.Contains )  // "\t" (spelled out, not the character) doesn't match
+false
+
 // ESCAPED #
 
 >> Match( "ab#cd", "ab#cd" )
@@ -218,12 +221,6 @@ Blank()
 false
 
 >> IsMatch( "ab", "a b", MatchOptions.FreeSpacing) // space
-true
-
->> IsMatch( "ab", "a\tb", MatchOptions.FreeSpacing) // space
-true
-
->> IsMatch( "ab", "a\x0009b", MatchOptions.FreeSpacing) // space
 true
 
 >> IsMatch( "ab", "a" &UniChar(9)& "b", MatchOptions.FreeSpacing)  // \t
@@ -307,9 +304,6 @@ true
 true
 
 >> IsMatch( "a b", "a[ ]b", MatchOptions.FreeSpacing) // space
-true
-
->> IsMatch( "a" & Char(9) & " b", "a[\t]b", MatchOptions.FreeSpacing) // space
 true
 
 >> IsMatch( "a" & UniChar(9) & "b", "a[" &UniChar(9)& "]b", MatchOptions.FreeSpacing)  // \t
