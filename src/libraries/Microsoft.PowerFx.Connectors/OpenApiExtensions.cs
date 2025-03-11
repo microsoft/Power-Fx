@@ -1045,7 +1045,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static ConnectorPermission GetPermission(this ISwaggerExtensions param)
         {
-            if (param.Extensions != null && param.Extensions.TryGetValue(XMsPermission, out IOpenApiExtension ext) && ext is OpenApiString apiStr && apiStr != null && !string.IsNullOrEmpty(apiStr.Value))
+            if (param.Extensions != null && param.Extensions.TryGetValue(XMsPermission, out IOpenApiExtension ext) && ext is OpenApiString apiStr && !string.IsNullOrEmpty(apiStr.Value))
             {
                 if (apiStr.Value.Equals("read-only", StringComparison.OrdinalIgnoreCase))
                 {
@@ -1062,9 +1062,9 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static ServiceCapabilities GetTableCapabilities(this ISwaggerExtensions schema)
         {
-            if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsCapabilities, out IOpenApiExtension ext))
+            if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsCapabilities, out IOpenApiExtension ext) && ext is IDictionary<string, IOpenApiAny> dic)
             {
-                return ServiceCapabilities.ParseTableCapabilities(ext as IDictionary<string, IOpenApiAny>);
+                return ServiceCapabilities.ParseTableCapabilities(dic);
             }
 
             return null;
@@ -1072,9 +1072,9 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static ColumnCapabilities GetColumnCapabilities(this ISwaggerExtensions schema)
         {
-            if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsCapabilities, out IOpenApiExtension ext))
+            if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsCapabilities, out IOpenApiExtension ext) && ext is IDictionary<string, IOpenApiAny> dic)
             {
-                return ColumnCapabilities.ParseColumnCapabilities(ext as IDictionary<string, IOpenApiAny>);
+                return ColumnCapabilities.ParseColumnCapabilities(dic);
             }
 
             return null;
@@ -1082,9 +1082,9 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static Dictionary<string, Relationship> GetRelationships(this ISwaggerExtensions schema)
         {
-            if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsRelationships, out IOpenApiExtension ext))
+            if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsRelationships, out IOpenApiExtension ext) && ext is IDictionary<string, IOpenApiAny> dic)
             {
-                return Relationship.ParseRelationships(ext as IDictionary<string, IOpenApiAny>);
+                return Relationship.ParseRelationships(dic);
             }
 
             return null;
