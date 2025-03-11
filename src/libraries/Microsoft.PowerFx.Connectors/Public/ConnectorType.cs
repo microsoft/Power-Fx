@@ -167,7 +167,7 @@ namespace Microsoft.PowerFx.Connectors
                 if (list != null && list.Any())
                 {
                     EnumValues = list.Select<KeyValuePair<DName, DName>, FormulaValue>(kvp => isNumber ? FormulaValue.New(decimal.Parse(kvp.Key.Value, CultureInfo.InvariantCulture)) : FormulaValue.New(kvp.Key)).ToArray();
-                    EnumDisplayNames = list.Select(list => list.Value.Value).ToArray();                    
+                    EnumDisplayNames = list.Select(list => list.Value.Value).ToArray();
                 }
                 else
                 {
@@ -238,7 +238,7 @@ namespace Microsoft.PowerFx.Connectors
         internal ConnectorType(ISwaggerSchema schema, ConnectorSettings settings)
             : this(schema, null, new SwaggerParameter(null, true, schema, null).GetConnectorType(settings))
         {
-        }        
+        }
 
         // Called by ConnectorFunction.GetCdpTableType
         internal ConnectorType(JsonElement schema, string tableName, SymbolTable optionSets, ConnectorSettings settings, IList<ReferencedEntity> referencedEntities, string datasetName, string name, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
@@ -316,7 +316,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             get
             {
-                _displayNameProvider ??= DisplayNameUtility.MakeUnique(Fields.Select(field => new KeyValuePair<string, string>(field.Name, field.DisplayName ?? field.Name)));                    
+                _displayNameProvider ??= DisplayNameUtility.MakeUnique(Fields.Where(f => !string.IsNullOrEmpty(f.Name)).Select(field => new KeyValuePair<string, string>(field.Name, field.DisplayName ?? field.Name)));
                 return _displayNameProvider;
             }
         }
