@@ -1583,9 +1583,12 @@ namespace Microsoft.PowerFx.Core.Binding
                             if (hexCallNode.Head.Name.Value == BuiltinFunctionsCore.Hex2Dec.Name && hexCallNode.Args.Children[0].Kind == NodeKind.StrLit)
                             {
                                 var hexStr = hexCallNode.Args.Children[0].AsStrLit().Value;
-                                if (hexStr.Length <= 7) // must be 32-bit positive
+
+                                // check for 10 hex digits is the same as in LibraryMath.cs/Hex2Dec, Excel functions works on a 40 bit number
+                                // may result in a negative val, but that will be checked below
+                                if (hexStr.Length > 10 || !int.TryParse(hexStr, System.Globalization.NumberStyles.HexNumber, null, out val))
                                 {
-                                    int.TryParse(hexStr, System.Globalization.NumberStyles.HexNumber, null, out val);
+                                    return false;
                                 }
                             }
                         }
