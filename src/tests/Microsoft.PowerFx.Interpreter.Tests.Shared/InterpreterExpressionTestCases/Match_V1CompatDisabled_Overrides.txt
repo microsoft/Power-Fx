@@ -37,3 +37,9 @@ Blank()
 
 >> Match("Hi", "Hi", MatchOptions.Multiline)
 {FullMatch:"Hi",StartMatch:1}
+
+>> With( {opts: MatchOptions.IgnoreCase}, Match( "Hi", "hi", opts ) )
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> With( {opts: "i"}, Match( "Hi", "hi", opts ) )
+Error({Kind:ErrorKind.InvalidArgument})

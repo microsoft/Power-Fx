@@ -46,7 +46,16 @@ Errors: Error 63-75: Invalid regular expression: MatchOptions.DotAll and MatchOp
 Errors: Error 75-76: Invalid regular expression: MatchOptions.DotAll and MatchOptions.FreeSpacing are only available with Power Fx V1, found "MatchOptions.IgnoreCase & MatchOptions.FreeSpacing".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // does no harm to use NumberedSubMatches
+
 >> Match( "Hi", "(H)([Ii])", MatchOptions.NumberedSubMatches )
 {FullMatch:"Hi",StartMatch:1,SubMatches:Table({Value:"H"},{Value:"i"})}
 
+// pre-v1 options could be variable, which is very rare, but OK as they couldn't impact the schema
+// post-v1 options such as DotAll or FreeSpacing would not have an impact as they weren't supported by the runtime implementation
+// results shown here are for Canvas, the C# interpreter doesn't know about pre-v1 very much, so this will result in a type mismatch runtime error (testing handled in an override file)
 
+>> With( {opts: MatchOptions.IgnoreCase}, Match( "Hi", "hi", opts ) )
+{FullMatch:"Hi",StartMatch:1,SubMatches:Table()}
+
+>> With( {opts: "i"}, Match( "Hi", "hi", opts ) )
+{FullMatch:"Hi",StartMatch:1,SubMatches:Table()}

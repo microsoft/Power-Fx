@@ -202,6 +202,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     errors.EnsureError(args[2], TexlStrings.ErrInvalidRegExV1Options, args[2]);
                     return false;
                 }
+
+                // having pre-V1 variable regex options that we can't process here is OK, as pre-V1 options would not impact the schema.
+                // regularExpressionOptions will remain empty for the cache work below which is fine.
             }
 
             if (!context.Features.PowerFxV1CompatibilityRules)
