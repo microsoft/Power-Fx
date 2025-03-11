@@ -691,7 +691,7 @@ namespace Microsoft.PowerFx.Connectors
                     return new ConnectorType(schema, openApiParameter, FormulaType.Blob);
 
                 default:
-                    return new ConnectorType(error: $"Unsupported schema type {schema.Type}");
+                    return new ConnectorType(error: $"Unsupported schema type {schema.Type} for field {openApiParameter.Name}");
             }
         }
 

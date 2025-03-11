@@ -25,6 +25,8 @@ namespace Microsoft.PowerFx.Connectors
 
         public override HttpClient HttpClient => _httpClient;
 
+        public ConnectorType ConnnectorType => IsInitialized ? TabularTableDescriptor : null;
+
         public override bool IsDelegable => (DelegationInfo?.SortRestriction != null) || (DelegationInfo?.FilterRestriction != null) || (DelegationInfo?.FilterSupportedFunctions != null);
 
         public IEnumerable<OptionSet> OptionSets { get; private set; }
