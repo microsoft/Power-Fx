@@ -316,7 +316,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             get
             {
-                _displayNameProvider ??= DisplayNameUtility.MakeUnique(Fields.Where(f => !string.IsNullOrEmpty(f.Name)).Select(field => new KeyValuePair<string, string>(field.Name, field.DisplayName ?? field.Name)));
+                _displayNameProvider ??= DisplayNameUtility.MakeUnique(Fields.Select(field => new KeyValuePair<string, string>(field.Name, field.DisplayName ?? field.Name)));
                 return _displayNameProvider;
             }
         }
