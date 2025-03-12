@@ -470,7 +470,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (settings.Level == 30)
             {
-                return new ConnectorType(error: "GetConnectorType() excessive recursion");
+                return new ConnectorType(error: "GetConnectorType() excessive recursion") { Name = openApiParameter.Name };
             }
 
             // schema.Format is optional and potentially any string
@@ -754,6 +754,7 @@ namespace Microsoft.PowerFx.Connectors
                     else
                     {
                         return new ConnectorType(error: $"Unsupported enum type '{schema.Enum.GetType().Name}'");
+                        return new ConnectorType(error: $"Unsupported enum type {schema.Enum.GetType().Name}") { Name = openApiParameter.Name };
                     }
                 }
             }
