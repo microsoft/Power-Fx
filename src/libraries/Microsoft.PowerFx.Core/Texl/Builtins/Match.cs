@@ -159,7 +159,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (!subMatchesHidden)
                 {
                     var subMatches = DType.CreateTable(new TypedName(DType.String, ColumnName_Value));
-                    subMatches.IsSealed = true;
                     propertyNames.Add(new TypedName(subMatches, ColumnName_SubMatches));
                 }
 
