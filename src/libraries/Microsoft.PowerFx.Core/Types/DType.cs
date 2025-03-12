@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx.Core.Types
         // All records/tables that are sealed in V1 are also marked sealed in Pre-V1. For the IfError function, since ScopeInfo is defined independent of V1 status, it would be a problem to make sealed V1 dependent.
         // Instead, a V1 specific check is made at the points that a formula could create a problem, such as AddColumns and record union.
         // Sealed is NOT checked at internal .Add of fields to a record. This would be a good validation, however we don't have V1 information plumbed down to make that possible.
-        // Note that .Add does not pass through IsSealed. Be sure to set IsSealed after fully creating the type.
+        // Note that .Add does not pass through IsSealed. Be sure to set IsSealed after fully creating the type. See the User object in the interpreter, which is sealed, as an example.
         public bool IsSealed { get; set; }
 
         #endregion 
