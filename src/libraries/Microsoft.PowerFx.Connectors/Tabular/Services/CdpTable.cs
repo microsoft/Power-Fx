@@ -7,7 +7,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
@@ -61,8 +60,17 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         //// TABLE METADATA SERVICE
-        // GET: /$metadata.json/datasets/{datasetName}/tables/{tableName}?api-version=2015-09-01
+        // GET: /$metadata.json/datasets/{datasetName}/tables/{tableName}?api-version=2015-09-01        
         public virtual async Task InitAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+#pragma warning disable CS0618 // Type or member is obsolete
+            await InitAsync(httpClient, uriPrefix, TableName, cancellationToken, logger).ConfigureAwait(false);
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
+
+        [Obsolete("This API should not be called directly - used by CDP Validator only", false)]
+        public virtual async Task InitAsync(HttpClient httpClient, string uriPrefix, string tableName, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -81,7 +89,7 @@ namespace Microsoft.PowerFx.Connectors
             _uriPrefix = uriPrefix;
 
             CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, logger);
-            TabularTableDescriptor = await tableResolver.ResolveTableAsync(TableName, cancellationToken).ConfigureAwait(false);
+            TabularTableDescriptor = await tableResolver.ResolveTableAsync(tableName, cancellationToken).ConfigureAwait(false);
 
             if (TabularTableDescriptor.HasErrors)
             {
@@ -97,7 +105,7 @@ namespace Microsoft.PowerFx.Connectors
         private async Task InitializeDatasetMetadata(HttpClient httpClient, string uriPrefix, ConnectorLogger logger, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            
+
             DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(httpClient, uriPrefix, cancellationToken, logger).ConfigureAwait(false);
 
             DatasetMetadata = dm ?? throw new InvalidOperationException("Dataset metadata is not available");
@@ -123,7 +131,7 @@ namespace Microsoft.PowerFx.Connectors
 
             string text = await GetObject(_httpClient, $"List items ({nameof(GetItemsInternalAsync)})", uri, null, cancellationToken, executionLogger).ConfigureAwait(false);
             return !string.IsNullOrWhiteSpace(text) ? GetResult(text) : Array.Empty<DValue<RecordValue>>();
-        }        
+        }
 
         private IReadOnlyCollection<DValue<RecordValue>> GetResult(string text)
         {
