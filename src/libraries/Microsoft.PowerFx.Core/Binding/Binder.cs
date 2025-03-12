@@ -2065,9 +2065,13 @@ namespace Microsoft.PowerFx.Core.Binding
             foreach (var name in GetLambdaParamNames(call.ScopeNest + 1))
             {
                 var fError = false;
+                var fieldName = name.Name;
+
+                call.CursorType.DisplayNameProvider?.TryGetLogicalName(name.Name, out fieldName);
+
                 if (!name.Node.InTree(arg0) &&
                     name.Node.InTree(call.Node) &&
-                    call.CursorType.TryGetType(name.Name, out var lambdaParamType))
+                    call.CursorType.TryGetType(fieldName, out var lambdaParamType))
                 {
                     if (name.Node.Parent is DottedNameNode dotted)
                     {
@@ -2860,8 +2864,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.SetInfo(node, info);
                     _txb.SetLambdaScopeLevel(node, info.UpCount);
                     _txb.AddFieldToQuerySelects(nodeType, nodeName);
-                    
-                    //_txb.SetScopeNode(node.Id, info);
                     return;
                 }
 
@@ -5343,7 +5345,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // If PreVisit resulted in errors for the node (and a non-null CallInfo),
                 // we're done -- we have a match and appropriate errors logged already.
-                if (_txb.ErrorContainer.HasErrors(node, DocumentErrorSeverity.Moderate) || _txb.ErrorContainer.HasErrors(node.Head.Token))
+                if (_txb.ErrorContainer.HasErrors(node) || _txb.ErrorContainer.HasErrors(node.Head.Token))
                 {
                     Contracts.Assert(info != null);
 

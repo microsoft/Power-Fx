@@ -4,13 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -105,9 +103,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <returns></returns>
         public virtual bool CheckInput(Features features, CallNode callNode, TexlNode[] inputNodes, out DType typeScope, params DType[] inputSchema)
         {
-            var result = CheckInput(features, callNode, inputNodes[0], inputSchema[0], out typeScope);
-
-            return result;
+            return CheckInput(features, callNode, inputNodes[0], inputSchema[0], out typeScope);
         }
 
         // Typecheck an input for this function, and get the cursor type for an invocation with that input.
@@ -224,14 +220,14 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public virtual void CheckPredicateFields(DType fields, CallNode callNode, IEnumerable<FirstNameInfo> lambdaNames, ErrorContainer errors)
         {
-            if (fields.GetAllNames(DPath.Root).Any())
+            if (fields == DType.Error || fields.GetAllNames(DPath.Root).Any())
             {
                 return;
             }
 
             GetScopeIdent(callNode.Args.ChildNodes.ToArray(), out var idents);
 
-            if (!lambdaNames.Any(name => lambdaNames.Contains(name)))
+            if (!lambdaNames.Any(lambdaName => idents.Contains(lambdaName.Name)))
             {
                 errors.EnsureError(DocumentErrorSeverity.Warning, callNode, TexlStrings.WarnCheckPredicateUsage);
             }
