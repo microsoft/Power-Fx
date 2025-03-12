@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public static IExpressionEvaluator GetEvaluator(this CheckResult result)
         {
-            var stackMarker = new StackDepthCounter(result.Engine.Config.MaxCallDepth);
+            var stackMarker = new StackDepthCounter(PowerFxConfig.DefaultMaxCallDepth);
             return GetEvaluator(result, stackMarker);
         }
 
