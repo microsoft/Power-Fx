@@ -9,7 +9,6 @@ using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
@@ -4326,16 +4325,13 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 Assert.True(result.IsSuccess);
 
-                // Filter function can produce a 'WarnCheckPredicateUsage' warning. Any other warnings are unexpected.
-                var filteredErrors = result.Errors.Where(err => err.MessageKey != "WarnCheckPredicateUsage").ToList();
-
                 if (warnings)
                 {
-                    Assert.True(filteredErrors.Count() > 0, "Expected warnings in original function");
+                    Assert.True(result.Errors.Count() > 0, "Expected warnings in original function");
                 }
                 else
                 {
-                    Assert.False(filteredErrors.Count() > 0, "No warnings expected in original function");
+                    Assert.False(result.Errors.Count() > 0, "No warnings expected in original function");
                 }
 
                 // then run with the mock filter function that does silent delgation checks
