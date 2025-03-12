@@ -2440,7 +2440,7 @@
     <comment>Duplicate columns.</comment>
   </data>
   <data name="WarnCheckPredicateUsage" xml:space="preserve">
-    <value>Warning: The expression does not access '{0}' directly and can return unexpected results.</value>
+    <value>Warning: The expression does not access scope fields directly and can return unexpected results.</value>
     <comment>Warning given when an expression with a function operating over a table does not access the predicate directly.</comment>
   </data>
   <data name="WarnDynamicMetadata" xml:space="preserve">

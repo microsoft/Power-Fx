@@ -460,11 +460,9 @@ namespace Microsoft.PowerFx
 
                 List<TexlError> bindErrors = new List<TexlError>();
 
-                var onlyErrors = binding.ErrorContainer.GetErrors(DocumentErrorSeverity.Moderate);
-
-                if (onlyErrors.Count() > 0)
+                if (binding.ErrorContainer.GetErrors(ref bindErrors))
                 {
-                    sb.AppendLine(string.Join(", ", onlyErrors.Select(err => err.ToString())));
+                    sb.AppendLine(string.Join(", ", bindErrors.Select(err => err.ToString())));
                 }
                 else
                 {

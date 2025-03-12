@@ -4504,7 +4504,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Table(Search(DS, \"Foo\", Name), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 1)]
 
         // existing warning due to sqrt should propagate, no new warnigns on table
-        [InlineData("Table(Filter(DS, Sqrt(Age) > 5), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 2)]
+        [InlineData("Table(Filter(DS, Sqrt(Age) > 5), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 1)]
         public void TexlFunctionTypeSemanticsTable_PageableInputs(string script, string expectedSchema, int errorCount)
         {
             var dataSourceSchema = TestUtils.DT("*[Id:n, Name:s, Age:n]");
@@ -4552,25 +4552,30 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("Filter(t1, a = 1)", false)]
+        [InlineData("Filter(t1, Abs(a) = 1)", false)]
         [InlineData("Sum(t1, a)", false)]
         [InlineData("Average(t1, a)", false)]
         [InlineData("Min(t1, a)", false)]
         [InlineData("Max(t1, a)", false)]
         [InlineData("Join(t1, t2, LeftRecord.a = RightRecord.x, JoinType.Inner, RightRecord.z As Z)", false)]
+        [InlineData("Join(t1 As X, t2 As Y, X.a = Y.x, JoinType.Inner, Y.z As Z)", false)]
         [InlineData("Summarize(t1, a)", false)]
         [InlineData("Summarize(t1, a, CountRows(ThisGroup) As Counter)", false)]
         [InlineData("LookUp(t1, 1=1)", false)] // The 'LookUp' wont produce any warning because it has not been set to analyse the predicate.
+        [InlineData("Max(t1, Abs(a))", false)]
+        [InlineData("Min(t1, Abs(a))", false)]
+        [InlineData("Average(t1, Abs(a))", false)]
+        [InlineData("Sum(t1, Abs(a))", false)]
+        [InlineData("Filter(t1, With({x:a}, StartsWith(x, \"something\")))", false)]
+        [InlineData("Filter(t1 As Tbl, With({b:\"hello\"}, StartsWith(Tbl.b, b)))", false)]
 
-        [InlineData("Filter(t1, Abs(a) = 1)", true)]
-        [InlineData("Summarize(t1, a, CountRows(Filter(ThisGroup, b = \"test\")) As Counter)", true)]
+        [InlineData("Filter(t1, 1=1)", true)]
+        [InlineData("Filter(t1, With({b:\"hello\"}, StartsWith(b, \"something\")))", true)]
         [InlineData("Sum(t1, 1)", true)]
-        [InlineData("Sum(t1, Abs(a))", true)]
         [InlineData("Average(t1, 1)", true)]
-        [InlineData("Average(t1, Abs(a))", true)]
         [InlineData("Min(t1, 1)", true)]
-        [InlineData("Min(t1, Abs(a))", true)]
         [InlineData("Max(t1, 1)", true)]
-        [InlineData("Max(t1, Abs(a))", true)]
+        [InlineData("Join(t1, t2, true, JoinType.Inner, RightRecord.z As Z, LeftRecord.a As AAA)", true)]
 
         public void TestScopePredicate(string expression, bool expectingWarning)
         {
@@ -4703,10 +4708,8 @@ namespace Microsoft.PowerFx.Core.Tests
             var opts = new ParserOptions() { NumberIsFloat = numberIsFloat };
             var result = engine.Check(script, opts);
             Assert.Equal(expectedType, result.Binding.ResultType);
+            Assert.False(result.Binding.ErrorContainer.HasErrors());
             Assert.True(result.IsSuccess);
-
-            // Some functions (like Filter) may produce warnings related to the predicate. We don't want to fail the test in that case.
-            Assert.False(result.Binding.ErrorContainer.HasErrors(DocumentErrorSeverity.Moderate));
         }
     }
 }
