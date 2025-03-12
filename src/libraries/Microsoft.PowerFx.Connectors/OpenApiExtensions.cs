@@ -470,7 +470,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (settings.Level == 30)
             {
-                return new ConnectorType(error: "GetConnectorType() excessive recursion");
+                return new ConnectorType(error: "GetConnectorType() excessive recursion") { Name = openApiParameter.Name };
             }
 
             // schema.Format is optional and potentially any string
@@ -521,7 +521,7 @@ namespace Microsoft.PowerFx.Connectors
                             return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
 
                         default:
-                            return new ConnectorType(error: $"Unsupported type of number: {schema.Format}");
+                            return new ConnectorType(error: $"Unsupported type of number: '{schema.Format}'") { Name = openApiParameter.Name };
                     }
 
                 // For testing only
@@ -546,7 +546,7 @@ namespace Microsoft.PowerFx.Connectors
                             return TryGetOptionSet(openApiParameter, settings) ?? new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
 
                         default:
-                            return new ConnectorType(error: $"Unsupported type of integer: {schema.Format}");
+                            return new ConnectorType(error: $"Unsupported type of integer: '{schema.Format}'") { Name = openApiParameter.Name };
                     }
 
                 case "array":
@@ -595,7 +595,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
                     else
                     {
-                        return new ConnectorType(error: $"Unsupported type of array ({arrayType.FormulaType._type.ToAnonymousString()})");
+                        return new ConnectorType(error: $"Unsupported type of array '{arrayType.FormulaType._type.ToAnonymousString()}'") { Name = openApiParameter.Name };
                     }
 
                 case "object":
@@ -691,7 +691,7 @@ namespace Microsoft.PowerFx.Connectors
                     return new ConnectorType(schema, openApiParameter, FormulaType.Blob);
 
                 default:
-                    return new ConnectorType(error: $"Unsupported schema type {schema.Type}");
+                    return new ConnectorType(error: $"Unsupported schema type '{schema.Type}'") { Name = openApiParameter.Name };
             }
         }
 
@@ -752,8 +752,8 @@ namespace Microsoft.PowerFx.Connectors
                         return new ConnectorType(schema, openApiParameter, optionSet.FormulaType);
                     }
                     else
-                    {
-                        return new ConnectorType(error: $"Unsupported enum type {schema.Enum.GetType().Name}");
+                    {                        
+                        return new ConnectorType(error: $"Unsupported enum type '{schema.Enum.GetType().Name}'") { Name = openApiParameter.Name };
                     }
                 }
             }
@@ -929,7 +929,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
-            return new ConnectorType(error: $"Unsupported return type - found {string.Join(", ", response.Content.Select(kv4 => kv4.Key))}");
+            return new ConnectorType(error: $"Unsupported return type - found '{string.Join(", ", response.Content.Select(kv4 => kv4.Key))}'");
         }
 
         /// <summary>
@@ -1277,7 +1277,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
                 else
                 {
-                    return new ConnectorDynamicSchema(error: $"Missing mandatory parameters operationId and parameters in {XMsDynamicSchema} extension");
+                    return new ConnectorDynamicSchema(error: $"Missing mandatory parameters operationId and parameters in '{XMsDynamicSchema}' extension");
                 }
             }
 
@@ -1309,7 +1309,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
                 else
                 {
-                    return new ConnectorDynamicProperty(error: $"Missing mandatory parameters operationId and parameters in {XMsDynamicProperties} extension");
+                    return new ConnectorDynamicProperty(error: $"Missing mandatory parameters operationId and parameters in '{XMsDynamicProperties}' extension");
                 }
             }
 
