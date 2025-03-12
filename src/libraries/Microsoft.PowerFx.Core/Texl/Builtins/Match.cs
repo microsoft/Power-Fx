@@ -233,6 +233,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return true;
             }
 
+            // we found a null in the cache, meaning we failed before and didn't check again, error has already been reported by RegexCacheTypeLookup
+            if (returnType == DType.Error)
+            {
+                return false;
+            }
+
             // cache miss, validate the regular expression, create the return type, and cache
             if (!context.Features.PowerFxV1CompatibilityRules || IsSupportedRegularExpression(regExNode, regularExpression, regularExpressionOptions, out alteredOptions, errors))
             {
@@ -245,7 +251,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         private string RegexCacheKeyGen(string prefix, string options, string regex)
         {
             // include any options that could impact the output schema or change the way the regular expression is parsed for validation
-            return prefix + (options.Contains(MatchOptionChar.NumberedSubMatches) ? "N_" : "-_") + (options.Contains(MatchOptionChar.FreeSpacing) ? "X_" : "~_") + regex;
+            return prefix + (options.Contains(MatchOptionChar.NumberedSubMatches) ? "N" : "-") + (options.Contains(MatchOptionChar.FreeSpacing) ? "X_" : "~_") + regex;
         }
 
         private bool RegexCacheTypeLookup(TexlNode regExNode, string regexCacheKey, IErrorContainer errors, ref DType returnType)
@@ -261,6 +267,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else
                 {
+                    returnType = DType.Error;
                     errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegEx);
                     return false;
                 }
@@ -296,17 +303,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // always .NET compile the regular expression, even if we don't need the return type (boolean), to ensure it is legal in .NET
                 var regex = new Regex(regexPattern, regexDotNetOptions);
 
-                if (returnType == DType.Boolean)
-                {
-                    if (_regexTypeCache != null)
-                    {
-                        _regexTypeCache[regexCacheKey] = Tuple.Create((DType)null, false, false, false);
-                    }
-                }
-                else
+                bool fullMatchHidden = false, subMatchesHidden = false, startMatchHidden = false;
+
+                // we don't need to check hidden or do any type calculation if the return type is Boolean (IsMatch)
+                if (returnType != DType.Boolean)
                 { 
                     List<TypedName> propertyNames = new List<TypedName>();
-                    bool fullMatchHidden = false, subMatchesHidden = false, startMatchHidden = false;
 
                     foreach (var captureName in regex.GetGroupNames())
                     {
@@ -320,7 +322,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         {
                             fullMatchHidden = true;
                         }
-                        else if (captureName == ColumnName_SubMatches.Value)
+                        else if (captureName == ColumnName_SubMatches.Value && alteredOptions.Contains(MatchOptionChar.NumberedSubMatches))
                         {
                             subMatchesHidden = true;
                         }
@@ -352,11 +354,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         : DType.CreateTable(propertyNames);
 
                     AddWarnings(regExNode, errors, hidesFullMatch: fullMatchHidden, hidesSubMatches: subMatchesHidden, hidesStartMatch: startMatchHidden);
+                }
 
-                    if (_regexTypeCache != null)
-                    {
-                        _regexTypeCache[regexCacheKey] = Tuple.Create(returnType, fullMatchHidden, subMatchesHidden, startMatchHidden);
-                    }
+                if (_regexTypeCache != null)
+                {
+                    _regexTypeCache[regexCacheKey] = Tuple.Create(returnType, fullMatchHidden, subMatchesHidden, startMatchHidden);
                 }
 
                 return true;
