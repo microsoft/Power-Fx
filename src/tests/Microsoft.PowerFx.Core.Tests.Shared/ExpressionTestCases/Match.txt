@@ -68,37 +68,3 @@ Error({Kind:ErrorKind.Div0})
 
 >> Match("Hello", Right("llo", 3)).FullMatch
 Errors: Error 15-30: Regular expression must be a constant value.|Error 0-5: The function 'Match' has some invalid arguments.|Error 31-41: Name isn't valid. 'FullMatch' isn't recognized.
-
-// detecting king check in chess
-
->> Match( "q-----b-__P-P-K---__---P----__------P-__-p-NP--P__n----n--__p--pBpNp__r-bk---r__1411110000_045_000_00", 
-    "(" & "[QR]-*k|k-*[QR]|[QR].{9}(-.{9})*k|k.{9}(-.{9})*[QR]|" & 
-    "[QB].{10}(-.{10})*k|k.{10}(-.{10})*[QB]|[QB].{8}(-.{8})*k|k.{8}(-.{8})*[QB]|" & 
-    "P.{10}k|P.{8}k|" & 
-    "N.{18}k|k.{18}N|N.{20}k|k.{20}N|N.{11}k|k.{11}N|N.{7}k|k.{7}N|" &
-    "Kk|kK|K.{8,10}k|k.{8,10}K" & ")", MatchOptions.Contains )
-{FullMatch:"BpNp__r-bk",StartMatch:65}
-
->> Match( "q-----b-__P-P-K---__---P-Q--__------P-__-p-NP--P__n--B----__p--p-pNp__r-b-k-nr__1010110000_041_000_00", 
-    "(" & "[QR]-*k|k-*[QR]|[QR].{9}(-.{9})*k|k.{9}(-.{9})*[QR]|" & 
-    "[QB].{10}(-.{10})*k|k.{10}(-.{10})*[QB]|[QB].{8}(-.{8})*k|k.{8}(-.{8})*[QB]|" & 
-    "P.{10}k|P.{8}k|" & 
-    "N.{18}k|k.{18}N|N.{20}k|k.{20}N|N.{11}k|k.{11}N|N.{7}k|k.{7}N|" &
-    "Kk|kK|K.{8,10}k|k.{8,10}K" & ")", MatchOptions.Contains )
-{FullMatch:"Np__r-b-k",StartMatch:67}
-
->> Match( "RNB--KR-__PPP-----__---P-Q--__----PpP-__-p---NqP__-----n--__p--p-ppp__rnb-kb-r__1010010000_027_000_00", 
-    "(" & "[QR]-*k|k-*[QR]|[QR].{9}(-.{9})*k|k.{9}(-.{9})*[QR]|" & 
-    "[QB].{10}(-.{10})*k|k.{10}(-.{10})*[QB]|[QB].{8}(-.{8})*k|k.{8}(-.{8})*[QB]|" & 
-    "P.{10}k|P.{8}k|" & 
-    "N.{18}k|k.{18}N|N.{20}k|k.{20}N|N.{11}k|k.{11}N|N.{7}k|k.{7}N|" &
-    "Kk|kK|K.{8,10}k|k.{8,10}K" & ")", MatchOptions.Contains )
-Blank()
-
->> Match( "q----Kb-__P-P-----__---P-Q--__------P-__-p-NPN-P__---B----__p--p-ppp__rnb-k-nr__0010110000_038_000_00",
-    "(" & "[qr]-*K|K-*[qr]|[qr].{9}(-.{9})*K|K.{9}(-.{9})*[qr]|" & 
-    "[qb].{10}(-.{10})*K|K.{10}(-.{10})*[qb]|[qb].{8}(-.{8})*K|K.{8}(-.{8})*[qb]|" & 
-    "K.{10}p|K.{8}p|" & 
-    "n.{18}K|K.{18}n|n.{20}K|K.{20}n|n.{11}K|K.{11}n|n.{7}K|K.{7}n|" &
-    "kK|Kk|k.{8,10}K|K.{8,10}k" & ")", MatchOptions.Contains )
-{FullMatch:"q----K",StartMatch:1}

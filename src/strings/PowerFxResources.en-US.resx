@@ -4703,9 +4703,13 @@
     <value>The value passed to the '{0}' function cannot be changed.</value>
     <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefined" xml:space="preserve">
-    <value>Capture names are hiding one or more predefined properties of the regular expression match, found {0}. Consider renaming them if you want to use the predefined properties.</value>
-    <comment>Information message indicating that the maker used a group name that will hide predefined properties.</comment>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>The capture name '{0}' is hiding a predefined property that returns match information. Consider renaming it if you want to access the match information.</value>
+    <comment>Information message indicating that the maker used a group name that will hide the property 'FullMatch' in the function result.</comment>
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>The capture names in the set '{0}' are hiding predefined properties that return match information. Consider renaming them if you want to access the match information.</value>
+    <comment>Information message indicating that the maker used a group name that will hide the property 'FullMatch' in the function result.</comment>
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Removes all formatting and returns a plain text value.</value>

@@ -788,7 +788,8 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
         public static ErrorResourceKey ErrVariableRegExOptions = new ErrorResourceKey("ErrVariableRegExOptions");
-        public static ErrorResourceKey InfoRegExCaptureNameHidesPredefined = new ErrorResourceKey("InfoRegExCaptureNameHidesPredefined");
+        public static ErrorResourceKey InfoRegExCaptureNameHidesPredefinedSingular = new ErrorResourceKey("InfoRegExCaptureNameHidesPredefinedSingular");
+        public static ErrorResourceKey InfoRegExCaptureNameHidesPredefinedPlural = new ErrorResourceKey("InfoRegExCaptureNameHidesPredefinedPlural");
 
         public static ErrorResourceKey ErrErrorIrrelevantField = new ErrorResourceKey("ErrErrorIrrelevantField");
         public static ErrorResourceKey ErrAsNotInContext = new ErrorResourceKey("ErrAsNotInContext");

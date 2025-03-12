@@ -345,7 +345,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         return new RegexTypeCacheEntry()
                         {
                             ReturnType = returnType,
-                            Error = TexlStrings.InfoRegExCaptureNameHidesPredefined,
+                            Error = errorParam.TrimEnd().Contains(' ') ? TexlStrings.InfoRegExCaptureNameHidesPredefinedPlural : TexlStrings.InfoRegExCaptureNameHidesPredefinedSingular,
                             ErrorSeverity = DocumentErrorSeverity.Suggestion,
                             ErrorParam = errorParam.TrimEnd()
                         };
