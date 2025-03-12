@@ -1126,6 +1126,20 @@ namespace Microsoft.PowerFx.Core.Binding
             }
         }
 
+        public void CheckPredicateUsage(CallNode node, TexlFunction func)
+        {
+            Contracts.AssertValue(node);
+            Contracts.AssertValue(func);
+
+            if (func.ScopeInfo != null &&
+                func.ScopeInfo.CheckPredicateUsage &&
+                !node.Args.ChildNodes.Any(child => child is ErrorNode) &&
+                TryGetCall(node.Id, out var callInfo))
+            {
+                func.ScopeInfo.CheckPredicateFields(GetUsedScopeFields(callInfo), node, GetLambdaParamNames(callInfo.ScopeNest + 1), ErrorContainer);
+            }
+        }
+
         public void CheckAndMarkAsPageable(FirstNameNode node)
         {
             Contracts.AssertValue(node);
@@ -2846,6 +2860,8 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.SetInfo(node, info);
                     _txb.SetLambdaScopeLevel(node, info.UpCount);
                     _txb.AddFieldToQuerySelects(nodeType, nodeName);
+                    
+                    //_txb.SetScopeNode(node.Id, info);
                     return;
                 }
 
@@ -4494,7 +4510,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             // Determine the Scope Identifier using the func.ScopeArgs arg
                             required = scopeInfo.GetScopeIdent(node.Args.Children.ToArray(), out scopeIdentifiers);
 
-                            if (scopeInfo.CheckInput(_txb.Features, node, node.Args.Children.ToArray(), out scope, _txb.ErrorContainer, GetScopeArgsTypes(node.Args.Children, argsCount)))
+                            if (scopeInfo.CheckInput(_txb.Features, node, node.Args.Children.ToArray(), out scope, GetScopeArgsTypes(node.Args.Children, argsCount)))
                             {
                                 if (_txb.TryGetEntityInfo(node.Args.Children[0], out expandInfo))
                                 {
@@ -4593,7 +4609,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         args[i].Accept(this);
                     }
 
-                    fArgsValid = scopeInfo.CheckInput(_txb.Features, node, args, out typeScope, _txb.ErrorContainer, GetScopeArgsTypes(node.Args.Children, maybeFunc.ScopeArgs));
+                    fArgsValid = scopeInfo.CheckInput(_txb.Features, node, args, out typeScope, GetScopeArgsTypes(node.Args.Children, maybeFunc.ScopeArgs));
 
                     // Determine the scope identifier using the first node for lambda params
                     identRequired = scopeInfo.GetScopeIdent(args, out scopeIdent);
@@ -4863,6 +4879,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 _txb.CheckAndMarkAsDelegatable(node);
                 _txb.CheckAndMarkAsPageable(node, func);
+                _txb.CheckPredicateUsage(node, func);
 
                 // A function will produce a constant output (and have no side-effects, which is important for
                 // caching/precomputing the result) iff the function is pure and its arguments are constant.

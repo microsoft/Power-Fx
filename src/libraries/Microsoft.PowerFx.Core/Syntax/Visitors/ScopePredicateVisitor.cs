@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -13,29 +14,29 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 {
     internal class ScopePredicateVisitor : IdentityTexlVisitor
     {
-        private readonly DType _typeScope;
-        private readonly DName[] _idents;
-
-        // The Summarize function creates a 'ThisGroup' indentifier that can only be used inside a call.
-        private bool _allowAggregateCall;
+        private readonly TexlBinding _binding;
 
         public HashSet<DName> InUsePredicates;
 
-        public ScopePredicateVisitor(DType typeScope, DName[] indents, bool allowAggregateCall = false)
+        public ScopePredicateVisitor(TexlBinding binding)
         {
-            _typeScope = typeScope;
-            _idents = indents;
-            _allowAggregateCall = allowAggregateCall;
+            _binding = binding;
 
             InUsePredicates = new HashSet<DName>();
         }
 
         public override void Visit(FirstNameNode node)
         {
-            if (_idents.Contains(node.Ident.Name) || _typeScope.TryGetType(node.Ident.Name, out _))
-            {
-                InUsePredicates.Add(node.Ident.Name);
-            }
+            var info = _binding.GetInfo(node);
+            
+            //_binding.TryGetCall(_node.Id, out var callInfo);
+
+            //if (_idents.Contains(node.Ident.Name) || _typeScope.TryGetType(node.Ident.Name, out _))
+            //{
+            //    InUsePredicates.Add(node.Ident.Name);
+            //}
+
+            var test = "dasdasd";
         }
 
         public override bool PreVisit(DottedNameNode node)
@@ -47,12 +48,10 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
         public override bool PreVisit(CallNode node)
         {
-            if (_allowAggregateCall)
+            if (_binding.TryGetCall(node.Id, out var callInfo) && 
+                callInfo.Function.ScopeInfo != null &&
+                callInfo.Function.ScopeInfo.CheckPredicateUsage)
             {
-                // If `ThisGroup` is placed inside multiple calls, raise a warning.
-                // Example
-                //      Summarize(t1, Fruit, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
-                _allowAggregateCall = false;
                 return true;
             }
 

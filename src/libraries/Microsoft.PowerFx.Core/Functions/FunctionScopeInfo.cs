@@ -2,9 +2,12 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Syntax.Visitors;
@@ -100,14 +103,9 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <param name="errors"></param>
         /// <param name="inputSchema">List of data sources to compose the calculated type.</param>
         /// <returns></returns>
-        public virtual bool CheckInput(Features features, CallNode callNode, TexlNode[] inputNodes, out DType typeScope, IErrorContainer errors, params DType[] inputSchema)
+        public virtual bool CheckInput(Features features, CallNode callNode, TexlNode[] inputNodes, out DType typeScope, params DType[] inputSchema)
         {
             var result = CheckInput(features, callNode, inputNodes[0], inputSchema[0], out typeScope);
-
-            if (result && CheckPredicateUsage)
-            {
-                CheckPredicates(inputNodes, typeScope, errors);
-            }
 
             return result;
         }
@@ -204,27 +202,6 @@ namespace Microsoft.PowerFx.Core.Functions
             return CheckInput(features, inputNode, inputSchema, TexlFunction.DefaultErrorContainer, out typeScope);
         }
 
-        public virtual void CheckPredicates(TexlNode[] inputNodes, DType typeScope, IErrorContainer errors = null)
-        {
-            GetScopeIdent(inputNodes, out DName[] idents);
-            var visitor = new ScopePredicateVisitor(typeScope, idents);            
-
-            for (var i = 1; i < inputNodes.Length; i++)
-            {
-                var arg = inputNodes[i];
-
-                if (_function.IsLambdaParam(inputNodes[i], i))
-                {
-                    arg.Accept(visitor);
-                }
-            }
-
-            if (visitor.InUsePredicates.Count == 0)
-            {
-                errors.EnsureError(DocumentErrorSeverity.Warning, inputNodes[0], TexlStrings.WarnCheckPredicateUsage, idents.First());
-            }
-        }
-
         /// <summary>
         /// Get the scope identifiers for the function based on the CallNode child args.
         /// The majority of the functions will have a single scope identifier named ThisRecord.
@@ -244,6 +221,21 @@ namespace Microsoft.PowerFx.Core.Functions
 
             return false;
         }
+
+        public virtual void CheckPredicateFields(DType fields, CallNode callNode, IEnumerable<FirstNameInfo> lambdaNames, ErrorContainer errors)
+        {
+            if (fields.GetAllNames(DPath.Root).Any())
+            {
+                return;
+            }
+
+            GetScopeIdent(callNode.Args.ChildNodes.ToArray(), out var idents);
+
+            if (!lambdaNames.Any(name => lambdaNames.Contains(name)))
+            {
+                errors.EnsureError(DocumentErrorSeverity.Warning, callNode, TexlStrings.WarnCheckPredicateUsage);
+            }
+        }
     }
 
     internal class FunctionThisGroupScopeInfo : FunctionScopeInfo
@@ -251,7 +243,7 @@ namespace Microsoft.PowerFx.Core.Functions
         public static DName ThisGroup => new DName("ThisGroup");
 
         public FunctionThisGroupScopeInfo(TexlFunction function)
-            : base(function, appliesToArgument: (argIndex) => argIndex > 0, checkPredicateUsage: true)
+            : base(function, appliesToArgument: (argIndex) => argIndex > 0)
         {
         }
 
@@ -289,26 +281,6 @@ namespace Microsoft.PowerFx.Core.Functions
 
             return ret;
         }
-
-        public override void CheckPredicates(TexlNode[] inputNodes, DType typeScope, IErrorContainer errors)
-        {
-            GetScopeIdent(inputNodes, out DName[] idents);            
-
-            for (int i = 0; i < inputNodes.Length; i++)
-            {
-                if (_function.IsLambdaParam(inputNodes[i], i))
-                {
-                    // We create a new visitor object for each iteration since lambda parms can appear at any place in the expression.
-                    var visitor = new ScopePredicateVisitor(typeScope, new[] { ThisGroup }, true);
-                    inputNodes[i].Accept(visitor);
-
-                    if (!visitor.InUsePredicates.Contains(ThisGroup))
-                    {
-                        errors.EnsureError(DocumentErrorSeverity.Warning, inputNodes[i], TexlStrings.WarnCheckPredicateUsage, ThisGroup);
-                    }
-                }
-            }
-        }
     }
 
     internal class FunctionJoinScopeInfo : FunctionScopeInfo
@@ -322,7 +294,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
         }
 
-        public override bool CheckInput(Features features, CallNode callNode, TexlNode[] inputNodes, out DType typeScope, IErrorContainer errors, params DType[] inputSchema)
+        public override bool CheckInput(Features features, CallNode callNode, TexlNode[] inputNodes, out DType typeScope, params DType[] inputSchema)
         {
             var ret = true;
             var argCount = Math.Min(inputNodes.Length, 2);
@@ -335,11 +307,6 @@ namespace Microsoft.PowerFx.Core.Functions
             {
                 ret &= base.CheckInput(features, callNode, inputNodes[i], inputSchema[i], out var type);
                 typeScope = typeScope.Add(idents[i], type);
-            }
-
-            if (ret)
-            {
-                CheckPredicates(inputNodes, typeScope, errors);
             }
 
             return ret;
@@ -372,18 +339,47 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-        public override void CheckPredicates(TexlNode[] inputNodes, DType typeScope, IErrorContainer errors)
+        public override void CheckPredicateFields(DType fields, CallNode callNode, IEnumerable<FirstNameInfo> lambdaNames, ErrorContainer errors)
         {
-            GetScopeIdent(inputNodes, out DName[] idents);
-
-            var visitor = new ScopePredicateVisitor(typeScope, idents);
-
-            inputNodes[2].Accept(visitor);
-
-            if (!visitor.InUsePredicates.Contains(idents[0]) || !visitor.InUsePredicates.Contains(idents[1]))
+            // If Join call node has less than 5 records, we are possibly looking for suggestions.
+            if (callNode.Args.ChildNodes.Count < 5)
             {
-                errors.EnsureError(DocumentErrorSeverity.Warning, inputNodes[2], TexlStrings.WarnCheckPredicateUsage, string.Join("/", idents.Select(id => id.Value)));
+                return;
             }
+
+            GetScopeIdent(callNode.Args.ChildNodes.ToArray(), out var idents);
+
+            var foundIdents = new HashSet<DName>();
+            var predicate = callNode.Args.ChildNodes[2];
+
+            // In the Join function, arg2 and argN > 3 are lambdas nodes.
+            // We need to check if scope identifiers are used arg2 (predicate).
+            foreach (var lambda in lambdaNames)
+            {
+                var parent = lambda.Node.Parent;
+
+                while (parent != null)
+                {
+                    if (parent.Id == predicate.Id)
+                    {
+                        foundIdents.Add(lambda.Name);
+                        break;
+                    }
+
+                    parent = parent.Parent;
+                }
+            }
+
+            var foundIdentsArray = foundIdents.ToArray();
+
+            if (foundIdents.Count == 2 && 
+                fields.TryGetType(foundIdentsArray[0], out _) && 
+                fields.TryGetType(foundIdentsArray[1], out _))
+            {                
+                return;
+            }
+
+            errors.EnsureError(DocumentErrorSeverity.Warning, callNode, TexlStrings.WarnCheckPredicateUsage);
         }
     }
 }

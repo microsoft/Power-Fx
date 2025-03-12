@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 
 namespace Microsoft.PowerFx.Core.Utils
@@ -37,10 +36,16 @@ namespace Microsoft.PowerFx.Core.Utils
             return rgv == null ? 0 : rgv.Length;
         }
 
-        public static int Size<T>(IEnumerable<T> enumerable)
+        public static int Size<T>(List<T> list)
         {
-            Contracts.AssertValueOrNull(enumerable);
-            return enumerable == null ? 0 : enumerable.Count();
+            Contracts.AssertValueOrNull(list);
+            return list == null ? 0 : list.Count;
+        }
+
+        public static int Size<T>(IList<T> list)
+        {
+            Contracts.AssertValueOrNull(list);
+            return list == null ? 0 : list.Count;
         }
 
         public static int Size<T>(Stack<T> stack)

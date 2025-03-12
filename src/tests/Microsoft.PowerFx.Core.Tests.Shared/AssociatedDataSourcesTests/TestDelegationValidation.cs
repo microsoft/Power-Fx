@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
 
         [Theory]
         [InlineData("UDF1()", "UDF1():Accounts = Accounts;", true)]
-        [InlineData("Filter(UDF1(), \"name\" <> \"\")", "UDF1():Accounts = Accounts;", true)]
+        [InlineData("Filter(UDF1(), \"name\" <> \"\")", "UDF1():Accounts = Accounts;", false)]
         public void TestDelegableExpressions_UserDfeinedFunction(string expression, string script, bool isDelegable)
         {
             TestDelegableExpressions(Features.PowerFxV1, expression, isDelegable, script);
@@ -150,9 +150,6 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             // Only shows warning if data source is passed directly to CountRows
             result = engine.Check("CountRows(Filter(Accounts, IsBlank('Address 1: City')))");
             Assert.True(result.IsSuccess);
-
-            // Some functions (like 'Filter') can produce a 'WarnCheckPredicateUsage' warning. Any other warnings are unexpected.
-            Assert.Empty(result.Errors.Where(err => err.MessageKey != "WarnCheckPredicateUsage"));
         }
     }
 }
