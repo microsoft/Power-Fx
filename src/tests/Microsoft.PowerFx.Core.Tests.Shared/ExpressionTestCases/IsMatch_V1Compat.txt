@@ -17,4 +17,15 @@ true
 >> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~`  1234567890", "\p{L}")
 false
 
+// for comparison
+
+>> IsMatch( "ihi", "h", MatchOptions.Complete )
+false
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` A 1234567890", "\p{L}", MatchOptions.Complete )
+false
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~`  1234567890", "\p{L}", MatchOptions.Complete )
+false
+
 

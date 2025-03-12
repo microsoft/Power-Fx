@@ -70,7 +70,7 @@ Lookahead and lookbehind assertions cannot contain submatches or unlimited quant
 | Character class | `[abc]` list of characters, `[a-fA-f0-9]` range of characters, `[^a-z]` everything but these characters. Character classes cannot be nested, subtracted, or intersected, and many punctuation marks may not appear twice in a row (`@@`, `%%`, `!!`, etc). |  
 | Word characters | `\w` and `\W` using the Unicode definition of letters `[\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Nd}\p{Pc}\p{Lm}]`. `\W` cannot be used in a negative character class.|
 | Digit characters | `\d` includes the digits `0` to`9` and `\p{Nd}`, `\D` matches everything except characters matched by `\d`. `\D` cannot be used in a negative character class.|
-| Space characters | `\s` includes spacing characters `[ \r\n\t\f\x0B\x85\p{Z}]`, `\S` which matches everything except characters matched by `\s`, `\r` carriage return, `\n` newline, `\t` tab, `\f` form feed. `\S` cannot be used in a negative character class.|
+| Space characters | `\s` includes spacing characters `[ \t\n\x0b\f\r\x85\u2028\u2029\p{Z}]`, `\S` which matches everything except characters matched by `\s`. `\S` cannot be used in a negative character class.|
 | Unicode character category | `\p{Ll}` matches all Unicode lowercase letters, while `\P{Ll}` matches everything that is not a Unicode lowercase letter. `\P{}` cannot be used in a negative character class. |
 
 To increase clarity and avoid ambiguity, square bracket character classes are more restrictive than in other regular expression languages:
@@ -177,7 +177,7 @@ Enabled with **MatchOptions.EndsWith** or use `$` at the end of the regular expr
 
 Enabled with **MatchOptions.DotAll** or `(?s)` at the start of the regular expression.
 
-Normally the dot `.` operator will match all characters except newline characters `Char(10)` and `Char(13)`. With the **DotAll** modifier, all characters are matched, including newlines.
+Normally the dot `.` operator will match all characters except newline characters `[\n\x0b\f\r\x85\u2028\u2029]`. With the **DotAll** modifier, all characters are matched, including newlines.
 
 In this example, only the "Hello" is matched as the newline after it will not be matched by a `.` by default:
 
@@ -203,9 +203,9 @@ Trim( Match( "Hello
 Enabled with **MatchOptions.FreeSpacing** or `(?x)` at the start of a regular expression.
 
 Free spacing makes it easier to read and maintain a complex regular expression. The rules are simple:
-- Space characters are ignored in the regular expression, including tabs and newline characters. If matching a space is desired, use `\s`, `\ `, `\t`, `\r`, or `\n`.
-- `#` begins a comment which runs until the end of the line. It and all characters that follow up to the next newline character are ignored.
-- Characters classes are not included in these changes. Space characters and `#` act as they normally do. For example, `IsMatch( "a#b c", "(?x)a[ #]b[ #]c" )` returns *true*. Some regular expression languages include character classes in free spacing, or provide an option to include them, but Power Fx does not at this time.
+- Space characters are ignored in the regular expression, including all characters that would match `\s`. If matching a space is desired, use `\s`, `\ `, `\t`, `\r`, or `\n`.
+- `#` begins a comment which runs until the end of the line. It and all characters that follow up to the next newline character (characters not matched by `.` without **MatchOptions.DotAll**) are ignored.
+- Characters classes are not included in these changes. Space characters and `#` act as they normally do. For example, `IsMatch( "a#b c", "(?x)a[ #]b[ #]c" )` returns *true*. Some regular expression languages include character classes in free spacing, or provide an option to include them, but Power Fx does not.
 
 For example, here is a complex regular expression for matching an ISO [8601 date time](https://en.wikipedia.org/wiki/ISO_8601):
 
