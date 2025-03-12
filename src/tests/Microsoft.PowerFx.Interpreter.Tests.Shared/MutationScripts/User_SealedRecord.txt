@@ -9,20 +9,56 @@
 Table({DataverseUserId:GUID("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),Email:"susan@contoso.com",FullName:"Susan Burk",TeamsMemberId:"29:1DUjC5z4ttsBQa0fX2O7B0IDu30R"})
 
 // AddColumns and RenameColumns are blocked
+// Work around is to ShowColumns first
 
 >> AddColumns( User, Foo, 1 )
 Errors: Error 12-16: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-10: The function 'AddColumns' has some invalid arguments.
 
+>> AddColumns( ShowColumns( User, FullName, Email ), Foo, 1 )
+{Email:"susan@contoso.com",Foo:1,FullName:"Susan Burk"}
+
 >> RenameColumns( User, FullName, Name )
 Errors: Error 15-19: Can't rename columns of a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-13: The function 'RenameColumns' has some invalid arguments.
 
+>> RenameColumns( ShowColumns( User, FullName, Email ), FullName, Name )
+{Email:"susan@contoso.com",Name:"Susan Burk"}
+
+// and with tables...
+
+>> AddColumns( Table(User, User), Foo, 1 )
+Errors: Error 12-29: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-10: The function 'AddColumns' has some invalid arguments.
+
+>> AddColumns( ShowColumns( Table(User, User), FullName, Email ), Foo, 1 )
+Table({Email:"susan@contoso.com",Foo:1,FullName:"Susan Burk"},{Email:"susan@contoso.com",Foo:1,FullName:"Susan Burk"})
+
+>> RenameColumns( Table(User, User), FullName, Name )
+Errors: Error 15-32: Can't rename columns of a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-13: The function 'RenameColumns' has some invalid arguments.
+
+>> RenameColumns( ShowColumns( Table(User, User), FullName, Email ), FullName, Name )
+Table({Email:"susan@contoso.com",Name:"Susan Burk"},{Email:"susan@contoso.com",Name:"Susan Burk"})
+
 // DropColumns and ShowColumns work as normal, as they are removing without adding
+// But the result of DropColumns is still sealed, since it could include columns that were added
 
 >> DropColumns( User, FullName )
 {DataverseUserId:GUID("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),Email:"susan@contoso.com",TeamsMemberId:"29:1DUjC5z4ttsBQa0fX2O7B0IDu30R"}
 
+>> AddColumns( DropColumns( User, FullName ), foo, 1 )
+Errors: Error 12-41: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-10: The function 'AddColumns' has some invalid arguments.
+
 >> ShowColumns( User, Email )
 {Email:"susan@contoso.com"}
+
+// and with tables...
+
+>> DropColumns( Table(User, User), FullName )
+Table({DataverseUserId:GUID("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),Email:"susan@contoso.com",TeamsMemberId:"29:1DUjC5z4ttsBQa0fX2O7B0IDu30R"},{DataverseUserId:GUID("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),Email:"susan@contoso.com",TeamsMemberId:"29:1DUjC5z4ttsBQa0fX2O7B0IDu30R"})
+
+>> AddColumns( DropColumns( Table(User, User), FullName ), foo, 1 )
+Errors: Error 12-54: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-10: The function 'AddColumns' has some invalid arguments.
+
+>> ShowColumns( Table(User, User), Email )
+Table({Email:"susan@contoso.com"},{Email:"susan@contoso.com"})
 
 // Type union should also fail, unless it is the same.
 // Ideally a subset that didn't cause the union to expand would also be permitted, but for simplicity is currently blocked.
@@ -46,9 +82,6 @@ If(true, {test:1}, "Void value (result of the expression can't be used).")
 
 >> AddColumns( DropColumns( User, FullName ), Foo, 1 )
 Errors: Error 12-41: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-10: The function 'AddColumns' has some invalid arguments.
-
->> AddColumns( ShowColumns( User, FullName, Email ), Foo, 1 )
-{Email:"susan@contoso.com",Foo:1,FullName:"Susan Burk"}
 
 >> AddColumns( [User], Foo, 1 )
 Errors: Error 12-18: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-10: The function 'AddColumns' has some invalid arguments.
@@ -103,6 +136,18 @@ Errors: Error 71-73: Can't rename columns of a system record or table of system 
 
 // A sealed record shouldn't taint the rest of the data structure
 
+>> AddColumns( {c:User}, a, 1)
+{a:1,c:{DataverseUserId:GUID("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),Email:"susan@contoso.com",FullName:"Susan Burk",TeamsMemberId:"29:1DUjC5z4ttsBQa0fX2O7B0IDu30R"}}
+
+>> AddColumns( AddColumns( {c:User}, a, 1).c, b, 2 )
+Errors: Error 39-41: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-10: The function 'AddColumns' has some invalid arguments.
+
+>> AddColumns( Table({c:User}), a, 1)
+Table({a:1,c:{DataverseUserId:GUID("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),Email:"susan@contoso.com",FullName:"Susan Burk",TeamsMemberId:"29:1DUjC5z4ttsBQa0fX2O7B0IDu30R"}})
+
+>> AddColumns( ShowColumns( AddColumns( Table({c:User}), a, 1), c), b, 2 )
+Table({b:2,c:{DataverseUserId:GUID("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),Email:"susan@contoso.com",FullName:"Susan Burk",TeamsMemberId:"29:1DUjC5z4ttsBQa0fX2O7B0IDu30R"}})
+
 >> AddColumns( Last( ForAll( Table( { b: {c: User, d:{n:1}} } ), ThisRecord )).b.d, Goo, "Hi" )
 {Goo:"Hi",n:1}
 
@@ -125,3 +170,12 @@ Table({Email:"susan@contoso.com"},{Email:"susan@contoso.com"})
 
 >> [DropColumns(DropColumns(User, FullName), Email), DropColumns(DropColumns(User, Email), FullName)]
 Table({DataverseUserId:GUID("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),TeamsMemberId:"29:1DUjC5z4ttsBQa0fX2O7B0IDu30R"},{DataverseUserId:GUID("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),TeamsMemberId:"29:1DUjC5z4ttsBQa0fX2O7B0IDu30R"})
+
+// Misc
+
+>> AddColumns( With( {a: User}, a ), foo, 2 )
+Errors: Error 12-32: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-10: The function 'AddColumns' has some invalid arguments.
+
+>> AddColumns( With( User, ThisRecord ), foo, 2 )
+Errors: Error 12-36: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-10: The function 'AddColumns' has some invalid arguments.
+
