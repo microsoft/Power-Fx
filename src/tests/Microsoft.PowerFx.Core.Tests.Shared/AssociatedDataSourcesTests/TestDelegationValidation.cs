@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
 
         [Theory]
         [InlineData("UDF1()", "UDF1():Accounts = Accounts;", true)]
-        [InlineData("Filter(UDF1(), \"name\" <> \"\")", "UDF1():Accounts = Accounts;", false)]
+        [InlineData("Filter(UDF1(), \"name\" <> \"\")", "UDF1():Accounts = Accounts;", true)]
         public void TestDelegableExpressions_UserDfeinedFunction(string expression, string script, bool isDelegable)
         {
             TestDelegableExpressions(Features.PowerFxV1, expression, isDelegable, script);

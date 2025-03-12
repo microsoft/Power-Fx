@@ -145,7 +145,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
 
-            if (!CheckArgsCount(callNode, binding))
+            if (!CheckArgsCount(callNode, binding, DocumentErrorSeverity.Moderate))
             {
                 return false;
             }
