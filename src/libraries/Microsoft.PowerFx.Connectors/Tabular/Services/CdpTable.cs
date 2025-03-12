@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         [Obsolete("This API should not be called directly - used by CDP Validator only", false)]
-        public virtual async Task InitAsync(HttpClient httpClient, string uriPrefix, string tableName, CancellationToken cancellationToken, ConnectorLogger logger = null)
+        public async Task InitAsync(HttpClient httpClient, string uriPrefix, string tableName, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
