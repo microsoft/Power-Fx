@@ -98,7 +98,6 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <param name="callNode">Caller call node.</param>
         /// <param name="inputNodes">ArgN node.</param>
         /// <param name="typeScope">Calculated DType type.</param>
-        /// <param name="errors"></param>
         /// <param name="inputSchema">List of data sources to compose the calculated type.</param>
         /// <returns></returns>
         public virtual bool CheckInput(Features features, CallNode callNode, TexlNode[] inputNodes, out DType typeScope, params DType[] inputSchema)
