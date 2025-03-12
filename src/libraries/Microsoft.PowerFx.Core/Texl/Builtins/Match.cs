@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -120,9 +121,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     internal class BaseMatchFunction : BuiltinFunction
     {
-        private readonly ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>> _regexTypeCache;
+        private readonly RegexTypeCache _regexTypeCache;
         private readonly string _cachePrefix;
-        private readonly int _regexCacheSize;
 
         public override bool IsSelfContained => true;
 
@@ -136,8 +136,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (regexTypeCache != null)
             {
                 _cachePrefix = returnType == DType.Boolean ? "bol_" : (returnType.IsTable ? "tbl_" : "rec_");
-                _regexTypeCache = regexTypeCache.Cache;
-                _regexCacheSize = regexTypeCache.CacheSize;
+                _regexTypeCache = regexTypeCache;
             }
         }
 
@@ -213,8 +212,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 regularExpressionOptions += MatchOptionChar.NumberedSubMatches;
             }
 
-            string alteredOptions = regularExpressionOptions;
-
             if (!fValid)
             {
                 return false;
@@ -225,27 +222,39 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // - Regular expression pattern
             // - NumberedSubMatches vs. Not
             // if another MatchOption is added which impacts the return type, this will need to be updated
-            string regexCacheKey = RegexCacheKeyGen(this._cachePrefix, alteredOptions, regularExpression);
+            string regexCacheKey = RegexCacheKeyGen(this._cachePrefix, regularExpressionOptions, regularExpression);
 
             // if the key is found in the cache, then the regular expression must have previously passed IsSupportedRegularExpression (or we are pre V1 and we don't check)
-            if (RegexCacheTypeLookup(regExNode, regexCacheKey, errors, ref returnType))
+            if (!_regexTypeCache.TryLookup(regexCacheKey, out var typeCacheEntry))
             {
-                return true;
+                string alteredOptions = regularExpressionOptions;
+
+                if (context.Features.PowerFxV1CompatibilityRules)
+                {
+                    // will fill in typeCacheEntry with error information if there is a problem
+                    typeCacheEntry = IsSupportedRegularExpression(regExNode, regularExpression, regularExpressionOptions, out alteredOptions);
+                }
+                
+                if (typeCacheEntry == null)
+                { 
+                    // either didn't check (pre-V1) or no error
+                    typeCacheEntry = RegexCacheGetType(regularExpression, alteredOptions, returnType);
+                }
+
+                _regexTypeCache.Add(regexCacheKey, typeCacheEntry);
             }
 
-            // we found a null in the cache, meaning we failed before and didn't check again, error has already been reported by RegexCacheTypeLookup
-            if (returnType == DType.Error)
+            if (typeCacheEntry.Error != null)
             {
-                return false;
-            }
+                errors.EnsureError(typeCacheEntry.ErrorSeverity, regExNode, (ErrorResourceKey)typeCacheEntry.Error, typeCacheEntry.ErrorParam);
+                if (typeCacheEntry.ErrorSeverity == DocumentErrorSeverity.Severe)
+                {
+                    return false;
+                }
+            } 
 
-            // cache miss, validate the regular expression, create the return type, and cache
-            if (!context.Features.PowerFxV1CompatibilityRules || IsSupportedRegularExpression(regExNode, regularExpression, regularExpressionOptions, out alteredOptions, errors))
-            {
-                return RegexCacheTypeCreate(regExNode, regexCacheKey, regularExpression, alteredOptions, errors, ref returnType);
-            }
-
-            return false;
+            returnType = typeCacheEntry.ReturnType;
+            return true;
         }
 
         private string RegexCacheKeyGen(string prefix, string options, string regex)
@@ -254,39 +263,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return prefix + (options.Contains(MatchOptionChar.NumberedSubMatches) ? "N" : "-") + (options.Contains(MatchOptionChar.FreeSpacing) ? "X_" : "~_") + regex;
         }
 
-        private bool RegexCacheTypeLookup(TexlNode regExNode, string regexCacheKey, IErrorContainer errors, ref DType returnType)
-        {
-            if (_regexTypeCache != null && _regexTypeCache.ContainsKey(regexCacheKey))
-            {
-                var cachedType = _regexTypeCache[regexCacheKey];
-                if (cachedType != null)
-                {
-                    returnType = cachedType.Item1;
-                    AddWarnings(regExNode, errors, cachedType.Item2, cachedType.Item3, cachedType.Item4);
-                    return true;
-                }
-                else
-                {
-                    returnType = DType.Error;
-                    errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegEx);
-                    return false;
-                }
-            }
-
-            return false;
-        }
-
         // Creates a typed result: [Match:s, Captures:*[Value:s], NamedCaptures:r[<namedCaptures>:s]]
-        private bool RegexCacheTypeCreate(TexlNode regExNode, string regexCacheKey, string regexPattern, string alteredOptions, IErrorContainer errors, ref DType returnType)
+        private RegexTypeCacheEntry RegexCacheGetType(string regexPattern, string alteredOptions, DType initialReturnType)
         {
-            if (_regexTypeCache != null && _regexTypeCache.Count >= _regexCacheSize)
-            {
-                // To preserve memory during authoring, we clear the cache if it gets
-                // too large. This should only happen in a minority of cases and
-                // should have no impact on deployed apps.
-                _regexTypeCache.Clear();
-            }
-
             try
             {
                 var regexDotNetOptions = RegexOptions.None;
@@ -303,12 +282,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // always .NET compile the regular expression, even if we don't need the return type (boolean), to ensure it is legal in .NET
                 var regex = new Regex(regexPattern, regexDotNetOptions);
 
-                bool fullMatchHidden = false, subMatchesHidden = false, startMatchHidden = false;
-
                 // we don't need to check hidden or do any type calculation if the return type is Boolean (IsMatch)
-                if (returnType != DType.Boolean)
-                { 
+                if (initialReturnType == DType.Boolean)
+                {
+                    return new RegexTypeCacheEntry()
+                    {
+                        ReturnType = DType.Boolean
+                    };
+                }
+                else
+                {
+                    bool fullMatchHidden = false, subMatchesHidden = false, startMatchHidden = false;
                     List<TypedName> propertyNames = new List<TypedName>();
+                    string errorParam = string.Empty;
 
                     foreach (var captureName in regex.GetGroupNames())
                     {
@@ -321,14 +307,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         if (captureName == ColumnName_FullMatch.Value)
                         {
                             fullMatchHidden = true;
+                            errorParam += ColumnName_FullMatch.Value + " ";
                         }
                         else if (captureName == ColumnName_SubMatches.Value && alteredOptions.Contains(MatchOptionChar.NumberedSubMatches))
                         {
                             subMatchesHidden = true;
+                            errorParam += ColumnName_SubMatches.Value + " ";
                         }
                         else if (captureName == ColumnName_StartMatch.Value)
                         {
                             startMatchHidden = true;
+                            errorParam += ColumnName_StartMatch.Value + " ";
                         }
 
                         propertyNames.Add(new TypedName(DType.String, DName.MakeValid(captureName, out _)));
@@ -349,47 +338,34 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         propertyNames.Add(new TypedName(DType.Number, ColumnName_StartMatch));
                     }
 
-                    returnType = returnType.IsRecord
-                        ? DType.CreateRecord(propertyNames)
-                        : DType.CreateTable(propertyNames);
-
-                    AddWarnings(regExNode, errors, hidesFullMatch: fullMatchHidden, hidesSubMatches: subMatchesHidden, hidesStartMatch: startMatchHidden);
+                    var returnType = initialReturnType.IsRecord ? DType.CreateRecord(propertyNames) : DType.CreateTable(propertyNames);
+                    
+                    if (fullMatchHidden || subMatchesHidden || startMatchHidden)
+                    {
+                        return new RegexTypeCacheEntry()
+                        {
+                            ReturnType = returnType,
+                            Error = TexlStrings.InfoRegExCaptureNameHidesPredefined,
+                            ErrorSeverity = DocumentErrorSeverity.Suggestion,
+                            ErrorParam = errorParam.TrimEnd()
+                        };
+                    }
+                    else
+                    {
+                        return new RegexTypeCacheEntry()
+                        {
+                            ReturnType = returnType
+                        };
+                    }
                 }
-
-                if (_regexTypeCache != null)
-                {
-                    _regexTypeCache[regexCacheKey] = Tuple.Create(returnType, fullMatchHidden, subMatchesHidden, startMatchHidden);
-                }
-
-                return true;
             }
             catch (ArgumentException)
             {
-                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegEx);
-                if (_regexTypeCache != null)
+                return new RegexTypeCacheEntry()
                 {
-                    _regexTypeCache[regexCacheKey] = null; // Cache to avoid evaluating again
-                }
-
-                return false;
-            }
-        }
-
-        private void AddWarnings(TexlNode regExNode, IErrorContainer errors, bool hidesFullMatch, bool hidesSubMatches, bool hidesStartMatch)
-        {
-            if (hidesFullMatch)
-            {
-                errors.EnsureError(DocumentErrorSeverity.Suggestion, regExNode, TexlStrings.InfoRegExCaptureNameHidesPredefinedFullMatchField, ColumnName_FullMatch.Value);
-            }
-
-            if (hidesSubMatches)
-            {
-                errors.EnsureError(DocumentErrorSeverity.Suggestion, regExNode, TexlStrings.InfoRegExCaptureNameHidesPredefinedSubMatchesField, ColumnName_SubMatches.Value);
-            }
-
-            if (hidesStartMatch)
-            {
-                errors.EnsureError(DocumentErrorSeverity.Suggestion, regExNode, TexlStrings.InfoRegExCaptureNameHidesPredefinedStartMatchField, ColumnName_StartMatch.Value);
+                    Error = TexlStrings.ErrInvalidRegEx,
+                    ErrorSeverity = DocumentErrorSeverity.Severe,
+                };
             }
         }
 
@@ -423,7 +399,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public const int MaxGroupStackDepth = 32;                   // maximum number of nested grouping levels, avoids performance issues with a complex group tree.
         public const int ErrorContextLength = 12;                   // number of characters to include in error message context excerpt from formula.
 
-        private bool IsSupportedRegularExpression(TexlNode regExNode, string regexPattern, string regexOptions, out string alteredOptions, IErrorContainer errors)
+        private RegexTypeCacheEntry IsSupportedRegularExpression(TexlNode regExNode, string regexPattern, string regexOptions, out string alteredOptions)
         {
             bool freeSpacing = regexOptions.Contains(MatchOptionChar.FreeSpacing);                 // can also be set with inline mode modifier
             bool numberedCpature = regexOptions.Contains(MatchOptionChar.NumberedSubMatches);      // can only be set here, no inline mode modifier
@@ -537,28 +513,31 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             foreach (Match token in generalRE.Matches(regexPattern))
             {
-                void RegExError(ErrorResourceKey errKey, Match errToken = null, bool startContext = false, bool endContext = false, string postContext = null)
+                RegexTypeCacheEntry RegExError(ErrorResourceKey? error, Match errToken = null, bool startContext = false, bool endContext = false, string postContext = null)
                 {
                     if (errToken == null)
                     {
                         errToken = token;
                     }
 
+                    string found = errToken.Value;
+
                     if (endContext)
                     {
                         var tokenEnd = errToken.Index + errToken.Length;
-                        var found = tokenEnd > ErrorContextLength ? "..." + regexPattern.Substring(tokenEnd - ErrorContextLength, ErrorContextLength) : regexPattern.Substring(0, tokenEnd);
-                        errors.EnsureError(regExNode, errKey, found + postContext);
+                        found = tokenEnd > ErrorContextLength ? "..." + regexPattern.Substring(tokenEnd - ErrorContextLength, ErrorContextLength) : regexPattern.Substring(0, tokenEnd);
                     }
                     else if (startContext)
                     {
-                        var found = errToken.Index + ErrorContextLength >= regexPattern.Length ? regexPattern.Substring(errToken.Index) : regexPattern.Substring(errToken.Index, ErrorContextLength) + "...";
-                        errors.EnsureError(regExNode, errKey, found + postContext);
+                        found = errToken.Index + ErrorContextLength >= regexPattern.Length ? regexPattern.Substring(errToken.Index) : regexPattern.Substring(errToken.Index, ErrorContextLength) + "...";
                     }
-                    else
+
+                    return new RegexTypeCacheEntry()
                     {
-                        errors.EnsureError(regExNode, errKey, errToken.Value + postContext);
-                    }
+                        Error = error,
+                        ErrorParam = found + postContext,
+                        ErrorSeverity = DocumentErrorSeverity.Severe,
+                    };
                 }
 
                 if (openPoundComment && token.Groups["newline"].Success)
@@ -579,72 +558,62 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         if (!groupTracker.SeenQuantifier(0, -1, out var error))
                         {
-                            RegExError((ErrorResourceKey)error, endContext: true);
-                            return false;
+                            return RegExError(error, endContext: true);
                         }
                     }
                     else if (token.Groups["goodZeroOrOne"].Success)
                     {
                         if (!groupTracker.SeenQuantifier(0, 1, out var error))
                         {
-                            RegExError((ErrorResourceKey)error, endContext: true);
-                            return false;
+                            return RegExError(error, endContext: true);
                         }
                     }
                     else if (token.Groups["goodExact"].Success)
                     {
                         if (!int.TryParse(token.Groups["goodExact"].Value, out var exact))
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExNumberOverflow);
-                            return false;
+                            return RegExError(TexlStrings.ErrInvalidRegExNumberOverflow);
                         }
 
                         if (!groupTracker.SeenQuantifier(exact, exact, out var error))
                         {
-                            RegExError((ErrorResourceKey)error, endContext: true);
-                            return false;
+                            return RegExError(error, endContext: true);
                         }
                     }
                     else if (token.Groups["goodLimitedL"].Success)
                     {
                         if (!int.TryParse(token.Groups["goodLimitedL"].Value, out var low))
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExNumberOverflow);
-                            return false;
+                            return RegExError(TexlStrings.ErrInvalidRegExNumberOverflow);
                         }
 
                         if (!int.TryParse(token.Groups["goodLimitedH"].Value, out var high))
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExNumberOverflow);
-                            return false;
+                            return RegExError(TexlStrings.ErrInvalidRegExNumberOverflow);
                         }
 
                         if (!groupTracker.SeenQuantifier(low, high, out var error))
                         {
-                            RegExError((ErrorResourceKey)error, endContext: true);
-                            return false;
+                            return RegExError((ErrorResourceKey)error, endContext: true);
                         }
                     }
                     else if (token.Groups["goodOneOrMore"].Success)
                     {
                         if (!groupTracker.SeenQuantifier(1, -1, out var error))
                         {
-                            RegExError((ErrorResourceKey)error, endContext: true);
-                            return false;
+                            return RegExError(error, endContext: true);
                         }
                     }
                     else if (token.Groups["goodUnlimited"].Success)
                     {
                         if (!int.TryParse(token.Groups["goodUnlimited"].Value, out var low))
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExNumberOverflow);
-                            return false;
+                            return RegExError(TexlStrings.ErrInvalidRegExNumberOverflow);
                         }
 
                         if (!groupTracker.SeenQuantifier(low, -1, out var error))
                         {
-                            RegExError((ErrorResourceKey)error, endContext: true);
-                            return false;
+                            return RegExError(error, endContext: true);
                         }
                     }
                     else if (token.Groups["else"].Success || token.Groups["newline"].Success || token.Groups["goodEscape"].Success || token.Groups["goodEscapeOutsideCC"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
@@ -658,9 +627,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         foreach (Match ccToken in characterClassRE.Matches(ccString))
                         {
-                            void CCRegExError(ErrorResourceKey errKey)
+                            RegexTypeCacheEntry CCRegExError(ErrorResourceKey errKey)
                             {
-                                RegExError(errKey, errToken: ccToken);
+                                return RegExError(errKey, errToken: ccToken);
                             }
 
                             if (ccToken.Groups["goodEscape"].Success || ccToken.Groups["goodEscapeInsideCCOnly"].Success)
@@ -671,8 +640,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             {
                                 if (characterClassNegative)
                                 {
-                                    CCRegExError(TexlStrings.ErrInvalidRegExBadEscapeInsideNegativeCharacterClass);
-                                    return false;
+                                    return CCRegExError(TexlStrings.ErrInvalidRegExBadEscapeInsideNegativeCharacterClass);
                                 }
                             }
                             else if (ccToken.Groups["goodUEscape"].Success)
@@ -680,46 +648,38 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 if (ccToken.Groups["goodUEscape"].Value == "P" && characterClassNegative)
                                 {
                                     // would be problematic for us to allow this if we wanted to implement MatchOptions.LocaleAware in the future
-                                    CCRegExError(TexlStrings.ErrInvalidRegExBadEscapeInsideNegativeCharacterClass);
-                                    return false;
+                                    return CCRegExError(TexlStrings.ErrInvalidRegExBadEscapeInsideNegativeCharacterClass);
                                 }
 
                                 if (!UnicodeCategories.Contains(ccToken.Groups["UCategory"].Value))
                                 {
-                                    CCRegExError(TexlStrings.ErrInvalidRegExBadUnicodeCategory);
-                                    return false;
+                                    return CCRegExError(TexlStrings.ErrInvalidRegExBadUnicodeCategory);
                                 }
                             }
                             else if (ccToken.Groups["badEscape"].Success)
                             {
-                                CCRegExError(TexlStrings.ErrInvalidRegExBadEscape);
-                                return false;
+                                return CCRegExError(TexlStrings.ErrInvalidRegExBadEscape);
                             }
                             else if (ccToken.Groups["goodEscapeOutsideCC"].Success || ccToken.Groups["backRefName"].Success || ccToken.Groups["backRefNumber"].Success)
                             {
-                                CCRegExError(TexlStrings.ErrInvalidRegExBadEscapeInsideCharacterClass);
-                                return false;
+                                return CCRegExError(TexlStrings.ErrInvalidRegExBadEscapeInsideCharacterClass);
                             }
                             else if (ccToken.Groups["badOctal"].Success)
                             {
-                                CCRegExError(TexlStrings.ErrInvalidRegExBadOctal);
-                                return false;
+                                return CCRegExError(TexlStrings.ErrInvalidRegExBadOctal);
                             }
                             else if (ccToken.Groups["badInCharClass"].Success)
                             {
-                                CCRegExError(TexlStrings.ErrInvalidRegExUnescapedCharInCharacterClass);
-                                return false;
+                                return CCRegExError(TexlStrings.ErrInvalidRegExUnescapedCharInCharacterClass);
                             }
                             else if (ccToken.Groups["badDoubleInCharClass"].Success)
                             {
-                                CCRegExError(TexlStrings.ErrInvalidRegExRepeatInCharClass);
-                                return false;
+                                return CCRegExError(TexlStrings.ErrInvalidRegExRepeatInCharClass);
                             }
                             else if (ccToken.Groups["badHyphen"].Success)
                             {
                                 // intentionally RegExError to get the whole character class as this is on the ends
-                                RegExError(TexlStrings.ErrInvalidRegExLiteralHyphenInCharacterClass);
-                                return false;
+                                return RegExError(TexlStrings.ErrInvalidRegExLiteralHyphenInCharacterClass);
                             }
                             else
                             {
@@ -736,44 +696,38 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         if (numberedCpature)
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExMixingNamedAndNumberedSubMatches);
-                            return false;
+                            return RegExError(TexlStrings.ErrInvalidRegExMixingNamedAndNumberedSubMatches);
                         }
 
                         if (namedCapture.Length > MaxNamedCaptureNameLength)
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExNamedCaptureNameTooLong);
-                            return false;
+                            return RegExError(TexlStrings.ErrInvalidRegExNamedCaptureNameTooLong);
                         }
 
                         if (!groupTracker.SeenOpen(out var error, name: namedCapture))
                         {
-                            RegExError((ErrorResourceKey)error, startContext: true);
-                            return false;
+                            return RegExError((ErrorResourceKey)error, startContext: true);
                         }
                     }
                     else if (token.Groups["goodNonCapture"].Success)
                     {
                         if (!groupTracker.SeenOpen(out var error))
                         {
-                            RegExError((ErrorResourceKey)error, startContext: true);
-                            return false;
+                            return RegExError((ErrorResourceKey)error, startContext: true);
                         }
                     }
                     else if (token.Groups["goodLookBehind"].Success)
                     {
                         if (!groupTracker.SeenOpen(out var error, isLookBehind: true))
                         {
-                            RegExError((ErrorResourceKey)error, startContext: true);
-                            return false;
+                            return RegExError((ErrorResourceKey)error, startContext: true);
                         }
                     }
                     else if (token.Groups["goodLookAhead"].Success)
                     {
                         if (!groupTracker.SeenOpen(out var error, isLookAhead: true))
                         {
-                            RegExError((ErrorResourceKey)error, startContext: true);
-                            return false;
+                            return RegExError((ErrorResourceKey)error, startContext: true);
                         }
                     }
                     else if (token.Groups["alternation"].Success)
@@ -787,16 +741,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             captureNumber++;
                             if (!groupTracker.SeenOpen(out var error, name: captureNumber.ToString(CultureInfo.InvariantCulture)))
                             {
-                                RegExError((ErrorResourceKey)error, startContext: true);
-                                return false;
+                                return RegExError((ErrorResourceKey)error, startContext: true);
                             }
                         }
                         else
                         {
                             if (!groupTracker.SeenOpen(out var error))
                             {
-                                RegExError((ErrorResourceKey)error, startContext: true);
-                                return false;
+                                return RegExError((ErrorResourceKey)error, startContext: true);
                             }
                         }
                     }
@@ -804,8 +756,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         if (!groupTracker.SeenClose(out var error))
                         {
-                            RegExError((ErrorResourceKey)error, endContext: true);
-                            return false;
+                            return RegExError((ErrorResourceKey)error, endContext: true);
                         }
                     }
                     else if (token.Groups["backRefName"].Success || token.Groups["backRefNumber"].Success)
@@ -818,8 +769,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                             if (numberedCpature)
                             {
-                                RegExError(TexlStrings.ErrInvalidRegExMixingNamedAndNumberedSubMatches);
-                                return false;
+                                return RegExError(TexlStrings.ErrInvalidRegExMixingNamedAndNumberedSubMatches);
                             }
                         }
                         else
@@ -828,23 +778,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                             if (!numberedCpature)
                             {
-                                RegExError(TexlStrings.ErrInvalidRegExNumberedSubMatchesDisabled);
-                                return false;
+                                return RegExError(TexlStrings.ErrInvalidRegExNumberedSubMatchesDisabled);
                             }
                         }
 
                         if (!groupTracker.SeenBackRef(backRefName, out var error))
                         {
-                            RegExError((ErrorResourceKey)error);
-                            return false;
+                            return RegExError((ErrorResourceKey)error);
                         }
                     }
                     else if (token.Groups["goodUEscape"].Success)
                     {
                         if (!UnicodeCategories.Contains(token.Groups["UCategory"].Value))
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExBadUnicodeCategory);
-                            return false;
+                            return RegExError(TexlStrings.ErrInvalidRegExBadUnicodeCategory);
                         }
                     }
                     else if (token.Groups["goodInlineOptions"].Success)
@@ -853,14 +800,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         if (Regex.IsMatch(inlineOptions, @"(?<char>.).*\k<char>"))
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExRepeatedInlineOption);
-                            return false;
+                            return RegExError(TexlStrings.ErrInvalidRegExRepeatedInlineOption);
                         }
 
                         if (inlineOptions.Contains(MatchOptionChar.ExplicitCapture) && numberedCpature)
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches);
-                            return false;
+                            return RegExError(TexlStrings.ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches);
                         }
 
                         if (inlineOptions.Contains(MatchOptionChar.FreeSpacing))
@@ -885,73 +830,59 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["badNamedCaptureName"].Success)
                     {
-                        RegExError(TexlStrings.ErrInvalidRegExBadNamedCaptureName);
-                        return false;
+                        return RegExError(TexlStrings.ErrInvalidRegExBadNamedCaptureName);
                     }
                     else if (token.Groups["badOctal"].Success)
                     {
-                        RegExError(TexlStrings.ErrInvalidRegExBadOctal);
-                        return false;
+                        return RegExError(TexlStrings.ErrInvalidRegExBadOctal);
                     }
                     else if (token.Groups["badBalancing"].Success)
                     {
-                        RegExError(TexlStrings.ErrInvalidRegExBadBalancing);
-                        return false;
+                        return RegExError(TexlStrings.ErrInvalidRegExBadBalancing);
                     }
                     else if (token.Groups["badInlineOptions"].Success)
                     {
-                        RegExError(token.Groups["badInlineOptions"].Index > 0 ? TexlStrings.ErrInvalidRegExInlineOptionNotAtStart : TexlStrings.ErrInvalidRegExBadInlineOptions);
-                        return false;
+                        return RegExError(token.Groups["badInlineOptions"].Index > 0 ? TexlStrings.ErrInvalidRegExInlineOptionNotAtStart : TexlStrings.ErrInvalidRegExBadInlineOptions);
                     }
                     else if (token.Groups["badSingleQuoteNamedCapture"].Success)
                     {
-                        RegExError(TexlStrings.ErrInvalidRegExBadSingleQuoteNamedCapture);
-                        return false;
+                        return RegExError(TexlStrings.ErrInvalidRegExBadSingleQuoteNamedCapture);
                     }
                     else if (token.Groups["badConditional"].Success)
                     {
-                        RegExError(TexlStrings.ErrInvalidRegExBadConditional);
-                        return false;
+                        return RegExError(TexlStrings.ErrInvalidRegExBadConditional);
                     }
                     else if (token.Groups["badEscape"].Success)
                     {
-                        RegExError(TexlStrings.ErrInvalidRegExBadEscape);
-                        return false;
+                        return RegExError(TexlStrings.ErrInvalidRegExBadEscape);
                     }
                     else if (token.Groups["goodEscapeInsideCCOnly"].Success)
                     {
-                        RegExError(TexlStrings.ErrInvalidRegExBadEscapeOutsideCharacterClass);
-                        return false;
+                        return RegExError(TexlStrings.ErrInvalidRegExBadEscapeOutsideCharacterClass);
                     }
                     else if (token.Groups["badQuantifiers"].Success || token.Groups["badLimited"].Success || token.Groups["badUnlimited"].Success)
                     {
-                        RegExError(TexlStrings.ErrInvalidRegExBadQuantifier);
-                        return false;
+                        return RegExError(TexlStrings.ErrInvalidRegExBadQuantifier);
                     }
                     else if (token.Groups["badExact"].Success)
                     {
-                        RegExError(TexlStrings.ErrInvalidRegExBadExactQuantifier);
-                        return false;
+                        return RegExError(TexlStrings.ErrInvalidRegExBadExactQuantifier);
                     }
                     else if (token.Groups["badCurly"].Success)
                     {
-                        RegExError(TexlStrings.ErrInvalidRegExBadCurly);
-                        return false;
+                        return RegExError(TexlStrings.ErrInvalidRegExBadCurly);
                     }
                     else if (token.Groups["badParen"].Success)
                     {
-                        RegExError(TexlStrings.ErrInvalidRegExBadParen);
-                        return false;
+                        return RegExError(TexlStrings.ErrInvalidRegExBadParen);
                     }
                     else if (token.Groups["badSquareBrackets"].Success)
                     {
-                        RegExError(TexlStrings.ErrInvalidRegExBadSquare, endContext: true);
-                        return false;
+                        return RegExError(TexlStrings.ErrInvalidRegExBadSquare, endContext: true);
                     }
                     else if (token.Groups["badEmptyCharacterClass"].Success)
                     {
-                        RegExError(TexlStrings.ErrInvalidRegExEmptyCharacterClass);
-                        return false;
+                        return RegExError(TexlStrings.ErrInvalidRegExEmptyCharacterClass);
                     }
                     else
                     {
@@ -963,20 +894,27 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (!groupTracker.Complete(out var completeError, out var completeErrorArg))
             {
-                errors.EnsureError(regExNode, (ErrorResourceKey)completeError, completeErrorArg);
-                return false;
+                return new RegexTypeCacheEntry() 
+                { 
+                    Error = completeError, 
+                    ErrorParam = completeErrorArg, 
+                    ErrorSeverity = DocumentErrorSeverity.Severe 
+                };
             }
 
             if (openInlineComment)
             {
-                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExUnclosedInlineComment);
-                return false;
+                return new RegexTypeCacheEntry() 
+                { 
+                    Error = TexlStrings.ErrInvalidRegExUnclosedInlineComment, 
+                    ErrorSeverity = DocumentErrorSeverity.Severe 
+                };
             }
 
             // may be modifed by inline options; we only care about x and N in the next stage
             alteredOptions = (freeSpacing ? "x" : string.Empty) + (numberedCpature ? "N" : string.Empty);
 
-            return true;
+            return null;
         }
 
         private static readonly IReadOnlyCollection<string> UnicodeCategories = new HashSet<string>()
