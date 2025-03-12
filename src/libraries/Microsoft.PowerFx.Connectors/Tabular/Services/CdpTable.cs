@@ -25,6 +25,8 @@ namespace Microsoft.PowerFx.Connectors
 
         public override HttpClient HttpClient => _httpClient;
 
+        public ConnectorType ConnnectorType => TabularTableDescriptor;
+
         public override bool IsDelegable => (DelegationInfo?.SortRestriction != null) || (DelegationInfo?.FilterRestriction != null) || (DelegationInfo?.FilterSupportedFunctions != null);
 
         public IEnumerable<OptionSet> OptionSets { get; private set; }
@@ -80,6 +82,11 @@ namespace Microsoft.PowerFx.Connectors
 
             CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, logger);
             TabularTableDescriptor = await tableResolver.ResolveTableAsync(TableName, cancellationToken).ConfigureAwait(false);
+
+            if (TabularTableDescriptor.HasErrors)
+            {
+                throw new PowerFxConnectorException($"Table has errors in its schema - {string.Join(", ", TabularTableDescriptor.Errors)}");
+            }
 
             _relationships = TabularTableDescriptor.Relationships;
             OptionSets = tableResolver.OptionSets;
