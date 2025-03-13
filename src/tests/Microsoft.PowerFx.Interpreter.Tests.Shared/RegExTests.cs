@@ -117,7 +117,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var checkPreV1 = enginePreV1.Check(formula);
                 Assert.False(checkPreV1.IsSuccess);
                 Assert.Equal(checkPreV1.Errors.First().ResourceKey.Key, TexlStrings.ErrInvalidRegEx.Key);
-                Assert.Contains(containsErrorPreV1, checkPreV1.Errors.First().Message);
+                Assert.Contains(containsErrorPreV1, checkPreV1.Errors.First().Message.Substring(26));
             }
         }
     }

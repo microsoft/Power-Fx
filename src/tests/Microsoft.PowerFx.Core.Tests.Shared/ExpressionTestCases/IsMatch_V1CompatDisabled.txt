@@ -1,10 +1,5 @@
 ﻿#SETUP: RegEx,disable:PowerFxV1CompatibilityRules
 
-// Without V1, we don't run the full regular expression validation test, so this result comes from .NET
-
->> IsMatch("Foo", "J(")
-Errors: Error 15-19: Invalid regular expression: Invalid pattern 'J(' at offset 2. Not enough )'s.|Error 0-7: The function 'IsMatch' has some invalid arguments.
-
 // includes tests for IsMatch with the older "complete" semantics
 
 >> IsMatch("ihi", "h")
