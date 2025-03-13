@@ -90,10 +90,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // in V1, we do our own regular expression validation, with our own localized error messages
         // containsErrorPreV1 is looking for a small part of the .NET message that is hopefully less prone to changing, often the offset of the error
         [Theory]
-        [InlineData("a", "In(valid", "ErrInvalidRegExUnclosedCaptureGroups", "8")]
-        [InlineData("a", "In\\qvalid", "ErrInvalidRegExBadEscape", "4")]
-        [InlineData("a", "In[valid", "ErrInvalidRegExBadSquare", "8")]
-        [InlineData("a", "In(*valid", "ErrInvalidRegExBadParen", "4")]
+        [InlineData("a", "In(valid", "ErrInvalidRegExUnclosedCaptureGroups", "enough")]
+        [InlineData("a", "In\\qvalid", "ErrInvalidRegExBadEscape", "escape")]
+        [InlineData("a", "In[valid", "ErrInvalidRegExBadSquare", "unterminated")]
+        [InlineData("a", "In(*valid", "ErrInvalidRegExBadParen", "quantifier")]
         public void TestRegExV1DisabledExceptionMessage(string subject, string pattern, string errorV1, string containsErrorPreV1)
         {
             PowerFxConfig configV1 = new PowerFxConfig(Features.PowerFxV1);
@@ -117,7 +117,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var checkPreV1 = enginePreV1.Check(formula);
                 Assert.False(checkPreV1.IsSuccess);
                 Assert.Equal(checkPreV1.Errors.First().ResourceKey.Key, TexlStrings.ErrInvalidRegEx.Key);
-                Assert.Contains(containsErrorPreV1, checkPreV1.Errors.First().Message.Substring(26));
+
+                // starting at 35, past boilerplate, so more of the string to match is in the test log
+                Assert.Contains(containsErrorPreV1, checkPreV1.Errors.First().Message.Substring(35).ToLower());
             }
         }
     }
