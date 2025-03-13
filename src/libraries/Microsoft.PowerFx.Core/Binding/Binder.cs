@@ -2067,7 +2067,13 @@ namespace Microsoft.PowerFx.Core.Binding
                 var fError = false;
                 var fieldName = name.Name;
 
-                call.CursorType.DisplayNameProvider?.TryGetLogicalName(name.Name, out fieldName);
+                var usesDisplayName =
+                            DType.TryGetConvertedDisplayNameAndLogicalNameForColumn(call.CursorType, name.Name.Value, out var maybeLogicalName, out _) ||
+                            DType.TryGetLogicalNameForColumn(call.CursorType, name.Name.Value, out maybeLogicalName);
+                if (usesDisplayName)
+                {
+                    fieldName = new DName(maybeLogicalName);
+                }
 
                 if (!name.Node.InTree(arg0) &&
                     name.Node.InTree(call.Node) &&

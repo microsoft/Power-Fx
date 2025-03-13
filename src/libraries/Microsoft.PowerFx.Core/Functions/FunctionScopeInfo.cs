@@ -337,7 +337,7 @@ namespace Microsoft.PowerFx.Core.Functions
         public override void CheckPredicateFields(DType fields, CallNode callNode, IEnumerable<FirstNameInfo> lambdaNames, ErrorContainer errors)
         {
             // If Join call node has less than 5 records, we are possibly looking for suggestions.
-            if (callNode.Args.ChildNodes.Count < 5)
+            if (callNode.Args.ChildNodes.Count < 5 || fields == DType.Error)
             {
                 return;
             }
