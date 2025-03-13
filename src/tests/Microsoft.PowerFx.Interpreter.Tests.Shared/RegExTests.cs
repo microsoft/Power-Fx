@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // we run these through the .NET regular expression compiler and include the exception.message in our error message to the maker
         // there can be alot of variability in the .NET message, so we just look that there is something there without an exact match
         // in V1, we do our own regular expression validation, with our own localized error messages
-        // containsErrorPreV1 is looking for a small part of the .NET message that is hopefully less prone to changing, often the offset of the error
+        // containsErrorPreV1 is looking for a small part of the .NET message that is hopefully less prone to changing
         [Theory]
         [InlineData("a", "In(valid", "ErrInvalidRegExUnclosedCaptureGroups", "enough")]
         [InlineData("a", "In\\qvalid", "ErrInvalidRegExBadEscape", "escape")]
