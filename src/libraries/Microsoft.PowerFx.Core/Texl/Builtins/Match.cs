@@ -266,106 +266,109 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // Creates a typed result: [Match:s, Captures:*[Value:s], NamedCaptures:r[<namedCaptures>:s]]
         private RegexTypeCacheEntry RegexCacheGetType(string regexPattern, string alteredOptions, DType initialReturnType)
         {
+            var regexDotNetOptions = RegexOptions.None;
+            Regex regex;
+
+            if (alteredOptions.Contains(MatchOptionChar.FreeSpacing))
+            {
+                regexDotNetOptions |= RegexOptions.IgnorePatternWhitespace;
+
+                // In x mode, comment line endings are any newline character (as per PCRE2), but .NET only supports \n.
+                // For our purposes here to determine the type, we can just replace the other newline characters wtih \n.
+                var regexPatternWhitespace = new Regex("[" + MatchWhiteSpace.NewLineEscapes + "]");
+                regexPattern = regexPatternWhitespace.Replace(regexPattern, "\n");
+            }
+
+            // always .NET compile the regular expression, even if we don't need the return type (boolean), to ensure it is legal in .NET
             try
             {
-                var regexDotNetOptions = RegexOptions.None;
-                if (alteredOptions.Contains(MatchOptionChar.FreeSpacing))
-                {
-                    regexDotNetOptions |= RegexOptions.IgnorePatternWhitespace;
-
-                    // In x mode, comment line endings are any newline character (as per PCRE2), but .NET only supports \n.
-                    // For our purposes here to determine the type, we can just replace the other newline characters wtih \n.
-                    var regexPatternWhitespace = new Regex("[" + MatchWhiteSpace.NewLineEscapes + "]");
-                    regexPattern = regexPatternWhitespace.Replace(regexPattern, "\n");
-                }
-
-                // always .NET compile the regular expression, even if we don't need the return type (boolean), to ensure it is legal in .NET
-                var regex = new Regex(regexPattern, regexDotNetOptions);
-
-                // we don't need to check hidden or do any type calculation if the return type is Boolean (IsMatch)
-                if (initialReturnType == DType.Boolean)
-                {
-                    return new RegexTypeCacheEntry()
-                    {
-                        ReturnType = DType.Boolean
-                    };
-                }
-                else
-                {
-                    bool fullMatchHidden = false, subMatchesHidden = false, startMatchHidden = false;
-                    List<TypedName> propertyNames = new List<TypedName>();
-                    string errorParam = string.Empty;
-
-                    foreach (var captureName in regex.GetGroupNames())
-                    {
-                        if (int.TryParse(captureName, out _))
-                        {
-                            // Unnamed captures are returned as integers, ignoring them
-                            continue;
-                        }
-
-                        if (captureName == ColumnName_FullMatch.Value)
-                        {
-                            fullMatchHidden = true;
-                            errorParam += ColumnName_FullMatch.Value + " ";
-                        }
-                        else if (captureName == ColumnName_SubMatches.Value && alteredOptions.Contains(MatchOptionChar.NumberedSubMatches))
-                        {
-                            subMatchesHidden = true;
-                            errorParam += ColumnName_SubMatches.Value + " ";
-                        }
-                        else if (captureName == ColumnName_StartMatch.Value)
-                        {
-                            startMatchHidden = true;
-                            errorParam += ColumnName_StartMatch.Value + " ";
-                        }
-
-                        propertyNames.Add(new TypedName(DType.String, DName.MakeValid(captureName, out _)));
-                    }
-
-                    if (!fullMatchHidden)
-                    {
-                        propertyNames.Add(new TypedName(DType.String, ColumnName_FullMatch));
-                    }
-
-                    if (!subMatchesHidden && alteredOptions.Contains(MatchOptionChar.NumberedSubMatches))
-                    {
-                        propertyNames.Add(new TypedName(DType.CreateTable(new TypedName(DType.String, ColumnName_Value)), ColumnName_SubMatches));
-                    }
-
-                    if (!startMatchHidden)
-                    {
-                        propertyNames.Add(new TypedName(DType.Number, ColumnName_StartMatch));
-                    }
-
-                    var returnType = initialReturnType.IsRecord ? DType.CreateRecord(propertyNames) : DType.CreateTable(propertyNames);
-                    
-                    if (fullMatchHidden || subMatchesHidden || startMatchHidden)
-                    {
-                        return new RegexTypeCacheEntry()
-                        {
-                            ReturnType = returnType,
-                            Error = errorParam.TrimEnd().Contains(' ') ? TexlStrings.InfoRegExCaptureNameHidesPredefinedPlural : TexlStrings.InfoRegExCaptureNameHidesPredefinedSingular,
-                            ErrorSeverity = DocumentErrorSeverity.Suggestion,
-                            ErrorParam = errorParam.TrimEnd()
-                        };
-                    }
-                    else
-                    {
-                        return new RegexTypeCacheEntry()
-                        {
-                            ReturnType = returnType
-                        };
-                    }
-                }
+                regex = new Regex(regexPattern, regexDotNetOptions);
             }
-            catch (ArgumentException)
+            catch (ArgumentException exception)
             {
                 return new RegexTypeCacheEntry()
                 {
                     Error = TexlStrings.ErrInvalidRegEx,
                     ErrorSeverity = DocumentErrorSeverity.Severe,
+                    ErrorParam = exception.Message,
                 };
+            }
+
+            // we don't need to check hidden or do any type calculation if the return type is Boolean (IsMatch)
+            if (initialReturnType == DType.Boolean)
+            {
+                return new RegexTypeCacheEntry()
+                {
+                    ReturnType = DType.Boolean
+                };
+            }
+            else
+            {
+                bool fullMatchHidden = false, subMatchesHidden = false, startMatchHidden = false;
+                List<TypedName> propertyNames = new List<TypedName>();
+                string errorParam = string.Empty;
+
+                foreach (var captureName in regex.GetGroupNames())
+                {
+                    if (int.TryParse(captureName, out _))
+                    {
+                        // Unnamed captures are returned as integers, ignoring them
+                        continue;
+                    }
+
+                    if (captureName == ColumnName_FullMatch.Value)
+                    {
+                        fullMatchHidden = true;
+                        errorParam += ColumnName_FullMatch.Value + " ";
+                    }
+                    else if (captureName == ColumnName_SubMatches.Value && alteredOptions.Contains(MatchOptionChar.NumberedSubMatches))
+                    {
+                        subMatchesHidden = true;
+                        errorParam += ColumnName_SubMatches.Value + " ";
+                    }
+                    else if (captureName == ColumnName_StartMatch.Value)
+                    {
+                        startMatchHidden = true;
+                        errorParam += ColumnName_StartMatch.Value + " ";
+                    }
+
+                    propertyNames.Add(new TypedName(DType.String, DName.MakeValid(captureName, out _)));
+                }
+
+                if (!fullMatchHidden)
+                {
+                    propertyNames.Add(new TypedName(DType.String, ColumnName_FullMatch));
+                }
+
+                if (!subMatchesHidden && alteredOptions.Contains(MatchOptionChar.NumberedSubMatches))
+                {
+                    propertyNames.Add(new TypedName(DType.CreateTable(new TypedName(DType.String, ColumnName_Value)), ColumnName_SubMatches));
+                }
+
+                if (!startMatchHidden)
+                {
+                    propertyNames.Add(new TypedName(DType.Number, ColumnName_StartMatch));
+                }
+
+                var returnType = initialReturnType.IsRecord ? DType.CreateRecord(propertyNames) : DType.CreateTable(propertyNames);
+                    
+                if (fullMatchHidden || subMatchesHidden || startMatchHidden)
+                {
+                    return new RegexTypeCacheEntry()
+                    {
+                        ReturnType = returnType,
+                        Error = errorParam.TrimEnd().Contains(' ') ? TexlStrings.InfoRegExCaptureNameHidesPredefinedPlural : TexlStrings.InfoRegExCaptureNameHidesPredefinedSingular,
+                        ErrorSeverity = DocumentErrorSeverity.Suggestion,
+                        ErrorParam = errorParam.TrimEnd()
+                    };
+                }
+                else
+                {
+                    return new RegexTypeCacheEntry()
+                    {
+                        ReturnType = returnType
+                    };
+                }
             }
         }
 

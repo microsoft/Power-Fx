@@ -4512,7 +4512,7 @@
     <comment>Error message on non-service data sources passed to Refresh.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression.</value>
+    <value>Invalid regular expression: {0}</value>
     <comment>Error message indicating that the regular expression entered by the user is invalid.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
