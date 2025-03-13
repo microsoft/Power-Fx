@@ -463,14 +463,14 @@ namespace Microsoft.PowerFx.Connectors
         {
             if (openApiParameter == null)
             {
-                return new ConnectorType(error: "OpenApiParameter is null, can't determine its schema");
+                return new ConnectorType("OpenApiParameter is null, can't determine its schema", $"null_{Guid.NewGuid().ToString("n")}", FormulaType.BindingError);
             }
 
             ISwaggerSchema schema = openApiParameter.Schema;
 
             if (settings.Level == 30)
             {
-                return new ConnectorType(error: "GetConnectorType() excessive recursion") { Name = openApiParameter.Name };
+                return new ConnectorType("GetConnectorType() excessive recursion", openApiParameter.Name, FormulaType.BindingError);
             }
 
             // schema.Format is optional and potentially any string
@@ -520,8 +520,9 @@ namespace Microsoft.PowerFx.Connectors
                         case "currency":
                             return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
 
-                        default:
-                            return new ConnectorType(error: $"Unsupported type of number: '{schema.Format}'") { Name = openApiParameter.Name };
+                        default:                            
+                            // ex: Format = "date" or "string"
+                            return new ConnectorType($"Unsupported type of number: '{schema.Format}'", openApiParameter.Name, FormulaType.BindingError);
                     }
 
                 // For testing only
@@ -543,10 +544,11 @@ namespace Microsoft.PowerFx.Connectors
                         case "int64":
                         case "uint64":
                         case "unixtime":
+                        case "enum":
                             return TryGetOptionSet(openApiParameter, settings) ?? new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
 
                         default:
-                            return new ConnectorType(error: $"Unsupported type of integer: '{schema.Format}'") { Name = openApiParameter.Name };
+                            return new ConnectorType($"Unsupported type of integer: '{schema.Format}'", openApiParameter.Name, FormulaType.BindingError);
                     }
 
                 case "array":
@@ -595,7 +597,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
                     else
                     {
-                        return new ConnectorType(error: $"Unsupported type of array '{arrayType.FormulaType._type.ToAnonymousString()}'") { Name = openApiParameter.Name };
+                        return new ConnectorType($"Unsupported type of array '{arrayType.FormulaType._type.ToAnonymousString()}'", openApiParameter.Name, FormulaType.BindingError);
                     }
 
                 case "object":
@@ -659,8 +661,7 @@ namespace Microsoft.PowerFx.Connectors
                                 return new ConnectorType(schema, openApiParameter, FormulaType.String, hiddenfields.ToRecordType());
                             }
 
-                            //ConnectorType propertyType = new OpenApiParameter() { Name = propLogicalName, Required = schema.Required.Contains(propLogicalName), Schema = kv.Value, Extensions = kv.Value.Extensions }.GetConnectorType(settings.Stack(schemaIdentifier));
-                            ConnectorType propertyType = new SwaggerParameter(propLogicalName, schema.Required.Contains(propLogicalName), kv.Value, kv.Value.Extensions).GetConnectorType(settings.Stack(schemaIdentifier));
+                            ConnectorType propertyType = new SwaggerParameter(propLogicalName, schema.Required.Contains(propLogicalName), kv.Value, kv.Value.Extensions).GetConnectorType(settings.Stack(schemaIdentifier));                            
 
                             settings.UnStack();
 
@@ -690,8 +691,9 @@ namespace Microsoft.PowerFx.Connectors
                 case "file":
                     return new ConnectorType(schema, openApiParameter, FormulaType.Blob);
 
-                default:
-                    return new ConnectorType(error: $"Unsupported schema type '{schema.Type}'") { Name = openApiParameter.Name };
+                default:                    
+                    // ex: type = "null" or "decimal"
+                    return new ConnectorType($"Unsupported schema type '{schema.Type}'", openApiParameter.Name, FormulaType.BindingError);
             }
         }
 
@@ -751,9 +753,14 @@ namespace Microsoft.PowerFx.Connectors
 
                         return new ConnectorType(schema, openApiParameter, optionSet.FormulaType);
                     }
+                    else if (schema.Enum.All(e => e is OpenApiInteger))
+                    {
+                        // $$$ Not supported yet
+                        return new ConnectorType("Unsupported enum type (int)", openApiParameter.Name, FormulaType.BindingError);
+                    }
                     else
                     {                        
-                        return new ConnectorType(error: $"Unsupported enum type '{schema.Enum.GetType().Name}'") { Name = openApiParameter.Name };
+                        return new ConnectorType($"Unsupported enum type '{schema.Enum.GetType().Name}'", openApiParameter.Name, FormulaType.BindingError);
                     }
                 }
             }
@@ -896,8 +903,8 @@ namespace Microsoft.PowerFx.Connectors
 
             if (response == null)
             {
-                // Returns UntypedObject by default, without error
-                return new ConnectorType(null);
+                // Unknown response, don't fail
+                return new ConnectorType(null, "response", FormulaType.UntypedObject);
             }
 
             if (response.Content.Count == 0)
@@ -929,7 +936,8 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
-            return new ConnectorType(error: $"Unsupported return type - found '{string.Join(", ", response.Content.Select(kv4 => kv4.Key))}'");
+            // $$$ Blob? (application/pdf, audio/mp3, application/zip, application/gzip, application/x-bzip2, image/gif, image/png, image/jpeg, image/bmp...)
+            return new ConnectorType($"Unsupported return type - found '{string.Join(", ", response.Content.Select(kv4 => kv4.Key))}'", "response", FormulaType.UntypedObject);
         }
 
         /// <summary>
