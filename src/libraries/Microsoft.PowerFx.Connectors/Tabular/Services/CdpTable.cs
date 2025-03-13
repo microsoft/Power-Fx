@@ -16,6 +16,7 @@ namespace Microsoft.PowerFx.Connectors
     // Implements CDP protocol for Tabular connectors
     public class CdpTable : CdpService
     {
+        // Logical name
         public string TableName { get; private set; }
 
         public string DisplayName { get; internal set; }
@@ -62,16 +63,7 @@ namespace Microsoft.PowerFx.Connectors
         //// TABLE METADATA SERVICE
         // GET: /$metadata.json/datasets/{datasetName}/tables/{tableName}?api-version=2015-09-01        
         public virtual async Task InitAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-#pragma warning disable CS0618 // Type or member is obsolete
-            await InitAsync(httpClient, uriPrefix, TableName, cancellationToken, logger).ConfigureAwait(false);
-#pragma warning restore CS0618 // Type or member is obsolete
-        }
-
-        [Obsolete("This API should not be called directly - used by CDP Validator only", false)]
-        public async Task InitAsync(HttpClient httpClient, string uriPrefix, string tableName, CancellationToken cancellationToken, ConnectorLogger logger = null)
-        {
+        {            
             cancellationToken.ThrowIfCancellationRequested();
 
             if (IsInitialized)
@@ -89,14 +81,15 @@ namespace Microsoft.PowerFx.Connectors
             _uriPrefix = uriPrefix;
 
             CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, logger);
-            TabularTableDescriptor = await tableResolver.ResolveTableAsync(tableName, cancellationToken).ConfigureAwait(false);
-
+            TabularTableDescriptor = await tableResolver.ResolveTableAsync(TableName, cancellationToken).ConfigureAwait(false);
+            
             if (TabularTableDescriptor.HasErrors)
             {
                 throw new PowerFxConnectorException($"Table has errors in its schema - {string.Join(", ", TabularTableDescriptor.Errors)}");
             }
-
+            
             _relationships = TabularTableDescriptor.Relationships;
+            DisplayName ??= TabularTableDescriptor.DisplayName;
             OptionSets = tableResolver.OptionSets;
 
             RecordType = (RecordType)TabularTableDescriptor.FormulaType;

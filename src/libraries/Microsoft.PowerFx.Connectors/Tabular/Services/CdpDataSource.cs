@@ -81,6 +81,33 @@ namespace Microsoft.PowerFx.Connectors
             return filtered.First();
         }
 
+        /// <summary>
+        /// Retrieves a single CdpTable without testing its existence and initializes it.
+        /// </summary>
+        /// <param name="httpClient">HttpClient.</param>
+        /// <param name="uriPrefix">Connector Uri prefix.</param>
+        /// <param name="logicalTableName">Logical Table Name.</param>
+        /// <param name="cancellation">Cancellation token.</param>
+        /// <param name="logger">Llogger.</param>
+        /// <returns>Initialized CdpTable or null is table doesn't exist.</returns>
+        public virtual async Task<CdpTable> GetTableAsync(HttpClient httpClient, string uriPrefix, string logicalTableName, CancellationToken cancellation, ConnectorLogger logger = null)
+        {
+            cancellation.ThrowIfCancellationRequested();
+
+            CdpTable table = new CdpTable(DatasetName, logicalTableName, DatasetMetadata, null);
+
+            try
+            {
+                await table.InitAsync(httpClient, uriPrefix, cancellation, logger).ConfigureAwait(false);
+            }
+            catch (PowerFxConnectorException)
+            {
+                table = null;
+            }
+
+            return table;
+        }
+
         // logicalOrDisplay
         // true  = logical only
         // false = display name only
