@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App.Controls;
@@ -14,6 +15,7 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -1506,6 +1508,28 @@ namespace Microsoft.PowerFx.Core.Binding
                 case NodeKind.StrLit:
                     nodeValue = node.AsStrLit().Value;
                     return true;
+                case NodeKind.StrInterp:
+                    var strInterpNode = node.AsStrInterp();
+                    var segments = new List<string>();
+                    foreach (var segmentNode in strInterpNode.Children)
+                    {
+                        if (TryGetConstantValue(context, segmentNode, out var segmentValue))
+                        {
+                            segments.Append(segmentValue);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    if (segments.Count == strInterpNode.Children.Count)
+                    {
+                        nodeValue = string.Join(string.Empty, segments);
+                        return true;
+                    }
+
+                    break;
                 case NodeKind.BinaryOp:
                     var binaryOpNode = node.AsBinaryOp();
                     if (binaryOpNode.Op == BinaryOp.Concat)
@@ -1540,6 +1564,42 @@ namespace Microsoft.PowerFx.Core.Binding
                             nodeValue = string.Join(string.Empty, parameters);
                             return true;
                         }
+                    }
+                    else if ((callNode.Head.Name.Value == BuiltinFunctionsCore.Char.Name || callNode.Head.Name.Value == BuiltinFunctionsCore.UniChar.Name) && callNode.Args.Children.Count == 1)
+                    {
+                        int val = -1;
+
+                        if (callNode.Args.Children[0].Kind == NodeKind.DecLit)
+                        {
+                            val = (int)((DecLitNode)callNode.Args.Children[0]).ActualDecValue;
+                        }
+                        else if (callNode.Args.Children[0].Kind == NodeKind.NumLit)
+                        {
+                            val = (int)((NumLitNode)callNode.Args.Children[0]).ActualNumValue;
+                        }
+                        else if (callNode.Args.Children[0].Kind == NodeKind.Call)
+                        {
+                            var hexCallNode = callNode.Args.Children[0].AsCall();
+                            if (hexCallNode.Head.Name.Value == BuiltinFunctionsCore.Hex2Dec.Name && hexCallNode.Args.Children[0].Kind == NodeKind.StrLit)
+                            {
+                                var hexStr = hexCallNode.Args.Children[0].AsStrLit().Value;
+
+                                // check for 10 hex digits is the same as in LibraryMath.cs/Hex2Dec, Excel functions works on a 40 bit number
+                                // may result in a negative val, but that will be checked below
+                                if (hexStr.Length > 10 || !int.TryParse(hexStr, System.Globalization.NumberStyles.HexNumber, null, out val))
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+
+                        if (val < 1 || (val > 255 && callNode.Head.Name.Value == BuiltinFunctionsCore.Char.Name) || val > 0x10FFFF || (val >= 0xD800 && val <= 0xDFFF))
+                        {
+                            return false;
+                        }
+
+                        nodeValue = char.ConvertFromUtf32(val);
+                        return true;
                     }
 
                     break;
