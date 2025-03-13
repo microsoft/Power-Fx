@@ -95,6 +95,7 @@ namespace Microsoft.PowerFx.Core.Tests
             possible.Add("Default");
             possible.Add("DisableMemChecks");
             possible.Add("EnableJsonFunctions");
+            possible.Add("Language");
             possible.Add("MutationFunctionsTestSetup");
             possible.Add("OptionSetSortTestSetup");
             possible.Add("OptionSetTestSetup");

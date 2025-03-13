@@ -963,6 +963,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     runtimeConfig.AddService(iSetup.TimeZoneInfo);
                 }
 
+                if (iSetup.Language != null)
+                {
+                    runtimeConfig.AddService(new CultureInfo(iSetup.Language));
+                }
+
                 if (engine.TryGetByName("traceRecord", out _))
                 {
                     var traceRecord = engine.GetValue("traceRecord");

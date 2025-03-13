@@ -36,11 +36,6 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
-        internal StringValue ToLower()
-        {
-            return new StringValue(IRContext.NotInSource(FormulaType.String), Value.ToLowerInvariant());
-        }
-
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
             sb.Append($"\"{CharacterUtils.ExcelEscapeString(Value)}\"");

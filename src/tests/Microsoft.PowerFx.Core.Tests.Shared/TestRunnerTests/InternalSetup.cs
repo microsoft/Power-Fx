@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Parser;
@@ -18,6 +19,8 @@ namespace Microsoft.PowerFx.Core.Tests
         internal Features Features { get; set; }
 
         internal TimeZoneInfo TimeZoneInfo { get; set; }
+
+        internal string Language { get; set; }
 
         /// <summary>
         /// By default, we run expressions with a memory governor to enforce a limited amount of memory. 
@@ -142,6 +145,20 @@ namespace Microsoft.PowerFx.Core.Tests
                     else
                     {
                         throw new ArgumentException("Invalid TimeZoneInfo setup!");
+                    }
+                }
+                else if (part.StartsWith("Language", StringComparison.OrdinalIgnoreCase))
+                {
+                    var m = new Regex(@"Language\(""(?<language>\w{2,3}-\w{2,3}(-\w{2,4})?)""\)", RegexOptions.IgnoreCase).Match(part);
+
+                    if (m.Success)
+                    {
+                        iSetup.Language = m.Groups["language"].Value;
+                        parts.Remove(part);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Invalid Language setup!");
                     }
                 }
             }           

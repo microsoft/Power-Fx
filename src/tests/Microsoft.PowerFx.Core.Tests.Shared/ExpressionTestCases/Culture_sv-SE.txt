@@ -1,0 +1,138 @@
+﻿#SETUP: RegEx,Language("sv-SE"),PowerFxV1CompatibilityRules,ConsistentOneColumnTableResult,SupportColumnNamesAsIdentifiers
+
+>> Language()
+"sv-SE"
+
+>> "Ö" = UniChar( Hex2Dec( "00d6") )
+true
+
+>> "ö" = UniChar( Hex2Dec( "00f6") )
+true
+
+// UPPER, LOWER, PROPER
+
+>> Upper( "ö" )
+"Ö"
+
+>> Lower( "Ö" )
+"ö"
+
+>> Upper( "ö" ) = "Ö"
+true
+
+>> Lower( "Ö" ) = "ö"
+true
+
+>> Lower( "något" ) = Lower( "NÅGOT" )
+true
+
+>> Upper( "NÅGOT" ) = Upper( "något" )
+true
+
+>> Proper( "något" )
+"Något"
+
+>> Proper( "NÅGOT" )
+"Något"
+
+// VALUE, DECIMAL, FLOAT
+// Comma decimal seperator
+
+>> Value( "123,456" )
+123.456
+
+>> Value( "123,456", "sv-SE" )
+123.456
+
+>> Decimal( "123,456" )
+123.456
+
+>> Decimal( "123,456", "sv-SE" )
+123.456
+
+>> Float( "123,456" )
+123.456
+
+>> Float( "123,456", "sv-SE" )
+123.456
+
+// TEXT
+
+>> Text( DateTime(2010,1,1,14,0,0,0), "mmm ddd yyyy AM/PM" )
+"jan. fre 2010 em"
+
+>> Text( DateTime(2020,1,1,2,0,0,0), "mmmm dddd yyyy AM/PM" )
+"januari onsdag 2020 fm"
+
+>> Text( 123456789, "#,###.00" )
+"123456789,00000"
+
+>> Text( 123456789, "#.###,00" )
+"123456789,00000"
+
+// IN AND EXACTIN
+
+>> "ö" in "varför"
+true
+
+>> "Ö" in "varför"
+true
+
+>> "Ä" in "poäng"
+true
+
+>> "ä" in "POÄNG"
+true
+
+>> "ö" exactin "varför"
+true
+
+>> "Ö" exactin "varför"
+false
+
+>> "Ä" exactin "poäng"
+false
+
+>> "varför" in ["vARFÖr","bcde"]
+true
+
+>> "poÄng" in ["bcde", "poäng"]
+true
+
+>> "poäng" in ["bcde", "varför"]
+false
+
+// SORT
+
+>> Concat( Sort( Split( "H C å n N P X c j F Q O r A D s L ä K t b ö g k Ö z m l x U e y w S Å f p I Y W Z J B o u d G v E T i R Ä V a q M h", " " ), Value ), Value, " " )
+"a A b B c C d D e E f F g G h H i I j J k K l L m M n N o O p P q Q r R s S t T u U v V w W x X y Y z Z å Å ä Ä ö Ö"
+
+>> Concat( SortByColumns( Split( "B I Ö p M Y h a A X V w z J Z t l k x G Ä e f v y T W E i Å R N Q K n C u F b H L q c r d m g o S j O P å D U ö s ä", " " ), "Value" ), Value, " " )
+"a A b B c C d D e E f F g G h H i I j J k K l L m M n N o O p P q Q r R s S t T u U v V w W x X y Y z Z å Å ä Ä ö Ö"
+
+// REGULAR EXPRESSIONS
+// Always uses invariant in all locales, even in en-US and tr-TR (industry standard)
+
+>> IsMatch( "ä", "Ä", MatchOptions.IgnoreCase )           
+true
+
+>> IsMatch( "Ä", "ä", MatchOptions.IgnoreCase )           
+true
+
+>> IsMatch( "Ä", "A", MatchOptions.IgnoreCase )           
+false
+
+>> IsMatch( "Ä", "a", MatchOptions.IgnoreCase )           
+false
+
+>> IsMatch( "Ö", "ö", MatchOptions.IgnoreCase )
+true
+
+>> IsMatch( "ö", "Ö", MatchOptions.IgnoreCase )
+true
+
+>> ShowColumns( Match( "poÄÄng", "\u00c4+" ), FullMatch, StartMatch )
+{FullMatch:"ÄÄ",StartMatch:3}
+
+>> IsMatch( "poäng", "[Ää]", MatchOptions.Contains )
+true
