@@ -150,6 +150,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             // Only shows warning if data source is passed directly to CountRows
             result = engine.Check("CountRows(Filter(Accounts, IsBlank('Address 1: City')))");
             Assert.True(result.IsSuccess);
+            Assert.Empty(result.Errors);
         }
     }
 }
