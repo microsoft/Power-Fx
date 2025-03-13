@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -80,6 +81,43 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Assert.True(fv is BooleanValue);
                 BooleanValue bv = (BooleanValue)fv;
                 Assert.Equal(expBoolean, bv.Value);
+            }
+        }
+
+        // test error messages in pre-v1
+        // we run these through the .NET regular expression compiler and include the exception.message in our error message to the maker
+        // there can be alot of variability in the .NET message, so we just look that there is something there without an exact match
+        // in V1, we do our own regular expression validation, with our own localized error messages
+        // containsErrorPreV1 is looking for a small part of the .NET message that is hopefully less prone to changing, often the offset of the error
+        [Theory]
+        [InlineData("a", "In(valid", "ErrInvalidRegExUnclosedCaptureGroups", "8")]
+        [InlineData("a", "In\\qvalid", "ErrInvalidRegExBadEscape", "4")]
+        [InlineData("a", "In[valid", "ErrInvalidRegExBadSquare", "8")]
+        [InlineData("a", "In(*valid", "ErrInvalidRegExBadParen", "4")]
+        public void TestRegExV1DisabledExceptionMessage(string subject, string pattern, string errorV1, string containsErrorPreV1)
+        {
+            PowerFxConfig configV1 = new PowerFxConfig(Features.PowerFxV1);
+            configV1.EnableRegExFunctions(new TimeSpan(0, 0, 3));
+            RecalcEngine engineV1 = new RecalcEngine(configV1);
+
+            PowerFxConfig configPreV1 = new PowerFxConfig(Features.None);
+            configPreV1.EnableRegExFunctions(new TimeSpan(0, 0, 3));
+            RecalcEngine enginePreV1 = new RecalcEngine(configPreV1);
+
+            string[] funcs = { "IsMatch", "Match", "MatchAll" };
+
+            foreach (var func in funcs)
+            {
+                var formula = $"{func}(\"{subject}\", \"{pattern}\")";
+
+                var checkV1 = engineV1.Check(formula);
+                Assert.False(checkV1.IsSuccess);
+                Assert.Equal(checkV1.Errors.First().ResourceKey.Key, errorV1);
+
+                var checkPreV1 = enginePreV1.Check(formula);
+                Assert.False(checkPreV1.IsSuccess);
+                Assert.Equal(checkPreV1.Errors.First().ResourceKey.Key, TexlStrings.ErrInvalidRegEx.Key);
+                Assert.Contains(containsErrorPreV1, checkPreV1.Errors.First().Message);
             }
         }
     }
