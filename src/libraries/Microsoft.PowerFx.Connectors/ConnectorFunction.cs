@@ -1019,7 +1019,7 @@ namespace Microsoft.PowerFx.Connectors
         // Only called by ConnectorTable.GetSchema
         // Returns a FormulaType with AssociatedDataSources set (done in AddTabularDataSource)
         internal static ConnectorType GetCdpTableType(ICdpTableResolver tableResolver, string connectorName, string tableName, string valuePath, StringValue stringValue, ConnectorSettings settings, string datasetName,
-                                                      out string name, out string displayName, out TableDelegationInfo delegationInfo, out IEnumerable<OptionSet> optionSets)
+                                                      out TableDelegationInfo delegationInfo, out IEnumerable<OptionSet> optionSets)
         {
             // There are some errors when parsing this Json payload but that's not a problem here as we only need x-ms-capabilities parsing to work
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
@@ -1028,12 +1028,12 @@ namespace Microsoft.PowerFx.Connectors
             ServiceCapabilities serviceCapabilities = tableSchema.GetTableCapabilities();
             ConnectorPermission tablePermission = tableSchema.GetPermission();
 
-            JsonElement jsonElement = ExtractFromJson(stringValue, valuePath, out name, out displayName);
+            JsonElement jsonElement = ExtractFromJson(stringValue, valuePath, out string name, out string displayName);
             bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;
             IList<ReferencedEntity> referencedEntities = GetReferenceEntities(connectorName, stringValue);
 
             SymbolTable symbolTable = new SymbolTable();
-            ConnectorType connectorType = new ConnectorType(jsonElement, tableName, symbolTable, settings, referencedEntities, datasetName, name, connectorName, tableResolver, serviceCapabilities, isTableReadOnly);
+            ConnectorType connectorType = new ConnectorType(jsonElement, tableName, symbolTable, settings, referencedEntities, datasetName, name, displayName, connectorName, tableResolver, serviceCapabilities, isTableReadOnly);
             delegationInfo = ((DataSourceInfo)connectorType.FormulaType._type.AssociatedDataSources.First()).DelegationInfo;
             optionSets = symbolTable.OptionSets.Select(kvp => kvp.Value);
 

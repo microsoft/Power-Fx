@@ -266,6 +266,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server Intellisense Response2 2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server Load Customers DB.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server TestAllFunctions.jsonSet" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Wrong Table.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Teams_GetMessageDetails_GetSuggestionsForChannel.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Teams_GetMessageDetails_InputType.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Teams_GetMessageLocations.json" />
