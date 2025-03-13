@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Connectors
                 + (CdpTableResolver.UseV2(uriPrefix) ? "/v2" : string.Empty)
                 + $"/$metadata.json/datasets";
 
-            return await GetObject<DatasetMetadata>(httpClient, "Get datasets metadata", uri, null, cancellationToken, logger).ConfigureAwait(false);            
+            return await GetObject<DatasetMetadata>(httpClient, "Get datasets metadata", uri, null, cancellationToken, logger).ConfigureAwait(false);
         }
 
         public virtual async Task<IEnumerable<CdpTable>> GetTablesAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
@@ -95,15 +95,7 @@ namespace Microsoft.PowerFx.Connectors
             cancellation.ThrowIfCancellationRequested();
 
             CdpTable table = new CdpTable(DatasetName, logicalTableName, DatasetMetadata, null);
-
-            try
-            {
-                await table.InitAsync(httpClient, uriPrefix, cancellation, logger).ConfigureAwait(false);
-            }
-            catch (PowerFxConnectorException)
-            {
-                table = null;
-            }
+            await table.InitAsync(httpClient, uriPrefix, cancellation, logger).ConfigureAwait(false);
 
             return table;
         }

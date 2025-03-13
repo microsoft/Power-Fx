@@ -419,9 +419,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Trying with a wrong table name (2nd network call ends up with a 400)
             testConnector.SetResponseFromFiles((@"Responses\SQL GetDatasetsMetadata.json", HttpStatusCode.OK), (@"Responses\SQL Wrong Table.json", HttpStatusCode.BadRequest));
-            table = await cds.GetTableAsync(client, $"/apim/sql/{connectionId}", "UnknownTable123", CancellationToken.None, logger);
+            PowerFxConnectorException e = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await cds.GetTableAsync(client, $"/apim/sql/{connectionId}", "UnknownTable123", CancellationToken.None, logger).ConfigureAwait(false));
 
-            Assert.Null(table);
+            Assert.StartsWith(@"CDP call to /apim/sql/29941b77eb0a40fe925cd7a03cb85b40/v2/$metadata.json/datasets/pfxdev-sql.database.windows.net%2CSampleDB/tables/UnknownTable123?api-version=2015-09-01 failed with 400 error:  (Bad Request)", e.Message);
         }
 
         [Fact]
