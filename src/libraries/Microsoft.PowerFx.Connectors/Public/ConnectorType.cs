@@ -229,10 +229,11 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static readonly FormulaType DefaultType = FormulaType.UntypedObject;
 
-        internal ConnectorType(string error, ErrorResourceKey warning = default)
+        internal ConnectorType(string error, string name, FormulaType formulaType, ErrorResourceKey warning = default)
             : base(error, warning)
         {
-            FormulaType = DefaultType;
+            Name = name;
+            FormulaType = formulaType;
         }
 
         internal ConnectorType(ISwaggerSchema schema, ConnectorSettings settings)
