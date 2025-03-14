@@ -46,6 +46,8 @@ namespace Microsoft.PowerFx.Core.Types
         public static readonly DType Error = new DType(DKind.Error);
         public static readonly DType EmptyRecord = new DType(DKind.Record);
         public static readonly DType EmptyTable = new DType(DKind.Table);
+        public static readonly DType EmptySealedRecord = new DType(DKind.Record, isSealed: true);
+        public static readonly DType EmptySealedTable = new DType(DKind.Table, isSealed: true);
         public static readonly DType EmptyEnum = new DType(DKind.Unknown, default(ValueTree));
         public static readonly DType Polymorphic = new DType(DKind.Polymorphic);
         public static readonly DType View = new DType(DKind.View);
@@ -130,12 +132,14 @@ namespace Microsoft.PowerFx.Core.Types
         // Special case for old enums. 
         public ValueTree ValueTree { get; }
 
-        // The columns of a table or record are sealed and cannot be added to, renamed, or unioned by the formula writer. This allows us to add columns to system records/tables without fear of breaking an existing formula.
-        // All records/tables that are sealed in V1 are also marked sealed in Pre-V1. For the IfError function, since ScopeInfo is defined independent of V1 status, it would be a problem to make sealed V1 dependent.
-        // Instead, a V1 specific check is made at the points that a formula could create a problem, such as AddColumns and record union.
-        // Sealed is NOT checked at internal .Add of fields to a record. This would be a good validation, however we don't have V1 information plumbed down to make that possible.
-        // Note that .Add does not pass through IsSealed. Be sure to set IsSealed after fully creating the type. See the User object in the interpreter, which is sealed, as an example.
-        public bool IsSealed { get; set; }
+        // The columns of a table or record are sealed and cannot be added to, renamed, or unioned by the formula writer, but they can be internally.
+        // This allows us to add columns to system records/tables without fear of breaking an existing formula.  For example, FirstError and AllErrors in the IfError function.
+        // All records/tables that are sealed in V1 are also marked sealed in Pre-V1. For the IfError function, since ScopeInfo is defined independent of V1 status,
+        // it would be a problem to make sealed here V1 dependent.
+        // Instead, a V1 specific check is made at the points that a formula writer could create a problem, such as AddColumns and record union.
+        // Sealed is NOT checked at internal .Add of fields to a record. This allows an empty, sealed record to be built up, as is done with the ShowColumns function and
+        // the User object in the interpreter.
+        public bool IsSealed { get; }
 
         #endregion 
 
@@ -220,7 +224,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
         }
 
-        internal DType(DKind kind)
+        internal DType(DKind kind, bool isSealed = false)
         {
             Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
 
@@ -235,6 +239,7 @@ namespace Microsoft.PowerFx.Core.Types
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
+            IsSealed = isSealed;
             AssertValid();
         }
 
@@ -822,6 +827,11 @@ namespace Microsoft.PowerFx.Core.Types
             return CreateRecordOrTable(DKind.Table, typedNames);
         }
 
+        public static DType CreateTable(TypedName typedName, bool isSealed = false)
+        {
+            return CreateRecordOrTable(DKind.Table, new TypedName[] { typedName }, isSealed: isSealed);
+        }
+
         public static DType CreateTable(IEnumerable<TypedName> typedNames, bool isSealed = false)
         {
             return CreateRecordOrTable(DKind.Table, typedNames, isSealed: isSealed);
@@ -1312,7 +1322,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                 Contracts.Assert(typeCur.IsRecord || typeCur.IsTable);
                 var tree = typeCur.TypeTree.SetItem(path.Name, type, skipCompare);
-                type = new DType(typeCur.Kind, tree, typeCur.AssociatedDataSources, typeCur.DisplayNameProvider);
+                type = new DType(typeCur.Kind, tree, typeCur.AssociatedDataSources, typeCur.DisplayNameProvider, isSealed: fullType.IsSealed);
 
                 if (typeCur.HasExpandInfo)
                 {
@@ -1362,7 +1372,7 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             var tree = typeOuter.TypeTree.SetItem(name, type);
-            var updatedTypeOuter = new DType(typeOuter.Kind, tree, AssociatedDataSources, typeOuter.DisplayNameProvider);
+            var updatedTypeOuter = new DType(typeOuter.Kind, tree, AssociatedDataSources, typeOuter.DisplayNameProvider, isSealed: fullType.IsSealed);
 
             if (typeOuter.HasExpandInfo)
             {
@@ -1389,7 +1399,7 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.Assert(!fullType.TypeTree.Contains(name));
 
             var tree = fullType.TypeTree.SetItem(name, type);
-            var newType = new DType(fullType.Kind, tree, AssociatedDataSources, fullType.DisplayNameProvider);
+            var newType = new DType(fullType.Kind, tree, AssociatedDataSources, fullType.DisplayNameProvider, isSealed: fullType.IsSealed);
 
             if (fullType.HasExpandInfo)
             {

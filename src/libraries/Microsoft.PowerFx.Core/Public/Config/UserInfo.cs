@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx
                 throw new InvalidOperationException($"Must have at least 1 field for User object.");
             }
 
-            var type = RecordType.Empty();
+            var type = RecordType.EmptySealed();
             HashSet<string> added = new HashSet<string>();
 
             foreach (var field in fields)
@@ -122,8 +122,6 @@ namespace Microsoft.PowerFx
                     throw new InvalidOperationException($"Field '{field}' is not supported on User object.");
                 }
             }
-
-            type._type.IsSealed = true;
 
             return type;
         }

@@ -5723,10 +5723,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 DType tableType = exprType.IsValid
                     ? (_features.TableSyntaxDoesntWrapRecords && exprType.IsRecord
-                        ? DType.CreateTable(exprType.GetNames(DPath.Root))
-                        : DType.CreateTable(new TypedName(exprType, TableValue.ValueDName)))
+                        ? DType.CreateTable(exprType.GetNames(DPath.Root), isSealed: exprType.IsSealed)
+                        : DType.CreateTable(new TypedName(exprType, TableValue.ValueDName), isSealed: exprType.IsSealed))
                     : DType.EmptyTable;
-                tableType.IsSealed = exprType.IsSealed;
 
                 _txb.SetType(node, tableType);
                 SetVariadicNodePurity(node);
