@@ -229,10 +229,11 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static readonly FormulaType DefaultType = FormulaType.UntypedObject;
 
-        internal ConnectorType(string error, ErrorResourceKey warning = default)
+        internal ConnectorType(string error, string name, FormulaType formulaType, ErrorResourceKey warning = default)
             : base(error, warning)
         {
-            FormulaType = DefaultType;
+            Name = name;
+            FormulaType = formulaType;
         }
 
         internal ConnectorType(ISwaggerSchema schema, ConnectorSettings settings)
@@ -241,10 +242,11 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Called by ConnectorFunction.GetCdpTableType
-        internal ConnectorType(JsonElement schema, string tableName, SymbolTable optionSets, ConnectorSettings settings, IList<ReferencedEntity> referencedEntities, string datasetName, string name, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
+        internal ConnectorType(JsonElement schema, string tableName, SymbolTable optionSets, ConnectorSettings settings, IList<ReferencedEntity> referencedEntities, string datasetName, string name, string displayName, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
             : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(tableName, optionSets, settings))
         {
             Name = name;
+            DisplayName = displayName;
 
             foreach (ConnectorType field in Fields.Where(f => f.Capabilities != null))
             {

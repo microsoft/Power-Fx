@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -392,6 +393,35 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             StringValue name = Assert.IsType<StringValue>(result);
             Assert.Equal("Juigné", name.Value);
+        }
+
+        [Fact]
+        public async Task SQL_CdpTabular_GetTables5()
+        {
+            using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            using var httpClient = new HttpClient(testConnector);
+            string connectionId = "29941b77eb0a40fe925cd7a03cb85b40";
+            string jwt = "eyJ0eX...";
+            using var client = new PowerPlatformConnectorClient("49970107-0806-e5a7-be5e-7c60e2750f01.12.common.firstrelease.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+            
+            CdpDataSource cds = new CdpDataSource("pfxdev-sql.database.windows.net,SampleDB");
+
+            testConnector.SetResponseFromFiles(@"Responses\SQL GetDatasetsMetadata.json", @"Responses\SQL GetSchema Products.json");
+            CdpTable table = await cds.GetTableAsync(client, $"/apim/sql/{connectionId}", "[SalesLT].[Product]", CancellationToken.None, logger);
+
+            Assert.Equal("[SalesLT].[Product]", table.TableName);
+            Assert.Equal("[SalesLT].[Product]", table.DisplayName);
+            Assert.True(table.IsInitialized);
+
+            // Trying with a wrong table name (2nd network call ends up with a 400)
+            testConnector.SetResponseFromFiles((@"Responses\SQL GetDatasetsMetadata.json", HttpStatusCode.OK), (@"Responses\SQL Wrong Table.json", HttpStatusCode.BadRequest));
+            PowerFxConnectorException e = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await cds.GetTableAsync(client, $"/apim/sql/{connectionId}", "UnknownTable123", CancellationToken.None, logger).ConfigureAwait(false));
+
+            Assert.StartsWith(@"CDP call to /apim/sql/29941b77eb0a40fe925cd7a03cb85b40/v2/$metadata.json/datasets/pfxdev-sql.database.windows.net%2CSampleDB/tables/UnknownTable123?api-version=2015-09-01 failed with 400 error:  (Bad Request)", e.Message);
         }
 
         [Fact]
