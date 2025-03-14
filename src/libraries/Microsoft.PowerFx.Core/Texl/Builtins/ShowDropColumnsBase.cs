@@ -101,6 +101,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 fArgsValid = base.CheckType(context, args[0], argTypes[0], isRecord ? DType.EmptyRecord : ParamTypes[0], errors, ref nodeToCoercedTypeMap);
             }
 
+            // DType.IsSealed is not propogated here as the result of ShowColumns can be added to (since specifc columns have been chosen), but not DropColumns
             var supportColumnNamesAsIdentifiers = context.Features.SupportColumnNamesAsIdentifiers;
             var colsToKeep =
                 _isShowColumns

@@ -136,6 +136,17 @@ namespace Microsoft.PowerFx.Types
         }
 
         /// <summary>
+        /// Static builder method for constructing a sealed record type. 
+        /// Use with <see cref="Add(NamedFormulaType)"/> to construct a
+        /// record type.
+        /// </summary>
+        /// <returns>An empty sealed RecordType instance.</returns>
+        public static RecordType EmptySealed()
+        {
+            return new KnownRecordType(DType.EmptySealedRecord);
+        }
+
+        /// <summary>
         /// Static builder method for constructing a Polymorphic record type.
         /// Used for Dataverse Polymorphic types.
         /// </summary>
