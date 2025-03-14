@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             string formula = @"
                 {
                     type: ""AdaptiveCard"",
-                    body: [
+                    body: [ //comment
                         {},
                         {
                             type: ""TextBlock"",
@@ -39,13 +39,58 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 } 
                 ";
             string expected = @"
-$.body[1].text, first
-$.footer.text, second
+$/body/1/text, first
+$/footer/text, second
 ";
 
             var finder = new Finder();
-            var locs = finder.Extract(formula);
 
+            // Extract
+            Dictionary<PropertyPath, string> locs = finder.Extract(formula);
+
+            string actual = ToString(locs).Trim();
+
+            Assert.Equal(expected.Trim(), actual);
+
+            // Merge 
+            var locs2 = new Dictionary<PropertyPath, string>
+            {
+                { PropertyPath.Parse("$/body/1/text"), "LOC1" },
+                { PropertyPath.Parse("$/footer/text"), "LO\"C2" },
+            };
+            var newFormula = finder.Merge(formula, locs2);
+
+            string expected2 = @"
+                {
+                    type: ""AdaptiveCard"",
+                    body: [ //comment
+                        {},
+                        {
+                            type: ""TextBlock"",
+                            size: ""Medium"",
+                            weight: ""Bolder"",
+                            text: ""LOC1""
+                        }
+	                ],
+                    footer : {
+                        text : ""LO""""C2""
+                    }
+                }                 
+";
+            Assert.Equal(NormExpr(expected2), NormExpr(newFormula));
+        }        
+
+        // Normalize whitespace in an expression so we can compare them.
+        private static string NormExpr(string expr)
+        {
+            var parse = Engine.Parse(expr);
+            
+            var normalized = parse.Root.ToString();
+            return normalized;
+        }
+
+        private static string ToString(IReadOnlyDictionary<PropertyPath, string> locs)
+        {
             StringBuilder sb = new StringBuilder();
             foreach (var kv in locs.OrderBy(x => x.Key.ToString()))
             {
@@ -55,9 +100,9 @@ $.footer.text, second
                 sb.AppendLine();
             }
 
-            string actual = sb.ToString().Trim();
-            Assert.Equal(expected.Trim(), actual);
-        }        
+            string actual = sb.ToString();
+            return actual;
+        }
     }
 
     public class WidgetVisitor : TexlFunctionalVisitor<object, PropertyPath>
@@ -181,11 +226,17 @@ $.footer.text, second
                     {
                         bool shouldLocalize = _keywords.Contains(id.Name);
 
+                        if (Merged != null && Merged.TryGetValue(childPath, out var newText))
+                        {
+                            var span = str.GetCompleteSpan();
+
+                            var newText2 = '"' + StrLitToken.EscapeString(newText) + '"';
+                            _replacements.Add(new KeyValuePair<Span, string>(span, newText2));
+                        }
+
                         if (shouldLocalize)
                         {
-                            var valueStr = str.Value;
-
-                            // $$$ Same thing that adds should also replace...
+                            var valueStr = str.Value;                            
                             _localizations.Add(childPath, valueStr);
                         }
                     }
@@ -198,6 +249,10 @@ $.footer.text, second
 
             return null;
         }
+
+        internal readonly List<KeyValuePair<Span, string>> _replacements = new List<KeyValuePair<Span, string>>();
+
+        internal IReadOnlyDictionary<PropertyPath, string> Merged { get; init; }
 
         public override object Visit(TableNode node, PropertyPath context)
         {
@@ -227,9 +282,20 @@ $.footer.text, second
             return vis._localizations;
         }
 
-        public string Merge(string original, Dictionary<PropertyPath, string> localizations)
+        public string Merge(string formula, Dictionary<PropertyPath, string> localizations)
         {
-            throw new NotImplementedException();
+            var parse = Engine.Parse(formula);
+
+            var vis = new WidgetVisitor(_propertiesToLocalize)
+            {
+                Merged = localizations
+            };
+
+            parse.Root.Accept(vis, PropertyPath.Root);
+
+            var newFormula = Span.ReplaceSpans(formula, vis._replacements);
+
+            return newFormula;            
         }
 
         // Get schema from: https://adaptivecards.io/explorer/AdaptiveCard.html 
@@ -323,16 +389,44 @@ $.footer.text, second
 
             if (_idx is string fieldName)
             {
-                sb.Append($".{fieldName}");
+                sb.Append($"/{fieldName}");
             }
             else if (_idx is int idx)
             {
-                sb.Append($"[{idx}]");
+                sb.Append($"/{idx}");
             }
             else
             {
-                sb.Append(".???");
+                sb.Append("/???");
             }
+        }
+
+        // parse from ToString
+        public static PropertyPath Parse(string path)
+        {
+            var x = PropertyPath.Root;
+
+            // Starts with "$"
+            var parts = path.Split('/');
+
+            if (parts[0] != "$")
+            {
+                throw new InvalidOperationException($"Path should be rooted with '$'");
+            }
+
+            foreach (var part in parts.Skip(1))
+            {
+                if (int.TryParse(part, out var idx))
+                {
+                    x = x.Index(idx);
+                }
+                else
+                {
+                    x = x.Field(part);
+                }
+            }
+
+            return x;
         }
     }
 }
