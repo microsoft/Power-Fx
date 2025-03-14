@@ -81,5 +81,30 @@ namespace Microsoft.PowerFx.Core.Types
             return self.GetNames(path).Any(n => n.Type.IsExpandEntity ||
                 (n.Type.IsAggregate && n.Type.ContainsDataEntityType(DPath.Root, currentDepth - 1)));
         }
+
+        /// <summary>
+        /// Try to get the column logical name.
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="displayName"></param>
+        /// <param name="logicalName"></param>
+        /// <returns></returns>
+        public static bool TryGetLogicalName(this DType self, DName displayName, out DName logicalName)
+        {
+            var usesDisplayName =
+                            DType.TryGetConvertedDisplayNameAndLogicalNameForColumn(self, displayName.Value, out var maybeLogicalName, out _) ||
+                            DType.TryGetLogicalNameForColumn(self, displayName.Value, out maybeLogicalName);
+
+            if (usesDisplayName)
+            {
+                logicalName = new DName(maybeLogicalName);
+            }
+            else
+            {
+                logicalName = displayName;
+            }
+
+            return usesDisplayName;
+        }
     }
 }
