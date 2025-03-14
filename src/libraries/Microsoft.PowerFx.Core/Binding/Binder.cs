@@ -5721,6 +5721,8 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                 }
 
+                // Tables that are created from sealed records become sealed
+                // Among other things, this avoids someone writing First( Table( SealedRecord ) ) to remove the seal
                 DType tableType = exprType.IsValid
                     ? (_features.TableSyntaxDoesntWrapRecords && exprType.IsRecord
                         ? DType.CreateTable(exprType.GetNames(DPath.Root), isSealed: exprType.IsSealed)

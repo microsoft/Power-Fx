@@ -257,7 +257,7 @@ namespace Microsoft.PowerFx.Core.Types
             DisplayNameProvider = displayNameProvider;
         }
 
-        public virtual DType Clone()
+        public DType Clone()
         {
             AssertValid();
 
@@ -278,6 +278,29 @@ namespace Microsoft.PowerFx.Core.Types
                 DisplayNameProvider,
                 LazyTypeProvider,
                 IsSealed);
+        }
+
+        public DType CloneAndSeal()
+        {
+            AssertValid();
+
+            return new DType(
+                Kind,
+                TypeTree,
+                EnumSuperkind,
+                ValueTree,
+                ExpandInfo,
+                PolymorphicInfo,
+                Metadata,
+                IsFile,
+                IsLargeImage,
+                new HashSet<IExternalTabularDataSource>(AssociatedDataSources),
+                OptionSetInfo,
+                ViewInfo,
+                NamedValueKind,
+                DisplayNameProvider,
+                LazyTypeProvider,
+                true);
         }
 
         // Constructor for aggregate types (record, table)
@@ -2746,7 +2769,9 @@ namespace Microsoft.PowerFx.Core.Types
             leftType.AssertValid();
             rightType.AssertValid();
 
-            if (features.PowerFxV1CompatibilityRules && (leftType.IsSealed || rightType.IsSealed) && leftType != rightType)
+            if (features.PowerFxV1CompatibilityRules && leftType != rightType &&
+                ((leftType.IsSealed && rightType != DType.ObjNull && rightType != DType.EmptyRecord && rightType != DType.EmptyTable) 
+                 || (rightType.IsSealed && leftType != DType.ObjNull && leftType != DType.EmptyRecord && leftType != DType.EmptyTable)))
             {
                 fError = true;
                 return Error;
@@ -2850,7 +2875,7 @@ namespace Microsoft.PowerFx.Core.Types
             rightType.AssertValid();
             Contracts.Assert(rightType.IsAggregate);
 
-            var result = leftType;
+            var result = rightType.IsSealed ? leftType.CloneAndSeal() : leftType;
 
             foreach (var pair in rightType.GetNames(DPath.Root))
             {
