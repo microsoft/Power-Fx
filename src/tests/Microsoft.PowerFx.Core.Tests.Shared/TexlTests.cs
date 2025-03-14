@@ -4557,13 +4557,14 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Join(t1 As X, t2 As Y, X.a = Y.x, JoinType.Inner, Y.z As Z)", false)]
         [InlineData("Summarize(t1, a)", false)]
         [InlineData("Summarize(t1, a, CountRows(ThisGroup) As Counter)", false)]
-        [InlineData("LookUp(t1, 1=1)", false)] // The 'LookUp' wont produce any warning because it has not been set to analyse the predicate.
+        [InlineData("LookUp(t1, a = 1)", false)]
         [InlineData("Max(t1, Abs(a))", false)]
         [InlineData("Min(t1, Abs(a))", false)]
         [InlineData("Average(t1, Abs(a))", false)]
         [InlineData("Sum(t1, Abs(a))", false)]
         [InlineData("Filter(t1, With({x:a}, StartsWith(x, \"something\")))", false)]
         [InlineData("Filter(t1 As Tbl, With({b:\"hello\"}, StartsWith(Tbl.b, b)))", false)]
+        [InlineData("If(LookUp(t1, a = 1).a = 1, 1)", false)]
 
         [InlineData("Filter(t1, 1=1)", true)]
         [InlineData("Filter(t1, With({b:\"hello\"}, StartsWith(b, \"something\")))", true)]
@@ -4572,6 +4573,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Min(t1, 1)", true)]
         [InlineData("Max(t1, 1)", true)]
         [InlineData("Join(t1, t2, true, JoinType.Inner, RightRecord.z As Z, LeftRecord.a As AAA)", true)]
+        [InlineData("LookUp(t1, 1=1)", true)]
+        [InlineData("LookUp(t1, With({a:99}, a) = 99)", true)]
 
         public void TestScopePredicate(string expression, bool expectingWarning)
         {
