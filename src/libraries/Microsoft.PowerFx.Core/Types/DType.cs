@@ -257,7 +257,7 @@ namespace Microsoft.PowerFx.Core.Types
             DisplayNameProvider = displayNameProvider;
         }
 
-        public DType Clone()
+        public virtual DType Clone()
         {
             AssertValid();
 
