@@ -16,7 +16,7 @@ using YamlDotNet.Core.Tokens;
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
     // Demonstrate mutation example using IUntypedObject
-    public class Widget2Tests
+    public class TextLiteralFinderTests
     {
         [Fact]
         public void Test()
@@ -43,7 +43,7 @@ $/body/1/text, first
 $/footer/text, second
 ";
 
-            var finder = new Finder();
+            var finder = new TextLiteralFinder();
 
             // Extract
             Dictionary<PropertyPath, string> locs = finder.Extract(formula);
@@ -105,14 +105,17 @@ $/footer/text, second
         }
     }
 
-    public class WidgetVisitor : TexlFunctionalVisitor<object, PropertyPath>
+    /// <summary>
+    /// Helper for <see cref="TextLiteralFinder"/>.
+    /// </summary>
+    internal class TextLiteralFinderVisitor : TexlFunctionalVisitor<object, PropertyPath>
     {
         internal readonly Dictionary<PropertyPath, string> _localizations = new Dictionary<PropertyPath, string>();
 
         // Which propertyNames should get localized?
         private readonly IReadOnlySet<string> _keywords;
 
-        public WidgetVisitor(IReadOnlySet<string> keywords)
+        public TextLiteralFinderVisitor(IReadOnlySet<string> keywords)
         {
             _keywords = keywords ?? throw new ArgumentNullException(nameof(keywords));
         }
@@ -195,6 +198,8 @@ $/footer/text, second
 
         public override object Visit(CallNode node, PropertyPath context)
         {
+            // Expression can have calls - but we won't visit them.
+            // So records within a call's arguments won't get translated. 
             return null;
         }
 
@@ -269,13 +274,16 @@ $/footer/text, second
         }
     }
 
-    public class Finder
+    // Given an expression that *represents an object (records/tables)*,
+    // extract the text literals for fields of known names. 
+    // And allow merging back new (localized) text literals.
+    public class TextLiteralFinder
     {
         public Dictionary<PropertyPath, string> Extract(string formula)
         {
             var parse = Engine.Parse(formula);
 
-            var vis = new WidgetVisitor(_propertiesToLocalize);            
+            var vis = new TextLiteralFinderVisitor(_propertiesToLocalize);            
 
             parse.Root.Accept(vis, PropertyPath.Root);
 
@@ -286,14 +294,14 @@ $/footer/text, second
         {
             var parse = Engine.Parse(formula);
 
-            var vis = new WidgetVisitor(_propertiesToLocalize)
+            var vis = new TextLiteralFinderVisitor(_propertiesToLocalize)
             {
                 Merged = localizations
             };
 
             parse.Root.Accept(vis, PropertyPath.Root);
 
-            var newFormula = Span.ReplaceSpans(formula, vis._replacements);
+            var newFormula = ReplaceSpans(formula, vis._replacements);
 
             return newFormula;            
         }
@@ -303,11 +311,40 @@ $/footer/text, second
         {
             "text"
         };
+
+        // Get from Fx.Core: https://github.com/microsoft/Power-Fx/issues/1874
+        private static string ReplaceSpans(string script, IEnumerable<KeyValuePair<Span, string>> worklist)
+        {
+            StringBuilder sb = new StringBuilder(script.Length);
+
+            int index = 0;
+            int lastLim = -1;
+
+            foreach (KeyValuePair<Span, string> pair in worklist.OrderBy(kvp => kvp.Key.Min))
+            {
+                if (pair.Key.Min < lastLim)
+                {
+                    // Avoid corrupting the replacement.
+                    throw new InvalidOperationException($"Post-processing failed: replacement span overlap");
+                }
+
+                sb.Append(script, index, pair.Key.Min - index);
+                sb.Append(pair.Value);
+                index = pair.Key.Lim;
+
+                lastLim = pair.Key.Lim;
+            }
+
+            if (index < script.Length)
+            {
+                sb.Append(script, index, script.Length - index);
+            }
+
+            return sb.ToString();
+        }
     }
 
-    // a
-    // a.b
-    // a[0].c
+    // Represent a path into an object. 
     public class PropertyPath
     {
         public static PropertyPath Root = new PropertyPath();
