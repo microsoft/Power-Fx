@@ -2065,8 +2065,13 @@ namespace Microsoft.PowerFx.Core.Binding
             foreach (var name in GetLambdaParamNames(call.ScopeNest + 1))
             {
                 var fError = false;
+                var fieldName = name.Name;
+                var foundLogicalName = call.CursorType.TryGetLogicalName(name.Name, out var logicalName);
 
-                call.CursorType.TryGetLogicalName(name.Name, out var fieldName);
+                if (foundLogicalName)
+                {
+                    fieldName = logicalName;
+                }
 
                 if (!name.Node.InTree(arg0) &&
                     name.Node.InTree(call.Node) &&
@@ -3155,7 +3160,12 @@ namespace Microsoft.PowerFx.Core.Binding
                         // Attempt to get the logical name to use for type checking.
                         // If this is executed amidst a metadata refresh then the reference may refer to an old
                         // display name, so we need to check the old mapping as well as the current mapping.
-                        scope.Type.TryGetLogicalName(node.Ident.Name, out nodeName);
+                        var foundLoficalName = scope.Type.TryGetLogicalName(node.Ident.Name, out var logicalName);
+
+                        if (foundLoficalName)
+                        {
+                            nodeName = logicalName;
+                        }
 
                         if (scope.Type.TryGetType(nodeName, out var typeTmp))
                         {

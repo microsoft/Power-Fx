@@ -95,13 +95,11 @@ namespace Microsoft.PowerFx.Core.Types
                             DType.TryGetConvertedDisplayNameAndLogicalNameForColumn(self, displayName.Value, out var maybeLogicalName, out _) ||
                             DType.TryGetLogicalNameForColumn(self, displayName.Value, out maybeLogicalName);
 
+            logicalName = default;
+
             if (usesDisplayName)
             {
                 logicalName = new DName(maybeLogicalName);
-            }
-            else
-            {
-                logicalName = displayName;
             }
 
             return usesDisplayName;
