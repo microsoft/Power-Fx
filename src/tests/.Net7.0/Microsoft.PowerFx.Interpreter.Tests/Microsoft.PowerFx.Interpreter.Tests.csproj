@@ -24,6 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\Microsoft.PowerFx.Interpreter.Tests.Shared\Scenarios\Filename.cs" Link="Filename.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\libraries\Microsoft.PowerFx.Json\Microsoft.PowerFx.Json.csproj" />
     <ProjectReference Include="..\..\..\libraries\Microsoft.PowerFx.Repl\Microsoft.PowerFx.Repl.csproj" />    
     <ProjectReference Include="..\..\..\libraries\Microsoft.PowerFx.Interpreter\Microsoft.PowerFx.Interpreter.csproj" />
