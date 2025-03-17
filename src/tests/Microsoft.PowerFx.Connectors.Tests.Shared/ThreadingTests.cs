@@ -3,9 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests;
 using Xunit;
 
@@ -21,7 +19,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var bugsFieldType = new HashSet<Type>();
             var bugNames = new HashSet<string>()
             {
-                "ConnectorFunction._slash",                
+                "ConnectorFunction._slash",
+                "ConnectorFunction._validFunctions",
                 "ColumnCapabilities.DefaultFilterFunctionSupport"
             };
 

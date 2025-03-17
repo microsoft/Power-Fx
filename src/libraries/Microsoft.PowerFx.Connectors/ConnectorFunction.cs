@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -1037,7 +1038,122 @@ namespace Microsoft.PowerFx.Connectors
             delegationInfo = ((DataSourceInfo)connectorType.FormulaType._type.AssociatedDataSources.First()).DelegationInfo;
             optionSets = symbolTable.OptionSets.Select(kvp => kvp.Value);
 
+            List<string> issues = new List<string>();
+            HashSet<string> fieldNames = new HashSet<string>(connectorType.Fields.Select(ct => ct.Name));            
+
+            // Table level validation
+            ValidatePropertyExist(serviceCapabilities?.FilterRestriction?.RequiredProperties, fieldNames, ref issues, "x-ms-capabilities/filterRestrictions/requiredProperties");
+            ValidatePropertyExist(serviceCapabilities?.FilterRestriction?.NonFilterableProperties, fieldNames, ref issues, "x-ms-capabilities/filterRestrictions/nonFilterableProperties");
+            ValidateFunctionExist(serviceCapabilities?.FilterSupportedFunctions, ref issues, "x-ms-capabilities/filterFunctionSupport");
+            ValidatePropertyExist(serviceCapabilities?.GroupRestriction?.UngroupableProperties, fieldNames, ref issues, "x-ms-capabilities/groupRestriction/ungroupableProperties");
+            ValidateOdataVersion(serviceCapabilities?.ODataVersion, ref issues, "x-ms-capabilities/oDataVersion");
+            ValidateServerPaging(serviceCapabilities?.PagingCapabilities?.ServerPagingOptions, ref issues, "x-ms-capabilities/serverPagingOptions");
+            ValidatePropertyExist(serviceCapabilities?.SortRestriction?.UnsortableProperties, fieldNames, ref issues, "x-ms-capabilities/sortRestrictions/unsortableProperties");
+            ValidatePropertyExist(serviceCapabilities?.SortRestriction?.AscendingOnlyProperties, fieldNames, ref issues, "x-ms-capabilities/sortRestrictions/ascendingOnlyProperties");
+           
+            // Column level validation
+            foreach (ConnectorType field in connectorType.Fields)
+            {
+                ColumnCapabilities columnCapabilities = field.Capabilities;
+                ValidateFunctionExist(columnCapabilities?.Capabilities?.FilterFunctions, ref issues, $"schema/item/properties/{Display(field.Name)}/x-ms-capabilities/filterFunctions");                
+            }
+
+            // We exclude salesforce here as we do not manage compound properties
+            // ex: in Accounts table, BillingAddress consists of (BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude, BillingGeocodeAccuracy)
+            if (connectorName != "salesforce")
+            {
+                foreach (string err in issues)
+                {
+                    connectorType.AddError(err);
+                }
+            }
+
             return connectorType;
+        }
+
+        private static void ValidatePropertyExist(IEnumerable<string> propertyList, HashSet<string> fields, ref List<string> issues, string location)        
+        {
+            if (propertyList != null)
+            {
+                foreach (string requiredProperty in propertyList)
+                {
+                    if (!fields.Contains(requiredProperty))
+                    {
+                        issues.Add($"Required property '{Display(requiredProperty)}' is not an existing field in {location}");
+                    }
+                }
+            }
+        }
+
+        private static readonly HashSet<string> _validFunctions = new HashSet<string>(new[]
+        {
+            // From Power Apps - https://msazure.visualstudio.com/OneAgile/_git/PowerApps-Client?path=/src/Cloud/DocumentServer.Core/XrmDataProvider/CdsPatchDatasourceHelper.cs&version=GBmaster&line=1055&lineEnd=1055&lineStartColumn=23&lineEndColumn=47&lineStyle=plain&_a=contents
+            "add", "and", "average", "ceiling", "concat", "contains", "countdistinct", "date", "day", "div", "endswith", "eq", "floor", "ge", "gt", "hour", "indexof", "le", "length", "lt", "max", "min", "minute", "mod", "month", "mul", "ne", 
+            "negate", "not", "now", "null", "or", "replace", "round", "second", "startswith", "sub", "substring", "substringof", "sum", "time", "tolower", "totaloffsetminutes", "totalseconds", "toupper", "trim", "year",
+
+            // Fx additions
+            "distinct", "joinfull", "joininner", "joinleft", "joinright"
+        });
+
+        private static void ValidateFunctionExist(IEnumerable<string> propertyList, ref List<string> issues, string location)
+        {
+            if (propertyList != null)
+            {
+                foreach (string requiredProperty in propertyList)
+                {
+                    if (!_validFunctions.Contains(requiredProperty))
+                    {
+                        issues.Add($"Function '{Display(requiredProperty)}' is not an valid function name in {location}");
+                    }
+                }
+            }
+        }
+
+        private static void ValidateOdataVersion(int? version, ref List<string> issues, string location)
+        {
+            if (version != 3 && version != 4)
+            {
+                issues.Add($"ODataVersion '{Display(version)}' is not supported in {location}");
+            }
+        }        
+
+        private static void ValidateServerPaging(IEnumerable<string> pagingOptions, ref List<string> issues, string location)
+        {
+            if (pagingOptions != null)
+            {
+                foreach (string po in pagingOptions)
+                {
+                    if (po != "top" && po != "skiptoken")
+                    {
+                        issues.Add($"Invalid paging option '{Display(po)}' in {location}");
+                    }
+                }
+            }
+        }
+
+        private static string Display(string str)
+        {
+            if (str is null)
+            {
+                return "<null>";
+            }
+
+            if (string.IsNullOrEmpty(str))
+            {
+                return "<empty>";
+            }
+
+            return Uri.EscapeDataString(str);
+        }
+
+        private static string Display(int? i)
+        {
+            if (!i.HasValue)
+            {
+                return "<null>";
+            }
+
+            return i.Value.ToString(CultureInfo.InvariantCulture);
         }
 
         private static IList<ReferencedEntity> GetReferenceEntities(string connectorName, StringValue sv)
