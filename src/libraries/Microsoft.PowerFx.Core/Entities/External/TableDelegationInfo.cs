@@ -29,6 +29,9 @@ namespace Microsoft.PowerFx.Core.Entities
         [Obsolete("preview")]
         public CountCapabilities CountCapabilities { get; init; }
 
+        [Obsolete("preview")]
+        public TopLevelAggregationCapabilities TopLevelAggregationCapabilities { get; init; }
+
         // Defines ungroupable columns
         public GroupRestrictions GroupRestriction { get; init; }
 
@@ -346,6 +349,18 @@ namespace Microsoft.PowerFx.Core.Entities
         /// </summary>
         /// <returns></returns>
         public virtual bool IsCountableAfterSummarize()
+        {
+            return false;
+        }
+    }
+
+    [Obsolete("preview")]
+    public class TopLevelAggregationCapabilities
+    {
+        /// <summary>
+        /// If the table supports top level aggregation for a column, return true.
+        /// </summary>
+        public virtual bool IsTopLevelAggregationSupported(SummarizeMethod method, string propertyName)
         {
             return false;
         }
