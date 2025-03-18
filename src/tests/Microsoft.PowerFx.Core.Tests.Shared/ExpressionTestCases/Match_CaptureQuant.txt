@@ -755,3 +755,29 @@ Errors: Error 12-79: Invalid regular expression: Too many nested groups, found a
 
 >> Match( "babaabb", "(((((((((((((((((((((((((((((((?<cap>(a|b))))))))))))))))))))))))))))))))\k<cap>" )
 Errors: Error 18-100: Invalid regular expression: Too many nested groups, found at the beginning of "(a|b))))))))...".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// anchors and zero width escapes
+
+>> Match( "a", "(^|a)*" )
+Errors: Error 12-20: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(^|a)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "($|a)*" )
+Errors: Error 12-20: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "($|a)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(\b|a)*" )
+Errors: Error 12-21: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(\b|a)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(\B|a)*" )
+Errors: Error 12-21: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(\B|a)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(a|^)*" )
+Errors: Error 12-20: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a|^)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(a|$)*" )
+Errors: Error 12-20: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a|$)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(a|\b)*" )
+Errors: Error 12-21: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a|\b)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(a|\B)*" )
+Errors: Error 12-21: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a|\B)*".|Error 0-5: The function 'Match' has some invalid arguments.

@@ -89,8 +89,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("a", "In(valid", "ErrInvalidRegExUnclosedCaptureGroups")]
         [InlineData("a", "In\\qvalid", "ErrInvalidRegExBadEscape")]
         [InlineData("a", "In[valid", "ErrInvalidRegExBadSquare")]
-        [InlineData("a", "In(*valid", "ErrInvalidRegExBadParen")]
-        public void TestRegExV1DisabledExceptionMessage(string subject, string pattern, string errorV1)
+        [InlineData("a", "In(*valid", "ErrInvalidRegExBadParen", "ErrInvalidRegExQuantifierOnNothing")]
+        public void TestRegExV1DisabledExceptionMessage(string subject, string pattern, string errorV1, string errorPreV1 = null)
         {
             PowerFxConfig configV1 = new PowerFxConfig(Features.PowerFxV1);
             configV1.EnableRegExFunctions(new TimeSpan(0, 0, 3));
@@ -102,6 +102,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             string[] funcs = { "IsMatch", "Match", "MatchAll" };
 
+            if (errorPreV1 == null)
+            {
+                errorPreV1 = errorV1;
+            }
+
             foreach (var func in funcs)
             {
                 var formula = $"{func}(\"{subject}\", \"{pattern}\")";
@@ -112,7 +117,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 var checkPreV1 = enginePreV1.Check(formula);
                 Assert.False(checkPreV1.IsSuccess);
-                Assert.Equal(checkPreV1.Errors.First().ResourceKey.Key, errorV1);
+                Assert.Equal(checkPreV1.Errors.First().ResourceKey.Key, errorPreV1);
             }
         }
     }

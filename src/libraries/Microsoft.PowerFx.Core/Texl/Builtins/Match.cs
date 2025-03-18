@@ -286,7 +286,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             catch (ArgumentException exception)
             {
+#pragma warning disable CS0618 // Type or member is obsolete
                 return GetRegexErrorEntry(regexPattern, exception);
+#pragma warning restore CS0618 // Type or member is obsolete
             }
 
             // we don't need to check hidden or do any type calculation if the return type is Boolean (IsMatch)
@@ -468,17 +470,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         break;
                 }
 
-                int intOffset = (int)errorOffset + 1;
-
-                if (intOffset > pattern.Length)
-                {
-                    intOffset = pattern.Length;
-                }
-
-                if (intOffset < 0)
-                {
-                    intOffset = 0;
-                }
+                int intOffset = Math.Max(Math.Min((int)errorOffset, 0), pattern.Length);
 
                 errorParam = intOffset > ErrorContextLength ? "..." + pattern.Substring(intOffset - ErrorContextLength, ErrorContextLength) : pattern.Substring(0, intOffset);
             }
