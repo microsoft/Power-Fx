@@ -373,7 +373,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // The reflection is only needed until we are all on .NET 5 or higher,
         // with support for RegexParserException https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexparseexception
         // Errors are cached, so this should only need to be hit once for a given pattern.
-        [Obsolete]
+        [Obsolete("Use with caution, .NET Reflection needed for fine grained regular expression error messages until we can move everyone up to Power Fx V1 or .NET 5+ as our minimum supported platform.")]
         private static RegexTypeCacheEntry GetRegexErrorEntry(string pattern, Exception exception)
         {
             var errorCode = exception.GetType().GetProperty("Error")?.GetValue(exception);
