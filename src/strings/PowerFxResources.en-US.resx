@@ -2113,6 +2113,14 @@
     <value>Column name conflict for '{0}'.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Can't rename columns of a system record or table of system records. Use ShowColumns to extract the specific columns you need first.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>The specified column '{0}' does not exist.</value>
     <comment>Error Message.</comment>
