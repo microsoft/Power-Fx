@@ -378,8 +378,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             string errorParam = string.Empty;
             ErrorResourceKey error = TexlStrings.ErrInvalidRegEx;
 
-            var errorCode = exception.GetType().GetProperty("Error").GetValue(exception);
-            var errorOffset = exception.GetType().GetProperty("Offset").GetValue(exception);
+            var errorCode = exception.GetType().GetProperty("Error")?.GetValue(exception);
+            var errorOffset = exception.GetType().GetProperty("Offset")?.GetValue(exception);
+
             if (errorCode != null && errorOffset != null)
             {
                 // values are from RegexParserError enum https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexparseerror
