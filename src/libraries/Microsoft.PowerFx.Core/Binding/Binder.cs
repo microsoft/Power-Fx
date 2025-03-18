@@ -1136,7 +1136,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 !node.Args.ChildNodes.Any(child => child is ErrorNode) &&
                 TryGetCall(node.Id, out var callInfo))
             {
-                func.ScopeInfo.CheckPredicateFields(GetUsedScopeFields(callInfo), node, GetLambdaParamNames(callInfo.ScopeNest + 1), ErrorContainer);
+                //func.ScopeInfo.CheckPredicateFields(GetUsedScopeFields(callInfo), node, GetLambdaParamNames(callInfo.ScopeNest + 1), ErrorContainer);
+                func.ScopeInfo.CheckPredicateFields(this, callInfo);
             }
         }
 
