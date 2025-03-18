@@ -5430,9 +5430,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     if (sdf.Warnings != null)
                     {
-                        foreach (ErrorResourceKey erk in sdf.Warnings)
+                        foreach (ExpressionError erk in sdf.Warnings)
                         {
-                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, erk, func.Name, func.Namespace);
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, erk.ResourceKey, func.Name, func.Namespace);
                         }
                     }
                 }

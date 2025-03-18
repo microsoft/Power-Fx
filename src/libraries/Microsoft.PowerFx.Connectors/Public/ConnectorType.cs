@@ -10,7 +10,6 @@ using System.Text.Json;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Connectors.Constants;
@@ -125,7 +124,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal string ForeignKey { get; set; }
 
-        internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, FormulaType formulaType, ErrorResourceKey warning = default, IEnumerable<KeyValuePair<DName, DName>> list = null, bool isNumber = false)
+        internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, FormulaType formulaType, ExpressionError warning = default, IEnumerable<KeyValuePair<DName, DName>> list = null, bool isNumber = false)
         {
             Name = openApiParameter?.Name;
             IsRequired = openApiParameter?.Required == true;
@@ -219,8 +218,8 @@ namespace Microsoft.PowerFx.Connectors
                 EnumValues = Array.Empty<FormulaValue>();
                 EnumDisplayNames = Array.Empty<string>();
             }
-
-            AddWarning(warning);
+            
+            AddWarning(warning);            
             DynamicSchema = AggregateErrorsAndWarnings(openApiParameter.GetDynamicSchema());
             DynamicProperty = AggregateErrorsAndWarnings(openApiParameter.GetDynamicProperty());
             DynamicValues = AggregateErrorsAndWarnings(openApiParameter.GetDynamicValue());
@@ -229,7 +228,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static readonly FormulaType DefaultType = FormulaType.UntypedObject;
 
-        internal ConnectorType(string error, string name, FormulaType formulaType, ErrorResourceKey warning = default)
+        internal ConnectorType(string error, string name, FormulaType formulaType, ExpressionError warning = default)
             : base(error, warning)
         {
             Name = name;

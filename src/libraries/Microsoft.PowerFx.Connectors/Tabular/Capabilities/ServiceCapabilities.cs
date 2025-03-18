@@ -161,7 +161,7 @@ namespace Microsoft.PowerFx.Connectors
             Core.Entities.PagingCapabilities pagingCapabilities = new Core.Entities.PagingCapabilities()
             {
                 IsOnlyServerPagable = serviceCapabilities?.PagingCapabilities?.IsOnlyServerPagable ?? false,
-                ServerPagingOptions = serviceCapabilities?.PagingCapabilities?.ServerPagingOptions?.ToArray()
+                ServerPagingOptions = serviceCapabilities?.PagingCapabilities?.ServerPagingOptions?.Select(str => Enum.TryParse(str, true, out ServerPagingOptions spo) ? spo : Core.Entities.ServerPagingOptions.Unknown).ToArray()
             };
 
             Dictionary<string, Core.Entities.ColumnCapabilitiesBase> columnCapabilities = serviceCapabilities?._columnsCapabilities?.ToDictionary(

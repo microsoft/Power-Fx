@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Core.Entities
             PagingCapabilities = new PagingCapabilities()
             {
                 IsOnlyServerPagable = false,
-                ServerPagingOptions = new string[0]
+                ServerPagingOptions = new ServerPagingOptions[0]
             };
             SupportsRecordPermission = true;
             ColumnsWithRelationships = new Dictionary<string, string>();
@@ -226,16 +226,15 @@ namespace Microsoft.PowerFx.Core.Entities
         // If true, @odata.nextlink URL is used instead of $skip and $top query parameters
         // If false, $top and $skip will be used
         public bool IsOnlyServerPagable { get; init; }
-
-        // Only supported values "top" and "skiptoken"
+        
         // Used to define paging options to use 
-        public IEnumerable<string> ServerPagingOptions { get; init; }
+        public IEnumerable<ServerPagingOptions> ServerPagingOptions { get; init; }
 
         public PagingCapabilities()
         {
         }
 
-        public PagingCapabilities(bool isOnlyServerPagable, string[] serverPagingOptions)
+        public PagingCapabilities(bool isOnlyServerPagable, ServerPagingOptions[] serverPagingOptions)
         {
             // Server paging restrictions, true for CDS
             // Setting 'IsOnlyServerPagable' to true in the table metadata response lets PowerApps application to use
@@ -248,6 +247,13 @@ namespace Microsoft.PowerFx.Core.Entities
             // used in https://msazure.visualstudio.com/OneAgile/_git/PowerApps-Client?path=/src/AppMagic/js/AppMagic.Services/ConnectedData/CdpConnector.ts&_a=contents&version=GBmaster
             ServerPagingOptions = serverPagingOptions;
         }
+    }
+
+    internal enum ServerPagingOptions
+    {
+        Unknown,
+        Top,
+        SkipToken
     }
 
     public sealed class GroupRestrictions
