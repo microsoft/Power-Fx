@@ -217,19 +217,48 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-        public virtual void CheckPredicateFields(DType fields, CallNode callNode, IEnumerable<FirstNameInfo> lambdaNames, ErrorContainer errors)
+        public virtual void CheckPredicateFields(TexlBinding binding, CallInfo callInfo)
         {
+            var fields = binding.GetUsedScopeFields(callInfo);
+            var lambdaParamNames = binding.GetLambdaParamNames(callInfo.ScopeNest + 1);
+
             if (fields == DType.Error || fields.GetAllNames(DPath.Root).Any())
             {
                 return;
             }
 
-            GetScopeIdent(callNode.Args.ChildNodes.ToArray(), out var idents);
+            GetScopeIdent(callInfo.Node.Args.ChildNodes.ToArray(), out var idents);
 
-            if (!lambdaNames.Any(lambdaName => idents.Contains(lambdaName.Name)))
+            if (!lambdaParamNames.Any(lambdaName => idents.Contains(lambdaName.Name)))
             {
-                errors.EnsureError(DocumentErrorSeverity.Warning, callNode, TexlStrings.WarnCheckPredicateUsage);
+                binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, callInfo.Node, TexlStrings.WarnCheckPredicateUsage);
             }
+        }
+    }
+
+    internal class FunctionFilterScopeInfo : FunctionScopeInfo
+    {
+        public FunctionFilterScopeInfo(TexlFunction function)
+            : base(function, checkPredicateUsage: true)
+        {
+        }
+
+        public override void CheckPredicateFields(TexlBinding binding, CallInfo callInfo)
+        {
+            // Filter can also accept a view as argument.
+            // In the event of any argN (where N > 1) is a view, the binder will validate if the view is valid or not.
+            // We check if there is any view as argument. If there is, we just skip the predicate checking.
+            foreach (var childNode in callInfo.Node.Args.ChildNodes)
+            {
+                var argType = binding.GetType(childNode);
+
+                if (argType.Kind == DKind.ViewValue)
+                {
+                    return;
+                }
+            }
+
+            base.CheckPredicateFields(binding, callInfo);
         }
     }
 
@@ -334,22 +363,25 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-        public override void CheckPredicateFields(DType fields, CallNode callNode, IEnumerable<FirstNameInfo> lambdaNames, ErrorContainer errors)
+        public override void CheckPredicateFields(TexlBinding binding, CallInfo callInfo)
         {
+            var fields = binding.GetUsedScopeFields(callInfo);
+            var lambdaParamNames = binding.GetLambdaParamNames(callInfo.ScopeNest + 1);
+
             // If Join call node has less than 5 records, we are possibly looking for suggestions.
-            if (callNode.Args.ChildNodes.Count < 5 || fields == DType.Error)
+            if (callInfo.Node.Args.ChildNodes.Count < 5 || fields == DType.Error)
             {
                 return;
             }
 
-            GetScopeIdent(callNode.Args.ChildNodes.ToArray(), out var idents);
+            GetScopeIdent(callInfo.Node.Args.ChildNodes.ToArray(), out var idents);
 
             var foundIdents = new HashSet<DName>();
-            var predicate = callNode.Args.ChildNodes[2];
+            var predicate = callInfo.Node.Args.ChildNodes[2];
 
             // In the Join function, arg2 and argN > 3 are lambdas nodes.
             // We need to check if scope identifiers are used arg2 (predicate).
-            foreach (var lambda in lambdaNames)
+            foreach (var lambda in lambdaParamNames)
             {
                 var parent = lambda.Node.Parent;
 
@@ -374,7 +406,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 return;
             }
 
-            errors.EnsureError(DocumentErrorSeverity.Warning, callNode, TexlStrings.WarnCheckPredicateUsage);
+            binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, callInfo.Node, TexlStrings.WarnCheckPredicateUsage);
         }
     }
 }
