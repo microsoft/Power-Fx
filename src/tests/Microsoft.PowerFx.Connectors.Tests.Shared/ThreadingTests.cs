@@ -3,9 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests;
 using Xunit;
 

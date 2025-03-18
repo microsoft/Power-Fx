@@ -753,10 +753,17 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             testConnector.SetResponseFromFiles(@"Responses\SF GetDatasetsMetadata.json", @"Responses\SF GetTables.json");
             IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
-            CdpTable connectorTable = tables.First(t => t.DisplayName == "Accounts");
+            CdpTable connectorTable = tables.First(t => t.DisplayName == "Accounts");            
 
             testConnector.SetResponseFromFile(@"Responses\SF GetSchema.json");
             await connectorTable.InitAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
+
+            // No error but we have 2 warnings as we don't support compound properties in SalesForce
+            Assert.Empty(connectorTable.ConnnectorType.Errors);
+            string[] warnings = connectorTable.ConnnectorType.Warnings.Select(ee => ee.Message).OrderBy(x => x).ToArray();
+            Assert.Equal<object>("Required property 'BillingAddress' is not an existing field in x-ms-capabilities/sortRestrictions/unsortableProperties.", warnings[0]);
+            Assert.Equal<object>("Required property 'ShippingAddress' is not an existing field in x-ms-capabilities/sortRestrictions/unsortableProperties.", warnings[1]);
+
             CdpTableValue sfTable = connectorTable.GetTableValue();
 
             SymbolValues symbolValues = new SymbolValues().Add("Accounts", sfTable);
