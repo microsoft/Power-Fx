@@ -286,12 +286,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             catch (ArgumentException exception)
             {
-                return new RegexTypeCacheEntry()
-                {
-                    Error = TexlStrings.ErrInvalidRegEx,
-                    ErrorSeverity = DocumentErrorSeverity.Severe,
-                    ErrorParam = exception.Message,
-                };
+                return GetRegexErrorEntry(regexPattern, exception);
             }
 
             // we don't need to check hidden or do any type calculation if the return type is Boolean (IsMatch)
@@ -372,6 +367,130 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
         }
 
+        // This is only needed until everyone is on Power Fx V1, where our own error checking is done.
+        // The reflection is only needed until we are all on .NET 5 or higher,
+        // with support for RegexParserException https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexparseexception
+        // Errors are cached, so this should only need to be hit once for a given pattern.
+        [Obsolete]
+        private static RegexTypeCacheEntry GetRegexErrorEntry(string pattern, Exception exception)
+        {
+            string errorParam = string.Empty;
+            ErrorResourceKey error = TexlStrings.ErrInvalidRegEx;
+
+            var errorCode = exception.GetType().GetProperty("Error").GetValue(exception);
+            var errorOffset = exception.GetType().GetProperty("Offset").GetValue(exception);
+            if (errorCode != null && errorOffset != null)
+            {
+                // values are from RegexParserError enum https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexparseerror
+                switch ((int)errorCode)
+                {
+                    case 0: // unknown
+                        break;
+                    case 1: // AlternationHasTooManyConditions
+                    case 2: // AlternationHasMalformedCondition
+                        // uncommon and not supported by V1 Power Fx regular expressions, use default message
+                        break;
+                    case 3: // InvalidUnicodePropertyEscape
+                    case 4: // MalformedUnicodePropertyEscape
+                        error = TexlStrings.ErrInvalidRegExBadUnicodeCategory;
+                        break;
+                    case 5: // UnrecognizedEscape
+                        error = TexlStrings.ErrInvalidRegExBadEscape;
+                        break;
+                    case 6: // UnrecognizedControlCharacter        
+                    case 7: // MissingControlCharacter
+                        // uncommon and not supported by V1 Power Fx regular expressions, use default message
+                        break;
+                    case 8: // InsufficientOrInvalidHexDigits
+                        // uncommon and not blocked by V1 Power Fx regular expression parser, use default message
+                        break;
+                    case 9: // QuantifierOrCaptureGroupOutOfRange
+                        error = TexlStrings.ErrInvalidRegExNumberOverflow;
+                        break;
+                    case 10: // UndefinedNamedReference
+                    case 11: // UndefinedNumberedReference
+                        error = TexlStrings.ErrInvalidRegExBadBackRefNotDefined;
+                        break;
+                    case 12: // MalformedNamedReference
+                        error = TexlStrings.ErrInvalidRegExBadNamedCaptureName;
+                        break;
+                    case 13: // UnescapedEndingBackslash
+                        error = TexlStrings.ErrInvalidRegExEndsWithBackslash;
+                        break;
+                    case 14: // UnterminatedComment
+                        error = TexlStrings.ErrInvalidRegExUnclosedInlineComment;
+                        break;
+                    case 15: // InvalidGroupingConstruct
+                        error = TexlStrings.ErrInvalidRegExBadParen;
+                        break;
+                    case 16: // AlternationHasNamedCapture
+                    case 17: // AlternationHasComment
+                    case 18: // AlternationHasMalformedReference
+                    case 19: // AlternationHasUndefinedReference
+                        // not common, for conditional alternation, not supported by V1 Power Fx regular expressions
+                        break;
+                    case 20: // CaptureGroupNameInvalid
+                    case 21: // CaptureGroupOfZero
+                        error = TexlStrings.ErrInvalidRegExBadNamedCaptureName;
+                        break;
+                    case 22: // UnterminatedBracket
+                        error = TexlStrings.ErrInvalidRegExBadSquare;
+                        break;
+                    case 23: // ExclusionGroupNotLast
+                        // not common, not supported by V1 Power Fx regular expressions
+                        break;
+                    case 24: // ReversedCharacterRange
+                        error = TexlStrings.ErrInvalidRegExCharacterClassRangeReverse;
+                        break;
+                    case 25: // ShorthandClassInCharacterRange
+                        error = TexlStrings.ErrInvalidRegExCharacterClassCategoryUse;
+                        break;
+                    case 26: // InsufficientClosingParentheses
+                        error = TexlStrings.ErrInvalidRegExUnclosedCaptureGroups;
+                        break;
+                    case 27: // ReversedQuantifierRange
+                        error = TexlStrings.ErrInvalidRegExLowHighQuantifierFlip;
+                        break;
+                    case 28: // NestedQuantifiersNotParenthesized
+                        error = TexlStrings.ErrInvalidRegExBadQuantifier;
+                        break;
+                    case 29: // QuantifierAfterNothing
+                        error = TexlStrings.ErrInvalidRegExQuantifierOnNothing;
+                        break;
+                    case 30: // InsufficientOpeningParentheses
+                        error = TexlStrings.ErrInvalidRegExUnopenedCaptureGroups;
+                        break;
+                    case 31: // UnrecognizedUnicodeProperty
+                        error = TexlStrings.ErrInvalidRegExBadUnicodeCategory;
+                        break;
+                    default:
+                        // go with the default
+                        break;
+                }
+
+                int intOffset = (int)errorOffset + 1;
+
+                if (intOffset > pattern.Length)
+                {
+                    intOffset = pattern.Length;
+                }
+
+                if (intOffset < 0)
+                {
+                    intOffset = 0;
+                }
+
+                errorParam = intOffset > ErrorContextLength ? "..." + pattern.Substring(intOffset - ErrorContextLength, ErrorContextLength) : pattern.Substring(0, intOffset);
+            }
+
+            return new RegexTypeCacheEntry()
+            {
+                Error = error,
+                ErrorSeverity = DocumentErrorSeverity.Severe,
+                ErrorParam = errorParam,
+            };
+        }
+
         // Power Fx regular expressions are limited to features that can be transpiled to native .NET (C# Interpreter), ECMAScript (Canvas), or PCRE2 (Excel).
         // We want the same results everywhere for Power Fx, even if the underlying implementation is different. Even with these limits in place there are some minor semantic differences but we get as close as we can.
         // These tests can be run through all three engines and the results compared with by setting ExpressionEvaluationTests.RegExCompareEnabled, a PCRE2 DLL and NodeJS must be installed on the system.
@@ -402,7 +521,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public const int MaxGroupStackDepth = 32;                   // maximum number of nested grouping levels, avoids performance issues with a complex group tree.
         public const int ErrorContextLength = 12;                   // number of characters to include in error message context excerpt from formula.
 
-        private RegexTypeCacheEntry IsSupportedRegularExpression(TexlNode regExNode, string regexPattern, string regexOptions, out string alteredOptions)
+        private static RegexTypeCacheEntry IsSupportedRegularExpression(TexlNode regExNode, string regexPattern, string regexOptions, out string alteredOptions)
         {
             bool freeSpacing = regexOptions.Contains(MatchOptionChar.FreeSpacing);                 // can also be set with inline mode modifier
             bool numberedCpature = regexOptions.Contains(MatchOptionChar.NumberedSubMatches);      // can only be set here, no inline mode modifier
@@ -426,7 +545,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             const string escapeRE =
                 @"
-                    # leading backslash, escape sequences
+# leading backslash, escape sequences
                     (?<badOctal>\\0\d*)                                | # \0 and octal are not accepted, ambiguous and not needed (use \x instead)
                     \\k<(?<backRefName>\w+)>                           | # named backreference
                     \\(?<backRefNumber>[1-9]\d*)                       | # numeric backreference, must be enabled with MatchOptions.NumberedSubMatches
@@ -437,7 +556,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             x[0-9a-fA-F]{2}                        |     # hex character, must be exactly 2 hex digits
                             u[0-9a-fA-F]{4}))                          | # Unicode characters, must be exactly 4 hex digits
                     \\(?<goodUEscape>[pP])\{(?<UCategory>[\w=:-]+)\}   | # Unicode character classes, extra characters here for a better error message
-                    (?<goodEscapeOutsideCC>\\[bB])                     | # acceptable outside a character class, includes negative classes until we have character class subtraction, include \P for future MatchOptions.LocaleAware
+                    (?<goodAnchorOutsideCC>\\[bB])                     | # acceptable outside a character class, includes negative classes until we have character class subtraction, include \P for future MatchOptions.LocaleAware
                     (?<goodEscapeOutsideAndInsideCCIfPositive>\\[DWS]) |
                     (?<goodEscapeInsideCCOnly>\\[&\-!#%,;:<=>@`~\^])   | # https://262.ecma-international.org/#prod-ClassSetReservedPunctuator, others covered with goodEscape above
                     (?<badEscape>\\.)                                  | # all other escaped characters are invalid and reserved for future use
@@ -446,33 +565,33 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Regex generalRE = new Regex(
                 escapeRE +
                 @"
-                    # leading (?<, named captures
+# leading (?<, named captures
                     \(\?<(?<goodNamedCapture>[_\p{L}][_\p{L}\p{Nd}]*)> | # named capture group, name characters are the lowest common denonminator with Unicode PCRE2
-                                                                         # .NET uses \w with \u200c and \u200d allowing a number in the first character (seems like it could be confused with numbered captures),
-                                                                         # while JavaScript uses identifer characters, including $, and does not allow a number for the first character
+# .NET uses \w with \u200c and \u200d allowing a number in the first character (seems like it could be confused with numbered captures),
+# while JavaScript uses identifer characters, including $, and does not allow a number for the first character
                     (?<goodLookAhead>\(\?(=|!))                        |
                     (?<goodLookBehind>\(\?(<=|<!))                     | # Look behind has many limitations
                     (?<badBalancing>\(\?<\w*-\w*>)                     | # .NET balancing captures are not supported
                     (?<badNamedCaptureName>\(\?<[^>]*>)                | # bad named capture name, didn't match goodNamedCapture
                     (?<badSingleQuoteNamedCapture>\(\?'[^']*')         | # single quoted capture names are not supported
 
-                    # leading (?, misc
+# leading (?, misc
                     (?<goodNonCapture>\(\?:)                           | # non-capture group, still need to track to match with closing paren
                     \A\(\?(?<goodInlineOptions>[imnsx]+)\)             | # inline options
                     (?<goodInlineComment>\(\?\#)                       | # inline comment
                     (?<badInlineOptions>\(\?(\w+|\w*-\w+)[\:\)])       | # inline options, including disable of options
                     (?<badConditional>\(\?\()                          | # .NET conditional alternations are not supported
 
-                    # leading (, used for other special purposes
+# leading (, used for other special purposes
                     (?<badParen>\([\?\+\*].?)                          | # everything else unsupported that could start with a (, includes atomic groups, recursion, subroutines, branch reset, and future features
 
-                    # leading ?\*\+, quantifiers
+# leading ?\*\+, quantifiers
                     (?<badQuantifiers>[\*\+\?][\+\*])                  | # possessive (ends with +) and useless quantifiers (ends with *)
                     (?<goodOneOrMore>[\+]\??)                          | # greedy and lazy quantifiers
                     (?<goodZeroOrMore>[\*]\??)                         |
                     (?<goodZeroOrOne>[\?]\??)                          |
 
-                    # leading {, exact and limited quantifiers
+# leading {, exact and limited quantifiers
                     (?<badExact>{\d+}[\+\*\?])                         | # exact quantifier can't be used with a modifier
                     {(?<goodExact>\d+)}                                | # standard exact quantifier, no optional lazy
                     (?<badLimited>{\d+,\d+}[\+|\*])                    | # possessive and useless quantifiers
@@ -481,12 +600,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {(?<goodUnlimited>\d+),}\??                        |
                     (?<badCurly>[{}])                                  | # more constrained, blocks {,3} and Java/Rust semantics that does not treat this as a literal
 
-                    # character class
+# character class
                     (?<badEmptyCharacterClass>\[\]|\[^\])              | # some implementations support empty character class, with varying semantics; we do not
                     \[(?<characterClass>(\\\]|\\\[|[^\]\[])+)\]        | # does not accept empty character class
                     (?<badSquareBrackets>[\[\]])                       | # square brackets that are not escaped and didn't define a character class
 
-                    # open and close regions
+# open and close regions
                     (?<openParen>\()                                   |
                     (?<closeParen>\))                                  |                                      
                     (?<alternation>\|)                                 |
@@ -505,7 +624,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<badDoubleInCharClass> << | == | >> | ::   |       # reserved pairs, see https://262.ecma-international.org/#prod-ClassSetReservedDoublePunctuator 
                         @@ | `` | ~~ | %% | && | ;; | ,, | !!    |       # and https://www.unicode.org/reports/tr18/#Subtraction_and_Intersection
                         \|\| | \#\# | \$\$ | \*\* | \+\+ | \.\.  |       # includes set subtraction 
-                        \?\? | \^\^ | \-\-)                                                                
+                        \?\? | \^\^ | \-\-)                            | # 
+                    (?<goodHyphen>-)                                   |
+                    (?<else>.)
                 ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
 
             int captureNumber = 0;                                  // last numbered capture encountered
@@ -553,7 +674,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else if (!openPoundComment && !openInlineComment)
                 {
-                    if (token.Groups["anchors"].Success)
+                    if (token.Groups["anchors"].Success || token.Groups["goodAnchorOutsideCC"].Success)
                     {
                         // nothing to do
                     }
@@ -619,14 +740,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             return RegExError(error, endContext: true);
                         }
                     }
-                    else if (token.Groups["else"].Success || token.Groups["newline"].Success || token.Groups["goodEscape"].Success || token.Groups["goodEscapeOutsideCC"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
+                    else if (token.Groups["else"].Success || token.Groups["newline"].Success || token.Groups["goodEscape"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
                     {
+                        if (token.Value == "\\" && token.Index == regexPattern.Length)
+                        {
+                            return RegExError(TexlStrings.ErrInvalidRegExEndsWithBackslash);
+                        }
+
                         groupTracker.SeenNonGroup();
                     }
                     else if (token.Groups["characterClass"].Success)
                     {
                         bool characterClassNegative = token.Groups["characterClass"].Value[0] == '^';
                         string ccString = characterClassNegative ? token.Groups["characterClass"].Value.Substring(1) : token.Groups["characterClass"].Value;
+                        int hyphenWait = 0;
+                        int hyphenStart = 0;
 
                         foreach (Match ccToken in characterClassRE.Matches(ccString))
                         {
@@ -635,19 +763,80 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 return RegExError(errKey, errToken: ccToken);
                             }
 
-                            if (ccToken.Groups["goodEscape"].Success || ccToken.Groups["goodEscapeInsideCCOnly"].Success)
+                            if (ccToken.Groups["goodEscape"].Success || ccToken.Groups["goodEscapeInsideCCOnly"].Success || ccToken.Groups["else"].Success)
                             {
-                                // all good, nothing to do
+                                int charVal;
+
+                                if (ccToken.Groups["else"].Success)
+                                {
+                                    charVal = ccToken.Value[0];
+                                }
+                                else
+                                {
+                                    switch (ccToken.Value[1])
+                                    {
+                                        case 'r':
+                                            charVal = 13;
+                                            break;
+                                        case 'n':
+                                            charVal = 10;
+                                            break;
+                                        case 't':
+                                            charVal = 9;
+                                            break;
+                                        case 'f':
+                                            charVal = 12;
+                                            break;
+                                        case 'x':
+                                        case 'u':
+                                            int.TryParse(ccToken.Value.Substring(2), System.Globalization.NumberStyles.HexNumber, null, out charVal);
+                                            break;
+                                        case 'd':
+                                        case 's':
+                                        case 'w':
+                                            charVal = -1;
+                                            break;
+                                        default:
+                                            charVal = ccToken.Value[1];
+                                            break;
+                                    }
+                                }
+
+                                if (hyphenWait > 1 && charVal == -1)
+                                {
+                                    return CCRegExError(TexlStrings.ErrInvalidRegExCharacterClassCategoryUse);
+                                }
+
+                                if (hyphenWait > 1 && hyphenStart != -1 && charVal != -1 && (charVal - hyphenStart < 0))
+                                {
+                                    return CCRegExError(TexlStrings.ErrInvalidRegExCharacterClassRangeReverse);
+                                }
+
+                                hyphenStart = charVal;
+                                hyphenWait--;
                             }
                             else if (ccToken.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
                             {
+                                if (hyphenWait > 1)
+                                {
+                                    return CCRegExError(TexlStrings.ErrInvalidRegExCharacterClassCategoryUse);
+                                }
+
                                 if (characterClassNegative)
                                 {
                                     return CCRegExError(TexlStrings.ErrInvalidRegExBadEscapeInsideNegativeCharacterClass);
                                 }
+
+                                hyphenStart = -1;
+                                hyphenWait--;
                             }
                             else if (ccToken.Groups["goodUEscape"].Success)
                             {
+                                if (hyphenWait > 1)
+                                {
+                                    return CCRegExError(TexlStrings.ErrInvalidRegExCharacterClassCategoryUse);
+                                }
+
                                 if (ccToken.Groups["goodUEscape"].Value == "P" && characterClassNegative)
                                 {
                                     // would be problematic for us to allow this if we wanted to implement MatchOptions.LocaleAware in the future
@@ -658,12 +847,30 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 {
                                     return CCRegExError(TexlStrings.ErrInvalidRegExBadUnicodeCategory);
                                 }
+
+                                hyphenStart = -1;
+                                hyphenWait--;
+                            }
+                            else if (ccToken.Groups["goodHyphen"].Success)
+                            {
+                                if (hyphenStart == -1)
+                                {
+                                    return CCRegExError(TexlStrings.ErrInvalidRegExCharacterClassCategoryUse);
+                                }
+
+                                if (hyphenWait > 0)
+                                {
+                                    return CCRegExError(TexlStrings.ErrInvalidRegExLiteralHyphenInCharacterClass);
+                                }
+
+                                // we need to see two characters after a hyphen, to end and start another range, before we can entertain another hyphen
+                                hyphenWait = 2; 
                             }
                             else if (ccToken.Groups["badEscape"].Success)
                             {
                                 return CCRegExError(TexlStrings.ErrInvalidRegExBadEscape);
                             }
-                            else if (ccToken.Groups["goodEscapeOutsideCC"].Success || ccToken.Groups["backRefName"].Success || ccToken.Groups["backRefNumber"].Success)
+                            else if (ccToken.Groups["goodAnchorOutsideCC"].Success || ccToken.Groups["backRefName"].Success || ccToken.Groups["backRefNumber"].Success)
                             {
                                 return CCRegExError(TexlStrings.ErrInvalidRegExBadEscapeInsideCharacterClass);
                             }
@@ -796,6 +1003,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         {
                             return RegExError(TexlStrings.ErrInvalidRegExBadUnicodeCategory);
                         }
+
+                        groupTracker.SeenNonGroup();
                     }
                     else if (token.Groups["goodInlineOptions"].Success)
                     {
@@ -939,7 +1148,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         private class GroupTracker
         {
             private readonly Stack<GroupInfo> _groupStack = new Stack<GroupInfo>();         // current stack of open groups
-            private GroupInfo _quantTarget = new GroupInfo();                               // pointer to the literal or group seen, to apply quantifiers to
+            private GroupInfo _quantTarget;                                                 // pointer to the literal or group seen, to apply quantifiers to
             private GroupInfo _inLookBehind;                                                // are we in a look behind?  they have special rules
             private readonly Dictionary<string, GroupInfo> _captureNames = new Dictionary<string, GroupInfo>();       // named and numbered group lookup
             private readonly List<string> _backRefs = new List<string>();                   // backrefs seen, processed in Complete to ensure they are non empty
@@ -996,12 +1205,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 _groupStack.Push(groupInfo);
 
+                _quantTarget = null;
+
                 error = null;
                 return true;
             }
 
             public void SeenAlternation()
             {
+                _quantTarget = null;
                 _groupStack.Peek().SeenAlternation();
             }
 
@@ -1019,7 +1231,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     return false;
                 }
 
-                return _groupStack.Peek().SeenQuantifier(_quantTarget, min, max, out error);
+                if (_quantTarget == null)
+                {
+                    error = TexlStrings.ErrInvalidRegExQuantifierOnNothing;
+                    return false;
+                }
+
+                var result = _groupStack.Peek().SeenQuantifier(_quantTarget, min, max, out error);
+                _quantTarget = null;
+                return result;
             }
 
             public bool SeenClose(out ErrorResourceKey? error)
@@ -1102,7 +1322,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     if (_captureNames[backRef].IsPossibleZeroLength())
                     {
                         error = TexlStrings.ErrInvalidRegExBackRefToZeroCapture;
-                        errorArg = CharacterUtils.IsDigit(backRef[0]) ? "\\" + backRef : "\\k<" + backRef + ">";
+                        errorArg = char.IsDigit(backRef[0]) ? "\\" + backRef : "\\k<" + backRef + ">";
                         return false;
                     }
                 }

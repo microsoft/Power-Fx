@@ -753,7 +753,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidRegExRepeatInCharClass = new ErrorResourceKey("ErrInvalidRegExRepeatInCharClass");
         public static ErrorResourceKey ErrInvalidRegExRepeatedInlineOption = new ErrorResourceKey("ErrInvalidRegExRepeatedInlineOption");
         public static ErrorResourceKey ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches = new ErrorResourceKey("ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches");
-        public static ErrorResourceKey ErrInvalidRegExConflictingInlineOptions = new ErrorResourceKey("ErrInvalidRegExConflictingInlineOptions");
         public static ErrorResourceKey ErrInvalidRegExBadQuantifier = new ErrorResourceKey("ErrInvalidRegExBadQuantifier");
         public static ErrorResourceKey ErrInvalidRegExBadExactQuantifier = new ErrorResourceKey("ErrInvalidRegExBadExactQuantifier");
         public static ErrorResourceKey ErrInvalidRegExBadBackRefSelfReferencing = new ErrorResourceKey("ErrInvalidRegExBadBackRefSelfReferencing");
@@ -785,6 +784,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidRegExLookbehindTooManyChars = new ErrorResourceKey("ErrInvalidRegExLookbehindTooManyChars");
         public static ErrorResourceKey ErrInvalidRegExNumberOverflow = new ErrorResourceKey("ErrInvalidRegExNumberOverflow");
         public static ErrorResourceKey ErrInvalidRegExV1Options = new ErrorResourceKey("ErrInvalidRegExV1Options");
+        public static ErrorResourceKey ErrInvalidRegExCharacterClassCategoryUse = new ErrorResourceKey("ErrInvalidRegExCharacterClassCategoryUse");
+        public static ErrorResourceKey ErrInvalidRegExCharacterClassRangeReverse = new ErrorResourceKey("ErrInvalidRegExCharacterClassRangeReverse");
+        public static ErrorResourceKey ErrInvalidRegExEndsWithBackslash = new ErrorResourceKey("ErrInvalidRegExEndsWithBackslash");
+        public static ErrorResourceKey ErrInvalidRegExQuantifierOnNothing = new ErrorResourceKey("ErrInvalidRegExQuantifierOnNothing");
 
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
         public static ErrorResourceKey ErrVariableRegExOptions = new ErrorResourceKey("ErrVariableRegExOptions");

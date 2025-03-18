@@ -1599,3 +1599,167 @@ Errors: Error 12-57: Invalid regular expression: Number is too large, found "{11
 
 >> Match( "a", "a{11111111111111111111111111111111111111}" )
 Errors: Error 12-55: Invalid regular expression: Number is too large, found "{11111111111111111111111111111111111111}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// character class ranges with character classes
+
+>> Match( "-", "[\w-a]" )
+Errors: Error 12-20: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found "-".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "-", "[a-\w]" )
+Errors: Error 12-20: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found "\w".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "-", "[\s-a]" )
+Errors: Error 12-20: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found "-".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "-", "[a-\s]" )
+Errors: Error 12-20: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found "\s".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "-", "[\d-a]" )
+Errors: Error 12-20: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found "-".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "-", "[a-\d]" )
+Errors: Error 12-20: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found "\d".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "-", "[\p{L}-a]" )
+Errors: Error 12-23: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found "-".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "-", "[a-\p{L}]" )
+Errors: Error 12-23: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found "\p{L}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// character class ranges in reverse order
+
+>> Match( "k", "[a-z]")
+{FullMatch:"k",StartMatch:1}
+
+>> Match( "k", "[z-a]")
+Errors: Error 12-19: Invalid regular expression: The characters in a character class range are reversed, found at the end of "a".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "k", "[k-k]")
+{FullMatch:"k",StartMatch:1}
+
+>> Match( "k", "[\x60-\x80]")
+{FullMatch:"k",StartMatch:1}
+
+>> Match( "k", "[\x80-\x60]")
+Errors: Error 12-25: Invalid regular expression: The characters in a character class range are reversed, found at the end of "\x60".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "k", "[\x6b-\x6B]")
+{FullMatch:"k",StartMatch:1}
+
+>> Match( "%", "[\u0020-\u0030]")
+{FullMatch:"%",StartMatch:1}
+
+>> Match( "%", "[\u0030-\u0020]")
+Errors: Error 12-29: Invalid regular expression: The characters in a character class range are reversed, found at the end of "\u0020".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%", "[\u0025-\u0025]")
+{FullMatch:"%",StartMatch:1}
+
+// character class range followed by an unescaped hyphen
+
+>> Match( "a", "[a-b]")
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "a", "[a-b-c]")
+Errors: Error 12-21: Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "-".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "[-b]")
+Errors: Error 12-18: Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "[-b]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "[-b-c]")
+Errors: Error 12-20: Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "[-b-c]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "[a-b-]")
+Errors: Error 12-20: Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "[a-b-]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "[a-bc-de-fg-h]")
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "a", "[a-bc-de-fg-h-k]")
+Errors: Error 12-30: Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "-".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "y", "[a-bcd-ekp-z]")
+{FullMatch:"y",StartMatch:1}
+
+// ends with backslash
+
+>> Match( "a\\", "\" )
+Errors: Error 14-17: Invalid regular expression: Ends with an unescaped backslash.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a\\", "a\" )
+Errors: Error 14-18: Invalid regular expression: Ends with an unescaped backslash.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a\\", "a\\" )
+{FullMatch:"a\",StartMatch:1}
+
+>> Match( "a\\", "a\\\" )
+Errors: Error 14-20: Invalid regular expression: Ends with an unescaped backslash.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a\\", "a\\\\" )
+{FullMatch:"a\\",StartMatch:1}
+
+// nothing to quantify
+
+>> Match( "a", "*" )
+Errors: Error 12-15: Invalid regular expression: Quantifier without something to quantify, found "*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "+" )
+Errors: Error 12-15: Invalid regular expression: Quantifier without something to quantify, found "+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "?" )
+Errors: Error 12-15: Invalid regular expression: Quantifier without something to quantify, found "?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "{3}" )
+Errors: Error 12-17: Invalid regular expression: Quantifier without something to quantify, found "{3}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "{3,}" )
+Errors: Error 12-18: Invalid regular expression: Quantifier without something to quantify, found "{3,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "{3,4}" )
+Errors: Error 12-19: Invalid regular expression: Quantifier without something to quantify, found "{3,4}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "asdf|*" )
+Errors: Error 12-20: Invalid regular expression: Quantifier without something to quantify, found "asdf|*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "asdf|+" )
+Errors: Error 12-20: Invalid regular expression: Quantifier without something to quantify, found "asdf|+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "asdf|?" )
+Errors: Error 12-20: Invalid regular expression: Quantifier without something to quantify, found "asdf|?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "asdf|{3}" )
+Errors: Error 12-22: Invalid regular expression: Quantifier without something to quantify, found "asdf|{3}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "asdf|{3,}" )
+Errors: Error 12-23: Invalid regular expression: Quantifier without something to quantify, found "asdf|{3,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "asdf|{3,4}" )
+Errors: Error 12-24: Invalid regular expression: Quantifier without something to quantify, found "asdf|{3,4}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?i)+" )
+Errors: Error 12-19: Invalid regular expression: Quantifier without something to quantify, found "(?i)+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?i)*" )
+Errors: Error 12-19: Invalid regular expression: Quantifier without something to quantify, found "(?i)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?i){1,3}" )
+Errors: Error 12-23: Invalid regular expression: Quantifier without something to quantify, found "(?i){1,3}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?# comment)?" )
+Errors: Error 12-27: Invalid regular expression: Quantifier without something to quantify, found "...?# comment)?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?# comment)*" )
+Errors: Error 12-27: Invalid regular expression: Quantifier without something to quantify, found "...?# comment)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?# comment){1,3}" )
+Errors: Error 12-31: Invalid regular expression: Quantifier without something to quantify, found "...omment){1,3}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaaaa", "a(?# comment)?" )
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "aaaaaaa", "a(?# comment)*" )
+{FullMatch:"aaaaaaa",StartMatch:1}
+
+>> Match( "aaaaaaa", "a(?# comment){1,3}" )
+{FullMatch:"aaa",StartMatch:1}
+
