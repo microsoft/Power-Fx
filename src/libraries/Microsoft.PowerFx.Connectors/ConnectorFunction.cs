@@ -1085,6 +1085,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
+        // List of functions that can be present in filterFunctionSupport capability
         private static readonly IEnumerable<string> _validFunctions = new HashSet<string>(new[]
         {
             // From Power Apps - https://msazure.visualstudio.com/OneAgile/_git/PowerApps-Client?path=/src/Cloud/DocumentServer.Core/XrmDataProvider/CdsPatchDatasourceHelper.cs&version=GBmaster&line=1055&lineEnd=1055&lineStartColumn=23&lineEndColumn=47&lineStyle=plain&_a=contents
