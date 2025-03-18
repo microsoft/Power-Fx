@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -18,8 +19,6 @@ using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Validations;
 using Microsoft.PowerFx.Connectors.Localization;
 using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Errors;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -80,7 +79,7 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// Warnings to be reported to end user.
         /// </summary>
-        public IReadOnlyCollection<ErrorResourceKey> Warnings
+        public IReadOnlyCollection<ExpressionError> Warnings
         {
             get
             {
@@ -297,7 +296,7 @@ namespace Microsoft.PowerFx.Connectors
 
         private string _notSupportedReason;
 
-        private List<ErrorResourceKey> _warnings;
+        private List<ExpressionError> _warnings;
 
         // Those properties are only used by HttpFunctionInvoker
         internal ConnectorParameterInternals _internals = null;
@@ -1037,7 +1036,140 @@ namespace Microsoft.PowerFx.Connectors
             delegationInfo = ((DataSourceInfo)connectorType.FormulaType._type.AssociatedDataSources.First()).DelegationInfo;
             optionSets = symbolTable.OptionSets.Select(kvp => kvp.Value);
 
+            List<ExpressionError> issues = new List<ExpressionError>();
+            HashSet<string> fieldNames = new HashSet<string>(connectorType.Fields.Select(ct => ct.Name));            
+
+            // Table level validation
+            ValidatePropertyExist(serviceCapabilities?.FilterRestriction?.RequiredProperties, fieldNames, issues, "x-ms-capabilities/filterRestrictions/requiredProperties");
+            ValidatePropertyExist(serviceCapabilities?.FilterRestriction?.NonFilterableProperties, fieldNames, issues, "x-ms-capabilities/filterRestrictions/nonFilterableProperties");
+            ValidateFunctionExist(serviceCapabilities?.FilterSupportedFunctions, issues, "x-ms-capabilities/filterFunctionSupport");
+            ValidatePropertyExist(serviceCapabilities?.GroupRestriction?.UngroupableProperties, fieldNames, issues, "x-ms-capabilities/groupRestriction/ungroupableProperties");
+            ValidateOdataVersion(serviceCapabilities?.ODataVersion, issues, "x-ms-capabilities/oDataVersion");
+            ValidateServerPaging(serviceCapabilities?.PagingCapabilities?.ServerPagingOptions, issues, "x-ms-capabilities/serverPagingOptions");
+            ValidatePropertyExist(serviceCapabilities?.SortRestriction?.UnsortableProperties, fieldNames, issues, "x-ms-capabilities/sortRestrictions/unsortableProperties");
+            ValidatePropertyExist(serviceCapabilities?.SortRestriction?.AscendingOnlyProperties, fieldNames, issues, "x-ms-capabilities/sortRestrictions/ascendingOnlyProperties");
+           
+            // Column level validation
+            foreach (ConnectorType field in connectorType.Fields)
+            {
+                ColumnCapabilities columnCapabilities = field.Capabilities;
+                ValidateFunctionExist(columnCapabilities?.Capabilities?.FilterFunctions, issues, $"schema/item/properties/{Display(field.Name)}/x-ms-capabilities/filterFunctions");                
+            }
+           
+            foreach (ExpressionError err in issues)
+            {
+                // Salesforce will generate warnings here as we do not manage compound properties
+                // ex: in Accounts table, BillingAddress consists of (BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude, BillingGeocodeAccuracy)
+                connectorType.AddWarning(err);
+            }
+            
             return connectorType;
+        }
+
+        private static void ValidatePropertyExist(IEnumerable<string> propertyList, ISet<string> fields, List<ExpressionError> issues, string location)        
+        {
+            if (propertyList != null)
+            {
+                foreach (string requiredProperty in propertyList)
+                {
+                    if (!fields.Contains(requiredProperty))
+                    {                        
+                        issues.Add(new ExpressionError()
+                        {
+                            Kind = ErrorKind.AnalysisError,
+                            ResourceKey = ConnectorStringResources.WarnInvalidProperty,
+                            MessageArgs = new[] { Display(requiredProperty), location }
+                        });                                                  
+                    }
+                }
+            }
+        }
+
+        // List of functions that can be present in filterFunctionSupport capability
+        private static readonly IEnumerable<string> _validFunctions = new HashSet<string>(new[]
+        {
+            // From Power Apps - https://msazure.visualstudio.com/OneAgile/_git/PowerApps-Client?path=/src/Cloud/DocumentServer.Core/XrmDataProvider/CdsPatchDatasourceHelper.cs&version=GBmaster&line=1055&lineEnd=1055&lineStartColumn=23&lineEndColumn=47&lineStyle=plain&_a=contents
+            "add", "and", "average", "ceiling", "concat", "contains", "countdistinct", "date", "day", "div", "endswith", "eq", "floor", "ge", "gt", "hour", "indexof", "le", "length", "lt", "max", "min", "minute", "mod", "month", "mul", "ne", 
+            "negate", "not", "now", "null", "or", "replace", "round", "second", "startswith", "sub", "substring", "substringof", "sum", "time", "tolower", "totaloffsetminutes", "totalseconds", "toupper", "trim", "year",
+
+            // Fx additions (from DelegationOperator)
+            "arraylookup", "astype", "cdsin", "count", "distinct", "joinfull", "joininner", "joinleft", "joinright", "top"
+        });
+
+        private static void ValidateFunctionExist(IEnumerable<string> propertyList, List<ExpressionError> issues, string location)
+        {
+            if (propertyList != null)
+            {
+                foreach (string requiredProperty in propertyList)
+                {
+                    if (!_validFunctions.Contains(requiredProperty))
+                    {                       
+                        issues.Add(new ExpressionError()
+                        {
+                            Kind = ErrorKind.AnalysisError,
+                            ResourceKey = ConnectorStringResources.WarnInvalidFunction,
+                            MessageArgs = new[] { Display(requiredProperty), location }
+                        });
+                    }
+                }
+            }
+        }
+
+        private static void ValidateOdataVersion(int? version, List<ExpressionError> issues, string location)
+        {
+            if (version != 3 && version != 4)
+            {               
+                issues.Add(new ExpressionError()
+                {
+                    Kind = ErrorKind.AnalysisError,
+                    ResourceKey = ConnectorStringResources.WarnUnsupportedODataVersion,
+                    MessageArgs = new[] { Display(version), location }
+                });
+            }
+        }        
+
+        private static void ValidateServerPaging(IEnumerable<string> pagingOptions, List<ExpressionError> issues, string location)
+        {
+            if (pagingOptions != null)
+            {
+                foreach (string po in pagingOptions)
+                {
+                    if (!Enum.TryParse(po, out ServerPagingOptions _))
+                    {
+                        issues.Add(new ExpressionError()
+                        {
+                            Kind = ErrorKind.AnalysisError,
+                            ResourceKey = ConnectorStringResources.WarnInvalidPagingOption,
+                            MessageArgs = new[] { Display(po), location }
+                        });                        
+                    }
+                }
+            }
+        }
+
+        private static string Display(string str)
+        {
+            if (str is null)
+            {
+                return "<null>";
+            }
+
+            if (string.IsNullOrEmpty(str))
+            {
+                return "<empty>";
+            }
+
+            return Uri.EscapeDataString(str);
+        }
+
+        private static string Display(int? i)
+        {
+            if (!i.HasValue)
+            {
+                return "<null>";
+            }
+
+            return i.Value.ToString(CultureInfo.InvariantCulture);
         }
 
         private static IList<ReferencedEntity> GetReferenceEntities(string connectorName, StringValue sv)
@@ -1588,15 +1720,15 @@ namespace Microsoft.PowerFx.Connectors
             _hiddenRequiredParameters = hiddenRequiredParameters.ToArray();
             _arityMin = _requiredParameters.Length;
             _arityMax = _arityMin + (_optionalParameters.Length == 0 ? 0 : 1);
-            _warnings = new List<ErrorResourceKey>();
+            _warnings = new List<ExpressionError>();
 
             _returnType = errorsAndWarnings.AggregateErrorsAndWarnings(Operation.GetConnectorReturnType(ConnectorSettings));
 
             if (IsDeprecated)
             {
-                _warnings.Add(ConnectorStringResources.WarnDeprecatedFunction);
-                string msg = ErrorUtils.FormatMessage(StringResources.Get(ConnectorStringResources.WarnDeprecatedFunction), null, Name, Namespace);
-                _configurationLogger?.LogWarning($"{msg}");
+                ExpressionError ee = new ExpressionError() { ResourceKey = ConnectorStringResources.WarnDeprecatedFunction, MessageArgs = new[] { Name, Namespace } };
+                _warnings.Add(ee);                
+                _configurationLogger?.LogWarning($"{ee.Message}");
             }
 
             if (errorsAndWarnings.HasErrors)
@@ -1611,9 +1743,9 @@ namespace Microsoft.PowerFx.Connectors
 
             if (errorsAndWarnings.HasWarnings)
             {
-                foreach (ErrorResourceKey warning in errorsAndWarnings.Warnings)
+                foreach (ExpressionError warning in errorsAndWarnings.Warnings)
                 {
-                    string msg = ErrorUtils.FormatMessage(StringResources.Get(warning), null, Name, Namespace);
+                    string msg = warning.Message;
                     _configurationLogger?.LogWarning($"Function {Name}: {msg}");
                 }
 

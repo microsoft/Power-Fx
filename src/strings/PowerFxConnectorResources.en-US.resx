@@ -128,4 +128,20 @@
     <value>This function uses 'byte' format and might not work as expected.</value>
     <comment>A warning message when a function is using byte type.</comment>
   </data>
+  <data name="WarnInvalidProperty" xml:space="preserve">
+    <value>Required property '{0}' is not an existing field in {1}.</value>
+    <comment>A warning message when a CDP property is referenced but not declared.</comment>
+  </data>
+  <data name="WarnInvalidFunction" xml:space="preserve">
+    <value>Function '{0}' is not an valid function name in {1}.</value>
+    <comment>A warning message when a CDP delegated function is referenced but doesn't exist.</comment>
+  </data>
+  <data name="WarnUnsupportedODataVersion" xml:space="preserve">
+    <value>ODataVersion '{0}' is not supported in {1}.</value>
+    <comment>A warning message when a CDP schema uses an invalid OData version.</comment>
+  </data>
+  <data name="WarnInvalidPagingOption" xml:space="preserve">
+    <value>Invalid paging option '{0}' in {1}.</value>
+    <comment>A warning message when a CDP schema uses an invalid paging option.</comment>
+  </data>
 </root>

@@ -12,9 +12,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.OpenApi.Models;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Tests;
 using Xunit;
@@ -1003,7 +1001,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             IsBehavior = connectorFunction.IsBehavior;
             IsSupported = connectorFunction.IsSupported;
             NotSupportedReason = connectorFunction.NotSupportedReason;
-            Warnings = connectorFunction.Warnings.Count > 0 ? string.Join(", ", connectorFunction.Warnings.Select(erk => ErrorUtils.FormatMessage(StringResources.Get(erk), null, Name, connectorFunction.Namespace))) : null;
+            Warnings = connectorFunction.Warnings.Count > 0 ? string.Join(", ", connectorFunction.Warnings.Select(ee => ee.Message)) : null;
             IsDeprecated = connectorFunction.IsDeprecated;
             IsInternal = connectorFunction.IsInternal;
             IsPageable = connectorFunction.IsPageable;
