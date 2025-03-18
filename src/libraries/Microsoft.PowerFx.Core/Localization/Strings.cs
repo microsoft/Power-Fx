@@ -741,11 +741,13 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrDecimalRequiresPowerFxV1 = new ErrorResourceKey("ErrDecimalNeedsPowerFxV1");
 
         public static ErrorResourceKey ErrInvalidRegEx = new ErrorResourceKey("ErrInvalidRegEx");
+        public static ErrorResourceKey ErrInvalidRegExWithContext = new ErrorResourceKey("ErrInvalidRegExWithContext");
         public static ErrorResourceKey ErrInvalidRegExBadInlineOptions = new ErrorResourceKey("ErrInvalidRegExBadInlineOptions");
         public static ErrorResourceKey ErrInvalidRegExInlineOptionNotAtStart = new ErrorResourceKey("ErrInvalidRegExInlineOptionNotAtStart");
         public static ErrorResourceKey ErrInvalidRegExBadOctal = new ErrorResourceKey("ErrInvalidRegExBadOctal");
         public static ErrorResourceKey ErrInvalidRegExBadCurly = new ErrorResourceKey("ErrInvalidRegExBadCurly");
         public static ErrorResourceKey ErrInvalidRegExBadSquare = new ErrorResourceKey("ErrInvalidRegExBadSquare");
+        public static ErrorResourceKey ErrInvalidRegExUnterminatedSquare = new ErrorResourceKey("ErrInvalidRegExUnterminatedSquare");
         public static ErrorResourceKey ErrInvalidRegExBadParen = new ErrorResourceKey("ErrInvalidRegExBadParen");
         public static ErrorResourceKey ErrInvalidRegExBadEscapeInsideCharacterClass = new ErrorResourceKey("ErrInvalidRegExBadEscapeInsideCharacterClass");
         public static ErrorResourceKey ErrInvalidRegExBadEscapeInsideNegativeCharacterClass = new ErrorResourceKey("ErrInvalidRegExBadEscapeInsideNegativeCharacterClass");
@@ -765,6 +767,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidRegExBadNamedCaptureName = new ErrorResourceKey("ErrInvalidRegExBadNamedCaptureName");
         public static ErrorResourceKey ErrInvalidRegExUnclosedCaptureGroups = new ErrorResourceKey("ErrInvalidRegExUnclosedCaptureGroups");
         public static ErrorResourceKey ErrInvalidRegExUnclosedInlineComment = new ErrorResourceKey("ErrInvalidRegExUnclosedInlineComment");
+        public static ErrorResourceKey ErrInvalidRegExUnclosedInlineCommentWithContext = new ErrorResourceKey("ErrInvalidRegExUnclosedInlineCommentWithContext");
         public static ErrorResourceKey ErrInvalidRegExUnopenedCaptureGroups = new ErrorResourceKey("ErrInvalidRegExUnopenedCaptureGroups");
         public static ErrorResourceKey ErrInvalidRegExMixingNamedAndNumberedSubMatches = new ErrorResourceKey("ErrInvalidRegExMixingNamedAndNumberedSubMatches");
         public static ErrorResourceKey ErrInvalidRegExNumberedSubMatchesDisabled = new ErrorResourceKey("ErrInvalidRegExNumberedSubMatchesDisabled");

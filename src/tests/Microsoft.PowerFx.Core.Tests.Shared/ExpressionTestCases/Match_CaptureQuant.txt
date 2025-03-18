@@ -793,3 +793,14 @@ Errors: Error 12-23: Invalid regular expression: Back reference "\1" to sub matc
 >> Match( "o", "(?!(o)o)\1", MatchOptions.NumberedSubMatches ) // .net != node
 Errors: Error 12-24: Invalid regular expression: Back reference "\1" to sub match that is inside a lookbehind or lookahead.|Error 0-5: The function 'Match' has some invalid arguments.
 
+>> Match( "o", "o(?!(o))o", MatchOptions.NumberedSubMatches )
+Blank()
+
+>> Match( "o", "o(?!(o))", MatchOptions.NumberedSubMatches )
+{FullMatch:"o",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "o", "(?!(o))o", MatchOptions.NumberedSubMatches )
+Blank()
+
+>> Match( "o", "(?!(o))", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:2,SubMatches:Table({Value:Blank()})}

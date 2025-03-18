@@ -375,14 +375,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // Errors are cached, so this should only need to be hit once for a given pattern.
         private static RegexTypeCacheEntry GetRegexErrorEntry(string pattern, Exception exception)
         {
-            string errorParam = string.Empty;
-            ErrorResourceKey error = TexlStrings.ErrInvalidRegEx;
-
             var errorCode = exception.GetType().GetProperty("Error")?.GetValue(exception);
             var errorOffset = exception.GetType().GetProperty("Offset")?.GetValue(exception);
 
             if (errorCode != null && errorOffset != null)
             {
+                var error = TexlStrings.ErrInvalidRegExWithContext;
+
                 // values are from RegexParserError enum https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexparseerror
                 switch ((int)errorCode)
                 {
@@ -404,7 +403,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         // uncommon and not supported by V1 Power Fx regular expressions, use default message
                         break;
                     case 8: // InsufficientOrInvalidHexDigits
-                        // uncommon and not blocked by V1 Power Fx regular expression parser, use default message
+                        error = TexlStrings.ErrInvalidRegExBadEscape;
                         break;
                     case 9: // QuantifierOrCaptureGroupOutOfRange
                         error = TexlStrings.ErrInvalidRegExNumberOverflow;
@@ -436,7 +435,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         error = TexlStrings.ErrInvalidRegExBadNamedCaptureName;
                         break;
                     case 22: // UnterminatedBracket
-                        error = TexlStrings.ErrInvalidRegExBadSquare;
+                        error = TexlStrings.ErrInvalidRegExUnterminatedSquare;
                         break;
                     case 23: // ExclusionGroupNotLast
                         // not common, not supported by V1 Power Fx regular expressions
@@ -470,17 +469,24 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         break;
                 }
 
-                int intOffset = Math.Max(Math.Min((int)errorOffset, 0), pattern.Length);
+                int intOffset = Math.Min(Math.Max((int)errorOffset, 0), pattern.Length);
 
-                errorParam = intOffset > ErrorContextLength ? "..." + pattern.Substring(intOffset - ErrorContextLength, ErrorContextLength) : pattern.Substring(0, intOffset);
+                return new RegexTypeCacheEntry()
+                {
+                    Error = error,
+                    ErrorSeverity = DocumentErrorSeverity.Severe,
+                    ErrorParam = intOffset > ErrorContextLength ? "..." + pattern.Substring(intOffset - ErrorContextLength, ErrorContextLength) : pattern.Substring(0, intOffset),
+                };
             }
-
-            return new RegexTypeCacheEntry()
+            else
             {
-                Error = error,
-                ErrorSeverity = DocumentErrorSeverity.Severe,
-                ErrorParam = errorParam,
-            };
+                return new RegexTypeCacheEntry()
+                {
+                    Error = TexlStrings.ErrInvalidRegEx,
+                    ErrorSeverity = DocumentErrorSeverity.Severe,
+                    ErrorParam = string.Empty,
+                };
+            }
         }
 
         // Power Fx regular expressions are limited to features that can be transpiled to native .NET (C# Interpreter), ECMAScript (Canvas), or PCRE2 (Excel).
@@ -626,6 +632,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             bool openPoundComment = false;                          // there is an open end-of-line pound comment, only in freeFormMode
             bool openInlineComment = false;                         // there is an open inline comment
+            int openInlineCommentStart = 0;                         // start of the inlince comment, for error reporting
 
             foreach (Match token in generalRE.Matches(regexPattern))
             {
@@ -1020,6 +1027,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     else if (token.Groups["goodInlineComment"].Success)
                     {
                         openInlineComment = true;
+                        openInlineCommentStart = token.Index;
                     }
                     else if (token.Groups["poundComment"].Success)
                     {
@@ -1108,10 +1116,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (openInlineComment)
             {
-                return new RegexTypeCacheEntry() 
-                { 
-                    Error = TexlStrings.ErrInvalidRegExUnclosedInlineComment, 
-                    ErrorSeverity = DocumentErrorSeverity.Severe 
+                return new RegexTypeCacheEntry()
+                {
+                    Error = TexlStrings.ErrInvalidRegExUnclosedInlineCommentWithContext,
+                    ErrorParam = regexPattern.Length - openInlineCommentStart > ErrorContextLength ? regexPattern.Substring(openInlineCommentStart, ErrorContextLength) + "..." : regexPattern.Substring(openInlineCommentStart),
+                    ErrorSeverity = DocumentErrorSeverity.Severe
                 };
             }
 

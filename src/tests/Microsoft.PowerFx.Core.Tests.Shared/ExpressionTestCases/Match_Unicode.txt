@@ -41,4 +41,31 @@
 >> JSON( MatchAll( Char(9) & Char(13) & Char(10) & Char(Hex2Dec("85")) & UniChar(Hex2Dec("2028")) & UniChar(Hex2Dec("2029")) & Char(Hex2Dec("C")) & Char(Hex2Dec("B")) & Char(14), "." ) )
 "[{""FullMatch"":""\t"",""StartMatch"":1},{""FullMatch"":""\u000E"",""StartMatch"":9}]"
 
+// surrogate pairs not supported in character class, same for .NET and browser JavaScript
+
+// browser: console.log("😀".length)
+>> Len( "😀" )
+2
+
+// .NET returns 1, Node returns 2, JavaScript in browser returns 1
+// browser: console.log( /[\uD83D\uDE00]/.exec("😀" )[0].length)
+// >> Len( Match( "😀", "[\uD83D\uDE00]" ).FullMatch )
+// 1
+//
+// >> Len( Match( "😀", "[😀]" ).FullMatch )
+// 1
+
+>> Len( Match( "😀", "\uD83D\uDE00" ).FullMatch )
+2
+
+>> Len( Match( "😀", "😀" ).FullMatch )
+2
+
+// .NET, Node, Browser, PCRE2 all agree with these range error messages, apparently not looking at surrogates as a pair
+>> Match( "😀", "[\uD83D\uDE00-\uD83D\uDE06]" )
+Errors: Error 13-42: Invalid regular expression: The characters in a character class range are reversed, found at the end of "\uD83D".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// also gives an error, but results in a single surrogate pair character which throws off the testing infrastructure
+// >> Match( "😀", "[😀-😆]" )
+// Errors: Error 13-22: Invalid regular expression: The characters in a character class range are reversed, found at the end of "�".|Error 0-5: The function 'Match' has some invalid arguments.
 

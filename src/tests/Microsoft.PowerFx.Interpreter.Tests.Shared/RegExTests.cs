@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Theory]
         [InlineData("a", "In(valid", "ErrInvalidRegExUnclosedCaptureGroups")]
         [InlineData("a", "In\\qvalid", "ErrInvalidRegExBadEscape")]
-        [InlineData("a", "In[valid", "ErrInvalidRegExBadSquare")]
+        [InlineData("a", "In[valid", "ErrInvalidRegExBadSquare", "ErrInvalidRegExUnterminatedSquare")]
         [InlineData("a", "In(*valid", "ErrInvalidRegExBadParen", "ErrInvalidRegExQuantifierOnNothing")]
         public void TestRegExV1DisabledExceptionMessage(string subject, string pattern, string errorV1, string errorPreV1 = null)
         {

@@ -28,7 +28,7 @@ Errors: Error 16-33: Invalid regular expression: Unopened groups, too few openin
 Errors: Error 15-70: Invalid regular expression: Unopened groups, too few opening parenthesis.|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "test", "te (?# this is a test with an unclosed comment" )
-Errors: Error 15-63: Invalid regular expression: Unclosed inline comment, starts with "(?#...".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 15-63: Invalid regular expression: Unclosed inline comment, found "(?# this is ...".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // with free spacing
 

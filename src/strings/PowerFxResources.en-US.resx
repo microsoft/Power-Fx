@@ -4512,8 +4512,12 @@
     <comment>Error message on non-service data sources passed to Refresh.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: {0}</value>
+    <value>Invalid regular expression.</value>
     <comment>Error message indicating that the regular expression entered by the user is invalid.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression, found "{0}".</value>
+    <comment>Error message indicating that the regular expression entered by the user is invalid, including context.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Inline options must appear at the beginning of the regular expression, found "{0}" later.</value>
@@ -4534,6 +4538,10 @@
   <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "{0}".</value>
     <comment>Error message indicating that the regular expression has literal square braces.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Unclosed character class square bracket.</value>
+    <comment>Error message indicating that the regular expression has an unterminated square bracket. Only used for PreV1 errors, .net does not return the location of the square bracket.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Unsupported special group, found "{0}".</value>
@@ -4560,9 +4568,13 @@
     <comment>Error message indicating that the regular expression includes more than one of the same option.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Unclosed inline comment, starts with "(?#...".</value>
-    <comment>{Locked=(?#...} Error message indicating that the regular expression includes an unclosed inline comment.</comment>
-  </data>  
+    <value>Invalid regular expression: Unclosed inline comment.</value>
+    <comment>Error message indicating that the regular expression includes an unclosed inline comment. Used for PreV1 where .NET does not return good information</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Unclosed inline comment, found "{0}".</value>
+    <comment>Error message indicating that the regular expression includes an unclosed inline comment, with context.</comment>
+  </data>
   <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Inline option is incompatible with MatchOptions.NumberedSubMatches, found "{0}".</value>
     <comment>{Locked=MatchOptions.NumberedSubMatches} Error message indicating that the regular expression includes an inline option that is incompatible with numbered sub matches.</comment>
