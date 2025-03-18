@@ -1,0 +1,167 @@
+﻿#SETUP: RegEx,PowerFxV1CompatibilityRules
+
+>> Match("Hello", "\w")
+{FullMatch:"H",StartMatch:1}
+
+>> Index(Match("Hello", "(\w)l(\w)", MatchOptions.NumberedSubMatches).SubMatches, 1).Value
+"e"
+
+>> Index(Match("Hello", "(\w)l(\w)", MatchOptions.NumberedSubMatches).SubMatches, 2).Value
+"l"
+
+>> Concat(ForAll(Match("Hello", "(\w)l(\w)", MatchOptions.NumberedSubMatches).SubMatches, With({x:Value}, x)), Value, ", ")
+"e, l"
+
+>> Match("Hello", "(\w)l(\w)", MatchOptions.NumberedSubMatches).SubMatches
+Table({Value:"e"},{Value:"l"})
+
+>> Match("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete & MatchOptions.Multiline & MatchOptions.NumberedSubMatches)
+{FullMatch:"Joe 164",StartMatch:1,SubMatches:Table({Value:"Joe"},{Value:"164"})}
+
+>> Match("JohnDoe@microsoft.com", Match.Email)
+{FullMatch:"JohnDoe@microsoft.com",StartMatch:1}
+
+>> Match("(555) 123-4567", "^[\+]?[\(]?[0-9]{3}[\)]?[\-\s\.]?[0-9]{3}[\-\s\.]?[0-9]{4,6}$")
+{FullMatch:"(555) 123-4567",StartMatch:1}
+
+>> Match("Hello", "Hello", MatchOptions.IgnoreCase)
+{FullMatch:"Hello",StartMatch:1}
+
+>> Match("Hi", "Hi", MatchOptions.Multiline)
+{FullMatch:"Hi",StartMatch:1}
+
+>> Match("28", "28", Blank())
+Errors: Error 18-25: MatchOptions must be a constant value.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match("28", "28", 28)
+Errors: Error 18-20: MatchOptions must be a constant value.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "((a)|(b))", MatchOptions.NumberedSubMatches )
+{FullMatch:"a",StartMatch:1,SubMatches:Table({Value:"a"},{Value:"a"},{Value:Blank()})}
+
+>> Match( "b", "((a)|(b))", MatchOptions.NumberedSubMatches )
+{FullMatch:"b",StartMatch:1,SubMatches:Table({Value:"b"},{Value:Blank()},{Value:"b"})}
+
+>> Match( "c", "((a)|(b))", MatchOptions.NumberedSubMatches )
+Blank()
+
+>> Match( "a", "(?<whole>(?<alpha>a)|(?<beta>b))" )
+{FullMatch:"a",StartMatch:1,alpha:"a",beta:Blank(),whole:"a"}
+
+>> Match( "b", "(?<whole>(?<alpha>a)|(?<beta>b))" )
+{FullMatch:"b",StartMatch:1,alpha:Blank(),beta:"b",whole:"b"}
+
+>> Match( "c", "(?<whole>(?<alpha>a)|(?<beta>b))" )
+Blank()
+
+>> Match( "a", "(b*)*", MatchOptions.NumberedSubMatches )
+Errors: Error 12-19: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(b*)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(b)*", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "a", "(b*)", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
+
+>> Match( "a", "(b)?", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "a", "(b?)", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
+
+>> Match( "a", "(b){0,4}", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "a", "(b{0,4})", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
+
+>> Match( "ab", "(a)*b\1" , MatchOptions.NumberedSubMatches )
+Errors: Error 13-22: Invalid regular expression: Back reference "\1" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ab", "(a)*b" , MatchOptions.NumberedSubMatches )
+{FullMatch:"ab",StartMatch:1,SubMatches:Table({Value:"a"})}
+
+>> Match( "ab", "(a*)b\1" , MatchOptions.NumberedSubMatches )
+Errors: Error 13-22: Invalid regular expression: Back reference "\1" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "Hi", ".", MatchOptions.DotAll )
+{FullMatch:"H",StartMatch:1}
+
+>> Match( "Hi", " H # a comment " & Char(10) & " i ", MatchOptions.FreeSpacing )
+{FullMatch:"Hi",StartMatch:1}
+
+>> Match( "Hi", " H # a comment " & Char(10) & " I ", MatchOptions.IgnoreCase & MatchOptions.FreeSpacing )
+{FullMatch:"Hi",StartMatch:1}
+
+// does no harm to use NumberedSubMatches with or without V1
+>> Match( "Hi", "(H)([Ii])", MatchOptions.NumberedSubMatches )
+{FullMatch:"Hi",StartMatch:1,SubMatches:Table({Value:"H"},{Value:"i"})}
+
+// detecting king check in chess
+
+>> Match( "q-----b-__P-P-K---__---P----__------P-__-p-NP--P__n----n--__p--pBpNp__r-bk---r__1411110000_045_000_00", 
+    "(" & "[QR]-*k|k-*[QR]|[QR].{9}(-.{9})*k|k.{9}(-.{9})*[QR]|" & 
+    "[QB].{10}(-.{10})*k|k.{10}(-.{10})*[QB]|[QB].{8}(-.{8})*k|k.{8}(-.{8})*[QB]|" & 
+    "P.{10}k|P.{8}k|" & 
+    "N.{18}k|k.{18}N|N.{20}k|k.{20}N|N.{11}k|k.{11}N|N.{7}k|k.{7}N|" &
+    "Kk|kK|K.{8,10}k|k.{8,10}K" & ")", MatchOptions.Contains )
+{FullMatch:"BpNp__r-bk",StartMatch:65}
+
+>> Match( "q-----b-__P-P-K---__---P-Q--__------P-__-p-NP--P__n--B----__p--p-pNp__r-b-k-nr__1010110000_041_000_00", 
+    "(" & "[QR]-*k|k-*[QR]|[QR].{9}(-.{9})*k|k.{9}(-.{9})*[QR]|" & 
+    "[QB].{10}(-.{10})*k|k.{10}(-.{10})*[QB]|[QB].{8}(-.{8})*k|k.{8}(-.{8})*[QB]|" & 
+    "P.{10}k|P.{8}k|" & 
+    "N.{18}k|k.{18}N|N.{20}k|k.{20}N|N.{11}k|k.{11}N|N.{7}k|k.{7}N|" &
+    "Kk|kK|K.{8,10}k|k.{8,10}K" & ")", MatchOptions.Contains )
+{FullMatch:"Np__r-b-k",StartMatch:67}
+
+>> Match( "RNB--KR-__PPP-----__---P-Q--__----PpP-__-p---NqP__-----n--__p--p-ppp__rnb-kb-r__1010010000_027_000_00", 
+    "(" & "[QR]-*k|k-*[QR]|[QR].{9}(-.{9})*k|k.{9}(-.{9})*[QR]|" & 
+    "[QB].{10}(-.{10})*k|k.{10}(-.{10})*[QB]|[QB].{8}(-.{8})*k|k.{8}(-.{8})*[QB]|" & 
+    "P.{10}k|P.{8}k|" & 
+    "N.{18}k|k.{18}N|N.{20}k|k.{20}N|N.{11}k|k.{11}N|N.{7}k|k.{7}N|" &
+    "Kk|kK|K.{8,10}k|k.{8,10}K" & ")", MatchOptions.Contains )
+Blank()
+
+>> Match( "q----Kb-__P-P-----__---P-Q--__------P-__-p-NPN-P__---B----__p--p-ppp__rnb-k-nr__0010110000_038_000_00",
+    "(" & "[qr]-*K|K-*[qr]|[qr].{9}(-.{9})*K|K.{9}(-.{9})*[qr]|" & 
+    "[qb].{10}(-.{10})*K|K.{10}(-.{10})*[qb]|[qb].{8}(-.{8})*K|K.{8}(-.{8})*[qb]|" & 
+    "K.{10}p|K.{8}p|" & 
+    "n.{18}K|K.{18}n|n.{20}K|K.{20}n|n.{11}K|K.{11}n|n.{7}K|K.{7}n|" &
+    "kK|Kk|k.{8,10}K|K.{8,10}k" & ")", MatchOptions.Contains )
+{FullMatch:"q----K",StartMatch:1}
+
+// with submatches
+
+>> Match( "q-----b-__P-P-K---__---P----__------P-__-p-NP--P__n----n--__p--pBpNp__r-bk---r__1411110000_045_000_00", 
+    "(" & "[QR]-*k|k-*[QR]|[QR].{9}(-.{9})*k|k.{9}(-.{9})*[QR]|" & 
+    "[QB].{10}(-.{10})*k|k.{10}(-.{10})*[QB]|[QB].{8}(-.{8})*k|k.{8}(-.{8})*[QB]|" & 
+    "P.{10}k|P.{8}k|" & 
+    "N.{18}k|k.{18}N|N.{20}k|k.{20}N|N.{11}k|k.{11}N|N.{7}k|k.{7}N|" &
+    "Kk|kK|K.{8,10}k|k.{8,10}K" & ")", MatchOptions.Contains & MatchOptions.NumberedSubMatches )
+{FullMatch:"BpNp__r-bk",StartMatch:65,SubMatches:Table({Value:"BpNp__r-bk"},{Value:Blank()},{Value:Blank()},{Value:Blank()},{Value:Blank()},{Value:Blank()},{Value:Blank()})}
+
+>> Match( "q-----b-__P-P-K---__---P-Q--__------P-__-p-NP--P__n--B----__p--p-pNp__r-b-k-nr__1010110000_041_000_00", 
+    "(" & "[QR]-*k|k-*[QR]|[QR].{9}(-.{9})*k|k.{9}(-.{9})*[QR]|" & 
+    "[QB].{10}(-.{10})*k|k.{10}(-.{10})*[QB]|[QB].{8}(-.{8})*k|k.{8}(-.{8})*[QB]|" & 
+    "P.{10}k|P.{8}k|" & 
+    "N.{18}k|k.{18}N|N.{20}k|k.{20}N|N.{11}k|k.{11}N|N.{7}k|k.{7}N|" &
+    "Kk|kK|K.{8,10}k|k.{8,10}K" & ")", MatchOptions.Contains & MatchOptions.NumberedSubMatches )
+{FullMatch:"Np__r-b-k",StartMatch:67,SubMatches:Table({Value:"Np__r-b-k"},{Value:Blank()},{Value:Blank()},{Value:Blank()},{Value:Blank()},{Value:Blank()},{Value:Blank()})}
+
+>> Match( "RNB--KR-__PPP-----__---P-Q--__----PpP-__-p---NqP__-----n--__p--p-ppp__rnb-kb-r__1010010000_027_000_00", 
+    "(" & "[QR]-*k|k-*[QR]|[QR].{9}(-.{9})*k|k.{9}(-.{9})*[QR]|" & 
+    "[QB].{10}(-.{10})*k|k.{10}(-.{10})*[QB]|[QB].{8}(-.{8})*k|k.{8}(-.{8})*[QB]|" & 
+    "P.{10}k|P.{8}k|" & 
+    "N.{18}k|k.{18}N|N.{20}k|k.{20}N|N.{11}k|k.{11}N|N.{7}k|k.{7}N|" &
+    "Kk|kK|K.{8,10}k|k.{8,10}K" & ")", MatchOptions.Contains & MatchOptions.NumberedSubMatches )
+Blank()
+
+>> Match( "q----Kb-__P-P-----__---P-Q--__------P-__-p-NPN-P__---B----__p--p-ppp__rnb-k-nr__0010110000_038_000_00",
+    "(" & "[qr]-*K|K-*[qr]|[qr].{9}(-.{9})*K|K.{9}(-.{9})*[qr]|" & 
+    "[qb].{10}(-.{10})*K|K.{10}(-.{10})*[qb]|[qb].{8}(-.{8})*K|K.{8}(-.{8})*[qb]|" & 
+    "K.{10}p|K.{8}p|" & 
+    "n.{18}K|K.{18}n|n.{20}K|K.{20}n|n.{11}K|K.{11}n|n.{7}K|K.{7}n|" &
+    "kK|Kk|k.{8,10}K|K.{8,10}k" & ")", MatchOptions.Contains & MatchOptions.NumberedSubMatches )
+{FullMatch:"q----K",StartMatch:1,SubMatches:Table({Value:"q----K"},{Value:Blank()},{Value:Blank()},{Value:Blank()},{Value:Blank()},{Value:Blank()},{Value:Blank()})}
+

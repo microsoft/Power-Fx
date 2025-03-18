@@ -1,4 +1,4 @@
 ﻿#SETUP: RegEx,disable:StronglyTypedBuiltinEnums
 
->> Match("Hello", "Hello", "")
-{FullMatch:"Hello",StartMatch:1,SubMatches:Table()}
+>> Match("Hello", "Hello", "").FullMatch
+"Hello"

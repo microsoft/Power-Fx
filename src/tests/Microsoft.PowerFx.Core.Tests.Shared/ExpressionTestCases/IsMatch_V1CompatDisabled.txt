@@ -1,0 +1,20 @@
+﻿#SETUP: RegEx,disable:PowerFxV1CompatibilityRules
+
+// includes tests for IsMatch with the older "complete" semantics
+
+>> IsMatch("ihi", "h")
+false
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` A 1234567890", "\p{L}")
+false
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~`  1234567890", "\p{L}")
+false
+
+// With Icelandic Eth
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` Ð 1234567890", "\p{L}")
+false
+
+// set options shouldn't override complete
+>> IsMatch( "aa", "a", MatchOptions.IgnoreCase )
+false
