@@ -103,7 +103,7 @@ Errors: Error 13-54: Invalid regular expression.|Error 0-5: The function 'Match'
 // 19: AlternationHasUndefinedReference
 #DISABLE.NET: 70
 >> Match( "ab", ">>>>>>>>>>>>>(?(1)a|b)<<<<<<<<<<<<<<<<" )
-Errors: Error 13-53:Invalid regular expression.|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 13-53: Invalid regular expression.|Error 0-5: The function 'Match' has some invalid arguments.
 
 // 20: CaptureGroupNameInvalid
 #DISABLE.NET: 70

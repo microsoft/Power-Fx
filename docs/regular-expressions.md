@@ -117,19 +117,21 @@ Mixing submatches and quantifiers has limitations. See [Possibly empty submatche
 |---------|---------|
 | Group | `(` and `)` are used to group elements for quantifiers to be applied. For example `(abc)+` matches `abcabc`. |
 | Alternation | `a|b` matches "a" or "b", often used in a group. |
-| Named sub-match and back reference | `(?<name>chars)` captures a sub-match with the name `name`, referenced with `\k<name>`. Cannot be used if **MatchOptions.NumberedSubMatches** is enabled. |
-| Numbered sub-match and back reference | When **MatchOptions.NumberedSubMatches** is enabled, `(a)` captures a sub-match referenced with `\1`. |
-| Non-capture group | `(?:a)`, creates group without capturing the result as a named or numbered sub-match. All groups are non-capturing unless **MatchOptions.NumberedSubMatches** is enabled. |
+| Named submatch and back reference | `(?<name>chars)` captures a submatch with the name `name`, referenced with `\k<name>`. Cannot be used if **MatchOptions.NumberedSubMatches** is enabled. |
+| Numbered submatch and back reference | When **MatchOptions.NumberedSubMatches** is enabled, `(a)` captures a submatch referenced with `\1`. |
+| Non-capture group | `(?:a)`, creates group without capturing the result as a named or numbered submatch. All groups are non-capturing unless **MatchOptions.NumberedSubMatches** is enabled. |
 
-Named and numbered sub-matches cannot be used together. By default, named sub-matches are enabled and are preferred for clarity and maintainability, while standard capture groups become non capture groups with improved performance. This can be changed with **MatchOptions.NumberedSubMatches** which provides for traditional capture groups but disables named capture groups. Some implementations treat a mix of numbered and named capture groups differently which is why Power Fx disallows it. 
+Named and numbered submatches cannot be used together. By default, named submatches are enabled and are preferred for clarity and maintainability, while standard capture groups become non capture groups with improved performance. This can be changed with **MatchOptions.NumberedSubMatches** which provides for traditional capture groups but disables named capture groups. Some implementations treat a mix of numbered and named capture groups differently which is why Power Fx disallows it. 
 
 Self referencing capture groups are not supported, for example the regular expression `(a\1)`.
 
 Two capture groups cannot share the same name, for example the regular expression `(?<id>\w+)|(?<id>\d+)` is not supported.
 
-The name of a named sub-match must begin with a `\p{L}` character or `_`, and can continue with those characters plus `\p{Nd}`. Names are limited in length to 62 UTF-16 code units.
+The name of a named submatch must begin with a `\p{L}` character or `_`, and can continue with those characters plus `\p{Nd}`. Names are limited in length to 62 UTF-16 code units.
 
-Some implementations offer an "explicit capture" option to improve performance which is unnecessary in Power Fx as it is effectively the default. **MatchOptions.NumberedSubMatches** disables it and enables implicit numbered captures.
+Backreferences to possibly empty submatches and to submatches within a look behind or look ahead are also not supported. 
+
+Some implementations offer an "explicit capture" option to improve performance which is unnecessary in Power Fx as it is effectively the default. **MatchOptions.NumberedSubMatches** disables it and enables implicitly numbered captures.
 
 Mixing submatches and quantifiers has limitations. See [Possibly empty submatches](#possibly-empty-submatches) for more information.
 
@@ -279,7 +281,7 @@ By default, `(...)` does not capture, the equivalent of what most systems call "
 
 If you have an existing regular expression, it may depend on groups being captured automatically and numbered, including numbered back references. This is available by using the **MatchOptions.NumberedSubMatches** option.
 
-Named and numbered sub-matches cannot be used together. Some implementations treat a mix of numbered and named capture groups differently which is why Power Fx disallows it. 
+Named and numbered submatches cannot be used together. Some implementations treat a mix of numbered and named capture groups differently which is why Power Fx disallows it. 
 
 ## Possibly empty submatches
 
@@ -298,4 +300,3 @@ To avoid different results across Power Fx implementations, submatches that coul
 
 Note that the submatch in `(?<submatch>a+)+` cannot be empty, as there must be at least one `a` in he submatch, and is supported.
 
-Backreferences to possibly empty submatches are also not supported. 
