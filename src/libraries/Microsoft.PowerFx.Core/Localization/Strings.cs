@@ -788,6 +788,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidRegExCharacterClassRangeReverse = new ErrorResourceKey("ErrInvalidRegExCharacterClassRangeReverse");
         public static ErrorResourceKey ErrInvalidRegExEndsWithBackslash = new ErrorResourceKey("ErrInvalidRegExEndsWithBackslash");
         public static ErrorResourceKey ErrInvalidRegExQuantifierOnNothing = new ErrorResourceKey("ErrInvalidRegExQuantifierOnNothing");
+        public static ErrorResourceKey ErrInvalidRegExBackRefToCaptureInLookaround = new ErrorResourceKey("ErrInvalidRegExBackRefToCaptureInLookaround");
 
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
         public static ErrorResourceKey ErrVariableRegExOptions = new ErrorResourceKey("ErrVariableRegExOptions");

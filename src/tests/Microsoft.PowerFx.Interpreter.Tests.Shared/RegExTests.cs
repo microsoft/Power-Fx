@@ -106,6 +106,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 errorPreV1 = errorV1;
             }
+#if NET462
+            // we don't have the more granular errors in 4.6.2, but we also don't have anyone running PreV1 there either
+            errorPreV1 = "ErrInvalidRegEx";
+#endif
 
             foreach (var func in funcs)
             {

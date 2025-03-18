@@ -781,3 +781,15 @@ Errors: Error 12-21: Invalid regular expression: Quantifier on a group containin
 
 >> Match( "a", "(a|\B)*" )
 Errors: Error 12-21: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a|\B)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// back refs to captures in lookarounds
+
+>> Match( "o", "o(?!(o))\1", MatchOptions.NumberedSubMatches ) // .net != node
+Errors: Error 12-26: Invalid regular expression: Back reference "\1" to sub match that is inside a lookbehind or lookahead.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "o", "(?!(o))\1", MatchOptions.NumberedSubMatches ) // .net != node
+Errors: Error 12-25: Invalid regular expression: Back reference "\1" to sub match that is inside a lookbehind or lookahead.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "o", "(?!(o)o)\1", MatchOptions.NumberedSubMatches ) // .net != node
+Errors: Error 12-26: Invalid regular expression: Back reference "\1" to sub match that is inside a lookbehind or lookahead.|Error 0-5: The function 'Match' has some invalid arguments.
+

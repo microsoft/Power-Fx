@@ -734,7 +734,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["else"].Success || token.Groups["newline"].Success || token.Groups["goodEscape"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
                     {
-                        if (token.Value == "\\" && token.Index == regexPattern.Length)
+                        if (token.Value == "\\" && token.Index == regexPattern.Length - 1)
                         {
                             return RegExError(TexlStrings.ErrInvalidRegExEndsWithBackslash);
                         }
@@ -1311,9 +1311,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // for caompatibility reasons, back refs can't reference something that is posibly empty
                 foreach (var backRef in _backRefs)
                 {
-                    if (_captureNames[backRef].IsPossibleZeroLength())
+                    if (_captureNames[backRef].IsBlockedBackRef(out error))
                     {
-                        error = TexlStrings.ErrInvalidRegExBackRefToZeroCapture;
                         errorArg = char.IsDigit(backRef[0]) ? "\\" + backRef : "\\k<" + backRef + ">";
                         return false;
                     }
@@ -1336,7 +1335,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 public bool HasZeroQuant;               // this group has a quantifier
                 public bool HasAlternation;             // this group has an alternation within
                 public bool ContainsCapture;            // this gruop contains a cpature, perhaps nested down
-                public bool KnownNonZero;               // we've checked previously; this group is known not to be zero sized
+                public bool KnownGoodBackRef;           // we've checked previously; this group is known not to be zero sized
                 public int MaxSize;                     // maximum size of this group, -1 for unlimited
                 public int MinSize;                     // minimum size of this group, 0 being the minimum
                 public int MaxSizeAlternation;          // maximum size of the largest alternation option
@@ -1472,11 +1471,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 // used to determine if a backref is acceptable
-                public bool IsPossibleZeroLength()
+                public bool IsBlockedBackRef(out ErrorResourceKey? error)
                 {
                     // short circuit in case we are asked about the same capture
-                    if (KnownNonZero)
+                    if (KnownGoodBackRef)
                     {
+                        error = null;
                         return false;
                     }
 
@@ -1485,15 +1485,24 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // ok to have alternation in the capture group itself, unless it is empty that PossibleEmpty would detect
                     if (HasZeroQuant || MinSize == 0)
                     {
+                        error = TexlStrings.ErrInvalidRegExBackRefToZeroCapture;
                         return true;
                     }
 
                     // walk nested groups up to the base
-                    // stop at a a lookaround, as it will appear to be zero below and quantifiers are not allowed on lookarounds and below
-                    for (var ptr = this.Parent; ptr != null && maxDepth-- >= 0 && !ptr.IsLookAround; ptr = ptr.Parent)
+                    // if we weren't already erroring on lookarounds,
+                    // we would want to stop at a a lookaround, as it will appear to be zero below and quantifiers are not allowed on lookarounds and below
+                    for (var ptr = this.Parent; ptr != null && maxDepth-- >= 0; ptr = ptr.Parent)
                     {
                         if (ptr.HasZeroQuant || ptr.HasAlternation || ptr.MinSize == 0)
                         {
+                            error = TexlStrings.ErrInvalidRegExBackRefToZeroCapture;
+                            return true;
+                        }
+
+                        if (ptr.IsLookAround)
+                        {
+                            error = TexlStrings.ErrInvalidRegExBackRefToCaptureInLookaround;
                             return true;
                         }
                     }
@@ -1504,8 +1513,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         throw new IndexOutOfRangeException("regular expression maximum GroupTracker depth exceeded");
                     }
 
-                    KnownNonZero = true;
+                    KnownGoodBackRef = true;
 
+                    error = null;
                     return false;
                 }
             }
