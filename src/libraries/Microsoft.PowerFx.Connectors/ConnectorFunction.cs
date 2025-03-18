@@ -1085,7 +1085,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        private static readonly HashSet<string> _validFunctions = new HashSet<string>(new[]
+        private static readonly IEnumerable<string> _validFunctions = new HashSet<string>(new[]
         {
             // From Power Apps - https://msazure.visualstudio.com/OneAgile/_git/PowerApps-Client?path=/src/Cloud/DocumentServer.Core/XrmDataProvider/CdsPatchDatasourceHelper.cs&version=GBmaster&line=1055&lineEnd=1055&lineStartColumn=23&lineEndColumn=47&lineStyle=plain&_a=contents
             "add", "and", "average", "ceiling", "concat", "contains", "countdistinct", "date", "day", "div", "endswith", "eq", "floor", "ge", "gt", "hour", "indexof", "le", "length", "lt", "max", "min", "minute", "mod", "month", "mul", "ne", 
