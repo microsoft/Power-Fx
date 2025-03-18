@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using Microsoft.PowerFx.Core.Localization;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
@@ -14,7 +13,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         bool IsNotSupported { get; }
 
-        IReadOnlyCollection<ErrorResourceKey> Warnings { get; }
+        IReadOnlyCollection<ExpressionError> Warnings { get; }
 
         // For internal use only. Not customer friendly, no need for localization.
         string NotSupportedReason { get; }

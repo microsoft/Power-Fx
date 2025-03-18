@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Connectors
         { 
         }
 
-        public ConnectorErrors(string error, ErrorResourceKey warning = default)
+        public ConnectorErrors(string error, ExpressionError warning = default)
             : base(error, warning)
         {            
         }
