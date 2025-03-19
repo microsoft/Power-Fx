@@ -281,9 +281,17 @@ namespace Microsoft.PowerFx.Core.Entities
         }
     }
 
+    /// <summary>
+    /// If the table supports summarize, return true.
+    /// e.g. Summarize(Table, ColumnName, Sum(ColumnName)).
+    /// For top level aggregation Sum(Table, ColumnName), use <see cref="TopLevelAggregationCapabilities"/>.
+    /// </summary>
     [Obsolete("preview")]
     public class SummarizeCapabilities
     {
+        /// <summary>
+        /// If the table property supports summarize, return true.
+        /// </summary>
         public virtual bool IsSummarizableProperty(string propertyName, SummarizeMethod method)
         {
             return false;
@@ -354,6 +362,12 @@ namespace Microsoft.PowerFx.Core.Entities
         }
     }
 
+    /// <summary>
+    /// If the table supports top level aggregation for a column, return true.
+    /// e.g. Sum, Average, Min, Max, Count without Summarize(). 
+    /// e.g. expression: Sum(Table, ColumnName).
+    /// For aggregation with grouping, Summarize(Table, ColumnName, Sum(ColumnName)), use <see cref="SummarizeCapabilities"/>.
+    /// </summary>
     [Obsolete("preview")]
     public class TopLevelAggregationCapabilities
     {
