@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,20 +16,13 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Core.Texl.Builtins.BaseMatchFunction;
 
 namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
         // https://learn.microsoft.com/en-us/power-platform/power-fx/reference/function-ismatch        
-
-        public const string FULLMATCH = "FullMatch";
-        public const string STARTMATCH = "StartMatch";
-        public const string SUBMATCHES = "SubMatches";
-
-        private const string DefaultIsMatchOptions = "^c$";
-        private const string DefaultMatchOptions = "c";
-        private const string DefaultMatchAllOptions = "c";
 
         /// <summary>
         /// Creates instances of the [Is]Match[All] functions and returns them so they can be added to the runtime.
@@ -49,7 +44,7 @@ namespace Microsoft.PowerFx.Functions
 
             return new Dictionary<TexlFunction, IAsyncTexlFunction>()
             {
-                { new IsMatchFunction(), new IsMatchImplementation(regexTimeout) },
+                { new IsMatchFunction(regexCache), new IsMatchImplementation(regexTimeout) },
                 { new MatchFunction(regexCache), new MatchImplementation(regexTimeout) },
                 { new MatchAllFunction(regexCache), new MatchAllImplementation(regexTimeout) }
             };
@@ -59,16 +54,17 @@ namespace Microsoft.PowerFx.Functions
         {
             private readonly TimeSpan _regexTimeout;
 
-            protected override string RegexOptions => DefaultIsMatchOptions;
+            protected override string DefaultRegexOptions => DefaultIsMatchOptions;
 
             public IsMatchImplementation(TimeSpan regexTimeout)
             {
                 _regexTimeout = regexTimeout;
             }
 
-            protected override FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options)
+            internal override FormulaValue InvokeRegexFunction(string input, string regex, string options)
             {
-                Regex rex = new Regex(regex, options, _regexTimeout);
+                var (regexAltered, regexOptions) = AlterRegex_DotNet(regex, options);
+                Regex rex = new Regex(regexAltered, regexOptions, _regexTimeout);
                 bool b = rex.IsMatch(input);
 
                 return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), b);
@@ -79,24 +75,25 @@ namespace Microsoft.PowerFx.Functions
         {
             private readonly TimeSpan _regexTimeout;
 
-            protected override string RegexOptions => DefaultMatchOptions;
+            protected override string DefaultRegexOptions => DefaultMatchOptions;
 
             public MatchImplementation(TimeSpan regexTimeout)
             {
                 _regexTimeout = regexTimeout;
             }
 
-            protected override FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options)
+            internal override FormulaValue InvokeRegexFunction(string input, string regex, string options)
             {
-                Regex rex = new Regex(regex, options, _regexTimeout);
+                var (regexAltered, regexOptions) = AlterRegex_DotNet(regex, options);
+                Regex rex = new Regex(regexAltered, regexOptions, _regexTimeout);
                 Match m = rex.Match(input);
 
                 if (!m.Success)
                 {
-                    return new BlankValue(IRContext.NotInSource(new KnownRecordType(GetRecordTypeFromRegularExpression(regex))));
+                    return new BlankValue(IRContext.NotInSource(new KnownRecordType(GetRecordTypeFromRegularExpression(regexAltered, regexOptions))));
                 }
 
-                return GetRecordFromMatch(rex, m);
+                return GetRecordFromMatch(rex, m, regexOptions);
             }
         }
 
@@ -104,101 +101,42 @@ namespace Microsoft.PowerFx.Functions
         {
             private readonly TimeSpan _regexTimeout;
 
-            protected override string RegexOptions => DefaultMatchAllOptions;
+            protected override string DefaultRegexOptions => DefaultMatchAllOptions;
 
             public MatchAllImplementation(TimeSpan regexTimeout)
             {
                 _regexTimeout = regexTimeout;
             }
 
-            protected override FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options)
+            internal override FormulaValue InvokeRegexFunction(string input, string regex, string options)
             {
-                Regex rex = new Regex(regex, options, _regexTimeout);
+                var (regexAltered, regexOptions) = AlterRegex_DotNet(regex, options);
+                Regex rex = new Regex(regexAltered, regexOptions, _regexTimeout);
                 MatchCollection mc = rex.Matches(input);
                 List<RecordValue> records = new ();
 
                 foreach (Match m in mc)
                 {
-                    records.Add(GetRecordFromMatch(rex, m));
+                    records.Add(GetRecordFromMatch(rex, m, regexOptions));
                 }
 
-                return TableValue.NewTable(new KnownRecordType(GetRecordTypeFromRegularExpression(regex)), records.ToArray());
+                return TableValue.NewTable(new KnownRecordType(GetRecordTypeFromRegularExpression(regexAltered, regexOptions)), records.ToArray());
             }
-        }
-
-        private static RecordValue GetRecordFromMatch(Regex rex, Match m)
-        {
-            Dictionary<string, NamedValue> fields = new ()
-            {
-                { FULLMATCH, new NamedValue(FULLMATCH, StringValue.New(m.Value)) },
-                { STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New((double)m.Index + 1)) }
-            };
-
-            List<string> subMatches = new List<string>();
-            string[] groupNames = rex.GetGroupNames();
-
-            for (int i = 0; i < groupNames.Length; i++)
-            {
-                string groupName = groupNames[i];
-                string validName = DName.MakeValid(groupName, out _).Value;
-                Group g = m.Groups[i];
-
-                if (!int.TryParse(groupName, out _))
-                {
-                    if (!fields.ContainsKey(validName))
-                    {
-                        fields.Add(validName, new NamedValue(validName, StringValue.New(g.Value)));
-                    }
-                    else
-                    {
-                        fields[validName] = new NamedValue(validName, StringValue.New(g.Value));
-                    }
-                }
-
-                if (i > 0)
-                {
-                    subMatches.Add(g.Value);
-                }
-            }
-
-            if (!fields.ContainsKey(SUBMATCHES))
-            {
-                fields.Add(SUBMATCHES, new NamedValue(SUBMATCHES, TableValue.NewSingleColumnTable(subMatches.Select(s => StringValue.New(s)).ToArray())));
-            }
-
-            return RecordValue.NewRecordFromFields(fields.Values);
-        }
-
-        private static DType GetRecordTypeFromRegularExpression(string regularExpression)
-        {
-            Dictionary<string, TypedName> propertyNames = new ();
-            Regex rex = new Regex(regularExpression);
-
-            propertyNames.Add(FULLMATCH, new TypedName(DType.String, new DName(FULLMATCH)));
-            propertyNames.Add(STARTMATCH, new TypedName(DType.Number, new DName(STARTMATCH)));
-            propertyNames.Add(SUBMATCHES, new TypedName(DType.CreateTable(new TypedName(DType.String, new DName(TexlFunction.ColumnName_ValueStr))), new DName(SUBMATCHES)));
-
-            foreach (string groupName in rex.GetGroupNames())
-            {
-                if (!int.TryParse(groupName, out _))
-                {
-                    DName validName = DName.MakeValid(groupName, out _);
-
-                    if (!propertyNames.ContainsKey(validName.Value))
-                    {
-                        propertyNames.Add(validName.Value, new TypedName(DType.String, validName));
-                    }
-                }
-            }
-
-            return DType.CreateRecord(propertyNames.Values);
         }
 
         internal abstract class RegexCommonImplementation : IAsyncTexlFunction
         {
-            protected abstract FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options);
+            internal abstract FormulaValue InvokeRegexFunction(string input, string regex, string options);
 
-            protected abstract string RegexOptions { get; }
+            protected abstract string DefaultRegexOptions { get; }
+
+            protected const string FULLMATCH = "FullMatch";
+            protected const string STARTMATCH = "StartMatch";
+            protected const string SUBMATCHES = "SubMatches";
+
+            protected const string DefaultIsMatchOptions = MatchOptionString.Contains;
+            protected const string DefaultMatchOptions = MatchOptionString.Contains;
+            protected const string DefaultMatchAllOptions = MatchOptionString.Contains;
 
             public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
             {
@@ -238,37 +176,21 @@ namespace Microsoft.PowerFx.Functions
                         default:
                             return Task.FromResult<FormulaValue>(args[2] is ErrorValue ? args[2] : CommonErrors.InvalidArgumentError(args[2].IRContext, RuntimeStringResources.ErrInvalidArgument));
                     }
+
+                    // don't override complete/contains/beginswith/endswith if already given, all these options include Contains ("c")
+                    if (!matchOptions.Contains(MatchOptionChar.ContainsBeginsEndsComplete))
+                    {
+                        matchOptions += DefaultRegexOptions;
+                    }
                 }
                 else
                 {
-                    matchOptions = RegexOptions;
-                }
-
-                RegexOptions regOptions = System.Text.RegularExpressions.RegexOptions.CultureInvariant;                
-
-                if (matchOptions.Contains("i"))
-                {
-                    regOptions |= System.Text.RegularExpressions.RegexOptions.IgnoreCase;
-                }
-
-                if (matchOptions.Contains("m"))
-                {
-                    regOptions |= System.Text.RegularExpressions.RegexOptions.Multiline;
-                }
-
-                if (matchOptions.Contains("^") && !regularExpression.StartsWith("^", StringComparison.Ordinal))
-                {
-                    regularExpression = "^" + regularExpression;
-                }
-
-                if (matchOptions.Contains("$") && !regularExpression.EndsWith("$", StringComparison.Ordinal))
-                {
-                    regularExpression += "$";
+                    matchOptions = DefaultRegexOptions;
                 }
 
                 try
                 {
-                    return Task.FromResult(InvokeRegexFunction(inputString, regularExpression, regOptions));
+                    return Task.FromResult(InvokeRegexFunction(inputString, regularExpression, matchOptions));
                 }
                 catch (RegexMatchTimeoutException rexTimeoutEx)
                 {
@@ -297,6 +219,207 @@ namespace Microsoft.PowerFx.Functions
                 }
 
 #pragma warning restore SA1119  // Statement should not use unnecessary parenthesis
+            }
+
+            protected (string, RegexOptions) AlterRegex_DotNet(string regex, string options)
+            {
+                var altered = new StringBuilder();
+                bool openCharacterClass = false;                       // are we defining a character class?
+                int index = 0;
+
+                Match inlineOptions = Regex.Match(regex, @"\A\(\?([imnsx]+)\)");
+                if (inlineOptions.Success)
+                {
+                    options = options + inlineOptions.Groups[1];
+                    index = inlineOptions.Length;
+                }
+
+                bool freeSpacing = options.Contains(MatchOptionChar.FreeSpacing);
+                bool multiline = options.Contains(MatchOptionChar.Multiline);
+                bool ignoreCase = options.Contains(MatchOptionChar.IgnoreCase);
+                bool dotAll = options.Contains(MatchOptionChar.DotAll);
+                bool matchStart = options.Contains(MatchOptionChar.Begins);
+                bool matchEnd = options.Contains(MatchOptionChar.Ends);
+                bool numberedSubMatches = options.Contains(MatchOptionChar.NumberedSubMatches);
+
+                // Can't add options ^ and $ too early as there may be freespacing comments, centralize the logic here and call subfunctions
+                // ^ doesn't require any translation if not in multilline, only matches the start of the string
+                // MatchAll( "1a3" & Char(13) & "2b4", "(?m)^\d" ) would not match "2" without translation
+                string AlterStart() => openCharacterClass ? "^" : (multiline ? @"(?:(?<=\A|\r\n|[\n" + MatchWhiteSpace.NewLineEscapesWithoutCRLF + @"])|(?<=\r)(?!\n))" : "^");
+
+                // $ does require translation if not in multilline, as $ does look past newlines to the end in .NET but it doesn't take into account \r
+                // MatchAll( "1a3" & Char(13) & "2b4" & Char(13), "(?m)\d$" ) would not match "3" or "4" without translation
+                // Match( "1a3" & Char(13), "\d$" ) would also not match "3" without translation
+                string AlterEnd() => openCharacterClass ? "$" : (multiline ? @"(?:(?=\r\n|[\r" + MatchWhiteSpace.NewLineEscapesWithoutCRLF + @"]|\z)|(?<!\r)(?=\n))" : @"(?:(?=\r\n\z|[\r" + MatchWhiteSpace.NewLineEscapesWithoutCRLF + @"]?\z)|(?<!\r)(?=\n\z))");
+
+                for (; index < regex.Length; index++)
+                {
+                    if (freeSpacing && !openCharacterClass && MatchWhiteSpace.IsSpaceNewLine(regex[index]))
+                    {
+                        altered.Append(' ');
+                    }
+                    else
+                    {
+                        switch (regex[index])
+                        {
+                            case '[':
+                                openCharacterClass = true;
+                                altered.Append('[');
+                                break;
+
+                            case ']':
+                                openCharacterClass = false;
+                                altered.Append(']');
+                                break;
+
+                            case '#':
+                                if (freeSpacing && !openCharacterClass)
+                                {
+                                    for (index++; index < regex.Length && !MatchWhiteSpace.IsNewLine(regex[index]); index++)
+                                    {
+                                        // skip the comment characters until the next newline, in case it includes [ ] 
+                                    }
+
+                                    // need something to be emitted to avoid "\1#" & Char(10) & "1" being interpreted as "\11"
+                                    // need to replace a \r ending comment (supported by Power Fx) with a \n ending comment (supported by .NET)
+                                    // also need to make sure the comment terminates with a newline in case we add a "$" below
+                                    altered.Append("\n");
+                                }
+                                else
+                                {
+                                    altered.Append('#');
+                                }
+
+                                break;
+
+                            case '(':
+                                // inline comment
+                                if (regex.Length - index > 2 && regex[index + 1] == '?' && regex[index + 2] == '#')
+                                {
+                                    for (index++; index < regex.Length && regex[index] != ')'; index++)
+                                    {
+                                        // skip the comment characters until the next closing paren, in case it includes [ ] 
+                                    }
+
+                                    // need something to be emitted to avoid "\1(?#)1" being interpreted as "\11"
+                                    altered.Append("(?#)");
+                                }
+                                else
+                                {
+                                    altered.Append(regex[index]);
+                                }
+
+                                break;
+
+                            case '\\':
+                                altered.Append("\\");
+                                if (++index < regex.Length)
+                                {
+                                    altered.Append(regex[index]);
+                                }
+
+                                break;
+
+                            case '.':
+                                altered.Append(!openCharacterClass && !dotAll ? @"[^" + MatchWhiteSpace.NewLineEscapes + "]" : ".");
+                                break;
+
+                            case '^':
+                                altered.Append(AlterStart());
+                                break;
+
+                            case '$':
+                                altered.Append(AlterEnd());
+                                break;
+
+                            default:
+                                altered.Append(regex[index]);
+                                break;
+                        }
+                    }
+                }
+
+                // multiline is not included as it is handled with the definitions of ^ and $ above
+                RegexOptions alteredOptions = RegexOptions.CultureInvariant |
+                    (ignoreCase ? RegexOptions.IgnoreCase : 0) |
+                    (dotAll ? RegexOptions.Singleline : 0) |
+                    (freeSpacing ? RegexOptions.IgnorePatternWhitespace : 0) |
+                    (numberedSubMatches ? 0 : RegexOptions.ExplicitCapture);
+
+                return ((matchStart ? AlterStart() : string.Empty) + altered.ToString() + (matchEnd ? AlterEnd() : string.Empty), alteredOptions);
+            }
+
+            protected static RecordValue GetRecordFromMatch(Regex rex, Match m, RegexOptions options)
+            {
+                Dictionary<string, NamedValue> fields = new ()
+                {
+                    { FULLMATCH, new NamedValue(FULLMATCH, StringValue.New(m.Value)) },
+                    { STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New((double)m.Index + 1)) }
+                };
+
+                List<RecordValue> subMatches = new List<RecordValue>();
+                string[] groupNames = rex.GetGroupNames();
+
+                for (int i = 0; i < groupNames.Length; i++)
+                {
+                    string groupName = groupNames[i];
+                    string validName = DName.MakeValid(groupName, out _).Value;
+                    Group g = m.Groups[i];
+                    FormulaValue val = g.Success ? StringValue.New(g.Value) : BlankValue.NewBlank(FormulaType.String);
+
+                    if (!int.TryParse(groupName, out _))
+                    {
+                        if (!fields.ContainsKey(validName))
+                        {
+                            fields.Add(validName, new NamedValue(validName, val));
+                        }
+                        else
+                        {
+                            fields[validName] = new NamedValue(validName, val);
+                        }
+                    }
+
+                    if (i > 0)
+                    {
+                        subMatches.Add(FormulaValue.NewRecordFromFields(new NamedValue(TableValue.ValueName, val)));
+                    }
+                }
+
+                if (!fields.ContainsKey(SUBMATCHES) && (options & RegexOptions.ExplicitCapture) == 0)
+                {
+                    var recordType = RecordType.Empty().Add(TableValue.ValueName, FormulaType.String);
+                    fields.Add(SUBMATCHES, new NamedValue(SUBMATCHES, TableValue.NewTable(recordType, subMatches)));
+                }
+
+                return RecordValue.NewRecordFromFields(fields.Values);
+            }
+
+            protected static DType GetRecordTypeFromRegularExpression(string regularExpression, RegexOptions regularExpressionOptions)
+            {
+                Dictionary<string, TypedName> propertyNames = new ();
+                Regex rex = new Regex(regularExpression, regularExpressionOptions);
+
+                propertyNames.Add(FULLMATCH, new TypedName(DType.String, new DName(FULLMATCH)));
+                propertyNames.Add(STARTMATCH, new TypedName(DType.Number, new DName(STARTMATCH)));
+                if ((regularExpressionOptions & RegexOptions.ExplicitCapture) == 0)
+                {
+                    propertyNames.Add(SUBMATCHES, new TypedName(DType.CreateTable(new TypedName(DType.String, new DName(TexlFunction.ColumnName_ValueStr))), new DName(SUBMATCHES)));
+                }
+
+                foreach (string groupName in rex.GetGroupNames())
+                {
+                    if (!int.TryParse(groupName, out _))
+                    {
+                        DName validName = DName.MakeValid(groupName, out _);
+
+                        if (!propertyNames.ContainsKey(validName.Value))
+                        {
+                            propertyNames.Add(validName.Value, new TypedName(DType.String, validName));
+                        }
+                    }
+                }
+
+                return DType.CreateRecord(propertyNames.Values);
             }
         }
     }

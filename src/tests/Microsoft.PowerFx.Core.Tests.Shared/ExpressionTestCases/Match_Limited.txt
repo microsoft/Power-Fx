@@ -1,0 +1,1765 @@
+﻿#SETUP: RegEx,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+
+// Power Fx regular expressions are limited to features that can be transpiled to native .NET (C# Interpreter), ECMAScript (Canvas), or PCRE2 (Excel).
+// We want the same results everywhere for Power Fx, even if the underlying implementation is different. Even with these limits in place there are some minor semantic differences but we get as close as we can.
+// These tests can be run through all three engines and the results compared with by setting ExpressionEvaluationTests.RegExCompareEnabled, a PCRE2 DLL and NodeJS must be installed on the system.
+//
+// In short, we use the insersection of canonical .NET regular expressions and ECMAScript 2024's "v" flag for escaping rules. 
+// Someday when "v" is more widely avaialble, we can support more of its features such as set subtraction.
+// We chose to use canonical .NET instead of RegexOptions.ECMAScript because we wanted the unicode definitions for words. See https://learn.microsoft.com/dotnet/standard/base-types/regular-expression-options#ecmascript-matching-behavior
+//
+// In addition, Power Fx regular expressions are opinionated and try to eliminate some of the ambiguity in the common regular expression language:
+//     Numbered capture groups are disabled by default, and cannot be mixed with named capture groups.
+//     Octal character codes are not supported, use \x or \u instead.
+//     Literal ^, -, [, ], {, and } must be escaped when used in a character class.
+//     Escaping is only supported for special characters and unknown alphanumeric escape sequences are not supported.
+//     Unicode characters are used throughout.
+//     Newlines support Windows friendly \r\n as well as \r and \n.
+//
+// There are significant differences between how possibly empty capture groups are handled between implementations which are blocked.
+// See Match_CaptureQuant.txt for test cases, which is important to run through both .net and node to determine coverage of the block.
+// 
+// See docs/regular-expressions.md for more details on the language supported.
+//
+// In addition, the Power Fx compiler uses the .NET regular expression engine to validate the expression and determine capture group names.
+// So, any regular expression that does not compile with .NET is also automatically disallowed.
+
+//
+// GROUPS
+//
+
+// Unclosed
+
+>> Match( "asdf", "a(sdf)" )
+{FullMatch:"asdf",StartMatch:1}
+
+// ErrInvalidRegExUnclosedCaptureGroups
+>> Match( "asdf", "a(sdf" )
+Errors: Error 15-22: Invalid regular expression: Unclosed groups, too few closing parenthesis.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// ErrInvalidRegExUnopenedCaptureGroups
+>> Match( "asdf", "asdf)" )
+Errors: Error 15-22: Invalid regular expression: Unopened groups, too few opening parenthesis.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// Self referencing groups are disallowed
+
+// ErrInvalidRegExNumberedSubMatchesDisabled
+>> Match( "aa", "(a\1)" )
+Errors: Error 13-20: Invalid regular expression: Use named captures with "(?<name>...)" and "\k<name>" or enable MatchOptions.NumberedSubMatches, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// ErrInvalidRegExBadBackRefSelfReferencing
+>> Match( "aa", "(a\1)", MatchOptions.NumberedSubMatches )
+Errors: Error 13-20: Invalid regular expression: Self-referencing sub matches are not supported, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aa", "(?<first>a\k<first>)" )
+Errors: Error 13-35: Invalid regular expression: Self-referencing sub matches are not supported, found "\k<first>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aa aaaa aaaaaa ", "((a+)(\1) ?)+" )
+Errors: Error 26-41: Invalid regular expression: Use named captures with "(?<name>...)" and "\k<name>" or enable MatchOptions.NumberedSubMatches, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aa aaaa aaaaaa ", "((a+)(\1) ?)+", MatchOptions.NumberedSubMatches )
+Errors: Error 26-41: Invalid regular expression: Self-referencing sub matches are not supported, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aa aaaa aaaaaa ", "(?<first>(a+)(\k<first>) ?)+" )
+Errors: Error 26-56: Invalid regular expression: Self-referencing sub matches are not supported, found "\k<first>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// Backreferences without a group are disallowed
+
+>> Match( "hello howdy", "([hi]).*\1" )
+Errors: Error 22-34: Invalid regular expression: Use named captures with "(?<name>...)" and "\k<name>" or enable MatchOptions.NumberedSubMatches, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// ErrInvalidRegExBadBackRefNotDefined
+>> Match( "hello howdy", "([hi]).*\k<1>" )
+Errors: Error 22-37: Invalid regular expression: Sub match "\k<1>" not defined or is an unsupported forward reference.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello howdy", "(?<first>[hi]).*\k<first>" )
+{FullMatch:"hello h",StartMatch:1,first:"h"}
+
+// ErrInvalidRegExMixingNamedAndNumberedSubMatches
+>> Match( "hello howdy", "(?<first>[hi]).*\k<first>", MatchOptions.NumberedSubMatches )
+Errors: Error 22-49: Invalid regular expression: Named captures cannot be used with MatchOptions.NumberedSubMatches enabled, found "(?<first>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello howdy", "(?<first>[hi]).*\1" )
+Errors: Error 22-42: Invalid regular expression: Use named captures with "(?<name>...)" and "\k<name>" or enable MatchOptions.NumberedSubMatches, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello howdy", "([hi]).*\1", MatchOptions.NumberedSubMatches )
+{FullMatch:"hello h",StartMatch:1,SubMatches:Table({Value:"h"})}
+
+>> Match( "hello howdy", "(?<first>[hi]).*\k<second>" )
+Errors: Error 22-50: Invalid regular expression: Sub match "\k<second>" not defined or is an unsupported forward reference.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello world", "(((((((((((?<eleven>l))))))))))).*\k<eleven>")  // 11 parens
+{FullMatch:"llo worl",StartMatch:3,eleven:"l"}
+
+>> Match( "hello world", "(((((((((((l))))))))))).*\11")  // 11 parens
+Errors: Error 22-52: Invalid regular expression: Use named captures with "(?<name>...)" and "\k<name>" or enable MatchOptions.NumberedSubMatches, found "\11".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello world", "(((((((((((l))))))))))).*\11", MatchOptions.NumberedSubMatches)  // 11 parens
+{FullMatch:"llo worl",StartMatch:3,SubMatches:Table({Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"})}
+
+>> Match( "hello world", "(((((((((((?<eleven>l)))))))))).*\k<eleven>")   // unclosed 11th paren
+Errors: Error 22-67: Invalid regular expression: Unclosed groups, too few closing parenthesis.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello world", "(?<first>((((((((((?<eleven>l)))))))))).*\k<first>")   // unclosed 11th paren
+Errors: Error 22-74: Invalid regular expression: Self-referencing sub matches are not supported, found "\k<first>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello world", "(?<a>(?<b>(?<c>(?<d>(?<e>(?<f>(?<g>(?<h>(?<i>(?<j>(l))))))))))).*\k<f>")  // 11 parens
+{FullMatch:"llo worl",StartMatch:3,a:"l",b:"l",c:"l",d:"l",e:"l",f:"l",g:"l",h:"l",i:"l",j:"l"}
+
+>> Match( "hello world", "(?<a>(?<b>(?<c>(?<d>(?<e>(?<f>(?<g>(?<h>(?<i>(?<j>(l))))))))))).*\k<a>")   // 11 parens
+{FullMatch:"llo worl",StartMatch:3,a:"l",b:"l",c:"l",d:"l",e:"l",f:"l",g:"l",h:"l",i:"l",j:"l"}
+
+>> Match( "hello world", "(((((((((((l))))))))))).*\1")   // 11 parens
+Errors: Error 22-51: Invalid regular expression: Use named captures with "(?<name>...)" and "\k<name>" or enable MatchOptions.NumberedSubMatches, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello world", "(((((((((((l))))))))))).*\1", MatchOptions.NumberedSubMatches)   // 11 parens
+{FullMatch:"llo worl",StartMatch:3,SubMatches:Table({Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"})}
+
+// Power Fx group nesting is limited, see match.cs for groupTracker.MaxStackDepth
+
+>> Match( "hello world", "((((((((((" & "((((((((((" & "((((((((((" & "(?<thirtyone>l)" & "))))))))))" & "))))))))))" & "))))))))))" & ".*\k<thirtyone>" )
+{FullMatch:"llo worl",StartMatch:3,thirtyone:"l"}
+
+>> Match( "hello world", "((((((((((" & "((((((((((" & "((((((((((" & "(l)" & "))))))))))" & "))))))))))" & "))))))))))" & ".*\31", MatchOptions.NumberedSubMatches )
+{FullMatch:"llo worl",StartMatch:3,SubMatches:Table({Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"})}
+
+>> Match( "hello world", "((((((((((" & "((((((((((" & "((((((((((" & "(?<thirtyone>l"  & "))))))))))" & "))))))))))" & "))))))))))" & ".*\k<thirtyone>" ) // missing paren
+Errors: Error 130-131: Invalid regular expression: Unclosed groups, too few closing parenthesis.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello world", "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(?<hundredone>l)" & ".*\k<hundredone>" )
+{FullMatch:"llo worl",StartMatch:3,hundredone:"l"} 
+
+>> Match( "hello world", "(((())(())(())(((((((())))))))))()(?<letter>l)()\k<letter>")
+{FullMatch:"ll",StartMatch:3,letter:"l"}
+
+>> Match( "hello world", "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(?<hundredone>l)" & ".*\k<hundredone>", MatchOptions.NumberedSubMatches )
+Errors: Error 491-492: Invalid regular expression: Named captures cannot be used with MatchOptions.NumberedSubMatches enabled, found "(?<hundredone>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello world", "(((())(())(())(((((((())))))))))()(?<letter>l)()\k<letter>", MatchOptions.NumberedSubMatches)
+Errors: Error 22-82: Invalid regular expression: Named captures cannot be used with MatchOptions.NumberedSubMatches enabled, found "(?<letter>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello world", "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(l)" & ".*\101", MatchOptions.NumberedSubMatches )
+{FullMatch:"llo worl",StartMatch:3,SubMatches:Table({Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:"l"})} 
+
+>> Match( "hello world", "(((())(())(())(((((((())))))))))()(l)()\18", MatchOptions.NumberedSubMatches)
+{FullMatch:"ll",StartMatch:3,SubMatches:Table({Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:"l"},{Value:""})}
+
+// balancing groups
+
+// ErrInvalidRegExBadBalancing
+>> Match( "(hello world)", "(?<s-e>)a")
+Errors: Error 24-35: Invalid regular expression: Balancing sub matches are not supported, found "(?<s-e>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "(hello world)", "(?<s>)a(?<-s>)b")
+Errors: Error 24-41: Invalid regular expression: Balancing sub matches are not supported, found "(?<-s>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// groups with single ticks
+
+// ErrInvalidRegExBadSingleQuoteNamedCapture
+>> Match( "(hello world)", "(?'name'l)")
+Errors: Error 24-36: Invalid regular expression: Using single quoted named captures is not supported, use (?<...>) syntax instead, found "(?'name'".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "(hello world)", "(?'s-e'l)")
+Errors: Error 24-35: Invalid regular expression: Using single quoted named captures is not supported, use (?<...>) syntax instead, found "(?'s-e'".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// Octal characters are not allowed
+
+// ErrInvalidRegExBadOctal
+>> Match( "as$df", "\044" )
+Errors: Error 16-22: Invalid regular expression: Octal \0 character codes are not supported, use hexadecimal \x or Unicode \u instead, found "\044".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "as$df", "\0" )
+Errors: Error 16-20: Invalid regular expression: Octal \0 character codes are not supported, use hexadecimal \x or Unicode \u instead, found "\0".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "as$df", "\000" )
+Errors: Error 16-22: Invalid regular expression: Octal \0 character codes are not supported, use hexadecimal \x or Unicode \u instead, found "\000".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// Can't define named capture group more than once
+
+>> Match( "test", "(?<one>t).*(?<two>t)" )
+{FullMatch:"test",StartMatch:1,one:"t",two:"t"}
+
+>> Match( "test", "((?<one>t)|(?<two>t))" )
+{FullMatch:"t",StartMatch:1,one:"t",two:Blank()}
+
+// ErrInvalidRegExBadNamedCaptureAlreadyExists
+>> Match( "test", "(?<one>t).*(?<one>t)" )
+Errors: Error 15-37: Invalid regular expression: Named sub match defined more than once, found at the beginning of "(?<one>t)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "((?<one>t)|(?<one>t))" )
+Errors: Error 15-38: Invalid regular expression: Named sub match defined more than once, found at the beginning of "(?<one>t))".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// Bad named capture group names
+
+// Matchs .NET unicode \w without \Nd [\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Pc}\p{Lm}], followed by any number of \w [\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Pc}\p{Lm}]
+// digits can't lead capture name in JavaScript, and would be confusing with numbered sub matches
+// doesn't include zero-width non-joiner (ZWNJ) \u200c and zero-width joiner (ZWJ) \u200d appears to have problems with pcre2, can add later if desired
+
+>> Match( "abc", "a(?<ß>b)c" )
+{FullMatch:"abc",StartMatch:1,ß:"b"}
+
+>> Match( "abc", "a(?<５>b)c" )
+Errors: Error 14-25: Invalid regular expression: Sub match name must be a combination of word characters and not begin with a number, found "(?<５>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abc", "a(?<_>b)c" )
+{FullMatch:"abc",StartMatch:1,_:"b"}
+
+>> Match( "abc", "a(?<ß５>b)c" )
+{FullMatch:"abc",StartMatch:1,ß５:"b"}
+
+>> Match( "abc", "a(?<_５>b)c" )
+{FullMatch:"abc",StartMatch:1,_５:"b"}
+
+>> Match( "abc", "a(?<_ß５>b)c" )
+{FullMatch:"abc",StartMatch:1,_ß５:"b"}
+
+>> Match( "abc", "a(?<$>b)c" )   // JavaScript supports $ but .NET does not
+Errors: Error 14-25: Invalid regular expression: Sub match name must be a combination of word characters and not begin with a number, found "(?<$>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "(?<a>s).*" )
+{FullMatch:"st",StartMatch:3,a:"s"}
+
+>> Match( "test", "(?<a1>s).*" )
+{FullMatch:"st",StartMatch:3,a1:"s"}
+
+// ErrInvalidRegExBadNamedCaptureName
+>> Match( "test", "(?<1>s).*" )
+Errors: Error 15-26: Invalid regular expression: Sub match name must be a combination of word characters and not begin with a number, found "(?<1>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "(?<1a>s).*" )
+Errors: Error 15-27: Invalid regular expression: Sub match name must be a combination of word characters and not begin with a number, found "(?<1a>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "(?<a_>s).*" )
+{FullMatch:"st",StartMatch:3,a_:"s"}
+
+>> Match( "test", "(?<a!>s).*" )
+Errors: Error 15-27: Invalid regular expression: Sub match name must be a combination of word characters and not begin with a number, found "(?<a!>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// Group name case sensitivity
+
+>> Match( "test", "(?<a>t).*\k<a>")
+{FullMatch:"test",StartMatch:1,a:"t"}
+
+>> Match( "test", "(?<a>t).*\k<A>")
+Errors: Error 15-31: Invalid regular expression: Sub match "\k<A>" not defined or is an unsupported forward reference.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "(?<A>t).*\k<a>")
+Errors: Error 15-31: Invalid regular expression: Sub match "\k<a>" not defined or is an unsupported forward reference.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// maximum length of capture name is 62 characters (limit is 128 code units in pcre2, less than half for multi-code unit characters if UTF-16 was used)
+
+>> Match( "abc", "a(?<a2345678901234567890123456789012345678901234567890123456789012>b)c" )
+{FullMatch:"abc",StartMatch:1,a2345678901234567890123456789012345678901234567890123456789012:"b"}
+
+>> Match( "abc", "a(?<a23456789012345678901234567890123456789012345678901234567890123>b)c" )
+Errors: Error 14-87: Invalid regular expression: Name of submatch is too long, found "(?<a23456789012345678901234567890123456789012345678901234567890123>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// conditional alternation
+
+// ErrInvalidRegExBadConditional
+// Console.WriteLine( Regex.Match( "1-23-456-7890", @"(?(\d{2}-)\d{2}-\d{2}|\d{3}-\d{2})" ).Value );
+>> Match( "1-23-456-7890", "(?(\d{2}-)\d{2}-\d{2}|\d{3}-\d{2})" )
+Errors: Error 24-60: Invalid regular expression: Conditional alternation is not supported, found "(?(".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// Console.WriteLine( Regex.Match( "hello world", @"(e)(?(1)l|d)" ).Value );
+>> Match( "hello world", "(e)(?(1)l|d)" )
+Errors: Error 22-36: Invalid regular expression: Conditional alternation is not supported, found "(?(".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// support for \r in compile time checks
+
+>> ShowColumns( Match( "ab", "(?x)a # " & Char(13) & " (?<capture>b)" ), capture )
+{capture:"b"}
+
+>> ShowColumns( Match( "ab", "(?x)a # " & Char(10) & " (?<capture>b)" ), capture )
+{capture:"b"}
+
+>> ShowColumns( Match( "ab", "a # " & Char(13) & " (?<capture>b)", MatchOptions.FreeSpacing ), capture )
+{capture:"b"}
+
+>> ShowColumns( Match( "ab", "a # " & Char(10) & " (?<capture>b)", MatchOptions.FreeSpacing ), capture )
+{capture:"b"}
+
+// difference between null and empty string
+
+>> Match( "ab", "a(d)?b", MatchOptions.NumberedSubMatches )
+{FullMatch:"ab",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "ab", "a(d?)b", MatchOptions.NumberedSubMatches )
+{FullMatch:"ab",StartMatch:1,SubMatches:Table({Value:""})}
+
+>> Match( "ab", "a(?<one>d)?b" )
+{FullMatch:"ab",StartMatch:1,one:Blank()}
+
+>> Match( "ab", "a(?<one>d?)b" )
+{FullMatch:"ab",StartMatch:1,one:""}
+
+//
+// CHARACTER CLASSES
+//
+
+// unclosed
+
+>> Match( "asdf", "asd[asdf]" )
+{FullMatch:"asdf",StartMatch:1}
+
+>> Match( "asdf", "asd[asdf" )
+Errors: Error 15-25: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "asd[".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "asdf", "asd]asdf" )
+Errors: Error 15-25: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "asd]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// character class and literal square brackets
+
+// ErrInvalidRegExEmptyCharacterClass
+>> Match( "a", "[]" )
+Errors: Error 12-16: Invalid regular expression: Square bracket character classes cannot be empty, found "[]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "]", "[]]" )
+Errors: Error 12-17: Invalid regular expression: Square bracket character classes cannot be empty, found "[]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// ErrInvalidRegExBadSquare
+>> Match( "[", "[[]" )
+Errors: Error 12-17: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "[".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcdef]ghijk", "[\w]\w]" )
+Errors: Error 23-32: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "[\w]\w]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcdef]ghijk", "asdfasdfasdfsadf[\w]\w]" )
+Errors: Error 23-48: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "...fsadf[\w]\w]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a]", "[a]]" )
+Errors: Error 13-19: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "[a]]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcdef]ghijk", "[\w\]\w]" ) // escaped closing square bracket
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "[", "[\[]" )
+{FullMatch:"[",StartMatch:1}
+
+>> Match( "]", "[\]]" )
+{FullMatch:"]",StartMatch:1}
+
+>> Match( ">test[", "[\w\[>]+" )
+{FullMatch:">test[",StartMatch:1}
+
+>> Match( ">test[", "[\w\]>]+" )
+{FullMatch:">test",StartMatch:1}
+
+// ErrInvalidRegExLiteralHyphenInCharacterClass
+>> Match( "aaaaa", "[-a]" )
+Errors: Error 16-22: Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "[-a]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaa", "[]a]" )
+Errors: Error 16-22: Invalid regular expression: Square bracket character classes cannot be empty, found "[]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaa", "[[a]" )
+Errors: Error 16-22: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "[".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// ErrInvalidRegExUnescapedCharInCharacterClass
+>> Match( "aaaaa", "[a^]" )
+Errors: Error 16-22: Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "^".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaa", "[]" )
+Errors: Error 16-20: Invalid regular expression: Square bracket character classes cannot be empty, found "[]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaa", "[a(b)]" )
+Errors: Error 16-24: Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "(".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaa", "[a(b]" )
+Errors: Error 16-23: Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "(".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaa", "[a)b]" )
+Errors: Error 16-23: Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of ")".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// character class subtraction
+
+// ErrInvalidRegExBadSquare
+>> Match( "k", "[a-z-[b-c]]" )
+Errors: Error 12-25: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "[".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// repeated characters in character class, used by intersection and future character class features, also would catch POSIX cases if wasn't already blocked by nested square brackets
+
+>> Match( "hello", "[a-z&&[k-m]]" )
+Errors: Error 16-30: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "[".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello", "[a-z&&k-m]" )
+Errors: Error 16-28: Invalid regular expression: Character appears more than once in character class, found repeated "&&".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello", "[a-hh-z]" )
+{FullMatch:"h",StartMatch:1}
+
+// ErrInvalidRegExBadSquare
+>> Match( "HellO", "[[:lower:]]" )
+Errors: Error 16-29: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "[".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello", "[[:s:]]" )
+Errors: Error 16-25: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "[".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello", "[[=x=]]" )
+Errors: Error 16-25: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "[".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// literal curly braces
+
+// ErrInvalidRegExBadCurly
+>> Match( "asdf", "{}" )
+Errors: Error 15-19: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "asdf", "asdf{}" )
+Errors: Error 15-23: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "asdf", "as{}" )
+Errors: Error 15-21: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "asdf", "as{" )
+Errors: Error 15-20: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "asdf{}", "}" )
+Errors: Error 17-20: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "asdf", "[{]" )
+Errors: Error 15-20: Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "asdf", "[}]" )
+Errors: Error 15-20: Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "asdf", "[{}]" )
+Errors: Error 15-21: Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "asdf{}", "\{\}" )
+{FullMatch:"{}",StartMatch:5}
+
+>> Match( "asdf{}", "\{" )
+{FullMatch:"{",StartMatch:5}
+
+>> Match( "asdf{}", "\}" )
+{FullMatch:"}",StartMatch:6}
+
+>> Match( "asdf{}", "[\{\}]" )
+{FullMatch:"{",StartMatch:5}
+
+>> Match( "asdf{}", "[\{\}]+" )
+{FullMatch:"{}",StartMatch:5}
+
+>> Match( "asdf{}", "[\{]" )
+{FullMatch:"{",StartMatch:5}
+
+>> Match( "asdf{}", "[\}]" )
+{FullMatch:"}",StartMatch:6}
+
+//
+// ESCAPES
+//
+
+// ErrInvalidRegExBadEscape
+>> Match( "test", "\a" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\a".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\A" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\A".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "$test atest test", "\btest" )
+{FullMatch:"test",StartMatch:2}
+
+>> Match( "$test atest test", "\Btest" )
+{FullMatch:"test",StartMatch:8}
+
+>> Match( "test" & Char(10) & "bed", "\c" )
+Errors: Error 34-38: Invalid regular expression: Invalid escape code, found "\c".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test" & Char(10) & "bed", "\cJ" )
+Errors: Error 34-39: Invalid regular expression: Invalid escape code, found "\c".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test" & Char(10) & "bed", "\cj" )
+Errors: Error 34-39: Invalid regular expression: Invalid escape code, found "\c".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test" & Char(10) & "bed", "\cm" )
+Errors: Error 34-39: Invalid regular expression: Invalid escape code, found "\c".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test" & Char(10) & "bed", "\cM" )
+Errors: Error 34-39: Invalid regular expression: Invalid escape code, found "\c".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\C" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\C".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test123bed", "\d+" )
+{FullMatch:"123",StartMatch:5}
+
+>> Match( "test123bed", "\D+" )
+{FullMatch:"test",StartMatch:1}
+
+>> Match( "test", "\e" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\e".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\E" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\E".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test"&Char(12)&"bed", "\f" )
+{FullMatch:"",StartMatch:5}
+
+>> Match( "test", "\F" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\F".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\g" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\g".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\G" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\G".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\h" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\h".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\H" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\H".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\i" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\i".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\I" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\I".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\j" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\j".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\J" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\J".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "1234551234", "(?<first>\d)\k<first>" )
+{FullMatch:"55",StartMatch:5,first:"5"}
+
+>> Match( "test", "\K" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\K".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\l" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\l".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\L" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\L".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\m" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\m".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\M" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\M".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> DropColumns( Match( "test" & Char(10) & "bed", "\n" ), FullMatch )
+{StartMatch:5}
+
+>> Match( "test", "\N" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\N".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\o" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\o".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\O" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\O".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "123test456", "\p{L}+" )
+{FullMatch:"test",StartMatch:4}
+
+>> Match( "foo123test456", "\P{L}+" )
+{FullMatch:"123",StartMatch:4}
+
+>> Match( "test", "\q" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\q".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\Q" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\Q".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> DropColumns( Match( "test" & Char(13) & "bed", "\r" ), FullMatch )
+{StartMatch:5}
+
+>> Match( "test", "\R" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\R".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test   bed", "\s+" )
+{FullMatch:"   ",StartMatch:5}
+
+>> Match( "   test   ", "\S+" )
+{FullMatch:"test",StartMatch:4}
+
+>> Match( "test" & Char(9) & "bed", "\t" )
+{FullMatch:"	",StartMatch:5}
+
+>> Match( "test", "\T" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\T".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\u0065" )
+{FullMatch:"e",StartMatch:2}
+
+>> Match( "test", "\U" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\U".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test" & Char(11) & "bed", "\v" )
+Errors: Error 34-38: Invalid regular expression: Invalid escape code, found "\v".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\V" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\V".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "&*%test bed^%$", "\w+" )
+{FullMatch:"test",StartMatch:4}
+
+>> Match( "test%bed", "\W" )
+{FullMatch:"%",StartMatch:5}
+
+>> Match( "test", "\x65" )
+{FullMatch:"e",StartMatch:2}
+
+>> Match( "test", "\X" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\X".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\y" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\y".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\Y" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\Y".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\z" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\z".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\Z" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\Z".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\_" )
+Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\_".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// negated escape class and \b can't appear in a character classes, can't easily transpile without character class subtraction or intersection in ECMAScript
+
+// ErrInvalidRegExBadEscapeInsideCharacterClass
+>> Match( "$test" & Char(8) & "test", "[\b]test" )  
+Errors: Error 35-45: Invalid regular expression: Escape character not permitted within character class, found "\b".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "$test" & Char(8) & "test", "[\B]test" )  
+Errors: Error 35-45: Invalid regular expression: Escape character not permitted within character class, found "\B".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test123bed", "[\D]+" )
+{FullMatch:"test",StartMatch:1}
+
+// ErrInvalidRegExBadEscapeInsideNegativeCharacterClass
+>> Match( "test123bed", "[^\D]+" )
+Errors: Error 21-29: Invalid regular expression: Negative escape character not permitted within negated character class, found "\D".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "$test" & Char(8) & "test", "[\W]test" )  
+{FullMatch:"$test",StartMatch:1}
+
+>> Match( "$test" & Char(8) & "test", "[^\W]test" )  
+Errors: Error 35-46: Invalid regular expression: Negative escape character not permitted within negated character class, found "\W".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "$test" & Char(8) & "test", "[\S]test" )  
+{FullMatch:"$test",StartMatch:1}
+
+>> Match( "$test" & Char(8) & "test", "[^\S]test" )  
+Errors: Error 35-46: Invalid regular expression: Negative escape character not permitted within negated character class, found "\S".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "foo123test456", "[\P{L}]+" )  
+{FullMatch:"123",StartMatch:4}
+
+>> Match( "foo123test456", "[^\P{L}]+")  // would be problematic if we wanted to implement MatchOptions.LocaleAware in the future
+Errors: Error 24-35: Invalid regular expression: Negative escape character not permitted within negated character class, found "\P{L}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "$test" & Char(8) & "test", "[\w]test" )  // \w is OK
+Blank()
+
+>> Match( "$test" & Char(8) & "atest", "[\w]test" )  // \w is OK
+{FullMatch:"atest",StartMatch:7}
+
+// Limits on character classes
+
+>> Match( "test", "\c@" )
+Errors: Error 15-20: Invalid regular expression: Invalid escape code, found "\c".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\xF" )
+Errors: Error 15-20: Invalid regular expression: Invalid escape code, found "\x".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "eF", "\x65F" ) // will only use the first two characters for the hex code and leave the F to match separately
+{FullMatch:"eF",StartMatch:1}
+
+>> Match( "test", "\uF" )
+Errors: Error 15-20: Invalid regular expression: Invalid escape code, found "\u".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\uFF" )
+Errors: Error 15-21: Invalid regular expression: Invalid escape code, found "\u".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\uFFF" )
+Errors: Error 15-22: Invalid regular expression: Invalid escape code, found "\u".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "eF", "\u0065F" ) // will only use the first four characters for the unicode and leave the F to match separately
+{FullMatch:"eF",StartMatch:1}
+
+>> Match( "test", "\p{@}" )
+Errors: Error 15-22: Invalid regular expression: Invalid escape code, found "\p".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "\P{@}" )
+Errors: Error 15-22: Invalid regular expression: Invalid escape code, found "\P".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// Escape characters acceptable to ECMAScript, plus \# and \<space> for x mode
+
+>> Match("^$\.*+?()[]{}|/# ", "\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/\#\ " ) 
+{FullMatch:"^$\.*+?()[]{}|/# ",StartMatch:1}
+
+>> Match("^$\.*+?()[]{}|/# ", "[\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/\#\ ]+" )
+{FullMatch:"^$\.*+?()[]{}|/# ",StartMatch:1}
+
+// Escape characters that are blocked outside a character class
+
+// ErrInvalidRegExBadEscapeOutsideCharacterClass
+>> Match( "!@#%&=-`~><';:,""", "\!" )
+Errors: Error 28-32: Invalid regular expression: Escape character not permitted outside a character class, found "\!".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\@" )
+Errors: Error 28-32: Invalid regular expression: Escape character not permitted outside a character class, found "\@".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\%" )
+Errors: Error 28-32: Invalid regular expression: Escape character not permitted outside a character class, found "\%".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\&" )
+Errors: Error 28-32: Invalid regular expression: Escape character not permitted outside a character class, found "\&".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\=" )
+Errors: Error 28-32: Invalid regular expression: Escape character not permitted outside a character class, found "\=".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\-" )
+Errors: Error 28-32: Invalid regular expression: Escape character not permitted outside a character class, found "\-".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\`" )
+Errors: Error 28-32: Invalid regular expression: Escape character not permitted outside a character class, found "\`".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\~" )
+Errors: Error 28-32: Invalid regular expression: Escape character not permitted outside a character class, found "\~".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\>" )
+Errors: Error 28-32: Invalid regular expression: Escape character not permitted outside a character class, found "\>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\<" )
+Errors: Error 28-32: Invalid regular expression: Escape character not permitted outside a character class, found "\<".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\;" )
+Errors: Error 28-32: Invalid regular expression: Escape character not permitted outside a character class, found "\;".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\:" )
+Errors: Error 28-32: Invalid regular expression: Escape character not permitted outside a character class, found "\:".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\," )
+Errors: Error 28-32: Invalid regular expression: Escape character not permitted outside a character class, found "\,".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a#b c", "#" )
+{FullMatch:"#",StartMatch:2}
+
+>> Match( "a#b c", " " )
+{FullMatch:" ",StartMatch:4}
+
+>> Match( "a#b c", "[#]" )
+{FullMatch:"#",StartMatch:2}
+
+>> Match( "a#b c", "[ ]" )
+{FullMatch:" ",StartMatch:4}
+
+>> Match( "a#b c", "\#" )
+{FullMatch:"#",StartMatch:2}
+
+>> Match( "a#b c", "\ " )
+{FullMatch:" ",StartMatch:4}
+
+>> Match( "a#b c", "[\ ]" )
+{FullMatch:" ",StartMatch:4}
+
+>> Match( "a#b c", "[\#]" )
+{FullMatch:"#",StartMatch:2}
+
+//
+// OPTIONS
+//
+
+// inline options
+
+>> Match( "hello"&Char(10)&"howdy", "o$" )
+Blank()
+
+>> Match( "hello"&Char(10)&"howdy", "o$", MatchOptions.Multiline )
+{FullMatch:"o",StartMatch:5}
+
+>> Match( "hello"&Char(10)&"howdy", "(?im)o$" )
+{FullMatch:"o",StartMatch:5}
+
+>> Match( "hello"&Char(10)&"howdy", "(?m)o$" )
+{FullMatch:"o",StartMatch:5}
+
+>> With( Match( "hello"&Char(10)&"howdy", "(?s)hello.howdy" ), {StartMatch: StartMatch, LengthMatch: Len(FullMatch)} )
+{LengthMatch:11,StartMatch:1}
+
+>> With( Match( "hello"&Char(13)&"howdy", "(?s)hello.howdy" ), {StartMatch: StartMatch, LengthMatch: Len(FullMatch)} )
+{LengthMatch:11,StartMatch:1}
+
+>> Match( "hello"&Char(13)&Char(10)&"howdy", "(?s)hello.howdy" )
+Blank()
+
+>> With( Match( "hello"&Char(10)&"howdy", "hello.howdy", MatchOptions.DotAll ), {StartMatch: StartMatch, LengthMatch: Len(FullMatch)} )
+{LengthMatch:11,StartMatch:1}
+
+>> With( Match( "hello"&Char(13)&"howdy", "hello.howdy", MatchOptions.DotAll ), {StartMatch: StartMatch, LengthMatch: Len(FullMatch)} )
+{LengthMatch:11,StartMatch:1}
+
+>> Match( "hello"&Char(13)&Char(10)&"howdy", "hello.howdy", MatchOptions.DotAll )
+Blank()
+
+>> Match( "hello, howdy", "(?x) llo , \s how # comment" )
+{FullMatch:"llo, how",StartMatch:3}
+
+// unsupported inline options
+
+// ErrInvalidRegExBadInlineOptions
+>> Match( "hello"&Char(10)&"howdy", "(?-m)o$" )
+Errors: Error 33-42: Invalid regular expression: Inline options are limited to a combination of the letters [imnsx], cannot disable options, and cannot be used on a subexpression, found "(?-m)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello"&Char(10)&"howdy", "(?i-m)o$" )
+Errors: Error 33-43: Invalid regular expression: Inline options are limited to a combination of the letters [imnsx], cannot disable options, and cannot be used on a subexpression, found "(?i-m)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello"&Char(10)&"howdy", "(?g)o$" )
+Errors: Error 33-41: Invalid regular expression: Inline options are limited to a combination of the letters [imnsx], cannot disable options, and cannot be used on a subexpression, found "(?g)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello"&Char(10)&"howdy", "(?u)o$" )
+Errors: Error 33-41: Invalid regular expression: Inline options are limited to a combination of the letters [imnsx], cannot disable options, and cannot be used on a subexpression, found "(?u)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello"&Char(10)&"howdy", "(?v)o$" )
+Errors: Error 33-41: Invalid regular expression: Inline options are limited to a combination of the letters [imnsx], cannot disable options, and cannot be used on a subexpression, found "(?v)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// ErrInvalidRegExBadOptionsNotAtFront
+>> Match( "hello"&Char(10)&"howdy", "^(?m)o$" )
+Errors: Error 33-42: Invalid regular expression: Inline options must appear at the beginning of the regular expression, found "(?m)" later.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello"&Char(10)&"howdy", "^(?i-m)o$" )
+Errors: Error 33-44: Invalid regular expression: Inline options must appear at the beginning of the regular expression, found "(?i-m)" later.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello"&Char(10)&"howdy", "^(?m:o$)" )
+Errors: Error 33-43: Invalid regular expression: Inline options must appear at the beginning of the regular expression, found "(?m:" later.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello world", "(?n)o")  // n accepted for compatibility, but is already turned on
+{FullMatch:"o",StartMatch:5}
+
+// ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches
+>> Match( "hello world", "(?n)o", MatchOptions.NumberedSubMatches)  // but n not accepted if it contradicts MatchOptions.NumberedSubMatches
+Errors: Error 22-29: Invalid regular expression: Inline option is incompatible with MatchOptions.NumberedSubMatches, found "(?n)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello world", "(?s)o")
+{FullMatch:"o",StartMatch:5}
+
+>> Match( "hello world", "(?x)o")
+{FullMatch:"o",StartMatch:5}
+
+>> Match( "hello world", "(?msnxi)o")
+{FullMatch:"o",StartMatch:5}
+
+// ErrInvalidRegExBadParen
+>> Match ("hello world", "(?^)o")  // PCRE2
+Errors: Error 22-29: Invalid regular expression: Unsupported special group, found "(?^".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// ErrInvalidRegExRepeatedInlineOption
+>> Match ("hello world", "(?xx)o")  // PCRE2
+Errors: Error 22-30: Invalid regular expression: Repeated inline option, found "(?xx)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match ("hello world", "(?imsni)o")  // PCRE2
+Errors: Error 22-33: Invalid regular expression: Repeated inline option, found "(?imsni)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// ErrInvalidRegExBadInlineOptions
+>> Match( "hello world", "(?A)o")
+Errors: Error 22-29: Invalid regular expression: Inline options are limited to a combination of the letters [imnsx], cannot disable options, and cannot be used on a subexpression, found "(?A)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match ("hello world", "(?J)o")  // PCRE2
+Errors: Error 22-29: Invalid regular expression: Inline options are limited to a combination of the letters [imnsx], cannot disable options, and cannot be used on a subexpression, found "(?J)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match ("hello world", "(?U)o")  // PCRE2
+Errors: Error 22-29: Invalid regular expression: Inline options are limited to a combination of the letters [imnsx], cannot disable options, and cannot be used on a subexpression, found "(?U)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// Option DotAll
+
+>> DropColumns( Match( "te" & " " & "t", "te.t", MatchOptions.DotAll ), FullMatch )
+{StartMatch:1}
+
+>> DropColumns( Match( "te" & Char(10) & "t", "te.t", MatchOptions.DotAll ), FullMatch )
+{StartMatch:1}
+
+>> DropColumns( Match( "te" & Char(13) & "t", "te.t", MatchOptions.DotAll ), FullMatch )
+{StartMatch:1}
+
+>> DropColumns( Match( "te" & UniChar(Hex2Dec("2028")) & "t", "te.t", MatchOptions.DotAll ), FullMatch )
+{StartMatch:1}
+
+>> DropColumns( Match( "te" & UniChar(Hex2Dec("2029")) & "t", "te.t", MatchOptions.DotAll ), FullMatch )
+{StartMatch:1}
+
+//
+// QUANTIFIERS
+//
+
+// greedy and lazy quantifiers
+
+>> Match( "#abcdef#", "\w+" ).FullMatch
+"abcdef"
+
+>> Match( "abcdef", "\w+?" ).FullMatch
+"a"
+
+>> Match( "abcdef", "\w*" ).FullMatch
+"abcdef"
+
+>> Match( "abcdef", "\w*?" ).FullMatch
+""
+
+>> Match( "abcdef", "\w?" ).FullMatch
+"a"
+
+>> Match( "abcdef", "\w??" ).FullMatch
+""
+
+>> Match( "abcdef", "\w{2}" ).FullMatch
+"ab"
+
+>> Match( "abcdef", "\w{2,}" ).FullMatch
+"abcdef"
+
+>> Match( "abcdef", "\w{2,}?" ).FullMatch
+"ab"
+
+>> Match( "abcdef", "\w{2,4}" ).FullMatch
+"abcd"
+
+>> Match( "abcdef", "\w{2,4}?" ).FullMatch
+"ab"
+
+// unclosed
+
+>> Match( "abcdef", "\w{2" )
+Errors: Error 17-23: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcdef", "\w2}" )
+Errors: Error 17-23: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcdef", "\w{2," )
+Errors: Error 17-24: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// ErrInvalidRegExBadCurly
+>> Match( "abcdef", "\w{,2}" ).FullMatch
+Errors: Error 17-25: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.|Error 27-37: Name isn't valid. 'FullMatch' isn't recognized.
+
+>> Match( "abcdef", "\w{,2}?" ).FullMatch
+Errors: Error 17-26: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.|Error 28-38: Name isn't valid. 'FullMatch' isn't recognized.
+
+>> Match( "abcdef", "\w{2" ).FullMatch
+Errors: Error 17-23: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.|Error 25-35: Name isn't valid. 'FullMatch' isn't recognized.
+
+>> Match( "abcdef", "\w2}" ).FullMatch
+Errors: Error 17-23: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "}".|Error 0-5: The function 'Match' has some invalid arguments.|Error 25-35: Name isn't valid. 'FullMatch' isn't recognized.
+
+// ErrInvalidRegExBadExactQuantifier
+>> Match( "abcdef", "\w{2}?" ).FullMatch
+Errors: Error 17-25: Invalid regular expression: Exact quantifiers cannot be used with quantifier modifiers such as ? for lazy, found "{2}?".|Error 0-5: The function 'Match' has some invalid arguments.|Error 27-37: Name isn't valid. 'FullMatch' isn't recognized.
+
+// possessive quantifiers
+
+// ErrInvalidRegExBadQuantifier
+>> Match( "abcdef", "\w++" ).FullMatch
+Errors: Error 17-23: Invalid regular expression: Possessive quantifiers are not supported, found "++".|Error 0-5: The function 'Match' has some invalid arguments.|Error 25-35: Name isn't valid. 'FullMatch' isn't recognized.
+
+>> Match( "abcdef", "\w*+" ).FullMatch
+Errors: Error 17-23: Invalid regular expression: Possessive quantifiers are not supported, found "*+".|Error 0-5: The function 'Match' has some invalid arguments.|Error 25-35: Name isn't valid. 'FullMatch' isn't recognized.
+
+>> Match( "abcdef", "\w?+" ).FullMatch
+Errors: Error 17-23: Invalid regular expression: Possessive quantifiers are not supported, found "?+".|Error 0-5: The function 'Match' has some invalid arguments.|Error 25-35: Name isn't valid. 'FullMatch' isn't recognized.
+
+>> Match( "abcdef", "\w{2}+" ).FullMatch
+Errors: Error 17-25: Invalid regular expression: Exact quantifiers cannot be used with quantifier modifiers such as ? for lazy, found "{2}+".|Error 0-5: The function 'Match' has some invalid arguments.|Error 27-37: Name isn't valid. 'FullMatch' isn't recognized.
+
+>> Match( "abcdef", "\w{2,}+" ).FullMatch
+Errors: Error 17-26: Invalid regular expression: Possessive quantifiers are not supported, found "{2,}+".|Error 0-5: The function 'Match' has some invalid arguments.|Error 28-38: Name isn't valid. 'FullMatch' isn't recognized.
+
+>> Match( "abcdef", "\w{2,4}+" ).FullMatch
+Errors: Error 17-27: Invalid regular expression: Possessive quantifiers are not supported, found "{2,4}+".|Error 0-5: The function 'Match' has some invalid arguments.|Error 29-39: Name isn't valid. 'FullMatch' isn't recognized.
+
+>> Match( "abcdef", "\w+*" ).FullMatch  // in case * is used someday in the future as a quantifier modifier
+Errors: Error 17-23: Invalid regular expression: Possessive quantifiers are not supported, found "+*".|Error 0-5: The function 'Match' has some invalid arguments.|Error 25-35: Name isn't valid. 'FullMatch' isn't recognized.
+
+>> Match( "abcdef", "\w**" ).FullMatch  // in case * is used someday in the future as a quantifier modifier
+Errors: Error 17-23: Invalid regular expression: Possessive quantifiers are not supported, found "**".|Error 0-5: The function 'Match' has some invalid arguments.|Error 25-35: Name isn't valid. 'FullMatch' isn't recognized.
+
+>> Match( "abcdef", "\w?*" ).FullMatch  // in case * is used someday in the future as a quantifier modifier
+Errors: Error 17-23: Invalid regular expression: Possessive quantifiers are not supported, found "?*".|Error 0-5: The function 'Match' has some invalid arguments.|Error 25-35: Name isn't valid. 'FullMatch' isn't recognized.
+
+>> Match( "abcdef", "\w{2}*" ).FullMatch  // in case * is used someday in the future as a quantifier modifier
+Errors: Error 17-25: Invalid regular expression: Exact quantifiers cannot be used with quantifier modifiers such as ? for lazy, found "{2}*".|Error 0-5: The function 'Match' has some invalid arguments.|Error 27-37: Name isn't valid. 'FullMatch' isn't recognized.
+
+>> Match( "abcdef", "\w{2,}*" ).FullMatch  // in case * is used someday in the future as a quantifier modifier
+Errors: Error 17-26: Invalid regular expression: Possessive quantifiers are not supported, found "{2,}*".|Error 0-5: The function 'Match' has some invalid arguments.|Error 28-38: Name isn't valid. 'FullMatch' isn't recognized.
+
+>> Match( "abcdef", "\w{2,4}*" ).FullMatch  // in case * is used someday in the future as a quantifier modifier
+Errors: Error 17-27: Invalid regular expression: Possessive quantifiers are not supported, found "{2,4}*".|Error 0-5: The function 'Match' has some invalid arguments.|Error 29-39: Name isn't valid. 'FullMatch' isn't recognized.
+
+// spaces in fixed range quantifiers not supported (supported in pcre2, not in JavaScript)
+
+>> Match( "abc", "a{ 1,2 }")
+Errors: Error 14-24: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abc", "a{1, 2}")
+Errors: Error 14-23: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abc", "a{ 1 , 2 }")
+Errors: Error 14-26: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abc", "a{1,2 }")
+Errors: Error 14-23: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abc", "a{ 1,2}")
+Errors: Error 14-23: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abc", "a{ 1,}")
+Errors: Error 14-22: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abc", "a{ 1, }")
+Errors: Error 14-23: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// leading zeros are ok
+
+>> Match( "abc", "a{01,02}")
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "abc", "a{000001,000002}")
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "abc", "a{01,}")
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "abc", "a{01,2}")
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "abc", "a{1,02}")
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "abc", "a{00,02}")
+{FullMatch:"a",StartMatch:1}
+
+// implied zero low value for fixed range quantifiers not supported (supported in pcre2, not in JavaScript)
+
+>> Match( "abc", "a{,2}")
+Errors: Error 14-21: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abc", "a{,}")
+Errors: Error 14-20: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// low larger than high
+
+>> Match( "baaaaaaaaaaaaaabc", "a{8,9}")
+{FullMatch:"aaaaaaaaa",StartMatch:2}
+
+>> Match( "baaaaaaaaaaaaaabc", "a{8,8}")
+{FullMatch:"aaaaaaaa",StartMatch:2}
+
+>> Match( "baaaaaaaaaaaaaabc", "a{9,8}")
+Errors: Error 28-36: Invalid regular expression: Quantifier range low number is greater than high number, found "a{9,8}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+//
+// UNICODE
+//
+
+// Unicode letters as word characters are matched
+
+>> Match( "the whole world", "\b(\w+\s*)+" )
+{FullMatch:"the whole world",StartMatch:1}
+
+>> Match( "целый мир", "\b(\w+\s*)+" )
+{FullMatch:"целый мир",StartMatch:1}
+
+>> Match( "el niño", "\b(\w+\s*)+" )
+{FullMatch:"el niño",StartMatch:1}
+
+>> Match( "Müller", "^\w+$" )
+{FullMatch:"Müller",StartMatch:1}
+
+// Unicode numbers as digits are matched
+
+>> Match( "12345", "^\d+$" )
+{FullMatch:"12345",StartMatch:1}
+
+>> Match( "12٤45", "^\d+$" )
+{FullMatch:"12٤45",StartMatch:1}
+
+>> Match( "123४5", "^\d+$" )
+{FullMatch:"123४5",StartMatch:1}
+
+>> Match( "abc3d", "^\D+" )
+{FullMatch:"abc",StartMatch:1}
+
+>> Match( "abc٤45", "^\D+" )
+{FullMatch:"abc",StartMatch:1}
+
+>> Match( "abc४5", "^\D+" )
+{FullMatch:"abc",StartMatch:1}
+
+// See Match_Unicode for character class consistency tests
+
+>> Match( "1aBc2+", "\p{L}")
+{FullMatch:"a",StartMatch:2}
+
+>> Match( "1Abc2+", "\p{L}")
+{FullMatch:"A",StartMatch:2}
+
+>> Match( "aBc2+", "\P{L}")
+{FullMatch:"2",StartMatch:4}
+
+>> Match( "1aBc2+", "\p{Ll}")
+{FullMatch:"a",StartMatch:2}
+
+>> Match( "aBc2+", "\P{Ll}")
+{FullMatch:"B",StartMatch:2}
+
+>> Match( "1aBc2+", "\p{Lu}")
+{FullMatch:"B",StartMatch:3}
+
+>> Match( "Bc2+", "\P{Lu}")
+{FullMatch:"c",StartMatch:2}
+
+>> Match( "1ῼa", "\p{Lt}" ) // Unicode Character “ῼ” (U+1FFC), Greek Capital Letter Omega with Prosgegrammeni
+{FullMatch:"ῼ",StartMatch:2}
+
+>> Match( "ῼa", "\P{Lt}" ) // Unicode Character “ῼ” (U+1FFC), Greek Capital Letter Omega with Prosgegrammeni
+{FullMatch:"a",StartMatch:2}
+
+>> Match( "1ˁa", "\p{Lm}" ) // Unicode Character “ˁ” (U+02C1), Modifier Letter Reversed Glottal Stop
+{FullMatch:"ˁ",StartMatch:2}
+
+>> Match( "ˁa1", "\P{Lm}" ) // Unicode Character “ˁ” (U+02C1), Modifier Letter Reversed Glottal Stop
+{FullMatch:"a",StartMatch:2}
+
+>> Match( "1ǂa1", "\p{Lo}" ) // Unicode Character “ǂ” (U+01C2), Latin Letter Alveolar Click
+{FullMatch:"ǂ",StartMatch:2}
+
+>> Match( "ǂa1", "\P{Lo}" ) // Unicode Character “ǂ” (U+01C2), Latin Letter Alveolar Click
+{FullMatch:"a",StartMatch:2}
+
+>> Match( "1҉a1", "\p{Me}" ) // Unicode Character “҉” (U+0489), Combining Cyrillic Millions Sign
+{FullMatch:"҉",StartMatch:2}
+
+>> Match( "҉a1", "\P{Me}" ) // Unicode Character “҉” (U+0489), Combining Cyrillic Millions Sign
+{FullMatch:"a",StartMatch:2}
+
+>> Match( "1◌̃a1", "\p{Mn}" ) // Unicode Character “◌̃” (U+0303), Combining Tilde
+{FullMatch:"̃",StartMatch:3}
+
+>> Match( "◌̃a1", "\P{Mn}" ) // Unicode Character “◌̃” (U+0303), Combining Tilde
+{FullMatch:"◌",StartMatch:1}
+
+>> Match( "1ைa1", "\p{Mc}" ) // Unicode Character “ை” (U+0BC8), Tamil Vowel Sign Ai
+{FullMatch:"ை",StartMatch:2}
+
+>> Match( "ைa1", "\P{Mc}" ) // Unicode Character “ை” (U+0BC8), Tamil Vowel Sign Ai
+{FullMatch:"a",StartMatch:2}
+
+// ErrInvalidRegExBadUnicodeCategory
+>> Match( "1aBc2+", "\P{Cs}")
+Errors: Error 17-25: Invalid regular expression: Invalid Unicode category name, found "\P{Cs}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "1aBc2+", "\P{Co}")
+Errors: Error 17-25: Invalid regular expression: Invalid Unicode category name, found "\P{Co}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "1aBc2+", "\P{Cn}")
+Errors: Error 17-25: Invalid regular expression: Invalid Unicode category name, found "\P{Cn}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "1aBc2+", "\P{Aa}")
+Errors: Error 17-25: Invalid regular expression: Invalid Unicode category name, found "\P{Aa}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "1aBc2+", "\P{Lz}")
+Errors: Error 17-25: Invalid regular expression: Invalid Unicode category name, found "\P{Lz}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "1aBc2+", "\P{}")
+Errors: Error 17-23: Invalid regular expression: Invalid escape code, found "\P".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 
+// CHARACTERS LIMITED IN CHARACTER CLASS 
+//
+
+>> Match( "abcd1234", "[\d]")
+{FullMatch:"1",StartMatch:5}
+
+>> Match( "abcd1234", "[\w]")
+{FullMatch:"a",StartMatch:1}
+
+// Single and double characters blocked
+
+>> Match( "abcd1234", "[{]")
+Errors: Error 19-24: Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "{".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234", "[}]")
+Errors: Error 19-24: Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234", "[/]")
+Errors: Error 19-24: Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "/".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234", "[|]")
+Errors: Error 19-24: Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "|".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234", "[\]")
+Errors: Error 19-24: Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "\".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234", "[a^]")
+Errors: Error 19-25: Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "^".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234", "[^^]")
+Errors: Error 19-25: Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "^".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234", "[^^^]")
+Errors: Error 19-26: Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "^".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234", "[-]")
+Errors: Error 19-24: Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "[-]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234", "[--]")
+Errors: Error 19-25: Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "[--]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234", "[-a]")
+Errors: Error 19-25: Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "[-a]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234", "[a-]")
+Errors: Error 19-25: Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "[a-]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234", "[a-b]")
+{FullMatch:"a",StartMatch:1}
+
+// Single is OK but double is not
+
+>> Match( "abcd1234***", "[*]")
+{FullMatch:"*",StartMatch:9}
+
+// ErrInvalidRegExRepeatInCharClass
+>> Match( "abcd1234***", "[**]")
+Errors: Error 22-28: Invalid regular expression: Character appears more than once in character class, found repeated "**".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234+++", "[+]")
+{FullMatch:"+",StartMatch:9}
+
+>> Match( "abcd1234+++", "[++]")
+Errors: Error 22-28: Invalid regular expression: Character appears more than once in character class, found repeated "++".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234...", "[.]")
+{FullMatch:".",StartMatch:9}
+
+>> Match( "abcd1234...", "[..]")
+Errors: Error 22-28: Invalid regular expression: Character appears more than once in character class, found repeated "..".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234###", "[#]")
+{FullMatch:"#",StartMatch:9}
+
+>> Match( "abcd1234###", "[##]")
+Errors: Error 22-28: Invalid regular expression: Character appears more than once in character class, found repeated "##".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234$", "[$]")
+{FullMatch:"$",StartMatch:9}
+
+>> Match( "abcd1234$$$", "[$$]")
+Errors: Error 22-28: Invalid regular expression: Character appears more than once in character class, found repeated "$$".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234???", "[?]")
+{FullMatch:"?",StartMatch:9}
+
+>> Match( "abcd1234???", "[??]")
+Errors: Error 22-28: Invalid regular expression: Character appears more than once in character class, found repeated "??".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234&&&", "[&]")
+{FullMatch:"&",StartMatch:9}
+
+>> Match( "abcd1234&&&", "[&&]")
+Errors: Error 22-28: Invalid regular expression: Character appears more than once in character class, found repeated "&&".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234!!!", "[!]")
+{FullMatch:"!",StartMatch:9}
+
+>> Match( "abcd1234!!!", "[!!]")
+Errors: Error 22-28: Invalid regular expression: Character appears more than once in character class, found repeated "!!".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234%%%", "[%]")
+{FullMatch:"%",StartMatch:9}
+
+>> Match( "abcd1234%%%", "[%%]")
+Errors: Error 22-28: Invalid regular expression: Character appears more than once in character class, found repeated "%%".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234,,,", "[,]")
+{FullMatch:",",StartMatch:9}
+
+>> Match( "abcd1234,,,", "[,,]")
+Errors: Error 22-28: Invalid regular expression: Character appears more than once in character class, found repeated ",,".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234:::", "[:]")
+{FullMatch:":",StartMatch:9}
+
+>> Match( "abcd1234:::", "[::]")
+Errors: Error 22-28: Invalid regular expression: Character appears more than once in character class, found repeated "::".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234;;;", "[;]")
+{FullMatch:";",StartMatch:9}
+
+>> Match( "abcd1234;;;", "[;;]")
+Errors: Error 22-28: Invalid regular expression: Character appears more than once in character class, found repeated ";;".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234<<<", "[<]")
+{FullMatch:"<",StartMatch:9}
+
+>> Match( "abcd1234<<<", "[<<]")
+Errors: Error 22-28: Invalid regular expression: Character appears more than once in character class, found repeated "<<".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234===", "[=]")
+{FullMatch:"=",StartMatch:9}
+
+>> Match( "abcd1234===", "[==]")
+Errors: Error 22-28: Invalid regular expression: Character appears more than once in character class, found repeated "==".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234>>>", "[>]")
+{FullMatch:">",StartMatch:9}
+
+>> Match( "abcd1234>>>", "[>>]")
+Errors: Error 22-28: Invalid regular expression: Character appears more than once in character class, found repeated ">>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234@@@@", "[@]")
+{FullMatch:"@",StartMatch:9}
+
+>> Match( "abcd1234@@@@", "[@@]")
+Errors: Error 23-29: Invalid regular expression: Character appears more than once in character class, found repeated "@@".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234````", "[`]")
+{FullMatch:"`",StartMatch:9}
+
+>> Match( "abcd1234````", "[``]")
+Errors: Error 23-29: Invalid regular expression: Character appears more than once in character class, found repeated "``".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcd1234~~~~", "[~]")
+{FullMatch:"~",StartMatch:9}
+
+>> Match( "abcd1234~~~~", "[~~]")
+Errors: Error 23-29: Invalid regular expression: Character appears more than once in character class, found repeated "~~".|Error 0-5: The function 'Match' has some invalid arguments.
+
+//
+// OTHER
+//
+
+// Features supported by PCRE2
+
+// ErrInvalidRegExBadParen
+>> Match( "asdf", "(*MARK)")
+Errors: Error 15-24: Invalid regular expression: Unsupported special group, found "(*M".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// regular expression parsing
+
+>> Match( "test\123bed", "\\(\a)" )
+Errors: Error 22-30: Invalid regular expression: Invalid escape code, found "\a".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test\123bed", "\\(\d)" )
+{FullMatch:"\1",StartMatch:5}
+
+>> IsMatch( "abc", "[-a]" )
+Errors: Error 16-22: Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "[-a]".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "abc", "[a-]" )
+Errors: Error 16-22: Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "[a-]".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "abc", "[a-b]+c" )
+true
+
+// ErrInvalidRegExBadEscapeInsideCharacterClass
+>> IsMatch( "abc", "(a)[\1]")
+Errors: Error 16-25: Invalid regular expression: Escape character not permitted within character class, found "\1".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "abc", "(?<c>a)[\k<c>]")
+Errors: Error 16-32: Invalid regular expression: Escape character not permitted within character class, found "\k<c>".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "abc", "[\b]")
+Errors: Error 16-22: Invalid regular expression: Escape character not permitted within character class, found "\b".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "abc", "[\B]")
+Errors: Error 16-22: Invalid regular expression: Escape character not permitted within character class, found "\B".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "abc", "[(]")
+Errors: Error 16-21: Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "(".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "abc()", "[\(]", MatchOptions.Contains )
+true
+
+// Basic comments, more in Match_Comments.txt
+
+>> Match( "asdf", "(?# asdf )" )
+{FullMatch:"",StartMatch:1}
+
+>> Match( "asdf", "d(?# asdf )" )
+{FullMatch:"d",StartMatch:3}
+
+// ErrInvalidRegExUnclosedInlineComment
+>> Match( "asdf", "(?# asdf " )
+Errors: Error 15-26: Invalid regular expression: Unclosed inline comment, found "(?# asdf ".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "asdf", "(?x) f # asdf " )
+{FullMatch:"f",StartMatch:4}
+
+// Pattern and options must be constant values
+
+>> Match( "asdf", "asdf" )
+{FullMatch:"asdf",StartMatch:1}
+
+// Concat of constants is OK
+>> Match( "asdf", "as" & "df" )
+{FullMatch:"asdf",StartMatch:1}
+
+>> Match( "asdf", Concatenate( "as", "df" ) )
+{FullMatch:"asdf",StartMatch:1}
+
+// Concat function is not
+>> Match( "asdf", Concat(["as", "df"], Value) )
+Errors: Error 15-42: Regular expression must be a constant value.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// Concat with Code and UniCode is OK
+>> Match( "asdf", Char(97) & "sd" & Char(102) )
+{FullMatch:"asdf",StartMatch:1}
+
+>> Match( "asdf", Char(65+32) & "sd" & Char(70+32) )
+Errors: Error 34-35: Regular expression must be a constant value.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// ErrVariableRegEx
+>> Match( "asdf", Text( "asdf" ) )
+Errors: Error 15-29: Regular expression must be a constant value.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// ErrVariableRegExOptions
+>> Match( "asdf", "asdf", If( Int(4) > -1, MatchOptions.IgnoreCase, MatchOptions.Contains ) )
+Errors: Error 23-88: MatchOptions must be a constant value.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "asdf", "asdf", If( Int(4) > -1, MatchOptions.IgnoreCase, Blank() ) )
+Errors: Error 23-74: MatchOptions must be a constant value.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// ErrVariableRegEx
+>> MatchAll( "asdf", Text( "asdf" ) )
+Errors: Error 18-32: Regular expression must be a constant value.|Error 0-8: The function 'MatchAll' has some invalid arguments.
+
+>> Match( "asDFASdf", "dfas", MatchOptions.IgnoreCase & MatchOptions.Contains )
+{FullMatch:"DFAS",StartMatch:3}
+
+>> Match( "asDFASdf", "dfas", Concatenate( MatchOptions.IgnoreCase, MatchOptions.Contains ) )
+{FullMatch:"DFAS",StartMatch:3}
+
+// ErrVariableRegExOptions
+>> MatchAll( "asdf", "asdf", If( Int(4) > -1, MatchOptions.IgnoreCase, MatchOptions.Contains ) )
+Errors: Error 26-91: MatchOptions must be a constant value.|Error 0-8: The function 'MatchAll' has some invalid arguments.
+
+// ErrVariableRegEx
+>> IsMatch( "asdf", Text( "asdf" ) )
+Errors: Error 17-31: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// ErrVariableRegExOptions
+>> IsMatch( "asdf", "asdf", If( Int(4) > -1, MatchOptions.IgnoreCase, MatchOptions.Contains ) )
+Errors: Error 25-90: MatchOptions must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// String interpolation is supported for constant regular expression pattern
+
+>> Match( "asdf", $"a{ Char(115) }{ UniChar(100) }f" )
+{FullMatch:"asdf",StartMatch:1}
+
+>> Match( "asdf", $"a{$"s{$"d{$"f"}"}"}" )
+{FullMatch:"asdf",StartMatch:1}
+
+>> Match( "asdf", $"a{ Char(115) }" & $"{ UniChar(100) }f" )
+{FullMatch:"asdf",StartMatch:1}
+
+>> Match( "asdf", "a" & $"{Char(115)}" & $"{UniChar(100)}" & "f" )
+{FullMatch:"asdf",StartMatch:1}
+
+>> Match( "asdf", "a" & $"{Char(Len("asdf"&"asdf"))}" & $"{UniChar(100)}" & "f" )
+Errors: Error 71-72: Regular expression must be a constant value.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "asdf", "a" & $"{Char(114+1)}" & $"{UniChar(100)}" & "f" )
+Errors: Error 58-59: Regular expression must be a constant value.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// leading zeros on quant support
+
+>> Match( "aaaaaa", "a{00002,}" )
+{FullMatch:"aaaaaa",StartMatch:1}
+
+>> Match( "aaaaaa", "a{00002,000003}" )
+{FullMatch:"aaa",StartMatch:1}
+
+>> Match( "aa", "a{00002,000003}" )
+{FullMatch:"aa",StartMatch:1}
+
+>> Match( "a", "a{00002,000003}" )
+Blank()
+
+// look behind character count
+
+>> Match ( "a", "(?<=a{1,250})")
+{FullMatch:"",StartMatch:2}
+
+>> Match ( "a", "(?<=a{1,251})")
+Errors: Error 13-28: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...?<=a{1,251})".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=(bc((a{1,2})b){2,4}d){5,16}0123456789)" )
+Blank()
+
+>> Match( "a", "(?<=(bc((a{1,3})b){2,4}d){5,16}0123456789)" )
+Errors: Error 12-56: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=(bc((a{1,2})b){2,5}d){5,16}0123456789)" )
+Errors: Error 12-56: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=(bc((a{1,2})b){2,4}d){5,17}0123456789)" )
+Errors: Error 12-56: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=a(bc((a{1,2})b){2,4}d){5,17}0123456789)" )
+Errors: Error 12-57: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=(bc((a{1,2})b){2,4}d){5,17}0123456789a)" )
+Errors: Error 12-57: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...0123456789a)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=(1234567890){25})")
+Blank()
+
+>> Match( "a", "(?<=(1234567890){26})")
+Errors: Error 12-35: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...567890){26})".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=((1234567890){1,12}){1,2}1234567890)")
+Blank()
+
+>> Match( "12345678901234567890", "(?<=((1234567890){1,12}){1,2}1234567890)")
+{FullMatch:"",StartMatch:21}
+
+>> Match( "12345678901234567890", "(?<=((1234567890){1,12}){1,2}1234567890a)")
+Errors: Error 31-74: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...1234567890a)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaaaaaaaaaaaaaaaaaab", "((aa){2,10})(?<=\1{2,12}aaaaaaaaaa)b", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaaab",StartMatch:18,SubMatches:Table({Value:"aaaa"},{Value:"aa"})}
+
+>> Match( "aaaaaaaaaaaaaaaaaaaaab", "((aa){2,10})(?<=\1{2,12}aaaaaaaaaaa)b", MatchOptions.NumberedSubMatches )
+Errors: Error 33-72: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...aaaaaaaaaaa)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaaaaaaaaaaaaaaaaaab", "((aa){2,})(?<=\1{2,12}aaaaaaaaaa)b", MatchOptions.NumberedSubMatches )
+Errors: Error 33-69: Invalid regular expression: Unlimited quantifiers are not supported in look behinds, found at the end of "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match ( "a", "(?<!a{1,250})")
+{FullMatch:"",StartMatch:1}
+
+>> Match( "a", "(?<!a{1,251})")
+Errors: Error 12-27: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...?<!a{1,251})".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!(bc((a{1,2})b){2,4}d){5,16}0123456789)" )
+{FullMatch:"",StartMatch:1}
+
+>> Match( "a", "(?<!(bc((a{1,3})b){2,4}d){5,16}0123456789)" )
+Errors: Error 12-56: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!(bc((a{1,2})b){2,5}d){5,16}0123456789)" )
+Errors: Error 12-56: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!(bc((a{1,2})b){2,4}d){5,17}0123456789)" )
+Errors: Error 12-56: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!a(bc((a{1,2})b){2,4}d){5,17}0123456789)" )
+Errors: Error 12-57: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!(bc((a{1,2})b){2,4}d){5,17}0123456789a)" )
+Errors: Error 12-57: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...0123456789a)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!(1234567890){25})")
+{FullMatch:"",StartMatch:1}
+
+>> Match( "a", "(?<!(1234567890){26})")
+Errors: Error 12-35: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...567890){26})".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!((1234567890){1,12}){1,2}1234567890)")
+{FullMatch:"",StartMatch:1}
+
+>> Match( "12345678901234567890", "(?<!((1234567890){1,12}){1,2}1234567890)")
+{FullMatch:"",StartMatch:1}
+
+>> Match( "12345678901234567890", "(?<!((1234567890){1,12}){1,2}1234567890a)")
+Errors: Error 31-74: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...1234567890a)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaaaaaaaaaaaaaaaaaab", "((aa){2,10})(?<!\1{2,12}aaaaaaaaaa)b", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaaaaaaaaaaaaaaaaaaab",StartMatch:2,SubMatches:Table({Value:"aaaaaaaaaaaaaaaaaaaa"},{Value:"aa"})}
+
+>> Match( "aaaaaaaaaaaaaaaaaaaaab", "((aa){2,10})(?<!\1{2,12}aaaaaaaaaaa)b", MatchOptions.NumberedSubMatches )
+Errors: Error 33-72: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...aaaaaaaaaaa)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaaaaaaaaaaaaaaaaaab", "((aa){2,})(?<!\1{2,12}aaaaaaaaaa)b", MatchOptions.NumberedSubMatches )
+Errors: Error 33-69: Invalid regular expression: Unlimited quantifiers are not supported in look behinds, found at the end of "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// number of repetitions overflow
+// very unlikely for standard use to hit signed 32-bit max, but someone may test the boundaries...
+// back refs are never converted to a number, instead compared as strings against the capture group's index converted to a string, so not an issue
+
+>> Match( "a", "a{1111111111111111111111111111111111,}" )
+Errors: Error 12-52: Invalid regular expression: Number is too large, found "{1111111111111111111111111111111111,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "a{1111111111111111111111111111111111,111111111111111111111111111111111111111111111}" )
+Errors: Error 12-97: Invalid regular expression: Number is too large, found "{1111111111111111111111111111111111,111111111111111111111111111111111111111111111}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "a{1,111111111111111111111111111111111111111111111}" )
+Errors: Error 12-64: Invalid regular expression: Number is too large, found "{1,111111111111111111111111111111111111111111111}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "a{11111111111111111111111111111111111111,1}" )
+Errors: Error 12-57: Invalid regular expression: Number is too large, found "{11111111111111111111111111111111111111,1}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "a{11111111111111111111111111111111111111}" )
+Errors: Error 12-55: Invalid regular expression: Number is too large, found "{11111111111111111111111111111111111111}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// character class ranges with character classes
+
+>> Match( "-", "[\w-a]" )
+Errors: Error 12-20: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found "-".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "-", "[a-\w]" )
+Errors: Error 12-20: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found "\w".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "-", "[\s-a]" )
+Errors: Error 12-20: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found "-".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "-", "[a-\s]" )
+Errors: Error 12-20: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found "\s".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "-", "[\d-a]" )
+Errors: Error 12-20: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found "-".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "-", "[a-\d]" )
+Errors: Error 12-20: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found "\d".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "-", "[\p{L}-a]" )
+Errors: Error 12-23: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found "-".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "-", "[a-\p{L}]" )
+Errors: Error 12-23: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found "\p{L}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// character class ranges in reverse order
+
+>> Match( "k", "[a-z]")
+{FullMatch:"k",StartMatch:1}
+
+>> Match( "k", "[z-a]")
+Errors: Error 12-19: Invalid regular expression: The characters in a character class range are reversed, found at the end of "a".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "k", "[k-k]")
+{FullMatch:"k",StartMatch:1}
+
+>> Match( "k", "[\x60-\x80]")
+{FullMatch:"k",StartMatch:1}
+
+>> Match( "k", "[\x80-\x60]")
+Errors: Error 12-25: Invalid regular expression: The characters in a character class range are reversed, found at the end of "\x60".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "k", "[\x6b-\x6B]")
+{FullMatch:"k",StartMatch:1}
+
+>> Match( "%", "[\u0020-\u0030]")
+{FullMatch:"%",StartMatch:1}
+
+>> Match( "%", "[\u0030-\u0020]")
+Errors: Error 12-29: Invalid regular expression: The characters in a character class range are reversed, found at the end of "\u0020".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%", "[\u0025-\u0025]")
+{FullMatch:"%",StartMatch:1}
+
+// character class range followed by an unescaped hyphen
+
+>> Match( "a", "[a-b]")
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "a", "[a-b-c]")
+Errors: Error 12-21: Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "-".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "[-b]")
+Errors: Error 12-18: Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "[-b]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "[-b-c]")
+Errors: Error 12-20: Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "[-b-c]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "[a-b-]")
+Errors: Error 12-20: Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "[a-b-]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "[a-bc-de-fg-h]")
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "a", "[a-bc-de-fg-h-k]")
+Errors: Error 12-30: Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "-".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "y", "[a-bcd-ekp-z]")
+{FullMatch:"y",StartMatch:1}
+
+// ends with backslash
+
+>> Match( "a\\", "\" )
+Errors: Error 14-17: Invalid regular expression: Ends with an unescaped backslash.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a\\", "a\" )
+Errors: Error 14-18: Invalid regular expression: Ends with an unescaped backslash.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a\\", "a\\" )
+{FullMatch:"a\",StartMatch:1}
+
+>> Match( "a\\", "a\\\" )
+Errors: Error 14-20: Invalid regular expression: Ends with an unescaped backslash.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a\\", "a\\\\" )
+{FullMatch:"a\\",StartMatch:1}
+
+// nothing to quantify
+
+>> Match( "a", "*" )
+Errors: Error 12-15: Invalid regular expression: Quantifier without something to quantify, found "*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "+" )
+Errors: Error 12-15: Invalid regular expression: Quantifier without something to quantify, found "+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "?" )
+Errors: Error 12-15: Invalid regular expression: Quantifier without something to quantify, found "?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "{3}" )
+Errors: Error 12-17: Invalid regular expression: Quantifier without something to quantify, found "{3}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "{3,}" )
+Errors: Error 12-18: Invalid regular expression: Quantifier without something to quantify, found "{3,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "{3,4}" )
+Errors: Error 12-19: Invalid regular expression: Quantifier without something to quantify, found "{3,4}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "asdf|*" )
+Errors: Error 12-20: Invalid regular expression: Quantifier without something to quantify, found "asdf|*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "asdf|+" )
+Errors: Error 12-20: Invalid regular expression: Quantifier without something to quantify, found "asdf|+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "asdf|?" )
+Errors: Error 12-20: Invalid regular expression: Quantifier without something to quantify, found "asdf|?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "asdf|{3}" )
+Errors: Error 12-22: Invalid regular expression: Quantifier without something to quantify, found "asdf|{3}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "asdf|{3,}" )
+Errors: Error 12-23: Invalid regular expression: Quantifier without something to quantify, found "asdf|{3,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "asdf|{3,4}" )
+Errors: Error 12-24: Invalid regular expression: Quantifier without something to quantify, found "asdf|{3,4}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?i)+" )
+Errors: Error 12-19: Invalid regular expression: Quantifier without something to quantify, found "(?i)+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?i)*" )
+Errors: Error 12-19: Invalid regular expression: Quantifier without something to quantify, found "(?i)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?i){1,3}" )
+Errors: Error 12-23: Invalid regular expression: Quantifier without something to quantify, found "(?i){1,3}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?# comment)?" )
+Errors: Error 12-27: Invalid regular expression: Quantifier without something to quantify, found "...?# comment)?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?# comment)*" )
+Errors: Error 12-27: Invalid regular expression: Quantifier without something to quantify, found "...?# comment)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?# comment){1,3}" )
+Errors: Error 12-31: Invalid regular expression: Quantifier without something to quantify, found "...omment){1,3}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaaaa", "a(?# comment)?" )
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "aaaaaaa", "a(?# comment)*" )
+{FullMatch:"aaaaaaa",StartMatch:1}
+
+>> Match( "aaaaaaa", "a(?# comment){1,3}" )
+{FullMatch:"aaa",StartMatch:1}
+

@@ -1,0 +1,26 @@
+#override: MatchAll_V1CompatDisabled.txt
+#SETUP: RegEx,disable:PowerFxV1CompatibilityRules
+
+// The C# interpeter doesn't have a non-V1 implementation of the Match functions, so SubMatches will not appear in these results
+
+>> MatchAll("Hello", "\w")
+Table({FullMatch:"H",StartMatch:1},{FullMatch:"e",StartMatch:2},{FullMatch:"l",StartMatch:3},{FullMatch:"l",StartMatch:4},{FullMatch:"o",StartMatch:5})
+
+>> MatchAll("Bob Jones <bob.jones@contoso.com>", "<(?<email>" & Match.Email & ")>")
+Table({FullMatch:"<bob.jones@contoso.com>",StartMatch:11,email:"bob.jones@contoso.com"})
+
+>> MatchAll("PT2H1M39S", "PT(?:(?<hours>\d+)H)?(?:(?<minutes>\d+)M)?(?:(?<seconds>\d+)S)?")
+Table({FullMatch:"PT2H1M39S",StartMatch:1,hours:"2",minutes:"1",seconds:"39"})
+
+>> MatchAll("Hello", "(?<p1>\w)l(?<p2>\w)")
+Table({FullMatch:"ell",StartMatch:2,p1:"e",p2:"l"})
+
+>> MatchAll("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete & MatchOptions.Multiline)
+Table({FullMatch:"Joe 164",StartMatch:1},{FullMatch:"Sam 208",StartMatch:9})
+
+>> MatchAll("Hello", "Hello", MatchOptions.IgnoreCase)
+Table({FullMatch:"Hello",StartMatch:1})
+
+>> MatchAll("Hi", "Hi", MatchOptions.Multiline)
+Table({FullMatch:"Hi",StartMatch:1})
+
