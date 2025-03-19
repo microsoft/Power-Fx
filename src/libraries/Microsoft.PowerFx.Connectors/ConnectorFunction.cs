@@ -1134,7 +1134,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 foreach (string po in pagingOptions)
                 {
-                    if (!Enum.TryParse(po, out ServerPagingOptions _))
+                    if (!Enum.TryParse(po, true, out ServerPagingOptions _))
                     {
                         issues.Add(new ExpressionError()
                         {
