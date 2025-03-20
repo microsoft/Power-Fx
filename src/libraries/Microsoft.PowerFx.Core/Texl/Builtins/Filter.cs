@@ -111,8 +111,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     if (dataSourceInfo != null)
                     {
                         // Verify the view belongs to the same datasource
-                        var viewInfo = argTypes[i].ViewInfo.VerifyValue();
-                        if (viewInfo.RelatedEntityName != dataSourceInfo.Name)
+                        var viewInfo = argTypes[i].ViewInfo?.VerifyValue();
+                        if (viewInfo != null && viewInfo.RelatedEntityName != dataSourceInfo.Name)
                         {
                             errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrViewFromCurrentTableExpected, dataSourceInfo.Name);
                         }
