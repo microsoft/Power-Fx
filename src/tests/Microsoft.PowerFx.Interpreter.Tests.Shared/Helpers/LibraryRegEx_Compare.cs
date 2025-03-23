@@ -66,24 +66,50 @@ namespace Microsoft.PowerFx.Functions
             protected Library.RegexCommonImplementation node_alt;
             protected Library.RegexCommonImplementation pcre2_alt;
 
-            private string CharCodes(string text)
+            private string CharCodes(string str)
             {
-                StringBuilder sb = new StringBuilder();
+                StringBuilder outStr = new StringBuilder();
 
-                foreach (char c in text)
+                foreach (var c in str)
                 {
-                    sb.Append(Convert.ToInt32(c).ToString("X4"));
-                    sb.Append(" ");
+                    switch (c)
+                    {
+                        case '\"':
+                            outStr.Append("\\\"");
+                            break;
+                        case '\r':
+                            outStr.Append("\\r");
+                            break;
+                        case '\n':
+                            outStr.Append("\\n");
+                            break;
+                        case '\t':
+                            outStr.Append("\\t");
+                            break;
+                        case '\b':
+                            outStr.Append("\\b");
+                            break;
+                        case '\f':
+                            outStr.Append("\\f");
+                            break;
+                        case '\\':
+                            outStr.Append("\\\\");
+                            break;
+                        default:
+                            if ((c < 0x20) || (c >= 0x7f))
+                            {
+                                outStr.Append("\\u" + ((int)c).ToString("X4"));
+                            }
+                            else
+                            {
+                                outStr.Append(c);
+                            }
+
+                            break;
+                    }
                 }
 
-                if (sb.Length > 0)
-                {
-                    return sb.ToString().Substring(0, sb.Length - 1);
-                }
-                else
-                {
-                    return string.Empty;
-                }    
+                return outStr.ToString();
             }
 
             private FormulaValue InvokeRegexFunctionOne(string input, string regex, string options, Library.RegexCommonImplementation dotnet, Library.RegexCommonImplementation node, Library.RegexCommonImplementation pcre2, string kind)
@@ -122,7 +148,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     var report =
                         $"  re='{regex}' options='{options}'\n" +
-                        $"  input='{input}' ({CharCodes(input)})\n" +
+                        $"  input='{CharCodes(input)}'\n" +
                         $"  net={dotnetExpr}\n" +
                         (nodeExpr != null ? $"  node={nodeExpr}\n" : string.Empty) +
                         (pcre2Expr != null ? $"  pcre2={pcre2Expr}\n" : string.Empty);

@@ -637,23 +637,28 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             foreach (Match token in generalRE.Matches(regexPattern))
             {
-                RegexTypeCacheEntry RegExError(ErrorResourceKey? error, Match errToken = null, bool startContext = false, bool endContext = false, string postContext = null)
+                RegexTypeCacheEntry RegExError(ErrorResourceKey? error, int index = -1, int len = 1, bool startContext = false, bool endContext = false, string postContext = null)
                 {
-                    if (errToken == null)
+                    if (index == -1)
                     {
-                        errToken = token;
+                        index = token.Index;
+                        len = token.Length;
                     }
 
-                    string found = errToken.Value;
+                    string found;
 
                     if (endContext)
                     {
-                        var tokenEnd = errToken.Index + errToken.Length;
+                        var tokenEnd = index + len;
                         found = tokenEnd > ErrorContextLength ? "..." + regexPattern.Substring(tokenEnd - ErrorContextLength, ErrorContextLength) : regexPattern.Substring(0, tokenEnd);
                     }
                     else if (startContext)
                     {
-                        found = errToken.Index + ErrorContextLength >= regexPattern.Length ? regexPattern.Substring(errToken.Index) : regexPattern.Substring(errToken.Index, ErrorContextLength) + "...";
+                        found = index + ErrorContextLength >= regexPattern.Length ? regexPattern.Substring(index) : regexPattern.Substring(index, ErrorContextLength) + "...";
+                    }
+                    else
+                    {
+                        found = regexPattern.Substring(index, len);
                     }
 
                     return new RegexTypeCacheEntry()
@@ -755,12 +760,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         string ccString = characterClassNegative ? token.Groups["characterClass"].Value.Substring(1) : token.Groups["characterClass"].Value;
                         int hyphenWait = 0;
                         int hyphenStart = 0;
+                        int lastChar = 0;
 
                         foreach (Match ccToken in characterClassRE.Matches(ccString))
                         {
-                            RegexTypeCacheEntry CCRegExError(ErrorResourceKey errKey)
+                            RegexTypeCacheEntry CCRegExError(ErrorResourceKey errKey, int index = -1, int len = -1)
                             {
-                                return RegExError(errKey, errToken: ccToken);
+                                return RegExError(errKey, index: index == -1 ? ccToken.Index + token.Index + 1 : index, len: len == -1 ? ccToken.Length : len, endContext: true);
                             }
 
                             if (ccToken.Groups["goodEscape"].Success || ccToken.Groups["goodEscapeInsideCCOnly"].Success || ccToken.Groups["else"].Success)
@@ -802,6 +808,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                     }
                                 }
 
+                                if (char.IsHighSurrogate((char)lastChar) && char.IsLowSurrogate((char)charVal))
+                                {
+                                    return CCRegExError(TexlStrings.ErrInvalidRegExSurrogatePairInCharacterClass);
+                                }
+
                                 if (hyphenWait > 1 && charVal == -1)
                                 {
                                     return CCRegExError(TexlStrings.ErrInvalidRegExCharacterClassCategoryUse);
@@ -813,6 +824,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 }
 
                                 hyphenStart = charVal;
+                                lastChar = charVal;
                                 hyphenWait--;
                             }
                             else if (ccToken.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
@@ -828,6 +840,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 }
 
                                 hyphenStart = -1;
+                                lastChar = 0;
                                 hyphenWait--;
                             }
                             else if (ccToken.Groups["goodUEscape"].Success)
@@ -849,6 +862,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 }
 
                                 hyphenStart = -1;
+                                lastChar = 0;
                                 hyphenWait--;
                             }
                             else if (ccToken.Groups["goodHyphen"].Success)
@@ -864,6 +878,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 }
 
                                 // we need to see two characters after a hyphen, to end and start another range, before we can entertain another hyphen
+                                lastChar = 0;
                                 hyphenWait = 2; 
                             }
                             else if (ccToken.Groups["badEscape"].Success)

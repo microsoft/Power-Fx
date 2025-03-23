@@ -88,7 +88,8 @@ namespace Microsoft.PowerFx.Functions
                             case '\\':
                                 if (++index < regex.length)
                                 {
-                                    const wordChar = '\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}\\p{Lm}\\p{Mn}\\p{Nd}\\p{Pc}';
+                                    const letterCaseChar = '\\p{Ll}\\p{Lu}\\p{Lt}';
+                                    const wordChar = letterCaseChar + '\\p{Lo}\\p{Lm}\\p{Mn}\\p{Nd}\\p{Pc}';
                                     const spaceChar = '" + MatchWhiteSpace.SpaceNewLineDoubleEscapes + @"';
                                     const digitChar = '\\p{Nd}';
 
@@ -119,6 +120,36 @@ namespace Microsoft.PowerFx.Functions
                                                 orCharacterClass = orCharacterClass.concat( '|[^', spaceChar, ']' );
                                             else
                                                 alteredToken = ''.concat('[^', spaceChar, ']');
+                                            break;
+
+                                        case 'p':
+                                            // /\p{Lt}/i.exec('a') does not match in JavaScript, but does in .NET and PCRE2
+                                            // Only if using ignoreCase, replace any of Ll, Lu, and Lt with all three of them
+                                            if (ignoreCase && /\{L[lut]\}/.test(regex.substring(index+1, index+6)) )
+                                            {
+                                                alteredToken = ''.concat(openCharacterClass ? '' : '[', letterCaseChar, openCharacterClass ? '' : ']');
+
+                                                index += 5;
+                                            }
+                                            else
+                                            {
+                                                alteredToken = '\\'.concat(regex.charAt(index));
+                                            }
+                                            break;
+                                        case 'P':
+                                            if (ignoreCase && /\{L[lut]\}/.test(regex.substring(index+1, index+6)) )
+                                            {
+                                                if (openCharacterClass)
+                                                    orCharacterClass = orCharacterClass.concat( '|[' + letterCaseChar + ']' );
+                                                else
+                                                    alteredToken = ''.concat('[^', letterCaseChar, ']');
+
+                                                index += 5;
+                                            }
+                                            else
+                                            {
+                                                alteredToken = '\\'.concat(regex.charAt(index));
+                                            }
                                             break;
 
                                         case 'd':

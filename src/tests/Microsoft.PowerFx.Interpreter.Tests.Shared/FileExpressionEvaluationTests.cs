@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 #endif
 
 #if MATCHCOMPARE
-        /* to enable, place this in Solution Items/Directiory.Build.Props:
+        /* to enable, place this in Solution Items/Directiory.Build.Props: a
           <PropertyGroup>
               <DefineConstants>$(DefineConstants);MATCHCOMPARE</DefineConstants>
           </PropertyGroup>
@@ -179,12 +179,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return false;
         }
 
-#if false
+#if true
         // Helper to run a single .txt
         [Fact]
         public void RunOne()
         {
-            var path = @"c:\temp\match_comb.txt";
+            var path = @"C:\od\regex\match\match_unicode_ranges_L.txt";
 
             var line = 0;
 

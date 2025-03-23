@@ -47,65 +47,67 @@ namespace Microsoft.PowerFx.Functions
         {
             internal static class NativeMethods
             {
-                // use 32 bit version as PCRE2 as it doesn't support surrogate pairs, we manually convert in/out of surrogate pairs to UTF-32.
+                // Use version 10.45 or later, as there are bugfixes to pick up
+                // Edit the source and comment out any reference to \u180e, around 6 of them. You don't need to worry about pcre2_study.c. PCRE2 treats this as a space character, but few others do.
+                // Use 32 bit version as PCRE2 as it doesn't support surrogate pairs, we manually convert in/out of surrogate pairs to UTF-32.
 
-                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-32d.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern IntPtr pcre2_compile_32(byte[] pattern, int patternLength, uint patternOptions, ref int errorNumber, ref int errorOffset, IntPtr context);
 
-                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-32d.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern int pcre2_match_32(IntPtr code, byte[] subject, int subjectLength, int subjectOffset, uint subjectOptions, IntPtr matchData, IntPtr matchContext);
 
-                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-32d.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern int pcre2_exec_32(IntPtr code, IntPtr extra, byte[] subject, int subjectLength, int subjectOffset, uint subjectOptions, IntPtr ovector, IntPtr ovectorSize);
 
-                [DllImport("pcre2-32.dll")]
+                [DllImport("pcre2-32d.dll")]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern IntPtr pcre2_match_data_create_32(int ovecSize, IntPtr generalContext);
 
-                [DllImport("pcre2-32.dll")]
+                [DllImport("pcre2-32d.dll")]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern IntPtr pcre2_match_data_create_from_pattern_32(IntPtr code, IntPtr generalContext);
 
-                [DllImport("pcre2-32.dll")]
+                [DllImport("pcre2-32d.dll")]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern int pcre2_get_startchar_32(IntPtr matchData);
 
-                [DllImport("pcre2-32.dll")]
+                [DllImport("pcre2-32d.dll")]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern int pcre2_get_ovector_count_32(IntPtr matchData);
 
-                [DllImport("pcre2-32.dll")]
+                [DllImport("pcre2-32d.dll")]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern IntPtr pcre2_get_ovector_pointer_32(IntPtr matchData);
 
-                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-32d.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern int pcre2_substring_number_from_name_32(IntPtr code, byte[] name);
 
-                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-32d.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern void pcre2_match_data_free_32(IntPtr data);
 
-                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-32d.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern void pcre2_code_free_32(IntPtr code);
 
-                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-32d.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern int pcre2_get_error_message_32(int code, IntPtr buffer, int bufferLength);
 
-                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-32d.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern int pcre2_set_compile_extra_options_32(IntPtr context, uint extraOptions);
 
-                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-32d.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern IntPtr pcre2_compile_context_create_32(IntPtr generalContext);
 
-                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-32d.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern int pcre2_set_newline_32(IntPtr generalContext, uint newlineOptions);
             }
@@ -167,8 +169,6 @@ namespace Microsoft.PowerFx.Functions
                     result.Append(s);
                 }
 
-                result.Replace('\uf8ff', '\u180e');
-
                 return result.ToString();
             }
 
@@ -179,7 +179,7 @@ namespace Microsoft.PowerFx.Functions
                 IntPtr matchContext = (IntPtr)0;
                 IntPtr generalContext = (IntPtr)0;
 
-                PCRE2_OPTIONS pcreOptions = PCRE2_OPTIONS.UTF | PCRE2_OPTIONS.UCP;
+                PCRE2_OPTIONS pcreOptions = PCRE2_OPTIONS.UCP;
                 RegexOptions options = RegexOptions.None;
 
                 Match inlineOptions = Regex.Match(pattern, @"^\(\?([imnsx]+)\)");
@@ -320,15 +320,12 @@ namespace Microsoft.PowerFx.Functions
                 var startMatch = 0;
                 List<RecordValue> allMatches = new ();
 
-                // PCRE2 uses an older definition of Unicode where 180e is a space character, moving it to something else (user defined cahracter) here for category comparisons tests
-                subject = subject.Replace('\u180e', '\uf8ff');
-
                 // see https://pcre.org/current/doc/html/pcre2demo.html for the full demo of using the PCRE2 API
                 var subjectBytes = Encoding.UTF32.GetBytes(subject);
                 PCRE2_MATCH_OPTIONS matchOptions = 0;
                 while (startMatch >= 0)
                 {
-                    var rc = NativeMethods.pcre2_match_32(code, subjectBytes, -1, startMatch, (uint)matchOptions, md, matchContext);
+                    var rc = NativeMethods.pcre2_match_32(code, subjectBytes, subjectBytes.Length / 4, startMatch, (uint)matchOptions, md, matchContext);
 
                     if (matchAll && rc == (int)PCRE2_RETURNCODES.ERROR_NOMATCH)
                     {
@@ -432,8 +429,8 @@ namespace Microsoft.PowerFx.Functions
                     allMatches.Add(RecordValue.NewRecordFromFields(fields.Values));
                 }
 
-                NativeMethods.pcre2_match_data_free_32(md);
-                NativeMethods.pcre2_code_free_32(code);
+//                NativeMethods.pcre2_match_data_free_32(md);
+//                NativeMethods.pcre2_code_free_32(code);
 
                 PCRE2Mutex.ReleaseMutex();
 

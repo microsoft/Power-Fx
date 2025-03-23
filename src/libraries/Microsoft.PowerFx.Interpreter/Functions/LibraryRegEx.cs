@@ -258,6 +258,13 @@ namespace Microsoft.PowerFx.Functions
                     {
                         altered.Append(' ');
                     }
+                    else if (!openCharacterClass && char.IsHighSurrogate(regex[index]) && index + 1 < regex.Length && char.IsLowSurrogate(regex[index+1]))
+                    {
+                        altered.Append("(?:");
+                        altered.Append(regex.Substring(index, 2));
+                        altered.Append(")");
+                        index++;
+                    }
                     else
                     {
                         switch (regex[index])

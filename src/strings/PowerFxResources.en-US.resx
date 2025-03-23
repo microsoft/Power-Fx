@@ -4731,6 +4731,10 @@
     <value>Invalid regular expression: Back reference "{0}" to sub match that is inside a lookbehind or lookahead.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExSurrogatePairInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Unicode characters in surrogate pairs (characters above \uffff) are not supported in character classes, found "{0}".</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regular expression must be a constant value.</value>
     <comment>Error Message.</comment>

@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx
         //  </PropertyGroup>
 
         private const string OptionMatchCompare = "MatchCompare";
-        private static bool _matchCompare = false;
+        private static bool _matchCompare = true;
 #endif
 
         private const string OptionUDF = "UserDefinedFunctions";
