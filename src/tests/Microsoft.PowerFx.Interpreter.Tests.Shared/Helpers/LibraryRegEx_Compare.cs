@@ -128,8 +128,14 @@ namespace Microsoft.PowerFx.Functions
 
                 if (pcre2 != null)
                 {
-                    var pcre2Match = pcre2.InvokeRegexFunction(input, regex, options);
-                    pcre2Expr = pcre2Match.ToExpression();
+                    int retry = 3;
+
+                    do
+                    {
+                        var pcre2Match = pcre2.InvokeRegexFunction(input, regex, options);
+                        pcre2Expr = pcre2Match.ToExpression();
+                    }
+                    while (--retry > 0 && (pcre2Expr != dotnetExpr || (node != null && pcre2Expr != nodeExpr)));
                 }
 
                 string prefix = null;
