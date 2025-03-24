@@ -429,8 +429,8 @@ namespace Microsoft.PowerFx.Functions
                     allMatches.Add(RecordValue.NewRecordFromFields(fields.Values));
                 }
 
-//                NativeMethods.pcre2_match_data_free_32(md);
-//                NativeMethods.pcre2_code_free_32(code);
+                NativeMethods.pcre2_match_data_free_32(md);
+                NativeMethods.pcre2_code_free_32(code);
 
                 PCRE2Mutex.ReleaseMutex();
 

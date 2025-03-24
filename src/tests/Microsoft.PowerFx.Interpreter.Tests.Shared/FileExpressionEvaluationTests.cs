@@ -109,6 +109,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InterpreterTheory]
         public void RegExCompare(ExpressionTestCase t)
         {
+            ExpressionEvaluationTests.RegExCompareDotNet = true;
             ExpressionEvaluationTests.RegExCompareNode = true;
             ExpressionEvaluationTests.RegExComparePCRE2 = true;
 
@@ -215,6 +216,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RunOneMatchCompare()
         {
+            ExpressionEvaluationTests.RegExCompareDotNet = true;
             ExpressionEvaluationTests.RegExCompareNode = true;
             ExpressionEvaluationTests.RegExComparePCRE2 = true;
             RunOne();

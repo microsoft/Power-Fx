@@ -167,7 +167,7 @@ namespace Microsoft.PowerFx.Functions
                         pcre2Match = pcre2.InvokeRegexFunction(input, regex, options);
                         pcre2Expr = pcre2Match.ToExpression();
                     }
-                    while (--retry > 0 && (pcre2Expr != dotnetExpr || (node != null && pcre2Expr != nodeExpr)));
+                    while (--retry > 0 && ((dotnet != null && pcre2Expr != dotnetExpr) || (node != null && pcre2Expr != nodeExpr)));
                 }
 
                 string prefix = null;
@@ -192,7 +192,7 @@ namespace Microsoft.PowerFx.Functions
                     var report =
                         $"  re='{regex}' options='{options}'\n" +
                         $"  input='{CharCodes(input)}'\n" +
-                        $"  net={dotnetExpr}\n" +
+                        (dotnetExpr != null ? $"  net={dotnetExpr}\n" : string.Empty) +
                         (nodeExpr != null ? $"  node={nodeExpr}\n" : string.Empty) +
                         (pcre2Expr != null ? $"  pcre2={pcre2Expr}\n" : string.Empty);
 
@@ -235,8 +235,8 @@ namespace Microsoft.PowerFx.Functions
 
                 if (includePCRE2)
                 {
-                    pcre2 = new PCRE2_IsMatchImplementation(regexTimeout);
-                    pcre2_alt = new PCRE2_MatchImplementation(regexTimeout);
+                    pcre2 = new PCRE2_IsMatchImplementation(new TimeSpan(regexTimeout.Ticks * 2));
+                    pcre2_alt = new PCRE2_MatchImplementation(new TimeSpan(regexTimeout.Ticks * 2));
                 }
             }
         }
