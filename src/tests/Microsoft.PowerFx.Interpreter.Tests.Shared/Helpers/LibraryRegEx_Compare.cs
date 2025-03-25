@@ -133,7 +133,16 @@ namespace Microsoft.PowerFx.Functions
                     }
                 }
 
-                return outStr.ToString();
+                var s = outStr.ToString();
+                const int context = 90;
+                if (s.Length > context)
+                {
+                    return s.Substring(0, context) + "...";
+                }
+                else
+                {
+                    return s;
+                }
             }
 
             private FormulaValue InvokeRegexFunctionOne(string input, string regex, string options, Library.RegexCommonImplementation dotnet, Library.RegexCommonImplementation node, Library.RegexCommonImplementation pcre2, string kind)
@@ -174,7 +183,7 @@ namespace Microsoft.PowerFx.Functions
 
                 if (nodeExpr != null && dotnetExpr != null && nodeExpr != dotnetExpr)
                 {
-                    prefix = $"{kind}: node != net";        
+                    prefix = $"{kind}: node != net";
                 }
 
                 if (pcre2Expr != null && dotnetExpr != null && pcre2Expr != dotnetExpr)
@@ -189,9 +198,104 @@ namespace Microsoft.PowerFx.Functions
 
                 if (prefix != null)
                 {
+                    int i;
+                    int c;
+                    const int before = 45;
+                    const int after = 45;
+
+                    for (i = 0; i < Math.Min(Math.Min(nodeExpr?.Length ?? int.MaxValue, pcre2Expr?.Length ?? int.MaxValue), dotnetExpr?.Length ?? int.MaxValue); i++)
+                    {
+                        c = -1;
+
+                        if (nodeExpr != null)
+                        {
+                            if (c == -1)
+                            {
+                                c = nodeExpr[i];
+                            }
+                            else if (c != nodeExpr[i])
+                            {
+                                break;
+                            }
+                        }
+
+                        if (dotnetExpr != null)
+                        {
+                            if (c == -1)
+                            {
+                                c = dotnetExpr[i];
+                            }
+                            else if (c != dotnetExpr[i])
+                            {
+                                break;
+                            }
+                        }
+
+                        if (pcre2Expr != null)
+                        {
+                            if (c == -1)
+                            {
+                                c = pcre2Expr[i];
+                            }
+                            else if (c != pcre2Expr[i])
+                            {
+                                break;
+                            }
+                        }
+                    }
+
+                    if (pcre2Expr != null)
+                    {
+                        if (i < before && pcre2Expr.Length > before + after)
+                        {
+                            pcre2Expr = pcre2Expr.Substring(0, before + after) + "...";
+                        }
+                        else if (pcre2Expr.Length > (i + before + after))
+                        {
+                            pcre2Expr = "..." + pcre2Expr.Substring(i - before, before + after) + "...";
+                        }
+                        else if (pcre2Expr.Length > before + after)
+                        {
+                            pcre2Expr = "..." + pcre2Expr.Substring(i - before);
+                        }
+                    }
+
+                    if (nodeExpr != null)
+                    {
+                        if (i < before && nodeExpr.Length > before + after)
+                        {
+                            nodeExpr = nodeExpr.Substring(0, before + after) + "...";
+                        }
+                        else if (nodeExpr.Length > (i + before + after))
+                        {
+                            nodeExpr = "..." + nodeExpr.Substring(i - before, before + after) + "...";
+                        }
+                        else if (nodeExpr.Length > before + after)
+                        {
+                            nodeExpr = "..." + nodeExpr.Substring(i - before);
+                        }
+                    }
+
+                    if (dotnetExpr != null)
+                    {
+                        if (i < before && dotnetExpr.Length > before + after)
+                        {
+                            dotnetExpr = dotnetExpr.Substring(0, before + after) + "...";
+                        }
+                        else if (dotnetExpr.Length > (i + before + after))
+                        {
+                            dotnetExpr = "..." + dotnetExpr.Substring(i - before, before + after) + "...";
+                        }
+                        else if (dotnetExpr.Length > before + after)
+                        {
+                            dotnetExpr = "..." + dotnetExpr.Substring(i - before);
+                        }
+                    }
+
                     var report =
                         $"  re='{regex}' options='{options}'\n" +
                         $"  input='{CharCodes(input)}'\n" +
+                        $"  diff at {i}\n" +
                         (dotnetExpr != null ? $"  net={dotnetExpr}\n" : string.Empty) +
                         (nodeExpr != null ? $"  node={nodeExpr}\n" : string.Empty) +
                         (pcre2Expr != null ? $"  pcre2={pcre2Expr}\n" : string.Empty);

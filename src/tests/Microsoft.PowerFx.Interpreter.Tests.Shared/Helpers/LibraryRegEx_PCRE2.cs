@@ -34,6 +34,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl.Builtins;
@@ -317,40 +318,12 @@ namespace Microsoft.PowerFx.Functions
 
                 var md = NativeMethods.pcre2_match_data_create_from_pattern_32(code, generalContext);
 
-                var startMatch = 0;
+                var subjectBytes = Encoding.UTF32.GetBytes(subject);
+                var subjectLen = subjectBytes.Length / 4;
                 List<RecordValue> allMatches = new ();
 
-                // see https://pcre.org/current/doc/html/pcre2demo.html for the full demo of using the PCRE2 API
-                var subjectBytes = Encoding.UTF32.GetBytes(subject);
-                PCRE2_MATCH_OPTIONS matchOptions = 0;
-                while (startMatch >= 0)
+                (int, int) ProcessMatch()
                 {
-                    var rc = NativeMethods.pcre2_match_32(code, subjectBytes, subjectBytes.Length / 4, startMatch, (uint)matchOptions, md, matchContext);
-
-                    if (matchAll && rc == (int)PCRE2_RETURNCODES.ERROR_NOMATCH)
-                    {
-                        if (startMatch + 1 < subject.Length && subject[startMatch] == '\r' && subject[startMatch + 1] == '\n')
-                        {
-                            startMatch += 2;
-                        }
-                        else
-                        {
-                            startMatch++;
-                        }
-
-                        if (startMatch > subject.Length)
-                        {
-                            break;
-                        }
-
-                        matchOptions = 0;
-                        continue;
-                    }
-                    else if (rc < 0)
-                    {
-                        break;
-                    }
-
                     Dictionary<string, NamedValue> fields = new ();
 
                     var sc = NativeMethods.pcre2_get_startchar_32(md);
@@ -360,35 +333,6 @@ namespace Microsoft.PowerFx.Functions
                     var start0 = Marshal.ReadInt32(op, 0);
                     var end0 = Marshal.ReadInt32(op, Marshal.SizeOf(typeof(long)));
                     fields.Add(FULLMATCH, new NamedValue(FULLMATCH, StringValue.New(Extract(subjectBytes, start0, end0))));
-
-                    // for next iteration
-                    if (matchAll)
-                    {
-                        startMatch = end0;
-                        if (end0 == start0)
-                        {
-#if false
-                            startMatch++;
-#else
-                            if (matchOptions == 0)
-                            {
-                                matchOptions = PCRE2_MATCH_OPTIONS.NOTEMPTY_ATSTART | PCRE2_MATCH_OPTIONS.ANCHORED;
-                            }
-                            else
-                            {
-                                throw new Exception("PCRE2 repeated empty result");
-                            }
-#endif
-                        }
-                        else
-                        {
-                            matchOptions = 0;
-                        }
-                    }
-                    else
-                    {
-                        startMatch = -1;
-                    }
 
                     List<FormulaValue> subMatches = new List<FormulaValue>();
                     var oc = NativeMethods.pcre2_get_ovector_count_32(md);
@@ -427,6 +371,55 @@ namespace Microsoft.PowerFx.Functions
                     }
 
                     allMatches.Add(RecordValue.NewRecordFromFields(fields.Values));
+
+                    return (start0, end0);
+                }
+
+                // translated more or less verbatim from https://pcre.org/current/doc/html/pcre2demo.html for proper usage of the PCRE2 API
+
+                var rc = NativeMethods.pcre2_match_32(code, subjectBytes, subjectLen, 0, 0, md, matchContext);
+
+                if (rc != (int)PCRE2_RETURNCODES.ERROR_NOMATCH)
+                {
+                    (var start0, var end0) = ProcessMatch();
+
+                    while (matchAll)
+                    {
+                        int startMatch = end0;
+                        PCRE2_MATCH_OPTIONS matchOptions = 0;
+
+                        if (end0 == start0)
+                        {
+                            if (end0 >= subjectLen)
+                            {
+                                break;
+                            }
+
+                            matchOptions = PCRE2_MATCH_OPTIONS.NOTEMPTY_ATSTART | PCRE2_MATCH_OPTIONS.ANCHORED;
+                        }
+
+                        rc = NativeMethods.pcre2_match_32(code, subjectBytes, subjectLen, startMatch, (uint)matchOptions, md, matchContext);
+
+                        if (rc == (int)PCRE2_RETURNCODES.ERROR_NOMATCH)
+                        {
+                            if (matchOptions == 0)
+                            {
+                                break;
+                            }
+
+                            end0 = startMatch + 1;
+                            if (end0 + 1 < subjectLen &&
+                                subjectBytes[(end0 * 4) + 0] == 13 && subjectBytes[(end0 * 4) + 1] == 0 && subjectBytes[(end0 * 4) + 2] == 0 && subjectBytes[(end0 * 4) + 3] == 0 &&
+                                subjectBytes[(end0 * 4) + 4] == 10 && subjectBytes[(end0 * 4) + 5] == 0 && subjectBytes[(end0 * 4) + 6] == 0 && subjectBytes[(end0 * 4) + 7] == 0)
+                            {
+                                end0++;
+                            }
+
+                            continue;
+                        }
+
+                        (start0, end0) = ProcessMatch();
+                    }
                 }
 
                 NativeMethods.pcre2_match_data_free_32(md);
