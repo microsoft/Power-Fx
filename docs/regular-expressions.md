@@ -300,3 +300,10 @@ To avoid different results across Power Fx implementations, submatches that coul
 
 Note that the submatch in `(?<submatch>a+)+` cannot be empty, as there must be at least one `a` in he submatch, and is supported.
 
+## Unicode
+
+Power Fx regular expressions use Unicode categories for the definitions of `\w`, `\d`, and `\s`, with specific categories directly available through `\p{..}`.
+
+There can be some variation in these definitions across platforms. For example, the Unicode standard is updated from time to time with new characters added and very rarely reclassified, which will be implemented by platforms at different times. Variations of results between platforms on these character changes can be expected until all platforms update to the new standard.
+
+Some platforms do not implement categories for characters in the Supplementary Multilingual Plane and abouve (`\u10000` through `\u10ffff`). This is not usually a concern as characters in the Basic Multilingual Plane (`\u0` to `\uffff`) are the most commonly used and Power Fx regular expressions will always ensure that catagories are available for them. If your scenario involves characters at or above `\u10000`, test your code with these characters on the platforms you intend to use.

@@ -121,7 +121,7 @@ namespace Microsoft.PowerFx
             {
                 // requires PCRE2 DLL (pcre2-16d.dll) on the path and Node.JS installed
                 // can also use RegEx_PCRE2 and RegEx_NodeJS directly too
-                Functions.RegEx_Compare.EnableRegExFunctions(config, new TimeSpan(0, 0, 5), regexCacheSize: 100, includeDotNet: false, includeNode: true, includePCRE2: true);
+                Functions.RegEx_Compare.EnableRegExFunctions(config, new TimeSpan(0, 0, 5), regexCacheSize: 100, includeDotNet: true, includeNode: true, includePCRE2: true);
             }
             else
 #endif
