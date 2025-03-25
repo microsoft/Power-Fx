@@ -76,6 +76,9 @@ Errors: Error 13-47: Invalid regular expression: Unicode characters in surrogate
 >> Match( "😀😀😀😀😀", "😀+" )
 {FullMatch:"😀😀😀😀😀",StartMatch:1}
 
+>> Match( "ab👻👻cd😀😀ef", "😀+" )  // ghosts each add two characters from StartMatch perspective
+{FullMatch:"😀😀",StartMatch:9}
+
 >> Match( "😀😀😀😀😀", "😀{2}" )
 {FullMatch:"😀😀",StartMatch:1}
 
@@ -87,5 +90,42 @@ Errors: Error 13-47: Invalid regular expression: Unicode characters in surrogate
 
 >> Match( "👻👻👻👻👻", "😀+" )
 Blank()
+
+// case folding ſ (U+017F LATIN SMALL LETTER LONG S) case-folds to s (U+0073 LATIN SMALL LETTER S) 
+// case folding K (U+212A KELVIN SIGN) case-folds to k (U+006B LATIN SMALL LETTER K).
+
+>> UniChar( Hex2Dec( "017f" )) = "ſ"
+true
+
+>> UniChar( Hex2Dec( "212a" )) = "K"
+true
+
+>> Match( "K", "[a-z]" )
+Blank()
+
+>> Match( "ſ", "[a-z]" )
+Blank()
+
+>> Match( "K", "k", MatchOptions.IgnoreCase )
+{FullMatch:"K", StartMatch:1}
+
+>> Match( "ſ", "s", MatchOptions.IgnoreCase )
+{FullMatch:"ſ", StartMatch:1}
+
+>> Match( "K", "[a-z]", MatchOptions.IgnoreCase )
+{FullMatch:"K", StartMatch:1}
+
+>> Match( "ſ", "[a-z]", MatchOptions.IgnoreCase )
+{FullMatch:"ſ", StartMatch:1}
+
+>> Match( "ß", "ss", MatchOptions.IgnoreCase )
+Blank()
+
+>> Match( UniChar( Hex2Dec( "2126" ) ), "\u03c9", MatchOptions.IgnoreCase )
+{FullMatch:"Ω", StartMatch:1}
+
+>> Match( UniChar( Hex2Dec( "2126" ) ), "\u03a9", MatchOptions.IgnoreCase )
+{FullMatch:"Ω", StartMatch:1}
+
 
 

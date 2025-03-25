@@ -185,7 +185,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RunOne()
         {
-            var path = @"C:\od\regex\match\match_unicode_ranges_L.txt";
+            var path = @"C:\od\regex\match\match_unicode_L_00.txt";
 
             var line = 0;
 
