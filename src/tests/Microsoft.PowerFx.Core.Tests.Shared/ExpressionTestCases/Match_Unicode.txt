@@ -162,6 +162,17 @@ Blank()
 >> Match( UniChar( Hex2Dec( "2126" ) ), "\u03a9", MatchOptions.IgnoreCase )
 {FullMatch:"Ω",StartMatch:1}
 
+// .net doesn't cover unicode categories above the BMP, node and pcre2 do
+
+>> Match( "👻", "\p{So}" )  // \u{01F47B}
+Blank()
+
+>> Match( "𝟭", "\p{Nd}" )   // \u{01D7ED}
+Blank()
+
+>> Match( "𐓶", "\p{Ll}" )   // \u{0104F6}
+Blank()
+
 // Unicode chars in errors, want to avoid breaking up surrogate pairs in message
 
 >> Match( "a", "\👻" )
