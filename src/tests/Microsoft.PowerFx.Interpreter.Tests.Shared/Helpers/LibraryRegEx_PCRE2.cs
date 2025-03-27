@@ -167,7 +167,7 @@ namespace Microsoft.PowerFx.Functions
                 IntPtr matchContext = (IntPtr)0;
                 IntPtr generalContext = (IntPtr)0;
 
-                PCRE2_OPTIONS pcreOptions = PCRE2_OPTIONS.UCP | PCRE2_OPTIONS.UTF | PCRE2_OPTIONS.ALT_BSUX;
+                PCRE2_OPTIONS pcreOptions = PCRE2_OPTIONS.UCP | PCRE2_OPTIONS.UTF;
                 RegexOptions options = RegexOptions.None;
 
                 Match inlineOptions = Regex.Match(pattern, @"^\(\?([imnsx]+)\)");
@@ -251,9 +251,38 @@ namespace Microsoft.PowerFx.Functions
                 var context = NativeMethods.pcre2_compile_context_create_16(generalContext);
                 NativeMethods.pcre2_set_newline_16(context, (uint)PCRE2_NEWLINE.ANY);
 
+                // pcre2 does not allow surrogate pairs in the form /uxxxx/uyyyy as each /u individually is not a valid Unicode code point
+                // so we need to translate out of those pairs here, into a single /u{...} code point.
+                StringBuilder patternSurrogates = new StringBuilder();
+
+                for (int i = 0; i < pattern.Length; i++)
+                {
+                    if (i + 11 < pattern.Length && pattern[i] == '\\' && pattern[i + 1] == 'u' && pattern[i + 6] == '\\' && pattern[i + 7] == 'u')
+                    {
+                        var s1 = Convert.ToInt32(Convert.ToInt32(pattern.Substring(i + 2, 4), 16));
+                        var s2 = Convert.ToInt32(Convert.ToInt32(pattern.Substring(i + 8, 4), 16));
+                        if (s1 >= 0xd800 && s1 <= 0xdbff && s2 >= 0xdc00 && s2 <= 0xdfff)
+                        {
+                            patternSurrogates.Append("\\x{" + Convert.ToString(((s1 - 0xd800) * 0x400) + (s2 - 0xdc00) + 0x10000, 16) + "}");
+                            i += 11;
+                        }
+                    }
+                    else if (i + 5 < pattern.Length && pattern[i] == '\\' && pattern[i + 1] == 'u')
+                    {
+                        patternSurrogates.Append("\\x{" + pattern[i + 2] + pattern[i + 3] + pattern[i + 4] + pattern[i + 5] + "}");
+                        i += 5;
+                    }
+                    else
+                    {
+                        patternSurrogates.Append(pattern[i]);
+                    }
+                }
+
+                var pcrePattern = patternSurrogates.ToString();
+
                 var encoder = new UnicodeEncoding(bigEndian: false, byteOrderMark: false, throwOnInvalidBytes: true);
 
-                var code = NativeMethods.pcre2_compile_16(pattern, pattern.Length, (uint)pcreOptions, ref errorNumber, ref errorOffset, context);
+                var code = NativeMethods.pcre2_compile_16(pcrePattern, pcrePattern.Length, (uint)pcreOptions, ref errorNumber, ref errorOffset, context);
                 if (code == IntPtr.Zero)
                 {
                     byte[] buffer = new byte[4096];
@@ -298,7 +327,7 @@ namespace Microsoft.PowerFx.Functions
                         var end = Marshal.ReadInt32(op, ((i * 2) + 1) * Marshal.SizeOf(typeof(long)));
                         if (start >= 0 && end >= 0)
                         {
-                            subMatches.Add(StringValue.New(subject.Substring(start0, end0 - start0)));
+                            subMatches.Add(StringValue.New(subject.Substring(start, end - start)));
                         }
                         else
                         {

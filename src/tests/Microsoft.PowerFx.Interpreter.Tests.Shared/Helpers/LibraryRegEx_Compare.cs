@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 var s = outStr.ToString();
-                const int context = 90;
+                const int context = 100;
                 if (s.Length > context)
                 {
                     return $"{s.Substring(0, context)}...";
@@ -226,8 +226,8 @@ namespace Microsoft.PowerFx.Functions
 
                     string Shorten(string expr)
                     {
-                        const int before = 45;
-                        const int after = 45;
+                        const int before = 50;
+                        const int after = 50;
 
                         if (expr != null)
                         {

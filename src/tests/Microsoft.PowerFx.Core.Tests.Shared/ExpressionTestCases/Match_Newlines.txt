@@ -97,15 +97,19 @@ Table({FullMatch:"a",StartMatch:1},{FullMatch:"a",StartMatch:4})
 // >> MatchAll( "a" & Char(13) & Char(10), "(?m)^(a|)" )  // gives a different answer on PCRE2 (doesn't include last empty match), but not on Excel?
 // Table({FullMatch:"a",StartMatch:Float(1)},{FullMatch:"",StartMatch:Float(4)})
 
+// .net and node agree, PCRE2 has an extra empty match
 >> MatchAll( Char(13) & Char(10) & "a", "(?m)^(a|)" )
 Table({FullMatch:"",StartMatch:1},{FullMatch:"a",StartMatch:3})
 
+// .net and node agree, PCRE2 has an extra empty match
 >> MatchAll( "a" & Char(13) & Char(10) & "a", "(?m)(a|)$" )  // matches after the \r and \n in JavaScript, not in PCRE2
 Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"a",StartMatch:4},{FullMatch:"",StartMatch:5})
 
+// .net and node agree, PCRE2 has an extra empty match
 >> MatchAll( "a" & Char(13) & Char(10) , "(?m)(a|)$" )  // pcre2 repeated empty result
 Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"",StartMatch:4})
 
+// .net and node agree, PCRE2 has an extra empty match
 >> MatchAll( Char(13) & Char(10) & "a", "(?m)(a|)$" )
 Table({FullMatch:"",StartMatch:1},{FullMatch:"a",StartMatch:3},{FullMatch:"",StartMatch:4})
 
@@ -121,6 +125,7 @@ Table({FullMatch:"",StartMatch:1})
 >> MatchAll( "a" & Char(13) & Char(10) & "a", "(a|)$" )  // matches after the \r and \n in JavaScript, not in PCRE2
 Table({FullMatch:"a",StartMatch:4},{FullMatch:"",StartMatch:5})
 
+// .net and node agree, PCRE2 has an extra empty match
 >> MatchAll( "a" & Char(13) & Char(10) , "(a|)$" )  // pcre2 repeated empty result
 Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"",StartMatch:4})
 

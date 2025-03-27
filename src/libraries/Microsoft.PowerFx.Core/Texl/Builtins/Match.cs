@@ -246,7 +246,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (typeCacheEntry.Error != null)
             {
-                errors.EnsureError(typeCacheEntry.ErrorSeverity, regExNode, (ErrorResourceKey)typeCacheEntry.Error, typeCacheEntry.ErrorParam);
+                // remove newlines and other characters that don't display
+                // surrogate pairs will be fine
+                var cleanParam = Regex.Replace(typeCacheEntry.ErrorParam ?? string.Empty, @"[\p{Cc}\p{Cf}\p{Z}]+", " ").Replace("\"", "\"\"");
+
+                errors.EnsureError(typeCacheEntry.ErrorSeverity, regExNode, (ErrorResourceKey)typeCacheEntry.Error, cleanParam);
                 if (typeCacheEntry.ErrorSeverity == DocumentErrorSeverity.Severe)
                 {
                     return false;
@@ -645,12 +649,25 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         len = token.Length;
                     }
 
+                    if (index + len < regexPattern.Length && char.IsHighSurrogate(regexPattern[index + len - 1]) && char.IsLowSurrogate(regexPattern[index + len]))
+                    {
+                        len++;
+                    }
+
                     string found;
 
                     if (endContext)
                     {
                         var tokenEnd = index + len;
-                        found = tokenEnd > ErrorContextLength ? "..." + regexPattern.Substring(tokenEnd - ErrorContextLength, ErrorContextLength) : regexPattern.Substring(0, tokenEnd);
+                        var tokenStart = tokenEnd > ErrorContextLength ? tokenEnd - ErrorContextLength : 0;
+                        var tokenLen = tokenEnd > ErrorContextLength ? ErrorContextLength : tokenEnd;
+                        if (char.IsLowSurrogate(regexPattern[tokenStart]))
+                        {
+                            tokenStart++;
+                            tokenLen--;
+                        }
+
+                        found = (tokenStart == 0 ? string.Empty : "...") + regexPattern.Substring(tokenStart, tokenLen);
                     }
                     else if (startContext)
                     {
@@ -658,6 +675,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else
                     {
+                        // token won't start in the middle of a surrogate pair
                         found = regexPattern.Substring(index, len);
                     }
 
@@ -764,9 +782,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         foreach (Match ccToken in characterClassRE.Matches(ccString))
                         {
-                            RegexTypeCacheEntry CCRegExError(ErrorResourceKey errKey, int index = -1, int len = -1)
+                            RegexTypeCacheEntry CCRegExError(ErrorResourceKey errKey)
                             {
-                                return RegExError(errKey, index: index == -1 ? ccToken.Index + token.Index + 1 : index, len: len == -1 ? ccToken.Length : len, endContext: true);
+                                return RegExError(
+                                    errKey, 
+                                    index: ccToken.Index + token.Index + 1 + (characterClassNegative ? 1 : 0), // 1 for opening [ and possibly 1 more for ^
+                                    len: ccToken.Length, 
+                                    endContext: true);
                             }
 
                             if (ccToken.Groups["goodEscape"].Success || ccToken.Groups["goodEscapeInsideCCOnly"].Success || ccToken.Groups["else"].Success)
@@ -903,8 +925,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             }
                             else if (ccToken.Groups["badHyphen"].Success)
                             {
-                                // intentionally RegExError to get the whole character class as this is on the ends
-                                return RegExError(TexlStrings.ErrInvalidRegExLiteralHyphenInCharacterClass);
+                                return CCRegExError(TexlStrings.ErrInvalidRegExLiteralHyphenInCharacterClass);
                             }
                             else
                             {

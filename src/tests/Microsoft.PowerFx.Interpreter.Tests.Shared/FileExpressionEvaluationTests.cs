@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 #endif
 
 #if MATCHCOMPARE
-        /* to enable, place this in Solution Items/Directiory.Build.Props: a
+        /* to enable, place this in Solution Items/Directiory.Build.Props: abcdefgeg
           <PropertyGroup>
               <DefineConstants>$(DefineConstants);MATCHCOMPARE</DefineConstants>
           </PropertyGroup>
@@ -185,7 +185,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RunOne()
         {
-            var path = @"C:\od\regex\match\match_unicode_L_00.txt";
+            var path = @"C:\od\regex\match9\one.txt";
 
             var line = 0;
 
@@ -212,7 +212,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
 #if MATCHCOMPARE
-        // Helper to run a single .txt with regular expression comparison between .NET, Node, and PCRE2
+        // Helper to run a single .txt with regular expression comparison between .NET, Node, and PCRE2 a
         [Fact]
         public void RunOneMatchCompare()
         {

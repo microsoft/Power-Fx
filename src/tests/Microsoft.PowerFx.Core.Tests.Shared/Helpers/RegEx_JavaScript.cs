@@ -152,7 +152,7 @@ namespace Microsoft.PowerFx.Functions
                                             {
                                                 alteredToken = ''.concat(openCharacterClass ? '' : '[', letterCaseChar, openCharacterClass ? '' : ']');
 
-                                                index += 5;
+                                                index += 4;
                                             }
                                             else
                                             {
@@ -167,7 +167,7 @@ namespace Microsoft.PowerFx.Functions
                                                 else
                                                     alteredToken = ''.concat('[^', letterCaseChar, ']');
 
-                                                index += 5;
+                                                index += 4;
                                             }
                                             else
                                             {
