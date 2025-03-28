@@ -521,7 +521,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // Configurable constants
         public const int MaxNamedCaptureNameLength = 62;            // maximum length of a capture name, in UTF-16 code units. PCRE2 has a 128 limit, cut in half for possible UFT-8 usage.
         public const int MaxLookBehindPossibleCharacters = 250;     // maximum possible number of characters in a look behind. PCRE2 has a 255 limit.
-        public const int MaxGroupStackDepth = 32;                   // maximum number of nested grouping levels, avoids performance issues with a complex group tree.
+        public const int MaxGroupStackDepth = 64;                   // maximum number of nested grouping levels, avoids performance issues with a complex group tree.
         public const int ErrorContextLength = 12;                   // number of characters to include in error message context excerpt from formula.
 
         private static RegexTypeCacheEntry IsSupportedRegularExpression(TexlNode regExNode, string regexPattern, string regexOptions, out string alteredOptions)
@@ -1243,6 +1243,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 _groupStack.Push(groupInfo);
 
+                var child = new GroupInfo
+                {
+                    Parent = groupInfo
+                };
+                _groupStack.Push(child);
+
                 _quantTarget = null;
 
                 error = null;
@@ -1252,7 +1258,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             public void SeenAlternation()
             {
                 _quantTarget = null;
-                _groupStack.Peek().SeenAlternation();
+
+                var closed = _groupStack.Pop();
+                
+                closed.SubGroupReport();
+
+                closed.Parent.HasAlternation = true;
+
+                var group = new GroupInfo
+                {
+                    Parent = closed.Parent
+                };
+                _groupStack.Push(group);
             }
 
             public void SeenNonGroup(int min = 1, int max = 1)
@@ -1282,12 +1299,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             public bool SeenClose(out ErrorResourceKey? error)
             {
-                if (_groupStack.Count <= 1)
+                if (_groupStack.Count <= 2)
                 {
                     error = TexlStrings.ErrInvalidRegExUnopenedCaptureGroups;
                     return false;
                 }
 
+                var subGroup = _groupStack.Pop();
+                subGroup.SubGroupReport();
                 _quantTarget = _groupStack.Pop();
                 
                 // Look behinds are limited in number of characters, PCRE2 doesn't support more than 255.
@@ -1345,9 +1364,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             public bool Complete(out ErrorResourceKey? error, out string errorArg)
             {
-                _groupStack.Peek().SeenEnd();
+                var subGroup = _groupStack.Pop();
+                subGroup.SubGroupReport();
+                var topGroup = _groupStack.Pop();
+                topGroup.SeenEnd();
 
-                if (_groupStack.Count != 1)
+                if (_groupStack.Count != 0)
                 {
                     error = TexlStrings.ErrInvalidRegExUnclosedCaptureGroups;
                     errorArg = null;
@@ -1384,9 +1406,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 public bool KnownGoodBackRef;           // we've checked previously; this group is known not to be zero sized
                 public int MaxSize;                     // maximum size of this group, -1 for unlimited
                 public int MinSize;                     // minimum size of this group, 0 being the minimum
-                public int MaxSizeAlternation;          // maximum size of the largest alternation option
-                public int MinSizeAlternation;          // minimim size of the smallest alternation option
                 public GroupInfo Parent;                // reference to the next level down
+                public bool SeenReport;
 
                 // for characters that aren't in a group, such as literal characters, anchors, escapes, character classes, etc.
                 public GroupInfo SeenNonGroup(int minSize = 1, int maxSize = 1)
@@ -1445,37 +1466,37 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     return true;
                 }
 
-                public void SeenAlternation()
+                public void SubGroupReport()
                 {
-                    // we need to examine each part of the alternation for a potential empty result
-                    // PossibleEmpty is reset and PossibleEmptyAlternation is the accumulator for any empty parts
-                    // HasAlternation is important because 
-                    if (HasAlternation)
+                    if (!Parent.SeenReport)
                     {
-                        MinSizeAlternation = Math.Min(MinSizeAlternation, MinSize);
-                        MaxSizeAlternation = MaxSizeAlternation == -1 || MaxSize == -1 ? -1 : Math.Max(MaxSizeAlternation, MaxSize);
+                        Parent.MaxSize = MaxSize;
+                        Parent.MinSize = MinSize;
+                        Parent.SeenReport = true;
                     }
                     else
                     {
-                        MinSizeAlternation = MinSize;
-                        MaxSizeAlternation = MaxSize;
+                        Parent.MaxSize = Math.Max(Parent.MaxSize, MaxSize);
+                        Parent.MinSize = Math.Min(Parent.MinSize, MinSize);
                     }
 
-                    HasAlternation = true;
+                    SeenEnd();
 
-                    MinSize = 0;
-                    MaxSize = 0;
+                    Parent.ErrorOnQuant |= ErrorOnQuant;
+                    Parent.ErrorOnQuant_LookBehind |= ErrorOnQuant_LookBehind;
+                    Parent.ContainsCapture |= ContainsCapture;
                 }
 
                 // broken out from SeenClose for the end of the regular expression which may not have a closing paren
                 public void SeenEnd()
                 {
+                    if (MinSize == 0)
+                    {
+                        ErrorOnQuant = true;
+                    }
+
                     if (HasAlternation)
                     {
-                        SeenAlternation();                                // closes the last part of the alternation, the "c" in "(a|b|c)"
-                        MinSize = MinSizeAlternation;
-                        MaxSize = MaxSizeAlternation;
-
                         // an alternation with a capture can effectively be empty, for example "(a|(b)|c)".
                         // The capture group "b" in this case is not empty, but it is a capture in an alternation.
                         ErrorOnQuant = ErrorOnQuant || ContainsCapture;
