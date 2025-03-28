@@ -1538,12 +1538,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 // used to determine if a backref is acceptable
-                public bool IsBlockedBackRef(out ErrorResourceKey? error)
+                public bool IsBlockedBackRef(out ErrorResourceKey? error, GroupInfo stop = null)
                 {
+                    GroupInfo ptr;
+                    error = null;
+
                     // short circuit in case we are asked about the same capture
-                    if (KnownGoodBackRef)
+                    if (stop == null && KnownGoodBackRef)
                     {
-                        error = null;
                         return false;
                     }
 
@@ -1559,7 +1561,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // walk nested groups up to the base
                     // if we weren't already erroring on lookarounds,
                     // we would want to stop at a a lookaround, as it will appear to be zero below and quantifiers are not allowed on lookarounds and below
-                    for (var ptr = this.Parent; ptr != null && maxDepth-- >= 0; ptr = ptr.Parent)
+                    for (ptr = this.Parent; ptr != null && ptr != stop && maxDepth-- >= 0; ptr = ptr.Parent)
                     {
                         if (ptr.HasZeroQuant || ptr.HasAlternation || ptr.MinSize == 0)
                         {
@@ -1580,9 +1582,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         throw new IndexOutOfRangeException("regular expression maximum GroupTracker depth exceeded");
                     }
 
-                    KnownGoodBackRef = true;
+                    if (stop == null)
+                    {
+                        KnownGoodBackRef = true;
+                    }
+                    else if (stop != ptr)
+                    {
+                        return true;
+                    }
 
-                    error = null;
                     return false;
                 }
             }
