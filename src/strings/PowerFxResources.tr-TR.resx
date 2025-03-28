@@ -2113,6 +2113,14 @@
     <value>'{0}' için sütun adı çakışıyor.</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Sistem kaydına veya sistem kayıtları tablosuna sütun eklenemiyor. Önce ihtiyacınız olan belirli sütunları ayıklamak için ShowColumns kullanın.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Sistem kaydının veya sistem kayıtları tablosunun sütunları yeniden adlandırılamıyor. Önce ihtiyacınız olan belirli sütunları ayıklamak için ShowColumns kullanın.</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Belirtilen '{0}' sütunu yok.</value>
     
@@ -4511,24 +4519,232 @@
     <value>Geçersiz normal ifade.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Satır içi seçenekler, normal ifadenin başında olmalıdır, sonrasında "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Satır içi seçenekler, [imnsx] harflerinin birleşimiyle sınırlıdır, seçenekler devre dışı bırakılamaz ve alt ifadede kullanılamaz, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Sekizli \0 karakter kodları desteklenmez, bunun yerine onaltılık \x veya Unicode \u kullanın, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Değişmez kıvrımlı ayraçlarda ters eğik çizgi ile kaçış yapılmalıdır, "{0}," bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Değişmez köşeli parantezler, karakter sınıflarında bile ters eğik çizgi ile kaçış yapılmalıdır, örneğin \[ veya \], "{0}" sonunda bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Kapanmamış karakter sınıfı köşeli parantez mevcut.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Desteklenmeyen özel grup, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Karakter sınıfı içinde kaçış karakterine izin verilmez, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Negatif yapılımlı karakter sınıfı içinde negatif kaçış karakterine izin verilmez, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Karakter sınıfı dışında kaçış karakterine izin verilmez, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Geçersiz Unicode kategori adı, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Tekrarlanan satır içi seçeneği, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Kapanmamış satır içi yorum mevcut.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Kapanmamış satır içi yorum mevcut, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Satır içi seçeneği, MatchOptions.NumberedSubMatches ile uyumsuz, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: İyelik niceleyicileri desteklenmez, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Tam niceleyiciler, yavaş için ? gibi niceleyici değiştiricileri ile birlikte kullanılamaz, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Geçersiz kaçış kodu, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Alt eşleşme "{0}" tanımlanmamış veya desteklenmeyen bir iletme başvurusu var.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Alt eşleşmeler, arkaya bakmalarda desteklenmez, "{0}" başlangıcında bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Arkaya bakmalar iç içe olamaz, "{0}" başlangıcında bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Arkaya bakmalarda sınırsız niceleyiciler desteklenmez, "{0}" sonunda bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Niceleyiciler, arkaya bakma veya öne bakmalarda desteklenmez, "{0}" sonunda bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Değişim veya sıfır niceleyici nedeniyle gerçekleşmeyebilecek alt eşleşmeye "{0}" geri referansı.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Kendine başvuran alt eşleşmeler desteklenmez, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Kapatılmamış gruplar, çok az sayıda parantez kapama mevcut.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Açılmamış gruplar, çok az sayıda parantez açma mevcut.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Birden fazla kez tanımlanmış adlandırılmış alt eşleşme var, "{0}" başlangıcında bulundu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Alt eşleme adı, sözcük karakterlerinin birleşimi olmalı ve sayı ile başlamamalıdır, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Satır içi seçenekler, normal ifadenin başında olmalıdır, sonrasında "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Karakter, karakter sınıfında birden çok kez görünüyor, tekrarlanan "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Köşeli parantez karakter sınıfları boş olamaz, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Dengeleyici alt eşleşmeler desteklenmez, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Tek tırnak işaretli adlandırılmış yakalamaların kullanılması desteklenmez, bunun yerine (?&lt;... &gt;) sözdizimi kullanın, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Koşullu değişim desteklenmez, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Adlandırılmış yakalamalar, MatchOptions.NumberedSubMatches etkin olarak kullanılamaz, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Adlandırılmış yakalamaları "(?&lt;name&gt;...)" ve "\k&lt;name&gt;" ile kullanın ya da MatchOptions.NumberedSubMatches seçeneğini etkinleştirin, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Karakter sınıfında değişmez çizgi, arka çizgi ile kaçış yapılmalıdır, "\-" ile kaçış, "{0}" içinde bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Değişmez karakterin, karakter sınıfında kullanıldığında ters eğik çizgi ile kaçış yapılması gerekir, "{0}" sonunda bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Belirsiz bir sonuca yol açabilecek başka bir niceleyici veya belirsiz sonuca yol açabilecek bir boş alternatif mevcut, "{0}" sonunda bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Lookbehind, 250 karakterlik olası maksimum karakter sınırını aşıyor, "{0}" sonunda bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Niceleyici aralığı düşük sayısı, yüksek sayıdan büyük, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Çok fazla iç içe grup mevcut, "{0}" başlangıcında bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Alt eşleşme adı çok uzun, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Sayı çok büyük, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Bir karakter sınıfı aralığındaki karakterler ters çevrilmiş, "{0}" sonunda bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Karakter sınıfı aralığında karakter sınıfı veya değişmez çizgide arka çizgi ile kaçış, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Kaçış olmayan ters eğik çizgi ile bitiyor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Ölçülecek bir öğe içermeyen niceleyici mevcut, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: MatchOptions.DotAll ve MatchOptions.FreeSpacing yalnızca Power Fx V1 ile kullanılabilir, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Lookbehind veya lookahead içindeki alt eşleşmeye "{0}" geri referansı.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Normal ifadeler sabit değer olmalıdır.</value>
+    <value>Normal ifade, sabit bir değer olmalıdır.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions, sabit bir değer olmalıdır.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>'{0}' işlevine aktarılan değer değiştirilemez.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Yakalama adı '{0}', normal ifadenin tam eşleşmesini döndüren önceden tanımlanmış özelliğini gizliyor. Belirtilen metinde tam eşleşmeyi ayıklamak için bu adlandırılan özelliği kullanmak istiyorsanız yeniden adlandırmanız yararlı olabilir.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>"{0}" yakalama adında, eşleşme bilgileri döndüren önceden tanımlanmış özellikler gizli. Eşleşme bilgilerine erişmek istiyorsanız bunları yeniden adlandırın.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Yakalama adı '{0}', normal ifadedeki grup eşleşmelerini döndüren önceden tanımlanmış özelliğini gizliyor. Belirtilen metinde tam eşleşmeyi ayıklamak için bu adlandırılan özelliği kullanmak istiyorsanız yeniden adlandırmanız yararlı olabilir.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Yakalama adı '{0}', normal ifade eşleşmesinin konumunu döndüren önceden tanımlanmış özelliğini gizliyor. Belirtilen metinde tam eşleşmeyi ayıklamak için bu adlandırılan özelliği kullanmak istiyorsanız yeniden adlandırmanız yararlı olabilir.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>"{0}" kümesindeki yakalama adlarında eşleşme bilgileri döndüren önceden tanımlanmış özellikler gizli. Eşleşme bilgilerine erişmek istiyorsanız bunları yeniden adlandırın.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">

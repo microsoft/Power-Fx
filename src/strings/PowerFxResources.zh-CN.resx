@@ -2113,6 +2113,14 @@
     <value>'{0}' 的列名冲突。</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>无法将列添加到系统记录或系统记录表。首先使用 ShowColumns 提取需要的特定列。</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>无法重命名系统记录或系统记录表的列。首先使用 ShowColumns 提取需要的特定列。</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>指定列 '{0}' 不存在。</value>
     
@@ -4511,24 +4519,232 @@
     <value>正则表达式无效。</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 内联选项必须显示在正则表达式的开头，稍后找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 内联选项仅限于字母 [imnsx] 的组合，无法禁用选项，并且不能用于子表达式，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 八进制 \0 字符代码不受支持，请改用十六进制 \x 或 Unicode \u，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 文字花括号必须用反斜杠进行转义，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 即使在字符类中，也必须使用反斜杠对文字方括号进行转义，例如 \[ 或 \]，在 "{0}" 的末尾找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 字符类方括号未封闭。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 特殊组不受支持，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 字符类中不允许使用转义字符，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 否定字符类中不允许使用负转义字符，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 在字符类外不允许使用转义字符，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: Unicode 类别名称无效，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 内联选项重复，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 内联注释未封闭。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 内联注释未封闭，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 内联选项与 MatchOptions.NumberedSubMatches 不兼容，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 占有限定符不受支持，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 精确限定符不能与表示延迟的 ? 等限定符修饰符一起使用，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 转义码无效，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 子匹配项 "{0}" 未定义或是不受支持的前向引用。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 此类匹配项在后瞻中不受支持，在 "{0}" 的开头找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 无法嵌套后瞻，在 "{0}" 的开头找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 无限限定符在后瞻中不受支持，在 "{0}" 的末尾找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 限定符在后瞻或前瞻中不受支持，在 "{0}" 的末尾找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 对因交替或限定符为零而可能不会发生的子匹配项的反向引用 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 自引用子匹配项不受支持，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 组未封闭，右括号太少。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 组未打开，左括号太少。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 多次定义了命名子匹配项，在 "{0}" 开头处找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 子匹配名称必须是字词字符的组合，且未以数字开头，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 内联选项必须显示在正则表达式的开头，稍后找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 字符在字符类中出现多次，找到重复的 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 方括号字符类不能为空，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 平衡子匹配项不受支持，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 使用带单引号的命名捕获不支持，请改用(?&lt;...&gt;)语法，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 条件交替不受支持，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 不能在启用 MatchOptions.NumberedSubMatches 的情况下使用命名捕获，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 将命名捕获与 "(?&lt;name&gt;...)" 和 "\k&lt;name&gt;" 结合使用，或者启用 MatchOptions.NumberedSubMatches，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 必须使用反斜杠对文字连字符进行转义，已使用 "\-" 转义，在 "{0}" 中找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 在字符类中使用时，需要使用反斜杠对文字字符进行转义，在 "{0}" 的末尾找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 组中的限定符包含另一个限定符或空交替，这可能会导致结果不明确，在 "{0}" 的末尾找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 后瞻超过 250 个字符的最大可能限制，在 "{0}" 的末尾找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 限定符范围下限数大于上限数，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 嵌套组过多，在 "{0}" 的开头找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 子匹配项的名称过长，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 数字过大，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 字符类范围中的字符被反转，在 "{0}" 的末尾找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 字符类在字符类范围内，或使用反斜杠对文字连字符进行转义，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 以未转义的反斜杠结尾。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 限定符没有要限定的内容，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: MatchOptions.DotAll 和 MatchOptions.FreeSpacing 仅适用于 Power Fx V1，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 对后瞻或前瞻内的子匹配项的反向引用 "{0}"。</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>正则表达式必须是常数值。</value>
+    <value>正则表达式必须是常量值。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions 必须为常量值。</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>无法更改传递给 '{0}' 函数的值。</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>捕获名称“{0}”将隐藏要返回正则表达式完整匹配的预定义属性。如果要使用该命名属性来提取指定文本中的完整匹配项，请对其重命名。</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>捕获名称 '{0}' 正隐藏返回匹配项信息的预定义属性。如果想要访问匹配项信息，请考虑对其进行重命名。</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>捕获名称“{0}”将隐藏要返回正则表达式中组匹配项的预定义属性。如果要使用该命名属性来提取指定文本中的所有子匹配项，请对其重命名。</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>捕获名称“{0}”将隐藏要返回正则表达式匹配项位置的预定义属性。如果要使用该命名属性来提取指定文本中完整匹配项的位置，请对其重命名。</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>集 '{0}' 中的捕获名称正隐藏返回匹配项信息的预定义属性。如果想要访问匹配项信息，请考虑对其进行重命名。</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">

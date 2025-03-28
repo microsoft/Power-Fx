@@ -2113,6 +2113,14 @@
     <value>Kolumnnamnskonflikt för {0}.</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Det går inte att lägga till kolumner i en systempost eller tabell med systemposter. Använd ShowColumns om du vill extrahera de specifika kolumner som du behöver först.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Det går inte att byta namn på kolumner för en systempost eller tabell med systemposter. Använd ShowColumns om du vill extrahera de specifika kolumner som du behöver först.</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Den angivna kolumnen {0} finns inte.</value>
     
@@ -4511,24 +4519,232 @@
     <value>Ogiltigt reguljärt uttryck.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Infogade alternativ måste finnas i början av det reguljära uttrycket, {0} hittades senare.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Infogade alternativ är begränsade till en kombination av bokstäverna [imnsx], kan inte inaktivera alternativ och kan inte användas i ett underuttryck, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Oktala \0-teckenkoder stöds inte, använd hexadecimal \x eller Unicode \u i stället, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Literala klammerparenteser måste undantas med ett omvänt snedstreck, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Literala hakparenteser måste undantas med ett omvänt snedstreck även i teckenklasser, till exempel \[ eller \], vilket hittades i slutet av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Teckenklass utan avslutande hakparentes.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Specialgruppen stöds inte, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Undantagstecken tillåts inte inom teckenklassen, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Negativt undantagstecken tillåts inte inom negerad teckenklass, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Undantagstecken tillåts inte utanför en teckenklass, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Ogiltigt Unicode-kategorinamn, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Upprepat infogat alternativ, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Ej stängd infogad kommentar.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Ej stängd infogad kommentar, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Infogat alternativ är inkompatibelt med MatchOptions.NumberedSubMatches, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Possessiva kvantifierare stöds inte, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Exakta kvantifierare kan inte användas med modifierare av kvantifierare, till exempel ? för lat, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Ogiltig undantagskod, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Undermatchningen {0} har inte definierats eller är en framåtreferens som inte stöds.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Undermatchningar stöds inte i bakåtreferenser, vilket finns i början av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Bakåtreferenser kan inte kapslas, vilket finns i början av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Obegränsade kvantifierare stöds inte i bakåtreferenser, vilket finns i slutet av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Kvantifierare stöds inte för bakåtreferenser eller framåtreferenser, vilket finns i slutet av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Bakåtreferensen {0} till undermatchning som kanske inte inträffar på grund av växling eller nollkvantifierare.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Självrefererande delmatchningar stöds inte, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Ej stängda grupper, för få avslutande parenteser.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Ej öppnade grupper, för få inledande parenteser.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Namngiven undermatchning har definierats mer än en gång, men finns i början av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Undermatchningsnamnet måste vara en kombination av ordtecken och får inte börja med en siffra, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Infogade alternativ måste finnas i början av det reguljära uttrycket, {0} hittades senare.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Tecknet förekommer mer än en gång i teckenklassen, upprepning av {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Teckenklasser med hakparenteser får inte vara tomma, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Balanserande delmatchningar stöds inte, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Det går inte att använda namngivna avbildningar med enkelt citattecken, använd syntaxen (?&lt;...&gt;) i stället, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Villkorlig växling stöds inte, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Namngivna avbildningar kan inte användas med MatchOptions.NumberedSubMatches aktiverat, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Använd namngivna avbildningar med ”(?&lt;name&gt;...)” och ”\k&lt;name&gt;” eller aktivera MatchOptions.NumberedSubMatches, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Literalt bindestreck i ett teckenklassintervall måste undantas med omvänt snedstreck, undanta med ”\-”, vilket finns i {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Literalt tecken måste undantas med ett omvänt snedstreck när det används i en teckenklass, vilket hittades i slutet av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Kvantifierare för en grupp som innehåller en annan kvantifierare eller tom växling som kan resultera i ett tvetydigt resultat, vilket finns i slutet av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Bakåtreferensen överskred maxgränsen på 250 tecken, vilket finns i slutet av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Kvantifierarintervallets låga tal är större än det höga talet, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: För många kapslade grupper, vilket finns i början av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Namnet på undermatchningen är för långt, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Talet är för stort, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Tecknen i ett teckenklassintervall är omvända, vilket finns i slutet av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Teckenklass i ett teckenklassintervall, eller undanta ett literalt bindestreck med ett omvänt snedstreck, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Slutar med ett omvänt snedstreck.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Kvantifierare utan något att kvantifiera, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: MatchOptions.DotAll och MatchOptions.FreeSpacing är bara tillgängliga med Power Fx V1, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Bakåtreferensen {0} till undermatchning som finns i bakåtreferens eller framåtreferens.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Reguljära uttryck måste vara konstanta värden.</value>
+    <value>Reguljärt uttryck måste vara ett konstant värde.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions måste vara ett konstant värde.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Det värde som skickas till funktionen "{0}" kan inte ändras.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Fånga in namnet {0} döljer den fördefinierade egenskapen som returnerar den fullständiga matchningen av det reguljära uttrycket. Överväg att byta namn på det om du vill använda den namngivna egenskapen för att extrahera den fullständiga matchningen i den angivna texten.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Avbildningsnamnet {0} döljer en fördefinierad egenskap som returnerar matchningsinformation. Överväg att byta namn på det om du vill komma åt matchningsinformationen.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Fånga in namnet {0} döljer den fördefinierade egenskapen som returnerar gruppmatchningarna i det reguljära uttrycket. Överväg att byta namn på det om du vill använda den namngivna egenskapen för att extrahera alla underordnade matchningar i den angivna texten.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Fånga in namnet {0} döljer den fördefinierade egenskapen som returnerar platsen för matchningen av det reguljära uttrycket. Överväg att byta namn på det om du vill använda den namngivna egenskapen för att extrahera positionen för den fullständiga matchningen i den angivna texten.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Avbildningsnamnen i uppsättningen {0} döljer fördefinierade egenskaper som returnerar matchningsinformation. Överväg att byta namn på dem om du vill komma åt matchningsinformationen.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
