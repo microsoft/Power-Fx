@@ -521,7 +521,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // Configurable constants
         public const int MaxNamedCaptureNameLength = 62;            // maximum length of a capture name, in UTF-16 code units. PCRE2 has a 128 limit, cut in half for possible UFT-8 usage.
         public const int MaxLookBehindPossibleCharacters = 250;     // maximum possible number of characters in a look behind. PCRE2 has a 255 limit.
-        public const int MaxGroupStackDepth = 64;                   // maximum number of nested grouping levels, avoids performance issues with a complex group tree.
+        public const int MaxGroupStackDepth = 64;                   // 2x maximum number of nested grouping levels, avoids performance issues with a complex group tree.
         public const int ErrorContextLength = 12;                   // number of characters to include in error message context excerpt from formula.
 
         private static RegexTypeCacheEntry IsSupportedRegularExpression(TexlNode regExNode, string regexPattern, string regexOptions, out string alteredOptions)
@@ -595,11 +595,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<goodZeroOrOne>[\?]\??)                          |
 
 # leading {, exact and limited quantifiers
-                    (?<badExact>{\d+}[\+\*\?])                         | # exact quantifier can't be used with a modifier
+                    (?<badExact>{\d+}[\+\*\?])                         | # exact quantifier can't be used with a modifier, lazy makes no sense
                     {(?<goodExact>\d+)}                                | # standard exact quantifier, no optional lazy
-                    (?<badLimited>{\d+,\d+}[\+|\*])                    | # possessive and useless quantifiers
+                    (?<badLimited>{\d+,\d+}[\+\*])                     | # possessive and useless quantifiers
                     {(?<goodLimitedL>\d+),(?<goodLimitedH>\d+)}\??     | # standard limited quantifiers, with optional lazy
-                    (?<badUnlimited>{\d+,}[\+|\*])                     |
+                    (?<badUnlimited>{\d+,}[\+\*])                      |
                     {(?<goodUnlimited>\d+),}\??                        |
                     (?<badCurly>[{}])                                  | # more constrained, blocks {,3} and Java/Rust semantics that does not treat this as a literal
 
@@ -1259,17 +1259,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 _quantTarget = null;
 
+                // close existing subgroup
                 var closed = _groupStack.Pop();
-                
-                closed.SubGroupReport();
+                closed.CloseSubGroup();
 
-                closed.Parent.HasAlternation = true;
-
+                // open new subgroup
                 var group = new GroupInfo
                 {
                     Parent = closed.Parent
                 };
                 _groupStack.Push(group);
+
+                // set this only after closing
+                closed.Parent.HasAlternation = true;
             }
 
             public void SeenNonGroup(int min = 1, int max = 1)
@@ -1306,7 +1308,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 var subGroup = _groupStack.Pop();
-                subGroup.SubGroupReport();
+                subGroup.CloseSubGroup();
                 _quantTarget = _groupStack.Pop();
                 
                 // Look behinds are limited in number of characters, PCRE2 doesn't support more than 255.
@@ -1356,7 +1358,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Backref maxsize is based on the size inside the capture, not any quantifiers on the capture
                 SeenNonGroup(_captureNames[name].MinSize, _captureNames[name].MaxSize);
 
-                _backRefs.Add(name);
+                // If a backref is in the same group its capture, even if the group is possibly empty, it is OK.
+                // If that isn't the case, no need to add the backRef for later checking.
+                if (_captureNames[name].IsBlockedBackRef(out _, _groupStack.Peek()) && !_backRefs.Contains(name))
+                {
+                    _backRefs.Add(name);
+                }
 
                 error = null;
                 return true;
@@ -1365,7 +1372,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             public bool Complete(out ErrorResourceKey? error, out string errorArg)
             {
                 var subGroup = _groupStack.Pop();
-                subGroup.SubGroupReport();
+                subGroup.CloseSubGroup();
                 var topGroup = _groupStack.Pop();
                 topGroup.SeenEnd();
 
@@ -1403,11 +1410,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 public bool HasZeroQuant;               // this group has a quantifier
                 public bool HasAlternation;             // this group has an alternation within
                 public bool ContainsCapture;            // this gruop contains a cpature, perhaps nested down
-                public bool KnownGoodBackRef;           // we've checked previously; this group is known not to be zero sized
                 public int MaxSize;                     // maximum size of this group, -1 for unlimited
                 public int MinSize;                     // minimum size of this group, 0 being the minimum
                 public GroupInfo Parent;                // reference to the next level down
-                public bool SeenReport;
 
                 // for characters that aren't in a group, such as literal characters, anchors, escapes, character classes, etc.
                 public GroupInfo SeenNonGroup(int minSize = 1, int maxSize = 1)
@@ -1415,6 +1420,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     MinSize += minSize;
                     MaxSize += maxSize;
 
+                    // this is a disconnected GroupInfo just for this literal, something for the next quantifier (if there is one) to work on
                     return new GroupInfo()
                     {
                         MinSize = minSize,
@@ -1466,18 +1472,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     return true;
                 }
 
-                public void SubGroupReport()
+                public void CloseSubGroup()
                 {
-                    if (!Parent.SeenReport)
-                    {
-                        Parent.MaxSize = MaxSize;
-                        Parent.MinSize = MinSize;
-                        Parent.SeenReport = true;
-                    }
-                    else
+                    if (Parent.HasAlternation)
                     {
                         Parent.MaxSize = Math.Max(Parent.MaxSize, MaxSize);
                         Parent.MinSize = Math.Min(Parent.MinSize, MinSize);
+                    }
+                    else
+                    {
+                        Parent.MaxSize = MaxSize;
+                        Parent.MinSize = MinSize;
                     }
 
                     SeenEnd();
@@ -1490,6 +1495,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // broken out from SeenClose for the end of the regular expression which may not have a closing paren
                 public void SeenEnd()
                 {
+                    // If we are possibly empty, we can't suport a zero quantifier.
                     if (MinSize == 0)
                     {
                         ErrorOnQuant = true;
@@ -1509,28 +1515,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     IsClosed = true;
 
-                    // If we are possibly empty, we can't suport a zero quantifier.
-                    if (MinSize == 0)
+                    Parent.ErrorOnQuant |= ErrorOnQuant;
+                    Parent.ErrorOnQuant_LookBehind |= ErrorOnQuant_LookBehind;
+
+                    if (!IsNonCapture)
                     {
-                        ErrorOnQuant = true;
+                        Parent.ContainsCapture = true;
                     }
 
-                    if (Parent != null)
+                    // Look arounds have no size with respect to their parent
+                    if (!IsLookAround)
                     {
-                        Parent.ErrorOnQuant |= ErrorOnQuant;
-                        Parent.ErrorOnQuant_LookBehind |= ErrorOnQuant_LookBehind;
-
-                        if (!IsNonCapture)
-                        {
-                            Parent.ContainsCapture = true;
-                        }
-
-                        // Look arounds have no size with respect to their parent
-                        if (!IsLookAround)
-                        {
-                            Parent.MaxSize = Parent.MaxSize == -1 || MaxSize == -1 ? -1 : Parent.MaxSize + MaxSize;
-                            Parent.MinSize += MinSize;
-                        }
+                        Parent.MaxSize = Parent.MaxSize == -1 || MaxSize == -1 ? -1 : Parent.MaxSize + MaxSize;
+                        Parent.MinSize += MinSize;
                     }
 
                     error = null;
@@ -1538,16 +1535,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 // used to determine if a backref is acceptable
+                // descent down the tree will stop if a stop GroupInfo is provided, used for detecting backrefs that are in the same group as their definition
                 public bool IsBlockedBackRef(out ErrorResourceKey? error, GroupInfo stop = null)
                 {
                     GroupInfo ptr;
                     error = null;
-
-                    // short circuit in case we are asked about the same capture
-                    if (stop == null && KnownGoodBackRef)
-                    {
-                        return false;
-                    }
 
                     int maxDepth = MaxGroupStackDepth;
 
@@ -1582,11 +1574,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         throw new IndexOutOfRangeException("regular expression maximum GroupTracker depth exceeded");
                     }
 
-                    if (stop == null)
-                    {
-                        KnownGoodBackRef = true;
-                    }
-                    else if (stop != ptr)
+                    // if we are checking for a specific group, and we didn't hit that gruop, the backref is not OK.
+                    // no error message required, we'll report it later on the final scan.
+                    if (stop != null && stop != ptr)
                     {
                         return true;
                     }
