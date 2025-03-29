@@ -992,6 +992,15 @@ Errors: Error 17-26: Invalid regular expression: Possessive quantifiers are not 
 >> Match( "abcdef", "\w{2,4}*" ).FullMatch  // in case * is used someday in the future as a quantifier modifier
 Errors: Error 17-27: Invalid regular expression: Possessive quantifiers are not supported, found "{2,4}*".|Error 0-5: The function 'Match' has some invalid arguments.|Error 29-39: Name isn't valid. 'FullMatch' isn't recognized.
 
+>> Match( "abcdef", "\w{1,2}|")
+{FullMatch:"ab",StartMatch:1}
+
+>> Match( "abcdef", "\w{1,}|")
+{FullMatch:"abcdef",StartMatch:1}
+
+>> Match( "abcdef", "\w{1}|")
+{FullMatch:"a",StartMatch:1}
+
 // spaces in fixed range quantifiers not supported (supported in pcre2, not in JavaScript)
 
 >> Match( "abc", "a{ 1,2 }")
