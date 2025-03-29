@@ -14,6 +14,29 @@ namespace Microsoft.PowerFx.Functions
         // This JavaScript function assumes that the regular expression has already been compiled and comforms to the Power Fx regular expression language.
         // For example, no affodance is made for nested character classes or inline options on a subexpression, as those would have already been blocked.
         // Stick to single ticks for strings to keep this easier to read and maintain here in C#.
+        
+        // On the mapping of Lu, Ll, and Lt with MatchOptions.IgnoreCase:
+        //
+        // From https://www.pcre.org/current/doc/html/pcre2pattern.html:
+        // Perl originally used the name L& for the Lc property. This is still supported by Perl, but discouraged.
+        // PCRE2 also still supports it. This property matches any character that has the Lu, Ll, or Lt property, in other words,
+        // any letter that is not classified as a modifier or "other".
+        // From release 10.45 of PCRE2 the properties Lu, Ll, and Lt are all treated as Lc when case-independent matching
+        // is set by the PCRE2_CASELESS option or (?i) within the pattern. The other properties are not affected by caseless matching.
+        //
+        // From https://github.com/dotnet/runtime/blob/889d514aace75eac9ed88bc9c155a82eb9dac78a/src/libraries/System.Text.RegularExpressions/src/System/Text/RegularExpressions/RegexCharClass.cs#L134
+        //  // Letters
+        //  { "Ll", "\u0002" }, // UnicodeCategory.LowercaseLetter + 1
+        //  { "Lm", "\u0004" }, // UnicodeCategory.ModifierLetter + 1
+        //  { "Lo", "\u0005" }, // UnicodeCategory.OtherLetter + 1
+        //  { "Lt", "\u0003" }, // UnicodeCategory.TitlecaseLetter + 1
+        //  { "Lu", "\u0001" }, // UnicodeCategory.UppercaseLetter + 1
+        //  { "L", "\u0000\u0002\u0004\u0005\u0003\u0001\u0000" },
+        //
+        //  // InternalRegexIgnoreCase = {LowercaseLetter} OR {TitlecaseLetter} OR {UppercaseLetter}
+        //  // !!!This category should only ever be used in conjunction with RegexOptions.IgnoreCase code paths!!!
+        //  { InternalRegexIgnoreCase, "\u0000\u0002\u0003\u0001\u0000" },
+
         public const string AlterRegex_JavaScript = @"
             function AlterRegex_JavaScript(regex, flags, crCode, nlCode)
             {
@@ -88,7 +111,8 @@ namespace Microsoft.PowerFx.Functions
                             case '\\':
                                 if (++index < regex.length)
                                 {
-                                    const wordChar = '\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}\\p{Lm}\\p{Mn}\\p{Nd}\\p{Pc}';
+                                    const letterCaseChar = '\\p{Ll}\\p{Lu}\\p{Lt}';
+                                    const wordChar = letterCaseChar + '\\p{Lo}\\p{Lm}\\p{Mn}\\p{Nd}\\p{Pc}';
                                     const spaceChar = '" + MatchWhiteSpace.SpaceNewLineDoubleEscapes + @"';
                                     const digitChar = '\\p{Nd}';
 
@@ -119,6 +143,36 @@ namespace Microsoft.PowerFx.Functions
                                                 orCharacterClass = orCharacterClass.concat( '|[^', spaceChar, ']' );
                                             else
                                                 alteredToken = ''.concat('[^', spaceChar, ']');
+                                            break;
+
+                                        case 'p':
+                                            // /\p{Lt}/i.exec('a') does not match in JavaScript, but does in .NET and PCRE2
+                                            // Only if using ignoreCase, replace any of Ll, Lu, and Lt with all three of them
+                                            if (ignoreCase && /\{L[lut]\}/.test(regex.substring(index+1, index+6)) )
+                                            {
+                                                alteredToken = ''.concat(openCharacterClass ? '' : '[', letterCaseChar, openCharacterClass ? '' : ']');
+
+                                                index += 4;
+                                            }
+                                            else
+                                            {
+                                                alteredToken = '\\'.concat(regex.charAt(index));
+                                            }
+                                            break;
+                                        case 'P':
+                                            if (ignoreCase && /\{L[lut]\}/.test(regex.substring(index+1, index+6)) )
+                                            {
+                                                if (openCharacterClass)
+                                                    orCharacterClass = orCharacterClass.concat( '|[' + letterCaseChar + ']' );
+                                                else
+                                                    alteredToken = ''.concat('[^', letterCaseChar, ']');
+
+                                                index += 4;
+                                            }
+                                            else
+                                            {
+                                                alteredToken = '\\'.concat(regex.charAt(index));
+                                            }
                                             break;
 
                                         case 'd':

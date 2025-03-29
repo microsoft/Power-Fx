@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 #endif
 
 #if MATCHCOMPARE
-        /* to enable, place this in Solution Items/Directiory.Build.Props:
+        /* to enable, place this in Solution Items/Directiory.Build.Props: abcdefgeg
           <PropertyGroup>
               <DefineConstants>$(DefineConstants);MATCHCOMPARE</DefineConstants>
           </PropertyGroup>
@@ -109,6 +109,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InterpreterTheory]
         public void RegExCompare(ExpressionTestCase t)
         {
+            ExpressionEvaluationTests.RegExCompareDotNet = true;
             ExpressionEvaluationTests.RegExCompareNode = true;
             ExpressionEvaluationTests.RegExComparePCRE2 = true;
 
@@ -179,12 +180,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return false;
         }
 
-#if false
+#if true
         // Helper to run a single .txt
         [Fact]
         public void RunOne()
         {
-            var path = @"c:\temp\match_comb.txt";
+            var path = @"C:\od\regex\match9\one.txt";
 
             var line = 0;
 
@@ -211,10 +212,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
 #if MATCHCOMPARE
-        // Helper to run a single .txt with regular expression comparison between .NET, Node, and PCRE2
+        // Helper to run a single .txt with regular expression comparison between .NET, Node, and PCRE2 a
         [Fact]
         public void RunOneMatchCompare()
         {
+            ExpressionEvaluationTests.RegExCompareDotNet = true;
             ExpressionEvaluationTests.RegExCompareNode = true;
             ExpressionEvaluationTests.RegExComparePCRE2 = true;
             RunOne();

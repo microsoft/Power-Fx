@@ -221,7 +221,7 @@ namespace Microsoft.PowerFx.Functions
 #pragma warning restore SA1119  // Statement should not use unnecessary parenthesis
             }
 
-            protected (string, RegexOptions) AlterRegex_DotNet(string regex, string options)
+            protected static (string, RegexOptions) AlterRegex_DotNet(string regex, string options)
             {
                 var altered = new StringBuilder();
                 bool openCharacterClass = false;                       // are we defining a character class?
@@ -257,6 +257,13 @@ namespace Microsoft.PowerFx.Functions
                     if (freeSpacing && !openCharacterClass && MatchWhiteSpace.IsSpaceNewLine(regex[index]))
                     {
                         altered.Append(' ');
+                    }
+                    else if (!openCharacterClass && char.IsHighSurrogate(regex[index]) && index + 1 < regex.Length && char.IsLowSurrogate(regex[index + 1]))
+                    {
+                        altered.Append("(?:");
+                        altered.Append(regex.Substring(index, 2));
+                        altered.Append(")");
+                        index++;
                     }
                     else
                     {
@@ -321,7 +328,9 @@ namespace Microsoft.PowerFx.Functions
                                 break;
 
                             case '.':
-                                altered.Append(!openCharacterClass && !dotAll ? @"[^" + MatchWhiteSpace.NewLineEscapes + "]" : ".");
+                                altered.Append(openCharacterClass ? "." :
+                                                    (dotAll ? @"(?:[\ud800-\udbff][\udc00-\udfff]|.)" :
+                                                              @"(?:[\ud800-\udbff][\udc00-\udfff]|[^" + MatchWhiteSpace.NewLineEscapes + "])"));  
                                 break;
 
                             case '^':

@@ -41,19 +41,22 @@
 >> JSON( MatchAll( Char(9) & Char(13) & Char(10) & Char(Hex2Dec("85")) & UniChar(Hex2Dec("2028")) & UniChar(Hex2Dec("2029")) & Char(Hex2Dec("C")) & Char(Hex2Dec("B")) & Char(14), "." ) )
 "[{""FullMatch"":""\t"",""StartMatch"":1},{""FullMatch"":""\u000E"",""StartMatch"":9}]"
 
-// surrogate pairs not supported in character class, same for .NET and browser JavaScript
+// surrogate pairs not supported in character class. .NET does not support, JavaScript supports with /u or /v regex modifier, PCRE2 supports
 
-// browser: console.log("😀".length)
+>> UniChar(Hex2Dec("1f600")) = "😀"
+true
+
+>> UniChar(Hex2Dec("1F47B")) = "👻"
+true
+
 >> Len( "😀" )
 2
 
-// .NET returns 1, Node returns 2, JavaScript in browser returns 1
-// browser: console.log( /[\uD83D\uDE00]/.exec("😀" )[0].length)
-// >> Len( Match( "😀", "[\uD83D\uDE00]" ).FullMatch )
-// 1
-//
-// >> Len( Match( "😀", "[😀]" ).FullMatch )
-// 1
+>> Match( "😀", "[\uD83D\uDE00]" )
+Errors: Error 13-29: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "...\uD83D\uDE00".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "😀", "[😀]" )
+Errors: Error 13-19: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "[😀".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Len( Match( "😀", "\uD83D\uDE00" ).FullMatch )
 2
@@ -61,11 +64,131 @@
 >> Len( Match( "😀", "😀" ).FullMatch )
 2
 
-// .NET, Node, Browser, PCRE2 all agree with these range error messages, apparently not looking at surrogates as a pair
+>> Match( "😀", "[a-\uD83D\uDE06]" )
+Errors: Error 13-31: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "...\uD83D\uDE06".|Error 0-5: The function 'Match' has some invalid arguments.
+
 >> Match( "😀", "[\uD83D\uDE00-\uD83D\uDE06]" )
-Errors: Error 13-42: Invalid regular expression: The characters in a character class range are reversed, found at the end of "\uD83D".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 13-42: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "...\uD83D\uDE00".|Error 0-5: The function 'Match' has some invalid arguments.
 
-// also gives an error, but results in a single surrogate pair character which throws off the testing infrastructure
-// >> Match( "😀", "[😀-😆]" )
-// Errors: Error 13-22: Invalid regular expression: The characters in a character class range are reversed, found at the end of "�".|Error 0-5: The function 'Match' has some invalid arguments.
+>> Match( "😀", "[😀-👻]" )
+Errors: Error 13-22: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "[😀".|Error 0-5: The function 'Match' has some invalid arguments.
 
+>> Match( "😀", "[a\uD83D\uDE00-👻b]" )
+Errors: Error 13-34: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "...\uD83D\uDE00".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "😀", "[a\uD83D\uDE00-\ud83d\udc7bb]" )
+Errors: Error 13-44: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "...\uD83D\uDE00".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "😀", "[abc\uD83D\uDE00\ud83d\udc7bdef]" )
+Errors: Error 13-47: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "...\uD83D\uDE00".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "😀😀😀😀😀", "😀+" )
+{FullMatch:"😀😀😀😀😀",StartMatch:1}
+
+>> Match( "ab👻👻cd😀😀ef", "😀+" )  // ghosts each add two characters from StartMatch perspective
+{FullMatch:"😀😀",StartMatch:9}
+
+>> Match( "😀😀😀😀😀", "😀{2}" )
+{FullMatch:"😀😀",StartMatch:1}
+
+>> Match( "😀😀😀😀😀", "😀?" )
+{FullMatch:"😀",StartMatch:1}
+
+>> Match( "👻👻👻👻👻", "😀?" )
+{FullMatch:"",StartMatch:1}
+
+>> Match( "👻👻👻👻👻", "😀+" )
+Blank()
+
+>> Match( "😀", "." )
+{FullMatch:"😀",StartMatch:1}
+
+>> Match( "😀", ".*" )
+{FullMatch:"😀",StartMatch:1}
+
+>> Match( "😀", ".+" )
+{FullMatch:"😀",StartMatch:1}
+
+>> Match( "a😀c%👻%def", "%.%" )
+{FullMatch:"%👻%",StartMatch:5}
+
+>> Match( "a😀c%👻%def", "%.%", MatchOptions.DotAll )
+{FullMatch:"%👻%",StartMatch:5}
+
+>> Match( "%👻👻a👻👻b👻c👻👻%", "%.{3,}%", MatchOptions.DotAll )
+{FullMatch:"%👻👻a👻👻b👻c👻👻%",StartMatch:1}
+
+>> JSON( Match( "%👻👻" & Char(13) & "👻👻" & Char(10) & "👻c👻👻%", "%.{3,}%" ) )
+"null"
+
+>> JSON( Match( "%👻👻" & Char(13) & "👻👻" & Char(10) & "👻c👻👻%", "%.{3,}%", MatchOptions.DotAll ) )
+"{""FullMatch"":""%\uD83D\uDC7B\uD83D\uDC7B\r\uD83D\uDC7B\uD83D\uDC7B\n\uD83D\uDC7Bc\uD83D\uDC7B\uD83D\uDC7B%"",""StartMatch"":1}"
+
+// case folding ſ (U+017F LATIN SMALL LETTER LONG S) case-folds to s (U+0073 LATIN SMALL LETTER S) 
+// case folding K (U+212A KELVIN SIGN) case-folds to k (U+006B LATIN SMALL LETTER K).
+
+>> UniChar( Hex2Dec( "017f" )) = "ſ"
+true
+
+>> UniChar( Hex2Dec( "212a" )) = "K"
+true
+
+>> Match( "K", "[a-z]" )
+Blank()
+
+>> Match( "ſ", "[a-z]" )
+Blank()
+
+>> Match( "K", "k", MatchOptions.IgnoreCase )
+{FullMatch:"K",StartMatch:1}
+
+// .net does not match this, but node and PCRE2 do: {FullMatch:"ſ",StartMatch:1}
+>> Match( "ſ", "s", MatchOptions.IgnoreCase )
+Blank()
+
+// .net does not match this, but node and PCRE2 do: {FullMatch:"ſ",StartMatch:1}
+>> Match( "ſ", "[a-z]", MatchOptions.IgnoreCase )
+Blank()
+
+>> Match( "K", "[a-z]", MatchOptions.IgnoreCase )
+{FullMatch:"K",StartMatch:1}
+
+>> Match( "ß", "ss", MatchOptions.IgnoreCase )
+Blank()
+
+>> Match( UniChar( Hex2Dec( "2126" ) ), "\u03c9", MatchOptions.IgnoreCase )
+{FullMatch:"Ω",StartMatch:1}
+
+>> Match( UniChar( Hex2Dec( "2126" ) ), "\u03a9", MatchOptions.IgnoreCase )
+{FullMatch:"Ω",StartMatch:1}
+
+// .net doesn't cover unicode categories above the BMP, node and pcre2 do
+
+>> Match( "👻", "\p{So}" )  // \u{01F47B}
+Blank()
+
+>> Match( "𝟭", "\p{Nd}" )   // \u{01D7ED}
+Blank()
+
+>> Match( "𐓶", "\p{Ll}" )   // \u{0104F6}
+Blank()
+
+// Unicode chars in errors, want to avoid breaking up surrogate pairs in message
+
+>> Match( "a", "\👻" )
+Errors: Error 12-17: Invalid regular expression: Invalid escape code, found "\👻".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", Char(13) & "[\Q]" )
+Errors: Error 21-22: Invalid regular expression: Invalid escape code, found " [\Q".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "👻👻👻👻👻[\Q]" )
+Errors: Error 12-28: Invalid regular expression: Invalid escape code, found "...👻👻👻👻[\Q".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "👻👻👻👻👻a[\Q]" )
+Errors: Error 12-29: Invalid regular expression: Invalid escape code, found "...👻👻👻👻a[\Q".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "👻👻👻👻👻ab[\Q]" )
+Errors: Error 12-30: Invalid regular expression: Invalid escape code, found "...👻👻👻ab[\Q".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "👻👻👻👻[\Q]" )
+Errors: Error 12-26: Invalid regular expression: Invalid escape code, found "👻👻👻👻[\Q".|Error 0-5: The function 'Match' has some invalid arguments.
