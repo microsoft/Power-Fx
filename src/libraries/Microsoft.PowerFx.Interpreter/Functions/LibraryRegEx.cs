@@ -3,18 +3,21 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter.Localization;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Texl.Builtins.BaseMatchFunction;
 
@@ -260,6 +263,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else if (!openCharacterClass && char.IsHighSurrogate(regex[index]) && index + 1 < regex.Length && char.IsLowSurrogate(regex[index + 1]))
                     {
+                        // treat a surrogtae pair as one character
                         altered.Append("(?:");
                         altered.Append(regex.Substring(index, 2));
                         altered.Append(")");
@@ -319,10 +323,28 @@ namespace Microsoft.PowerFx.Functions
                                 break;
 
                             case '\\':
-                                altered.Append("\\");
-                                if (++index < regex.Length)
+                                Match m;
+                                
+                                // treat a surrogtae pair, as provided in two back-to-back \uxxxx tokens, as one character
+                                if (!openCharacterClass &&
+                                    index + 12 <= regex.Length && 
+                                    regex[index + 1] == 'u' &&
+                                    (m = Regex.Match(regex.Substring(index, 12), "^\\\\u(?<high>[0-9a-fA-F]{4})\\\\u(?<low>[0-9a-fA-F]{4})")).Success &&
+                                    int.TryParse(m.Groups["high"].Value, NumberStyles.HexNumber, null, out var high) && char.IsHighSurrogate((char)high) &&
+                                    int.TryParse(m.Groups["low"].Value, NumberStyles.HexNumber, null, out var low) && char.IsLowSurrogate((char)low))
                                 {
-                                    altered.Append(regex[index]);
+                                    altered.Append("(?:");
+                                    altered.Append(regex.Substring(index, 12));
+                                    altered.Append(")");
+                                    index += 11;
+                                }
+                                else
+                                {
+                                    altered.Append("\\");
+                                    if (++index < regex.Length)
+                                    {
+                                        altered.Append(regex[index]);
+                                    }
                                 }
 
                                 break;

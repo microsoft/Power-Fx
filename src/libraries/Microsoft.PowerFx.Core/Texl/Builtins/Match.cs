@@ -552,17 +552,28 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<badOctal>\\0\d*)                                | # \0 and octal are not accepted, ambiguous and not needed (use \x instead)
                     \\k<(?<backRefName>\w+)>                           | # named backreference
                     \\(?<backRefNumber>[1-9]\d*)                       | # numeric backreference, must be enabled with MatchOptions.NumberedSubMatches
+                    (?<goodUSurrPair>\\u[dD][89a-bA-B][0-9a-fA-F]{2}
+                                     \\u[dD][c-fC-F][0-9a-fA-F]{2})    | # surrogate pair
+                    (?<badUSurr>\\u[dD][89a-fA-F][0-9a-fA-F]{2})       | # surrogate that is not in a pair
                     (?<goodEscape>\\
                            ([dfnrstw]                              |     # standard regex character classes, missing from .NET are aAeGzZv (no XRegExp support), other common are u{} and o
                             [\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/]       |     # acceptable escaped characters with Unicode aware ECMAScript
                             [\#\ ]                                 |     # added for free spacing, always accepted for conssitency even in character classes, escape needs to be removed on Unicode aware ECMAScript
                             x[0-9a-fA-F]{2}                        |     # hex character, must be exactly 2 hex digits
-                            u[0-9a-fA-F]{4}))                          | # Unicode characters, must be exactly 4 hex digits
+                            u[0-9a-fA-F]{4}))                          | # hex single word unicode character (not surrogate pair, and not a surrogate), must be exactly 4 hex digits
                     \\(?<goodUEscape>[pP])\{(?<UCategory>[\w=:-]+)\}   | # Unicode character classes, extra characters here for a better error message
                     (?<goodAnchorOutsideCC>\\[bB])                     | # acceptable outside a character class, includes negative classes until we have character class subtraction, include \P for future MatchOptions.LocaleAware
                     (?<goodEscapeOutsideAndInsideCCIfPositive>\\[DWS]) |
                     (?<goodEscapeInsideCCOnly>\\[&\-!#%,;:<=>@`~\^])   | # https://262.ecma-international.org/#prod-ClassSetReservedPunctuator, others covered with goodEscape above
                     (?<badEscape>\\.)                                  | # all other escaped characters are invalid and reserved for future use
+                ";
+
+            const string elseRE =
+                @"
+# end of both REs, checks for surrogate pair characters and everything else
+                    (?<elseUSurrPair>[\ud800-\udbff][\udc00-\udfff])   | # surrogate pairs need to be both inline characters, or both \u codes, but not mixed
+                    (?<elseBadUSurr>[\ud800-\udfff])                   |
+                    (?<else>.)
                 ";
 
             Regex generalRE = new Regex(
@@ -615,8 +626,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<anchors>[\^\$])                                 |
                     (?<poundComment>\#)                                | # used in free spacing mode (to detect start of comment), treated as else otherwise
                     (?<newline>[" + MatchWhiteSpace.NewLineEscapes + @"])    | # used in free spacing mode (to detect end of comment), treated as else otherwise
-                    (?<else>.)
-                ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
+                "
+                + elseRE, 
+                RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
 
             Regex characterClassRE = new Regex(
                 escapeRE +
@@ -629,8 +641,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         \|\| | \#\# | \$\$ | \*\* | \+\+ | \.\.  |       # includes set subtraction 
                         \?\? | \^\^ | \-\-)                            | # 
                     (?<goodHyphen>-)                                   |
-                    (?<else>.)
-                ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
+                "
+                + elseRE, 
+                RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
 
             int captureNumber = 0;                                  // last numbered capture encountered
             var groupTracker = new GroupTracker();
@@ -763,14 +776,22 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             return RegExError(error, endContext: true);
                         }
                     }
-                    else if (token.Groups["else"].Success || token.Groups["newline"].Success || token.Groups["goodEscape"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
+                    else if (token.Groups["else"].Success)
                     {
-                        if (token.Value == "\\" && token.Index == regexPattern.Length - 1)
+                        if (token.Value == "\\" && token.Index == regexPattern.Length)
                         {
                             return RegExError(TexlStrings.ErrInvalidRegExEndsWithBackslash);
                         }
 
                         groupTracker.SeenNonGroup();
+                    }
+                    else if (token.Groups["newline"].Success || token.Groups["goodEscape"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
+                    {
+                        groupTracker.SeenNonGroup();
+                    }
+                    else if (token.Groups["goodUSurrPair"].Success || token.Groups["elseUSurrPair"].Success)
+                    {
+                        groupTracker.SeenNonGroup(min: 2, max: 2);
                     }
                     else if (token.Groups["characterClass"].Success)
                     {
@@ -778,20 +799,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         string ccString = characterClassNegative ? token.Groups["characterClass"].Value.Substring(1) : token.Groups["characterClass"].Value;
                         int hyphenWait = 0;
                         int hyphenStart = 0;
-                        int lastChar = 0;
 
                         foreach (Match ccToken in characterClassRE.Matches(ccString))
                         {
                             RegexTypeCacheEntry CCRegExError(ErrorResourceKey errKey)
                             {
                                 return RegExError(
-                                    errKey, 
+                                    errKey,
                                     index: ccToken.Index + token.Index + 1 + (characterClassNegative ? 1 : 0), // 1 for opening [ and possibly 1 more for ^
-                                    len: ccToken.Length, 
+                                    len: ccToken.Length,
                                     endContext: true);
                             }
 
-                            if (ccToken.Groups["goodEscape"].Success || ccToken.Groups["goodEscapeInsideCCOnly"].Success || ccToken.Groups["else"].Success)
+                            if (ccToken.Groups["goodEscape"].Success || ccToken.Groups["goodUHex"].Success || ccToken.Groups["goodEscapeInsideCCOnly"].Success || ccToken.Groups["else"].Success)
                             {
                                 int charVal;
 
@@ -817,7 +837,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                             break;
                                         case 'x':
                                         case 'u':
-                                            int.TryParse(ccToken.Value.Substring(2), System.Globalization.NumberStyles.HexNumber, null, out charVal);
+                                            if (!int.TryParse(ccToken.Value.Substring(2), NumberStyles.HexNumber, null, out charVal))
+                                            {
+                                                // should never happen, goodEscape match implies that we have valid hex digits
+                                                throw new Exception("hex character did not parse in character class");
+                                            }
+
                                             break;
                                         case 'd':
                                         case 's':
@@ -828,11 +853,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                             charVal = ccToken.Value[1];
                                             break;
                                     }
-                                }
-
-                                if (char.IsHighSurrogate((char)lastChar) && char.IsLowSurrogate((char)charVal))
-                                {
-                                    return CCRegExError(TexlStrings.ErrInvalidRegExSurrogatePairInCharacterClass);
                                 }
 
                                 if (hyphenWait > 1 && charVal == -1)
@@ -846,7 +866,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 }
 
                                 hyphenStart = charVal;
-                                lastChar = charVal;
                                 hyphenWait--;
                             }
                             else if (ccToken.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
@@ -862,7 +881,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 }
 
                                 hyphenStart = -1;
-                                lastChar = 0;
                                 hyphenWait--;
                             }
                             else if (ccToken.Groups["goodUEscape"].Success)
@@ -884,7 +902,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 }
 
                                 hyphenStart = -1;
-                                lastChar = 0;
                                 hyphenWait--;
                             }
                             else if (ccToken.Groups["goodHyphen"].Success)
@@ -900,12 +917,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 }
 
                                 // we need to see two characters after a hyphen, to end and start another range, before we can entertain another hyphen
-                                lastChar = 0;
-                                hyphenWait = 2; 
+                                hyphenWait = 2;
                             }
                             else if (ccToken.Groups["badEscape"].Success)
                             {
                                 return CCRegExError(TexlStrings.ErrInvalidRegExBadEscape);
+                            }
+                            else if (ccToken.Groups["goodUSurrPair"].Success || ccToken.Groups["elseUSurrPair"].Success)
+                            {
+                                return CCRegExError(TexlStrings.ErrInvalidRegExSurrogatePairInCharacterClass);
+                            }
+                            else if (ccToken.Groups["badUSurr"].Success || ccToken.Groups["elseBadUSurr"].Success)
+                            {
+                                return CCRegExError(TexlStrings.ErrInvalidRegExMalformedSurrogatePair);
                             }
                             else if (ccToken.Groups["goodAnchorOutsideCC"].Success || ccToken.Groups["backRefName"].Success || ccToken.Groups["backRefNumber"].Success)
                             {
@@ -1132,6 +1156,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     else if (token.Groups["badEmptyCharacterClass"].Success)
                     {
                         return RegExError(TexlStrings.ErrInvalidRegExEmptyCharacterClass);
+                    }
+                    else if (token.Groups["badUSurr"].Success || token.Groups["elseeUSurr"].Success)
+                    {
+                        return RegExError(TexlStrings.ErrInvalidRegExMalformedSurrogatePair);
                     }
                     else
                     {

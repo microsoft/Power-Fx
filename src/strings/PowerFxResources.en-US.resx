@@ -4735,6 +4735,10 @@
     <value>Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "{0}".</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExMalformedSurrogatePair_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "{0}".</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regular expression must be a constant value.</value>
     <comment>Error Message.</comment>

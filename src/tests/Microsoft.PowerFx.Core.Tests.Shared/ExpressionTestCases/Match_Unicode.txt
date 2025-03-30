@@ -100,6 +100,48 @@ Errors: Error 13-47: Invalid regular expression: Unicode characters in surrogate
 >> Match( "👻👻👻👻👻", "😀+" )
 Blank()
 
+>> Match( "👻👻👻👻👻", "\uD83D\uDC7B" )
+{FullMatch:"👻",StartMatch:1}
+
+>> Match( "👻👻👻👻👻", "\uD83D\uDC7B+" )
+{FullMatch:"👻👻👻👻👻",StartMatch:1}
+
+>> Match( "👻👻👻👻👻", "\uD83D\uDC7B?" )
+{FullMatch:"👻",StartMatch:1}
+
+>> Match( "👻👻👻👻👻", "\uD83D\uDC7B{3}" )
+{FullMatch:"👻👻👻",StartMatch:1}
+
+>> Match( "👻👻👻👻👻", "\uD83D\uDC7B{3,4}" )
+{FullMatch:"👻👻👻👻",StartMatch:1}
+
+>> Match( "👻👻👻👻👻", "\uD83D\uDC7B{3,}" )
+{FullMatch:"👻👻👻👻👻",StartMatch:1}
+
+>> Match( "👻👻👻👻👻", "\uD83D\uD87B" )
+Errors: Error 21-35: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\uD83D".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "\uDc3D\uDC7B" )
+Errors: Error 21-35: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\uDc3D".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "[\uD83D]" )
+Errors: Error 21-31: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "[\uD83D".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "[\uDC7B]" )
+Errors: Error 21-31: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "[\uDC7B".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "\uD83D" )
+Errors: Error 21-29: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\uD83D".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "\uDc3D" )
+Errors: Error 21-29: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\uDc3D".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "\uD83Da" )
+Errors: Error 21-30: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\uD83D".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "b\uDc3D" )
+Errors: Error 21-30: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\uDc3D".|Error 0-5: The function 'Match' has some invalid arguments.
+
 >> Match( "😀", "." )
 {FullMatch:"😀",StartMatch:1}
 
