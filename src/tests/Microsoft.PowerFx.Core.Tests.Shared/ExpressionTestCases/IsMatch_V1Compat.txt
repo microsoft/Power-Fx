@@ -34,6 +34,9 @@ false
 >> IsMatch( "a", "\u{0061}" )
 Errors: Error 14-24: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.
 
+>> IsMatch( "a", "\u{1F47B}" )
+Errors: Error 14-25: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
 // leading zeros are fine
 >> IsMatch( "a", "\u{00000000000000061}" )
 Errors: Error 14-37: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.

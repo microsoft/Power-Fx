@@ -37,13 +37,16 @@ Errors: Error 14-38: Invalid regular expression: Invalid escape code, found "\u{
 Errors: Error 14-38: Invalid regular expression: Invalid escape code, found "\u{".|Error 0-7: The function 'IsMatch' has some invalid arguments.
 
 // checking the error message if the \u{...} is in the context of another error
+#DISABLE.NET:462
 >> IsMatch( "a", "\u{0061}[z-a]" )
 Errors: Error 14-29: Invalid regular expression: The characters in a character class range are reversed, found at the end of "\u0061[z-a".|Error 0-7: The function 'IsMatch' has some invalid arguments.
 
 // \u{...} replaced with surrogate pairs
+#DISABLE.NET:462
 >> IsMatch( "a", "\u{010ff41}[z-a]" )
 Errors: Error 14-32: Invalid regular expression: The characters in a character class range are reversed, found at the end of "...FF\uDF41[z-a".|Error 0-7: The function 'IsMatch' has some invalid arguments.
 
 // out of range and illegal
+#DISABLE.NET:462
 >> IsMatch( "a", "\u{014ff41}[z-a]" )
 Errors: Error 14-32: Invalid regular expression: Invalid escape code, found "\u{".|Error 0-7: The function 'IsMatch' has some invalid arguments.
