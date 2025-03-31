@@ -24,3 +24,26 @@ false
 // when V1 is disabled, runtime error on .NET because it doesn't support it in the interpreter
 >> IsMatch( "a", "\u{0061}" )
 Error({Kind:ErrorKind.BadRegex})
+
+// leading zeros are fine
+>> IsMatch( "a", "\u{00000000000000061}" )
+Error({Kind:ErrorKind.BadRegex})
+
+// spaces are not
+>> IsMatch( "a", "\u{ 00000000000000061}" )
+Errors: Error 14-38: Invalid regular expression: Invalid escape code, found "\u{".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "a", "\u{00000000000000061 }" )
+Errors: Error 14-38: Invalid regular expression: Invalid escape code, found "\u{".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// checking the error message if the \u{...} is in the context of another error
+>> IsMatch( "a", "\u{0061}[z-a]" )
+Errors: Error 14-29: Invalid regular expression: The characters in a character class range are reversed, found at the end of "\u0061[z-a".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// \u{...} replaced with surrogate pairs
+>> IsMatch( "a", "\u{010ff41}[z-a]" )
+Errors: Error 14-32: Invalid regular expression: The characters in a character class range are reversed, found at the end of "...FF\uDF41[z-a".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// out of range and illegal
+>> IsMatch( "a", "\u{014ff41}[z-a]" )
+Errors: Error 14-32: Invalid regular expression: Invalid escape code, found "\u{".|Error 0-7: The function 'IsMatch' has some invalid arguments.
