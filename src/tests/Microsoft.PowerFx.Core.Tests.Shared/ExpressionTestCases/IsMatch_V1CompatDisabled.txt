@@ -18,3 +18,9 @@ false
 // set options shouldn't override complete
 >> IsMatch( "aa", "a", MatchOptions.IgnoreCase )
 false
+
+// \u{...} notation not supported by .net
+// will be blocked in V1 by the regular expression checker (for now) with a compile time error
+// when V1 is disabled, runtime error on .NET because it doesn't support it in the interpreter
+>> IsMatch( "a", "\u{0061}" )
+Error({Kind:ErrorKind.BadRegex})

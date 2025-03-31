@@ -28,4 +28,10 @@ false
 >> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~`  1234567890", "\p{L}", MatchOptions.Complete )
 false
 
+// \u{...} notation not supported by .net
+// will be blocked in V1 by the regular expression checker (for now) with a compile time error
+// when V1 is disabled, runtime error on .NET because it doesn't support it in the interpreter
+>> IsMatch( "a", "\u{0061}" )
+Errors: Error 14-24: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
 

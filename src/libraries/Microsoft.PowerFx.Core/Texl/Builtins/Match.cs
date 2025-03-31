@@ -279,6 +279,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 regexPattern = regexPatternWhitespace.Replace(regexPattern, "\n");
             }
 
+            // .NET doesn't support \u{...} notation.
+            // For the purposes of confirming this is a legitimate regular expression and finding the capture names, replace with something simple (an "A").
+            // Canvas pre-V1 allowed this, with as many digits as desired (but no spaces), so long as the result was less that or equal to 0xffff.
+            regexPattern = Regex.Replace(regexPattern, "\\\\u\\{[0-9a-fA-F]{1,}\\}", "\\u0041");
+
             // always .NET compile the regular expression, even if we don't need the return type (boolean), to ensure it is legal in .NET
             try
             {
