@@ -278,10 +278,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 regexDotNetOptions |= RegexOptions.IgnorePatternWhitespace;
 
                 // In x mode, comment line endings are any newline character (as per PCRE2), but .NET only supports \n.
-                // For our purposes here to determine the type, we can just replace the other newline characters wtih \n.
+                // For our purposes here to determine the type, we can just replace all the other newline characters wtih \n.
                 var regexPatternWhitespace = new Regex("[" + MatchWhiteSpace.NewLineEscapes + "]");
                 regexPattern = regexPatternWhitespace.Replace(regexPattern, "\n");
             }
+
+            // .NET doesn't support \u{...} notation.
+            // For the purposes of confirming this is a legitimate regular expression and finding the capture names, replace with something simple.
+            // Canvas pre-V1 allowed this, with as many digits as desired (but no spaces), so long as the result was less that or equal to 0xffff.
+            regexPattern = Regex.Replace(regexPattern, "\\\\u\\{[0-9a-fA-F]{1,}\\}", "\\u0041");
 
             // always .NET compile the regular expression, even if we don't need the return type (boolean), to ensure it is legal in .NET
             try
@@ -552,15 +557,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<badOctal>\\0\d*)                                | # \0 and octal are not accepted, ambiguous and not needed (use \x instead)
                     \\k<(?<backRefName>\w+)>                           | # named backreference
                     \\(?<backRefNumber>[1-9]\d*)                       | # numeric backreference, must be enabled with MatchOptions.NumberedSubMatches
-                    (?<goodUSurrPair>\\u[dD][89a-bA-B][0-9a-fA-F]{2}
-                                     \\u[dD][c-fC-F][0-9a-fA-F]{2})    | # surrogate pair
-                    (?<badUSurr>\\u[dD][89a-fA-F][0-9a-fA-F]{2})       | # surrogate that is not in a pair
+                    (?<goodUSurrPair>\\u[dD][89a-bA-B][0-9a-fA-F]{2}     # \u... syntax, valid surrogate pair
+                                     \\u[dD][c-fC-F][0-9a-fA-F]{2}) |    # \u{...} syntax is not supported for surrogate pairs (same as JavaScript and PCRE2)
+                    (?<badUSurr>\\u[dD][89a-fA-F][0-9a-fA-F]{2}     |    # \u... syntax, surrogate that is not in a pair as it didn't match <goodUSurrPair>
+                           \\u\{0{0,2}[dD][89a-fA-F][0-9a-fA-F]{2})    | # \u{...} syntax, surrogates are not supported with this syntax
                     (?<goodEscape>\\
-                           ([dfnrstw]                              |     # standard regex character classes, missing from .NET are aAeGzZv (no XRegExp support), other common are u{} and o
+                            ([dfnrstw]                             |     # standard regex character classes, missing from .NET are aAeGzZv (no XRegExp support), other common are u{} and o
                             [\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/]       |     # acceptable escaped characters with Unicode aware ECMAScript
                             [\#\ ]                                 |     # added for free spacing, always accepted for conssitency even in character classes, escape needs to be removed on Unicode aware ECMAScript
                             x[0-9a-fA-F]{2}                        |     # hex character, must be exactly 2 hex digits
-                            u[0-9a-fA-F]{4}))                          | # hex single word unicode character (not surrogate pair, and not a surrogate), must be exactly 4 hex digits
+                            u[0-9a-fA-F]{4}))                          | # unicode character, must be exactly 4 hex digits
+                    (?<goodUSmall>\\u\{0{0,2}[0-9a-fA-F]{1,4})\}           | # small (< U+10000) \u{...} code point, can stay as one UTF-16 word
+                    (?<goodULarge>\\u\{(0?[0-9a-fA-F]|10)[0-9a-fA-F]{4})\} | # large (>=U+10000) \u{...} code point, must be broken into surrogate pairs
                     \\(?<goodUEscape>[pP])\{(?<UCategory>[\w=:-]+)\}   | # Unicode character classes, extra characters here for a better error message
                     (?<goodAnchorOutsideCC>\\[bB])                     | # acceptable outside a character class, includes negative classes until we have character class subtraction, include \P for future MatchOptions.LocaleAware
                     (?<goodEscapeOutsideAndInsideCCIfPositive>\\[DWS]) |
@@ -703,9 +711,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (openPoundComment && token.Groups["newline"].Success)
                 {
                     openPoundComment = false;
-                }
+                }                
                 else if (openInlineComment && (token.Groups["closeParen"].Success || token.Groups["goodEscape"].Value == "\\)"))
                 {
+                    // goodEscape with \\) too as you can't escape the closing paren of an inline comment
                     openInlineComment = false;
                 }
                 else if (!openPoundComment && !openInlineComment)
@@ -785,11 +794,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         groupTracker.SeenNonGroup();
                     }
-                    else if (token.Groups["newline"].Success || token.Groups["goodEscape"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
+                    else if (token.Groups["newline"].Success || token.Groups["goodEscape"].Success || token.Groups["goodUSmall"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
                     {
                         groupTracker.SeenNonGroup();
                     }
-                    else if (token.Groups["goodUSurrPair"].Success || token.Groups["elseUSurrPair"].Success)
+                    else if (token.Groups["goodUSurrPair"].Success || token.Groups["goodULarge"].Success || token.Groups["elseUSurrPair"].Success)
                     {
                         groupTracker.SeenNonGroup(min: 2, max: 2);
                     }
@@ -811,7 +820,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                     endContext: true);
                             }
 
-                            if (ccToken.Groups["goodEscape"].Success || ccToken.Groups["goodUHex"].Success || ccToken.Groups["goodEscapeInsideCCOnly"].Success || ccToken.Groups["else"].Success)
+                            if (ccToken.Groups["goodEscape"].Success || ccToken.Groups["goodUSmall"].Success || ccToken.Groups["goodEscapeInsideCCOnly"].Success || ccToken.Groups["else"].Success)
                             {
                                 int charVal;
 
@@ -837,7 +846,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                             break;
                                         case 'x':
                                         case 'u':
-                                            if (!int.TryParse(ccToken.Value.Substring(2), NumberStyles.HexNumber, null, out charVal))
+                                            if (!int.TryParse(ccToken.Value.Substring(ccToken.Groups["goodUSmall"].Success ? 3 : 2), NumberStyles.HexNumber, null, out charVal))
                                             {
                                                 // should never happen, goodEscape match implies that we have valid hex digits
                                                 throw new Exception("hex character did not parse in character class");
@@ -923,7 +932,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             {
                                 return CCRegExError(TexlStrings.ErrInvalidRegExBadEscape);
                             }
-                            else if (ccToken.Groups["goodUSurrPair"].Success || ccToken.Groups["elseUSurrPair"].Success)
+                            else if (ccToken.Groups["goodUSurrPair"].Success || ccToken.Groups["elseUSurrPair"].Success || ccToken.Groups["goodULarge"].Success)
                             {
                                 return CCRegExError(TexlStrings.ErrInvalidRegExSurrogatePairInCharacterClass);
                             }

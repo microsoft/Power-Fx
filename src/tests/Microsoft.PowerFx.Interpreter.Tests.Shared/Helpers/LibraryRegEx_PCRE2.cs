@@ -28,6 +28,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -245,32 +246,35 @@ namespace Microsoft.PowerFx.Functions
                     pattern = pattern + "$";
                 }
 
-                // pcre2 should be thread safe, but we have seen odd behaviors, just making sure
-                PCRE2Mutex.WaitOne();
-
-                var context = NativeMethods.pcre2_compile_context_create_16(generalContext);
-                NativeMethods.pcre2_set_newline_16(context, (uint)PCRE2_NEWLINE.ANY);
-
                 // pcre2 does not allow surrogate pairs in the form /uxxxx/uyyyy as each /u individually is not a valid Unicode code point
                 // so we need to translate out of those pairs here, into a single /u{...} code point.
                 StringBuilder patternSurrogates = new StringBuilder();
 
                 for (int i = 0; i < pattern.Length; i++)
                 {
-                    if (i + 11 < pattern.Length && pattern[i] == '\\' && pattern[i + 1] == 'u' && pattern[i + 6] == '\\' && pattern[i + 7] == 'u')
+                    if (pattern[i] == '\\' && i + 2 < pattern.Length && pattern[i + 1] == 'u')
                     {
-                        var s1 = Convert.ToInt32(Convert.ToInt32(pattern.Substring(i + 2, 4), 16));
-                        var s2 = Convert.ToInt32(Convert.ToInt32(pattern.Substring(i + 8, 4), 16));
-                        if (s1 >= 0xd800 && s1 <= 0xdbff && s2 >= 0xdc00 && s2 <= 0xdfff)
+                        Match m;
+
+                        if ((m = new Regex("^\\\\u(?<high>[0-9a-fA-F]{4})\\\\u(?<low>[0-9a-fA-F]{4})").Match(pattern, i)).Success &&
+                           int.TryParse(m.Groups["high"].Value, NumberStyles.HexNumber, null, out var high) && char.IsHighSurrogate((char)high) &&
+                           int.TryParse(m.Groups["low"].Value, NumberStyles.HexNumber, null, out var low) && char.IsLowSurrogate((char)low))
                         {
-                            patternSurrogates.Append("\\x{" + Convert.ToString(((s1 - 0xd800) * 0x400) + (s2 - 0xdc00) + 0x10000, 16) + "}");
-                            i += 11;
+                            patternSurrogates.Append("\\x{" + Convert.ToString(((high - 0xd800) * 0x400) + (low - 0xdc00) + 0x10000, 16) + "}");
+                            i += m.Length - 1;
                         }
-                    }
-                    else if (i + 5 < pattern.Length && pattern[i] == '\\' && pattern[i + 1] == 'u')
-                    {
-                        patternSurrogates.Append("\\x{" + pattern[i + 2] + pattern[i + 3] + pattern[i + 4] + pattern[i + 5] + "}");
-                        i += 5;
+                        else if (i + 3 < pattern.Length && pattern[i + 2] == '{' &&
+                                 (m = new Regex("^\\\\u\\{(?<hex>[0-9a-fA-F]{1,})\\}").Match(pattern, i)).Success &&
+                                 int.TryParse(m.Groups["hex"].Value, NumberStyles.HexNumber, null, out var hex) && hex >= 0 && hex <= 0x10ffff)
+                        {
+                            patternSurrogates.Append("\\x{" + Convert.ToString(hex, 16) + "}");
+                            i += m.Length - 1;
+                        }
+                        else if (i + 5 < pattern.Length)
+                        {
+                            patternSurrogates.Append("\\x{" + pattern[i + 2] + pattern[i + 3] + pattern[i + 4] + pattern[i + 5] + "}");
+                            i += 5;
+                        }
                     }
                     else
                     {
@@ -279,6 +283,16 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 var pcrePattern = patternSurrogates.ToString();
+
+                // uses .NET compatible pattern
+                var (regexAltered, regexOptions) = AlterRegex_DotNet(pattern, flags);
+                Regex rex = new Regex(regexAltered, regexOptions, new TimeSpan(0, 0, 1));
+
+                // pcre2 should be thread safe, but we have seen odd behaviors, just making sure
+                PCRE2Mutex.WaitOne();
+
+                var context = NativeMethods.pcre2_compile_context_create_16(generalContext);
+                NativeMethods.pcre2_set_newline_16(context, (uint)PCRE2_NEWLINE.ANY);
 
                 var encoder = new UnicodeEncoding(bigEndian: false, byteOrderMark: false, throwOnInvalidBytes: true);
 
@@ -342,10 +356,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        // In x mode, comment line endings are [\r\n], but .NET only supports \n.  For our purposes here, we can just replace the \r.
-                        pattern = pattern.Replace('\r', '\n');
-                        var regex = new Regex(pattern, options);
-                        foreach (var name in regex.GetGroupNames())
+                        foreach (var name in rex.GetGroupNames())
                         {
                             if (!int.TryParse(name, out _))
                             {
@@ -412,8 +423,8 @@ namespace Microsoft.PowerFx.Functions
 
                 if (allMatches.Count == 0)
                 {
-                    return matchAll ? FormulaValue.NewTable(new KnownRecordType(GetRecordTypeFromRegularExpression(pattern, options))) 
-                                    : new BlankValue(IRContext.NotInSource(new KnownRecordType(GetRecordTypeFromRegularExpression(pattern, options))));
+                    return matchAll ? FormulaValue.NewTable(new KnownRecordType(GetRecordTypeFromRegularExpression(rex))) 
+                                    : new BlankValue(IRContext.NotInSource(new KnownRecordType(GetRecordTypeFromRegularExpression(rex))));
                 }
                 else
                 {

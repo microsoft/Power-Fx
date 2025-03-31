@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions;
@@ -94,7 +95,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 #endif
 
 #if MATCHCOMPARE
-        /* to enable, place this in Solution Items/Directiory.Build.Props: abcdefgegegfe
+        /* to enable, place this in Solution Items/Directiory.Build.Props: abcdefgegegfee4e2
           <PropertyGroup>
               <DefineConstants>$(DefineConstants);MATCHCOMPARE</DefineConstants>
           </PropertyGroup>
@@ -194,6 +195,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             testRunner.AddFile(new Dictionary<string, bool>(), path);
 
+            var overridePath = Regex.Replace(path, @"\.txt$", "_overrides.txt");
+            if (File.Exists(overridePath))
+            {
+                testRunner.AddFile(new Dictionary<string, bool>(), overridePath);
+            }
+
             // We can filter to just cases we want, set line above
             if (line > 0)
             {
@@ -212,7 +219,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
 #if MATCHCOMPARE
-        // Helper to run a single .txt with regular expression comparison between .NET, Node, and PCRE2 a
+        // Helper to run a single .txt with regular expression comparison between .NET, Node, and PCRE2 ab
         [Fact]
         public void RunOneMatchCompare()
         {

@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Functions
 
                 if (!m.Success)
                 {
-                    return new BlankValue(IRContext.NotInSource(new KnownRecordType(GetRecordTypeFromRegularExpression(regexAltered, regexOptions))));
+                    return new BlankValue(IRContext.NotInSource(new KnownRecordType(GetRecordTypeFromRegularExpression(rex))));
                 }
 
                 return GetRecordFromMatch(rex, m, regexOptions);
@@ -123,7 +123,7 @@ namespace Microsoft.PowerFx.Functions
                     records.Add(GetRecordFromMatch(rex, m, regexOptions));
                 }
 
-                return TableValue.NewTable(new KnownRecordType(GetRecordTypeFromRegularExpression(regexAltered, regexOptions)), records.ToArray());
+                return TableValue.NewTable(new KnownRecordType(GetRecordTypeFromRegularExpression(rex)), records.ToArray());
             }
         }
 
@@ -324,12 +324,39 @@ namespace Microsoft.PowerFx.Functions
 
                             case '\\':
                                 Match m;
-                                
+
+                                // convert \u{...} notation to \u notation and surrogate pair if needed
+                                // \u below 0xffff is allowed in character classes
+                                if (index + 2 <= regex.Length &&
+                                    regex[index + 1] == 'u' && regex[index + 2] == '{' &&
+                                    (m = new Regex("^\\\\u\\{(?<hex>[0-9a-fA-F]{1,})\\}").Match(regex, index)).Success &&
+                                    int.TryParse(m.Groups["hex"].Value, NumberStyles.HexNumber, null, out var hex) && hex >= 0 && hex <= 0x10ffff &&
+                                    (!openCharacterClass || hex <= 0xffff))
+                                {
+                                    if (hex <= 0xffff)
+                                    {
+                                        altered.Append("\\u");
+                                        altered.Append(hex.ToString("X4", CultureInfo.InvariantCulture));
+                                    }
+                                    else
+                                    {
+                                        var highSurr = 0xd800 + (((hex - 0x10000) >> 10) & 0x3ff);
+                                        var lowSurr = 0xdc00 + ((hex - 0x10000) & 0x3ff);
+                                        altered.Append("(?:\\u");
+                                        altered.Append(highSurr.ToString("X4", CultureInfo.InvariantCulture));
+                                        altered.Append("\\u");
+                                        altered.Append(lowSurr.ToString("X4", CultureInfo.InvariantCulture));
+                                        altered.Append(")");
+                                    }
+
+                                    index += m.Length - 1;
+                                }
+
                                 // treat a surrogtae pair, as provided in two back-to-back \uxxxx tokens, as one character
-                                if (!openCharacterClass &&
-                                    index + 12 <= regex.Length && 
+                                else if (!openCharacterClass &&
+                                    index + 12 <= regex.Length &&
                                     regex[index + 1] == 'u' &&
-                                    (m = Regex.Match(regex.Substring(index, 12), "^\\\\u(?<high>[0-9a-fA-F]{4})\\\\u(?<low>[0-9a-fA-F]{4})")).Success &&
+                                    (m = new Regex("^\\\\u(?<high>[0-9a-fA-F]{4})\\\\u(?<low>[0-9a-fA-F]{4})").Match(regex, index)).Success &&
                                     int.TryParse(m.Groups["high"].Value, NumberStyles.HexNumber, null, out var high) && char.IsHighSurrogate((char)high) &&
                                     int.TryParse(m.Groups["low"].Value, NumberStyles.HexNumber, null, out var low) && char.IsLowSurrogate((char)low))
                                 {
@@ -338,6 +365,8 @@ namespace Microsoft.PowerFx.Functions
                                     altered.Append(")");
                                     index += 11;
                                 }
+
+                                // all other escapes and use of \u
                                 else
                                 {
                                     altered.Append("\\");
@@ -425,14 +454,13 @@ namespace Microsoft.PowerFx.Functions
                 return RecordValue.NewRecordFromFields(fields.Values);
             }
 
-            protected static DType GetRecordTypeFromRegularExpression(string regularExpression, RegexOptions regularExpressionOptions)
+            protected static DType GetRecordTypeFromRegularExpression(Regex rex)
             {
                 Dictionary<string, TypedName> propertyNames = new ();
-                Regex rex = new Regex(regularExpression, regularExpressionOptions);
 
                 propertyNames.Add(FULLMATCH, new TypedName(DType.String, new DName(FULLMATCH)));
                 propertyNames.Add(STARTMATCH, new TypedName(DType.Number, new DName(STARTMATCH)));
-                if ((regularExpressionOptions & RegexOptions.ExplicitCapture) == 0)
+                if ((rex.Options & RegexOptions.ExplicitCapture) == 0)
                 {
                     propertyNames.Add(SUBMATCHES, new TypedName(DType.CreateTable(new TypedName(DType.String, new DName(TexlFunction.ColumnName_ValueStr))), new DName(SUBMATCHES)));
                 }
