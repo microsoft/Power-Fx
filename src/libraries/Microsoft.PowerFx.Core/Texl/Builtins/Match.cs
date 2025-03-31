@@ -279,6 +279,32 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 regexPattern = regexPatternWhitespace.Replace(regexPattern, "\n");
             }
 
+            // .NET doesn't support \u{...} notation, so we translate to \u... notation (no curly braces).
+            // We retain as much of the original as possible for error message context, if an error is encountered after this.
+            // Canvas pre-V1 allowed \u{...}, with as many digits as desired (but no spaces), so long as the result was less that or equal to 0xffff.
+            string ReplaceUCurly(Match m)
+            {
+                // hex will be limited to 6 hex digits by the regular expression, so will not overflow or be negative
+                if (int.TryParse(m.Groups["hex"].Value, NumberStyles.HexNumber, null, out var hex))
+                {
+                    if (hex <= 0xffff)
+                    {
+                        return "\\u" + hex.ToString("X4", CultureInfo.InvariantCulture);
+                    }
+                    else if (hex <= 0x10ffff)
+                    {
+                        var highSurr = 0xd800 + (((hex - 0x10000) >> 10) & 0x3ff);
+                        var lowSurr = 0xdc00 + ((hex - 0x10000) & 0x3ff);
+                        return "\\u" + highSurr.ToString("X4", CultureInfo.InvariantCulture) + "\\u" + lowSurr.ToString("X4", CultureInfo.InvariantCulture);
+                    }
+                }
+
+                // number is out of range, just pass it through and the .NET regex engine will error
+                return m.Value;
+            }
+
+            regexPattern = Regex.Replace(regexPattern, "\\\\u\\{0*(?<hex>[0-9a-fA-F]{1,6})\\}", new MatchEvaluator(ReplaceUCurly));
+
             // always .NET compile the regular expression, even if we don't need the return type (boolean), to ensure it is legal in .NET
             try
             {

@@ -28,4 +28,35 @@ false
 >> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~`  1234567890", "\p{L}", MatchOptions.Complete )
 false
 
+// \u{...} notation not supported by .net
+// will be blocked in V1 by the regular expression checker (for now) with a compile time error
+// when V1 is disabled, runtime error on .NET because it doesn't support it in the interpreter
+>> IsMatch( "a", "\u{0061}" )
+Errors: Error 14-24: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "a", "\u{1F47B}" )
+Errors: Error 14-25: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// leading zeros are fine
+>> IsMatch( "a", "\u{00000000000000061}" )
+Errors: Error 14-37: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// spaces are not
+>> IsMatch( "a", "\u{ 00000000000000061}" )
+Errors: Error 14-38: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "a", "\u{00000000000000061 }" )
+Errors: Error 14-38: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// checking the error message if the \u{...} is in the context of another error
+>> IsMatch( "a", "\u{0061}[z-a]" )
+Errors: Error 14-29: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// \u{...} replaced with surrogate pairs
+>> IsMatch( "a", "\u{010ff41}[z-a]" )
+Errors: Error 14-32: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// out of range and illegal
+>> IsMatch( "a", "\u{014ff41}[z-a]" )
+Errors: Error 14-32: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.
 
