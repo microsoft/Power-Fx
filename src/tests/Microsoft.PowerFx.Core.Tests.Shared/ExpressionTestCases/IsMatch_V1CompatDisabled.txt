@@ -30,9 +30,11 @@ Error({Kind:ErrorKind.BadRegex})
 Error({Kind:ErrorKind.BadRegex})
 
 // spaces are not
+#DISABLE.NET:462
 >> IsMatch( "a", "\u{ 00000000000000061}" )
 Errors: Error 14-38: Invalid regular expression: Invalid escape code, found "\u{".|Error 0-7: The function 'IsMatch' has some invalid arguments.
 
+#DISABLE.NET:462
 >> IsMatch( "a", "\u{00000000000000061 }" )
 Errors: Error 14-38: Invalid regular expression: Invalid escape code, found "\u{".|Error 0-7: The function 'IsMatch' has some invalid arguments.
 

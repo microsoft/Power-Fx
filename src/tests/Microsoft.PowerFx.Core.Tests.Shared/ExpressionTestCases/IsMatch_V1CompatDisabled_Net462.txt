@@ -14,12 +14,12 @@ Error({Kind:ErrorKind.BadRegex})
 Error({Kind:ErrorKind.BadRegex})
 
 // spaces are not
->> IsMatch( "a", "\u{ 00000000000000061}" )
 #DISABLE.NET:70
+>> IsMatch( "a", "\u{ 00000000000000061}" )
 Errors: Error 14-38: Invalid regular expression.|Error 0-7: The function 'IsMatch' has some invalid arguments.
 
->> IsMatch( "a", "\u{00000000000000061 }" )
 #DISABLE.NET:70
+>> IsMatch( "a", "\u{00000000000000061 }" )
 Errors: Error 14-38: Invalid regular expression.|Error 0-7: The function 'IsMatch' has some invalid arguments.
 
 // checking the error message if the \u{...} is in the context of another error
