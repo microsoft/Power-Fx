@@ -456,10 +456,12 @@ namespace Microsoft.PowerFx.Functions
 
             protected static DType GetRecordTypeFromRegularExpression(Regex rex)
             {
-                Dictionary<string, TypedName> propertyNames = new ();
+                Dictionary<string, TypedName> propertyNames = new Dictionary<string, TypedName>()
+                {
+                    { FULLMATCH, new TypedName(DType.String, new DName(FULLMATCH)) },
+                    { STARTMATCH, new TypedName(DType.Number, new DName(STARTMATCH)) }
+                };
 
-                propertyNames.Add(FULLMATCH, new TypedName(DType.String, new DName(FULLMATCH)));
-                propertyNames.Add(STARTMATCH, new TypedName(DType.Number, new DName(STARTMATCH)));
                 if ((rex.Options & RegexOptions.ExplicitCapture) == 0)
                 {
                     propertyNames.Add(SUBMATCHES, new TypedName(DType.CreateTable(new TypedName(DType.String, new DName(TexlFunction.ColumnName_ValueStr))), new DName(SUBMATCHES)));
