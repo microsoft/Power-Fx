@@ -235,6 +235,18 @@ Errors: Error 15-27: Invalid regular expression: Sub match name must be a combin
 >> Match( "test", "(?<a!>s).*" )
 Errors: Error 15-27: Invalid regular expression: Sub match name must be a combination of word characters and not begin with a number, found "(?<a!>".|Error 0-5: The function 'Match' has some invalid arguments.
 
+>> Match( "abdbc", "a(?<ß>b)d\k<ß>c" )
+{FullMatch:"abdbc",StartMatch:1,ß:"b"}
+
+>> Match( "abdbc", "a(?<_ß５>b)d\k<_ß５>c" )
+{FullMatch:"abdbc",StartMatch:1,_ß５:"b"}
+
+>> Match( "abc", "a(?<👻>b)c" )   // JavaScript supports emojis but we do not
+Errors: Error 14-26: Invalid regular expression: Sub match name must be a combination of word characters and not begin with a number, found "(?<👻>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abc", "a(?<a👻>b)c" )   // JavaScript supports emojis but we do not
+Errors: Error 14-27: Invalid regular expression: Sub match name must be a combination of word characters and not begin with a number, found "(?<a👻>".|Error 0-5: The function 'Match' has some invalid arguments.
+
 // Group name case sensitivity
 
 >> Match( "test", "(?<a>t).*\k<a>")
