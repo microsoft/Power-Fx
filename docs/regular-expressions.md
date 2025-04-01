@@ -36,7 +36,8 @@ The regular expression must be a constant and not calculated or stored in a vari
 |---------|---------|
 | Literal characters | Any Unicode character can be inserted directly, except `\`, `[`, `]`, `^`, `$`, `.`, `|`, `?`, `*`, `+`, `(`, `)`, `{`, and `}`. When using **MatchOptions.FreeSpacing**, `#`, ` `, and other `\s` space characters must be escaped as they have a different meaning. |
 | Escaped literal characters | `\` (backslash) followed by one of the direct literal characters, such as `\?` to insert a question mark. `\#` and `\ ` may also be used even when **MatchOptions.FreeSpacing** is disabled for consistency. | 
-| Hexadecimal and Unicode character codes | `\x20` with two hexadecimal digits, `\u2028` with four hexadecimal digits. |
+| Hexadecimal and Unicode character codes | `\x20` with exactly two hexadecimal digits, `\u2028` with exactly four hexadecimal digits and can be used for high and low surrogates. |
+| Unicode code point | `\u{01F47B}` with up to 8 hexadecimal digits. Must be in the range 0 to U+10FFFF and cannot be used for either a high or low surrogate. May result in a surrogate pair (two characters) if greater than U+FFFF. |
 | Carriage return | `\r`, the same as `Char(13)`. |
 | Newline character | `\n`, the same as `Char(10)`. |
 | Form feed | `\f`, the same as `Char(12)`. |
