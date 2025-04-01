@@ -547,7 +547,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // Configurable constants
         public const int MaxNamedCaptureNameLength = 62;            // maximum length of a capture name, in UTF-16 code units. PCRE2 has a 128 limit, cut in half for possible UFT-8 usage.
         public const int MaxLookBehindPossibleCharacters = 250;     // maximum possible number of characters in a look behind. PCRE2 has a 255 limit.
-        public const int MaxGroupStackDepth = 64;                   // 2x maximum number of nested grouping levels, avoids performance issues with a complex group tree.
+        public const int MaxGroupStackDepth = 32 * 2;               // 2x maximum number of nested grouping levels (2 used per level), avoids performance issues with a complex group tree.
         public const int ErrorContextLength = 12;                   // number of characters to include in error message context excerpt from formula.
 
         private static RegexTypeCacheEntry IsSupportedRegularExpression(TexlNode regExNode, string regexPattern, string regexOptions, out string alteredOptions)
@@ -1242,10 +1242,24 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // Tracks the groups in the regular expression.  Groups includes named and numbered capture groups, non-capture groups, and look arounds.
         // Groups that have been closed, even though they aren't still on the stack, may still have references through GroupInfo.Parent, captures, and backRefs lists.
         // The depth is limited so that the tree walk in GroupInfo.IsPossibleZeroCapture() is limited.
+        //
+        // For each group, there are two items put on the stack: one for the group, and one for the first (and possibly only) alternation in that group.
+        // The stack will always be a multiple of 2, and hence the max size MaxGroupStackDepth is defined in terms of a multiple of 2.
+        // If an alternation is seen, the first is closed and a second opened, etc. This allows us to see if a capture group is in the same alternation as a back reference.
+        //
+        // Graphically, it looks something like this (with lots of whitspace, think (?x):
+        //
+        //               a  (  b  |   (  c  )  |  d  )    e   |  f 
+        //  Stack 5:                    ---                             if there are any alternation in that group (there are not)
+        //  Stack 4:                  -------                           container for the group starting at "( c ..."
+        //  Stack 3:          ---    ---------   ---                    if there are any alternations in that group (there are)
+        //  Stack 2:        ---------------------------                 container for the group starting at "( b ..."
+        //  Stack 1:    -------------------------------------   ---     if there are any alternations at the top level (there are)
+        //  Stack 0:   ---------------------------------------------    base for the entire RE
         private class GroupTracker
         {
             private readonly Stack<GroupInfo> _groupStack = new Stack<GroupInfo>();         // current stack of open groups
-            private GroupInfo _quantTarget;                                                 // pointer to the literal or group seen, to apply quantifiers to
+            private GroupInfo _quantTarget;                                                 // pointer to the literal or group seen, to apply next quantifier to
             private GroupInfo _inLookBehind;                                                // are we in a look behind?  they have special rules
             private readonly Dictionary<string, GroupInfo> _captureNames = new Dictionary<string, GroupInfo>();       // named and numbered group lookup
             private readonly List<string> _backRefs = new List<string>();                   // backrefs seen, processed in Complete to ensure they are non empty
@@ -1417,8 +1431,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Backref maxsize is based on the size inside the capture, not any quantifiers on the capture
                 SeenNonGroup(_captureNames[name].MinSize, _captureNames[name].MaxSize);
 
-                // If a backref is in the same group its capture, even if the group is possibly empty, it is OK.
-                // If that isn't the case, no need to add the backRef for later checking.
+                // If a backref is in the same group as its capture, even if the group is possibly empty, it is OK.
+                // If that isn't the case, no need to add the backRef for later checking (but it may be added later from another location)
                 if (_captureNames[name].IsBlockedBackRef(out _, _groupStack.Peek()) && !_backRefs.Contains(name))
                 {
                     _backRefs.Add(name);
@@ -1457,7 +1471,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return true;
             }
 
-            // Information tracked for each group and its parent
+            // Information tracked for each group
             private class GroupInfo
             {
                 public bool IsNonCapture;               // this group is a non-capture group
