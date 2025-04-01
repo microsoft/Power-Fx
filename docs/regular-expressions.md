@@ -295,7 +295,7 @@ One area that can be significantly different between implementations is how empt
 To avoid different results across Power Fx implementations, submatches that could be empty cannot be used with a quantifier. Here are examples of how a submatch could be empty:
 
 | Examples | Description |
-|==========|=============|
+|----------|-------------|
 | `(?<submatch>a{0,}b*)+` | All of the contents of the submatch are optional and so the entire submatch may be empty. |
 | `((<submatch>a)?b)+` | Due to the `?` outside the submatch, the submatch as a whole is optional. |
 | `(?<submatch>a|b*)+` | Alternation within the submatch with something that could be empty could result in the entire submatch being empty. |
