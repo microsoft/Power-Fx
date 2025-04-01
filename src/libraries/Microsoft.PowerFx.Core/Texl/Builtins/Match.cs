@@ -809,7 +809,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["else"].Success)
                     {
-                        if (token.Value == "\\" && token.Index == regexPattern.Length)
+                        if (token.Value == "\\" && token.Index == regexPattern.Length - 1)
                         {
                             return RegExError(TexlStrings.ErrInvalidRegExEndsWithBackslash);
                         }

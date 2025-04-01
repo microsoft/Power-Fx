@@ -30,6 +30,48 @@
 >> Match( UniChar(Hex2Dec("2126")), "\u03a9", MatchOptions.IgnoreCase ).FullMatch
 "Ω"
 
+// case folding ſ (U+017F LATIN SMALL LETTER LONG S) case-folds to s (U+0073 LATIN SMALL LETTER S) 
+// case folding K (U+212A KELVIN SIGN) case-folds to k (U+006B LATIN SMALL LETTER K).
+
+>> UniChar( Hex2Dec( "017f" )) = "ſ"
+true
+
+>> UniChar( Hex2Dec( "212a" )) = "K"
+true
+
+>> Match( "K", "[a-z]" )
+Blank()
+
+>> Match( "ſ", "[a-z]" )
+Blank()
+
+#DISABLE.NET:462
+>> Match( "K", "k", MatchOptions.IgnoreCase )
+{FullMatch:"K",StartMatch:1}
+
+// .net does not match this, but node and PCRE2 do: {FullMatch:"ſ",StartMatch:1}
+>> Match( "ſ", "s", MatchOptions.IgnoreCase )
+Blank()
+
+// .net does not match this, but node and PCRE2 do: {FullMatch:"ſ",StartMatch:1}
+>> Match( "ſ", "[a-z]", MatchOptions.IgnoreCase )
+Blank()
+
+#DISABLE.NET:462
+>> Match( "K", "[a-z]", MatchOptions.IgnoreCase )
+{FullMatch:"K",StartMatch:1}
+
+>> Match( "ß", "ss", MatchOptions.IgnoreCase )
+Blank()
+
+#DISABLE.NET:462
+>> Match( UniChar( Hex2Dec( "2126" ) ), "\u03c9", MatchOptions.IgnoreCase )
+{FullMatch:"Ω",StartMatch:1}
+
+#DISABLE.NET:462
+>> Match( UniChar( Hex2Dec( "2126" ) ), "\u03a9", MatchOptions.IgnoreCase )
+{FullMatch:"Ω",StartMatch:1}
+
 // newline characters not matched by "."
 >> JSON( MatchAll( Char(9) & Char(13) & Char(10) & Char(Hex2Dec("85")) & UniChar(Hex2Dec("2028")) & UniChar(Hex2Dec("2029")) & Char(Hex2Dec("C")) & Char(Hex2Dec("B")) & Char(14), "." ) )
 "[{""FullMatch"":""\t"",""StartMatch"":1},{""FullMatch"":""\u000E"",""StartMatch"":9}]"
@@ -177,44 +219,6 @@ Errors: Error 21-30: Invalid regular expression: Malformed Unicode surrogate pai
 
 >> JSON( Match( "%👻👻" & Char(13) & "👻👻" & Char(10) & "👻c👻👻%", "%.{3,}%", MatchOptions.DotAll ) )
 "{""FullMatch"":""%\uD83D\uDC7B\uD83D\uDC7B\r\uD83D\uDC7B\uD83D\uDC7B\n\uD83D\uDC7Bc\uD83D\uDC7B\uD83D\uDC7B%"",""StartMatch"":1}"
-
-// case folding ſ (U+017F LATIN SMALL LETTER LONG S) case-folds to s (U+0073 LATIN SMALL LETTER S) 
-// case folding K (U+212A KELVIN SIGN) case-folds to k (U+006B LATIN SMALL LETTER K).
-
->> UniChar( Hex2Dec( "017f" )) = "ſ"
-true
-
->> UniChar( Hex2Dec( "212a" )) = "K"
-true
-
->> Match( "K", "[a-z]" )
-Blank()
-
->> Match( "ſ", "[a-z]" )
-Blank()
-
->> Match( "K", "k", MatchOptions.IgnoreCase )
-{FullMatch:"K",StartMatch:1}
-
-// .net does not match this, but node and PCRE2 do: {FullMatch:"ſ",StartMatch:1}
->> Match( "ſ", "s", MatchOptions.IgnoreCase )
-Blank()
-
-// .net does not match this, but node and PCRE2 do: {FullMatch:"ſ",StartMatch:1}
->> Match( "ſ", "[a-z]", MatchOptions.IgnoreCase )
-Blank()
-
->> Match( "K", "[a-z]", MatchOptions.IgnoreCase )
-{FullMatch:"K",StartMatch:1}
-
->> Match( "ß", "ss", MatchOptions.IgnoreCase )
-Blank()
-
->> Match( UniChar( Hex2Dec( "2126" ) ), "\u03c9", MatchOptions.IgnoreCase )
-{FullMatch:"Ω",StartMatch:1}
-
->> Match( UniChar( Hex2Dec( "2126" ) ), "\u03a9", MatchOptions.IgnoreCase )
-{FullMatch:"Ω",StartMatch:1}
 
 // .net doesn't cover unicode categories above the BMP, node and pcre2 do
 

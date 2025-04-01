@@ -18,3 +18,19 @@ Blank()
 #DISABLE.NET:70
 >> Match( UniChar(Hex2Dec("2126")), "\u03a9", MatchOptions.IgnoreCase ).FullMatch
 Blank()
+
+#DISABLE.NET:70
+>> Match( "K", "k", MatchOptions.IgnoreCase )
+Blank()
+
+#DISABLE.NET:70
+>> Match( "K", "[a-z]", MatchOptions.IgnoreCase )
+Blank()
+
+#DISABLE.NET:70
+>> Match( UniChar( Hex2Dec( "2126" ) ), "\u03c9", MatchOptions.IgnoreCase )
+Blank()
+
+#DISABLE.NET:70
+>> Match( UniChar( Hex2Dec( "2126" ) ), "\u03a9", MatchOptions.IgnoreCase )
+Blank()
