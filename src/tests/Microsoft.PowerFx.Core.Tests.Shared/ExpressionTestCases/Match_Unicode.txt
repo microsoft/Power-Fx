@@ -316,16 +316,16 @@ Errors: Error 21-41: Invalid regular expression: Invalid escape code, found "\u"
 // surrogate characters not allowed (they aren't legitimate code points)
 
 >> Match( "👻👻👻👻👻", "\u{d800}" )
-Errors: Error 21-31: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\u{d800".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 21-31: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\u{d800}".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "👻👻👻👻👻", "\u{deff}" )
-Errors: Error 21-31: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\u{deff".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 21-31: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\u{deff}".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "👻👻👻👻👻", "\u{df00}" )
-Errors: Error 21-31: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\u{df00".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 21-31: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\u{df00}".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "👻👻👻👻👻", "\u{dfff}" )
-Errors: Error 21-31: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\u{dfff".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 21-31: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\u{dfff}".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "👻👻👻👻👻", "\u{e000}" )
 Blank()
@@ -333,7 +333,7 @@ Blank()
 // can't use \u{...} for surrogate pairs, use \u... instead.
 
 >> Match( "👻👻👻👻👻", "\u{D83D}\u{DC7B}" )
-Errors: Error 21-39: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\u{D83D".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 21-39: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\u{D83D}".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // range checking, bypasses surrogate range
 
