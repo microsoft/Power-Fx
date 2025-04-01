@@ -326,10 +326,10 @@ namespace Microsoft.PowerFx.Functions
                                 Match m;
 
                                 // convert \u{...} notation to \u notation and surrogate pair if needed
-                                // \u below 0xffff is allowed in character classes
+                                // \u below 0xffff is allowed in character classes and doesn't require (?:...) wrapping
                                 if (index + 2 <= regex.Length &&
                                     regex[index + 1] == 'u' && regex[index + 2] == '{' &&
-                                    (m = new Regex("^\\\\u\\{(?<hex>[0-9a-fA-F]{1,})\\}").Match(regex, index)).Success &&
+                                    (m = new Regex("\\G\\\\u\\{0*(?<hex>[0-9a-fA-F]{1,6})\\}").Match(regex, index)).Success &&
                                     int.TryParse(m.Groups["hex"].Value, NumberStyles.HexNumber, null, out var hex) && hex >= 0 && hex <= 0x10ffff &&
                                     (!openCharacterClass || hex <= 0xffff))
                                 {
@@ -352,11 +352,11 @@ namespace Microsoft.PowerFx.Functions
                                     index += m.Length - 1;
                                 }
 
-                                // treat a surrogtae pair, as provided in two back-to-back \uxxxx tokens, as one character
+                                // treat a surrogtae pair, as provided in two back-to-back \uxxxx tokens, as one character with (?...) wrapping
                                 else if (!openCharacterClass &&
                                     index + 12 <= regex.Length &&
                                     regex[index + 1] == 'u' &&
-                                    (m = new Regex("^\\\\u(?<high>[0-9a-fA-F]{4})\\\\u(?<low>[0-9a-fA-F]{4})").Match(regex, index)).Success &&
+                                    (m = new Regex("\\G\\\\u(?<high>[0-9a-fA-F]{4})\\\\u(?<low>[0-9a-fA-F]{4})").Match(regex, index)).Success &&
                                     int.TryParse(m.Groups["high"].Value, NumberStyles.HexNumber, null, out var high) && char.IsHighSurrogate((char)high) &&
                                     int.TryParse(m.Groups["low"].Value, NumberStyles.HexNumber, null, out var low) && char.IsLowSurrogate((char)low))
                                 {

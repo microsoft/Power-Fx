@@ -256,7 +256,7 @@ namespace Microsoft.PowerFx.Functions
                     {
                         Match m;
 
-                        if ((m = new Regex("^\\\\u(?<high>[0-9a-fA-F]{4})\\\\u(?<low>[0-9a-fA-F]{4})").Match(pattern, i)).Success &&
+                        if ((m = new Regex("\\G\\\\u(?<high>[0-9a-fA-F]{4})\\\\u(?<low>[0-9a-fA-F]{4})").Match(pattern, i)).Success &&
                            int.TryParse(m.Groups["high"].Value, NumberStyles.HexNumber, null, out var high) && char.IsHighSurrogate((char)high) &&
                            int.TryParse(m.Groups["low"].Value, NumberStyles.HexNumber, null, out var low) && char.IsLowSurrogate((char)low))
                         {
@@ -264,7 +264,7 @@ namespace Microsoft.PowerFx.Functions
                             i += m.Length - 1;
                         }
                         else if (i + 3 < pattern.Length && pattern[i + 2] == '{' &&
-                                 (m = new Regex("^\\\\u\\{(?<hex>[0-9a-fA-F]{1,})\\}").Match(pattern, i)).Success &&
+                                 (m = new Regex("\\G\\\\u\\{0*(?<hex>[0-9a-fA-F]{1,6})\\}").Match(pattern, i)).Success &&
                                  int.TryParse(m.Groups["hex"].Value, NumberStyles.HexNumber, null, out var hex) && hex >= 0 && hex <= 0x10ffff)
                         {
                             patternSurrogates.Append("\\x{" + Convert.ToString(hex, 16) + "}");

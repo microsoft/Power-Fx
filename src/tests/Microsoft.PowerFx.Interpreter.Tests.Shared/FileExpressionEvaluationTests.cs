@@ -219,7 +219,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
 #if MATCHCOMPARE
-        // Helper to run a single .txt with regular expression comparison between .NET, Node, and PCRE2 ab
+        // Helper to run a single .txt with regular expression comparison between .NET, Node, and PCRE2
         [Fact]
         public void RunOneMatchCompare()
         {

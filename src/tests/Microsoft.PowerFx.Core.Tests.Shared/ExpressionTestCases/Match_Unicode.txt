@@ -254,7 +254,36 @@ Errors: Error 12-30: Invalid regular expression: Invalid escape code, found "...
 >> Match( "a", "👻👻👻👻[\Q]" )
 Errors: Error 12-26: Invalid regular expression: Invalid escape code, found "👻👻👻👻[\Q".|Error 0-5: The function 'Match' has some invalid arguments.
 
+// \u{...}
+
+>> Match( Char(9), "\u{9}")
+{FullMatch:"    ",StartMatch:1}
+
+>> Match( "👻", "\u{1F47B}")
+{FullMatch:"👻",StartMatch:1}
+
+>> Match( "zzz👻👻👻👻wwww", "\u{1F47B}+")
+{FullMatch:"👻👻👻👻",StartMatch:4}
+
+>> Match( "a", "\u{61}")
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "zzzzaaaaoooo", "\u{61}+")
+{FullMatch:"aaaa",StartMatch:5}
+
+>> Match( "qqqq❶qqqq", "q\u{2776}q")
+{FullMatch:"q❶q",StartMatch:4}
+
+>> Match( "qqqq❶❶qqqq", "q\u{2776}{2,4}q")
+{FullMatch:"q❶❶q",StartMatch:4}
+
+>> Match( Concat( Sequence(5,0), Char(Value+97) & UniChar(Value+Hex2Dec("1d7ec")) ), "a\u{1d7ec}b(\u{1d7ed})c(?:\u{1d7ee})d(\u{1d7ef})e\u{1d7f0}", MatchOptions.NumberedSubMatches)
+{FullMatch:"a𝟬b𝟭c𝟮d𝟯e𝟰",StartMatch:1,SubMatches:Table({Value:"𝟭"},{Value:"𝟯"})}
+
 // \u{...} limits
+
+>> Match( "👻👻👻👻👻", "\u{1000ff}" )
+Blank()
 
 >> Match( "👻👻👻👻👻", "\u{110000}" )
 Errors: Error 21-33: Invalid regular expression: Invalid escape code, found "\u".|Error 0-5: The function 'Match' has some invalid arguments.
@@ -264,6 +293,8 @@ Errors: Error 21-33: Invalid regular expression: Invalid escape code, found "\u"
 
 >> Match( "👻👻👻👻👻", "\u{0000001}" )
 Errors: Error 21-34: Invalid regular expression: Invalid escape code, found "\u".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// surrogate characters not allowed (they aren't legitimate code points)
 
 >> Match( "👻👻👻👻👻", "\u{d800}" )
 Errors: Error 21-31: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\u{d800".|Error 0-5: The function 'Match' has some invalid arguments.
@@ -277,7 +308,7 @@ Errors: Error 21-31: Invalid regular expression: Malformed Unicode surrogate pai
 >> Match( "👻👻👻👻👻", "\u{dfff}" )
 Errors: Error 21-31: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\u{dfff".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "👻👻👻👻👻", "\u{e0000}" )
+>> Match( "👻👻👻👻👻", "\u{e000}" )
 Blank()
 
 // can't use \u{...} for surrogate pairs, use \u... instead.
