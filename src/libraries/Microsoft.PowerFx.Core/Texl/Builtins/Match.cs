@@ -581,7 +581,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<goodUSurrPair>\\u[dD][89a-bA-B][0-9a-fA-F]{2}     # \u... syntax, valid surrogate pair
                                      \\u[dD][c-fC-F][0-9a-fA-F]{2}) |    # \u{...} syntax is not supported for surrogate pairs (same as JavaScript and PCRE2)
                     (?<badUSurr>\\u[dD][89a-fA-F][0-9a-fA-F]{2}     |    # \u... syntax, surrogate that is not in a pair as it didn't match <goodUSurrPair>
-                           \\u\{0{0,2}[dD][89a-fA-F][0-9a-fA-F]{2})    | # \u{...} syntax, surrogates are not supported with this syntax
+                         \\u\{0{0,2}[dD][89a-fA-F][0-9a-fA-F]{2}\})    | # \u{...} syntax, surrogates are not supported with this syntax
                     (?<goodEscape>\\
                             ([dfnrstw]                             |     # standard regex character classes, missing from .NET are aAeGzZv (no XRegExp support), other common are u{} and o
                             [\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/]       |     # acceptable escaped characters with Unicode aware ECMAScript
