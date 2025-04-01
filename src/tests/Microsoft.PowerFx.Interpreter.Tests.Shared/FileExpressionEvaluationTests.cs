@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
           </PropertyGroup>
         */
 
-#if true // may not want to run this, even if MATCHCOMPARE is enabled
+#if false // may not want to run this, even if MATCHCOMPARE is enabled
 
         // Runs only tests that have asked for RegEx setup. This test run will compare the regular expression results between
         // .NET (used in the C# interpreter), NodeJS with JavaScript (used in Canvas), and PCRE2 (used in Excel).
@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return false;
         }
 
-#if true
+#if false
         // Helper to run a single .txt
         [Fact]
         public void RunOne()

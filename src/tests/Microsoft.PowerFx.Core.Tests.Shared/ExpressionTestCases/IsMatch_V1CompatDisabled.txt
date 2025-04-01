@@ -19,24 +19,22 @@ false
 >> IsMatch( "aa", "a", MatchOptions.IgnoreCase )
 false
 
-// \u{...} notation not supported by .net
-// will be blocked in V1 by the regular expression checker (for now) with a compile time error
-// when V1 is disabled, runtime error on .NET because it doesn't support it in the interpreter
 >> IsMatch( "a", "\u{0061}" )
-Error({Kind:ErrorKind.BadRegex})
+true
 
-// leading zeros are fine
->> IsMatch( "a", "\u{00000000000000061}" )
-Error({Kind:ErrorKind.BadRegex})
+// leading zeros are fine, up to 8
+>> IsMatch( "a", "\u{00000061}" )
+true
 
-// spaces are not
-#DISABLE.NET:462
->> IsMatch( "a", "\u{ 00000000000000061}" )
-Errors: Error 14-38: Invalid regular expression: Invalid escape code, found "\u{".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+// spaces are not ok
 
 #DISABLE.NET:462
->> IsMatch( "a", "\u{00000000000000061 }" )
-Errors: Error 14-38: Invalid regular expression: Invalid escape code, found "\u{".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+>> IsMatch( "a", "\u{ 00061}" )
+Errors: Error 14-26: Invalid regular expression: Invalid escape code, found "\u{".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+#DISABLE.NET:462
+>> IsMatch( "a", "\u{00061 }" )
+Errors: Error 14-26: Invalid regular expression: Invalid escape code, found "\u{".|Error 0-7: The function 'IsMatch' has some invalid arguments.
 
 // checking the error message if the \u{...} is in the context of another error
 #DISABLE.NET:462

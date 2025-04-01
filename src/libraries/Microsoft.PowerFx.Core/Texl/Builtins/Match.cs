@@ -588,8 +588,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             [\#\ ]                                 |     # added for free spacing, always accepted for conssitency even in character classes, escape needs to be removed on Unicode aware ECMAScript
                             x[0-9a-fA-F]{2}                        |     # hex character, must be exactly 2 hex digits
                             u[0-9a-fA-F]{4}))                          | # unicode character, must be exactly 4 hex digits
-                    (?<goodUSmall>\\u\{0{0,2}[0-9a-fA-F]{1,4})\}           | # small (< U+10000) \u{...} code point, can stay as one UTF-16 word
-                    (?<goodULarge>\\u\{(0?[0-9a-fA-F]|10)[0-9a-fA-F]{4})\} | # large (>=U+10000) \u{...} code point, must be broken into surrogate pairs
+                    (?<goodUSmall>\\u\{0{0,4}[0-9a-fA-F]{1,4})\}       | # small (< U+10000) \u{...} code point, can stay as one UTF-16 word, up to 8 hex digits (our arbitrary cutoff, at 32-bits)
+                    (?<goodULarge>\\u\{0{0,2}
+                            (0?[1-9a-fA-F]|10)[0-9a-fA-F]{4})\}        | # large (>=U+10000) \u{...} code point, must be broken into surrogate pairs, up to 8 hex digits (our arbitrary cutoff, at 32-bits)
                     \\(?<goodUEscape>[pP])\{(?<UCategory>[\w=:-]+)\}   | # Unicode character classes, extra characters here for a better error message
                     (?<goodAnchorOutsideCC>\\[bB])                     | # acceptable outside a character class, includes negative classes until we have character class subtraction, include \P for future MatchOptions.LocaleAware
                     (?<goodEscapeOutsideAndInsideCCIfPositive>\\[DWS]) |
@@ -869,7 +870,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                         case 'u':
                                             if (!int.TryParse(ccToken.Value.Substring(ccToken.Groups["goodUSmall"].Success ? 3 : 2), NumberStyles.HexNumber, null, out charVal))
                                             {
-                                                // should never happen, goodEscape match implies that we have valid hex digits
+                                                // should never happen, goodEscape match implies that we have valid hex digits in roughly Unicode range
                                                 throw new Exception("hex character did not parse in character class");
                                             }
 

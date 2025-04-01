@@ -1,14 +1,7 @@
 ﻿#SETUP: RegEx,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers,DisableMemChecks
 
 // Unicode character behavior in Power Fx regular expressions.
-//
-//  Effective                                        Usage                 .NET        ECMAScript       PCRE2         Power Fx
-// =====================================================================================================================================
-//  \p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{Nd}\p{Pc}       \w, \W, \b, \B        Yes         No               Yes           Yes
-//  \p{Nd}                                           \d, \D                Yes         No               Yes           Yes
-//  \p{Category}                                     \p, \P                Yes         Yes              Yes           No
-//  \p{Script}                                       \p, \P                Yes         Yes              Yes           No (syntax varies)
-//
+
 // We chose to use canonical .NET instead of RegexOptions.ECMAScript because we wanted the unicode definitions for words.
 // See https://learn.microsoft.com/dotnet/standard/base-types/regular-expression-options#ecmascript-matching-behavior for more details
 
@@ -256,8 +249,8 @@ Errors: Error 12-26: Invalid regular expression: Invalid escape code, found "�
 
 // \u{...}
 
->> Match( Char(9), "\u{9}")
-{FullMatch:"    ",StartMatch:1}
+>> JSON( Match( Char(9), "\u{9}") )
+"{""FullMatch"":""\t"",""StartMatch"":1}"
 
 >> Match( "👻", "\u{1F47B}")
 {FullMatch:"👻",StartMatch:1}
@@ -291,8 +284,30 @@ Errors: Error 21-33: Invalid regular expression: Invalid escape code, found "\u"
 >> Match( "👻👻👻👻👻", "\u{200000}" )
 Errors: Error 21-33: Invalid regular expression: Invalid escape code, found "\u".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "👻👻👻👻👻", "\u{0000001}" )
-Errors: Error 21-34: Invalid regular expression: Invalid escape code, found "\u".|Error 0-5: The function 'Match' has some invalid arguments.
+// 8 hex digits are OK
+
+>> Match( "👻👻👻👻👻", "\u{00000001}" )
+Blank()
+
+>> Match( "👻👻👻👻👻", "\u{00010001}" )
+Blank()
+
+>> Match( "👻👻👻👻👻", "\u{00090001}" )
+Blank()
+
+>> Match( "👻👻👻👻👻", "\u{000e0001}" )
+Blank()
+
+>> Match( "👻👻👻👻👻", "\u{00100001}" )
+Blank()
+
+// 9 or more digits is not OK
+
+>> Match( "👻👻👻👻👻", "\u{000000001}" )
+Errors: Error 21-36: Invalid regular expression: Invalid escape code, found "\u".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "\u{00000000000001}" )
+Errors: Error 21-41: Invalid regular expression: Invalid escape code, found "\u".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // surrogate characters not allowed (they aren't legitimate code points)
 

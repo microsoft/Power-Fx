@@ -130,7 +130,7 @@ Errors: Error 12-62: Invalid regular expression: The characters in a character c
 // 25: ShorthandClassInCharacterRange
 #DISABLE.NET: 462
 >> Match( "ab", ">>>>>>>>>>>>>[a-\d]<<<<<<<<<<<<<<<<" )
-Errors: Error 13-50: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found "...>>>>>>>[a-\d".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 13-50: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found at the end of "...>>>>>>>[a-\d".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // 26: InsufficientClosingParentheses
 #DISABLE.NET: 462
