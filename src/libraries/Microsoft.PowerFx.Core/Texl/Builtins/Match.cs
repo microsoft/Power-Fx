@@ -12,8 +12,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -611,8 +609,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 @"
 # leading (?<, named captures
                     \(\?<(?<goodNamedCapture>[_\p{L}][_\p{L}\p{Nd}]*)> | # named capture group, name characters are the lowest common denonminator with Unicode PCRE2
-# .NET uses \w with \u200c and \u200d allowing a number in the first character (seems like it could be confused with numbered captures),
-# while JavaScript uses identifer characters, including $, and does not allow a number for the first character
+                                                                         # .NET uses \w with \u200c and \u200d allowing a number in the first character (seems like it could be confused with numbered captures),
+                                                                         # while JavaScript uses identifer characters, including $, and does not allow a number for the first character
                     (?<goodLookAhead>\(\?(=|!))                        |
                     (?<goodLookBehind>\(\?(<=|<!))                     | # Look behind has many limitations
                     (?<badBalancing>\(\?<\w*-\w*>)                     | # .NET balancing captures are not supported
@@ -1253,7 +1251,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         //  Stack 5:                    ---                             if there are any alternation in that group (there are not)
         //  Stack 4:                  -------                           container for the group starting at "( c ..."
         //  Stack 3:          ---    ---------   ---                    if there are any alternations in that group (there are)
-        //  Stack 2:        ---------------------------                 container for the group starting at "( b ..."
+        //  Stack 2:        --------------------------                  container for the group starting at "( b ..."
         //  Stack 1:    -------------------------------------   ---     if there are any alternations at the top level (there are)
         //  Stack 0:   ---------------------------------------------    base for the entire RE
         private class GroupTracker
@@ -1336,7 +1334,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var closed = _groupStack.Pop();
                 closed.CloseSubGroup();
 
-                // open new subgroup
+                // open new subgroup, same parent
                 var group = new GroupInfo
                 {
                     Parent = closed.Parent

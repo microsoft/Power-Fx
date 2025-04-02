@@ -14,10 +14,6 @@
     <LangVersion>10.0</LangVersion>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <DefineConstants>$(DefineConstants);MATCHCOMPARE</DefineConstants>
-  </PropertyGroup>
-
   <!-- <PropertyGroup>
     <RunSettingsFilePath>$(MSBuildThisFileDirectory)\CodeCoverage.runsettings</RunSettingsFilePath>
   </PropertyGroup> -->

@@ -73,8 +73,77 @@ Blank()
 {FullMatch:"Ω",StartMatch:1}
 
 // newline characters not matched by "."
+
 >> JSON( MatchAll( Char(9) & Char(13) & Char(10) & Char(Hex2Dec("85")) & UniChar(Hex2Dec("2028")) & UniChar(Hex2Dec("2029")) & Char(Hex2Dec("C")) & Char(Hex2Dec("B")) & Char(14), "." ) )
 "[{""FullMatch"":""\t"",""StartMatch"":1},{""FullMatch"":""\u000E"",""StartMatch"":9}]"
+
+// \p{Lu}, \p{Ll}, and \p{Lt} are treated as a set with ignore case
+
+>> Len( Match( Concat(["01c5","01c8","01cb","01f2","1fbc","1fcc","1ffc"],UniChar(Hex2Dec(Value))) & Concat( Sequence(8,Hex2Dec("1f88")),UniChar(Value)) & 
+    Concat(Sequence(8,Hex2Dec("1f98")),UniChar(Value)) & Concat(Sequence(8,Hex2Dec("1fa8")),UniChar(Value)),
+    "\p{Lt}+", MatchOptions.IgnoreCase ).FullMatch )
+31
+
+>> Len( Match( Concat(["01c5","01c8","01cb","01f2","1fbc","1fcc","1ffc"],UniChar(Hex2Dec(Value))) & Concat( Sequence(8,Hex2Dec("1f88")),UniChar(Value)) & 
+    Concat(Sequence(8,Hex2Dec("1f98")),UniChar(Value)) & Concat(Sequence(8,Hex2Dec("1fa8")),UniChar(Value)),
+    "\p{Lt}+" ).FullMatch )
+31
+
+>> Len( Match( Concat(["01c5","01c8","01cb","01f2","1fbc","1fcc","1ffc"],UniChar(Hex2Dec(Value))) & Concat( Sequence(8,Hex2Dec("1f88")),UniChar(Value)) & 
+    Concat(Sequence(8,Hex2Dec("1f98")),UniChar(Value)) & Concat(Sequence(8,Hex2Dec("1fa8")),UniChar(Value)),
+    "\p{Lu}+", MatchOptions.IgnoreCase ).FullMatch )
+31
+
+>> Len( Match( Concat(["01c5","01c8","01cb","01f2","1fbc","1fcc","1ffc"],UniChar(Hex2Dec(Value))) & Concat( Sequence(8,Hex2Dec("1f88")),UniChar(Value)) & 
+    Concat(Sequence(8,Hex2Dec("1f98")),UniChar(Value)) & Concat(Sequence(8,Hex2Dec("1fa8")),UniChar(Value)),
+    "\p{Lu}+" ).FullMatch )
+0
+
+>> Len( Match( Concat(["01c5","01c8","01cb","01f2","1fbc","1fcc","1ffc"],UniChar(Hex2Dec(Value))) & Concat( Sequence(8,Hex2Dec("1f88")),UniChar(Value)) & 
+    Concat(Sequence(8,Hex2Dec("1f98")),UniChar(Value)) & Concat(Sequence(8,Hex2Dec("1fa8")),UniChar(Value)),
+    "\p{Ll}+", MatchOptions.IgnoreCase ).FullMatch )
+31
+
+>> Len( Match( Concat(["01c5","01c8","01cb","01f2","1fbc","1fcc","1ffc"],UniChar(Hex2Dec(Value))) & Concat( Sequence(8,Hex2Dec("1f88")),UniChar(Value)) & 
+    Concat(Sequence(8,Hex2Dec("1f98")),UniChar(Value)) & Concat(Sequence(8,Hex2Dec("1fa8")),UniChar(Value)),
+    "\p{Ll}+" ).FullMatch )
+0
+
+>> Len( Match( "abcdefghijklmnopqrstuvwxyz", "\p{Ll}+" ).FullMatch )
+26
+
+>> Len( Match( "abcdefghijklmnopqrstuvwxyz", "\p{Ll}+", MatchOptions.IgnoreCase ).FullMatch )
+26
+
+>> Len( Match( "abcdefghijklmnopqrstuvwxyz", "\p{Lu}+" ).FullMatch )
+0
+
+>> Len( Match( "abcdefghijklmnopqrstuvwxyz", "\p{Lu}+", MatchOptions.IgnoreCase ).FullMatch )
+26
+
+>> Len( Match( "abcdefghijklmnopqrstuvwxyz", "\p{Lt}+" ).FullMatch )
+0
+
+>> Len( Match( "abcdefghijklmnopqrstuvwxyz", "\p{Lt}+", MatchOptions.IgnoreCase ).FullMatch )
+26
+
+>> Len( Match( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "\p{Lu}+" ).FullMatch )
+26
+
+>> Len( Match( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "\p{Lu}+", MatchOptions.IgnoreCase ).FullMatch )
+26
+
+>> Len( Match( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "\p{Ll}+" ).FullMatch )
+0
+
+>> Len( Match( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "\p{Ll}+", MatchOptions.IgnoreCase ).FullMatch )
+26
+
+>> Len( Match( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "\p{Lt}+" ).FullMatch )
+0
+
+>> Len( Match( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "\p{Lt}+", MatchOptions.IgnoreCase ).FullMatch )
+26
 
 // surrogate pairs not supported in character class. .NET does not support, JavaScript supports with /u or /v regex modifier, PCRE2 supports
 

@@ -652,6 +652,30 @@ Errors: Error 17-34: Invalid regular expression: Back reference "\1" to sub matc
     As m,If(Not IsBlank(m.x), m.x & "*", Not IsBlank(m.l), m.l & "_", Not IsBlank(m.h), m.h & "^", m.FullMatch))
 "00_,008,009,015,016,017,01^,02*,030,031,"
 
+>> Match( "a", "((?<one>b)\k<one>)*" )
+{FullMatch:"",StartMatch:1,one:Blank()}
+
+>> Match( "a", "((?<one>b)\k<one>|a)*" )
+Errors: Error 12-35: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...)\k<one>|a)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "((?<one>b)\k<one>|a)" )
+{FullMatch:"a",StartMatch:1,one:Blank()}
+
+>> Match( "a", "(?<one>b)\k<one>|a" )
+{FullMatch:"a",StartMatch:1,one:Blank()}
+
+>> Match( "b", "((?<one>b)\k<one>)*" )
+{FullMatch:"",StartMatch:1,one:Blank()}
+
+>> Match( "b", "((?<one>b)\k<one>|a)*" )
+Errors: Error 12-35: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...)\k<one>|a)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "b", "((?<one>b)\k<one>|a)" )
+Blank()
+
+>> Match( "b", "(?<one>b)\k<one>|a" )
+Blank()
+
 // non capture group tests (note no MatchOptions.NumberedSubMatches)
 
 >> Match( "a", "(a*?)*" )  // .net != node
