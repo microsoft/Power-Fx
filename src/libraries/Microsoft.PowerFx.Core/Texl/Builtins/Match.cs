@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
 using System;
@@ -1431,7 +1431,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 // If a backref is in the same group as its capture, even if the group is possibly empty, it is OK.
                 // If that isn't the case, no need to add the backRef for later checking (but it may be added later from another location)
-                if (!_backRefs.Contains(name) && _captureNames[name].IsBlockedBackRef(out _, _groupStack.Peek()))
+                if (!_backRefs.Contains(name) && _captureNames[name].IsBlockedBackRef(out _, _groupStack.Peek()))
                 {
                     _backRefs.Add(name);
                 }
