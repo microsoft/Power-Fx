@@ -1,6 +1,7 @@
 ﻿#SETUP: RegEx,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers,DisableMemChecks
 
 // Unicode character behavior in Power Fx regular expressions.
+// This file consolidates Unicode testing for IsMatch, Match, and MatchAll
 
 // We chose to use canonical .NET instead of RegexOptions.ECMAScript because we wanted the unicode definitions for words.
 // See https://learn.microsoft.com/dotnet/standard/base-types/regular-expression-options#ecmascript-matching-behavior for more details
@@ -71,6 +72,16 @@ Blank()
 #DISABLE.NET:462
 >> Match( UniChar( Hex2Dec( "2126" ) ), "\u03a9", MatchOptions.IgnoreCase )
 {FullMatch:"Ω",StartMatch:1}
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` A 1234567890", "\p{L}")
+true
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~`  1234567890", "\p{L}")
+false
+
+// With Icelandic Eth
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` Ð 1234567890", "\p{L}")
+true
 
 // newline characters not matched by "."
 
@@ -419,6 +430,55 @@ Blank()
 >> Match( "👻👻👻👻👻", "\u{D83D}\u{DC7B}" )
 Errors: Error 21-39: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\u{D83D}".|Error 0-5: The function 'Match' has some invalid arguments.
 
+// \u codes
+
+>> IsMatch( "a", "\u{0061}" )
+true
+
+>> IsMatch( "a", "\u{1F47B}" )
+false
+
+>> IsMatch( "😀", "\u{1F600}" )
+true
+
+>> IsMatch( "aaa😀😀aaaa", "\u{1F600}{2}" )
+true
+
+>> IsMatch( "aaa😀😀aaaa", "\u{1F600}{3}" )
+false
+
+>> IsMatch( "aaa😀😀aaaa", "\uD83D\uDE00{2}" )
+true
+
+>> IsMatch( "aaa😀😀aaaa", "\uD83D\uDE00{3}" )
+false
+
+// leading zeros are fine, up to 8
+>> IsMatch( "a", "\u{00000061}" )
+true
+
+// spaces are not
+>> IsMatch( "a", "\u{ 00061}" )
+Errors: Error 14-26: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "a", "\u{00061 }" )
+Errors: Error 14-26: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "a", "\u{ 00061 }" )
+Errors: Error 14-27: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// checking the error message if the \u{...} is in the context of another error
+>> IsMatch( "a", "\u{0061}[z-a]" )
+Errors: Error 14-29: Invalid regular expression: The characters in a character class range are reversed, found at the end of "\u{0061}[z-a".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// \u{...} replaced with surrogate pairs
+>> IsMatch( "a", "\u{010ff41}[z-a]" )
+Errors: Error 14-32: Invalid regular expression: The characters in a character class range are reversed, found at the end of "...010ff41}[z-a".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// out of range and illegal
+>> IsMatch( "a", "\u{014ff41}[z-a]" )
+Errors: Error 14-32: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
 // range checking, bypasses surrogate range
 
 >> JSON( Match( Concat( Sequence(8,Hex2Dec("00021"),Hex2Dec("4000")), Dec2Hex(Value,6) & UniChar(Value) ), "(\w+\u{00021})(\w+\u{04021})(\w+\u{08021})(\w+\u{0c021})(\w+\u{10021})(\w+\u{14021})(\w+\u{18021})(\w+\u{1c021})", MatchOptions.NumberedSubMatches ) )
@@ -447,3 +507,6 @@ Errors: Error 21-39: Invalid regular expression: Malformed Unicode surrogate pai
 
 >> JSON( Match( Concat( Sequence(4,Hex2Dec("100021"),Hex2Dec("4000")), Dec2Hex(Value,6) & UniChar(Value) ), "(\w+\u{100021})(\w+\u{104021})(\w+\u{108021})(\w+\u{10c021})", MatchOptions.NumberedSubMatches ) )
 "{""FullMatch"":""100021\uDBC0\uDC21104021\uDBD0\uDC21108021\uDBE0\uDC2110C021\uDBF0\uDC21"",""StartMatch"":1,""SubMatches"":[{""Value"":""100021\uDBC0\uDC21""},{""Value"":""104021\uDBD0\uDC21""},{""Value"":""108021\uDBE0\uDC21""},{""Value"":""10C021\uDBF0\uDC21""}]}"
+
+
+

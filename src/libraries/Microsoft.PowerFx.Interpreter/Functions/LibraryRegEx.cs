@@ -323,19 +323,44 @@ namespace Microsoft.PowerFx.Functions
                             case '\\':
                                 Match m;
 
-                                // convert \u{...} notation to \u notation and surrogate pair if needed
-                                // \u below 0xffff is allowed in character classes and doesn't require (?:...) wrapping
-                                if (index + 2 <= regex.Length &&
-                                    regex[index + 1] == 'u' && regex[index + 2] == '{' &&
-                                    (m = new Regex("\\G\\\\u\\{0*(?<hex>[0-9a-fA-F]{1,6})\\}").Match(regex, index)).Success &&
-                                    int.TryParse(m.Groups["hex"].Value, NumberStyles.HexNumber, null, out var hex) && hex <= 0x10ffff)
+                                if (index + 1 <= regex.Length && regex[index + 1] == 'u')
                                 {
-                                    if (hex <= 0xffff)
+                                    // convert \u{...} notation to \u notation and surrogate pair if needed
+                                    // \u below 0xffff is allowed in character classes and doesn't require (?:...) wrapping
+                                    if (index + 2 <= regex.Length && regex[index + 2] == '{' &&
+                                        (m = new Regex("\\G\\\\u\\{0*(?<hex>[0-9a-fA-F]{1,6})\\}").Match(regex, index)).Success &&
+                                        int.TryParse(m.Groups["hex"].Value, NumberStyles.HexNumber, null, out var hex) && hex <= 0x10ffff)
                                     {
-                                        altered.Append("\\u");
-                                        altered.Append(hex.ToString("X4", CultureInfo.InvariantCulture));
+                                        if (hex <= 0xffff)
+                                        {
+                                            altered.Append("\\u");
+                                            altered.Append(hex.ToString("X4", CultureInfo.InvariantCulture));
+                                        }
+                                        else
+                                        {
+                                            if (openCharacterClass)
+                                            {
+                                                // should never hit this, should have been blocked at compile time, just in case as we don't want to transpile incorrectly
+                                                throw new Exception("Surrogate pairs are not allowed in character classes");
+                                            }
+
+                                            var highSurr = 0xd800 + (((hex - 0x10000) >> 10) & 0x3ff);
+                                            var lowSurr = 0xdc00 + ((hex - 0x10000) & 0x3ff);
+                                            altered.Append("(?:\\u");
+                                            altered.Append(highSurr.ToString("X4", CultureInfo.InvariantCulture));
+                                            altered.Append("\\u");
+                                            altered.Append(lowSurr.ToString("X4", CultureInfo.InvariantCulture));
+                                            altered.Append(")");
+                                        }
+
+                                        index += m.Length - 1;
                                     }
-                                    else
+
+                                    // treat a surrogtae pair, as provided in two back-to-back \uxxxx tokens, as one character with (?...) wrapping
+                                    else if (index + 12 <= regex.Length &&
+                                        (m = new Regex("\\G\\\\u(?<high>[0-9a-fA-F]{4})\\\\u(?<low>[0-9a-fA-F]{4})").Match(regex, index)).Success &&
+                                        int.TryParse(m.Groups["high"].Value, NumberStyles.HexNumber, null, out var high) && char.IsHighSurrogate((char)high) &&
+                                        int.TryParse(m.Groups["low"].Value, NumberStyles.HexNumber, null, out var low) && char.IsLowSurrogate((char)low))
                                     {
                                         if (openCharacterClass)
                                         {
@@ -343,35 +368,28 @@ namespace Microsoft.PowerFx.Functions
                                             throw new Exception("Surrogate pairs are not allowed in character classes");
                                         }
 
-                                        var highSurr = 0xd800 + (((hex - 0x10000) >> 10) & 0x3ff);
-                                        var lowSurr = 0xdc00 + ((hex - 0x10000) & 0x3ff);
-                                        altered.Append("(?:\\u");
-                                        altered.Append(highSurr.ToString("X4", CultureInfo.InvariantCulture));
-                                        altered.Append("\\u");
-                                        altered.Append(lowSurr.ToString("X4", CultureInfo.InvariantCulture));
+                                        altered.Append("(?:");
+                                        altered.Append(regex.Substring(index, 12));
                                         altered.Append(")");
+
+                                        index += 11;
                                     }
 
-                                    index += m.Length - 1;
-                                }
-
-                                // treat a surrogtae pair, as provided in two back-to-back \uxxxx tokens, as one character with (?...) wrapping
-                                else if (index + 12 <= regex.Length &&
-                                    regex[index + 1] == 'u' &&
-                                    (m = new Regex("\\G\\\\u(?<high>[0-9a-fA-F]{4})\\\\u(?<low>[0-9a-fA-F]{4})").Match(regex, index)).Success &&
-                                    int.TryParse(m.Groups["high"].Value, NumberStyles.HexNumber, null, out var high) && char.IsHighSurrogate((char)high) &&
-                                    int.TryParse(m.Groups["low"].Value, NumberStyles.HexNumber, null, out var low) && char.IsLowSurrogate((char)low))
-                                {
-                                    if (openCharacterClass)
+                                    // validate that \uxxxx is not a surrogate character
+                                    else if (index + 6 <= regex.Length &&
+                                        (m = new Regex("\\G\\\\u(?<single>[0-9a-fA-F]{4})").Match(regex, index)).Success &&
+                                        int.TryParse(m.Groups["single"].Value, NumberStyles.HexNumber, null, out var single) && !char.IsSurrogate((char)single))
                                     {
-                                        // should never hit this, should have been blocked at compile time, just in case as we don't want to transpile incorrectly
-                                        throw new Exception("Surrogate pairs are not allowed in character classes");
+                                        altered.Append(regex.Substring(index, 6));
+
+                                        index += 5;
                                     }
 
-                                    altered.Append("(?:");
-                                    altered.Append(regex.Substring(index, 12));
-                                    altered.Append(")");
-                                    index += 11;
+                                    // should never hit this, should have been blocked at compile time, just in case as we don't want to transpile incorrectly
+                                    else
+                                    {
+                                        throw new Exception("Malformed \\u escape sequence");
+                                    }
                                 }
 
                                 // all other escapes and use of \u

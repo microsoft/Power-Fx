@@ -34,3 +34,28 @@ Blank()
 #DISABLE.NET:70
 >> Match( UniChar( Hex2Dec( "2126" ) ), "\u03a9", MatchOptions.IgnoreCase )
 Blank()
+
+// spaces are not
+#DISABLE.NET:70
+>> IsMatch( "a", "\u{ 00061}" )
+Errors: Error 14-26: Invalid regular expression.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+#DISABLE.NET:70
+>> IsMatch( "a", "\u{00061 }" )
+Errors: Error 14-26: Invalid regular expression.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// checking the error message if the \u{...} is in the context of another error
+#DISABLE.NET:70
+>> IsMatch( "a", "\u{0061}[z-a]" )
+Errors: Error 14-29: Invalid regular expression.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// \u{...} replaced with surrogate pairs
+#DISABLE.NET:70
+>> IsMatch( "a", "\u{010ff41}[z-a]" )
+Errors: Error 14-32: Invalid regular expression.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// out of range and illegal
+#DISABLE.NET:70
+>> IsMatch( "a", "\u{014ff41}[z-a]" )
+Errors: Error 14-32: Invalid regular expression.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
