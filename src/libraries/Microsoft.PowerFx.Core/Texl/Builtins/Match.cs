@@ -840,7 +840,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                     endContext: true);
                             }
 
-                            if (ccToken.Groups["goodEscape"].Success || ccToken.Groups["goodUSmall"].Success || ccToken.Groups["goodEscapeInsideCCOnly"].Success || ccToken.Groups["else"].Success)
+                            if (ccToken.Groups["else"].Success || ccToken.Groups["goodEscape"].Success || ccToken.Groups["goodUSmall"].Success || ccToken.Groups["goodEscapeInsideCCOnly"].Success)
                             {
                                 int charVal;
 
@@ -866,7 +866,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                             break;
                                         case 'x':
                                         case 'u':
-                                            if (!int.TryParse(ccToken.Value.Substring(ccToken.Groups["goodUSmall"].Success ? 3 : 2), NumberStyles.HexNumber, null, out charVal))
+                                            if (!int.TryParse(ccToken.Groups["goodUSmall"].Success ? ccToken.Groups["goodUSmall"].Value.Substring(3) : ccToken.Value.Substring(2), NumberStyles.HexNumber, null, out charVal))
                                             {
                                                 // should never happen, goodEscape match implies that we have valid hex digits in roughly Unicode range
                                                 throw new Exception("hex character did not parse in character class");
@@ -1186,7 +1186,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         return RegExError(TexlStrings.ErrInvalidRegExEmptyCharacterClass);
                     }
-                    else if (token.Groups["badUSurr"].Success || token.Groups["elseeUSurr"].Success)
+                    else if (token.Groups["badUSurr"].Success || token.Groups["elseBadUSurr"].Success)
                     {
                         return RegExError(TexlStrings.ErrInvalidRegExMalformedSurrogatePair);
                     }

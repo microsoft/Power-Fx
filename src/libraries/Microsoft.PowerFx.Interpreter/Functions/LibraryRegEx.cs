@@ -328,8 +328,7 @@ namespace Microsoft.PowerFx.Functions
                                 if (index + 2 <= regex.Length &&
                                     regex[index + 1] == 'u' && regex[index + 2] == '{' &&
                                     (m = new Regex("\\G\\\\u\\{0*(?<hex>[0-9a-fA-F]{1,6})\\}").Match(regex, index)).Success &&
-                                    int.TryParse(m.Groups["hex"].Value, NumberStyles.HexNumber, null, out var hex) && hex >= 0 && hex <= 0x10ffff &&
-                                    (!openCharacterClass || hex <= 0xffff))
+                                    int.TryParse(m.Groups["hex"].Value, NumberStyles.HexNumber, null, out var hex) && hex <= 0x10ffff)
                                 {
                                     if (hex <= 0xffff)
                                     {
@@ -338,6 +337,12 @@ namespace Microsoft.PowerFx.Functions
                                     }
                                     else
                                     {
+                                        if (openCharacterClass)
+                                        {
+                                            // should never hit this, should have been blocked at compile time, just in case as we don't want to transpile incorrectly
+                                            throw new Exception("Surrogate pairs are not allowed in character classes");
+                                        }
+
                                         var highSurr = 0xd800 + (((hex - 0x10000) >> 10) & 0x3ff);
                                         var lowSurr = 0xdc00 + ((hex - 0x10000) & 0x3ff);
                                         altered.Append("(?:\\u");
@@ -351,13 +356,18 @@ namespace Microsoft.PowerFx.Functions
                                 }
 
                                 // treat a surrogtae pair, as provided in two back-to-back \uxxxx tokens, as one character with (?...) wrapping
-                                else if (!openCharacterClass &&
-                                    index + 12 <= regex.Length &&
+                                else if (index + 12 <= regex.Length &&
                                     regex[index + 1] == 'u' &&
                                     (m = new Regex("\\G\\\\u(?<high>[0-9a-fA-F]{4})\\\\u(?<low>[0-9a-fA-F]{4})").Match(regex, index)).Success &&
                                     int.TryParse(m.Groups["high"].Value, NumberStyles.HexNumber, null, out var high) && char.IsHighSurrogate((char)high) &&
                                     int.TryParse(m.Groups["low"].Value, NumberStyles.HexNumber, null, out var low) && char.IsLowSurrogate((char)low))
                                 {
+                                    if (openCharacterClass)
+                                    {
+                                        // should never hit this, should have been blocked at compile time, just in case as we don't want to transpile incorrectly
+                                        throw new Exception("Surrogate pairs are not allowed in character classes");
+                                    }
+
                                     altered.Append("(?:");
                                     altered.Append(regex.Substring(index, 12));
                                     altered.Append(")");

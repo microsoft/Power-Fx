@@ -186,6 +186,21 @@ Errors: Error 13-44: Invalid regular expression: Unicode characters in surrogate
 >> Match( "😀", "[abc\uD83D\uDE00\ud83d\udc7bdef]" )
 Errors: Error 13-47: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "...\uD83D\uDE00".|Error 0-5: The function 'Match' has some invalid arguments.
 
+>> Match( "😀", "\u{1F600}" )
+{FullMatch:"😀",StartMatch:1}
+
+>> Match( "😀", "[a-\u{1F600}]" )
+Errors: Error 13-28: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "[a-\u{1F600}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "😀", "[\u{1F47B}-\u{1F600}]" )
+Errors: Error 13-36: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "[\u{1F47B}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "😀", "[\u{1F47B}-z]" )
+Errors: Error 13-28: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "[\u{1F47B}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "😀", "[\u{1F47B}-👻]" )
+Errors: Error 13-29: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "[\u{1F47B}".|Error 0-5: The function 'Match' has some invalid arguments.
+
 >> Match( "😀😀😀😀😀", "😀+" )
 {FullMatch:"😀😀😀😀😀",StartMatch:1}
 
