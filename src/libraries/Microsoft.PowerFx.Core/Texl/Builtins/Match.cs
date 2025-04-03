@@ -889,7 +889,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                     return CCRegExError(TexlStrings.ErrInvalidRegExCharacterClassCategoryUse);
                                 }
 
-                                if (hyphenWait > 1 && hyphenStart != -1 && charVal != -1 && (charVal - hyphenStart < 0))
+                                if (hyphenWait > 1 && hyphenStart != -1 && charVal != -1 && charVal < hyphenStart)
                                 {
                                     return CCRegExError(TexlStrings.ErrInvalidRegExCharacterClassRangeReverse);
                                 }
