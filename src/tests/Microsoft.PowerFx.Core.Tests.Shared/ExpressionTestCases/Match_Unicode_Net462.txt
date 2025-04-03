@@ -1,4 +1,6 @@
-﻿#SETUP: RegEx,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+﻿#SETUP: RegEx,disable:PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+
+
 
 // Changes in case insensitive matching in .NET 7 causes different answers that are consistent with PCRE2 and Node
 // See https://devblogs.microsoft.com/dotnet/regular-expression-improvements-in-dotnet-7/#case-insensitive-matching-and-regexoptions-ignorecase
@@ -35,6 +37,10 @@ Blank()
 >> Match( UniChar( Hex2Dec( "2126" ) ), "\u03a9", MatchOptions.IgnoreCase )
 Blank()
 
+// With .NET 462, with Power Fx V1 turned off, we report a very terse "Invalid regular expression" error message since .NET can't supply us with error details.
+// With .NET 70, .NET supplies errror messages
+// With Power Fx V1, we do our own error checking
+
 // spaces are not
 #DISABLE.NET:70
 >> IsMatch( "a", "\u{ 00061}" )
@@ -59,3 +65,6 @@ Errors: Error 14-32: Invalid regular expression.|Error 0-7: The function 'IsMatc
 >> IsMatch( "a", "\u{014ff41}[z-a]" )
 Errors: Error 14-32: Invalid regular expression.|Error 0-7: The function 'IsMatch' has some invalid arguments.
 
+#DISABLE.NET:70
+>> IsMatch("Foo", "J(")
+Errors: Error 15-19: Invalid regular expression: Unclosed groups, too few closing parenthesis.|Error 0-7: The function 'IsMatch' has some invalid arguments.

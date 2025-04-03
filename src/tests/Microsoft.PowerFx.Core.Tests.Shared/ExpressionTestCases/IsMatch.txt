@@ -167,9 +167,6 @@ false
 >> IsMatch( "abcba", "abcb", MatchOptions.BeginsWith )
 true
 
->> IsMatch("Foo", "J(")
-Errors: Error 15-19: Invalid regular expression: Unclosed groups, too few closing parenthesis.|Error 0-7: The function 'IsMatch' has some invalid arguments.
-
 // newer IsMatch "contains" semantics by default, even when in V1CompatDisabled as the C# interpreter is always in this mode
 
 >> IsMatch( "ihi", "h" )

@@ -37,6 +37,9 @@
 >> Match( "asdf", "a(sdf" )
 Errors: Error 15-22: Invalid regular expression: Unclosed groups, too few closing parenthesis.|Error 0-5: The function 'Match' has some invalid arguments.
 
+>> IsMatch("Foo", "J(")
+Errors: Error 15-19: Invalid regular expression: Unclosed groups, too few closing parenthesis.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
 // ErrInvalidRegExUnopenedCaptureGroups
 >> Match( "asdf", "asdf)" )
 Errors: Error 15-22: Invalid regular expression: Unopened groups, too few opening parenthesis.|Error 0-5: The function 'Match' has some invalid arguments.

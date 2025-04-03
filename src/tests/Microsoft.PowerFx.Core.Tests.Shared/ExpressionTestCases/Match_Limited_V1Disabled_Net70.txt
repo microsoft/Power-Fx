@@ -161,3 +161,7 @@ Errors: Error 13-45: Invalid regular expression: Unopened groups, too few openin
 #DISABLE.NET: 462
 >> Match( "a", ">>>>>>>>>>>\p{Zz}<<<<<<<<<<<<<<" )
 Errors: Error 12-45: Invalid regular expression: Invalid Unicode category name, found "...>>>>>>\p{Zz}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+#DISABLE.NET: 462
+>> IsMatch("Foo", "J(")
+Errors: Error 15-19: Invalid regular expression: Unclosed groups, too few closing parenthesis.|Error 0-7: The function 'IsMatch' has some invalid arguments.
