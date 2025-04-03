@@ -103,8 +103,8 @@ namespace Microsoft.PowerFx.Functions
                             const [alteredPattern, alteredFlags, endGuards] = AlterRegex_JavaScript( pattern, flags );
                             const regex = RegExp(alteredPattern, alteredFlags.concat(matchAll ? 'g' : ''));
                             const matches = matchAll ? [...subject.matchAll(regex)] : [subject.match(regex)];
-                            console.log(alteredPattern);       // useful to debug AlterRegex_JavaScript
-                            console.log(encodeURI(subject));
+                            // console.log('RE:/'+alteredPattern+'/');       // useful to debug AlterRegex_JavaScript
+                            // console.log('INPUT:<'+encodeURI(subject)+'>');
                             console.log('%%begin%%');
                             if (matches.length != 0 && matches[0] != null)
                             {
@@ -175,9 +175,10 @@ namespace Microsoft.PowerFx.Functions
                     int begin = output.IndexOf("%%begin%%");
                     int end = output.IndexOf("%%end%%");
 
-                    // In x mode, comment line endings are [\r\n], but .NET only supports \n.  For our purposes here, we can just replace the \r.
-                    pattern = pattern.Replace('\r', '\n');
-                    var type = new KnownRecordType(GetRecordTypeFromRegularExpression(pattern, (flags.Contains('N') ? RegexOptions.None : RegexOptions.ExplicitCapture) | (flags.Contains('x') ? RegexOptions.IgnorePatternWhitespace : RegexOptions.None)));
+                    var (regexAltered, regexOptions) = AlterRegex_DotNet(pattern, flags);
+                    Regex rex = new Regex(regexAltered, regexOptions, new TimeSpan(0, 0, 1));
+
+                    var type = new KnownRecordType(GetRecordTypeFromRegularExpression(rex));
 
                     if (end == begin + 9)
                     {

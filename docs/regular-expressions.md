@@ -36,7 +36,8 @@ The regular expression must be a constant and not calculated or stored in a vari
 |---------|---------|
 | Literal characters | Any Unicode character can be inserted directly, except `\`, `[`, `]`, `^`, `$`, `.`, `|`, `?`, `*`, `+`, `(`, `)`, `{`, and `}`. When using **MatchOptions.FreeSpacing**, `#`, ` `, and other `\s` space characters must be escaped as they have a different meaning. |
 | Escaped literal characters | `\` (backslash) followed by one of the direct literal characters, such as `\?` to insert a question mark. `\#` and `\ ` may also be used even when **MatchOptions.FreeSpacing** is disabled for consistency. | 
-| Hexadecimal and Unicode character codes | `\x20` with two hexadecimal digits, `\u2028` with four hexadecimal digits. |
+| Hexadecimal and Unicode character codes | `\x20` with exactly two hexadecimal digits, `\u2028` with exactly four hexadecimal digits and can be used for high and low surrogates. |
+| Unicode code point | `\u{01F47B}` with up to 8 hexadecimal digits. Must be in the range 0 to U+10FFFF and cannot be used for either a high or low surrogate. May result in a surrogate pair (two characters) if greater than U+FFFF. |
 | Carriage return | `\r`, the same as `Char(13)`. |
 | Newline character | `\n`, the same as `Char(10)`. |
 | Form feed | `\f`, the same as `Char(12)`. |
@@ -90,6 +91,8 @@ Unicode character categories supported by `\p{}` and `\P{}`:
 - Control and Format: `Cc`, `Cf`, while other `C` prefix categories are not supported.
 
 `\W`, `\D`, `\S`, and `\P{}` cannot be used within a negated character class `[^...]`. In order to be implemented on some platforms, these are translated to their Unicode equivalents which could be difficult to do if also negated.
+
+Unicode characters at or above U+10000, requiring surrogate pairs, are not supported in character classes.
 
 ### Quantifiers
 
@@ -292,7 +295,7 @@ One area that can be significantly different between implementations is how empt
 To avoid different results across Power Fx implementations, submatches that could be empty cannot be used with a quantifier. Here are examples of how a submatch could be empty:
 
 | Examples | Description |
-|==========|=============|
+|----------|-------------|
 | `(?<submatch>a{0,}b*)+` | All of the contents of the submatch are optional and so the entire submatch may be empty. |
 | `((<submatch>a)?b)+` | Due to the `?` outside the submatch, the submatch as a whole is optional. |
 | `(?<submatch>a|b*)+` | Alternation within the submatch with something that could be empty could result in the entire submatch being empty. |
@@ -300,3 +303,12 @@ To avoid different results across Power Fx implementations, submatches that coul
 
 Note that the submatch in `(?<submatch>a+)+` cannot be empty, as there must be at least one `a` in he submatch, and is supported.
 
+## Unicode
+
+Power Fx regular expressions use Unicode categories for the definitions of `\w`, `\d`, and `\s`, with specific categories available through `\p{..}`.
+
+There can be some variation in these definitions across platforms. For example, the Unicode standard is updated from time to time with new characters which will later be implemented by platforms at their own pace. Variations of results between platforms on these character changes can be expected until all platforms are updated.
+
+Power Fx regular expressions will ensure that category information is always available for the Basic Multilingual Plane (characters `\u0` to `\uffff`). Some platforms do not implement categories for characters in the Supplementary Multilingual Plane and abouve (U+10000 through U+10ffff). This is not usually a concern as characters in the Basic Multilingual Plane (`\u0` to `\uffff`) are the most commonly used. Consider using character values directly instead of categories if your scenario involves characters at or above U+10000 and test your formulas on the platforms you intend to use.
+
+There can also be small edge case differences between platforms. For example, some platforms may not see `ſ` as matching `s` when **MatchOptions.IgnoreCase** is invoked. If these characters are important for your scenario, use a character class such as `[ſsS]` to match in a case insensitive manner that explicitly includes the characters desired.

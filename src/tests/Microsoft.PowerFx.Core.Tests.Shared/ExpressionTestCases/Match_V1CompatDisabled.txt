@@ -1,6 +1,8 @@
 ﻿#SETUP: RegEx,disable:PowerFxV1CompatibilityRules
 
->> Match("Hello", "\w")
+// submatches included by default
+
+>> Match("Hello", "\w")  
 {FullMatch:"H",StartMatch:1,SubMatches:Table()}
 
 >> Match("Hello", "llo", MatchOptions.Complete).SubMatches
@@ -27,7 +29,9 @@ Table({Value:"e"},{Value:"l"})
 >> Match("JohnDoe@microsoft.com", Match.Email)
 {FullMatch:"JohnDoe@microsoft.com",StartMatch:1,SubMatches:Table()}
 
->> Match("(555) 123-4567", "^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")
+// leading - in character class allowed
+
+>> Match("(555) 123-4567", "^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$", MatchOptions.NumberedSubMatches ) 
 {FullMatch:"(555) 123-4567",StartMatch:1,SubMatches:Table()}
 
 >> Match("Hello", "Hello", MatchOptions.IgnoreCase)
@@ -35,6 +39,8 @@ Table({Value:"e"},{Value:"l"})
 
 >> Match("Hi", "Hi", MatchOptions.Multiline)
 {FullMatch:"Hi",StartMatch:1,SubMatches:Table()}
+
+// new options cause an error
 
 >> Match( "Hi", ".", MatchOptions.DotAll )
 Errors: Error 30-37: Invalid regular expression: MatchOptions.DotAll and MatchOptions.FreeSpacing are only available with Power Fx V1, found "MatchOptions.DotAll".|Error 0-5: The function 'Match' has some invalid arguments.
@@ -45,7 +51,7 @@ Errors: Error 63-75: Invalid regular expression: MatchOptions.DotAll and MatchOp
 >> Match( "Hi", " H # a comment " & Char(10) & " I ", MatchOptions.IgnoreCase & MatchOptions.FreeSpacing )
 Errors: Error 75-76: Invalid regular expression: MatchOptions.DotAll and MatchOptions.FreeSpacing are only available with Power Fx V1, found "MatchOptions.IgnoreCase & MatchOptions.FreeSpacing".|Error 0-5: The function 'Match' has some invalid arguments.
 
-// does no harm to use NumberedSubMatches
+// but does no harm to use NumberedSubMatches
 
 >> Match( "Hi", "(H)([Ii])", MatchOptions.NumberedSubMatches )
 {FullMatch:"Hi",StartMatch:1,SubMatches:Table({Value:"H"},{Value:"i"})}
@@ -60,34 +66,26 @@ Errors: Error 75-76: Invalid regular expression: MatchOptions.DotAll and MatchOp
 >> With( {opts: "i"}, Match( "Hi", "hi", opts ) )
 {FullMatch:"Hi",StartMatch:1,SubMatches:Table()}
 
->> Match( "q-----b-__P-P-K---__---P----__------P-__-p-NP--P__n----n--__p--pBpNp__r-bk---r__1411110000_045_000_00", 
-    "(" & "[QR]-*k|k-*[QR]|[QR].{9}(-.{9})*k|k.{9}(-.{9})*[QR]|" & 
-    "[QB].{10}(-.{10})*k|k.{10}(-.{10})*[QB]|[QB].{8}(-.{8})*k|k.{8}(-.{8})*[QB]|" & 
-    "P.{10}k|P.{8}k|" & 
-    "N.{18}k|k.{18}N|N.{20}k|k.{20}N|N.{11}k|k.{11}N|N.{7}k|k.{7}N|" &
-    "Kk|kK|K.{8,10}k|k.{8,10}K" & ")", MatchOptions.Contains )
-{FullMatch:"BpNp__r-bk",StartMatch:65,SubMatches:Table({Value:"BpNp__r-bk"},{Value:Blank()},{Value:Blank()},{Value:Blank()},{Value:Blank()},{Value:Blank()},{Value:Blank()})}
+// options must be a constant value in V1, but not pre-V1
+// still may not always work with the interpreter when testing in C#
 
->> Match( "q-----b-__P-P-K---__---P-Q--__------P-__-p-NP--P__n--B----__p--p-pNp__r-b-k-nr__1010110000_041_000_00", 
-    "(" & "[QR]-*k|k-*[QR]|[QR].{9}(-.{9})*k|k.{9}(-.{9})*[QR]|" & 
-    "[QB].{10}(-.{10})*k|k.{10}(-.{10})*[QB]|[QB].{8}(-.{8})*k|k.{8}(-.{8})*[QB]|" & 
-    "P.{10}k|P.{8}k|" & 
-    "N.{18}k|k.{18}N|N.{20}k|k.{20}N|N.{11}k|k.{11}N|N.{7}k|k.{7}N|" &
-    "Kk|kK|K.{8,10}k|k.{8,10}K" & ")", MatchOptions.Contains )
-{FullMatch:"Np__r-b-k",StartMatch:67,SubMatches:Table({Value:"Np__r-b-k"},{Value:Blank()},{Value:Blank()},{Value:Blank()},{Value:Blank()},{Value:Blank()},{Value:Blank()})}
+>> Match("28", "28", Blank())
+Error({Kind:ErrorKind.InvalidArgument})
 
->> Match( "RNB--KR-__PPP-----__---P-Q--__----PpP-__-p---NqP__-----n--__p--p-ppp__rnb-kb-r__1010010000_027_000_00", 
-    "(" & "[QR]-*k|k-*[QR]|[QR].{9}(-.{9})*k|k.{9}(-.{9})*[QR]|" & 
-    "[QB].{10}(-.{10})*k|k.{10}(-.{10})*[QB]|[QB].{8}(-.{8})*k|k.{8}(-.{8})*[QB]|" & 
-    "P.{10}k|P.{8}k|" & 
-    "N.{18}k|k.{18}N|N.{20}k|k.{20}N|N.{11}k|k.{11}N|N.{7}k|k.{7}N|" &
-    "Kk|kK|K.{8,10}k|k.{8,10}K" & ")", MatchOptions.Contains )
-Blank()
+>> IsMatch("28", "28", Blank())
+Error({Kind:ErrorKind.InvalidArgument})
 
->> Match( "q----Kb-__P-P-----__---P-Q--__------P-__-p-NPN-P__---B----__p--p-ppp__rnb-k-nr__0010110000_038_000_00",
-    "(" & "[qr]-*K|K-*[qr]|[qr].{9}(-.{9})*K|K.{9}(-.{9})*[qr]|" & 
-    "[qb].{10}(-.{10})*K|K.{10}(-.{10})*[qb]|[qb].{8}(-.{8})*K|K.{8}(-.{8})*[qb]|" & 
-    "K.{10}p|K.{8}p|" & 
-    "n.{18}K|K.{18}n|n.{20}K|K.{20}n|n.{11}K|K.{11}n|n.{7}K|K.{7}n|" &
-    "kK|Kk|k.{8,10}K|K.{8,10}k" & ")", MatchOptions.Contains )
-{FullMatch:"q----K",StartMatch:1,SubMatches:Table({Value:"q----K"},{Value:Blank()},{Value:Blank()},{Value:Blank()},{Value:Blank()},{Value:Blank()},{Value:Blank()})}
+>> MatchAll("28", "28", Blank())
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Match("28", "28", 28)
+{FullMatch:"28",StartMatch:1}
+
+>> Match("""Hello world""", "\w+", If( Sqrt(4) > 0, MatchOptions.Contains, MatchOptions.Complete))
+{FullMatch:"Hello",StartMatch:2}
+
+>> MatchAll("""Hello world""", "\w+", If( Sqrt(4) > 0, MatchOptions.Contains, MatchOptions.Complete))
+Table({FullMatch:"Hello",StartMatch:2},{FullMatch:"world",StartMatch:8})
+
+>> IsMatch("""Hello world""", "\w+", If( Sqrt(4) > 0, MatchOptions.Contains, MatchOptions.Complete))
+true

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions;
@@ -100,7 +101,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
           </PropertyGroup>
         */
 
-#if true // may not want to run this, even if MATCHCOMPARE is enabled
+#if false // may not want to run this, even if MATCHCOMPARE is enabled
 
         // Runs only tests that have asked for RegEx setup. This test run will compare the regular expression results between
         // .NET (used in the C# interpreter), NodeJS with JavaScript (used in Canvas), and PCRE2 (used in Excel).
@@ -109,6 +110,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InterpreterTheory]
         public void RegExCompare(ExpressionTestCase t)
         {
+            ExpressionEvaluationTests.RegExCompareDotNet = true;
             ExpressionEvaluationTests.RegExCompareNode = true;
             ExpressionEvaluationTests.RegExComparePCRE2 = true;
 
@@ -184,7 +186,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RunOne()
         {
-            var path = @"c:\temp\match_comb.txt";
+            var path = @"C:\od\regex\match9\one.txt";
 
             var line = 0;
 
@@ -192,6 +194,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var testRunner = new TestRunner(runner);
 
             testRunner.AddFile(new Dictionary<string, bool>(), path);
+
+            var overridePath = Regex.Replace(path, @"\.txt$", "_overrides.txt");
+            if (File.Exists(overridePath))
+            {
+                testRunner.AddFile(new Dictionary<string, bool>(), overridePath);
+            }
 
             // We can filter to just cases we want, set line above
             if (line > 0)
@@ -215,6 +223,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RunOneMatchCompare()
         {
+            ExpressionEvaluationTests.RegExCompareDotNet = true;
             ExpressionEvaluationTests.RegExCompareNode = true;
             ExpressionEvaluationTests.RegExComparePCRE2 = true;
             RunOne();

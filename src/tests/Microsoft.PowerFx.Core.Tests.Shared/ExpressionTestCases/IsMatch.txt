@@ -167,3 +167,16 @@ false
 >> IsMatch( "abcba", "abcb", MatchOptions.BeginsWith )
 true
 
+// newer IsMatch "contains" semantics by default, even when in V1CompatDisabled as the C# interpreter is always in this mode
+
+>> IsMatch( "ihi", "h" )
+true
+
+// being explicit, for comparison
+
+>> IsMatch( "ihi", "h", MatchOptions.Complete )
+false
+
+>> IsMatch( "ihi", "h", MatchOptions.Contains )
+true
+
