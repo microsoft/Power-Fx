@@ -13,9 +13,21 @@ namespace Microsoft.PowerFx.Types
     public abstract class DelegationParameters
     {
         /// <summary>
+        /// When using OData with top level aggregation the field name to use to store the result. e.g. result of Sum(Employees, Salary).
+        /// </summary>
+        public const string ODataAggregationFieldName = "result";
+
+        internal const string ODataCountFieldName = "count";
+
+        /// <summary>
         /// Which features does this use - so we can determine if we support it. 
         /// </summary>
         public abstract DelegationParameterFeatures Features { get; }
+
+        /// <summary>
+        /// Expected type query needs to return.
+        /// </summary>
+        public abstract FormulaType ExpectedReturnType { get; }
 
         /// <summary>
         /// Throw if the parameters use features outside the feature list. 
@@ -47,6 +59,18 @@ namespace Microsoft.PowerFx.Types
         {
             return new string[0];
         }
+
+        /// <summary>
+        /// Get OData $apply parameter string.
+        /// </summary>
+        /// <returns></returns>
+        public abstract string GetODataApply();
+
+        /// <summary>
+        /// Get OData $count flag.
+        /// </summary>
+        /// <returns></returns>
+        public abstract bool ReturnTotalCount();
 
         public int? Top { get; set; }
     }

@@ -30,6 +30,61 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         [Fact]
+        public async Task LivePPTest()
+        {
+            var endpoint = "https://44f782dc-c6fb-eafc-907b-dc95ca486d9c.15.common.tip1002.azure-apihub.net/";
+            var connectionId = "5772e1af38d64721bc9b96307fae662e";
+            var envId = "44f782dc-c6fb-eafc-907b-dc95ca486d9c";
+            var sessionId = "4eac2adc-8cd1-441d-b0e9-608d3f360f8d";
+            var dataset = "testconnector.database.windows.net,testconnector";
+            var tableToUseInExpression = "Employees";
+            var expr = @"First(Employees).'First Name'";
+            var jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IkNOdjBPSTNSd3FsSEZFVm5hb01Bc2hDSDJYRSIsImtpZCI6IkNOdjBPSTNSd3FsSEZFVm5hb01Bc2hDSDJYRSJ9.eyJhdWQiOiJodHRwczovL2FwaWh1Yi5henVyZS5jb20iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC84ZDgxNDc4YS01YjY4LTQxNWUtYjA4ZC03ZmZmZTcxMmI2NTcvIiwiaWF0IjoxNzQzNjE5NjQzLCJuYmYiOjE3NDM2MTk2NDMsImV4cCI6MTc0MzYyNDUzNSwiYWNyIjoiMSIsImFpbyI6IkFXUUJtLzRaQUFBQXBJamJzQnRoY2prN0xyWGRpY2dsS091NlJ3Y3hTTHNERGZvNzEvTkUyNWwrdnNGTjFuQU5DVUVLd2F1N25Hbi9yNHpjUzR4VmRQd3lndjhTUEp3T1VybmpWd0lSamVySDBJcG1SZU5QM3NibVRkcldnMVp2RXptYmY0TkhkSmgzeStpWEl0bnNjdmhuWHdqRzJ5aFdOc25vZ3pzZklyb1FRbk1Qc2hQZmtWYzFqb0JVWUZkWHBwZ2IzeThHODJlTFdMT1lCem9IanVKMytWQVloNTdQTWpibjJoR1ZQRVNucERXY3lKWjM1LzJkN01mMXl4eVRscDdnclFubERCcnRXbStaZnczL0F3bXI4eHBuRHRZbDJvU2ZLTUhGMDNLQnBGUHo3UzN1aHRTZ1NOaERQUHFjN2tiRXU4ZTFXYlRtQ1IrRE10K200NTdvTjRDUzJUWXlBTG9XUlBGSW1uM0RQWU8yamlkZzUweE9ic0NkUG9NQ0RHUHFkNUVsNy9oN2NBMjlHeXVrRkRrOEJNWHlncTlmb1J5OEw5em4vYnZPRjR4aFNGQ1g2VzZrdkdBQU93dHZwNlBGVWlrSndoTlZ2YlNQbUM3TWxBeW9xNjAySVdEdFFnPT0iLCJhbXIiOlsicnNhIiwibWZhIl0sImFwcGlkIjoiYThmN2E2NWMtZjViYS00ODU5LWIyZDYtZGY3NzJjMjY0ZTlkIiwiYXBwaWRhY3IiOiIwIiwiZmFtaWx5X25hbWUiOiJhdXJvcmEiLCJnaXZlbl9uYW1lIjoidXNlcjAxIiwiaWR0eXAiOiJ1c2VyIiwiaXBhZGRyIjoiMjYwMTpjYzowOjIzMzA6NDUyMTpmNGNkOmNiYTc6NWQzNiIsIm5hbWUiOiJhdXJvcmF1c2VyMDEiLCJvaWQiOiIzZDhmNDZmMS1hMzk4LTQzZDktOGJiZC04NzQwOTIyNTQwZTEiLCJwdWlkIjoiMTAwMzIwMDJCQTBEQ0JBNSIsInJoIjoiMS5BYjBBaWtlQmpXaGJYa0d3alhfXzV4SzJWMTg4QmY2U05oUlBydkx1TlB3SUhLNjlBUGE5QUEuIiwic2NwIjoiUnVudGltZS5BbGwiLCJzaWQiOiIwMDNkMzdmOS0wZmFjLThmODgtY2E4NS02ZWVlYjkxMjEyZDIiLCJzdWIiOiJqUVd2UExGcERXYW5vOURTVGJvTmtFRnI4SnlNY09Na3N6VHNPTHBNTkg4IiwidGlkIjoiOGQ4MTQ3OGEtNWI2OC00MTVlLWIwOGQtN2ZmZmU3MTJiNjU3IiwidW5pcXVlX25hbWUiOiJhdXJvcmF1c2VyMDFAYXVyb3JhZmluYW5jZWludGVncmF0aW9uMDEub25taWNyb3NvZnQuY29tIiwidXBuIjoiYXVyb3JhdXNlcjAxQGF1cm9yYWZpbmFuY2VpbnRlZ3JhdGlvbjAxLm9ubWljcm9zb2Z0LmNvbSIsInV0aSI6IlJDM21QME9qQzBleVp1ZjExMDh5QUEiLCJ2ZXIiOiIxLjAiLCJ4bXNfaWRyZWwiOiIxMiAxIn0.TwVlXxkxA5j_eb1a1AlO_zn1Je8UcTex15Hdhh5xIVkq7zk1kz1mc9VVPsYVlyuUioL8G-ECsKRFRk_tFcwXsuuIGKH7eswgFSxxbpIGf-9cu4BO2a0TyTkwRKnx5UdRKAsGl7Np25qDP6CHDG_ofIOKIvZO4ZTorS2VpbJXJj6fWoJa5oreqPeqy3DNYxJeMa6taPr5vJZlqwMDmYb60v10KRkH6mfN_WZFJ1vTdHIF9RoJGMl18nNPSStwYzgfSdLBRlHBNA_9TRFBVL-IjdBeIw75IjKi5pdmpQCSM_1n45pu8CWoTUOLhI1BCxn-5ghj8KkkS4d_MVM-5llveQ";
+            
+            using var client = new PowerPlatformConnectorClient(endpoint, envId, connectionId, () => jwt) { SessionId = sessionId };
+
+            CdpDataSource cds = new CdpDataSource(dataset);
+
+            IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None);
+            CdpTable connectorTable = tables.First(t => t.DisplayName == tableToUseInExpression);
+
+            Assert.False(connectorTable.IsInitialized);
+            Assert.Equal(tableToUseInExpression, connectorTable.DisplayName);
+
+            await connectorTable.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None);
+
+            CdpTableValue sqlTable = connectorTable.GetTableValue();
+
+            var rows = await sqlTable.GetRowsAsync(null, null, CancellationToken.None);
+
+            HashSet<IExternalTabularDataSource> ads = sqlTable.Type._type.AssociatedDataSources;
+            Assert.NotNull(ads);
+            Assert.Single(ads);
+
+            DataSourceInfo dataSourceInfo = Assert.IsType<DataSourceInfo>(ads.First());
+            Assert.NotNull(dataSourceInfo);
+
+            Assert.Equal(tableToUseInExpression, dataSourceInfo.EntityName.Value);
+            Assert.True(dataSourceInfo.IsDelegatable);
+            Assert.True(dataSourceInfo.IsPageable);
+            Assert.True(dataSourceInfo.IsRefreshable);
+            Assert.True(dataSourceInfo.IsSelectable);
+            Assert.True(dataSourceInfo.IsWritable);
+            Assert.True(dataSourceInfo.RequiresAsync);
+
+            SymbolValues symbolValues = new SymbolValues().Add(tableToUseInExpression, sqlTable);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues);
+
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
+            Assert.IsNotAssignableFrom<ErrorValue>(result);
+        }
+
+        [Fact]
         public async Task SQL_CdpTabular_GetTables()
         {
             using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
@@ -204,7 +259,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             testConnector.SetResponseFromFile(@"Responses\SQL GetTables SampleDB.json");
             InvalidOperationException ioe = await Assert.ThrowsAsync<InvalidOperationException>(() => cds.GetTableAsync(client, $"/apim/sql/{connectionId}", "[SalesLT].[Product]", false /* display name only */, CancellationToken.None, logger));
-            Assert.Equal("Cannot find any table with the specified name", ioe.Message);
+            Assert.Equal("Cannot find any tableToUseInExpression with the specified name", ioe.Message);
 
             testConnector.SetResponseFromFiles(@"Responses\SQL GetSchema Products.json", @"Responses\SQL GetRelationships SampleDB.json");
             await connectorTable.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
@@ -417,7 +472,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("[SalesLT].[Product]", table.DisplayName);
             Assert.True(table.IsInitialized);
 
-            // Trying with a wrong table name (2nd network call ends up with a 400)
+            // Trying with a wrong tableToUseInExpression name (2nd network call ends up with a 400)
             testConnector.SetResponseFromFiles((@"Responses\SQL GetDatasetsMetadata.json", HttpStatusCode.OK), (@"Responses\SQL Wrong Table.json", HttpStatusCode.BadRequest));
             PowerFxConnectorException e = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await cds.GetTableAsync(client, $"/apim/sql/{connectionId}", "UnknownTable123", CancellationToken.None, logger).ConfigureAwait(false));
 
@@ -529,7 +584,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             // Use of tabular connector
-            // There is a network call here to retrieve the table's schema
+            // There is a network call here to retrieve the tableToUseInExpression's schema
             testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
 
             ConsoleLogger logger = new ConsoleLogger(_output);
@@ -945,7 +1000,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.False((CdpRecordType)sfTable.RecordType is null);
             Assert.False(userTable is null);
 
-            // External relationship table name
+            // External relationship tableToUseInExpression name
             Assert.Equal("User", userTable.TableSymbolName);
 
             Assert.Equal<object>(
@@ -1097,7 +1152,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.NotNull(dm.Tabular);
             Assert.Equal("dataset", dm.Tabular.DisplayName);
             Assert.Equal("singleton", dm.Tabular.Source);
-            Assert.Equal("table", dm.Tabular.TableDisplayName);
+            Assert.Equal("tableToUseInExpression", dm.Tabular.TableDisplayName);
             Assert.Equal("tables", dm.Tabular.TablePluralName);
             Assert.Equal("double", dm.Tabular.UrlEncoding);
 
@@ -1167,7 +1222,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.NotNull(dm.Tabular);
             Assert.Equal("dataset", dm.Tabular.DisplayName);
             Assert.Equal("singleton", dm.Tabular.Source);
-            Assert.Equal("table", dm.Tabular.TableDisplayName);
+            Assert.Equal("tableToUseInExpression", dm.Tabular.TableDisplayName);
             Assert.Equal("tables", dm.Tabular.TablePluralName);
             Assert.Equal("double", dm.Tabular.UrlEncoding);
 

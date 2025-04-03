@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -47,7 +48,10 @@ namespace Microsoft.PowerFx.Connectors
         public DelegationParameterFeatures SupportedFeatures => DelegationParameterFeatures.Filter |
                 DelegationParameterFeatures.Top |
                 DelegationParameterFeatures.Columns | // $select
-                DelegationParameterFeatures.Sort; // $orderby
+                DelegationParameterFeatures.Sort | // $orderby
+                DelegationParameterFeatures.ApplyGroupBy |
+                DelegationParameterFeatures.ApplyTopLevelAggregation |
+                DelegationParameterFeatures.Count;
 
         public async Task<IReadOnlyCollection<DValue<RecordValue>>> GetRowsAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel)
         {
@@ -72,9 +76,77 @@ namespace Microsoft.PowerFx.Connectors
             _cachedRows = null;
         }
 
-        public Task<FormulaValue> ExecuteQueryAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel)
+        public async Task<FormulaValue> ExecuteQueryAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel)
         {
-            throw new NotImplementedException();
+            if (parameters == null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            var op = parameters?.ToOdataParameters();
+            var value = await _tabularService.ExecuteQueryAsync(services, op, cancel).ConfigureAwait(false);
+
+            var expectedRT = parameters.ExpectedReturnType;
+            if (expectedRT is not AggregateType) 
+            {
+                if (value.Type is not AggregateType)
+                {
+                    var expectedValue = ConvertToExpectedType(expectedRT, value);
+                    return expectedValue;
+                }
+                else if (value.Type is RecordType resultRT &&
+                    resultRT.FieldNames.Count() == 1)
+                {
+                    var fieldName = resultRT.FieldNames.First();
+                    var expectedValue = await ExtractResultAsync((RecordValue)value, parameters, cancel).ConfigureAwait(false);
+                    return expectedValue;
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Invalid result type {value.Type}, expected type was {expectedRT}");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException($"Invalid expected type {expectedRT} for {nameof(ExecuteQueryAsync)}");
+            }
+        }
+
+        private static async Task<FormulaValue> ExtractResultAsync(RecordValue value, DelegationParameters parameters, CancellationToken cancellationToken)
+        {
+            FormulaValue result;
+            if (parameters.ReturnTotalCount())
+            {
+                result = await value.GetFieldAsync(DelegationParameters.ODataCountFieldName, cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                result = await value.GetFieldAsync(DelegationParameters.ODataAggregationFieldName, cancellationToken).ConfigureAwait(false);
+            }
+
+            result = ConvertToExpectedType(parameters.ExpectedReturnType, result);
+            return result;
+        }
+
+        private static FormulaValue ConvertToExpectedType(FormulaType expectedType, FormulaValue value)
+        {
+            var valueType = value.Type;
+            if (expectedType == valueType)
+            {
+                return value;
+            }
+            else if (expectedType == FormulaType.Number && valueType == FormulaType.Decimal)
+            {
+                return FormulaValue.New(Convert.ToDouble(((DecimalValue)value).Value));
+            }
+            else if (expectedType == FormulaType.Decimal && valueType == FormulaType.Number)
+            {
+                return FormulaValue.New(Convert.ToDecimal(((NumberValue)value).Value));
+            }
+            else
+            {
+                throw new InvalidOperationException($"Expected type {expectedType} can not be converted to {valueType}");
+            }
         }
     }   
 
@@ -82,20 +154,14 @@ namespace Microsoft.PowerFx.Connectors
     {
         public static ODataParameters ToOdataParameters(this DelegationParameters parameters)
         {
-            DelegationParameterFeatures allowedFeatures = 
-                DelegationParameterFeatures.Filter | 
-                DelegationParameterFeatures.Top | 
-                DelegationParameterFeatures.Columns | // $select
-                DelegationParameterFeatures.Sort;     // $orderby
-
-            parameters.EnsureOnlyFeatures(allowedFeatures);
-
             ODataParameters op = new ODataParameters()
             {
                 Filter = parameters.GetOdataFilter(),
                 Top = parameters.Top.GetValueOrDefault(),
                 Select = parameters.GetColumns(),
-                OrderBy = parameters.GetOrderBy()
+                OrderBy = parameters.GetOrderBy(),
+                Apply = parameters.GetODataApply(),
+                Count = parameters.ReturnTotalCount()
             };
 
             return op;

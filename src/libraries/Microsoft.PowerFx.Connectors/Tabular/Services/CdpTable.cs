@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -114,16 +115,29 @@ namespace Microsoft.PowerFx.Connectors
         protected override async Task<IReadOnlyCollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters odataParameters, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
+            string text = await Query(serviceProvider, odataParameters, cancellationToken).ConfigureAwait(false);
+            return !string.IsNullOrWhiteSpace(text) ? GetResult(text) : Array.Empty<DValue<RecordValue>>();
+        }
+
+        protected override async Task<FormulaValue> GetItemInternalAsync(IServiceProvider serviceProvider, ODataParameters odataParameters, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            string text = await Query(serviceProvider, odataParameters, cancellationToken).ConfigureAwait(false);
+            var result = FormulaValueJSON.FromJson(text);
+            return result;
+        }
+
+        private async Task<string> Query(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
             ConnectorLogger executionLogger = serviceProvider?.GetService<ConnectorLogger>();
-
-            string queryParams = (odataParameters != null) ? "&" + odataParameters.ToQueryString() : string.Empty;
-
+            string queryParams = (oDataParameters != null) ? "&" + oDataParameters.ToQueryString() : string.Empty;
             var uri = (_uriPrefix ?? string.Empty) +
                    (CdpTableResolver.UseV2(_uriPrefix) ? "/v2" : string.Empty) +
                    $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : SingleEncode(DatasetName))}/tables/{Uri.EscapeDataString(TableName)}/items?api-version=2015-09-01" + queryParams;
 
             string text = await GetObject(_httpClient, $"List items ({nameof(GetItemsInternalAsync)})", uri, null, cancellationToken, executionLogger).ConfigureAwait(false);
-            return !string.IsNullOrWhiteSpace(text) ? GetResult(text) : Array.Empty<DValue<RecordValue>>();
+            return text;
         }
 
         private IReadOnlyCollection<DValue<RecordValue>> GetResult(string text)

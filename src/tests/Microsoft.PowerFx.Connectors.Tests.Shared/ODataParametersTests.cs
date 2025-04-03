@@ -168,11 +168,17 @@ namespace Microsoft.PowerFx.Tests
 
             public override DelegationParameterFeatures Features => _features;
 
+            public override FormulaType ExpectedReturnType => throw new NotImplementedException();
+
             public override IReadOnlyCollection<string> GetColumns() => _columns;            
 
             public override string GetOdataFilter() => _filter;
 
             public override IReadOnlyCollection<(string, bool)> GetOrderBy() => _orderBy;
+
+            public override string GetODataApply() => throw new NotImplementedException();
+
+            public override bool ReturnTotalCount() => throw new NotImplementedException();
         }
     }
 }

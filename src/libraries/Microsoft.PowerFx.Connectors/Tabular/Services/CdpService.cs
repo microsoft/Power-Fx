@@ -53,7 +53,17 @@ namespace Microsoft.PowerFx.Connectors
                 : throw new InvalidOperationException(NotInitialized);
         }
 
+        public Task<FormulaValue> ExecuteQueryAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return IsInitialized
+                ? GetItemInternalAsync(serviceProvider, oDataParameters, cancellationToken)
+                : throw new InvalidOperationException(NotInitialized);
+        }
+
         protected abstract Task<IReadOnlyCollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken);
+
+        protected abstract Task<FormulaValue> GetItemInternalAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken);
 
         // TABLE DATA SERVICE - UPDATE
         // PATCH: /datasets/{datasetName}/tables/{tableName}/items/{id}

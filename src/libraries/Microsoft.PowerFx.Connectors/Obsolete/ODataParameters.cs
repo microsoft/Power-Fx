@@ -22,6 +22,8 @@ namespace Microsoft.PowerFx.Connectors
         // $expand
         public string Expand { get; init; } = null;
 
+        public string Apply { get; init; } = string.Empty;
+
         // $filter
         public string Filter { get; init; } = null;
 
@@ -62,6 +64,7 @@ namespace Microsoft.PowerFx.Connectors
             Compute = oDataParameters.Compute;
             Count = oDataParameters.Count;
             Expand = oDataParameters.Expand;
+            Apply = oDataParameters.Apply;
             Filter = oDataParameters.Filter;
             Format = oDataParameters.Format;
             Index = oDataParameters.Index;
@@ -149,6 +152,11 @@ namespace Microsoft.PowerFx.Connectors
             if (!string.IsNullOrEmpty(Expand))
             {
                 query["$expand"] = Expand;
+            }
+
+            if (!string.IsNullOrEmpty(Apply))
+            {
+                query["$apply"] = Apply;
             }
 
             if (!string.IsNullOrEmpty(Filter))
