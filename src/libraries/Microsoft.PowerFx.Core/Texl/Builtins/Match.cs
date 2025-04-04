@@ -30,8 +30,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // IsMatch(text:s, regular_expression:s, [options:s])
     internal class IsMatchFunction : BaseMatchFunction
     {
-        public IsMatchFunction(RegexTypeCache regexTypeCache)
-            : base("IsMatch", TexlStrings.AboutIsMatch, DType.Boolean, regexTypeCache)
+        public IsMatchFunction(RegexTypeCache regexTypeCache, bool v1Update = false)
+            : base("IsMatch", TexlStrings.AboutIsMatch, DType.Boolean, regexTypeCache, v1Update)
         {
         }
 
@@ -45,8 +45,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Match(text:s, regular_expression:s, [options:s])
     internal class MatchFunction : BaseMatchFunction
     {
-        public MatchFunction(RegexTypeCache regexTypeCache)
-            : base("Match", TexlStrings.AboutMatch, DType.EmptyRecord, regexTypeCache)
+        public MatchFunction(RegexTypeCache regexTypeCache, bool v1Update = false)
+            : base("Match", TexlStrings.AboutMatch, DType.EmptyRecord, regexTypeCache, v1Update)
         {
         }
     }
@@ -54,8 +54,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // MatchAll(text:s, regular_expression:s, [options:s])
     internal class MatchAllFunction : BaseMatchFunction
     {
-        public MatchAllFunction(RegexTypeCache regexTypeCache)
-            : base("MatchAll", TexlStrings.AboutMatchAll, DType.EmptyTable, regexTypeCache)
+        public MatchAllFunction(RegexTypeCache regexTypeCache, bool v1Update = false)
+            : base("MatchAll", TexlStrings.AboutMatchAll, DType.EmptyTable, regexTypeCache, v1Update)
         {
         }
     }
@@ -128,8 +128,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool UseParentScopeForArgumentSuggestions => true;
 
-        public BaseMatchFunction(string functionName, TexlStrings.StringGetter aboutGetter, DType returnType, RegexTypeCache regexTypeCache)
-            : base(functionName, aboutGetter, FunctionCategories.Text, returnType, 0, 2, 3, DType.String, BuiltInEnums.MatchEnum.FormulaType._type, BuiltInEnums.MatchOptionsEnum.FormulaType._type)
+        public BaseMatchFunction(string functionName, TexlStrings.StringGetter aboutGetter, DType returnType, RegexTypeCache regexTypeCache, bool v1Update)
+            : base(functionName, aboutGetter, FunctionCategories.Text, returnType, 0, 2, 3, DType.String, v1Update ? BuiltInEnums.MatchEnumV1Update.FormulaType._type : BuiltInEnums.MatchEnum.FormulaType._type, BuiltInEnums.MatchOptionsEnum.FormulaType._type)
         {
             if (regexTypeCache != null)
             {

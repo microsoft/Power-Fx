@@ -33,6 +33,23 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { LanguageConstants.JoinTypeEnumString, BuiltInEnums.JoinTypeEnum },
             };
 
+        internal static IReadOnlyDictionary<string, EnumSymbol> DefaultEnumSymbolsV1Update { get; } =
+            new Dictionary<string, EnumSymbol>()
+            {
+                { LanguageConstants.ColorEnumString, BuiltInEnums.ColorEnum },
+                { LanguageConstants.DateTimeFormatEnumString, BuiltInEnums.DateTimeFormatEnum },
+                { LanguageConstants.StartOfWeekEnumString, BuiltInEnums.StartOfWeekEnum },
+                { LanguageConstants.SortOrderEnumString, BuiltInEnums.SortOrderEnum },
+                { LanguageConstants.TimeUnitEnumString, BuiltInEnums.TimeUnitEnum },
+                { LanguageConstants.MatchOptionsEnumString, BuiltInEnums.MatchOptionsEnum },
+                { LanguageConstants.MatchEnumString, BuiltInEnums.MatchEnumV1Update },
+                { LanguageConstants.ErrorKindEnumString, BuiltInEnums.ErrorKindEnum },
+                { LanguageConstants.JSONFormatEnumString, BuiltInEnums.JSONFormatEnum },
+                { LanguageConstants.TraceSeverityEnumString, BuiltInEnums.TraceSeverityEnum },
+                { LanguageConstants.TraceOptionsEnumString, BuiltInEnums.TraceOptionsEnum },
+                { LanguageConstants.JoinTypeEnumString, BuiltInEnums.JoinTypeEnum },
+            };
+
         // DefaultEnums, with enum strings, is legacy and only used by Power Apps
         internal static IReadOnlyDictionary<string, string> DefaultEnums { get; } =
             new Dictionary<string, string>()
@@ -91,13 +108,15 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         private readonly Dictionary<string, EnumSymbol> _enumSymbols = new Dictionary<string, EnumSymbol>();
 
         #region Internal methods
-        internal EnumStoreBuilder WithRequiredEnums(TexlFunctionSet functions)
+        internal EnumStoreBuilder WithRequiredEnums(TexlFunctionSet functions, bool v1Update = true)
         {
+            var defaultEnums = v1Update ? DefaultEnumSymbolsV1Update : DefaultEnumSymbols;
+
             foreach (var name in functions.Enums)
             {
                 if (!_enumSymbols.ContainsKey(name))
                 {
-                    if (!DefaultEnumSymbols.TryGetValue(name, out var enumSymbol))
+                    if (!defaultEnums.TryGetValue(name, out var enumSymbol))
                     {
                         throw new InvalidOperationException($"Could not find enum {name}");
                     }
@@ -109,9 +128,11 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             return this;
         }
 
-        internal EnumStoreBuilder WithDefaultEnums()
+        internal EnumStoreBuilder WithDefaultEnums(bool v1Update = true)
         {
-            foreach (var defaultEnum in DefaultEnumSymbols)
+            var defaultEnums = v1Update ? DefaultEnumSymbolsV1Update : DefaultEnumSymbols;
+
+            foreach (var defaultEnum in defaultEnums)
             {
                 if (!_enumSymbols.ContainsKey(defaultEnum.Key))
                 {
