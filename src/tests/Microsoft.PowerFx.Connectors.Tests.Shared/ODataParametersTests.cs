@@ -179,6 +179,11 @@ namespace Microsoft.PowerFx.Tests
             public override string GetODataApply() => throw new NotImplementedException();
 
             public override bool ReturnTotalCount() => throw new NotImplementedException();
+
+            public override string GetODataQueryString()
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

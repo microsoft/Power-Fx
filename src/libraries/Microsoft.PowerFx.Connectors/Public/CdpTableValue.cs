@@ -60,8 +60,7 @@ namespace Microsoft.PowerFx.Connectors
                 return _cachedRows;
             }
 
-            var op = parameters?.ToOdataParameters();
-            var rows = await _tabularService.GetItemsAsync(services, op, cancel).ConfigureAwait(false);
+            var rows = await _tabularService.GetItemsAsync(services, parameters, cancel).ConfigureAwait(false);
 
             if (parameters == null)
             {
@@ -83,8 +82,7 @@ namespace Microsoft.PowerFx.Connectors
                 throw new ArgumentNullException(nameof(parameters));
             }
 
-            var op = parameters?.ToOdataParameters();
-            var value = await _tabularService.ExecuteQueryAsync(services, op, cancel).ConfigureAwait(false);
+            var value = await _tabularService.ExecuteQueryAsync(services, parameters, cancel).ConfigureAwait(false);
 
             var expectedRT = parameters.ExpectedReturnType;
             if (expectedRT is not AggregateType) 
@@ -94,10 +92,8 @@ namespace Microsoft.PowerFx.Connectors
                     var expectedValue = ConvertToExpectedType(expectedRT, value);
                     return expectedValue;
                 }
-                else if (value.Type is RecordType resultRT &&
-                    resultRT.FieldNames.Count() == 1)
+                else if (value.Type is RecordType resultRT)
                 {
-                    var fieldName = resultRT.FieldNames.First();
                     var expectedValue = await ExtractResultAsync((RecordValue)value, parameters, cancel).ConfigureAwait(false);
                     return expectedValue;
                 }
@@ -114,16 +110,14 @@ namespace Microsoft.PowerFx.Connectors
 
         private static async Task<FormulaValue> ExtractResultAsync(RecordValue value, DelegationParameters parameters, CancellationToken cancellationToken)
         {
-            FormulaValue result;
-            if (parameters.ReturnTotalCount())
+            var valueTable = (TableValue)(await value.GetFieldAsync(DelegationParameters.ODataResultFieldName, cancellationToken).ConfigureAwait(false));
+            if (valueTable.Rows.Count() != 1)
             {
-                result = await value.GetFieldAsync(DelegationParameters.ODataCountFieldName, cancellationToken).ConfigureAwait(false);
-            }
-            else
-            {
-                result = await value.GetFieldAsync(DelegationParameters.ODataAggregationFieldName, cancellationToken).ConfigureAwait(false);
+                throw new InvalidOperationException("value Table should always have 1 rows for aggregation result");
             }
 
+            var valueRecord = valueTable.Rows.First().Value;
+            var result = await valueRecord.GetFieldAsync(DelegationParameters.ODataAggregationResultFieldName, cancellationToken).ConfigureAwait(false);
             result = ConvertToExpectedType(parameters.ExpectedReturnType, result);
             return result;
         }
@@ -131,6 +125,12 @@ namespace Microsoft.PowerFx.Connectors
         private static FormulaValue ConvertToExpectedType(FormulaType expectedType, FormulaValue value)
         {
             var valueType = value.Type;
+
+            if (value is BlankValue)
+            {
+                return value;
+            }
+
             if (expectedType == valueType)
             {
                 return value;

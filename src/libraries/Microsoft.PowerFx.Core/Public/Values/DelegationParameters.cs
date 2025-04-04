@@ -15,9 +15,14 @@ namespace Microsoft.PowerFx.Types
         /// <summary>
         /// When using OData with top level aggregation the field name to use to store the result. e.g. result of Sum(Employees, Salary).
         /// </summary>
-        public const string ODataAggregationFieldName = "result";
+        public const string ODataAggregationResultFieldName = "result";
 
-        internal const string ODataCountFieldName = "count";
+        /// <summary>
+        /// When returning Records, OData puts them in this field.
+        /// </summary>
+        internal const string ODataResultFieldName = "value";
+
+        // internal const string ODataCountFieldName = "count";
 
         /// <summary>
         /// Which features does this use - so we can determine if we support it. 
@@ -71,6 +76,12 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         /// <returns></returns>
         public abstract bool ReturnTotalCount();
+
+        /// <summary>
+        /// Returns OData query string which has all parameter like $filter, $apply, etc.
+        /// </summary>
+        /// <returns></returns>
+        public abstract string GetODataQueryString();
 
         public int? Top { get; set; }
     }

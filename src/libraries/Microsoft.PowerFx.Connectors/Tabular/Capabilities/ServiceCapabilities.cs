@@ -200,7 +200,7 @@ namespace Microsoft.PowerFx.Connectors
 #pragma warning disable CS0618 // Type or member is obsolete
                 SupportsJoinFunction = serviceCapabilities?.SupportsJoinFunction ?? false,
 #pragma warning disable CS0612 // Type or member is obsolete
-                CountCapabilities = new CDPCountCapabilities(serviceCapabilities?.FilterSupportedFunctionsEnum),
+                CountCapabilities = new CDPCountCapabilities(primaryKeyNames, serviceCapabilities?.FilterSupportedFunctionsEnum),
                 TopLevelAggregationCapabilities = new CDPToplLevelAggregationCapabilities(columnCapabilities)
 #pragma warning restore CS0612 // Type or member is obsolete
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -264,20 +264,27 @@ namespace Microsoft.PowerFx.Connectors
         {
             private readonly IEnumerable<DelegationOperator> _filterSupportedFunctions;
 
-            public CDPCountCapabilities(IEnumerable<DelegationOperator> filterSupportedFunctions)
+            private readonly IEnumerable<string> _primaryKeyNames;
+
+            public CDPCountCapabilities(IEnumerable<string> primaryKeyNames, IEnumerable<DelegationOperator> filterSupportedFunctions)
             {
+                if (primaryKeyNames != null && primaryKeyNames.Count() > 1)
+                {
+                    throw new NotSupportedException($"Primary key count {primaryKeyNames.Count()} is not supported");
+                }
+
+                _primaryKeyNames = primaryKeyNames;
                 _filterSupportedFunctions = filterSupportedFunctions;
             }
 
             public override bool IsCountableAfterFilter()
             {
-                // $$$ test it.
                 return IsCountableTable();
             }
 
             public override bool IsCountableTable()
             {
-                if (_filterSupportedFunctions != null && _filterSupportedFunctions.Contains(DelegationOperator.Countdistinct))
+                if (_primaryKeyNames != null && _primaryKeyNames.Any() && _filterSupportedFunctions != null && _filterSupportedFunctions.Contains(DelegationOperator.Countdistinct))
                 {
                     return true;
                 }
