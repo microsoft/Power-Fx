@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "Any", "." },
                 { "Comma", "," },
                 { "Digit", "\\d" },
-                { "Email", "\\b[^\\s@]+@[^\\s@]+\\.[^\\s@.]{2,}\\b" },
+                { "Email", ".+@.+\\.[^.]{2,}" },
                 { "Hyphen", "\\-" },
                 { "LeftParen", "\\(" },
                 { "Letter", "\\p{L}" },
@@ -122,7 +122,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             canCoerceFromBackingKind: true,
             canConcatenateStronglyTyped: true);
 
-        public static readonly EnumSymbol MatchEnumV1CompatDisabled = new EnumSymbol(
+        public static readonly EnumSymbol MatchEnumV1Update = new EnumSymbol(
             new DName(LanguageConstants.MatchEnumString),
             DType.String,
             new Dictionary<string, object>()
@@ -130,7 +130,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "Any", "." },
                 { "Comma", "," },
                 { "Digit", "\\d" },
-                { "Email", ".+@.+\\.[^.]{2,}" },
+                { "Email", "\\b[^\\s@]+@[^\\s@]+\\.[^\\s@.]{2,}\\b" },
                 { "Hyphen", "\\-" },
                 { "LeftParen", "\\(" },
                 { "Letter", "\\p{L}" },

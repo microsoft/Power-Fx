@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx
         {
             RegexTypeCache regexTypeCache = new (regexCacheSize);
 
-            foreach (KeyValuePair<TexlFunction, IAsyncTexlFunction> func in Library.RegexFunctions(regExTimeout, regexTypeCache))
+            foreach (KeyValuePair<TexlFunction, IAsyncTexlFunction> func in Library.RegexFunctions(regExTimeout, regexTypeCache, config.Features.PowerFxV1CompatibilityRules))
             {
                 if (config.ComposedConfigSymbols.Functions.AnyWithName(func.Key.Name))
                 {

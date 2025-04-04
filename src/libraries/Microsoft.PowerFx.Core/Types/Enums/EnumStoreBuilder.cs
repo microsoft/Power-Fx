@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { LanguageConstants.JoinTypeEnumString, BuiltInEnums.JoinTypeEnum },
             };
 
-        internal static IReadOnlyDictionary<string, EnumSymbol> DefaultEnumSymbolsV1CompatDisabled { get; } =
+        internal static IReadOnlyDictionary<string, EnumSymbol> DefaultEnumSymbolsV1Update { get; } =
             new Dictionary<string, EnumSymbol>()
             {
                 { LanguageConstants.ColorEnumString, BuiltInEnums.ColorEnum },
@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { LanguageConstants.SortOrderEnumString, BuiltInEnums.SortOrderEnum },
                 { LanguageConstants.TimeUnitEnumString, BuiltInEnums.TimeUnitEnum },
                 { LanguageConstants.MatchOptionsEnumString, BuiltInEnums.MatchOptionsEnum },
-                { LanguageConstants.MatchEnumString, BuiltInEnums.MatchEnumV1CompatDisabled },
+                { LanguageConstants.MatchEnumString, BuiltInEnums.MatchEnumV1Update },
                 { LanguageConstants.ErrorKindEnumString, BuiltInEnums.ErrorKindEnum },
                 { LanguageConstants.JSONFormatEnumString, BuiltInEnums.JSONFormatEnum },
                 { LanguageConstants.TraceSeverityEnumString, BuiltInEnums.TraceSeverityEnum },
@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 },
                 {
                     LanguageConstants.MatchEnumString,
-                    $"%s[{string.Join(", ", BuiltInEnums.MatchEnumV1CompatDisabled.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
+                    $"%s[{string.Join(", ", BuiltInEnums.MatchEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
                 },
                 {
                     LanguageConstants.JSONFormatEnumString,
@@ -108,9 +108,9 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         private readonly Dictionary<string, EnumSymbol> _enumSymbols = new Dictionary<string, EnumSymbol>();
 
         #region Internal methods
-        internal EnumStoreBuilder WithRequiredEnums(TexlFunctionSet functions, bool v1Compat = true)
+        internal EnumStoreBuilder WithRequiredEnums(TexlFunctionSet functions, bool v1Update = true)
         {
-            var defaultEnums = v1Compat ? DefaultEnumSymbols : DefaultEnumSymbolsV1CompatDisabled;
+            var defaultEnums = v1Update ? DefaultEnumSymbolsV1Update : DefaultEnumSymbols;
 
             foreach (var name in functions.Enums)
             {
@@ -128,9 +128,9 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             return this;
         }
 
-        internal EnumStoreBuilder WithDefaultEnums(bool v1Compat = true)
+        internal EnumStoreBuilder WithDefaultEnums(bool v1Update = true)
         {
-            var defaultEnums = v1Compat ? DefaultEnumSymbols : DefaultEnumSymbolsV1CompatDisabled;
+            var defaultEnums = v1Update ? DefaultEnumSymbolsV1Update : DefaultEnumSymbols;
 
             foreach (var defaultEnum in defaultEnums)
             {
