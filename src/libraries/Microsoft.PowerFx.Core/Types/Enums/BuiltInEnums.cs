@@ -101,6 +101,35 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "Any", "." },
                 { "Comma", "," },
                 { "Digit", "\\d" },
+                { "Email", "\\b[^\\s@]+@[^\\s@]+\\.[^\\s@.]{2,}\\b" },
+                { "Hyphen", "\\-" },
+                { "LeftParen", "\\(" },
+                { "Letter", "\\p{L}" },
+                { "MultipleDigits", "\\d+" },
+                { "MultipleLetters", "\\p{L}+" },
+                { "MultipleNonSpaces", "\\S+" },
+                { "MultipleSpaces", "\\s+" },
+                { "NonSpace", "\\S" },
+                { "OptionalDigits", "\\d*" },
+                { "OptionalLetters", "\\p{L}*" },
+                { "OptionalNonSpaces", "\\S*" },
+                { "OptionalSpaces", "\\s*" },
+                { "Period", "\\." },
+                { "RightParen", "\\)" },
+                { "Space", "\\s" },
+                { "Tab", "\\t" }
+            },
+            canCoerceFromBackingKind: true,
+            canConcatenateStronglyTyped: true);
+
+        public static readonly EnumSymbol MatchEnumV1CompatDisabled = new EnumSymbol(
+            new DName(LanguageConstants.MatchEnumString),
+            DType.String,
+            new Dictionary<string, object>()
+            {
+                { "Any", "." },
+                { "Comma", "," },
+                { "Digit", "\\d" },
                 { "Email", ".+@.+\\.[^.]{2,}" },
                 { "Hyphen", "\\-" },
                 { "LeftParen", "\\(" },
