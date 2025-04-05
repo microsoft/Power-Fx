@@ -91,6 +91,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Date = _library.Add(new DateFunction());
         public static readonly TexlFunction DateAdd = _library.Add(new DateAddFunction());
         public static readonly TexlFunction DateAddT = _library.Add(new DateAddTFunction());
+        public static readonly TexlFunction Workday = _library.Add(new WorkdayFunction());
         public static readonly TexlFunction DateDiff = _library.Add(new DateDiffFunction());
         public static readonly TexlFunction DateDiffT = _library.Add(new DateDiffTFunction());
         public static readonly TexlFunction DateTime = _library.Add(new DateTimeFunction());
