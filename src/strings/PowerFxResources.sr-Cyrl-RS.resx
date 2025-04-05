@@ -2113,6 +2113,14 @@
     <value>Неусаглашеност имена колоне за „{0}“.</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Није могуће додати колоне у системски запис или табелу системских записа. Прво користите ShowColumns за издвајање одређених колона које су вам потребне.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Није могуће преименовати колоне системских записа или табеле системских записа. Прво користите ShowColumns за издвајање одређених колона које су вам потребне.</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Наведена колона „{0}“ не постоји.</value>
     
@@ -4511,24 +4519,232 @@
     <value>Неважећи регуларни израз.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Уметнуте опције морају да се појављују на почетку регуларног израза, пронађено је „{0}“ даље.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Уметнуте опције су ограничене на комбинацију слова [imnsx], не могу онемогућити опције, и не могу се користити у подизразу, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Октални \0 знаковни кодови нису подржани, уместо тога користите хексадецимални \x или Unicode \у, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Витичасте заграде литерала морају се завршавати обрнутом косом цртом, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Угласте заграде литерала морају се завршавати обрнутом косом цртом чак и у класама знакова, на пример \[ или \], који се налазе на крају „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Незатворена угласта заграда класе знакова.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Неподржана посебна група, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Излазни знак није дозвољен унутар класе знакова, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Негативни излазни знак није дозвољен унутар класе негативних знакова, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Излазни знак није дозвољен изван класе знакова, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Неважећи назив Unicode категорије, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Поновљена уметнута опција, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Незатворени уметнути коментар.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Незатворени уметнути коментар, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Уметнута опција је некомпатибилна са MatchOptions.NumberedSubMatches, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Посесивни квантификатори нису подржани, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Тачни квантификатори се не могу користити са модификаторима квантификатора као што су ? за лењост, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Неважећи командни кôд, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Потподударање „{0}“ није дефинисано или је неподржана референца унапред.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Потподударања нису подржана у тражењима уназад, налазе се на почетку „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Тражења уназад не могу бити угнежђена, налазе се на почетку „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Неограничени квантификатори нису подржани у тражењима уназад, налази се на крају „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Квантификатори нису подржани у тражењима уназад или тражењима унапред, налази се на крају „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Вратите референцу уназад „{0}“ на потподударање до ког можда неће доћи због измене или нултог квантификатора.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Само-референцирање потподударања нису подржана, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Незатворене групе, премало заграда за затварање.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Неотворене групе, премало заграда за отварање.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Именовано потподударање је дефинисано више пута, пронађено је на почетку „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Назив потподударања мора бити комбинација знакова речи и да не почиње са бројем, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Уметнуте опције морају да се појављују на почетку регуларног израза, пронађено је „{0}“ даље.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Знак се појављује више пута у класи знакова, пронађено је поновљено „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Класе знакова у угластој загради не могу бити празне, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Балансирање потподударања нису подржана, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Коришћење једноструких наводника именованих хватања није подржано, користите (?&lt;...&gt;) синтаксу уместо тога, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Условна измена није подржана, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Именовани снимци се не могу користити са омогућеним MatchOptions.NumberedSubMatches, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Користите именоване снимке са „(?&lt;name&gt;...)“ и „\k&lt;name&gt;“ или омогућите MatchOptions.NumberedSubMatches, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Цртица литерала у класи знакова мора да се обрнутом косом цртом, да се завршава са „\-“, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Знак литерала мора да се завршава обрнутом косом цртом када се користи у класи знакова, налази се на крају „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Квантификатор у групи која садржи други квантификатор или празну измену која би могла резултирати двосмисленим резултатом, налази се на крају „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Тражење уназад је премашило максимално могуће ограничење знакова од 250, налази се на крају „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Низак број опсега квантификатора је већи од високог броја, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Превише угнежђених група, пронађено је на почетку „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Назив потподударања је предугачко, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Број је превелик, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Знакови у опсегу класе знакова су обрнути, налазе се на крају „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Класа знакова у опсегу класе знакова, или завршите цртицу литерала обрнутом косом цртом, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Завршава се незавршеном обрнутом косом цртом.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Квантификатор без нечега што треба квантификовати, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Неисправан регуларни израз: MatchOptions.DotAll и MatchOptions.FreeSpacing доступни су само са Power Fx V1, пронађено је „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз: Вратите референцу уназад „{0}“ на потподударање које се налази унутар тражења уназад или тражења унапред.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Регуларни изрази морају представљати константне вредности.</value>
+    <value>Регуларни израз мора да представља константну вредност.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions мора да буде константна вредност.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Није могуће променити вредност „{0}“ која је прослеђена функцији.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Име снимка „{0}“ скрива унапред дефинисано својство које је враћа потпуно подударање регуларног израза. Требало би да га преименујете ако желите да користите то именовано својство да бисте издвојили потпуно подударање у наведеном тексту.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Назив бележења у скупу „{0}“ скрива унапред дефинисано својство које враћа информације о подударању. Размотрите његово преименовање ако желите да приступите информацијама о подударању.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Име снимка „{0}“ скрива унапред дефинисано својство које је враћа групна подударања у регуларном изразу. Требало би да га преименујете ако желите да користите то именовано својство да бисте издвојили сва потподударања у наведеном тексту.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Име снимка „{0}“ скрива унапред дефинисано својство које је враћа локацију подударања регуларног израза. Требало би да га преименујете ако желите да користите то именовано својство да бисте издвојили положај потпуног подударања у наведеном тексту.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Називи бележења у скупу „{0}“ скривају унапред дефинисана својства која враћају информације о подударању. Размотрите њихово преименовање ако желите да приступите информацијама о подударању.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">

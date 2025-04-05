@@ -2113,6 +2113,14 @@
     <value>Kolonnenavnkonflikt for '{0}'.</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Kolonner kan ikke føjes til en systempost eller tabel med systemposter. Brug ShowColumns til at udtrække de specifikke kolonner, du skal bruge først.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Kolonner i en systempost eller tabel med systemposter kan ikke omdøbes. Brug ShowColumns til at udtrække de specifikke kolonner, du skal bruge først.</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Den angivne kolonne '{0}' findes ikke.</value>
     
@@ -4511,24 +4519,232 @@
     <value>Ugyldigt regulært udtryk.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Indbyggede indstillinger skal vises i begyndelsen af søgemønstret. Fandt "{0}" senere.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Indbyggede indstillinger er begrænset til en kombination af bogstaverne [imnsx], indstillingerne kan ikke deaktiveres, og de kan ikke bruges i et underudtryk. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Oktal \0 tegnkoder understøttes ikke, brug hexadecimal \x eller Unicode \u i stedet. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Bogstavelige værdier for klammeparenteser skal escapes med en omvendt skråstreg. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Bogstavelige værdier for firkantede klammeparenteser skal escapes med en omvendt skråstreg, selv i tegnklasser, f.eks. \[ eller \]. Fundet i slutningen af "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Ikke afsluttet firkantet parentes for tegnklasse.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Ikke-understøttet specialgruppe. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Escape-tegn er ikke tilladt i tegnklassen. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Negativt escape-tegn er ikke tilladt i negativ tegnklasse. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Escape-tegn er ikke tilladt udenfor en tegnklassen. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Ugyldig Unicode-kategorinavn. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Gentaget indbygget indstilling. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Ikke-lukket indbygget kommentar.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Ikke-lukket indbygget kommentar. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Den indbyggede indstilling er ikke kompatibel med MatchOptions.NumberedSubMatches. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Kvantorer i ejefald understøttes ikke. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Nøjagtige kvantorer kan ikke bruges sammen med kvantormodifikatorer som f.eks. ? for doven. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Ugyldig escape-kode. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Undermatch "{0}" er ikke defineret eller er en ikke-understøttet fremadrettet reference.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Undermatches understøttes ikke i kig bagud. Fundet i begyndelsen af "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Kig bagud kan ikke indlejres i kig bagud. Fundet i begyndelsen af "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Ubegrænsede kvantorer understøttes ikke ved kig bagud-instruktioner. Fundet i slutningen af "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Kvantorer understøttes ikke ved kig bagud- eller kig fremad-instruktioner, som findes i slutningen af "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Tilbagereference "{0}" til undermatch, der muligvis ikke sker på grund af omskiftning eller nulkvantor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Selvrefererende undermatches understøttes ikke. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Ikke-lukkede grupper, der er for få slutparenteser.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Uåbnede grupper, der er for få åbningsparenteser.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Navngivet undermatch defineret mere end én gang, fundet i begyndelsen af "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Submatchnavnet skal være en kombination af ordtegn og må ikke begynde med et tal. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Indbyggede indstillinger skal vises i begyndelsen af søgemønstret. Fandt "{0}" senere.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Tegnet vises mere end én gang i tegnklassen. Fundet gentaget "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Tegnklasser i kantede parenteser må ikke være tomme. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Justering af undermatches understøttes ikke. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Brug af navngivne registreringer med enkeltanførselstegn understøttes ikke. Brug syntaksen (?&lt;... &gt;) i stedet for. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Betinget omskiftning understøttes ikke. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Navngivne registreringer kan ikke bruges sammen med aktiveret MatchOptions.NumberedSubMatches. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Brug navngivne registreringer sammen med "(?&lt;name&gt;...)" og "\k&lt;name&gt;, eller aktivér MatchOptions.NumberedSubMatches. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Bogstavelig værdi for bindestreg i tegnklasseområde skal escapes med en omvendt "\-". Fundet i "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Bogstavelig værdi for tegn skal escapes med en omvendt skråstreg, når det bruges i en tegnklasse. Fundet i slutningen af "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Kvantor på en gruppe, der indeholder en anden kvantor eller tom omskiftning, der kan resultere i et tvetydigt resultat. Fundet i slutningen af "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Lookbehind overskred den maksimalt mulige tegngrænse på 250. Fundet i slutningen af "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Kvantorområdets lave tal er større end højt tal. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Der blev fundet for mange indlejrede grupper. Fundet i begyndelsen af "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Navnet på undermatchet er for langt. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Tallet er for stort. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Tegnene i et tegnklasseområde er vendt om. Fundet i slutningen af "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Tegnklasse i et tegnklasseområde, eller escape af en bogstavelig værdi for bindestreg med en omvendt skråstreg. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Slutter med en omvendt skråstreg, der ikke er escapet.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Kvantor uden noget at kvantificere. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: MatchOptions.DotAll og MatchOptions.FreeSpacing er kun tilgængelige med Power Fx V1. Fandt "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Ugyldigt søgemønster: Tilbagereference "{0}" til undermatch, der er i et lookbehind eller lookahead.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Regulære udtryk skal være konstante værdier.</value>
+    <value>Søgemønster skal være en konstant værdi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions skal være en konstant værdi.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Den værdi, der blev sendt til "{0}" funktionen, kan ikke ændres.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Opsamlingsnavnet '{0}' skjuler den foruddefinerede egenskab, der returnerer det fulde match til det regulære udtryk. Du kan overveje at omdøbe det, hvis du vil bruge den navngivne egenskab til at udtrække det fulde match i den angivne tekst.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Registreringsnavnet '{0}' skjuler en foruddefineret egenskab, der returnerer matchoplysninger. Overvej at omdøbe det, hvis du vil have adgang til matchoplysningerne.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Opsamlingsnavnet '{0}' skjuler den foruddefinerede egenskab, der returnerer grupperesultatet i det regulære udtryk. Du kan overveje at omdøbe det, hvis du vil bruge den navngivne egenskab til at udtrække alle underresultater i den angivne tekst.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Opsamlingsnavnet '{0}' skjuler den foruddefinerede egenskab, der returnerer placeringen af matchet til det regulære udtryk. Du kan overveje at omdøbe det, hvis du vil bruge den navngivne egenskab til at udtrække placeringen af det fulde match i den angivne tekst.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Registreringsnavnene i sættet '{0}' skjuler foruddefinerede egenskaber, der returnerer matchoplysninger. Overvej at omdøbe dem, hvis du vil have adgang til matchoplysningerne.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
