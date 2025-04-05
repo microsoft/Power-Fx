@@ -10,7 +10,6 @@ using System.Text.Json;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Connectors.Constants;
@@ -125,7 +124,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal string ForeignKey { get; set; }
 
-        internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, FormulaType formulaType, ErrorResourceKey warning = default, IEnumerable<KeyValuePair<DName, DName>> list = null, bool isNumber = false)
+        internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, FormulaType formulaType, ExpressionError warning = default, IEnumerable<KeyValuePair<DName, DName>> list = null, bool isNumber = false)
         {
             Name = openApiParameter?.Name;
             IsRequired = openApiParameter?.Required == true;
@@ -167,7 +166,7 @@ namespace Microsoft.PowerFx.Connectors
                 if (list != null && list.Any())
                 {
                     EnumValues = list.Select<KeyValuePair<DName, DName>, FormulaValue>(kvp => isNumber ? FormulaValue.New(decimal.Parse(kvp.Key.Value, CultureInfo.InvariantCulture)) : FormulaValue.New(kvp.Key)).ToArray();
-                    EnumDisplayNames = list.Select(list => list.Value.Value).ToArray();                    
+                    EnumDisplayNames = list.Select(list => list.Value.Value).ToArray();
                 }
                 else
                 {
@@ -219,8 +218,8 @@ namespace Microsoft.PowerFx.Connectors
                 EnumValues = Array.Empty<FormulaValue>();
                 EnumDisplayNames = Array.Empty<string>();
             }
-
-            AddWarning(warning);
+            
+            AddWarning(warning);            
             DynamicSchema = AggregateErrorsAndWarnings(openApiParameter.GetDynamicSchema());
             DynamicProperty = AggregateErrorsAndWarnings(openApiParameter.GetDynamicProperty());
             DynamicValues = AggregateErrorsAndWarnings(openApiParameter.GetDynamicValue());
@@ -229,22 +228,24 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static readonly FormulaType DefaultType = FormulaType.UntypedObject;
 
-        internal ConnectorType(string error, ErrorResourceKey warning = default)
+        internal ConnectorType(string error, string name, FormulaType formulaType, ExpressionError warning = default)
             : base(error, warning)
         {
-            FormulaType = DefaultType;
+            Name = name;
+            FormulaType = formulaType;
         }
 
         internal ConnectorType(ISwaggerSchema schema, ConnectorSettings settings)
             : this(schema, null, new SwaggerParameter(null, true, schema, null).GetConnectorType(settings))
         {
-        }        
+        }
 
         // Called by ConnectorFunction.GetCdpTableType
-        internal ConnectorType(JsonElement schema, string tableName, SymbolTable optionSets, ConnectorSettings settings, IList<ReferencedEntity> referencedEntities, string datasetName, string name, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
+        internal ConnectorType(JsonElement schema, string tableName, SymbolTable optionSets, ConnectorSettings settings, IList<ReferencedEntity> referencedEntities, string datasetName, string name, string displayName, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
             : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(tableName, optionSets, settings))
         {
             Name = name;
+            DisplayName = displayName;
 
             foreach (ConnectorType field in Fields.Where(f => f.Capabilities != null))
             {
@@ -316,7 +317,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             get
             {
-                _displayNameProvider ??= DisplayNameUtility.MakeUnique(Fields.Select(field => new KeyValuePair<string, string>(field.Name, field.DisplayName ?? field.Name)));                    
+                _displayNameProvider ??= DisplayNameUtility.MakeUnique(Fields.Select(field => new KeyValuePair<string, string>(field.Name, field.DisplayName ?? field.Name)));
                 return _displayNameProvider;
             }
         }

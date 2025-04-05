@@ -79,6 +79,9 @@ namespace Microsoft.PowerFx.Types
         // $count
         Count = 1 << 6,
 
+        // $apply = aggregate(field1 with sum as TotalSum)
+        ApplyTopLevelAggregation = 1 << 7,
+
         /*
           To be implemented later when needed
          

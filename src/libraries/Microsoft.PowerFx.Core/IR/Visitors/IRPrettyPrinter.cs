@@ -5,12 +5,11 @@ using System;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx.Tests
+namespace Microsoft.PowerFx.Core.IR
 {
     // Pretty printer for tests. 
     // Stable  - tests rely on this, so we need to fix the format 

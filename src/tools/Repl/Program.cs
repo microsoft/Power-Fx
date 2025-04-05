@@ -42,12 +42,24 @@ namespace Microsoft.PowerFx
         private const string OptionTextFirst = "TextFirst";
         private static bool _textFirst = false;
 
+#if MATCHCOMPARE
+        // to enable, place this in Solution Items/Directiory.Build.Props:
+        //  <PropertyGroup>
+        //      <DefineConstants>$(DefineConstants);MATCHCOMPARE</DefineConstants>
+        //  </PropertyGroup>
+
+        private const string OptionMatchCompare = "MatchCompare";
+        private static bool _matchCompare = true;
+#endif
+
         private const string OptionUDF = "UserDefinedFunctions";
         private static bool _enableUDFs = true;
 
         private static readonly Features _features = Features.PowerFxV1;
 
         private static StandardFormatter _standardFormatter;
+
+        private static CultureInfo _cultureInfo = CultureInfo.CurrentCulture;
 
         private static bool _reset;
 
@@ -70,6 +82,9 @@ namespace Microsoft.PowerFx
                 { OptionHashCodes, OptionHashCodes },
                 { OptionStackTrace, OptionStackTrace },
                 { OptionTextFirst, OptionTextFirst },
+#if MATCHCOMPARE
+                { OptionMatchCompare, OptionMatchCompare },
+#endif
                 { OptionUDF, OptionUDF },
             };
 
@@ -97,10 +112,24 @@ namespace Microsoft.PowerFx
             config.AddFunction(new Option2Function());
             config.AddFunction(new Run1Function());
             config.AddFunction(new Run2Function());
+            config.AddFunction(new Language1Function());
 
             var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(options));
 
-            config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
+#if MATCHCOMPARE
+            if (_matchCompare)
+            {
+                // requires PCRE2 DLL (pcre2-16d.dll) on the path and Node.JS installed
+                // can also use RegEx_PCRE2 and RegEx_NodeJS directly too
+                Functions.RegEx_Compare.EnableRegExFunctions(config, new TimeSpan(0, 0, 5), regexCacheSize: 100, includeDotNet: true, includeNode: true, includePCRE2: true);
+            }
+            else
+#endif
+            {
+#pragma warning disable CS0618 // Type or member is obsolete
+                config.EnableRegExFunctions(new TimeSpan(0, 0, 5), regexCacheSize: 100);
+#pragma warning restore CS0618 // Type or member is obsolete
+            }
 
             config.AddOptionSet(optionsSet);
 
@@ -124,6 +153,8 @@ namespace Microsoft.PowerFx
             REPL(Console.In, prompt: true, echo: false, printResult: true, lineNumber: null);
         }
 
+#pragma warning disable CS0618
+
         // Hook repl engine with customizations.
         private class MyRepl : PowerFxREPL
         {
@@ -135,12 +166,17 @@ namespace Microsoft.PowerFx
                 this.ValueFormatter = _standardFormatter;
                 this.HelpProvider = new MyHelpProvider();
 
+                var bsp = new BasicServiceProvider();
+                bsp.AddService(_cultureInfo);
+                this.InnerServices = bsp;
+
                 this.AllowSetDefinitions = true;
                 this.AllowUserDefinedFunctions = _enableUDFs;
                 this.AllowImport = true;
 
                 this.EnableSampleUserObject();
                 this.AddPseudoFunction(new IRPseudoFunction());
+                this.AddPseudoFunction(new CIRPseudoFunction());
                 this.AddPseudoFunction(new SuggestionsPseudoFunction());
 
                 this.ParserOptions = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat, TextFirst = _textFirst };
@@ -262,6 +298,9 @@ namespace Microsoft.PowerFx
                 sb.Append(CultureInfo.InvariantCulture, $"{"StackTrace:",-42}{_stackTrace}\n");
                 sb.Append(CultureInfo.InvariantCulture, $"{"TextFirst:",-42}{_textFirst}\n");
                 sb.Append(CultureInfo.InvariantCulture, $"{"UserDefinedFunctions:",-42}{_enableUDFs}\n");
+#if MATCHCOMPARE
+                sb.Append(CultureInfo.InvariantCulture, $"{"MatchCompare:",-42}{_matchCompare}\n");
+#endif
 
                 foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
@@ -381,11 +420,20 @@ namespace Microsoft.PowerFx
                     return value;
                 }
 
+#if MATCHCOMPARE
+                if (string.Equals(option.Value, OptionMatchCompare, StringComparison.OrdinalIgnoreCase))
+                {
+                    _matchCompare = value.Value;
+                    _reset = true;
+                    return value;
+                }
+#endif
+
                 if (string.Equals(option.Value, OptionPowerFxV1, StringComparison.OrdinalIgnoreCase))
                 {
                     foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                     {
-                        if (prop.PropertyType == typeof(bool) && prop.CanWrite && (bool)prop.GetValue(Features.PowerFxV1))
+                            if (prop.PropertyType == typeof(bool) && prop.CanWrite)
                         {
                             prop.SetValue(_features, value.Value);
                         }
@@ -423,6 +471,26 @@ namespace Microsoft.PowerFx
                     Severity = ErrorSeverity.Critical,
                     Message = $"Invalid option name: {option.Value}.  Use \"Option()\" to see available Options enum names."
                 });
+            }
+        }
+
+        // set the language
+        private class Language1Function : ReflectionFunction
+        {
+            public Language1Function()
+                : base("Language", FormulaType.Void, new[] { FormulaType.String })
+            {
+            }
+
+            public FormulaValue Execute(StringValue lang)
+            {
+                var cultureInfo = new CultureInfo(lang.Value);
+
+                _cultureInfo = cultureInfo;
+
+                _reset = true;
+
+                return FormulaValue.NewVoid();
             }
         }
 
@@ -497,6 +565,8 @@ Records and Tables can be arbitrarily nested.
 Use Option( Options.FormatTable, false ) to disable table formatting.
 Use Option() to see the list of all options with their current value.
 Use Help( ""Options"" ) for more information.
+
+Use Language( ""en-US"" ) to set culture info.
 
 Once a formula is defined or a variable's type is defined, it cannot be changed.
 Use Reset() to clear all formulas and variables.

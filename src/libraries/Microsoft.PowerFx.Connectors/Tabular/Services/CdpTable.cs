@@ -7,7 +7,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
@@ -17,6 +16,7 @@ namespace Microsoft.PowerFx.Connectors
     // Implements CDP protocol for Tabular connectors
     public class CdpTable : CdpService
     {
+        // Logical name
         public string TableName { get; private set; }
 
         public string DisplayName { get; internal set; }
@@ -24,6 +24,8 @@ namespace Microsoft.PowerFx.Connectors
         public string DatasetName { get; private set; }
 
         public override HttpClient HttpClient => _httpClient;
+
+        public ConnectorType ConnnectorType => TabularTableDescriptor;
 
         public override bool IsDelegable => (DelegationInfo?.SortRestriction != null) || (DelegationInfo?.FilterRestriction != null) || (DelegationInfo?.FilterSupportedFunctions != null);
 
@@ -59,9 +61,9 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         //// TABLE METADATA SERVICE
-        // GET: /$metadata.json/datasets/{datasetName}/tables/{tableName}?api-version=2015-09-01
+        // GET: /$metadata.json/datasets/{datasetName}/tables/{tableName}?api-version=2015-09-01        
         public virtual async Task InitAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
-        {
+        {            
             cancellationToken.ThrowIfCancellationRequested();
 
             if (IsInitialized)
@@ -80,8 +82,14 @@ namespace Microsoft.PowerFx.Connectors
 
             CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, logger);
             TabularTableDescriptor = await tableResolver.ResolveTableAsync(TableName, cancellationToken).ConfigureAwait(false);
-
+            
+            if (TabularTableDescriptor.HasErrors)
+            {
+                throw new PowerFxConnectorException($"Table has errors in its schema - {string.Join(", ", TabularTableDescriptor.Errors)}");
+            }
+            
             _relationships = TabularTableDescriptor.Relationships;
+            DisplayName ??= TabularTableDescriptor.DisplayName;
             OptionSets = tableResolver.OptionSets;
 
             RecordType = (RecordType)TabularTableDescriptor.FormulaType;
@@ -90,7 +98,7 @@ namespace Microsoft.PowerFx.Connectors
         private async Task InitializeDatasetMetadata(HttpClient httpClient, string uriPrefix, ConnectorLogger logger, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            
+
             DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(httpClient, uriPrefix, cancellationToken, logger).ConfigureAwait(false);
 
             DatasetMetadata = dm ?? throw new InvalidOperationException("Dataset metadata is not available");
@@ -116,7 +124,7 @@ namespace Microsoft.PowerFx.Connectors
 
             string text = await GetObject(_httpClient, $"List items ({nameof(GetItemsInternalAsync)})", uri, null, cancellationToken, executionLogger).ConfigureAwait(false);
             return !string.IsNullOrWhiteSpace(text) ? GetResult(text) : Array.Empty<DValue<RecordValue>>();
-        }        
+        }
 
         private IReadOnlyCollection<DValue<RecordValue>> GetResult(string text)
         {

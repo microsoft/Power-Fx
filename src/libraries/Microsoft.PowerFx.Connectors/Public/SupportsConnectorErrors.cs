@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using Microsoft.PowerFx.Core.Localization;
 
 namespace Microsoft.PowerFx.Connectors
 {
@@ -14,20 +13,20 @@ namespace Microsoft.PowerFx.Connectors
 
         public IReadOnlyCollection<string> Errors => _errors;
 
-        public IReadOnlyCollection<ErrorResourceKey> Warnings => _warnings;
+        public IReadOnlyCollection<ExpressionError> Warnings => _warnings;
 
         protected HashSet<string> _errors = null;
 
-        protected HashSet<ErrorResourceKey> _warnings = null;
+        protected HashSet<ExpressionError> _warnings = null;
 
         protected SupportsConnectorErrors()
         {
         }
 
-        protected SupportsConnectorErrors(string error, ErrorResourceKey warning = default)
+        protected SupportsConnectorErrors(string error, ExpressionError warning = default)
         {
-            AddError(error);
-            AddWarning(warning);
+            AddError(error);            
+            AddWarning(warning);            
         }
 
         internal void AddError(string error)
@@ -39,9 +38,9 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        internal void AddWarning(ErrorResourceKey warning)
+        internal void AddWarning(ExpressionError warning)
         {
-            if (warning.Key != null)
+            if (warning != null)
             {
                 InitializeLists();
                 _warnings.Add(warning);
@@ -63,7 +62,7 @@ namespace Microsoft.PowerFx.Connectors
             if (externalObject?.HasWarnings == true)
             {
                 InitializeLists();
-                foreach (ErrorResourceKey warning in externalObject.Warnings)
+                foreach (ExpressionError warning in externalObject.Warnings)
                 {
                     _warnings.Add(warning);
                 }
@@ -75,7 +74,7 @@ namespace Microsoft.PowerFx.Connectors
         private void InitializeLists()
         {
             _errors ??= new HashSet<string>();
-            _warnings ??= new HashSet<ErrorResourceKey>();
+            _warnings ??= new HashSet<ExpressionError>();
         }
     }
 }
