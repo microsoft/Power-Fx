@@ -2113,6 +2113,14 @@
     <value>Konflikt názvů sloupců pro „{0}“.</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Nelze přidat sloupce do systémového záznamu nebo tabulky systémových záznamů. Pomocí funkce ShowColumns nejprve vyjměte konkrétní sloupce, které potřebujete.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Nelze přejmenovat sloupce do systémového záznamu nebo tabulky systémových záznamů. Pomocí funkce ShowColumns nejprve vyjměte konkrétní sloupce, které potřebujete.</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Zadaný sloupec „{0}“ neexistuje.</value>
     
@@ -4511,24 +4519,240 @@
     <value>Neplatný regulární výraz.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz, nalezeno „{0}“</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Vložené možnosti se musí zobrazovat na začátku regulárního výrazu, nalezeno „{0}“ později.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Vložené volby jsou omezeny na kombinaci písmen [imnsx], nelze zakázat volby a nelze je použít na podvýraz, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Osmičkové kódy znaků \0 nejsou podporovány, místo nich použijte hexadecimální \x nebo Unicode \u, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Složené závorky literálů musí být uzavřeny lomítkem, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Hranaté závorky literálu musí být uvozeny lomítkem i ve třídách znaků, například \[ nebo \], které se nacházejí na konci „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Neuzavřená hranatá závorka třídy znaků.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Nepodporovaná speciální skupina, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Řídicí znak není povolen v rámci třídy znaku, nalezeno na konci „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Negativní řídicí znak není povolen v rámci třídy negovaného znaku, nalezeno na konci „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Řídicí znak není povolen mimo třídu znaku, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Neplatný název kategorie Unicode, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Opakovaná vložená možnost, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Neuzavřený vložený komentář.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Neuzavřený vložený komentář, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Vložená možnost není kompatibilní s MatchOptions.NumberedSubMatches, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Přivlastňovací kvantifikátory nejsou podporovány, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Přesné kvantifikátory nelze použít s modifikátory kvantifikátoru, jako je ? pro líný, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Neplatný řídicí kód, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Dílčí shoda „{0}“ není definována nebo se jedná o nepodporovaný přímý odkaz.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Dílčí shody nejsou podporovány v lookbehindech a nachází se na začátku „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Lookbehind nelze vnořit, nachází se na začátku „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Neomezené kvantifikátory nejsou podporovány v lookbehindech, které se nacházejí na konci „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Kvantifikátory nejsou podporovány při lookbehind nebo při lookahead, které se nacházejí na konci „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Zpětný odkaz „{0}“ na dílčí shodu, která nemusí nastat kvůli alternaci nebo nulovému kvantifikátoru.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Dílčí shody odkazující na sebe nejsou podporovány, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Neuzavřené skupiny, příliš málo uzavíracích závorek.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Neotevřené skupiny, příliš málo otevíracích závorek.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Pojmenovaná dílčí shoda definovaná více než jednou, nalezená na začátku „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Název dílčí shody musí být kombinací znaků slov a nesmí začínat číslicí, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Vložené možnosti se musí zobrazovat na začátku regulárního výrazu, nalezeno „{0}“ později.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Znak se ve třídě znaků opakuje, nalezeno na konci „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Třídy znaků v hranatých závorkách nemohou být prázdné, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Vyrovnávací dílčí shody nejsou podporovány, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Použití pojmenovaných zachycení v jednoduchých uvozovkách není podporováno, použijte místo toho syntaxi (?&lt;...&gt;), nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Podmíněná alternace není podporována, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Pojmenovaná zachycení nelze použít s povoleným MatchOptions.NumberedSubMatches, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Použijte pojmenované zachycení s „(?&lt;name&gt;...)“ a „\k&lt;name&gt;“ nebo povolte MatchOptions.NumberedSubMatches, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Pomlčka literálu ve třídě znaků musí být uvozena zpětným lomítkem, uvozeným znakem „\-“, nalezeno na konci „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Znak literálu musí být při použití ve třídě znaků uzavřen zpětným lomítkem, které se nachází na konci „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Kvantifikátor na skupině obsahující jiný kvantifikátor nebo prázdnou alternaci, která by mohla vést k nejednoznačnému výsledku, nalezený na konci „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Lookbehind překročil maximální možný limit 250 znaků, nalezen na konci „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Rozsah kvantifikátoru nízké číslo je větší než vysoké číslo, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Příliš mnoho vnořených skupin nalezených na začátku „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Název dílčí shody je příliš dlouhý, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Číslo je příliš velké, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Znaky v rozsahu třídy znaků jsou obrácené a nacházejí se na konci „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Třída znaků v rozsahu tříd znaků nebo uzavřete pomlčku literálu pomocí zpětného lomítka, nalezeno na konci „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Končí lomítkem bez uvozovacího znaku.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Kvantifikátor bez něčeho, co by bylo možné kvantifikovat, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: MatchOptions.DotAll a MatchOptions.FreeSpacing jsou k dispozici pouze s Power Fx V1, nalezeno „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Zpětný odkaz „{0}“ na dílčí shodu, která je uvnitř lookbehind nebo lookahead.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExSurrogatePairInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Znaky Unicode v náhradních párech (znak U+10000 a vyšší) nejsou podporovány ve třídách znaků, nalezeno v „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMalformedSurrogatePair_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulární výraz: Chybný náhradní pár Unicode (znak U+10000 a vyšší), nalezeno na konci „{0}“.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Regulární výrazy musí být konstantní hodnoty.</value>
+    <value>Regulární výraz musí být konstantní hodnota.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions musí být konstantní hodnota.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Hodnotu předanou funkci '{0}' nelze změnit.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Název zachycení {0} skrývá předdefinovanou vlastnost, která vrací úplnou shodu daného regulárního výrazu. Pokud chcete danou pojmenovanou vlastnost použít k extrakci úplné shody v zadaném textu, zvažte možnost ji přejmenovat.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Název zaznamenání „{0}“ skrývá předdefinovanou vlastnost, která vrací informace o shodě. Zvažte jeho přejmenování, pokud chcete mít přístup k informacím o shodě.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Název zachycení {0} skrývá předdefinovanou vlastnost, která vrací shody skupin daného regulárního výrazu. Pokud chcete danou pojmenovanou vlastnost použít k extrakci všech dílčích shod v zadaném textu, zvažte možnost ji přejmenovat.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Název zachycení {0} skrývá předdefinovanou vlastnost, která vrací místo, kde došlo ke shodě s daným regulárním výrazem. Pokud chcete danou pojmenovanou vlastnost použít k extrakci pozice shody v zadaném textu, zvažte možnost ji přejmenovat.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Názvy zaznamenání v sadě „{0}“ skrývají předdefinované vlastnosti, které vracejí informace o shodě. Zvažte jejich přejmenování, pokud chcete mít přístup k informacím o shodě.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">

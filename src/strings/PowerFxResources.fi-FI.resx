@@ -2113,6 +2113,14 @@
     <value>Sarakkeen nimen ristiriita kohteelle {0}.</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Sarakkeiden lisääminen järjestelmätietueeseen tai järjestelmätietueiden taulukkoon ei onnistu. Ota käyttöön ShowColumns, jonka avulla voit poimia ensimmäisenä tarvittavat sarakkeet.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Järjestelmätietueen tai järjestelmätietueiden taulukon sarakkeiden nimeäminen uudelleen ei onnistu. Ota käyttöön ShowColumns, jonka avulla voit poimia ensimmäisenä tarvittavat sarakkeet.</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Määritettyä saraketta {0} ei ole.</value>
     
@@ -4511,24 +4519,240 @@
     <value>Virheellinen säännöllinen lauseke.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Tekstiin sidottujen asetusten on oltava säännönmukaisen lausekkeen alussa. Löytyi {0} myöhemmin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Tekstiin sidotut asetukset on rajoitettu kirjainten yhdistelmään [imnsx]. Alilausekkeen asetuksia ei voi poistaa käytöstä eikä niitä voi käyttää. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Oktaalin \0-merkkikoodeja ei tueta. Käytä sen sijaan heksadesimaalia \x tai Unicodea \u. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Literaalien aaltosulkeet on poistettava kenoviivalla. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Literaalien hakasulkeet on poistettava kenoviivalla myös merkkiluokissa, kuten \[ tai \]. Löytyi kohteen {0} lopusta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Sulkemattoman merkkiluokan hakasulje.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Erityisryhmää ei tueta. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Ohjausmerkkiä ei sallita merkkiluokassa. Löytyi kohteen {0} lopusta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Negatiivista ohjausmerkkiä ei sallita kielletyssä merkkiluokassa. Löytyi kohteen {0} lopusta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Ohjausmerkkiä ei sallita merkkiluokan ulkopuolella. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Virheellinen Unicode-luokan nimi. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Toistuva tekstiin sidottu asetus. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Tekstiin sidottu kommentti, jota ei ole suljettu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Tekstiin sidottu kommentti, jota ei ole suljettu. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Tekstiin sidottu asetus ei ole yhteensopiva kohteen MatchOptions.NumberedSubMatches kanssa. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Possessiivisia rajoittimia ei tueta. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Tarkkoja rajoittimia ei voi käyttää esimerkiksi rajoittimen määreissä, kuten ? ja laiska. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Virheellinen ohjausmerkki. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Alivastaavuutta {0} ei ole määritetty tai se on eteenpäinviittaus, jota ei tueta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Alivastaavuuksia ei tueta look behind -kohteissa. Löytyi kohteen {0} alusta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Look behind -kohteet eivät voi olla sisäkkäisiä. Löytyi kohteen {0} alusta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Rajoittamattomia rajoittimia ei tueta look behind -kohteissa. Löytyi kohteen {0} lopusta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Rajoitinta ei tueta look behind- ja look ahead -kohteissa. Löytyi kohteen {0} lopusta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke. Takaisinviittaus {0} alivastaavuuteen, joka ei ehkä tapahdu vaihtelun tai nollarajoittimen vuoksi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Itseensä viittaavia alivastaavuuksia ei tueta. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Suljetut ryhmät, liian sulkevia sulkumerkkejä.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Avaamattomat ryhmät, liian vähän avaavia sulkumerkkejä.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Nimetty alivastaavuus on määritetty useammin kuin kerran. Löytyi kohteen {0} alusta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Alivastaavuuden nimen on oltava yhdistelmä sanamerkkejä, eikä se saa alkaa numerolla. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Tekstiin sidottujen asetusten on oltava säännönmukaisen lausekkeen alussa. Löytyi {0} myöhemmin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Merkki toistui merkkiluokassa. Löytyi kohteen {0} lopusta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Virheellinen v lauseke: Hakasulkeiden merkkiluokat eivät voi olla tyhjiä. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Täsmäyttäviä alivastaavuuksia ei tueta. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Tallennuksia, jotka nimetään käyttämällä yksinkertaisia lainausmerkkejä, ei tueta. Käytä sen sijaan syntaksia (?&lt;...&gt;). Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Ehdollista vaihtelua ei tueta. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Nimettyjä tallennuksia ei voi käyttää, jos MatchOptions.NumberedSubMatches on käytössä. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Käytä nimettyjä tallennuksia, joilla on (?&lt;name&gt;...) ja \k&lt;name&gt;, tai ota käyttöön MatchOptions.NumberedSubMatches. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Merkkiluokan alueen literaalin alaviivassa on oltava kenoviiva (\) ohjausmerkkinä. Löytyi kohteen {0} lopusta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Literaalin merkki on poistettava kenoviivalla, kun sitä käytetään merkkiluokassa. Löytyi kohteen {0} lopusta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Sellaisen ryhmän rajoitin, joka sisältää toisen rajoittimen tai tyhjän vaihtelun, voi johtaa epäselvään tulokseen. Löytyi kohteen {0} lopusta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Lookbehind ylitti mahdollisten merkkien enimmäismäärän, joka on 250. Löytyi kohteen {0} lopusta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Rajoittimen alueen pienin luku on suurempi kuin suurin luku. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Liian monta sisäkkäistä ryhmää. Löytyi kohteen {0} alusta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Alivastaavuuden nimi on liian pitkä. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Luku on liian suuri. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Merkkiluokka-alueen merkit ovat käänteisiä. Löytyi kohteen {0} lopusta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Merkkiluokka merkkiluokan alueella tai literaalin alaviivan poisto kenoviivalla. Löytyi kohteen {0} lopusta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Päättyy kenoviivaan, jolla ei ole ohjausmerkkiä.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Rajoitin ilman määritettäviä kohteita. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: MatchOptions.DotAll ja MatchOptions.FreeSpacing ovat käytettävissä vain Power Fx V1 -ratkaisussa. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke. Takaisinviittaus {0} alivastaavuuteen, joka on lookbehind- tai lookahead-kohteen sisällä.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExSurrogatePairInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännöllinen lauseke: Unicode-merkkejä korvaavissa pareissa (merkki U+10 000 ja suuremmat merkit) ei tueta merkkiluokissa. Löytyi {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMalformedSurrogatePair_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännönmukainen lauseke: Virheellisesti muotoiltu Unicode-merkin korvaava pari (merkki U+10 000 ja suuremmat). Löytyi kohteen {0} lopusta.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Säännönmukaisten lausekkeiden on oltava vakioarvoja.</value>
+    <value>Säännönmukaisen lausekkeen on oltava vakioarvo.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions-kohteen on oltava vakioarvo.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Funktiolle {0} välitettyä arvoa ei voi muuttaa.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Sieppausnimi {0} piilottaa säännönmukaisen lausekkeen koko vastaavuuden palauttavan esimääritetyn ominaisuuden. Harkitse sen nimeämistä uudelleen, jos haluat käyttää kyseistä nimettyä ominaisuutta määritetyn tekstin koko vastaavuuden poimimiseen.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Tallenteen nimi {0} piilottaa ennalta määritetyn ominaisuuden, joka palauttaa vastaavuuden tiedot. Nimeä se uudelleen, jos haluat käyttää vastaavuuden tietoja.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Sieppausnimi {0} piilottaa säännönmukaisen lausekkeen ryhmävastaavuudet palauttavan esimääritetyn ominaisuuden. Harkitse sen nimeämistä uudelleen, jos haluat käyttää kyseistä nimettyä ominaisuutta määritetyn tekstin kaikkien alivastaavuuksien poimimiseen.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Sieppausnimi {0} piilottaa säännönmukaisen lausekkeen vastaavuuden sijainnin palauttavan esimääritetyn ominaisuuden. Harkitse sen nimeämistä uudelleen, jos haluat käyttää kyseistä nimettyä ominaisuutta määritetyn tekstin koko vastaavuuden sijainnin poimimiseen.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Tallenteiden nimet joukossa {0} piilottavat ennalta määritetyt ominaisuudet, jotka palauttavat vastaavuuden tiedot. Nimeä ne uudelleen, jos haluat käyttää vastaavuuden tietoja.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">

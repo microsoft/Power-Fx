@@ -2113,6 +2113,14 @@
     <value>„{0}“ stulpelio pavadinimo konfliktas.</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Nepavyksta įtraukti stulpelių į sistemos įrašą arba sistemos įrašų lentelę. Pirmiausia naudokite „ShowColumns“, kad išskleistumėte konkrečius jums reikalingus stulpelius.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Nepavyksta pervardyti sistemos įrašo arba sistemos įrašų lentelės stulpelių. Pirmiausia naudokite „ShowColumns“, kad išskleistumėte konkrečius jums reikalingus stulpelius.</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Nurodyto stulpelio „{0}“ nėra.</value>
     
@@ -4511,24 +4519,240 @@
     <value>Netinkama paprastoji išraiška.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: įdėtosios parinktys turi būti rodomos reguliariojo reiškinio pradžioje, rasta „{0}“ paskesnių.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: įdėtosios parinktys apribotos iki raidžių derinio [imnsx], negalima išjungti parinkčių ir negalima naudoti antrinėje išraiškoje, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: aštuonetainiai \0 simbolių kodai nepalaikomi, vietoj jų naudokite šešioliktainius \x arba „Unikode“ \u, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: literalo riestiniai skliaustai turi būti išskirti kairiniu pasviruoju brūkšniu, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: literalo laužtiniai skliaustai turi būti išskirti kairiniu pasviruoju brūkšniu net ir simbolių klasėse, pvz., \[ arba \], rasta „{0}“ pabaigoje.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: neuždarytas simbolių klasės laužtinis skliaustas.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: nepalaikoma specialioji grupė, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: simbolių klasėje kaitos simbolis neleidžiamas, rasta „{0}“ pabaigoje.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: paneigtų simbolių klasėje neigiamas kaitos simbolis neleidžiamas, rasta „{0}“ pabaigoje.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: už simbolių klasės ribų kaitos simbolis neleidžiamas, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: netinkamas „Unicode“ kategorijos pavadinimas, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: pasikartojanti įdėtoji parinktis, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: neuždarytas įdėtasis komentaras.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: neuždarytas įdėtasis komentaras, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: įdėtoji parinktis nesuderinama su „MatchOptions.NumberedSubMatches“, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: savininkiški kvantifikatoriai nepalaikomi, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: tikslių kvantifikatorių negalima naudoti su kvantifikatorių modifikatoriais, pvz., ?, skirtu atidėtam, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: netinkamas kaitos kodas, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: antrinis atitikmuo „{0}“ neapibrėžtas arba yra nepalaikoma išankstinė nuoroda.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: antriniai atitikmenys nepalaikomi „lookbehind“ elementuose, rasta „{0}“ pradžioje.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: „lookbehind“ antriniai atitikmenys negali būti įdėtieji, rasta „{0}“ pradžioje.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: neriboti kvantifikatoriai nepalaikomi „lookbehind“ elementuose, rasta „{0}“ pabaigoje.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: kvantifikatoriai nepalaikomi „lookbehind“ ir „lookahead“ elementuose, rasta „{0}“ pabaigoje.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: atgalinė nuoroda „{0}“ į antrinį atitikmenį, kurio gali nebūti dėl kaitos arba nulinio kvantifikatoriaus.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: save nurodantys antriniai atitikmenys nepalaikomi, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: neuždarytos grupės, per mažai uždaromųjų skliaustų.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: neatidarytos grupės, per mažai atidaromųjų skliaustų.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: įvardytasis antrinis atitikmuo apibrėžtas daugiau nei vieną kartą, rasta „{0}“ pradžioje.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: antrinio atitikmens pavadinimas turi būti žodžių simbolių derinys, o ne prasidėti skaičiumi, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: įdėtosios parinktys turi būti rodomos reguliariojo reiškinio pradžioje, rasta „{0}“ paskesnių.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: simbolių klasėje yra pasikartojantis simbolis, rastas „{0}“ pabaigoje.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: laužtinių skliaustų simbolių klasės negali būti tuščios, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: balansavimo antriniai atitikmenys nepalaikomi, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: viengubomis kabutėmis išskirtų įvardytųjų užfiksavimų naudojimas nepalaikomas, vietoj to naudokite (?&lt;... &gt;) sintaksę, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: sąlyginė kaita nepalaikoma, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: įvardytųjų užfiksavimų negalima naudoti su įjungta parinktimi „MatchOptions.NumberedSubMatches“, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: naudokite įvardytuosius užfiksavimus su „(?&lt;name&gt;...)“ ir „\k&lt;name&gt;“ arba įgalinkite „MatchOptions.NumberedSubMatches“, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: simbolių klasėje literalo brūkšnelis turi būti išskirtas kairinius pasviruoju brūkšniu, išskirkite „\-“, rasta „{0}“ pabaigoje.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: literalo simbolis turi būti išskirtas kairiniu pasviruoju brūkšniu, kai naudojamas simbolių klasėje, rasta „{0}“ pabaigoje.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: kvantifikatorius grupėje, kurioje yra kitas kvantifikatorius, arba tuščia kaita, dėl ko gali būti gautas dviprasmiškas rezultatas, rasta „{0}“ pabaigoje.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: „lookbehind“ viršijo didžiausią galimą 250 simbolių limitą, rasta „{0}“ pabaigoje.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: kvantifikatoriaus diapazono apatinės ribos skaičius yra didesnis už viršutinės ribos skaičių, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: rasta per daug įdėtųjų grupių, rasta „{0}“ pradžioje.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: antrinio atitikmens pavadinimas per ilgas, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: skaičius per didelis, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: simbolių klasės diapazono simboliai pateikti atvirkštine tvarka, rasta „{0}“ pabaigoje.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: simbolių klasę simbolių klasės diapazone arba literalo brūkšnelį išskirkite kairiniu pasviruoju brūkšniu, rasta „{0}“ pabaigoje.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: baigiasi neišskirtu kairiniu pasviruoju brūkšniu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: kvantifikatorius be kiekybinio įvertinimo objekto, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: „MatchOptions.DotAll“ ir „MatchOptions.FreeSpacing“ galima naudoti tik su „Power Fx“ V1, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: atgalinė nuoroda „{0}“ į antrinį atitikmenį, kuris yra „lookbehind“ arba „lookahead“ viduje.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExSurrogatePairInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: „Unicode“ simboliai pakaitinėse porose (simbolis U+10000 ir didesni) simbolių klasėse nepalaikomi, rasta „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMalformedSurrogatePair_ShortMessage" xml:space="preserve">
+    <value>Netinkamas reguliarusis reiškinys: netinkamai suformuota „Unicode“ pakaitinė pora (simbolis U+10000 ir didesni), rasta „{0}“ pabaigoje.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Paprastosios išraiškos turi būti pastovios vertės.</value>
+    <value>Reguliariojo reiškinio reikšmė turi būti pastovi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>„MatchOptions“ reikšmė turi būti pastovi.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Reikšmės, perduotos funkcijai „{0}“, pakeisti negalima.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Įrašytas pavadinimas {0} įvardija iš anksto nustatytą ypatybę, kuri pateikia visišką paprastosios išraiškos atitiktį. Pervardykite ją, jei norite naudoti ypatybę šiuo pavadinimu siekdami gauti visišką atitiktį nurodytame tekste.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Rinkinyje „{0}“ esančio užfiksavimo pavadinimas slepia iš anksto apibrėžtą ypatybę, kuri pateikia atitikmenų informaciją. Apsvarstykite galimybę jį pervardyti, jei norite pasiekti atitikmenų informaciją.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Įrašytas pavadinimas {0} įvardija iš anksto nustatytą ypatybę, kuri pateikia atitikčių grupes paprastojoje išraiškoje. Pervardykite ją, jei norite naudoti ypatybę šiuo pavadinimu siekdami gauti visas dalines atitiktis nurodytame tekste.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Įrašytas pavadinimas {0} įvardija iš anksto nustatytą ypatybę, kuri pateikia grupių atitiktis paprastojoje išraiškoje. Pervardykite ją, jei norite naudoti ypatybę šiuo pavadinimu siekdami gauti visiškos atitikties vietą nurodytame tekste.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Rinkinyje „{0}“ esančių užfiksavimų pavadinimai slepia iš anksto apibrėžtas ypatybes, kurios pateikia atitikmenų informaciją. Apsvarstykite galimybę juos pervardyti, jei norite pasiekti atitikmenų informaciją.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
