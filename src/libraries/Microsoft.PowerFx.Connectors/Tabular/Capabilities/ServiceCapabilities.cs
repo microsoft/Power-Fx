@@ -201,7 +201,8 @@ namespace Microsoft.PowerFx.Connectors
                 SupportsJoinFunction = serviceCapabilities?.SupportsJoinFunction ?? false,
 #pragma warning disable CS0612 // Type or member is obsolete
                 CountCapabilities = new CDPCountCapabilities(primaryKeyNames, serviceCapabilities?.FilterSupportedFunctionsEnum),
-                TopLevelAggregationCapabilities = new CDPToplLevelAggregationCapabilities(columnCapabilities)
+                TopLevelAggregationCapabilities = new CDPToplLevelAggregationCapabilities(columnCapabilities),
+                SummarizeCapabilities = new CDPSummarizeCapabilities(columnCapabilities)
 #pragma warning restore CS0612 // Type or member is obsolete
 #pragma warning restore CS0618 // Type or member is obsolete
             };
@@ -255,6 +256,49 @@ namespace Microsoft.PowerFx.Connectors
                     default:
                         delegationOperator = default;
                         return false;
+                }
+            }
+        }
+
+        [Obsolete]
+        private class CDPSummarizeCapabilities : SummarizeCapabilities
+        {
+            private readonly IReadOnlyDictionary<string, Core.Entities.ColumnCapabilitiesBase> _columnCapabilities;
+
+            public CDPSummarizeCapabilities(IReadOnlyDictionary<string, Core.Entities.ColumnCapabilitiesBase> columnCapabilities)
+            {
+                _columnCapabilities = columnCapabilities;
+            }
+
+            public override bool IsSummarizableProperty(string propertyName, SummarizeMethod method)
+            {
+                if (_columnCapabilities.TryGetValue(propertyName, out var columnCapabilitiesBase) && columnCapabilitiesBase is Core.Entities.ColumnCapabilities cc)
+                {
+                    var delegationOp = SummarizeMethodToDelegationOp(method);
+                    return cc.Definition.FilterFunctions.Contains(delegationOp);
+                }
+
+                return false;
+            }
+
+            private static DelegationOperator SummarizeMethodToDelegationOp(SummarizeMethod method)
+            {
+                switch (method)
+                {
+                    case SummarizeMethod.Sum:
+                        return DelegationOperator.Sum;
+                    case SummarizeMethod.Count:
+                        return DelegationOperator.Count;
+                    case SummarizeMethod.CountRows:
+                        return DelegationOperator.Count;
+                    case SummarizeMethod.Average:
+                        return DelegationOperator.Average;
+                    case SummarizeMethod.Max:
+                        return DelegationOperator.Max;
+                    case SummarizeMethod.Min:
+                        return DelegationOperator.Min;
+                    default:
+                        throw new NotImplementedException($"Unexpected {nameof(SummarizeMethod)} found: {method}");
                 }
             }
         }
