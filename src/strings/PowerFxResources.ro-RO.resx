@@ -2113,6 +2113,14 @@
     <value>Conflict de nume de coloană pentru „{0}”.</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Nu se pot adăuga coloane la o înregistrare de sistem sau la un tabel de înregistrări de sistem. Utilizați ShowColumns pentru a extrage mai întâi coloanele specifice de care aveți nevoie.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Nu se pot redenumi coloanele dintr-o înregistrare de sistem sau dintr-un tabel de înregistrări de sistem. Utilizați ShowColumns pentru a extrage mai întâi coloanele specifice de care aveți nevoie.</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Coloana specificată „{0}” nu există.</value>
     
@@ -4511,24 +4519,240 @@
     <value>Expresie regulată nevalidă.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă, s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: opțiunile în linie trebuie să apară la începutul expresiei regulate; s-a găsit „{0}” care nu era la început.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: opțiunile în linie sunt limitate la o combinație a literelor [imnsx]; nu se pot dezactiva opțiunile și nu pot fi utilizate pe o expresie secundară; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: codurile de caractere Octal \0 nu sunt acceptate, utilizați \x hexazecimal sau Unicode \u; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: acoladele pentru valori literale trebuie marcate cu o bară oblică inversă pentru a fi evitate la interpretare; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: parantezele drepte pentru valori literale trebuie evitate cu o bară oblică inversă chiar și în clasele de caractere, de exemplu \[ sau \]; au fost găsite la sfârșitul „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: paranteză dreaptă neînchisă pentru clasa de caractere.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: grup special neacceptat; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: caracterul de evitare nu este permis în cadrul clasei de caractere; s-a găsit la sfârșitul „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: caracterul de evitare negativ nu este permis în cadrul clasei de caractere negate; s-a găsit la sfârșitul „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: caracterul de evitare nu este permis în afara unei clase de caractere; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: nume nevalid pentru categoria Unicode; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: opțiune în linie repetată; s-a găsit în „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: comentariu în linie neînchis.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: comentariu în linie neînchis; s-a găsit în „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: opțiunea în linie este incompatibilă cu MatchOptions.NumberedSubMatches; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: cuantificatorii posesivi nu sunt acceptați; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: cuantificatorii exacți nu pot fi utilizați cu modificatori de cuantificatori, cum ar fi ? pentru leneș; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: cod de evitare nevalid; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: potrivirea secundară „{0}” nu este definită sau este o referință redirecționată neacceptată.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: potrivirile secundare nu sunt acceptate în căutările în spate; s-au găsit la începutul „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: căutările în spate nu pot fi imbricate; s-au găsit la începutul „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: nu se acceptă un număr nelimitat de cuantificatori la căutarea în spate sau înainte; au fost găsiți la sfârșitul „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: cuantificatorii nu sunt acceptați la căutarea în spate sau înainte; au fost găsiți la sfârșitul „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: referința inversă „{0}” duce la o potrivire secundară care ar putea să nu aibă loc, din cauza alternanței sau a unui cuantificator zero.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: potrivirile secundare cu autoreferențiere nu sunt acceptate; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: grupuri neînchise, prea puține paranteze de închidere.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: grupuri nedeschise, prea puține paranteze de deschidere.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: potrivirea secundară denumită a fost definită de mai multe ori; a fost găsită la începutul elementului „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: numele potrivirii secundare trebuie să fie o combinație de caractere cuvânt și să nu înceapă cu un număr; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: opțiunile în linie trebuie să apară la începutul expresiei regulate; s-a găsit „{0}” care nu era la început.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: caracter repetat în clasa de caractere; s-a găsit la sfârșitul „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: clasele de caractere între paranteze pătrate nu pot fi goale; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: potrivirile secundare de echilibrare nu sunt acceptate; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: utilizarea capturilor denumite, împreună cu ghilimele simple, nu este acceptată; utilizați sintaxa (?&lt;...&gt;); s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: alternanța condiționată nu este acceptată, s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: capturile denumite nu pot fi utilizate cu MatchOptions.NumberedSubMatches activat; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: utilizați capturile denumite cu "(?&lt;name&gt;...)" și "\k&lt;name&gt;" sau activați MatchOptions.NumberedSubMatches; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: cratima pentru valoarea literală, din clasa de caractere, trebuie evitată cu o bară oblică inversă "\-"; s-a găsit la sfârșitul „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: caracterele literale trebuie evitate cu o bară oblică inversă când sunt utilizate în clasele de caractere; au fost găsite la sfârșitul „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: s-a găsit un cuantificator pentru un grup care conține un alt cuantificator sau o alternanță goală, ceea ce ar putea duce la un rezultat ambiguu; găsit la sfârșitul „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: Lookbehind a depășit limita maximă posibilă de 250 de caractere; s-a găsit la sfârșitul „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: numărul inferior al intervalului de cuantificatori este mai mare decât numărul superior; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: prea multe grupuri imbricate; s-au găsit la începutul „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: numele potrivirii secundare este prea lung; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: numărul este prea mare; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: caracterele dintr-un interval de clase de caractere sunt inversate; s-au găsit la sfârșitul „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: clasă de caractere într-un interval de clase de caractere sau evitare cratimă literală cu o bară oblică inversă; s-a găsit la sfârșitul „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: se încheie cu o bară oblică inversă fără evitare.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: cuantificator fără ceva de cuantificat; găsit la „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: MatchOptions.DotAll și MatchOptions.FreeSpacing sunt disponibile numai cu Power Fx V1; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: referința inversă „{0}” duce la o potrivire secundară care se află în interiorul unui lookbehind sau lookahead.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExSurrogatePairInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: caracterele Unicode din perechile surogat (caracterul U+10000 și mai sus) nu sunt acceptate în clasele de caractere; s-a găsit „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMalformedSurrogatePair_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă: pereche surogat Unicode cu format greșit (caracterul U+10000 și mai sus); s-a găsit la sfârșitul "{0}".</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Expresiile regulate trebuie să fie valori constante.</value>
+    <value>Expresia regulată trebuie să fie o valoare constantă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions trebuie să fie o valoare constantă.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Valoarea transmisă funcției „{0}” nu se poate modifica.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Numele capturii „{0}” ascunde proprietatea predefinită care returnează potrivirea perfectă a expresiei regulate. O puteți redenumi dacă doriți să utilizați respectiva proprietate denumită pentru a extrage potrivirea completă din textul specificat.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Numele de captură „{0}” ascunde o proprietate predefinită care returnează informații despre potriviri. Luați în considerare redenumirea acesteia dacă doriți să accesați informațiile despre potrivire.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Numele capturii „{0}” ascunde proprietatea predefinită care returnează potrivirile de grup din expresia regulată. O puteți redenumi dacă doriți să utilizați respectiva proprietate denumită pentru a extrage toate subpotrivirile din textul specificat.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Numele capturii „{0}” ascunde proprietatea predefinită care returnează locația potrivirii expresiei regulate. O puteți redenumi dacă doriți să utilizați respectiva proprietate denumită pentru a extrage poziția potrivirii complete din textul specificat.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Numele de capturi din setul „{0}” ascund proprietăți predefinite care returnează informații despre potriviri. Luați în considerare redenumirea acestora dacă doriți să accesați informațiile despre potriviri.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">

@@ -2113,6 +2113,14 @@
     <value>Conflito no nome da columna '{0}'.</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Non se poden engadir columnas a un rexistro do sistema nin a unha táboa de rexistros do sistema. Primeiro, use ShowColumns para extraer as columnas específicas que necesita.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Non se pode cambiar o nome das columnas dun rexistro do sistema nin dunha táboa de rexistros do sistema. Primeiro, use ShowColumns para extraer as columnas específicas que necesita.</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>A columna especificada '{0}' non existe.</value>
     
@@ -4511,24 +4519,240 @@
     <value>Expresión regular non válida.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: As opcións inseridas deben aparecer ao comezo da expresión regular. Atopouse "{0}" máis adiante.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: As opcións inseridas están limitadas a unha combinación das letras [imnsx]. Non se poden desactivar as opcións e non se poden usar nunha subexpresión. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Non se admiten códigos de caracteres octais \0. No seu lugar, use o hexadecimal \ x ou Unicode \u. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: As chaves literais precisan unha barra invertida como carácter de escape. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Os corchetes literais precisan unha barra invertida como carácter de escape mesmo nas clases de caracteres; por exemplo \[ ou \]. Atopouse ao final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Corchete da clase de carácter sen pechar.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Grupo especial non admitido. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Non se permiten caracteres de escape dentro dunha clase de carácter. Atopouse ao final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Non se permiten caracteres de escape negativos dentro dunha clase de carácter negada. Atopouse ao final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Non se permiten caracteres de escape fóra dunha clase de carácter. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Nome de categoría Unicode non válido. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Opción inserida repetida. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Comentario inserido sen pechar.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Comentario inserido sen pechar. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: A opción inserida é incompatible con MatchOptions.NumberedSubMatches. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Non se admiten cuantificadores posesivos. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Non se poden usar cuantificadores exactos con modificadores cuantificadores como ? no modo preguiceiro. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Código de escape non válido. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: A subcoincidencia "{0}" non está definida ou é unha referencia directa non admitida.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Non se admiten subcoincidencias en buscas cara atrás. Atopouse ao comezo de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: As buscas cara atrás non poden estar aniñadas. Atopouse ao comezo de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Non se admiten cuantificadores ilimitados nas buscas cara detrás. Atopouse ao final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Non se admiten cuantificadores nas buscas cara detrás nin nas buscas cara adiante. Atopouse ao final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Referencia inversa "{0}" á subcoincidencia que pode non ter lugar debido á alternancia ou ao cuantificador cero.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Non se admiten subcoincidencias que fagan referencia a si mesmas. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Grupos sen pechar; moi poucos parénteses de peche.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Grupos sen abrir; moi poucos parénteses de apertura.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Subcoincidencia con nome definida máis dunha vez. Atopouse ao inicio de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: O nome da subcoincidencia debe ser unha combinación de caracteres de palabra e non pode comezar por un número. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: As opcións inseridas deben aparecer ao comezo da expresión regular. Atopouse "{0}" máis adiante.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: O carácter repítese na clase de carácter. Atopouse ao final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: As clases de caracteres de corchetes non poden estar baleiras. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Non se admiten subcoincidencias de compensación. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Non se admite o uso de capturas con nomes entre comiñas simples. No seu lugar, use a sintaxe (?&lt;...&gt;). Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Non se admite a alternancia condicional. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Non se poden usar capturas con nome con MatchOptions.NumberedSubMatches activado. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Use capturas con nome con "(?&lt;name&gt;...)" e "\k&lt;name&gt;" ou active MatchOptions.NumberedSubMatches. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Barra invertida necesaria como carácter de escape dun guión literal na clase de carácter. Use "\-" para o escape. Atopouse ao final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: O carácter literal precisa unha barra invertida como carácter de escape cando se usa nunha clase de carácter. Atopouse ao final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Cuantificador nun grupo que contén outro cuantificador ou alternancia baleira que podería dar lugar a un resultado ambiguo. Atopouse ao final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: A busca cara atrás superou o límite máximo posible de caracteres de 250. Atopouse ao final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: O número inferior do intervalo de cuantificadores é maior que o número superior. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Demasiados grupos aniñados. Atopouse ao comezo de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: O nome da subcoincidencia é demasiado longo. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: O número é demasiado grande. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Os caracteres dun intervalo de clases de caracteres están invertidos. Atopouse ao final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Clase de carácter nun intervalo de clases de caracteres ou barra invertida necesaria como carácter de escape dun guión literal. Atopouse ao final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Remata cunha barra invertida sen escape.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Cuantificador sen nada que cuantificar. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: MatchOptions.DotAll e MatchOptions.FreeSpacing só están dispoñibles con Power Fx V1. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Referencia inversa "{0}" á subcoincidencia que está dentro dunha busca cara atrás ou busca cara adiante.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExSurrogatePairInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Os caracteres Unicode en pares suplentes (carácter U+10000 e posteriores) non se admiten en clases de carácter. Atopouse "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMalformedSurrogatePair_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida: Par suplente Unicode con formato incorrecto (carácter U+10000 e posteriores). Atopouse ao final de "{0}".</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>As expresións regulares deben ser valores constantes.</value>
+    <value>A expresión regular deben ser un valor constante.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions debe ser un valor constante.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Non se puido modificar o valor que se pasou para a función "{0}".</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>O nome da captura "{0}" está a ocultar a propiedade predefinida que devolve a coincidencia completa da expresión regular. Considere a posibilidade de cambiarlle o nome se quere usar esa propiedade mencionada para extraer a coincidencia completa do texto especificado.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>O nome da captura "{0}" oculta unha propiedade predefinida que devolve a información das coincidencias. Considere cambiarlle o nome se quere acceder á información das coincidencias.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>O nome da captura "{0}" está a ocultar a propiedade predefinida que devolve as coincidencias do grupo da expresión regular. Considere a posibilidade de cambiarlle o nome se quere usar esa propiedade mencionada para extraer todas as subcoincidencias do texto especificado.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>O nome da captura "{0}" está a ocultar a propiedade predefinida que devolve a localización da coincidencia da expresión regular. Considere a posibilidade de cambiarlle o nome se quere usar esa propiedade mencionada para extraer a posición da coincidencia completa do texto especificado.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Os nomes de capturas do conxunto "{0}" ocultan propiedades predefinidas que devolven información das coincidencias. Considere cambiarlles o nome se quere acceder á información das coincidencias.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
