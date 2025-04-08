@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         private readonly Dictionary<string, EnumSymbol> _enumSymbols = new Dictionary<string, EnumSymbol>();
 
         #region Internal methods
-        internal EnumStoreBuilder WithRequiredEnums(TexlFunctionSet functions, bool isV1 = true)
+        internal EnumStoreBuilder WithRequiredEnums(TexlFunctionSet functions, bool isV1)
         {
             var defaultEnums = isV1 ? DefaultEnumSymbols : DefaultEnumSymbolsV1Disabled;
 
@@ -131,11 +131,9 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             return this;
         }
 
-        internal EnumStoreBuilder WithDefaultEnums(bool isV1 = true)
-        {
-            var defaultEnums = isV1 ? DefaultEnumSymbols : DefaultEnumSymbolsV1Disabled;
-
-            foreach (var defaultEnum in defaultEnums)
+        internal EnumStoreBuilder WithDefaultEnums()
+        { 
+            foreach (var defaultEnum in DefaultEnumSymbols)
             {
                 if (!_enumSymbols.ContainsKey(defaultEnum.Key))
                 {
