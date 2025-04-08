@@ -268,7 +268,7 @@ namespace Microsoft.PowerFx
 
         // Helper to create a ReadOnly symbol table around a set of core functions.
         // Important that this is readonly so that it can be safely shared across engines. 
-        internal static ReadOnlySymbolTable NewDefault(TexlFunctionSet coreFunctions)
+        internal static ReadOnlySymbolTable NewDefault(TexlFunctionSet coreFunctions, bool isV1 = true)
         {
             var s = new SymbolTable
             {
@@ -276,12 +276,12 @@ namespace Microsoft.PowerFx
                 DebugName = $"BuiltinFunctions ({coreFunctions.Count()})"
             };
 
-            s.AddFunctions(coreFunctions);
+            s.AddFunctions(coreFunctions, isV1);
 
             return s;
         }
 
-        internal static ReadOnlySymbolTable NewDefault(IEnumerable<TexlFunction> functions)
+        internal static ReadOnlySymbolTable NewDefault(IEnumerable<TexlFunction> functions, bool isV1 = true)
         {            
             TexlFunctionSet tfs = new TexlFunctionSet();
 
@@ -290,7 +290,7 @@ namespace Microsoft.PowerFx
                 tfs.Add(function);
             }
 
-            return NewDefault(tfs);
+            return NewDefault(tfs, isV1);
         }
 
         // Helper to create a ReadOnly symbol table around a set of core types. 
@@ -308,7 +308,7 @@ namespace Microsoft.PowerFx
         }
 
         // Overload Helper to create a ReadOnly symbol table around a set of core functions and types.
-        internal static ReadOnlySymbolTable NewDefault(TexlFunctionSet coreFunctions, IEnumerable<KeyValuePair<DName, FormulaType>> types)
+        internal static ReadOnlySymbolTable NewDefault(TexlFunctionSet coreFunctions, IEnumerable<KeyValuePair<DName, FormulaType>> types, bool isV1 = true)
         {
             Contracts.AssertValue(types);
             Contracts.AssertValue(coreFunctions);
@@ -319,7 +319,7 @@ namespace Microsoft.PowerFx
                 DebugName = $"BuiltinFunctions ({coreFunctions.Count()}), BuiltinTypes ({types?.Count()})"
             };
 
-            s.AddFunctions(coreFunctions);
+            s.AddFunctions(coreFunctions, isV1);
             s.AddTypes(types);
             return s;
         }
@@ -331,14 +331,14 @@ namespace Microsoft.PowerFx
         /// Important that this is mutable so that it can be changed across engines. 
         /// </summary>
         /// <returns>SymbolTable with supported functions.</returns>
-        public SymbolTable GetMutableCopyOfFunctions()
+        public SymbolTable GetMutableCopyOfFunctions(bool isV1 = true)
         {
             var s = new SymbolTable()
             {
                 DebugName = DebugName + " (Functions only)",
             };
 
-            s.AddFunctions(this.Functions);
+            s.AddFunctions(this.Functions, isV1);
 
             return s;
         }

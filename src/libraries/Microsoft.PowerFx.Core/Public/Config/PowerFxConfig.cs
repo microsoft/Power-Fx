@@ -177,12 +177,12 @@ namespace Microsoft.PowerFx
                 }
             }
 
-            InternalConfigSymbols.AddFunction(function);
+            InternalConfigSymbols.AddFunction(function, Features.PowerFxV1CompatibilityRules);
         }
 
         internal void AddFunctions(TexlFunctionSet functionSet)
         {
-            InternalConfigSymbols.AddFunctions(functionSet);
+            InternalConfigSymbols.AddFunctions(functionSet, Features.PowerFxV1CompatibilityRules);
         }
 
         /// <summary>
