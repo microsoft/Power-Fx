@@ -24,7 +24,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)O365GroupTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)O365OutlookTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)O365UserTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ODataParametersTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenAITests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiExtensionTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiFormUrlEncoderTests.cs" />
