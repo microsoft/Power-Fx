@@ -70,17 +70,19 @@ namespace Microsoft.PowerFx
         public Engine(PowerFxConfig powerFxConfig)
         {
             Config = powerFxConfig ?? throw new ArgumentNullException(nameof(powerFxConfig));
+            SupportedFunctions = Config.Features.PowerFxV1CompatibilityRules ? _allBuiltinCoreFunctionsV1 : _allBuiltinCoreFunctionsV1Disabled;
         }
 
         // All functions that powerfx core knows about. 
         // Derived engines may only support a subset of these builtins, 
         // and they may add their own custom ones. 
-        private static readonly ReadOnlySymbolTable _allBuiltinCoreFunctions = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library);
+        private static readonly ReadOnlySymbolTable _allBuiltinCoreFunctionsV1 = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, isV1: true);
+        private static readonly ReadOnlySymbolTable _allBuiltinCoreFunctionsV1Disabled = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, isV1: false);
 
         /// <summary>
         /// Builtin functions supported by this engine. 
         /// </summary>
-        public ReadOnlySymbolTable SupportedFunctions { get; protected internal set; } = _allBuiltinCoreFunctions;
+        public ReadOnlySymbolTable SupportedFunctions { get; protected internal set; }
 
         /// <summary>
         /// Builtin Types supported by this engine. 

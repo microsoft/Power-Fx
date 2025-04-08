@@ -40,7 +40,9 @@ namespace Microsoft.PowerFx
         /// </summary>
         internal ReadOnlySymbolTable ComposedConfigSymbols => ReadOnlySymbolTable.Compose(InternalConfigSymbols, SymbolTable);
 
-        private static EnumStoreBuilder BuiltInEnumStoreBuilder => new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore._library);
+        private static EnumStoreBuilder BuiltInEnumStoreBuilder => new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore._library, isV1: true);
+
+        private static EnumStoreBuilder BuiltInEnumStoreBuilderV1Disabled => new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore._library, isV1: false);
 
         /// <summary>
         /// Global symbols. Additional symbols beyond default function set and primitive types defined by host.
@@ -96,7 +98,7 @@ namespace Microsoft.PowerFx
         /// </summary>        
         /// <param name="features">Features to use.</param>
         public PowerFxConfig(Features features)
-            : this(BuiltInEnumStoreBuilder, features)
+            : this(features.PowerFxV1CompatibilityRules ? BuiltInEnumStoreBuilder : BuiltInEnumStoreBuilderV1Disabled, features)
         {
         }
 
@@ -175,12 +177,12 @@ namespace Microsoft.PowerFx
                 }
             }
 
-            InternalConfigSymbols.AddFunction(function);
+            InternalConfigSymbols.AddFunction(function, Features.PowerFxV1CompatibilityRules);
         }
 
         internal void AddFunctions(TexlFunctionSet functionSet)
         {
-            InternalConfigSymbols.AddFunctions(functionSet);
+            InternalConfigSymbols.AddFunctions(functionSet, Features.PowerFxV1CompatibilityRules);
         }
 
         /// <summary>
