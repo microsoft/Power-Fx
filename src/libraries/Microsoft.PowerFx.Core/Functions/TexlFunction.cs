@@ -1238,6 +1238,31 @@ namespace Microsoft.PowerFx.Core.Functions
             return typeChecks;
         }
 
+        protected bool CheckTypeEnum(CheckTypesContext context, TexlNode node, DType nodeType, DType expectedType, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            if (!context.Features.StronglyTypedBuiltinEnums && expectedType.OptionSetInfo is EnumSymbol enumSymbol)
+            {
+                expectedType = enumSymbol.EnumType.GetEnumSupertype();
+            }
+
+            var typeChecks = CheckType(context, node, nodeType, expectedType, errors, coerceIfSupported: true, out DType coercionType);
+            if (typeChecks)
+            {
+                // For implementations, coerce enum option set values to the backing type
+                if (!context.Features.StronglyTypedBuiltinEnums && expectedType.OptionSetInfo is EnumSymbol enumSymbol1)
+                {
+                    coercionType = enumSymbol1.EnumType.GetEnumSupertype();
+                }
+
+                if (coercionType != null)
+                {
+                    CollectionUtils.Add(ref nodeToCoercedTypeMap, node, coercionType);
+                }
+            }
+
+            return typeChecks;
+        }
+
         // Check the type of a specified node against an expected type and possibly emit errors
         // accordingly. Returns true if the types align, false otherwise.
         protected bool CheckType(CheckTypesContext context, TexlNode node, DType nodeType, DType expectedType, IErrorContainer errors, bool coerceIfSupported, out DType coercionType)

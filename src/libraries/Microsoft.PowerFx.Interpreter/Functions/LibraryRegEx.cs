@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Functions
         /// <param name="regexTimeout">Timeout duration for regular expression execution. Default is 1 second.</param>
         /// <param name="regexCache">Regular expression type cache.</param>        
         /// <returns></returns>
-        internal static Dictionary<TexlFunction, IAsyncTexlFunction> RegexFunctions(TimeSpan regexTimeout, RegexTypeCache regexCache, bool v1Update)
+        internal static Dictionary<TexlFunction, IAsyncTexlFunction> RegexFunctions(TimeSpan regexTimeout, RegexTypeCache regexCache)
         {
             if (regexTimeout == TimeSpan.Zero)
             {
@@ -45,9 +45,9 @@ namespace Microsoft.PowerFx.Functions
 
             return new Dictionary<TexlFunction, IAsyncTexlFunction>()
             {
-                { new IsMatchFunction(regexCache, v1Update), new IsMatchImplementation(regexTimeout) },
-                { new MatchFunction(regexCache, v1Update), new MatchImplementation(regexTimeout) },
-                { new MatchAllFunction(regexCache, v1Update), new MatchAllImplementation(regexTimeout) }
+                { new IsMatchFunction(regexCache), new IsMatchImplementation(regexTimeout) },
+                { new MatchFunction(regexCache), new MatchImplementation(regexTimeout) },
+                { new MatchAllFunction(regexCache), new MatchAllImplementation(regexTimeout) }
             };
         }
 

@@ -1,0 +1,73 @@
+﻿#SETUP: RegEx,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+
+>> Match( "a@contoso.com", Match.Email ).FullMatch
+"a@contoso.com"
+
+>> Match( "bob@contoso.com", Match.Email ).FullMatch
+"bob@contoso.com"
+
+>> Match( "bob.contoso@contoso.com", Match.Email ).FullMatch
+"bob.contoso@contoso.com"
+
+>> Match( "Bob Contoso <bob@contoso.com>", Match.Email ).FullMatch
+"bob@contoso.com"
+
+>> Match( "in the middle of bob@contonso.com a sentence", Match.Email ).FullMatch
+"bob@contonso.com"
+
+// Punctuation characters
+
+>> Match( "here's a fun address: dots.are.fun@contoso.org", Match.Email ).FullMatch
+"dots.are.fun@contoso.org"
+
+>> Match( "here's a fun address: dashes-are-fun@contoso.org", Match.Email ).FullMatch
+"dashes-are-fun@contoso.org"
+
+>> Match( "here's a fun address: pluses+are+fun+too@contoso.org", Match.Email ).FullMatch
+"pluses+are+fun+too@contoso.org"
+
+>> Match( "here's a fun address: slashes/are/fun/too@contoso.org", Match.Email ).FullMatch
+"slashes/are/fun/too@contoso.org"
+
+>> Match( "here's a fun address: how_about_underscores@contoso.org", Match.Email ).FullMatch
+"how_about_underscores@contoso.org"
+
+// Unicode characters
+
+>> Match( "Scary👻Nights@contoso.org", Match.Email ).FullMatch
+"Scary👻Nights@contoso.org"
+
+>> Match( "Events@Scary👻House.org", Match.Email ).FullMatch
+"Events@Scary👻House.org"
+
+// Negative tests
+
+>> Match( "a", Match.Email )
+Blank()
+
+>> Match( "a sentence that mentions email", Match.Email )
+Blank()
+
+>> Match( "foo.com", Match.Email )
+Blank()
+
+>> Match( "@", Match.Email )
+Blank()
+
+>> Match( "@foo", Match.Email )
+Blank()
+
+>> Match( "@foo.com", Match.Email )
+Blank()
+
+>> Match( "r@s@t@foo.com", Match.Email ).FullMatch   // multiple @ signs
+"t@foo.com"
+
+>> Match( "r@s@t@foo.c", Match.Email )   // domain name can't end with a single character
+Blank()
+
+// illegal but allowed with our definition
+
+>> Match( "abc@foo_bar.com", Match.Email ).FullMatch   // no underscores in domain
+"abc@foo_bar.com"
+
