@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "Any", "." },
                 { "Comma", "," },
                 { "Digit", "\\d" },
-                { "Email", ".+@.+\\.[^.]{2,}" },
+                { "Email", "[^\\s@]+@[^\\s@]+\\.[^\\s@.]+{2,}" },
                 { "Hyphen", "\\-" },
                 { "LeftParen", "\\(" },
                 { "Letter", "\\p{L}" },
@@ -121,6 +121,8 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             },
             canCoerceFromBackingKind: true,
             canConcatenateStronglyTyped: true);
+
+        public static readonly string MatchEnumEmail_PreV1 = ".+@.+\\.[^.]{2,}";
 
         public static readonly EnumSymbol ErrorKindEnum = new EnumSymbol(
             new DName(LanguageConstants.ErrorKindEnumString),

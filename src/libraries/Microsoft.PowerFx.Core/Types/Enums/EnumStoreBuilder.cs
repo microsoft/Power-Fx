@@ -34,6 +34,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             };
 
         // DefaultEnums, with enum strings, is legacy and only used by Power Apps
+        // Match is using Pre V1 values
         internal static IReadOnlyDictionary<string, string> DefaultEnums { get; } =
             new Dictionary<string, string>()
             {
@@ -67,7 +68,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 },
                 {
                     LanguageConstants.MatchEnumString,
-                    $"%s[{string.Join(", ", BuiltInEnums.MatchEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
+                    $"%s[{string.Join(", ", BuiltInEnums.MatchEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{(pair.Key == "Email" ? BuiltInEnums.MatchEnumEmail_PreV1 : pair.Value.Object)}"""))}]"
                 },
                 {
                     LanguageConstants.JSONFormatEnumString,
@@ -86,6 +87,11 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                     $"%s[{string.Join(", ", BuiltInEnums.JoinTypeEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
                 }
             };
+
+        // MatchEnum values at V1 for Power Apps use
+        internal static string DefaultEnums_MatchEnumV1 =
+                $"%s[{string.Join(", ", BuiltInEnums.MatchEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]";
+
         #endregion
 
         private readonly Dictionary<string, EnumSymbol> _enumSymbols = new Dictionary<string, EnumSymbol>();
