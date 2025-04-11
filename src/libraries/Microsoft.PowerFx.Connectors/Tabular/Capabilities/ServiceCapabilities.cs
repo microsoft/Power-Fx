@@ -268,11 +268,6 @@ namespace Microsoft.PowerFx.Connectors
 
             public CDPCountCapabilities(IEnumerable<string> primaryKeyNames, IEnumerable<DelegationOperator> filterSupportedFunctions)
             {
-                if (primaryKeyNames != null && primaryKeyNames.Count() > 1)
-                {
-                    throw new NotSupportedException($"Primary key count {primaryKeyNames.Count()} is not supported");
-                }
-
                 _primaryKeyNames = primaryKeyNames;
                 _filterSupportedFunctions = filterSupportedFunctions;
             }
@@ -284,7 +279,7 @@ namespace Microsoft.PowerFx.Connectors
 
             public override bool IsCountableTable()
             {
-                if (_primaryKeyNames != null && _primaryKeyNames.Any() && _filterSupportedFunctions != null && _filterSupportedFunctions.Contains(DelegationOperator.Countdistinct))
+                if (_primaryKeyNames != null && _primaryKeyNames.Count() == 1 && _filterSupportedFunctions != null && _filterSupportedFunctions.Contains(DelegationOperator.Countdistinct))
                 {
                     return true;
                 }
