@@ -93,6 +93,53 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             },
             canConcatenateStronglyTyped: true);
 
+        // For Match.Email, our objective is to define a simple, general purpose RE that matches most common email addresses
+        // - Useful for validating user input as looking like an email address when filling out a form.
+        // - Useful for extracint email addresses from a longer text stream.
+        // - We are not trying to validate every detail of the email address and domain name RFCs. We will accept email addresses that aren't legal.
+        // - If someone wants tighter boundaries, they are free to bring their own RE. The web has many examples, each tuned for various needs.
+        // - Composable with MatchOptions.BeginsWith, MatchOptions.EndsWith, and MatchOptions.Complete.
+        // - Support Unicode characters, interantional and emoji, looking to the future, including Iternationalized Domain Names
+        //
+        // Our definition is exclusionary as international Unicode characters and emojis are somewhat accepted as both an email address and in domain names.  
+        // We are excluding punctuation that is very unlikely to be allowed in either of these areas in the future, and accepting most everything else.
+        // It is helpful not to include common punctuation so that an email address can be extracted from, for example "Bob Contoso <bob@contoso.com>" and "Welcome bob@contoso.com!".
+        //
+        // Here is the breakdown of the RE:
+        //     [^\s@\(\)<>,;:\\""\[\]]+            # No spaces and excluding all the other "specials" in. Dot is OK, not checked for begin/end/duplicates
+        //     @                                   # The @ character in "a@b.com"
+        //     (?:[\-                              # Besides lowercase ASCII letters, - is the only allowed character in base hostnames.
+        //         .                               # We allow subdomains here, but not after the final .
+        //         _                               # Although illegal, we are accepting underscores as a hostname character as some use it.
+        //         \xb7\u05f3\u05f4\u0f0b\u30fb]   # These are the five characters that IDNA 2008 supports that are in \p{P} (Po to be exact) and would otherwise not be supported by the next line
+        //      | [^\s\p{P}<=>+\|]                 # Everything but spaces, punctuation, and common ASCII delimiters (in \p{Sm} but we don't need all of that)
+        //     )+                                  # At least one character is needed before the top level domain
+        //     \.                                  # The dot before the top level domain (TLD), the dot in "a@b.com"
+        //     (?:[\-                              # Same as above, but don't allow . as this is the TLD
+        //         _                               #
+        //         \xb7\u05f3\u05f4\u0f0b\u30fb]   # 
+        //      | [^\s\p{P}<=>+\|]                 # 
+        //     ){2,}                               # At least two characters are required for the TLD
+        //
+        // local-part (before the @) is driven by:
+        // - The "specials" production in https://www.w3.org/Protocols/rfc822/3_Lexical.html#z2
+        // - We don't support the uncommon quoted email addresses or comments in email addresses. https://datatracker.ietf.org/doc/html/rfc5321 states that systems shouldn't use the Quoted-string form.
+        // 
+        // domain-name and top-level-domain (after the @) is driven by:
+        // - ASCII:
+        //     - Original domain names only supported [a-z0-9\-]. Domain names are case insensitive, so effectively [A-Z] is also supported.
+        //     - Beyond \p{P}, < = > + | are commonly called out as illegal characters and excluded here.  < > in particular is commonly used to wrap email addresses with a companion display name.
+        //     - Although illegal, we are accepting underscores as a hostname character as some use it.
+        // - Internationalized domain names:
+        //     - See https://learn.microsoft.com/en-us/globalization/reference/idn and https://en.wikipedia.org/wiki/Internationalized_domain_name for general introduction to IDN
+        //     - For IDNs, almost all punctuation characters not included in https://www.unicode.org/Public/idna/idna2008derived/Idna2008-16.0.0.txt, but a few exceptions noted in https://datatracker.ietf.org/doc/html/rfc5892 and included in the RE.
+        // - Emojis in domain names:
+        //     - Is possible and supported in some TLDs today https://en.wikipedia.org/wiki/Emoji_domain, so we should be prepared for this to be more common, which is why we don't use an inclusive RE with some combination of \p{L}\p{N}\p{M}
+        //     - But unlikely to become common place as it is discouraged by ICANN for good reasons https://itp.cdn.icann.org/en/files/security-and-stability-advisory-committee-ssac-reports/sac-095-en.pdf
+        // - Domain name lengths:
+        //     - Second level domains can be one character long https://en.wikipedia.org/wiki/Single-letter_second-level_domain.
+        //     - There are no single letter top level domains at this time and unlikely to be added, as two letter are reserved for country codes and new gTLD applicants must be 3 characters or more https://newgtlds.icann.org/en/applicants/global-support/faqs/faqs-en
+
         public static readonly EnumSymbol MatchEnum = new EnumSymbol(
             new DName(LanguageConstants.MatchEnumString),
             DType.String,
@@ -101,8 +148,8 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "Any", "." },
                 { "Comma", "," },
                 { "Digit", "\\d" },
-                { "Email", "[^\\s@]+@[^\\s@]+\\.[^\\s@.]+{2,}" },
-                { "Hyphen", "\\-" },
+                { "Email", @"[^\s@\(\)<>,;:\\""\[\]]+@(?:[\-._\xb7\u05f3\u05f4\u0f0b\u30fb]|[^\s\p{P}<=>+\|])+\.(?:[\-_\xb7\u05f3\u05f4\u0f0b\u30fb]|[^\s\p{P}<=>+\|]){2,}" },
+                { "Hyphen", "-" },
                 { "LeftParen", "\\(" },
                 { "Letter", "\\p{L}" },
                 { "MultipleDigits", "\\d+" },
@@ -122,7 +169,35 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             canCoerceFromBackingKind: true,
             canConcatenateStronglyTyped: true);
 
-        public static readonly string MatchEnumEmail_PreV1 = ".+@.+\\.[^.]{2,}";
+        // This is the previous definition of the Match enum used by Power Apps pre-V1. Provided here for Power Apps' use.
+        public static readonly EnumSymbol MatchEnumPreV1 = new EnumSymbol(
+            new DName(LanguageConstants.MatchEnumString),
+            DType.String,
+            new Dictionary<string, object>()
+            {
+                { "Any", "." },
+                { "Comma", "," },
+                { "Digit", "\\d" },
+                { "Email", ".+@.+\\.[^.]{2,}" }, // differs from V1, suffers from not not excluding spaces, matching the entire sentence of "Welcome bob@contoso.com!".
+                { "Hyphen", "\\-" },             // differs from V1, escaped hyphen not supported by Power Fx and JavaScript outside of character classes
+                { "LeftParen", "\\(" },
+                { "Letter", "\\p{L}" },
+                { "MultipleDigits", "\\d+" },
+                { "MultipleLetters", "\\p{L}+" },
+                { "MultipleNonSpaces", "\\S+" },
+                { "MultipleSpaces", "\\s+" },
+                { "NonSpace", "\\S" },
+                { "OptionalDigits", "\\d*" },
+                { "OptionalLetters", "\\p{L}*" },
+                { "OptionalNonSpaces", "\\S*" },
+                { "OptionalSpaces", "\\s*" },
+                { "Period", "\\." },
+                { "RightParen", "\\)" },
+                { "Space", "\\s" },
+                { "Tab", "\\t" }
+            },
+            canCoerceFromBackingKind: true,
+            canConcatenateStronglyTyped: true);
 
         public static readonly EnumSymbol ErrorKindEnum = new EnumSymbol(
             new DName(LanguageConstants.ErrorKindEnumString),

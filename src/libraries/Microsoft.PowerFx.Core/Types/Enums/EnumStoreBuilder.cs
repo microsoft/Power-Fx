@@ -66,9 +66,11 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                     LanguageConstants.MatchOptionsEnumString,
                     $"%s[{string.Join(", ", BuiltInEnums.MatchOptionsEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
                 },
+
+                // Note this is the PreV1 definition of Match for Power Apps (the only consumer). If Power Apps wants to opt in, use DefaultEnums_MatchEnumV1 defined below.
                 {
                     LanguageConstants.MatchEnumString,
-                    $"%s[{string.Join(", ", BuiltInEnums.MatchEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{(pair.Key == "Email" ? BuiltInEnums.MatchEnumEmail_PreV1 : pair.Value.Object)}"""))}]"
+                    $"%s[{string.Join(", ", BuiltInEnums.MatchEnumPreV1.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
                 },
                 {
                     LanguageConstants.JSONFormatEnumString,
@@ -88,7 +90,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 }
             };
 
-        // MatchEnum values at V1 for Power Apps use
+        // MatchEnum values at V1 for Power Apps opt in
         internal static string DefaultEnums_MatchEnumV1 =
                 $"%s[{string.Join(", ", BuiltInEnums.MatchEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]";
 
