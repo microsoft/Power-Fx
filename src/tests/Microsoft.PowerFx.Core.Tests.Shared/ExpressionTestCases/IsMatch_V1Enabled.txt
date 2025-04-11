@@ -1,0 +1,24 @@
+﻿#SETUP: RegEx,PowerFxV1CompatibilityRules
+
+// Prior to V1, IsMatch would us IsConstant to determine if the second argument was a constant, instead of relying on TryGetConstantValue
+
+>> IsMatch("Foo", Blank())
+Errors: Error 15-22: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch(Blank(), Blank())
+Errors: Error 17-24: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "28", Concat( [2,8], Value ) )
+Errors: Error 15-37: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "28", Concat( [2,8], If( false, Text(Now()), Value ) ) )
+Errors: Error 15-63: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch("""Hello world""", Mid( "Hello", 1 ), MatchOptions.Contains)
+Errors: Error 27-44: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "adfA", Left( Left( "asdf", 1 ), 1 ) & Right( "asdf", 2 ) & Char( 65 ) )
+Errors: Error 67-68: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch("Hello 123 world", $"Hello {Sqrt(1)}{Sqrt(4)}{Sqrt(9)} world")
+Errors: Error 27-69: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
