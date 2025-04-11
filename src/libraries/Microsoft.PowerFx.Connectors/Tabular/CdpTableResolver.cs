@@ -28,13 +28,15 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly bool _doubleEncoding;
 
-        public CdpTableResolver(CdpTable tabularTable, HttpClient httpClient, string uriPrefix, bool doubleEncoding, ConnectorLogger logger = null)
+        private readonly ConnectorSettings _connectorSettings;
+
+        public CdpTableResolver(CdpTable tabularTable, HttpClient httpClient, string uriPrefix, bool doubleEncoding, ConnectorSettings connectorSettings, ConnectorLogger logger = null)
         {
             _tabularTable = tabularTable;
             _httpClient = httpClient;
             _uriPrefix = uriPrefix;
             _doubleEncoding = doubleEncoding;
-
+            _connectorSettings = connectorSettings ?? throw new ArgumentNullException(nameof(connectorSettings));
             Logger = logger;
         }
 
@@ -97,7 +99,7 @@ namespace Microsoft.PowerFx.Connectors
             var parts = _uriPrefix.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
             string connectorName = (parts.Length > 1) ? parts[1] : string.Empty;
 
-            ConnectorType connectorType = ConnectorFunction.GetCdpTableType(this, connectorName, _tabularTable.TableName, "Schema/Items", FormulaValue.New(text), ConnectorSettings.DefaultCdp, _tabularTable.DatasetName, 
+            ConnectorType connectorType = ConnectorFunction.GetCdpTableType(this, connectorName, _tabularTable.TableName, "Schema/Items", FormulaValue.New(text), _connectorSettings, _tabularTable.DatasetName, 
                                                                             out TableDelegationInfo delegationInfo, out IEnumerable<OptionSet> optionSets);
 
             OptionSets = optionSets;

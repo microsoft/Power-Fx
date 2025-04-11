@@ -11,12 +11,18 @@ namespace Microsoft.PowerFx.Connectors
     [ThreadSafeImmutable]
     public class ConnectorSettings
     {
-        internal static readonly ConnectorSettings DefaultCdp = new ConnectorSettings(null) 
-        { 
-            Compatibility = ConnectorCompatibility.CdpCompatibility,
-            SupportXMsEnumValues = true,
-            ReturnEnumsAsPrimitive = false
-        };
+        public static ConnectorSettings NewCDPConnectorSettings(bool extractMIPLables = false)
+        {
+            var connectorSettings = new ConnectorSettings(null)
+            {
+                Compatibility = ConnectorCompatibility.CdpCompatibility,
+                SupportXMsEnumValues = true,
+                ReturnEnumsAsPrimitive = false,
+                ExtractMIPLabels = extractMIPLables
+            };
+
+            return connectorSettings;
+        }
         
         public ConnectorSettings(string @namespace)
         {
@@ -32,6 +38,11 @@ namespace Microsoft.PowerFx.Connectors
         /// Maximum number of rows to return, per page.
         /// </summary>
         public int MaxRows { get; init; } = 1000;
+
+        /// <summary>
+        /// If this is enabled it will extract MIP Labels.
+        /// </summary>
+        public bool ExtractMIPLabels { get; init; } = false;
 
         /// <summary>
         /// Unknown extensions in swagger file are ignored by default during the validation process.

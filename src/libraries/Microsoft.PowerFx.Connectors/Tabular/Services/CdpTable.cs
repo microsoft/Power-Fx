@@ -48,15 +48,18 @@ namespace Microsoft.PowerFx.Connectors
 
         private IReadOnlyDictionary<string, Relationship> _relationships;
 
-        internal CdpTable(string dataset, string table, IReadOnlyCollection<RawTable> tables)
+        private readonly ConnectorSettings _connectorSettings;
+
+        internal CdpTable(string dataset, string table, IReadOnlyCollection<RawTable> tables, ConnectorSettings connectorSettings = null)
         {
             DatasetName = dataset ?? throw new ArgumentNullException(nameof(dataset));
             TableName = table ?? throw new ArgumentNullException(nameof(table));
             Tables = tables;
+            _connectorSettings = connectorSettings ?? ConnectorSettings.NewCDPConnectorSettings();
         }
 
-        internal CdpTable(string dataset, string table, DatasetMetadata datasetMetadata, IReadOnlyCollection<RawTable> tables)
-            : this(dataset, table, tables)
+        internal CdpTable(string dataset, string table, DatasetMetadata datasetMetadata, IReadOnlyCollection<RawTable> tables, ConnectorSettings connectorSettings)
+            : this(dataset, table, tables, connectorSettings)
         {
             DatasetMetadata = datasetMetadata;
         }
@@ -81,7 +84,7 @@ namespace Microsoft.PowerFx.Connectors
 
             _uriPrefix = uriPrefix;
 
-            CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, logger);
+            CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, _connectorSettings, logger);
             TabularTableDescriptor = await tableResolver.ResolveTableAsync(TableName, cancellationToken).ConfigureAwait(false);
             
             if (TabularTableDescriptor.HasErrors)
@@ -137,9 +140,11 @@ namespace Microsoft.PowerFx.Connectors
                 queryParams = "&" + queryParams;
             }
 
+            var useV2 = CdpTableResolver.UseV2(_uriPrefix);
+            var extractMipLabelsURI = useV2 && _connectorSettings.ExtractMIPLabels ? "extractMipLabels=true" : string.Empty;
             var uri = (_uriPrefix ?? string.Empty) +
-                   (CdpTableResolver.UseV2(_uriPrefix) ? "/v2" : string.Empty) +
-                   $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : SingleEncode(DatasetName))}/tables/{Uri.EscapeDataString(TableName)}/items?api-version=2015-09-01{queryParams}";
+                   (useV2 ? "/v2" : string.Empty) +
+                   $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : SingleEncode(DatasetName))}/tables/{Uri.EscapeDataString(TableName)}/items?api-version=2015-09-01{queryParams}&{extractMipLabelsURI}";
 
             string text = await GetObject(_httpClient, $"List items ({nameof(GetItemsInternalAsync)})", uri, null, cancellationToken, executionLogger).ConfigureAwait(false);
             return text;
