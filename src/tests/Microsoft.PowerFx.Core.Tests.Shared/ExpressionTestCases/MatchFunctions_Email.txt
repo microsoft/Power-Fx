@@ -1,0 +1,267 @@
+﻿#SETUP: RegEx,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+
+>> Match( "a@contoso.com", Match.Email ).FullMatch // single character
+"a@contoso.com"
+
+>> Match( "bob@contoso.com", Match.Email ).FullMatch
+"bob@contoso.com"
+
+>> Match( "bob.contoso@contoso.com", Match.Email ).FullMatch
+"bob.contoso@contoso.com"
+
+>> Match( "Bob Contoso <bob@contoso.com>", Match.Email ).FullMatch
+"bob@contoso.com"
+
+>> Match( "Welcome Bob Contoso <bob@contoso.com>!!!", Match.Email ).FullMatch
+"bob@contoso.com"
+
+>> Match( "in the middle of bob@contonso.com a sentence", Match.Email ).FullMatch
+"bob@contonso.com"
+
+// Punctuation characters in local-part
+
+>> Match( "here's a fun address: dots.are.fun@contoso.org", Match.Email ).FullMatch
+"dots.are.fun@contoso.org"
+
+>> Match( "here's a fun address: dashes-are-fun@contoso.org", Match.Email ).FullMatch
+"dashes-are-fun@contoso.org"
+
+>> Match( "here's a fun address: pluses+are+fun+too@contoso.org", Match.Email ).FullMatch
+"pluses+are+fun+too@contoso.org"
+
+>> Match( "here's a fun address: slashes/are/fun/too@contoso.org", Match.Email ).FullMatch
+"slashes/are/fun/too@contoso.org"
+
+>> Match( "here's a fun address: how_about_underscores@contoso.org", Match.Email ).FullMatch
+"how_about_underscores@contoso.org"
+
+// Unicode characters
+
+>> Match( "Scary👻Nights@contoso.org", Match.Email ).FullMatch
+"Scary👻Nights@contoso.org"
+
+>> Match( "Events@Scary👻House.org", Match.Email ).FullMatch
+"Events@Scary👻House.org"
+
+>> Match( " 👻ScaryNights@contoso👻.org ", Match.Email ).FullMatch
+"👻ScaryNights@contoso👻.org"
+
+>> Match( "Example of Greek IDN:fred@ουτοπία.δπθ.gr", Match.Email ).FullMatch  // example from https://en.wikipedia.org/wiki/Internationalized_domain_name
+"fred@ουτοπία.δπθ.gr"
+
+>> Match( "Example of Greek IDN <fred@ουτοπία.δπθ.gr> ", Match.Email ).FullMatch  
+"fred@ουτοπία.δπθ.gr"
+
+>> Match( "Punycode equivalent:fred@xn--kxae4bafwg.xn--pxaix.gr", Match.Email ).FullMatch
+"fred@xn--kxae4bafwg.xn--pxaix.gr"
+
+// Negative tests
+
+>> Match( "a", Match.Email )
+Blank()
+
+>> Match( "a sentence that mentions email", Match.Email )
+Blank()
+
+>> Match( "foo.com", Match.Email )
+Blank()
+
+>> Match( "@", Match.Email )
+Blank()
+
+>> Match( "@foo", Match.Email )
+Blank()
+
+>> Match( "@foo.com", Match.Email )
+Blank()
+
+>> Match( "start@middle@end.com", Match.Email ).FullMatch   // multiple @ signs, will take the last one, use with MatchOptions.BeginsWith to ensure the entire string is an email address
+"middle@end.com"
+
+// Valid and invalid punctuation in local part
+
+>> Match( "fred#!contoso*+/president@contoso.com", Match.Email ).FullMatch
+"fred#!contoso*+/president@contoso.com"
+
+>> Match( "fred#!""contoso*+/president@contoso.com", Match.Email ).FullMatch  // starts after illegal character
+"contoso*+/president@contoso.com"
+
+>> Match( "fred#!;contoso*+/president@contoso.com", Match.Email ).FullMatch  // starts after illegal character
+"contoso*+/president@contoso.com"
+
+>> Match( "fred#!;contoso*+/president@contoso.com", Match.Email, MatchOptions.BeginsWith ).FullMatch
+Blank()
+
+>> Match( "fred#!;contoso*+/president@contoso.com", Match.Email, MatchOptions.EndsWith ).FullMatch
+"contoso*+/president@contoso.com"
+
+// Valid and invalid punctuation in domain name, and domain name length
+
+>> Match( "fred@cont-o3so.com", Match.Email ).FullMatch
+"fred@cont-o3so.com"
+
+>> Match( "fred@cont-o3_so.com", Match.Email ).FullMatch  // no underscores
+"fred@cont-o3_so.com"
+
+>> Match( "fred@cont-o3?so.com", Match.Email ).FullMatch  // no question marks
+Blank()
+
+>> Match( "fred@contoso.co", Match.Email ).FullMatch  // two character TLD ok
+"fred@contoso.co"
+
+>> Match( "fred@contoso.c", Match.Email ).FullMatch   // one character TLD not ok
+Blank()
+
+>> Match( "fred@c.com", Match.Email ).FullMatch
+"fred@c.com"
+
+// From https://en.wikipedia.org/wiki/International_email
+
+>> Match( "stellyamburrr985@gmail.com", Match.Email )    // (English, ASCII)
+{FullMatch:"stellyamburrr985@gmail.com",StartMatch:1}
+
+>> Match( "Abc.123@example.com", Match.Email )    // (English, ASCII)  
+{FullMatch:"Abc.123@example.com",StartMatch:1}
+
+>> Match( "user+mailbox/department=shipping@example.com", Match.Email ) //  (English, ASCII)
+{FullMatch:"user+mailbox/department=shipping@example.com",StartMatch:1}
+
+>> Match( "Lots of punctuation: !#$%&'*+-/=?^_`.{|}~@example.com", Match.Email ) // (English, ASCII)
+{FullMatch:"!#$%&'*+-/=?^_`.{|}~@example.com",StartMatch:22}
+
+>> Match( "Lots of punctuation: !#$%&'*+-\=?^_`.{|}~@example.com", Match.Email ) // (English, ASCII)  Backslash not allowed
+{FullMatch:"=?^_`.{|}~@example.com",StartMatch:32}
+
+>> Match( """Abc@def""@example.com", Match.Email )   //   (English, ASCII)
+Blank()
+
+>> Match( """Fred\ Bloggs""@example.com", Match.Email ) //  (English, ASCII)
+Blank()
+
+>> Match( """Joe.\\Blow""@example.com", Match.Email ) //  (English, ASCII)
+Blank()
+
+>> Match( "用户@例子.广告, Chinese Unicode", Match.Email )  // (Chinese, Unicode)
+{FullMatch:"用户@例子.广告",StartMatch:1}
+
+>> Match( "ಬೆಂಬಲ@ಡೇಟಾಮೇಲ್.ಭಾರತ", Match.Email )  // (Kannada, Unicode)
+{FullMatch:"ಬೆಂಬಲ@ಡೇಟಾಮೇಲ್.ಭಾರತ",StartMatch:1}
+
+>> Match("अजय@डाटा.भारत", Match.Email )  // (Hindi, Unicode)
+{FullMatch:"अजय@डाटा.भारत",StartMatch:1}
+
+>> Match( "<квіточка@пошта.укр>", Match.Email ) // (Ukrainian, Unicode)
+{FullMatch:"квіточка@пошта.укр",StartMatch:2}
+
+>> Match( "Green Unicode: χρήστης@παράδειγμα.ελ", Match.Email ) // (Greek, Unicode)
+{FullMatch:"χρήστης@παράδειγμα.ελ",StartMatch:16}
+
+>> Match( "Dörte@Sörensen.example.com", Match.Email )  // (German, Unicode)
+{FullMatch:"Dörte@Sörensen.example.com",StartMatch:1}
+
+>> Match( "коля@пример.рф", Match.Email )            // (Russian, Unicode)
+{FullMatch:"коля@пример.рф",StartMatch:1}
+
+>> Match( "مثال@موقع.عر", Match.Email )               // (Arabic, Unicode)
+{FullMatch:"مثال@موقع.عر",StartMatch:1}
+
+// From https://en.wikipedia.org/wiki/Email_address
+// Valid email addresses
+
+>> Match( "simple@example.com", Match.Email )
+{FullMatch:"simple@example.com",StartMatch:1}
+
+>> Match( "very.common@example.com", Match.Email )
+{FullMatch:"very.common@example.com",StartMatch:1}
+
+>> Match( "FirstName.LastName@EasierReading.org", Match.Email ) // (case is always ignored after the @ and usually before)
+{FullMatch:"FirstName.LastName@EasierReading.org",StartMatch:1}
+
+>> Match("x@example.com", Match.Email ) // (one-letter local-part)
+{FullMatch:"x@example.com",StartMatch:1}
+
+>> Match( "long.email-address-with-hyphens@and.subdomains.example.com", Match.Email )
+{FullMatch:"long.email-address-with-hyphens@and.subdomains.example.com",StartMatch:1}
+
+>> Match( "user.name+tag+sorting@example.com", Match.Email ) // (may be routed to user.name@example.com inbox depending on mail server)
+{FullMatch:"user.name+tag+sorting@example.com",StartMatch:1}
+
+>> Match( "name/surname@example.com", Match.Email ) // (slashes are a printable character, and allowed)
+{FullMatch:"name/surname@example.com",StartMatch:1}
+
+>> Match( "admin@example", Match.Email ) // (local domain name with no TLD, although ICANN highly discourages dotless email addresses[32]) -- we don't support
+Blank()
+
+>> Match( "example@s.example", Match.Email ) // (see the List of Internet top-level domains)
+{FullMatch:"example@s.example",StartMatch:1}
+
+>> Match( """ ""@example.org", Match.Email ) // (space between the quotes) -- we don't support
+Blank()
+
+>> Match( """john..doe""@example.org", Match.Email ) // (quoted double dot) -- we don't support
+Blank()
+
+>> Match( "mailhost!username@example.org", Match.Email ) // (bangified host route used for uucp mailers)
+{FullMatch:"mailhost!username@example.org",StartMatch:1}
+
+>> Match( """very.(),:;<>[]\"".VERY.\""very@\\ \""very\"".unusual""@strange.example.com", Match.Email ) // (include non-letters character AND multiple at sign, the first one being double quoted)
+Blank()
+
+>> Match( "user%example.com@example.org", Match.Email ) // (% escaped mail route to user@example.com via example.org)
+{FullMatch:"user%example.com@example.org",StartMatch:1}
+
+>> Match( "user-@example.org", Match.Email ) // (local-part ending with non-alphanumeric character from the list of allowed printable characters)
+{FullMatch:"user-@example.org",StartMatch:1}
+
+>> Match( "postmaster@[123.123.123.123]", Match.Email ) // (IP addresses are allowed instead of domains when in square brackets, but strongly discouraged)
+Blank()
+
+>> Match( "postmaster@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370:7334]", Match.Email ) // (IPv6 uses a different syntax)
+Blank()
+
+>> Match( "_test@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370:7334]", Match.Email ) // (begin with underscore different syntax)
+Blank()
+
+>> Match( "I❤️CHOCOLATE@example.com", Match.Email ) // (emoji are only allowed with SMTPUTF8)
+{FullMatch:"I❤️CHOCOLATE@example.com",StartMatch:1}
+
+// Invalid email addresses
+
+>> Match( "abc.example.com", Match.Email ) // (no @ character)
+Blank()
+
+>> Match( "a@b@c@example.com", Match.Email ) // (only one @ is allowed outside quotation marks)
+{FullMatch:"c@example.com",StartMatch:5}
+
+>> Match( "a""b(c)d,e:f;g<h>i[j\k]l@example.com", Match.Email ) // (none of the special characters in this local-part are allowed outside quotation marks)
+{FullMatch:"l@example.com",StartMatch:23}
+
+>> Match( "just""not""right@example.com", Match.Email ) // (quoted strings must be dot separated or be the only element making up the local-part)
+{FullMatch:"right@example.com",StartMatch:10}
+
+>> Match( "this is""not\allowed@example.com", Match.Email ) // (spaces, quotes, and backslashes may only exist when within quoted strings and preceded by a backslash)
+{FullMatch:"allowed@example.com",StartMatch:13}
+
+>> Match( "this\ still\""not\\allowed@example.com", Match.Email ) // (even if escaped (preceded by a backslash), spaces, quotes, and backslashes must still be contained by quotes)
+{FullMatch:"allowed@example.com",StartMatch:19}
+
+>> Match( "1234567890123456789012345678901234567890123456789012345678901234+x@example.com", Match.Email ) // (local-part is longer than 64 characters)
+{FullMatch:"1234567890123456789012345678901234567890123456789012345678901234+x@example.com",StartMatch:1}
+
+>> Match( "i.like.underscores@but_they_are_not_allowed_in_this_part.com", Match.Email ) // (underscore is not allowed in domain part)
+{FullMatch:"i.like.underscores@but_they_are_not_allowed_in_this_part.com",StartMatch:1}
+
+// MatchAll
+
+>> MatchAll( "Fred Contoso <fred@contoso.com>; Sally Contoso <sally@contoso.edu>; June Contoso <june@contoso.org>", Match.Email )
+Table({FullMatch:"fred@contoso.com",StartMatch:15},{FullMatch:"sally@contoso.edu",StartMatch:49},{FullMatch:"june@contoso.org",StartMatch:83})
+
+>> MatchAll( "Fred Contoso <fred@contoso.com>, Sally Contoso <sally@contoso.edu>, June Contoso <june@contoso.org>", Match.Email )
+Table({FullMatch:"fred@contoso.com",StartMatch:15},{FullMatch:"sally@contoso.edu",StartMatch:49},{FullMatch:"june@contoso.org",StartMatch:83})
+
+>> MatchAll( "fred@contoso.com; sally@contoso.edu; june@contoso.org", Match.Email )
+Table({FullMatch:"fred@contoso.com",StartMatch:1},{FullMatch:"sally@contoso.edu",StartMatch:19},{FullMatch:"june@contoso.org",StartMatch:38})
+
+>> MatchAll( "fred@contoso.com, sally@contoso.edu, june@contoso.org", Match.Email )
+Table({FullMatch:"fred@contoso.com",StartMatch:1},{FullMatch:"sally@contoso.edu",StartMatch:19},{FullMatch:"june@contoso.org",StartMatch:38})
+
