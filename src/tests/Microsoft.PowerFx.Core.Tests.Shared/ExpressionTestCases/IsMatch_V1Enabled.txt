@@ -22,3 +22,32 @@ Errors: Error 67-68: Regular expression must be a constant value.|Error 0-7: The
 
 >> IsMatch("Hello 123 world", $"Hello {Sqrt(1)}{Sqrt(4)}{Sqrt(9)} world")
 Errors: Error 27-69: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "a", "a#f", MatchOptions.FreeSpacing )
+true
+
+>> IsMatch( Char(10), ".+", MatchOptions.DotAll )
+true
+
+>> IsMatch( "A", "a", MatchOptions.IgnoreCase )
+true
+
+// we CAN generate errors here because options are compile time constants (V1)
+
+>> With( { mo: MatchOptions.FreeSpacing }, IsMatch( "a", "a#f", mo ) )
+Errors: Error 61-63: MatchOptions must be a constant value.|Error 40-47: The function 'IsMatch' has some invalid arguments.
+
+>> With( { mo: MatchOptions.FreeSpacing }, IsMatch( "a", "a#f" ) )
+false
+
+>> With( { mo: MatchOptions.DotAll }, IsMatch( Char(10), ".+", mo ) )
+Errors: Error 60-62: MatchOptions must be a constant value.|Error 35-42: The function 'IsMatch' has some invalid arguments.
+
+>> With( { mo: MatchOptions.DotAll }, IsMatch( Char(10), ".+" ) )
+false
+
+>> With( { mo: MatchOptions.IgnoreCase }, IsMatch( "A", "a", mo ) )
+Errors: Error 58-60: MatchOptions must be a constant value.|Error 39-46: The function 'IsMatch' has some invalid arguments.
+
+>> With( { mo: MatchOptions.IgnoreCase }, IsMatch( "A", "a" ) )
+false

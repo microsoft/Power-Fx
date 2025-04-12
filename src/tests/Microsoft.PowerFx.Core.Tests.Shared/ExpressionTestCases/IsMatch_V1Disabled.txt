@@ -1,6 +1,7 @@
 ﻿#SETUP: RegEx,disable:PowerFxV1CompatibilityRules
 
-// Prior to V1, IsMatch would us IsConstant to determine if the second argument was a constant, instead of relying on TryGetConstantValue
+// Prior to V1, IsMatch would use IsConstant to determine if the second argument was a constant, instead of relying on TryGetConstantValue
+// MatchOptions was not required to be a compile time constant
 
 >> IsMatch("Foo", Blank())
 Errors: Error 15-22: Regular expression must be a constant value.
@@ -22,3 +23,35 @@ true
 
 >> IsMatch("Hello 123 world", $"Hello {Sqrt(1)}{Sqrt(4)}{Sqrt(9)} world")
 true
+
+// We give these errors when we can, as these options were not supported in pre-V1
+// They are not implemented in pre-V1
+
+>> IsMatch( "a", "a#f", MatchOptions.FreeSpacing )
+Errors: Error 33-45: Invalid regular expression: MatchOptions.DotAll and MatchOptions.FreeSpacing are only available with Power Fx V1, found "MatchOptions.FreeSpacing".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( Char(10), ".+", MatchOptions.DotAll )
+Errors: Error 37-44: Invalid regular expression: MatchOptions.DotAll and MatchOptions.FreeSpacing are only available with Power Fx V1, found "MatchOptions.DotAll".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "A", "a", MatchOptions.IgnoreCase )
+true
+
+// we can't generate errors when options are supported at runtime (pre-V1)
+
+>> With( { mo: MatchOptions.FreeSpacing }, IsMatch( "a", "a#f", mo ) )
+true
+
+>> With( { mo: MatchOptions.FreeSpacing }, IsMatch( "a", "a#f" ) )
+false
+
+>> With( { mo: MatchOptions.DotAll }, IsMatch( Char(10), ".+", mo ) )
+true
+
+>> With( { mo: MatchOptions.DotAll }, IsMatch( Char(10), ".+" ) )
+false
+
+>> With( { mo: MatchOptions.IgnoreCase }, IsMatch( "A", "a", mo ) )
+true
+
+>> With( { mo: MatchOptions.IgnoreCase }, IsMatch( "A", "a" ) )
+false
