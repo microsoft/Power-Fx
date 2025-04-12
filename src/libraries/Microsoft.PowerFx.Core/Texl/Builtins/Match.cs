@@ -179,14 +179,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(returnType.IsRecord || returnType.IsTable || returnType == DType.Boolean);
 
             var regExNode = args[1];
+            var isMatchCheckSemanticsLater = false;
 
             if ((argTypes[1].Kind != DKind.String && argTypes[1].Kind != DKind.OptionSetValue) || !BinderUtils.TryGetConstantValue(context, regExNode, out var regularExpression))
             {
+                regularExpression = null;
+
                 if (returnType == DType.Boolean && !context.Features.PowerFxV1CompatibilityRules)
                 {
                     // error check is delayed until CheckSemantics for IsMatch only, where we have the binding
                     // don't leave CheckTypes until after we review the third argument, can still report a problem with a constant third argument and the new enum flags
-                    regularExpression = null;
+                    isMatchCheckSemanticsLater = true;
                 }
                 else
                 {
@@ -223,7 +226,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // regularExpressionOptions will remain empty for the cache work below which is fine.
             }
 
-            if (regularExpression == null)
+            if (isMatchCheckSemanticsLater)
             {
                 return true;
             }
