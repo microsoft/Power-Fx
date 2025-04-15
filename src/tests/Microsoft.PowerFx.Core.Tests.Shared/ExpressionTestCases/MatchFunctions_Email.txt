@@ -38,6 +38,9 @@
 >> Match( "here's a fun address: how{about}curly@contoso.org", Match.Email ).FullMatch
 "how{about}curly@contoso.org"
 
+>> Match( "here's a fun address: dots.are.fun.too@contoso.org", Match.Email ).FullMatch
+"dots.are.fun.too@contoso.org"
+
 // Unicode characters everywhere (not legal today, but assume someday it will be)
 
 >> Match( "Scary👻Nights@contoso.org", Match.Email ).FullMatch
@@ -110,6 +113,44 @@ Blank()
 
 >> Match( "start@middle@end.com", Match.Email ).FullMatch   // multiple @ signs, will take the last one, use with MatchOptions.BeginsWith to ensure the entire string is an email address
 "middle@end.com"
+
+// From https://www.w3.org/Protocols/rfc822/3_Lexical.html#z2
+// specials    =  "(" / ")" / "<" / ">" / "@"  ; Must be in quoted-
+//             /  "," / ";" / ":" / "\" / <">  ;  string, to use
+//             /  "." / "[" / "]"              ;  within a word.
+
+>> Match( "here's a fun address: back slashes/are/not\fun/too@contoso.org", Match.Email ).FullMatch
+"fun/too@contoso.org"
+
+>> Match( "here's a fun address: parens/are/not(fun/too@contoso.org", Match.Email ).FullMatch
+"fun/too@contoso.org"
+
+>> Match( "here's a fun address: parens/are/not)fun/too@contoso.org", Match.Email ).FullMatch
+"fun/too@contoso.org"
+
+>> Match( "here's a fun address: angle brackets/are/not<fun/too@contoso.org", Match.Email ).FullMatch
+"fun/too@contoso.org"
+
+>> Match( "here's a fun address: angle brackets/are/not>fun/too@contoso.org", Match.Email ).FullMatch
+"fun/too@contoso.org"
+
+>> Match( "here's a fun address: square bracket/are/not[fun/too@contoso.org", Match.Email ).FullMatch
+"fun/too@contoso.org"
+
+>> Match( "here's a fun address: square bracket/are/not]fun/too@contoso.org", Match.Email ).FullMatch
+"fun/too@contoso.org"
+
+>> Match( "here's a fun address: comma/are/not,fun/too@contoso.org", Match.Email ).FullMatch
+"fun/too@contoso.org"
+
+>> Match( "here's a fun address: comma/are/not;fun/too@contoso.org", Match.Email ).FullMatch
+"fun/too@contoso.org"
+
+>> Match( "here's a fun address: comma/are/not:fun/too@contoso.org", Match.Email ).FullMatch
+"fun/too@contoso.org"
+
+>> Match( "here's a fun address: at/are/not@fun/too@contoso.org", Match.Email ).FullMatch
+"fun/too@contoso.org"
 
 // Valid and invalid punctuation in local part
 
@@ -354,4 +395,24 @@ Blank()
 
 >> Match( "If you have problems, send email to Fred {fred@contoso.com}", Match.Email ) // { is a legit email local-part character, captured at the front
 {FullMatch:"{fred@contoso.com",StartMatch:42}
+
+// complete
+
+>> Match( "If you have problems, send email to Fred (fred@contoso.com)", Match.Email, MatchOptions.Complete ) 
+Blank()
+
+>> Match( "fred@contoso.com", Match.Email, MatchOptions.Complete ) 
+{FullMatch:"fred@contoso.com",StartMatch:1}
+
+>> IsMatch( "fred@contoso.com", Match.Email, MatchOptions.Complete ) 
+true
+
+>> Match( "Fred Contoso <fred@contoso.com>", "\w+\s*\w+\s*<" & Match.Email & ">", MatchOptions.Complete )
+{FullMatch:"Fred Contoso <fred@contoso.com>",StartMatch:1}
+
+>> Match( "Fred Contoso <fred@contoso.com>, and some more", "\w+\s*\w+\s*<" & Match.Email & ">", MatchOptions.Complete )
+Blank()
+
+>> Match( "Fred Contoso <fred@contoso.com>, and some more", "\w+\s*\w+\s*<" & Match.Email & ">" )
+{FullMatch:"Fred Contoso <fred@contoso.com>",StartMatch:1}
 

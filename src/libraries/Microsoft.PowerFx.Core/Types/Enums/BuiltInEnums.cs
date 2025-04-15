@@ -107,7 +107,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         //
         // Here is the breakdown of the RE:
         //   (?:                                     # Entire thing is wrapped in a group, so that a quantifier could be used with it (such as a ?).
-        //     (?:[\{\}] |                           # These are excluded by the \p{P...} next, but should be included so added back in here.
+        //     (?:[\{\}] |                           # These are excluded by the \p{P...} next, but should be included as per RFC 822, so added back here.
         //        [^\s@<>,;:\\""                     # Excluding spaces and a few punctuation characters, more covered next; international letters, numbers, emojis, etc. are included
         //        \p{Pi}\p{Ps}\p{Pe}\p{Pf}]          # Excluding "specials" in the RFC, with international end and start punctuation, such as ( [ “ « 「
         //     )+                                    # At least one character is required
