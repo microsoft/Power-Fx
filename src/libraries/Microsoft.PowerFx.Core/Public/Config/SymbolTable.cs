@@ -309,7 +309,7 @@ namespace Microsoft.PowerFx
             _functions.RemoveAll(function);
         }
 
-        internal void AddFunctions(TexlFunctionSet functions)
+        internal void AddFunctions(TexlFunctionSet functions, bool isV1 = true)
         {
             using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
@@ -322,17 +322,17 @@ namespace Microsoft.PowerFx
             _functions.Add(functions);
 
             // Add any associated enums 
-            EnumStoreBuilder?.WithRequiredEnums(functions);
+            EnumStoreBuilder?.WithRequiredEnums(functions, isV1);
         }
 
-        internal void AddFunction(TexlFunction function)
+        internal void AddFunction(TexlFunction function, bool isV1 = true)
         {
             using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
             _functions.Add(function);
 
             // Add any associated enums 
-            EnumStoreBuilder?.WithRequiredEnums(new TexlFunctionSet(function));
+            EnumStoreBuilder?.WithRequiredEnums(new TexlFunctionSet(function), isV1);
         }
 
         internal EnumStoreBuilder EnumStoreBuilder

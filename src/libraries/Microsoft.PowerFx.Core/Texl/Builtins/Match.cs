@@ -139,7 +139,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool UseParentScopeForArgumentSuggestions => true;
 
         public BaseMatchFunction(string functionName, TexlStrings.StringGetter aboutGetter, DType returnType, RegexTypeCache regexTypeCache)
-            : base(functionName, aboutGetter, FunctionCategories.Text, returnType, 0, 2, 3, DType.String, BuiltInEnums.MatchEnum.FormulaType._type, BuiltInEnums.MatchOptionsEnum.FormulaType._type)
+            : base(functionName, aboutGetter, FunctionCategories.Text, returnType, 0, 2, 3, DType.String, DType.Unknown, BuiltInEnums.MatchOptionsEnum.FormulaType._type)
         {
             if (regexTypeCache != null)
             {
@@ -175,8 +175,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == 2 || args.Length == 3);
             Contracts.AssertValue(errors);
 
-            bool fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            returnType = ReturnType;
             Contracts.Assert(returnType.IsRecord || returnType.IsTable || returnType == DType.Boolean);
+
+            nodeToCoercedTypeMap = null;
+
+            bool fValid = CheckType(context, args[0], argTypes[0], DType.String, errors, ref nodeToCoercedTypeMap);
+            fValid &= CheckTypeEnum(context, args[1], argTypes[1], context.Features.PowerFxV1CompatibilityRules ? BuiltInEnums.MatchEnum.FormulaType._type : BuiltInEnums.MatchEnumV1Disabled.FormulaType._type, errors, ref nodeToCoercedTypeMap);
+            if (args.Length == 3)
+            {
+                fValid &= CheckTypeEnum(context, args[2], argTypes[2], BuiltInEnums.MatchOptionsEnum.FormulaType._type, errors, ref nodeToCoercedTypeMap);
+            }
 
             var regExNode = args[1];
             var isMatchCheckSemanticsLater = false;

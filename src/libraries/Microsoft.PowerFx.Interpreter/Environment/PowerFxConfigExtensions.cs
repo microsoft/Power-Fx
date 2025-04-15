@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx
                     throw new InvalidOperationException("Cannot add RegEx functions more than once.");
                 }
 
-                config.InternalConfigSymbols.AddFunction(func.Key);
+                config.InternalConfigSymbols.AddFunction(func.Key, config.Features.PowerFxV1CompatibilityRules);
                 config.AdditionalFunctions.Add(func.Key, func.Value);
             }
         }

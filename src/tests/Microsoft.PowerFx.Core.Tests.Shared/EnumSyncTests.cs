@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var kindStrings = new Dictionary<DKind, string>() { { DKind.Number, "%n[" }, { DKind.Color, "%c[" }, { DKind.String, "%s[" } };
 
-            foreach (var enumSymbol in EnumStoreBuilder.DefaultEnumSymbols)
+            foreach (var enumSymbol in EnumStoreBuilder.DefaultEnumSymbolsV1Disabled)
             {
                 var enumString = EnumStoreBuilder.DefaultEnums[enumSymbol.Key];
                 Assert.NotNull(enumString);
