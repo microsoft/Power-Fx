@@ -40,6 +40,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.IsMatchArg1, TexlStrings.IsMatchArg2 };
             yield return new[] { TexlStrings.IsMatchArg1, TexlStrings.IsMatchArg2, TexlStrings.IsMatchArg3 };
         }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            // most errors should be caught in CheckTypes, but we deliberately don't erorr for IsMatch in Pre-V1 and wait for this check instead
+            // for cases in Power Apps where IsConstant will be true but TryGetConstantValue in CheckTypes will fail
+            if (!binding.Features.PowerFxV1CompatibilityRules && ((argTypes[1].Kind != DKind.String && argTypes[1].Kind != DKind.OptionSetValue) || !binding.IsConstant(args[1])))
+            {
+                errors.EnsureError(args[1], TexlStrings.ErrVariableRegEx);
+            }
+        }
     }
 
     // Match(text:s, regular_expression:s, [options:s])
@@ -169,11 +179,23 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(returnType.IsRecord || returnType.IsTable || returnType == DType.Boolean);
 
             var regExNode = args[1];
+            var isMatchCheckSemanticsLater = false;
 
             if ((argTypes[1].Kind != DKind.String && argTypes[1].Kind != DKind.OptionSetValue) || !BinderUtils.TryGetConstantValue(context, regExNode, out var regularExpression))
             {
-                errors.EnsureError(regExNode, TexlStrings.ErrVariableRegEx);
-                return false;
+                regularExpression = null;
+
+                if (returnType == DType.Boolean && !context.Features.PowerFxV1CompatibilityRules)
+                {
+                    // error check is delayed until CheckSemantics for IsMatch only, where we have the binding
+                    // don't leave CheckTypes until after we review the third argument, can still report a problem with a constant third argument and the new enum flags
+                    isMatchCheckSemanticsLater = true;
+                }
+                else
+                {
+                    errors.EnsureError(regExNode, TexlStrings.ErrVariableRegEx);
+                    return false;
+                }
             }
 
             string regularExpressionOptions = string.Empty;
@@ -202,6 +224,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 // having pre-V1 variable regex options that we can't process here is OK, as pre-V1 options would not impact the schema.
                 // regularExpressionOptions will remain empty for the cache work below which is fine.
+            }
+
+            if (isMatchCheckSemanticsLater)
+            {
+                return true;
             }
 
             if (!context.Features.PowerFxV1CompatibilityRules)
