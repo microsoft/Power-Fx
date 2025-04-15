@@ -35,7 +35,10 @@
 >> Match( "here's a fun address: how_about_underscores@contoso.org", Match.Email ).FullMatch
 "how_about_underscores@contoso.org"
 
-// Unicode characters
+>> Match( "here's a fun address: how{about}curly@contoso.org", Match.Email ).FullMatch
+"how{about}curly@contoso.org"
+
+// Unicode characters everywhere (not legal today, but assume someday it will be)
 
 >> Match( "Scary👻Nights@contoso.org", Match.Email ).FullMatch
 "Scary👻Nights@contoso.org"
@@ -45,6 +48,12 @@
 
 >> Match( " 👻ScaryNights@contoso👻.org ", Match.Email ).FullMatch
 "👻ScaryNights@contoso👻.org"
+
+>> Match( "👻@👻.👻", Match.Email ).FullMatch
+"👻@👻.👻"
+
+>> Match( "👻@👻.👻.👻", Match.Email ).FullMatch
+"👻@👻.👻.👻"
 
 >> Match( "Example of Greek IDN:fred@ουτοπία.δπθ.gr", Match.Email ).FullMatch  // example from https://en.wikipedia.org/wiki/Internationalized_domain_name
 "fred@ουτοπία.δπθ.gr"
@@ -66,13 +75,37 @@ Blank()
 >> Match( "foo.com", Match.Email )
 Blank()
 
->> Match( "@", Match.Email )
+>> Match( "a@foo", Match.Email ) // must be a dot 
 Blank()
 
->> Match( "@foo", Match.Email )
+>> Match( "@", Match.Email ) // must be a dot and a local-part
 Blank()
 
->> Match( "@foo.com", Match.Email )
+>> Match( "@foo", Match.Email ) // must be a dot and a local-part
+Blank()
+
+>> Match( "@foo.com", Match.Email ) // must be a local-part
+Blank()
+
+>> Match( "a@foo .com", Match.Email ) // no space
+Blank()
+
+>> Match( "a@ foo.com", Match.Email ) // no space
+Blank()
+
+>> Match( "a@foo. com", Match.Email ) // no space
+Blank()
+
+>> Match( "a @foo.com", Match.Email ) // no space
+Blank()
+
+>> Match( "a@foo..com", Match.Email ) // no two dots
+Blank()
+
+>> Match( "a@foo.com.", Match.Email ) // no dot at end (doesn't match last dot)
+{FullMatch:"a@foo.com",StartMatch:1}
+
+>> Match( "a@.foo.com", Match.Email ) // no dot at beginning
 Blank()
 
 >> Match( "start@middle@end.com", Match.Email ).FullMatch   // multiple @ signs, will take the last one, use with MatchOptions.BeginsWith to ensure the entire string is an email address
@@ -109,8 +142,8 @@ Blank()
 >> Match( "fred@contoso.co", Match.Email ).FullMatch  // two character TLD ok
 "fred@contoso.co"
 
->> Match( "fred@contoso.c", Match.Email ).FullMatch   // one character TLD not ok
-Blank()
+>> Match( "fred@contoso.c", Match.Email ).FullMatch   // one character TLD not ok today, but may be coming with IDNA support (CJK single character), accepted by Power Fx
+"fred@contoso.c"
 
 >> Match( "fred@c.com", Match.Email ).FullMatch
 "fred@c.com"
@@ -225,6 +258,20 @@ Blank()
 >> Match( "I❤️CHOCOLATE@example.com", Match.Email ) // (emoji are only allowed with SMTPUTF8)
 {FullMatch:"I❤️CHOCOLATE@example.com",StartMatch:1}
 
+// As a group
+
+>> Match( "Fred", Match.MultipleNonSpaces & Match.OptionalSpaces & Match.Email & "?" )
+{FullMatch:"Fred",StartMatch:1}
+
+>> Match( "Fred fred@contoso.com", Match.MultipleNonSpaces & Match.OptionalSpaces & Match.Email & "?" )
+{FullMatch:"Fred fred@contoso.com",StartMatch:1}
+
+>> Match( "Fred fred@", Match.MultipleNonSpaces & Match.OptionalSpaces & Match.Email & "?" )
+{FullMatch:"Fred ",StartMatch:1}
+
+>> Match( "Fred Contoso <fred@contoso.com>", "(\w+)\s*(\w+)\s*<(" & Match.Email & ")>", MatchOptions.NumberedSubMatches )
+{FullMatch:"Fred Contoso <fred@contoso.com>",StartMatch:1,SubMatches:Table({Value:"Fred"},{Value:"Contoso"},{Value:"fred@contoso.com"})}
+
 // Invalid email addresses
 
 >> Match( "abc.example.com", Match.Email ) // (no @ character)
@@ -264,4 +311,47 @@ Table({FullMatch:"fred@contoso.com",StartMatch:1},{FullMatch:"sally@contoso.edu"
 
 >> MatchAll( "fred@contoso.com, sally@contoso.edu, june@contoso.org", Match.Email )
 Table({FullMatch:"fred@contoso.com",StartMatch:1},{FullMatch:"sally@contoso.edu",StartMatch:19},{FullMatch:"june@contoso.org",StartMatch:38})
+
+// With quotes
+
+>> Match( "If you have problems, send email to ""fred@contoso.com""", Match.Email )
+{FullMatch:"fred@contoso.com",StartMatch:38}
+
+>> Match( "If you have problems, send email to “fred@contoso.com”", Match.Email )
+{FullMatch:"fred@contoso.com",StartMatch:38}
+
+>> Match( "If you have problems, send email to «fred@contoso.com»", Match.Email )  // french
+{FullMatch:"fred@contoso.com",StartMatch:38}
+
+>> Match( "If you have problems, send email to « fred@contoso.com »", Match.Email ) // french
+{FullMatch:"fred@contoso.com",StartMatch:39}
+
+>> Match( "If you have problems, send email to 「fred@contoso.com」", Match.Email )  // japan
+{FullMatch:"fred@contoso.com",StartMatch:38}
+
+>> Match( "If you have problems, send email to 『fred@contoso.com』", Match.Email )  // japan
+{FullMatch:"fred@contoso.com",StartMatch:38}
+
+>> Match( "If you have problems, send email to ""fred""@contoso.com", Match.Email )
+Blank()
+
+>> Match( "If you have problems, send email to ""fred""a@contoso.com", Match.Email )
+{FullMatch:"a@contoso.com",StartMatch:43}
+
+// with parens and square brackets
+
+>> Match( "If you have problems, send email to Fred (fred@contoso.com)", Match.Email )
+{FullMatch:"fred@contoso.com",StartMatch:43}
+
+>> Match( "If you have problems, send email to Fred <fred@contoso.com>", Match.Email )
+{FullMatch:"fred@contoso.com",StartMatch:43}
+
+>> Match( "If you have problems, send email to Fred [fred@contoso.com]", Match.Email )
+{FullMatch:"fred@contoso.com",StartMatch:43}
+
+>> Match( "If you have problems, send email to Fred 'fred@contoso.com'", Match.Email ) // ' is a legit email local-part character, captured at the front
+{FullMatch:"'fred@contoso.com",StartMatch:42}
+
+>> Match( "If you have problems, send email to Fred {fred@contoso.com}", Match.Email ) // { is a legit email local-part character, captured at the front
+{FullMatch:"{fred@contoso.com",StartMatch:42}
 

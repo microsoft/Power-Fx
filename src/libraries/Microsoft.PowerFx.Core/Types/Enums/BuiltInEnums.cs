@@ -106,23 +106,31 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         // It is helpful not to include common punctuation so that an email address can be extracted from, for example "Bob Contoso <bob@contoso.com>" and "Welcome bob@contoso.com!".
         //
         // Here is the breakdown of the RE:
-        //     [^\s@\(\)<>,;:\\""\[\]]+            # No spaces and excluding all the other "specials" in. Dot is OK, not checked for begin/end/duplicates
-        //     @                                   # The @ character in "a@b.com"
-        //     (?:[\-                              # Besides lowercase ASCII letters, - is the only allowed character in base hostnames.
-        //         .                               # We allow subdomains here, but not after the final .
-        //         _                               # Although illegal, we are accepting underscores as a hostname character as some use it.
-        //         \xb7\u05f3\u05f4\u0f0b\u30fb]   # These are the five characters that IDNA 2008 supports that are in \p{P} (Po to be exact) and would otherwise not be supported by the next line
-        //      | [^\s\p{P}<=>+\|]                 # Everything but spaces, punctuation, and common ASCII delimiters (in \p{Sm} but we don't need all of that)
-        //     )+                                  # At least one character is needed before the top level domain
-        //     \.                                  # The dot before the top level domain (TLD), the dot in "a@b.com"
-        //     (?:[\-                              # Same as above, but don't allow . as this is the TLD
-        //         _                               #
-        //         \xb7\u05f3\u05f4\u0f0b\u30fb]   # 
-        //      | [^\s\p{P}<=>+\|]                 # 
-        //     ){2,}                               # At least two characters are required for the TLD
+        //   (?:                                     # Entire thing is wrapped in a group, so that a quantifier could be used with it (such as a ?).
+        //     (?:[\{\}] |                           # These are excluded by the \p{P...} next, but should be included so added back in here.
+        //        [^\s@<>,;:\\""                     # Excluding spaces and a few punctuation characters, more covered next; international letters, numbers, emojis, etc. are included
+        //        \p{Pi}\p{Ps}\p{Pe}\p{Pf}]          # Excluding "specials" in the RFC, with international end and start punctuation, such as ( [ “ « 「
+        //     )+                                    # At least one character is required
+        //     @                                     # The @ character in "a@b.com"
+        //     (?:
+        //       (?:
+        //         [\-                               # Besides lowercase ASCII letters, - is the only allowed character in base hostnames.
+        //           _                               # Although illegal, we are accepting underscores as a hostname character as some use it.
+        //           \xb7\u05f3\u05f4\u0f0b\u30fb]   # These are the five characters that IDNA 2008 supports that are in \p{P} (Po to be exact) and would otherwise not be supported by the next line
+        //         | [^\s\p{P}<=>+\|]                # Everything but spaces, all punctuation, and common ASCII delimiters (in \p{Sm} but we don't need all of that). This does not exclude IDNA or emojis.
+        //       )\.                                 # The dot before subdomains, domains, and top level domains, the dot in "a@b.com"
+        //     )+                                    # At least one character and then one dot is needed before the top level domain. Prevents two dots, one dot at beginning.
+        //     (?:[\-                                # Same as above, but without the trailing .
+        //          _                                #
+        //          \xb7\u05f3\u05f4\u0f0b\u30fb]    # 
+        //        | [^\s\p{P}<=>+\|]                 # 
+        //     )+                                    # At least one character in the TLD. Two is the practical lower bound today, but there is talk of single character for CJK in the future
+        //   )
         //
         // local-part (before the @) is driven by:
         // - The "specials" production in https://www.w3.org/Protocols/rfc822/3_Lexical.html#z2
+        // - In our RE, \p{Pi}\p{Ps}\p{Pe}\p{Pf} is inspired by "specials" including ( ) [ ] and ", we internationalize it, and it is useful to have these delimiters for email address extraction.
+        // - Technically it is possible to include these characters in an email address today - there are no character bounds on SMTPUTF8 - but it is highly unlikely and discouraged. Some work to better define this: https://www.ietf.org/archive/id/draft-ietf-mailmaint-smtputf8-syntax-00.html
         // - We don't support the uncommon quoted email addresses or comments in email addresses. https://datatracker.ietf.org/doc/html/rfc5321 states that systems shouldn't use the Quoted-string form.
         // 
         // domain-name and top-level-domain (after the @) is driven by:
@@ -148,7 +156,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "Any", "." },
                 { "Comma", "," },
                 { "Digit", "\\d" },
-                { "Email", @"[^\s@\(\)<>,;:\\""\[\]]+@(?:[\-._\xb7\u05f3\u05f4\u0f0b\u30fb]|[^\s\p{P}<=>+\|])+\.(?:[\-_\xb7\u05f3\u05f4\u0f0b\u30fb]|[^\s\p{P}<=>+\|]){2,}" },
+                { "Email", @"(?:(?:[\{\}]|[^\s@<>,;:\\""\p{Pi}\p{Ps}\p{Pe}\p{Pf}])+@(?:(?:[\-_\xb7\u05f3\u05f4\u0f0b\u30fb]|[^\s\p{P}<=>+\|])+\.)+(?:[\-_\xb7\u05f3\u05f4\u0f0b\u30fb]|[^\s\p{P}<=>+\|])+)" },
                 { "Hyphen", "-" },
                 { "LeftParen", "\\(" },
                 { "Letter", "\\p{L}" },
