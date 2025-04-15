@@ -301,6 +301,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
+            // CheckTypes server two purposes: 1) Check the types and sets the errors if any, 2) Compute the return type.
+            // During dataflow analysis, we only care about the 2) and we make that clear by passing in DefaultNoOpErrorContainer.
+            // So when errors is a noop error container, we omly really care about the return type so we can skip the base.CheckTypes.
             if (errors is DefaultNoOpErrorContainer)
             {
                 nodeToCoercedTypeMap = null;
@@ -313,9 +316,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Use DType.Error until we can correctly infer the return type.
             returnType = DType.Error;
 
-            // CheckTypes server two purposes: 1) Check the types and sets the errors if any, 2) Compute the return type.
-            // During dataflow analysis, we only care about the 2) and we make that clear by passing in DefaultNoOpErrorContainer.
-            // So when errors is a noop error container, we omly really care about the return type so we can skip the base.CheckTypes.
             if (!isValid)
             {
                 return false;
