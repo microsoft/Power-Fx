@@ -1,4 +1,4 @@
-﻿#SETUP: RegEx,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+﻿#SETUP: RegEx,PowerFxV1CompatibilityRules
 
 >> Match( "a@contoso.com", Match.Email ).FullMatch // single character
 "a@contoso.com"

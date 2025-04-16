@@ -1,4 +1,4 @@
-#SETUP: RegEx,disable:PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+#SETUP: RegEx,disable:PowerFxV1CompatibilityRules
 
 // We don't have fine grained error messages for 462, so we can only put out a generic message.
 // That said, we don't have any clients for 462 without V1. Canvas is on 70.

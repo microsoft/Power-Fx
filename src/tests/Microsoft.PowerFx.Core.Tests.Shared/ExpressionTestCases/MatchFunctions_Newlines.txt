@@ -1,4 +1,4 @@
-﻿#SETUP: RegEx,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+﻿#SETUP: RegEx,PowerFxV1CompatibilityRules
 
 // Newline and space character behavior in Power Fx regular expressions.
 //
@@ -11,42 +11,42 @@
 
 // .NET will match up to the final newline, XRegExp and JavaScript do not
 
->> AddColumns( Match( "test" & Char(10), "^test$" ), len, Len(FullMatch) )
+>> With( Match( "test" & Char(10), "^test$" ), { FullMatch: FullMatch, StartMatch: StartMatch, len: Len(FullMatch) } )
 {FullMatch:"test",StartMatch:1,len:4}
 
->> AddColumns( Match( "test" & Char(10) & Char(10), "^test$" ), len, Len(FullMatch) )
+>> With( Match( "test" & Char(10) & Char(10), "^test$" ), { FullMatch: FullMatch, StartMatch: StartMatch, len: Len(FullMatch) } )
 Blank()
 
->> AddColumns( Match( "test" & Char(13), "^test$" ), len, Len(FullMatch) )
+>> With( Match( "test" & Char(13), "^test$" ), { FullMatch: FullMatch, StartMatch: StartMatch, len: Len(FullMatch) } )
 {FullMatch:"test",StartMatch:1,len:4}
 
->> AddColumns( Match( "test" & Char(13) & Char(10), "^test$" ), len, Len(FullMatch) )
+>> With( Match( "test" & Char(13) & Char(10), "^test$" ), { FullMatch: FullMatch, StartMatch: StartMatch, len: Len(FullMatch) } )
 {FullMatch:"test",StartMatch:1,len:4}
 
 // dot doesn't include newline characters
 
->> DropColumns( Match( "te" & " " & "t", "te.t" ), FullMatch )
-{StartMatch:1}
+>> Match( "te" & " " & "t", "te.t" ).StartMatch
+1
 
->> DropColumns( Match( "te" & Char(10) & "t", "te.t" ), FullMatch )
+>> Match( "te" & Char(10) & "t", "te.t" ).StartMatch
 Blank()
 
->> DropColumns( Match( "te" & Char(13) & "t", "te.t" ), FullMatch )
+>> Match( "te" & Char(13) & "t", "te.t" ).StartMatch
 Blank()
 
->> DropColumns( Match( "te" & UniChar(Hex2Dec("2028")) & "t", "te.t" ), FullMatch )
+>> Match( "te" & UniChar(Hex2Dec("2028")) & "t", "te.t" ).StartMatch
 Blank()
 
->> DropColumns( Match( "te" & UniChar(Hex2Dec("2029")) & "t", "te.t" ), FullMatch )
+>> Match( "te" & UniChar(Hex2Dec("2029")) & "t", "te.t" ).StartMatch
 Blank()
 
->> DropColumns( Match( "te" & UniChar(Hex2Dec("85")) & "t", "te.t" ), FullMatch )
+>> Match( "te" & UniChar(Hex2Dec("85")) & "t", "te.t" ).StartMatch
 Blank()
 
->> DropColumns( Match( "te" & Char(11) & "t", "te.t" ), FullMatch )
+>> Match( "te" & Char(11) & "t", "te.t" ).StartMatch
 Blank()
 
->> DropColumns( Match( "te" & Char(12) & "t", "te.t" ), FullMatch )
+>> Match( "te" & Char(12) & "t", "te.t" ).StartMatch
 Blank()
 
 // $ end anchor, multiline, and newline characters

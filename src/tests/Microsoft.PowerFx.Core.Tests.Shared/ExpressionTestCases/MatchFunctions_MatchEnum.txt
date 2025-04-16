@@ -1,4 +1,4 @@
-﻿#SETUP: RegEx,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+﻿#SETUP: RegEx,PowerFxV1CompatibilityRules
 
 // Any
 

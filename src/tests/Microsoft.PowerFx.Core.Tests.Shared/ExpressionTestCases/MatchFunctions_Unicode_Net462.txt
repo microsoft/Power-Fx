@@ -1,4 +1,4 @@
-﻿#SETUP: RegEx,disable:PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+﻿#SETUP: RegEx,disable:PowerFxV1CompatibilityRules
 
 // Changes in case insensitive matching in .NET 7 causes different answers that are consistent with PCRE2 and Node
 // See https://devblogs.microsoft.com/dotnet/regular-expression-improvements-in-dotnet-7/#case-insensitive-matching-and-regexoptions-ignorecase
