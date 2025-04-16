@@ -19,3 +19,7 @@
 // escape removed from V1 version, but the interpreter doesn't know about the old definition
 >> Match.MultipleDigits & Match.Hyphen
 "\d+-"
+
+// completely different definition in V1 version, but the interpreter doesn't know about the old definition
+>> "^" & Match.Email & "$"
+"^(?:(?:[\{\}]|[^\s@<>,;:\\""\p{Pi}\p{Ps}\p{Pe}\p{Pf}])+@(?:(?:[\-_\xb7\u05f3\u05f4\u0f0b\u30fb]|[^\s\p{P}<=>+\|])+\.)+(?:[\-_\xb7\u05f3\u05f4\u0f0b\u30fb]|[^\s\p{P}<=>+\|])+)$"

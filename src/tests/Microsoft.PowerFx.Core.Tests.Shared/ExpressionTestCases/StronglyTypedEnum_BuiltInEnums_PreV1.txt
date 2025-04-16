@@ -1458,3 +1458,6 @@ false
 
 >> IsMatch( "28", 28 )
 Errors: Error 15-17: Regular expression must be a constant value.
+
+>> "^" & Match.Email & "$"
+"^.+@.+\.[^.]{2,}$"
