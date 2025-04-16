@@ -4898,7 +4898,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Update field projection info
                 // Only needed when running legacy analysis in Canvas Apps
-                if (_txb.QueryOptions != null && _txb.Document != null && _txb.Document.IsRunningDataflowAnalysis())
+                if (_txb.QueryOptions != null && _txb.Document != null && !_txb.Document.IsRunningDataflowAnalysis())
                 {
                     func.UpdateDataQuerySelects(node, _txb, _txb.QueryOptions);
                 }
