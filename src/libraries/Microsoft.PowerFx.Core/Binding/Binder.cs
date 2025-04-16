@@ -770,6 +770,13 @@ namespace Microsoft.PowerFx.Core.Binding
         // When getting projections from a chain rule, ensure that the projection belongs to the same DS as the one we're operating on (using match param)
         internal bool TryGetDataQueryOptions(TexlNode node, bool forCodegen, out DataSourceToQueryOptionsMap tabularDataQueryOptionsMap)
         {
+            // This method is only needed in Canvas when running legacy analysis.
+            if (Document == null || Document.IsRunningDataflowAnalysis())
+            {
+                tabularDataQueryOptionsMap = null;
+                return false;
+            }
+
             Contracts.AssertValue(node);
 
             if (node.Kind == NodeKind.As)
@@ -918,6 +925,12 @@ namespace Microsoft.PowerFx.Core.Binding
 
         internal IEnumerable<string> GetDataQuerySelects(TexlNode node)
         {
+            // This method is only needed in Canvas when running legacy analysis.
+            if (Document == null || Document.IsRunningDataflowAnalysis())
+            {
+                return Enumerable.Empty<string>();
+            }
+
             if (!Document.Properties.EnabledFeatures.IsProjectionMappingEnabled)
             {
                 return Enumerable.Empty<string>();
@@ -2225,6 +2238,12 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValid(type);
             Contracts.AssertNonEmpty(fieldName);
             Contracts.AssertValue(QueryOptions);
+
+            // This method is a bit expensive and only needed in Canvas when running legacy analysis.
+            if (Document == null || Document.IsRunningDataflowAnalysis())
+            {
+                return false;
+            }
 
             var retVal = false;
 
@@ -4878,7 +4897,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Update field projection info
-                if (_txb.QueryOptions != null)
+                // Only needed when running legacy analysis in Canvas Apps
+                if (_txb.QueryOptions != null && _txb.Document != null && _txb.Document.IsRunningDataflowAnalysis())
                 {
                     func.UpdateDataQuerySelects(node, _txb, _txb.QueryOptions);
                 }
