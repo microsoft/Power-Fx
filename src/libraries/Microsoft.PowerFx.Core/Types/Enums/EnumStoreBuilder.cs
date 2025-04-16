@@ -90,7 +90,8 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 }
             };
 
-        // MatchEnum values at V1 for Power Apps opt in
+        // V1 MatchEnum values for Power Apps to use in the future under a "Power Fx V1" mode.
+        // As these are combined into a string data structure, any double quotes need to be escaped, Power Fx style with double double quotes. Used by Match.Email.
         internal static readonly string DefaultEnums_MatchEnumV1 =
                 $"%s[{string.Join(", ", BuiltInEnums.MatchEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{((string)pair.Value.Object).Replace(@"""", @"""""")}"""))}]";
 
