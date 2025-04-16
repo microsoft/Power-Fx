@@ -1445,7 +1445,7 @@ Errors: Error 29-36: Name isn't valid. 'Digits' isn't recognized.|Error 5-20: In
 // Can concatenate strongly typed (CanConcatenateStronglyTyped = true)
 
 >> Match.MultipleDigits & Match.Hyphen
-"\d+-"
+"\d+\-"
 
 >> Match.MultipleDigits & "hi"
 "\d+hi"

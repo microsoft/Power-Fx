@@ -15,3 +15,7 @@
 
 >> Text( Date(1980,1,2), "utc", "en-us" )
 "utc"
+
+// escape removed from V1 version, but the interpreter doesn't know about the old definition
+>> Match.MultipleDigits & Match.Hyphen
+"\d+-"
