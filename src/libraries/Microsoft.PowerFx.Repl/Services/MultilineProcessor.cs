@@ -73,7 +73,8 @@ namespace Microsoft.PowerFx.Repl.Services
                                 else
                                 {
                                     // recurse in for string interpolation island
-                                    bufferIndex = ParseFormulaToClose(bufferIndex + 1, true, ref complete, ref error);
+                                    // subract 1 for the increment that will come with the loop
+                                    bufferIndex = ParseFormulaToClose(bufferIndex + 1, true, ref complete, ref error) - 1;
                                 }
                             }
                         }
