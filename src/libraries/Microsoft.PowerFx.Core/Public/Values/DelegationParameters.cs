@@ -13,9 +13,26 @@ namespace Microsoft.PowerFx.Types
     public abstract class DelegationParameters
     {
         /// <summary>
+        /// When using OData with top level aggregation the field name to use to store the result. e.g. result of Sum(Employees, Salary).
+        /// </summary>
+        public const string ODataAggregationResultFieldName = "result";
+
+        /// <summary>
+        /// When returning Records, OData puts them in this field.
+        /// </summary>
+        internal const string ODataResultFieldName = "value";
+
+        // internal const string ODataCountFieldName = "count";
+
+        /// <summary>
         /// Which features does this use - so we can determine if we support it. 
         /// </summary>
         public abstract DelegationParameterFeatures Features { get; }
+
+        /// <summary>
+        /// Expected type query needs to return.
+        /// </summary>
+        public abstract FormulaType ExpectedReturnType { get; }
 
         /// <summary>
         /// Throw if the parameters use features outside the feature list. 
@@ -48,6 +65,24 @@ namespace Microsoft.PowerFx.Types
             return new string[0];
         }
 
+        /// <summary>
+        /// Get OData $apply parameter string.
+        /// </summary>
+        /// <returns></returns>
+        public abstract string GetODataApply();
+
+        /// <summary>
+        /// Get OData $count flag.
+        /// </summary>
+        /// <returns></returns>
+        public abstract bool ReturnTotalCount();
+
+        /// <summary>
+        /// Returns OData query string which has all parameter like $filter, $apply, etc.
+        /// </summary>
+        /// <returns></returns>
+        public abstract string GetODataQueryString();
+
         public int? Top { get; set; }
     }
 
@@ -78,6 +113,9 @@ namespace Microsoft.PowerFx.Types
 
         // $count
         Count = 1 << 6,
+
+        // $apply = aggregate(field1 with sum as TotalSum)
+        ApplyTopLevelAggregation = 1 << 7,
 
         /*
           To be implemented later when needed

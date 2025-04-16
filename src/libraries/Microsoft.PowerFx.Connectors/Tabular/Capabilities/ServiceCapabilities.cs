@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Any;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions.Delegation;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 
 // DO NOT INCLUDE Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata ASSEMBLY
@@ -161,7 +162,7 @@ namespace Microsoft.PowerFx.Connectors
             Core.Entities.PagingCapabilities pagingCapabilities = new Core.Entities.PagingCapabilities()
             {
                 IsOnlyServerPagable = serviceCapabilities?.PagingCapabilities?.IsOnlyServerPagable ?? false,
-                ServerPagingOptions = serviceCapabilities?.PagingCapabilities?.ServerPagingOptions?.ToArray()
+                ServerPagingOptions = serviceCapabilities?.PagingCapabilities?.ServerPagingOptions?.Select(str => Enum.TryParse(str, true, out ServerPagingOptions spo) ? spo : Core.Entities.ServerPagingOptions.Unknown).ToArray()
             };
 
             Dictionary<string, Core.Entities.ColumnCapabilitiesBase> columnCapabilities = serviceCapabilities?._columnsCapabilities?.ToDictionary(
@@ -189,7 +190,7 @@ namespace Microsoft.PowerFx.Connectors
                 SortRestriction = sortRestriction,
                 FilterRestriction = filterRestriction,
                 SelectionRestriction = selectionRestriction,
-                GroupRestriction = groupRestriction,                
+                GroupRestriction = groupRestriction,
                 FilterSupportedFunctions = serviceCapabilities?.FilterSupportedFunctionsEnum,
                 PagingCapabilities = pagingCapabilities,
                 SupportsRecordPermission = serviceCapabilities?.SupportsRecordPermission ?? false,
@@ -197,9 +198,94 @@ namespace Microsoft.PowerFx.Connectors
                 ColumnsWithRelationships = columnWithRelationships,
                 PrimaryKeyNames = primaryKeyNames,
 #pragma warning disable CS0618 // Type or member is obsolete
-                SupportsJoinFunction = serviceCapabilities?.SupportsJoinFunction ?? false
+                SupportsJoinFunction = serviceCapabilities?.SupportsJoinFunction ?? false,
+#pragma warning disable CS0612 // Type or member is obsolete
+                CountCapabilities = new CDPCountCapabilities(primaryKeyNames, serviceCapabilities?.FilterSupportedFunctionsEnum),
+                TopLevelAggregationCapabilities = new CDPToplLevelAggregationCapabilities(columnCapabilities)
+#pragma warning restore CS0612 // Type or member is obsolete
 #pragma warning restore CS0618 // Type or member is obsolete
             };
+        }
+
+        [Obsolete]
+        private class CDPToplLevelAggregationCapabilities : TopLevelAggregationCapabilities
+        {
+            private readonly IReadOnlyDictionary<string, Core.Entities.ColumnCapabilitiesBase> _columnCapabilities;
+
+            public CDPToplLevelAggregationCapabilities(IReadOnlyDictionary<string, Core.Entities.ColumnCapabilitiesBase> columnCapabilities)
+            {
+                _columnCapabilities = columnCapabilities;
+            }
+
+            public override bool IsTopLevelAggregationSupported(SummarizeMethod method, string propertyName)
+            {
+                if (TryConvertSummarizeMethodToDelegationOperator(method, out var delegationOperator) && 
+                    _columnCapabilities != null &&
+                    _columnCapabilities.TryGetValue(propertyName, out var columnCapability))
+                {
+                    if (columnCapability is Core.Entities.ColumnCapabilities cc)
+                    {
+                        return cc.Definition.FilterFunctions.Contains(delegationOperator);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                return false;
+            }
+
+            private bool TryConvertSummarizeMethodToDelegationOperator(SummarizeMethod method, out DelegationOperator delegationOperator)
+            {
+                switch (method)
+                {
+                    case SummarizeMethod.Sum:
+                        delegationOperator = DelegationOperator.Sum;
+                        return true;
+                    case SummarizeMethod.Average: 
+                        delegationOperator = DelegationOperator.Average;
+                        return true;
+                    case SummarizeMethod.Max:
+                        delegationOperator = DelegationOperator.Max;
+                        return true;
+                    case SummarizeMethod.Min:
+                        delegationOperator = DelegationOperator.Min;
+                        return true;
+                    default:
+                        delegationOperator = default;
+                        return false;
+                }
+            }
+        }
+
+        [Obsolete]
+        private class CDPCountCapabilities : CountCapabilities
+        {
+            private readonly IEnumerable<DelegationOperator> _filterSupportedFunctions;
+
+            private readonly IEnumerable<string> _primaryKeyNames;
+
+            public CDPCountCapabilities(IEnumerable<string> primaryKeyNames, IEnumerable<DelegationOperator> filterSupportedFunctions)
+            {
+                _primaryKeyNames = primaryKeyNames;
+                _filterSupportedFunctions = filterSupportedFunctions;
+            }
+
+            public override bool IsCountableAfterFilter()
+            {
+                return IsCountableTable();
+            }
+
+            public override bool IsCountableTable()
+            {
+                if (_primaryKeyNames != null && _primaryKeyNames.Count() == 1 && _filterSupportedFunctions != null && _filterSupportedFunctions.Contains(DelegationOperator.Countdistinct))
+                {
+                    return true;
+                }
+
+                return false;
+            }
         }
 
         private static IEnumerable<DelegationOperator> GetDelegationOperatorEnumList(IEnumerable<string> filterFunctionList)

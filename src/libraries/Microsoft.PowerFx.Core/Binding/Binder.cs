@@ -5450,9 +5450,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     if (sdf.Warnings != null)
                     {
-                        foreach (ErrorResourceKey erk in sdf.Warnings)
+                        foreach (ExpressionError erk in sdf.Warnings)
                         {
-                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, erk, func.Name, func.Namespace);
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, erk.ResourceKey, func.Name, func.Namespace);
                         }
                     }
                 }
@@ -5741,10 +5741,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                 }
 
+                // Tables that are created from sealed records become sealed
+                // Among other things, this avoids someone writing First( Table( SealedRecord ) ) to remove the seal
                 DType tableType = exprType.IsValid
                     ? (_features.TableSyntaxDoesntWrapRecords && exprType.IsRecord
-                        ? DType.CreateTable(exprType.GetNames(DPath.Root))
-                        : DType.CreateTable(new TypedName(exprType, TableValue.ValueDName)))
+                        ? DType.CreateTable(exprType.GetNames(DPath.Root), isSealed: exprType.IsSealed)
+                        : DType.CreateTable(new TypedName(exprType, TableValue.ValueDName), isSealed: exprType.IsSealed))
                     : DType.EmptyTable;
 
                 _txb.SetType(node, tableType);

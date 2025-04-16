@@ -92,7 +92,12 @@ namespace Microsoft.PowerFx.Connectors
                     return SwaggerJsonSchema.New(items);
                 }
 
-                throw new NotImplementedException();
+                if (_schema.TryGetProperty("name", out JsonElement name) || _schema.TryGetProperty("title", out name))
+                {
+                    throw new PowerFxConnectorException($"Missing 'items' element in array property '{name}'");
+                }
+
+                throw new PowerFxConnectorException("Missing 'items' element in array");
             }
         }
 

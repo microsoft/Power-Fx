@@ -1,0 +1,167 @@
+#SETUP: RegEx,disable:PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+
+// 0: Uknown
+// Failsafe
+// Will result in same generic "Invalid regular expression" message as for 1 (AlternationHasTooManyConditions)
+
+// 1: AlternationHasTooManyConditions
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>(?<one>a)(?(one)b|c|d)<<<<<<<<<<<<<<<<" )
+Errors: Error 13-66: Invalid regular expression, found "...?(one)b|c|d)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 2: AlternationHasMalformedCondition
+// Not sure how to create and no tests in .NET test suite
+// Will result in same generic "Invalid regular expression" message as for 1 (AlternationHasTooManyConditions)
+
+// 3: InvalidUnicodePropertyEscape
+#DISABLE.NET: 462
+>> Match( "a", ">>>>>>>>>>>\p{:else:}<<<<<<<<<<<<<<" )
+Errors: Error 12-49: Invalid regular expression: Invalid Unicode category name, found "...>>>>>>>>\p{:".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 4: MalformedUnicodePropertyEscape
+#DISABLE.NET: 462
+>> Match( "a", ">>>>>>>>>>>\p<<<<<<<<<<<<<<" )
+Errors: Error 12-41: Invalid regular expression: Invalid Unicode category name, found "...>>>>>>>>>\p<".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 5: UnrecognizedEscape
+#DISABLE.NET: 462
+>> Match( "a", ">>>>>>>>>>>\q<<<<<<<<<<<<<<" )
+Errors: Error 12-41: Invalid regular expression: Invalid escape code, found "...>>>>>>>>>>\q".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 6: UnrecognizedControlCharacter 
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>\c<<<<<<<<<<<<<<<" )
+Errors: Error 13-45: Invalid regular expression, found "...>>>>>>>>>\c<".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 7: MissingControlCharacter
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>\c" )
+Errors: Error 13-30: Invalid regular expression, found "...>>>>>>>>>>\c".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 8: InsufficientOrInvalidHexDigits
+#DISABLE.NET: 462
+>> Match( "a", ">>>>>>>>>>>\u123<<<<<<<<<<<<<<" )
+Errors: Error 12-44: Invalid regular expression: Invalid escape code, found "...>>>>>>\u123<".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 9. QuantifierOrCaptureGroupOutOfRange
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>>(?<2147483648>a)<<<<<<<<<<<<<<<<<<<<" )
+Errors: Error 13-65: Invalid regular expression: Number is too large, found "...?<2147483648".|Error 0-5: The function 'Match' has some invalid arguments.
+
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>>a{1,2147483648}<<<<<<<<<<<<<<<<<<<<" )
+Errors: Error 13-64: Invalid regular expression: Number is too large, found "...1,2147483648".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 10: UndefinedNamedReference
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>>\k<one><<<<<<<<<<<<<<<<<<<<" )
+Errors: Error 13-56: Invalid regular expression: Sub match "...>>>>>\k<one>" not defined or is an unsupported forward reference.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 11: UndefinedNumberedReference
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>>\1<<<<<<<<<<<<<<<<<<<<" )
+Errors: Error 13-51: Invalid regular expression: Sub match "...>>>>>>>>>>\1" not defined or is an unsupported forward reference.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 12: MalformedNamedReference
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>(?<one>a)>>>>>>>>>\k" )
+Errors: Error 13-40: Invalid regular expression: Sub match name must be a combination of word characters and not begin with a number, found "...a)>>>>>>>>>\".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 13: UnescapedEndingBackslash
+#DISABLE.NET: 462
+>> Match( "a\\", ">>>>>>>>>>>>>>>>>>>>>>>>a\" )
+Errors: Error 14-42: Invalid regular expression: Ends with an unescaped backslash.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 14: UnterminatedComment
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>(?#abcd<<<<<<<<<<<<<<<<" )
+Errors: Error 13-51: Invalid regular expression: Unclosed inline comment.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 15: InvalidGroupingConstruct
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>>(?-x<<<<<<<<<<<<<<<<<<" )
+Errors: Error 13-51: Invalid regular expression: Unsupported special group, found "...>>>>>>>(?-x<".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 16: AlternationHasNamedCapture
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>(?(?<1a>)a|b)<<<<<<<<<<<<<<<<" )
+Errors: Error 13-57: Invalid regular expression, found "...>>>>>>>>>>(?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 17: AlternationHasComment
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>(?(?#1a)a|b)<<<<<<<<<<<<<<<<" )
+Errors: Error 13-56: Invalid regular expression, found "...>>>>>>>>>>(?".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 18: AlternationHasMalformedReference
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>(?(1a)a|b)<<<<<<<<<<<<<<<<" )
+Errors: Error 13-54: Invalid regular expression, found "...>>>>>>>(?(1a".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 19: AlternationHasUndefinedReference
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>(?(1)a|b)<<<<<<<<<<<<<<<<" )
+Errors: Error 13-53: Invalid regular expression, found "...>>>>>>>(?(1)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 20: CaptureGroupNameInvalid
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>(?<&>)<<<<<<<<<<<<<<<<" )
+Errors: Error 13-50: Invalid regular expression: Sub match name must be a combination of word characters and not begin with a number, found "...>>>>>>>>>(?<".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 21: CaptureGroupOfZero
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>(?<0>)<<<<<<<<<<<<<<<<" )
+Errors: Error 13-50: Invalid regular expression: Sub match name must be a combination of word characters and not begin with a number, found "...>>>>>>>>(?<0".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 22: UnterminatedBracket
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>[abcd<<<<<<<<<<<<<<<<" )
+Errors: Error 13-49: Invalid regular expression: Unclosed character class square bracket.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 23: ExclusionGroupNotLast
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>[a-z-[b-m]c]<<<<<<<<<<<<<<<<" )
+Errors: Error 13-56: Invalid regular expression, found "...>>[a-z-[b-m]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 24: ReversedCharacterRange
+#DISABLE.NET: 462
+>> Match( "k", ">>>>>>>>>>>>>>>>>>[z-a]<<<<<<<<<<<<<<<<<<<<<<<<<")
+Errors: Error 12-62: Invalid regular expression: The characters in a character class range are reversed, found at the end of "...>>>>>>>>[z-a".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 25: ShorthandClassInCharacterRange
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>[a-\d]<<<<<<<<<<<<<<<<" )
+Errors: Error 13-50: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found at the end of "...>>>>>>>[a-\d".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 26: InsufficientClosingParentheses
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>(123<<<<<<<<<<<<<<<<" )
+Errors: Error 13-48: Invalid regular expression: Unclosed groups, too few closing parenthesis.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 27: ReversedQuantifierRange
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>a{3,2}<<<<<<<<<<<<<<<<" )
+Errors: Error 13-50: Invalid regular expression: Quantifier range low number is greater than high number, found "...>>>>>>a{3,2}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 28: NestedQuantifiersNotParenthesized
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>a*+<<<<<<<<<<<<<<<" )
+Errors: Error 13-46: Invalid regular expression: Possessive quantifiers are not supported, found "...>>>>>>>>>a*+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 29: QuantifierAfterNothing
+#DISABLE.NET: 462
+>> Match( "a", ">>>>>>>>>>>>>>>>>>>>>>asdf|*<<<<<<<<<<<<<<<<<<<<" )
+Errors: Error 12-62: Invalid regular expression: Quantifier without something to quantify, found "...>>>>>>asdf|*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 30: InsufficientOpeningParentheses
+#DISABLE.NET: 462
+>> Match( "ab", ">>>>>>>>>>>>>a)<<<<<<<<<<<<<<<" )
+Errors: Error 13-45: Invalid regular expression: Unopened groups, too few opening parenthesis.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 31: UnrecognizedUnicodeProperty
+#DISABLE.NET: 462
+>> Match( "a", ">>>>>>>>>>>\p{Zz}<<<<<<<<<<<<<<" )
+Errors: Error 12-45: Invalid regular expression: Invalid Unicode category name, found "...>>>>>>\p{Zz}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+#DISABLE.NET: 462
+>> IsMatch("Foo", "J(")
+Errors: Error 15-19: Invalid regular expression: Unclosed groups, too few closing parenthesis.|Error 0-7: The function 'IsMatch' has some invalid arguments.

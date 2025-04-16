@@ -105,7 +105,9 @@ namespace Microsoft.PowerFx.Repl.Tests
 
         // string interpolation
         [InlineData(false, "$\" { \"hi\"", " } \"")]
+        [InlineData(false, "$\"{\"hi\"}\"")] // lack of spaces can fail to reach the end
         [InlineData(false, "$\" { $\" \"\" { 1 ", " + ", "2 } ", "\"", "}", "\"")]
+        [InlineData(false, "$\"{$\"\"\"{1+2}\"}\"")] // lack of spaces can fail to reach the end
         [InlineData(false, "$\" { $\" { 1 /* } ", " + } ", "2 } ", "\"", " */ }", "\"", "}", "more \"")]
         [InlineData(false, "$\" { $\" { 1 // } ", " + ", "2 } ", "\"", " & ", "\"a\" }", "\"")] // ending inline comment ignored
         [InlineData(false, "$\" { $\" { 1 /* } ", " + } ", "2 } ", "\"", " */ }", "\"", "")] // empty line stops continuation
@@ -113,6 +115,7 @@ namespace Microsoft.PowerFx.Repl.Tests
         [InlineData(false, "[ $\" { 4 + }\"")] // error, unclosed expresion in island
         [InlineData(false, "[ $\" { 4 * /* inline */ }\"")] // error, unclosed expresion in island
         [InlineData(false, "[ $\" { 4 * //", "}\"")] // error, unclosed expresion in island
+        [InlineData(false, "$\"{$\"{$\"{$\"{\"z\"}z\"}z\"}z\"}\"")]
 
         // comments
         [InlineData(false, "4 /* a *//", "3")]
@@ -176,6 +179,10 @@ namespace Microsoft.PowerFx.Repl.Tests
 
                     Assert.False(_processor.IsFirstLine); // always false after HandleLine();
                 } 
+                else if (result == null)
+                {
+                    Assert.Fail("multilineProcessor did not reach end of formula");
+                }
                 else
                 {
                     // Last line completes
@@ -183,7 +190,7 @@ namespace Microsoft.PowerFx.Repl.Tests
                     Assert.Equal(sb.ToString().TrimEnd(), result.TrimEnd());
 
                     // Reset, back to first line. 
-                    Assert.True(_processor.IsFirstLine); 
+                    Assert.True(_processor.IsFirstLine);
                 }
             }
         }   

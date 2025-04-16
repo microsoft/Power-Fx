@@ -1,0 +1,514 @@
+﻿#SETUP: RegEx,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+
+// Newline and space character behavior in Power Fx regular expressions.
+//
+//  Effective                       Usage                                  .NET        ECMAScript        PCRE2
+// =====================================================================================================================================
+//  (\r|\n|\r\n)                    ^ and $ in multline mode               No          No                Yes (as configured by Excel)
+//  (\z|\r\z|\n\z|\r\n\z)           ^ and $ when not in multline mode      Yes         No                Yes (as configured by Excel)
+//  [^\n\r]                         .                                      No          No (close)        Yes
+//  [ \r\n\f\v\t\x85\p{Z}]          \s and \S                              Yes         No (close)        Yes
+
+// .NET will match up to the final newline, XRegExp and JavaScript do not
+
+>> AddColumns( Match( "test" & Char(10), "^test$" ), len, Len(FullMatch) )
+{FullMatch:"test",StartMatch:1,len:4}
+
+>> AddColumns( Match( "test" & Char(10) & Char(10), "^test$" ), len, Len(FullMatch) )
+Blank()
+
+>> AddColumns( Match( "test" & Char(13), "^test$" ), len, Len(FullMatch) )
+{FullMatch:"test",StartMatch:1,len:4}
+
+>> AddColumns( Match( "test" & Char(13) & Char(10), "^test$" ), len, Len(FullMatch) )
+{FullMatch:"test",StartMatch:1,len:4}
+
+// dot doesn't include newline characters
+
+>> DropColumns( Match( "te" & " " & "t", "te.t" ), FullMatch )
+{StartMatch:1}
+
+>> DropColumns( Match( "te" & Char(10) & "t", "te.t" ), FullMatch )
+Blank()
+
+>> DropColumns( Match( "te" & Char(13) & "t", "te.t" ), FullMatch )
+Blank()
+
+>> DropColumns( Match( "te" & UniChar(Hex2Dec("2028")) & "t", "te.t" ), FullMatch )
+Blank()
+
+>> DropColumns( Match( "te" & UniChar(Hex2Dec("2029")) & "t", "te.t" ), FullMatch )
+Blank()
+
+>> DropColumns( Match( "te" & UniChar(Hex2Dec("85")) & "t", "te.t" ), FullMatch )
+Blank()
+
+>> DropColumns( Match( "te" & Char(11) & "t", "te.t" ), FullMatch )
+Blank()
+
+>> DropColumns( Match( "te" & Char(12) & "t", "te.t" ), FullMatch )
+Blank()
+
+// $ end anchor, multiline, and newline characters
+
+>> MatchAll( "a1" & Char(10) & "b2" & Char(10) & "c3", "\d$" )
+Table({FullMatch:"3",StartMatch:8})
+
+>> MatchAll( "a1" & Char(10) & "b2" & Char(10) & "c3", "\d$", MatchOptions.Multiline )
+Table({FullMatch:"1",StartMatch:2},{FullMatch:"2",StartMatch:5},{FullMatch:"3",StartMatch:8})
+
+>> MatchAll( "a1" & Char(13) & "b2" & Char(10) & "c3", "\d$" )
+Table({FullMatch:"3",StartMatch:8})
+
+>> MatchAll( "a1" & Char(13) & "b2" & Char(13) & "c3", "\d$", MatchOptions.Multiline )
+Table({FullMatch:"1",StartMatch:2},{FullMatch:"2",StartMatch:5},{FullMatch:"3",StartMatch:8})
+
+>> MatchAll( "a1" & Char(13)&Char(10) & "b2" & Char(13)&Char(10) & "c3", "\d$" )
+Table({FullMatch:"3",StartMatch:10})
+
+>> MatchAll( "a1" & Char(13)&Char(10) & "b2" & Char(13)&Char(10) & "c3", "\d$", MatchOptions.Multiline )
+Table({FullMatch:"1",StartMatch:2},{FullMatch:"2",StartMatch:6},{FullMatch:"3",StartMatch:10})
+
+// ^ beginning anchor, multiline, and newline characters
+
+>> MatchAll( "1a" & Char(10) & "2b" & Char(10) & "3c", "^\d" )
+Table({FullMatch:"1",StartMatch:1})
+
+>> MatchAll( "1a" & Char(10) & "2b" & Char(10) & "3c", "^\d", MatchOptions.Multiline )
+Table({FullMatch:"1",StartMatch:1},{FullMatch:"2",StartMatch:4},{FullMatch:"3",StartMatch:7})
+
+>> MatchAll( "1a" & Char(13) & "2b" & Char(10) & "3c", "^\d" )
+Table({FullMatch:"1",StartMatch:1})
+
+>> MatchAll( "1a" & Char(13) & "2b" & Char(13) & "3c", "^\d", MatchOptions.Multiline )
+Table({FullMatch:"1",StartMatch:1},{FullMatch:"2",StartMatch:4},{FullMatch:"3",StartMatch:7})
+
+>> MatchAll( "1a" & Char(13)&Char(10) & "2b" & Char(13)&Char(10) & "3c", "^\d" )
+Table({FullMatch:"1",StartMatch:1})
+
+>> MatchAll( "1a" & Char(13)&Char(10) & "2b" & Char(13)&Char(10) & "3c", "^\d", MatchOptions.Multiline )
+Table({FullMatch:"1",StartMatch:1},{FullMatch:"2",StartMatch:5},{FullMatch:"3",StartMatch:9})
+
+// tests for matching between a \r and \n
+
+>> MatchAll( "a" & Char(13) & Char(10) & "a", "(?m)^(a|)" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"a",StartMatch:4})
+
+// >> MatchAll( "a" & Char(13) & Char(10), "(?m)^(a|)" )  // gives a different answer on PCRE2 (doesn't include last empty match), but not on Excel?
+// Table({FullMatch:"a",StartMatch:Float(1)},{FullMatch:"",StartMatch:Float(4)})
+
+// .net and node agree, PCRE2 has an extra empty match
+>> MatchAll( Char(13) & Char(10) & "a", "(?m)^(a|)" )
+Table({FullMatch:"",StartMatch:1},{FullMatch:"a",StartMatch:3})
+
+// .net and node agree, PCRE2 has an extra empty match
+>> MatchAll( "a" & Char(13) & Char(10) & "a", "(?m)(a|)$" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"a",StartMatch:4},{FullMatch:"",StartMatch:5})
+
+// .net and node agree, PCRE2 has an extra empty match
+>> MatchAll( "a" & Char(13) & Char(10) , "(?m)(a|)$" )  // pcre2 repeated empty result
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"",StartMatch:4})
+
+// .net and node agree, PCRE2 has an extra empty match
+>> MatchAll( Char(13) & Char(10) & "a", "(?m)(a|)$" )
+Table({FullMatch:"",StartMatch:1},{FullMatch:"a",StartMatch:3},{FullMatch:"",StartMatch:4})
+
+>> MatchAll( "a" & Char(13) & Char(10) & "a", "^(a|)" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:1})
+
+>> MatchAll( "a" & Char(13) & Char(10), "^(a|)" )
+Table({FullMatch:"a",StartMatch:1})
+
+>> MatchAll( Char(13) & Char(10) & "a", "^(a|)" )
+Table({FullMatch:"",StartMatch:1})
+
+>> MatchAll( "a" & Char(13) & Char(10) & "a", "(a|)$" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:4},{FullMatch:"",StartMatch:5})
+
+// .net and node agree, PCRE2 has an extra empty match
+>> MatchAll( "a" & Char(13) & Char(10) , "(a|)$" )  // pcre2 repeated empty result
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"",StartMatch:4})
+
+>> MatchAll( Char(13) & Char(10) & "a", "(a|)$" )
+Table({FullMatch:"a",StartMatch:3},{FullMatch:"",StartMatch:4})
+
+// same tests with single newline \n
+
+>> MatchAll( "a" & Char(10) & "a", "(?m)^(a|)" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"a",StartMatch:3})
+
+// >> MatchAll( "a" & Char(10), "(?m)^(a|)" )  // gives a different answer on PCRE2 (doesn't include last empty match), but not on Excel?
+// Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:4})
+
+>> MatchAll( Char(10) & "a", "(?m)^(a|)" )
+Table({FullMatch:"",StartMatch:1},{FullMatch:"a",StartMatch:2})
+
+>> MatchAll( "a" & Char(10) & "a", "(?m)(a|)$" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"a",StartMatch:3},{FullMatch:"",StartMatch:4})
+
+>> MatchAll( "a" & Char(10), "(?m)(a|)$" )  // pcre2 repeated empty result
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"",StartMatch:3})
+
+>> MatchAll( Char(10) & "a", "(?m)(a|)$" )
+Table({FullMatch:"",StartMatch:1},{FullMatch:"a",StartMatch:2},{FullMatch:"",StartMatch:3})
+
+>> MatchAll( "a" & Char(10) & "a", "^(a|)" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:1})
+
+>> MatchAll( "a" & Char(10), "^(a|)" )
+Table({FullMatch:"a",StartMatch:1})
+
+>> MatchAll( Char(10) & "a", "^(a|)" )
+Table({FullMatch:"",StartMatch:1})
+
+>> MatchAll( "a" & Char(10) & "a", "(a|)$" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:3},{FullMatch:"",StartMatch:4})
+
+>> MatchAll( "a" & Char(10) , "(a|)$" )  // pcre2 repeated empty result
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"",StartMatch:3})
+
+>> MatchAll( Char(10) & "a", "(a|)$" )
+Table({FullMatch:"a",StartMatch:2},{FullMatch:"",StartMatch:3})
+
+// same tests with single newline \r
+
+>> MatchAll( "a" & Char(13) & "a", "(?m)^(a|)" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"a",StartMatch:3})
+
+// >> MatchAll( "a" & Char(13), "(?m)^(a|)" )  // gives a different answer on PCRE2 (doesn't include last empty match), but not on Excel?
+// Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:4})
+
+>> MatchAll( Char(13) & "a", "(?m)^(a|)" )
+Table({FullMatch:"",StartMatch:1},{FullMatch:"a",StartMatch:2})
+
+>> MatchAll( "a" & Char(13) & "a", "(?m)(a|)$" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"a",StartMatch:3},{FullMatch:"",StartMatch:4})
+
+>> MatchAll( "a" & Char(13) , "(?m)(a|)$" )  // pcre2 repeated empty result
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"",StartMatch:3})
+
+>> MatchAll( Char(13) & "a", "(?m)(a|)$" )
+Table({FullMatch:"",StartMatch:1},{FullMatch:"a",StartMatch:2},{FullMatch:"",StartMatch:3})
+
+>> MatchAll( "a" & Char(13) & "a", "^(a|)" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:1})
+
+>> MatchAll( "a" & Char(13), "^(a|)" )
+Table({FullMatch:"a",StartMatch:1})
+
+>> MatchAll( Char(13) & "a", "^(a|)" )
+Table({FullMatch:"",StartMatch:1})
+
+>> MatchAll( "a" & Char(13) & "a", "(a|)$" )  // matches after the \r and \n in JavaScript, not in PCRE2
+Table({FullMatch:"a",StartMatch:3},{FullMatch:"",StartMatch:4})
+
+>> MatchAll( "a" & Char(13), "(a|)$" )  // pcre2 repeated empty result
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"",StartMatch:2},{FullMatch:"",StartMatch:3})
+
+>> MatchAll( Char(13) & "a", "(a|)$" )
+Table({FullMatch:"a",StartMatch:2},{FullMatch:"",StartMatch:3})
+
+>> ForAll( MatchAll( "
+ a
+ b
+ c
+ ", "^.+$"), { Match: FullMatch, Len: Len(FullMatch), Start: StartMatch } )
+Table()
+
+>> ForAll( MatchAll( "
+ a
+ b
+ c
+ ", "^.+$", MatchOptions.Multiline), { Match: FullMatch, Len: Len(FullMatch), Start: StartMatch } )
+Table({Len:2,Match:" a",Start:3},{Len:2,Match:" b",Start:7},{Len:2,Match:" c",Start:11},{Len:1,Match:" ",Start:15})
+
+>> MatchAll( "a" & Char(13) & "b" & Char(13) & "cc" & Char(13), "\w" )
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"b",StartMatch:3},{FullMatch:"c",StartMatch:5},{FullMatch:"c",StartMatch:6})
+
+>> MatchAll( "a" & Char(13) & "b" & Char(13) & "cc" & Char(13), "\w", MatchOptions.Multiline )
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"b",StartMatch:3},{FullMatch:"c",StartMatch:5},{FullMatch:"c",StartMatch:6})
+
+>> MatchAll( "a" & Char(13) & "b" & Char(13) & "cc" & Char(13), "\w", MatchOptions.Multiline & MatchOptions.Complete )
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"b",StartMatch:3})
+
+>> MatchAll( "a" & Char(13) & "b" & Char(13) & "cc" & Char(13), "\w", MatchOptions.Complete )
+Table()
+
+>> MatchAll( Char(13) & "a" & Char(13) & "b" & Char(13) & "cc" & Char(13), "^\w", MatchOptions.Multiline )
+Table({FullMatch:"a",StartMatch:2},{FullMatch:"b",StartMatch:4},{FullMatch:"c",StartMatch:6})
+
+>> MatchAll( Char(10) & "a" & Char(10) & "b" & Char(10) & "cc" & Char(10), "^\w", MatchOptions.Multiline )
+Table({FullMatch:"a",StartMatch:2},{FullMatch:"b",StartMatch:4},{FullMatch:"c",StartMatch:6})
+
+>> MatchAll( Char(13) & "a" & Char(13) & "b" & Char(13) & "cc" & Char(13), "^\w" )
+Table()
+
+>> MatchAll( Char(10) & "a" & Char(10) & "b" & Char(10) & "cc" & Char(10), "^\w" )
+Table()
+
+>> MatchAll( "1a3" & Char(13) & "2b4" & Char(13), "(?m)\d$" )
+Table({FullMatch:"3",StartMatch:3},{FullMatch:"4",StartMatch:7})
+
+>> MatchAll( "1a3" & Char(13) & "2b4" & Char(13), "\d$" )
+Table({FullMatch:"4",StartMatch:7})
+
+>> Match( "1a3" & Char(13), "\d$" )
+{FullMatch:"3",StartMatch:3}
+
+>> MatchAll( "1a3" & Char(10) & "2b4" & Char(10), "(?m)\d$" )
+Table({FullMatch:"3",StartMatch:3},{FullMatch:"4",StartMatch:7})
+
+>> MatchAll( "1a3" & Char(10) & "2b4" & Char(10), "\d$" )
+Table({FullMatch:"4",StartMatch:7})
+
+>> Match( "1a3" & Char(10), "\d$" )
+{FullMatch:"3",StartMatch:3}
+
+>> MatchAll( "1a3" & Char(13)&Char(10) & "2b4" & Char(13)&Char(10), "(?m)\d$" )
+Table({FullMatch:"3",StartMatch:3},{FullMatch:"4",StartMatch:8})
+
+>> MatchAll( "1a3" & Char(13)&Char(10) & "2b4" & Char(13)&Char(10), "\d$" )
+Table({FullMatch:"4",StartMatch:8})
+
+>> Match( "1a3" & Char(13)&Char(10), "\d$" )
+{FullMatch:"3",StartMatch:3}
+
+// spaces
+
+>> IsMatch( "h" & "a" & "d", "h\sd") // control
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("0020")) & "d", "h\sd")  // " "
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("000d")) & "d", "h\sd")  // \r
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("000c")) & "d", "h\sd")  // \f
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("000a")) & "d", "h\sd")  // \n
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("0009")) & "d", "h\sd")  // \t
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("000b")) & "d", "h\sd")  // \v
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("0085")) & "d", "h\sd")  // \x85, not in ECMAScript
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("1680")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2000")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2001")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2002")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2003")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2004")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2005")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2006")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2007")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2008")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2009")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("200a")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("202f")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("205f")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("3000")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2028")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2029")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("feff")) & "d", "h\sd") // ECMAScript
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("00a0")) & "d", "h\sd")
+true
+
+// non-space
+
+>> IsMatch( "h" & "a" & "d", "h\Sd") // control
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("0020")) & "d", "h\Sd")  // " "
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("000d")) & "d", "h\Sd")  // \r
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("000c")) & "d", "h\Sd")  // \f
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("000a")) & "d", "h\Sd")  // \n
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("0009")) & "d", "h\Sd")  // \t
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("000b")) & "d", "h\Sd")  // \v
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("0085")) & "d", "h\Sd")  // \x85, not in ECMAScript
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("1680")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2000")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2001")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2002")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2003")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2004")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2005")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2006")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2007")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2008")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2009")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("200a")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("202f")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("205f")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("3000")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2028")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2029")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("feff")) & "d", "h\Sd") // ECMAScript
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("00a0")) & "d", "h\Sd") 
+false
+
+// newline terminators in free spacing
+
+>> Match( "aB", "(?x)a # a B" )
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a " & Char(8) & " B+" )
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a " & Char(9) & " B+" )  // \t
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a " & Char(10) & " B+" )  // \n
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a " & Char(11) & " B+" )  // \v
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a " & Char(12) & " B+" )  // \f
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a " & Char(13) & " B+" )  // \r
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a " & Char(14) & " B+" )
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a " & UniChar(Hex2Dec("85")) & " B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a " & UniChar(160) & " B+" ) // Non breaking space
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a " & UniChar(Hex2Dec("2028")) & " B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a # a" & UniChar(Hex2Dec("2029")) & " B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+// ignored spaces in free spacing
+
+>> Match( "aBBB", "(?x)a B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a " & Char(9) & " B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a " & Char(10) & " B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a " & Char(11) & " B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a " & Char(12) & " B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a " & Char(13) & " B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a " & Char(14) & " B+" )
+Blank()
+
+>> Match( "aBBB", "(?x)a " & UniChar(Hex2Dec("85")) & " B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a " & UniChar(160) & " B+" ) // Non breaking space
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a " & UniChar(Hex2Dec("2028")) & " B+" )
+{FullMatch:"aBBB",StartMatch:1}
+
+>> Match( "aBBB", "(?x)a " & UniChar(Hex2Dec("2029")) & " B+" ) 
+{FullMatch:"aBBB",StartMatch:1}
+
