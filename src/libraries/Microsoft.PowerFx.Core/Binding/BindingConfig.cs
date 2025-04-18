@@ -23,17 +23,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public bool AnalysisMode { get; }
 
-        public bool MarkAsAsyncOnLazilyLoadedControlRef { get; } = false;
-
         public bool UserDefinitionsMode { get; }
 
-        public BindingConfig(bool allowsSideEffects = false, bool useThisRecordForRuleScope = false, bool numberIsFloat = false, bool analysisMode = false, bool markAsAsyncOnLazilyLoadedControlRef = false, bool userDefinitionsMode = false)
+        public BindingConfig(bool allowsSideEffects = false, bool useThisRecordForRuleScope = false, bool numberIsFloat = false, bool analysisMode = false, bool userDefinitionsMode = false)
         {
             AllowsSideEffects = allowsSideEffects;
             UseThisRecordForRuleScope = useThisRecordForRuleScope;
             NumberIsFloat = numberIsFloat;
             AnalysisMode = analysisMode;
-            MarkAsAsyncOnLazilyLoadedControlRef = markAsAsyncOnLazilyLoadedControlRef;
             UserDefinitionsMode = userDefinitionsMode;
         }
     }
