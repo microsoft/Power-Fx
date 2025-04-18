@@ -1,4 +1,4 @@
-﻿#SETUP: RegEx,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers,DisableMemChecks
+﻿#SETUP: RegEx,PowerFxV1CompatibilityRules
 
 // Unicode character behavior in Power Fx regular expressions.
 // This file consolidates Unicode testing for IsMatch, Match, and MatchAll

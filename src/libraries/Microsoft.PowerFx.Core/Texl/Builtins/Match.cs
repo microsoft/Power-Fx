@@ -646,7 +646,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
 # leading (?, misc
                     (?<goodNonCapture>\(\?:)                           | # non-capture group, still need to track to match with closing paren
-                    \A\(\?(?<goodInlineOptions>[imnsx]+)\)             | # inline options
+                    ^\(\?(?<goodInlineOptions>[imnsx]+)\)              | # inline options
                     (?<goodInlineComment>\(\?\#)                       | # inline comment
                     (?<badInlineOptions>\(\?(\w+|\w*-\w+)[\:\)])       | # inline options, including disable of options
                     (?<badConditional>\(\?\()                          | # .NET conditional alternations are not supported
@@ -695,7 +695,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         @@ | `` | ~~ | %% | && | ;; | ,, | !!    |       # and https://www.unicode.org/reports/tr18/#Subtraction_and_Intersection
                         \|\| | \#\# | \$\$ | \*\* | \+\+ | \.\.  |       # includes set subtraction 
                         \?\? | \^\^ | \-\-)                            | # 
-                    (?<goodHyphen>-)                                   |
+                    (?<goodHyphen>\-)                                   |
                 "
                 + elseRE, 
                 RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);

@@ -1,4 +1,4 @@
-﻿#SETUP: RegEx,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+﻿#SETUP: RegEx,PowerFxV1CompatibilityRules
 
 // Power Fx regular expressions are limited to features that can be transpiled to native .NET (C# Interpreter), ECMAScript (Canvas), or PCRE2 (Excel).
 // We want the same results everywhere for Power Fx, even if the underlying implementation is different. Even with these limits in place there are some minor semantic differences but we get as close as we can.
@@ -282,17 +282,17 @@ Errors: Error 22-36: Invalid regular expression: Conditional alternation is not 
 
 // support for \r in compile time checks
 
->> ShowColumns( Match( "ab", "(?x)a # " & Char(13) & " (?<capture>b)" ), capture )
-{capture:"b"}
+>> Match( "ab", "(?x)a # " & Char(13) & " (?<capture>b)" ).capture
+"b"
 
->> ShowColumns( Match( "ab", "(?x)a # " & Char(10) & " (?<capture>b)" ), capture )
-{capture:"b"}
+>> Match( "ab", "(?x)a # " & Char(10) & " (?<capture>b)" ).capture
+"b"
 
->> ShowColumns( Match( "ab", "a # " & Char(13) & " (?<capture>b)", MatchOptions.FreeSpacing ), capture )
-{capture:"b"}
+>> Match( "ab", "a # " & Char(13) & " (?<capture>b)", MatchOptions.FreeSpacing ).capture
+"b"
 
->> ShowColumns( Match( "ab", "a # " & Char(10) & " (?<capture>b)", MatchOptions.FreeSpacing ), capture )
-{capture:"b"}
+>> Match( "ab", "a # " & Char(10) & " (?<capture>b)", MatchOptions.FreeSpacing ).capture
+"b"
 
 // difference between null and empty string
 
@@ -556,8 +556,8 @@ Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\m"
 >> Match( "test", "\M" )
 Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\M".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> DropColumns( Match( "test" & Char(10) & "bed", "\n" ), FullMatch )
-{StartMatch:5}
+>> Match( "test" & Char(10) & "bed", "\n" ).StartMatch
+5
 
 >> Match( "test", "\N" )
 Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\N".|Error 0-5: The function 'Match' has some invalid arguments.
@@ -580,8 +580,8 @@ Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\q"
 >> Match( "test", "\Q" )
 Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\Q".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> DropColumns( Match( "test" & Char(13) & "bed", "\r" ), FullMatch )
-{StartMatch:5}
+>> Match( "test" & Char(13) & "bed", "\r" ).StartMatch
+5
 
 >> Match( "test", "\R" )
 Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\R".|Error 0-5: The function 'Match' has some invalid arguments.
@@ -886,20 +886,20 @@ Errors: Error 22-29: Invalid regular expression: Inline options are limited to a
 
 // Option DotAll
 
->> DropColumns( Match( "te" & " " & "t", "te.t", MatchOptions.DotAll ), FullMatch )
-{StartMatch:1}
+>> Match( "te" & " " & "t", "te.t", MatchOptions.DotAll ).StartMatch
+1
 
->> DropColumns( Match( "te" & Char(10) & "t", "te.t", MatchOptions.DotAll ), FullMatch )
-{StartMatch:1}
+>> Match( "te" & Char(10) & "t", "te.t", MatchOptions.DotAll ).StartMatch
+1
 
->> DropColumns( Match( "te" & Char(13) & "t", "te.t", MatchOptions.DotAll ), FullMatch )
-{StartMatch:1}
+>> Match( "te" & Char(13) & "t", "te.t", MatchOptions.DotAll ).StartMatch
+1
 
->> DropColumns( Match( "te" & UniChar(Hex2Dec("2028")) & "t", "te.t", MatchOptions.DotAll ), FullMatch )
-{StartMatch:1}
+>> Match( "te" & UniChar(Hex2Dec("2028")) & "t", "te.t", MatchOptions.DotAll ).StartMatch
+1
 
->> DropColumns( Match( "te" & UniChar(Hex2Dec("2029")) & "t", "te.t", MatchOptions.DotAll ), FullMatch )
-{StartMatch:1}
+>> Match( "te" & UniChar(Hex2Dec("2029")) & "t", "te.t", MatchOptions.DotAll ).StartMatch
+1
 
 //
 // QUANTIFIERS

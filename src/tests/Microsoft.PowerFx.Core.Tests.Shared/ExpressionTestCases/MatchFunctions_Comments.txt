@@ -1,4 +1,4 @@
-﻿#SETUP: RegEx,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+﻿#SETUP: RegEx,PowerFxV1CompatibilityRules
 
 // Comments and free spacing behavior in Power Fx regular expressions.
 //

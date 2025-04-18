@@ -1,4 +1,4 @@
-#SETUP: RegEx,disable:PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+#SETUP: RegEx,disable:PowerFxV1CompatibilityRules
 
 // 0: Uknown
 // Failsafe
