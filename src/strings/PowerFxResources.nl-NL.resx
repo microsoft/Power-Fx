@@ -2113,6 +2113,14 @@
     <value>Conflict met de kolomnaam voor {0}.</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Kan geen kolommen toevoegen aan een systeemrecord of tabel met systeemrecords. Gebruik ShowColumns deze om eerst de specifieke kolommen te extraheren die u nodig hebt.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Kan geen namen van kolommen wijzigen van een systeemrecord of tabel met systeemrecords. Gebruik ShowColumns deze om eerst de specifieke kolommen te extraheren die u nodig hebt.</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>De opgegeven kolom {0} bestaat niet.</value>
     
@@ -4511,24 +4519,240 @@
     <value>Ongeldige reguliere expressie.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: inline opties moeten aan het begin van de reguliere expressie worden weergegeven. {0} later gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: inline opties zijn beperkt tot een combinatie van de letters [imnsx]. Opties kunnen niet worden uitgeschakeld en kunnen niet worden gebruikt voor een subexpressie. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: Octale \0-tekencodes worden niet ondersteund. Gebruik in plaats daarvan hexadecimale \x of Unicode \u. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: letterlijke accolades moeten worden escaped met een backslash. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: Letterlijke vierkante accolades moeten worden escaped met een backslash, zelfs in tekenklassen, bijvoorbeeld \[ of \]. Gevonden aan het einde van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Ongeldige gewone expressie: niet-gesloten vierkante haak van tekenklasse.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: niet-ondersteunde speciale groep. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: escapeteken is niet toegestaan in de negatief gemaakte tekenklasse. Gevonden aan het einde van "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: negatief escapeteken is niet toegestaan in negatief gemaakte tekenklasse. Gevonden aan het einde van "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: het escapeteken is niet toegestaan buiten een tekenklasse. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: ongeldige Unicode-categorienaam. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: herhaalde inline optie. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: niet-gesloten inline opmerking.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: niet-gesloten inline opmerking. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: inline optie is incompatibel met MatchOptions.NumberedSubMatches. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: bezittelijke kwantificatoren worden niet ondersteund. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: exacte kwantificatoren kunnen niet worden gebruikt met kwantificatormodificatoren zoals ? voor lui. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: ongeldige escapecode. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: subovereenkomst {0} is niet gedefinieerd of is een niet-ondersteunde doorgestuurde verwijzing.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: subovereenkomsten worden niet ondersteund in achterliggende elementen. Gevonden aan het begin van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: terugblikken kunnen niet worden genest. Gevonden aan het begin van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: onbeperkte kwantificatoren worden niet ondersteund in terugblikken. Gevonden aan het einde van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: kwantificatoren worden niet ondersteund voor terugblikken of vooruitblikken. Gevonden aan het einde van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: terugverwijzing {0} naar subovereenkomst die mogelijk niet plaatsvindt vanwege afwisseling of nulkwantificator.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: zelfverwijzende subovereenkomsten worden niet ondersteund. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: niet-gesloten groepen. Te weinig haakjes sluiten.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: niet-geopende groepen. Te weinig haakjes openen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: meerdere keren benoemde subovereenkomst gedefinieerd. Gevonden aan het begin van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: de naam van de subovereenkomst moet een combinatie van woordtekens zijn en mag niet beginnen met een getal. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: inline opties moeten aan het begin van de reguliere expressie worden weergegeven. {0} later gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: teken herhaald in tekenklasse. Gevonden aan einde van "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: tekenklassen tussen vierkante haken mogen niet leeg zijn. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: balancerende subovereenkomsten worden niet ondersteund. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: het gebruik van benoemde opnamen met enkele aanhalingstekens wordt niet ondersteund. Gebruik in plaats daarvan de syntaxis (?&lt;... &gt;). {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: voorwaardelijke afwisseling wordt niet ondersteund. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: benoemde opnamen kunnen niet worden gebruikt met MatchOptions.NumberedSubMatches ingeschakeld. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: gebruik benoemde opnamen met (?&lt;name&gt;...) en \k&lt;name&gt; of schakel MatchOptions.NumberedSubMatches in. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: letterlijk koppelteken in tekenklasse moet worden escaped met een backslash. Escape met "\-". Gevonden aan einde van "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: letterlijk teken moet worden escaped met een backslash, zelfs in tekenklassen. Gevonden aan het einde van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: kwantificator voor een groep die een andere kwantificator of lege afwisseling bevat die kan resulteren in een dubbelzinnig resultaat. Gevonden aan het einde van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: terugblik heeft de maximaal mogelijke tekenlimiet van 250 overschreden. Gevonden aan het einde van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: het lage getal van het kwantificatorbereik is groter dan het hoogste getal. Gevonden in {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: er zijn te veel geneste groepen. Gevonden aan het begin van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: de naam van de subovereenkomst is te lang. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: het getal is te groot. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: de tekens in een tekenklassebereik zijn omgekeerd. Gevonden aan het einde van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: tekenklasse in een tekenklassebereik of gebruik een letterlijk koppelteken met een backslash als escape. Gevonden aan het einde van "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: eindigt met een backslash zonder escapes.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: kwantificator zonder iets om te kwantificeren. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: MatchOptions.DotAll en MatchOptions.FreeSpacing zijn alleen beschikbaar met Power Fx V1. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: terugverwijzing {0} naar subovereenkomst die zich in een terugblik of vooruitblik bevindt.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExSurrogatePairInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: Unicode-tekens in surrogaatparen (teken U+10000 en hoger) worden niet ondersteund in tekenklassen. "{0}" gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMalformedSurrogatePair_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: onjuist ingedeeld Unicode-surrogaatpaar (teken U+10000 en hoger), gevonden aan het einde van "{0}".</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Reguliere expressies moeten constante waarden zijn.</value>
+    <value>Reguliere expressie moete een constante waarde zijn.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions moet een constante waarde zijn.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>De waarde die is doorgegeven aan functie {0} kan niet worden gewijzigd.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>De opnamenaam {0} verbergt de vooraf gedefinieerde eigenschap waarmee de volledige overeenkomst van de reguliere expressie wordt geretourneerd. Overweeg deze te hernoemen als u die benoemde eigenschap wilt gebruiken om de volledige overeenkomst in de opgegeven tekst te extraheren.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>De opnamenaam in de set {0} verbergt een vooraf gedefinieerde eigenschap die overeenkomstinformatie retourneert. Overweeg de naam te wijzigen als je toegang wilt tot de overeenkomstinformatie.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>De opnamenaam {0} verbergt de vooraf gedefinieerde eigenschap waarmee de groepsovereenkomsten in de reguliere expressie worden geretourneerd. Overweeg deze te hernoemen als u die benoemde eigenschap wilt gebruiken om alle subovereenkomsten in de opgegeven tekst te extraheren.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>De opnamenaam {0} verbergt de vooraf gedefinieerde eigenschap waarmee de locatie van de overeenkomst van de reguliere expressie wordt geretourneerd. Overweeg deze te hernoemen als u die benoemde eigenschap wilt gebruiken om de positie van de volledige overeenkomst in de opgegeven tekst te extraheren.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>De opnamenamen in de set {0} verbergen vooraf gedefinieerde eigenschappen die overeenkomstinformatie retourneren. Overweeg de naam te wijzigen als je toegang wilt tot de overeenkomstinformatie.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">

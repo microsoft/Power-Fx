@@ -2113,6 +2113,14 @@
     <value>Конфликт имен столбцов для "{0}".</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Невозможно добавить столбцы в системную запись или таблицу системных записей. Сначала используйте ShowColumns для извлечения конкретных нужных столбцов.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Невозможно переименовать столбцы в системной записи или таблице системных записей. Сначала используйте ShowColumns для извлечения конкретных нужных столбцов.</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Указанный столбец "{0}" не существует.</value>
     
@@ -4511,24 +4519,240 @@
     <value>Недопустимое регулярное выражение.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: встроенные варианты должны находиться в начале регулярного выражения; обнаружено после "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: встроенные параметры ограничены сочетанием букв [imnsx], не могут отключать параметры и не могут использоваться в подвыражении; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: восьмеричные коды символов \0 не поддерживаются. Используйте вместо них шестнадцатеричный код \x или Юникод \u; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: литеральные фигурные скобки должны быть экранированы обратной косой чертой; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: литеральные квадратные скобки должны быть экранированы обратной косой чертой даже в символьных классах, например \[ или \]; обнаружено в конце "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: незакрытая квадратная скобка символьного класса.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: неподдерживаемая специальная группа; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: использование escape-символа в символьном классе не допускается; обнаружено в конце "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: использование отрицательного escape-символа в символьном классе с отрицанием не допускается; обнаружено в конце "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: использование escape-символа за пределами символьного класса не допускается; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: недопустимое имя категории Юникода; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: повторяется встроенный параметр; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: незакрытый встроенный комментарий.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: незакрытый встроенный комментарий; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: встроенный параметр несовместим с MatchOptions.NumberedSubMatches; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: притяжательные квантификаторы не поддерживаются; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: точные квантификаторы нельзя использовать с модификаторами квантификаторов, такими как ? для задания ленивого режима; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: недопустимый escape-код; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: подсоответствие "{0}" не определено или является неподдерживаемой прямой ссылкой.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: подсоответствия не поддерживаются в просмотрах назад; обнаружено в начале "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: просмотры назад не могут быть вложенными; обнаружено в начале "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: неограниченные квантификаторы не поддерживаются в просмотрах назад; обнаружено в конце "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: квантификаторы не поддерживаются в просмотрах назад или просмотрах вперед; обнаружено в конце "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: обратная ссылка "{0}" на подсоответствие, которое может не произойти из-за чередования или нулевого квантификатора.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: подсоответствия, ссылающиеся на себя, не поддерживаются; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: незакрытые группы, слишком мало закрывающих скобок.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: неоткрытые группы, слишком мало открывающих скобок.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: именованное подсоответствие определено более одного раза; обнаружено в начале "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: имя подсоответствия должно представлять собой сочетание словесных символов и не начинаться с цифры; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: встроенные варианты должны находиться в начале регулярного выражения; обнаружено после "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: символ встречается более одного раза в символьном классе; обнаружено в конце "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: символьные классы в квадратных скобок не могут быть пустыми; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: балансирующие подсоответствия не поддерживаются; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: использование именованных захватов в одинарных кавычках не поддерживается. Используйте синтаксис (?&lt;... &gt;); обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: условное чередование не поддерживается; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: именованные захваты нельзя использовать в сочетании с MatchOptions.NumberedSubMatches; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: используйте именованные захваты с "(?&lt;name&gt;...)" и "\k&lt;name&gt;" или включите MatchOptions.NumberedSubMatches; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: литеральный дефис в символьном классе должен быть экранирован обратной косой чертой ("\-"); обнаружено в конце "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: литеральный символ при использовании в символьном классе должен быть экранирован обратной косой чертой; обнаружено в конце "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: квантификатор для группы, содержащей другой квантификатор или пустое чередование, может привести к неоднозначному результату; обнаружено в конце "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: просмотр назад превысил максимально возможное ограничение в 250 символов; обнаружено в конце "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: нижний предел диапазона квантификатора больше верхнего предела; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: слишком много вложенных групп; обнаружено в начале "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: слишком длинное имя подсоответствия; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: слишком большое число; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: символы в диапазоне символьного класса идут в обратном порядке; обнаружено в конце "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: символьный класс в диапазоне символьного класса (или экранируйте литеральный дефис обратной косой чертой); обнаружено в конце "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: заканчивается неэкранированной обратной косой чертой.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: квантификатор без чего-либо для количественного определения; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: MatchOptions.DotAll и MatchOptions.FreeSpacing доступны только при использовании Power Fx V1; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: обратная ссылка "{0}" на подсоответствие, которое находится внутри просмотра назад или просмотра вперед.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExSurrogatePairInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: символы Unicode в суррогатных парах (символ U+10000 и выше) не поддерживаются в символьных классах; обнаружено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMalformedSurrogatePair_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение: неправильно сформированная суррогатная пара Unicode (символ U+10000 и выше); обнаружено в конце "{0}".</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Регулярные выражения должны быть константными значениями.</value>
+    <value>Регулярное выражение должно быть константным значением.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>Значение MatchOptions должно быть константой.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Значение, переданное функции "{0}", нельзя изменить.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Имя записи "{0}" скрывает предопределенное свойство, которое возвращает полное соответствие регулярного выражения. Попробуйте переименовать запись, если вы хотите использовать именованное свойство для извлечения полного соответствия в указанном тексте.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Имя захвата в наборе "{0}" скрывает предопределенное свойство, которое возвращает информацию о соответствиях. Для доступа к информации о соответствиях рекомендуется его переименовать.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Имя записи "{0}" скрывает предопределенное свойство, которое возвращает групповые соответствия в регулярном выражении. Попробуйте переименовать запись, если вы хотите использовать именованное свойство для извлечения всех вложенных соответствий в указанном тексте.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Имя записи "{0}" скрывает предопределенное свойство, которое возвращает расположение соответствия регулярного выражения. Попробуйте переименовать запись, если вы хотите использовать именованное свойство для извлечения позиции полного соответствия в указанном тексте.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Имена захватов в наборе "{0}" скрывают предопределенные свойства, которые возвращают информацию о соответствиях. Для доступа к информации о соответствиях рекомендуется их переименовать.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">

@@ -2113,6 +2113,14 @@
     <value>Tên cột xung đột với '{0}'.</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Không thể thêm cột vào bản ghi hệ thống hoặc bảng bản ghi hệ thống. Trước tiên, hãy dùng ShowColumns để trích xuất các cột cụ thể mà bạn cần.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Không thể đổi tên cột của bản ghi hệ thống hoặc bảng bản ghi hệ thống. Trước tiên, hãy dùng ShowColumns để trích xuất các cột cụ thể mà bạn cần.</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Cột được chỉ định '{0}' không tồn tại.</value>
     
@@ -4511,24 +4519,240 @@
     <value>Biểu thức chính quy không hợp lệ.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Các tùy chọn nội tuyến phải xuất hiện ở đầu biểu thức chính quy, tìm thấy "{0}" ở vị trí sau.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Các tùy chọn nội tuyến chỉ giới hạn trong tổ hợp các chữ cái [imnsx], không thể vô hiệu hóa tùy chọn và không thể sử dụng trên biểu thức con, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Mã ký tự bát phân \0 không được hỗ trợ, hãy dùng mã thập lục phân \x hoặc Unicode \u, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Phải thoát dấu ngoặc nhọn ký tự bằng dấu gạch chéo ngược, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Dấu ngoặc vuông ký tự phải được thoát bằng dấu gạch chéo ngược ngay cả trong lớp ký tự, ví dụ \[ hoặc \], tìm thấy ở cuối "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Dấu ngoặc vuông lớp ký tự chưa được đóng.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Nhóm đặc biệt không được hỗ trợ, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Ký tự thoát không được cho phép trong lớp ký tự, tìm thấy ở cuối "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Ký tự thoát phủ định không được cho phép trong lớp ký tự phủ định, tìm thấy ở cuối "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Ký tự thoát không được phép nằm ngoài lớp ký tự, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Tên thể loại Unicode không hợp lệ, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Tùy chọn nội tuyến lặp lại, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Nhận xét nội tuyến chưa được đóng.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Nhận xét nội tuyến chưa được đóng, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Tùy chọn nội tuyến không tương thích với MatchOptions.NumberedSubMatches, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Không hỗ trợ lượng từ sở hữu, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Không thể sử dụng lượng từ chính xác với các bộ sửa đổi lượng từ như dấu ? cho chế độ so khớp lười, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Mã thoát không hợp lệ, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Kết quả so khớp phụ "{0}" không được định nghĩa hoặc là một tham chiếu tiến không được hỗ trợ.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Kết quả so khớp phụ không được hỗ trợ trong khẳng định tìm kiếm phía sau, tìm thấy ở đầu "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Các khẳng định tìm phía sau không được lồng nhau, tìm thấy ở đầu "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Lượng từ không giới hạn không được hỗ trợ trong các khẳng định tìm phía sau, tìm thấy ở cuối "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Lượng từ không được hỗ trợ trên các khẳng định tìm phía sau hoặc phía trước, tìm thấy ở cuối "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Tham chiếu "{0}" trở lại kết quả so khớp phụ có thể không xảy ra do lượng từ bằng không hoặc phép luân phiên.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Không hỗ trợ kết quả so khớp phụ tự tham chiếu, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Nhóm không đóng, quá ít dấu ngoặc đơn đóng.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Nhóm không mở, quá ít dấu ngoặc đơn mở.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Kết quả so khớp phụ có tên được xác định nhiều lần, tìm thấy ở đầu "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Tên so khớp phụ phải là tổ hợp các ký tự từ và không được bắt đầu bằng một số, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Các tùy chọn nội tuyến phải xuất hiện ở đầu biểu thức chính quy, tìm thấy "{0}" ở vị trí sau.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Ký tự lặp lại trong lớp ký tự, tìm thấy ở cuối "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Không được để trống các lớp ký tự dấu ngoặc vuông, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Không hỗ trợ kết quả so khớp phụ cân bằng, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Không hỗ trợ sử dụng nhóm chiếm giữ có tên trong dấu nháy đơn, thay vào đó, hãy sử dụng (?&lt;...&gt;), tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Không hỗ trợ phép luân phiên có điều kiện, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Không thể sử dụng nhóm chiếm giữ có tên với MatchOptions.NumberedSubMatches được bật, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Sử dụng nhóm chiếm giữ có tên với "(?&lt;name&gt;...)" và "\k&lt;name&gt;" hoặc bật MatchOptions.NumberedSubMatches, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Dấu gạch ngang ký tự trong lớp ký tự phải được thoát bằng dấu gạch chéo ngược, thoát bằng "\-", tìm thấy ở cuối "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Ký tự chữ cần được thoát bằng dấu gạch chéo ngược khi sử dụng trong một lớp ký tự, tìm thấy ở cuối "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Lượng từ trên một nhóm chứa một lượng từ khác hoặc phép luân phiên trống có thể dẫn đến kết quả không rõ ràng, tìm thấy ở cuối "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Khẳng định tìm kiếm phía sau vượt quá giới hạn ký tự tối đa có thể là 250, tìm thấy ở cuối "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Phạm vi lượng từ có số thấp lớn hơn số cao, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Quá nhiều nhóm lồng nhau, tìm thấy ở đầu "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Tên của kết quả so khớp phụ quá dài, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Số quá lớn, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Các ký tự trong phạm vi lớp ký tự được đảo ngược, tìm thấy ở cuối "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Lớp ký tự trong một phạm vi lớp ký tự hoặc thoát dấu gạch ngang ký tự bằng dấu gạch chéo ngược, tìm thấy ở cuối "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Kết thúc bằng dấu gạch chéo ngược không thoát.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Lượng từ không có gì để định lượng, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: MatchOptions.DotAll và MatchOptions.FreeSpacing chỉ khả dụng với Power Fx V1, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Tham chiếu "{0}" trở lại kết quả so khớp phụ nằm bên trong một khẳng định tìm kiếm phía sau hoặc phía trước.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExSurrogatePairInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Ký tự Unicode trong cặp mã đại diện (ký tự U+10000 trở lên) không được hỗ trợ trong các lớp ký tự, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMalformedSurrogatePair_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Cặp mã đại diện Unicode bị lỗi (ký tự U + 10000 trở lên), tìm thấy ở cuối "{0}".</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Biểu thức chính quy phải là các giá trị không đổi.</value>
+    <value>Biểu thức chính quy phải là một giá trị không đổi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions phải là một giá trị không đổi.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Không thể thay đổi giá trị được truyền đến hàm "{0}".</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Tên thu thập '{0}' đang ẩn thuộc tính được xác định trước mà trả về kết quả khớp đầy đủ của biểu thức thông thường. Hãy xem xét việc đặt lại tên nếu bạn muốn sử dụng các thuộc tính có tên để trích xuất các kết quả khớp đầy đủ trong văn bản được chỉ định.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Tên nhóm chiếm giữ "{0}" đang che giấu thuộc tính được định nghĩa sẵn trả về thông tin khớp. Hãy cân nhắc đổi tên nhóm nếu bạn muốn truy cập thông tin khớp.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Tên thu thập '{0}' đang ẩn thuộc tính được xác định trước mà trả về kết quả khớp nhóm của biểu thức thông thường. Hãy xem xét việc đặt lại tên nếu bạn muốn sử dụng các thuộc tính có tên để trích xuất mọi kết quả khớp phụ trong văn bản được chỉ định.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Tên thu thập '{0}' đang ẩn thuộc tính được xác định trước mà trả về vị trí kết quả khớp của biểu thức thông thường. Hãy xem xét việc đặt lại tên nếu bạn muốn sử dụng các thuộc tính có tên để trích xuất các vị trí kết quả khớp đầy đủ trong văn bản được chỉ định.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Các tên nhóm chiếm giữ trong tập "{0}" đang che giấu các thuộc tính được định nghĩa sẵn trả về thông tin khớp. Hãy cân nhắc đổi tên chúng nếu bạn muốn truy cập thông tin khớp.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">

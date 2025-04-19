@@ -2113,6 +2113,14 @@
     <value>Konflik nama kolom untuk '{0}'.</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Tidak dapat menambahkan kolom ke rekaman sistem atau tabel rekaman sistem. Gunakan ShowColumns untuk mengekstrak kolom yang Anda butuhkan terlebih dahulu.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Tidak dapat mengubah nama kolom rekaman sistem atau tabel rekaman sistem. Gunakan ShowColumns untuk mengekstrak kolom yang Anda butuhkan terlebih dahulu.</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Kolom yang ditentukan '{0}' tidak ada.</value>
     
@@ -4511,24 +4519,240 @@
     <value>Ekspresi reguler tidak valid.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pilihan sebaris harus muncul di awal ekspresi reguler, ditemukan "{0}" nanti.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pilihan sebaris terbatas pada kombinasi huruf [imnsx], tidak dapat menonaktifkan opsi, dan tidak dapat digunakan pada subekspresi, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Kode karakter Oktal \0 tidak didukung, gunakan heksadesimal \x atau Unicode \u sebagai gantinya, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Kurung kurawal harfiah harus diberi escape garis miring terbalik, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Tanda kurung siku harfiah harus di-escape dengan garis miring terbalik meski dalam kelas karakter, contoh \[ atau \], ditemukan di akhir "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Tanda kurung siku kelas karakter tidak tertutup.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Grup khusus tidak didukung, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Karakter escape tidak diizinkan dalam kelas karakter, ditemukan di bagian akhir "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Karakter escape negatif tidak diizinkan dalam kelas karakter yang dinegasikan, ditemukan di bagian akhir "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Karakter escape tidak diizinkan di luar kelas karakter, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Nama kategori Unicode tidak valid, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Opsi sebaris berulang, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Komentar sebaris tidak tertutup.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Komentar sebaris tidak tertutup, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pilihan sebaris tidak kompatibel dengan MatchOptions.NumberedSubMatches, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pembilang kepemilikan tidak didukung, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pembilang yang tepat tidak dapat digunakan dengan pengubah pembilang seperti ? untuk lazy, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Kode escape tidak valid, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Subkecocokan "{0}" tidak ditentukan atau merupakan referensi penerusan yang tidak didukung.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Subkecocokan tidak didukung dalam lookbehind, ditemukan di awal "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Look behind tidak dapat ditumpuk, ditemukan di awal "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pembilang tidak terbatas tidak didukung di look behind, ditemukan di akhir "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pembilang tidak didukung pada look behind atau look ahead, ditemukan di akhir "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Referensi balik "{0}" ke subkecocokan yang mungkin tidak terjadi karena alternasi atau pembilang nol.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Subkecocokan referensi mandiri tidak didukung, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Grup tidak tertutup, tanda kurung tutup terlalu sedikit.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Grup tidak terbuka, tanda kurung pembuka terlalu sedikit.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Subkecocokan bernama didefinisikan lebih dari sekali, ditemukan di awal "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Nama subkecocokan harus merupakan kombinasi karakter kata dan tidak diawali dengan angka, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pilihan sebaris harus muncul di awal ekspresi reguler, ditemukan "{0}" nanti.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Karakter berulang dalam kelas karakter, ditemukan di bagian akhir "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Kelas karakter tanda kurung siku tidak boleh kosong, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Subkecocokan penyeimbangan tidak didukung, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Menggunakan tangkapan bernama dengan tanda kutip tunggal tidak didukung, gunakan sintaks (?&lt;...), ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Alternasi kondisional tidak didukung, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Tangkapan bernama tidak dapat digunakan ketika MatchOptions.NumberedSubMatches aktif, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Gunakan tangkapan bernama dengan "(?&lt;name&gt;...)" dan "\k&lt;name&gt;" atau aktifkan MatchOptions.NumberedSubMatches, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Tanda hubung harfiah dalam kelas karakter harus di-escape dengan garis miring terbalik, escape dengan "\-", ditemukan di bagian akhir "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Karakter harfiah perlu di-escape dengan garis miring terbalik saat digunakan dalam kelas karakter, ditemukan di akhir "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pembilang pada grup yang berisi pembilang lain atau alternasi kosong yang dapat menghasilkan hasil yang ambigu, ditemukan di akhir "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Lookbehind melampaui batas karakter maksimum 250, ditemukan di akhir "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Angka rendah rentang pembilang lebih besar dari angka tinggi, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Terlalu banyak grup bertumpuk, ditemukan di awal "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Nama subkecocokan terlalu panjang, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Angka terlalu besar, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Karakter dalam rentang kelas karakter dibalik, ditemukan di akhir "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Kelas karakter dalam rentang kelas karakter, atau escape tanda hubung harfiah dengan garis miring terbalik, ditemukan di bagian akhir "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Berakhir dengan garis miring terbalik yang tidak di-escape.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pembilang tanpa sesuatu untuk diukur, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: MatchOptions.DotAll dan MatchOptions.FreeSpacing hanya tersedia dengan Power Fx V1, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Referensi balik "{0}" ke subkecocokan yang ada di dalam lookbehind atau lookahead.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExSurrogatePairInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Karakter Unicode dalam pasangan pengganti (karakter U+10000 ke atas) tidak didukung di kelas karakter, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMalformedSurrogatePair_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pasangan pengganti Unicode cacat (karakter U+10000 ke atas), ditemukan di bagian akhir "{0}".</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Ekspresi biasa harus berupa nilai konstanta.</value>
+    <value>Ekspresi reguler harus berupa nilai konstanta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions harus berupa nilai konstanta.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Nilai yang diteruskan ke fungsi '{0}' tidak dapat diubah.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Nama tangkapan '{0}' menyembunyikan properti standar yang menghasilkan kecocokan penuh pada ekspresi reguler. Pertimbangkan untuk mengganti namanya jika Anda ingin menggunakan properti bernama tersebut untuk mengekstrak kecocokan penuh pada teks yang ditentukan.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Nama tangkapan '{0}' menyembunyikan properti yang telah ditentukan sebelumnya yang mengembalikan informasi kecocokan. Pertimbangkan untuk mengganti namanya jika Anda ingin mengakses informasi kecocokan.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Nama tangkapan '{0}' menyembunyikan properti standar yang menghasilkan kecocokan grup dalam ekspresi reguler. Pertimbangkan untuk mengganti namanya jika Anda ingin menggunakan properti bernama tersebut untuk mengekstrak semua sub-kecocokan pada teks yang ditentukan.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Nama tangkapan '{0}' menyembunyikan properti standar yang menghasilkan lokasi kecocokan pada ekspresi reguler. Pertimbangkan untuk mengganti namanya jika Anda ingin menggunakan properti bernama tersebut untuk mengekstrak posisi kecocokan penuh pada teks yang ditentukan.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Nama tangkapan dalam set '{0}' menyembunyikan properti yang telah ditetapkan sebelumnya yang mengembalikan informasi kecocokan. Pertimbangkan untuk mengganti namanya jika Anda ingin mengakses informasi kecocokan.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">

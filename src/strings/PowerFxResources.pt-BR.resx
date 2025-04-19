@@ -2113,6 +2113,14 @@
     <value>Conflito de nome de coluna para '{0}'.</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Não é possível adicionar colunas a um registro do sistema ou tabela de registros do sistema. Use ShowColumns para extrair as colunas específicas que você precisa primeiro.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Não é possível renomear colunas de um registro do sistema ou tabela de registros do sistema. Use ShowColumns para extrair as colunas específicas que você precisa primeiro.</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>A coluna especificada '{0}' não existe.</value>
     
@@ -4511,24 +4519,240 @@
     <value>Expressão regular inválida.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: as opções em linha devem aparecer no início da expressão regular, foi encontrado "{0}" posteriormente.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: as opções em linha estão limitadas a uma combinação das letras [imnsx], não podem desabilitar opções e não podem ser usadas em uma subexpressão, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: não há suporte aos códigos de caracteres Octal \0. Use hexadecimais \x ou Unicode \u em vez disso, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: deve haver escape nas chaves literais com uma barra invertida, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: deve have escape nos colchetes literais com uma barra invertida mesmo em classes de caracteres, por exemplo \[ ou \], encontrados no final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: colchete da classe de caracteres não fechado.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: grupo especial sem suporte, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: caractere de escape não permitido na classe de caracteres negados, encontrado no final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: caractere de escape negativo não permitido na classe de caracteres negados, encontrado no final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: caractere de escape não permitido fora de uma classe de caracteres, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: nome da categoria Unicode inválido, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: opção em linha repetida, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: comentário em linha não fechado.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: comentário em linha não fechado, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: a opção em linha é incompatível com MatchOptions.NumberedSubMatches. Foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: não há suporte a quantificadores de possessivo, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: não é possível usar quantificadores exatos com modificadores de quantificador como: para ? preguiçosos, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: code de escape inválido, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: a subcorrespondência "{0}" não foi definida ou é uma referência de encaminhamento sem suporte.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: não há suporte às subcorrespondências em lookbehinds, encontrados no início de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: não é possível aninhar lookbehinds, encontrados no início de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: não há suporte a quantificadores ilimitados em lookbehinds, encontrados no final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: não há suporte aos quantificadores em lookbehinds ou lookaheads, encontrados no final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: Referência anterior "{0}" à subcorrespondência que pode não acontecer devido a alternância ou quantificador zero.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: não há suporte às subcorrespondências de autorreferência, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: grupos não fechados, muito poucos parênteses de fechamento.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: grupos não abertos, muito poucos parênteses de abertura.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: subcorrespondência com nome definida mais de uma vez, encontrada no início de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: o nome da subcorrespondência deve ser uma combinação de caracteres de palavra e não pode começar com um número, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: as opções em linha devem aparecer no início da expressão regular, foi encontrado "{0}" posteriormente.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: caractere repetido na classe de caracteres, encontrado no final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: as classes de caracteres de colchetes não podem estar vazias; foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: não há suporte ao equilíbrio das subcorrespondências, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: não há suporte ao uso de capturas nomeadas entre aspas simples. Use a sintaxe (?&lt;... &gt;) em vez disso, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: não há suporte à alternância condicional, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: não é possível usar capturas nomeadas com MatchOptions.NumberedSubMatches habilitada, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: use capturas nomeadas com "(?&lt;name&gt;...)" e "\k&lt;name&gt;" ou habilite MatchOptions.NumberedSubMatches, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: deve haver escape no hífen literal na classe de caracteres com uma barra invertida, escape com "\-", encontrado no final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: deve have escape no caractere literal com uma barra invertida quando usado em uma classe de caracteres, encontrado no final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: quantificador em um grupo contendo outro quantificador ou alternância vazia que poderia resultar em um resultado ambíguo, encontrado no final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: lookbehind excedeu o limite máximo possível de caracteres de 250, encontrado no final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: o número menor do intervalo do quantificador é maior que o número maior, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: foram encontrados muitos grupos aninhados no início de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: o nome da subcorrespondência é muito longo, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: o número é muito grande, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: os caracteres em um intervalo de classes de caracteres estão invertidos, encontrados no fim de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: classe de caracteres em um intervalo de classes de caracteres ou escape de um hífen literal com uma barra invertida, encontrado no final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: termina com uma barra invertida sem escape.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: quantificador sem algo para quantificar, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: MatchOptions.DotAll e MatchOptions.FreeSpacing só estão disponíveis com Power Fx V1, foi encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: Referência anterior "{0}" para a subcorrespondência que está dentro de um lookbehind ou lookahead.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExSurrogatePairInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: não há suporte a caracteres Unicode em pares alternativos (caractere U+10000 e acima) em classes de caracteres, encontrado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMalformedSurrogatePair_ShortMessage" xml:space="preserve">
+    <value>Expressão regular inválida: par alternativo Unicode malformado (caractere U+10000 e acima), encontrado no final de "{0}".</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>As expressões regulares devem ser valores constantes.</value>
+    <value>A expressão regular deve ser um valor constante.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions deve ser um valor constante.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>O valor passado para a função "{0}" não pode ser alterado.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>O nome de captura '{0}' está ocultando a propriedade predefinida que retorna a correspondência completa da expressão regular. Considere renomeá-lo se desejar usar essa propriedade nomeada para extrair a correspondência completa no texto especificado.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>O nome de captura '{0}' está ocultando uma propriedade predefinidas que retorna informações de correspondência. Considere renomeá-lo se quiser acessar as informações da correspondência.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>O nome de captura '{0}' está ocultando a propriedade predefinida que retorna as correspondências do grupo na expressão regular. Considere renomeá-lo se desejar usar essa propriedade nomeada para extrair todas as subcorrespondências no texto especificado.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>O nome de captura '{0}' está ocultando a propriedade predefinida que retorna o local da correspondência da expressão regular. Considere renomeá-lo se desejar usar essa propriedade nomeada para extrair a posição da correspondência completa no texto especificado.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Os nomes de captura no conjunto '{0}' ocultam propriedades predefinidas que retornam informações de correspondência. Considere renomeá-los se quiser acessar as informações da correspondência.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
