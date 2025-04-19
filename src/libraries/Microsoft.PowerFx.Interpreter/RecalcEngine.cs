@@ -386,6 +386,11 @@ namespace Microsoft.PowerFx
             SupportedFunctions = s;
         }
 
+        public ReadOnlySymbolTable GetAllSymbols()
+        {
+            return SymbolTable.Compose(Config.ComposedConfigSymbols, SupportedFunctions, _symbolTable, PrimitiveTypes);
+        }
+
         /// <summary>
         /// Add a set of user-defined formulas and functions to the engine.
         /// </summary>
@@ -420,7 +425,7 @@ namespace Microsoft.PowerFx
             }
 
             // Compose will handle null symbols
-            var composedSymbols = SymbolTable.Compose(Config.ComposedConfigSymbols, SupportedFunctions, PrimitiveTypes, _symbolTable);
+            var composedSymbols = SymbolTable.Compose(Config.ComposedConfigSymbols, SupportedFunctions, _symbolTable, PrimitiveTypes);
 
             if (parseResult.DefinedTypes.Any())
             {
