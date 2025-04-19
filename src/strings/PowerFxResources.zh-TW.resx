@@ -2113,6 +2113,14 @@
     <value>'{0}' 的資料行名稱相衝突。</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>無法將資料欄新增至系統記錄或系統記錄表。請先使用 ShowColumns 擷取您需要的特定資料欄。</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>無法重新命名系統記錄或系統記錄表的資料欄。請先使用 ShowColumns 擷取您需要的特定資料欄。</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>指定的資料行 '{0}' 不存在。</value>
     
@@ -4511,24 +4519,232 @@
     <value>無效的規則運算式。</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 內嵌選項必須出現在規則運算式的開頭，在後面找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 內嵌選項只限於字母 [imnsx] 的組合，不能停用選項，也不能用於子運算式，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 不支援八進位 \0 字元代碼，請使用十六進位 \x 或 Unicode \u 代替，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 常值上的大括弧必須使用反斜線轉換，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 常值上的方括號必須使用反斜線轉義，即使是在字元類別中，例如在「{0}」結尾找到的 \[ 或 \]。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 未封閉的字元類方括號。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 不支援特殊群組，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 字元類別中不允許轉換字元，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 在否定字元類別中不允許使用否定轉換字元，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 在字元類別外不允許否定字元，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 無效的 Unicode 類別，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 重複內嵌選項，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 未封閉的內嵌註解。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 未封閉的內嵌註解，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 內嵌選項不與 MatchOptions.NumberedSubMatches 相容，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 不支援所有格量化，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 精確量化無法與量化修飾子一起使用，例如懶惰的 ?，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 無效的轉換碼，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 子比對「{0}」未定義或為不支援的向前參考。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 在反向中不支援子比對，在「{0}」開頭處找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 反向不能嵌套，在「{0}」開頭找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 在反向中不支援無限制量化，在「{0}」結尾找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>無效規則運算式: 在「{0}」結尾的反向或正向中不支援量化。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 向後參考「{0}」至子比對，但由於交替或零量化，可能不會發生。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 不支援自參考子比對，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 未封閉的群組，封閉括弧太少。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 未開啟群組、開啟括號太少。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 命名子比對定義超過一次，在「{0}」開頭發現。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 子比對名稱必須是字元組合，且不能以數字開頭，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 內嵌選項必須出現在規則運算式的開頭，在後面找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 字元在字元類別中出現超過一次，找到重複的「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 方括號字元類別不能為空，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 不支援平衡子比對，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 不支援使用單引號命名擷取，請改用 (?&lt;...&gt;) 語法，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 不支援條件交替，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 命名擷取無法在啟用 MatchOptions.NumberedSubMatches 時使用，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 使用命名擷取與「(?&lt;name&gt;...)」和「\k&lt;name&gt;」或啟用 MatchOptions.NumberedSubMatches，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 字元類別中的常值連字元必須以反斜線轉換，以「\-」轉換，在「{0}」中找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 在字元類別中使用常值字元時，需要使用反斜線轉換，在「{0}」結尾找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 在「{0}」結尾找到，在包含另一個量子或空交替的群組上的量子，可能會導致含糊不清的結果。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 反向超過最大可能字元限制 250，在「{0}」結尾找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 量化範圍低位數大於高位數，在「{0}」中找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 太多嵌套群組，在「{0}」開頭找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 子比對的名稱太長，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 數字太大，在「{0}」找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 字元類別範圍內的字元顛倒，在「{0}」結尾找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 字元類別範圍內的字元類別，或以反斜線轉換字面上的連字元，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 以未反斜線結尾。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 量化無法定量，在「{0}」中找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: MatchOptions.DotAll 和 MatchOptions.FreeSpacing 只適用於 Power Fx V1，找到「{0}」。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式: 向後參考「{0}」到正向或反向內的子比對。</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>規則運算式必須是常數值。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions 必須是常數值。</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>無法變更傳遞至 '{0}' 函式的值。</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>擷取名稱 '{0}' 已隱藏傳回規則運算式完全相符項目的預先定義屬性。如果您要使用該具名屬性擷取指定文字中的完全相符項目，建議將它重新命名。</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>擷取名稱「{0}」隱藏了回傳比對資訊的預定義屬性。若要存取比對資訊，請考慮重新命名。</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>擷取名稱 '{0}' 已隱藏傳回規則運算式中群組相符項目的預先定義屬性。如果您要使用該具名屬性擷取指定文字中的所有子相符項目，建議將它重新命名。</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>擷取名稱 '{0}' 已隱藏傳回規則運算式相符項目之位置的預先定義屬性。如果您要使用該具名屬性擷取指定文字中完全相符項目的位置，建議將它重新命名。</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>集「{0}」中的擷取名稱隱藏了回傳比對資訊的預先定義屬性。如果要存取比對資訊，請考慮重新命名它們。</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">

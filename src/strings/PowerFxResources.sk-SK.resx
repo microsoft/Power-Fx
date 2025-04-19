@@ -2113,6 +2113,14 @@
     <value>Konflikt názvu stĺpca pre {0}.</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Do systémového záznamu alebo tabuľky systémových záznamov nemožno pridať stĺpce. Na extrahovanie konkrétnych stĺpcov, ktoré potrebujete ako prvé, použite možnosť ShowColumns.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Stĺpce systémového záznamu alebo tabuľky systémových záznamov nie je možné premenovať. Na extrahovanie konkrétnych stĺpcov, ktoré potrebujete ako prvé, použite možnosť ShowColumns.</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Zadaný stĺpec {0} neexistuje.</value>
     
@@ -4511,24 +4519,232 @@
     <value>Neplatný regulárny výraz.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: vnorené možnosti sa musia zobraziť na začiatku regulárneho výrazu, neskôr sa našlo: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: vnorené možnosti sú obmedzené na kombináciu písmen [imnsx], nemôžu zakázať možnosti a nemôžu sa použiť pre podvýraz, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: osmičkové kódy znakov \0 nie sú podporované, použite namiesto toho šestnástkové znaky \x alebo Unicode \u, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: literálne zložené zátvorky musia byť escapované opačnou lomkou, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: literálne hranaté zátvorky musia byť escapované opačnou lomkou aj v triedach znakov, napríklad \[ alebo \], našlo sa na konci {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: neuzavretá hranatá zátvorka triedy znakov.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: nepodporovaná špeciálna skupina, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: v triede znakov nie je povolený escapovací znak, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: negatívny escapovací znak nie je v rámci negovanej triedy znakov povolený, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: escapovací znak nie je mimo triedy znakov povolený, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: neplatný názov kategórie Unicode, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: opakovaná vnorená možnosť, našlo sa {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: neuzavretý vnorený komentár.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: neuzavretý vnorený komentár, našlo sa {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: vnorená možnosť je nekompatibilná s MatchOptions.NumberedSubMatches, našlo sa {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: posesívne kvantifikátory nie sú podporované, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: presné kvantifikátory nemožno použiť s modifikátormi kvantifikátora, ako napríklad ? pre pomalú kvantifikáciu, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: neplatný escapovací kód, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: podzhoda {0} nie je definovaná alebo je nepodporovaným dopredným odkazom.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: podzhody nie sú podporované v spätných náhľadoch, našlo sa na začiatku {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: spätné náhľady sa nedajú vnoriť, našlo sa na začiatku {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: neobmedzené kvantifikátory nie sú podporované v spätných náhľadoch, našlo sa na konci {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: kvantifikátory nie sú podporované v spätných a predbežných náhľadoch, našlo sa na konci {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: spätný odkaz {0} na podzhodu, ku ktorej nemusí dôjsť v dôsledku alternácie alebo nulového kvantifikátora.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: podzhody odkazujúce na seba nie sú podporované, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: neuzavreté skupiny, príliš málo pravých zátvoriek.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: neotvorené skupiny, príliš málo ľavých zátvoriek.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: pomenovaná podzhoda bola definovaná viac ako raz, našla sa na začiatku výrazu {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: názov podzhody musí byť kombináciou slovných znakov a nesmie sa začínať číslom, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: vnorené možnosti sa musia zobraziť na začiatku regulárneho výrazu, neskôr sa našlo: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: znak sa v triede znakov vyskytuje viackrát, našiel sa opakujúci znak {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: triedy znakov v hranatých zátvorkách nemôžu byť prázdne, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: vyrovnávacie podzhody nie sú podporované, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: používanie jednoduchých úvodzoviek pre pomenované záznamy nie je podporované, namiesto toho použite syntax (?&lt;... &gt;), našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: podmienená alternácia nie je podporovaná, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: pomenované záznamy nemožno použiť s povolenou hodnotou MatchOptions.NumberedSubMatches, našlo sa {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: použite pomenované záznamy s (?&lt;name&gt;...) a \k&lt;name&gt; alebo povoľte MatchOptions.NumberedSubMatches, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: literálny spojovník v triede znakov musí byť escapovaný opačnou lomkou, escapujte pomocou výrazu \-, našlo sa v {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: literálny znak musí byť escapovaný opačnou lomkou pri použití v triede znakov, našlo sa na konci {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: kvantifikátor v skupine obsahujúcej iný kvantifikátor alebo prázdne striedanie, ktoré by mohlo viesť k nejednoznačnému výsledku, našlo sa na konci {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: spätný náhľad prekročil maximálny možný limit znakov 250, našlo sa na konci {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: dolné číslo rozsahu kvantifikátora je väčšie ako horné číslo, našlo sa {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: príliš veľa vnorených skupín sa našlo na začiatku {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: názov podzhody je príliš dlhý, našlo sa {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: číslo je príliš veľké, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: znaky v rozsahu triedy znakov sú obrátené, našlo sa na konci {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: trieda znakov v rozsahu triedy znakov alebo escapovanie literálneho spojovníka pomocou opačnej lomky, našlo sa {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: končí sa neescapovanou opačnou lomkou.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: kvantifikátor nemá objekt na kvantifikáciu, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: MatchOptions.DotAll a MatchOptions.FreeSpacing sú k dispozícii iba s Power Fx V1, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: spätný odkaz {0} na podzhodu, ktorá sa nachádza v spätnom alebo predbežnom náhľade.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Regulárne výrazy musia byť konštantnými hodnotami.</value>
+    <value>Regulárny výraz musí byť konštantnou hodnotou.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions musí byť konštantná hodnota.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Hodnotu odovzdanú funkcii {0} nemožno zmeniť.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Názov záznamu {0} skrýva preddefinovanú vlastnosť, ktorá vracia úplnú zhodu daného regulárneho výrazu. Zvážte jeho premenovanie, pokiaľ chcete takto nazvanú vlastnosť použiť na extrahovanie úplnej zhody v zadanom texte.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Názov záznamu {0} skrýva preddefinovanú vlastnosť, ktorá vracia informácie o zhode. Ak chcete získať prístup k informáciám o zhode, zvážte jeho premenovanie.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Názov záznamu {0} skrýva preddefinovanú vlastnosť, ktorá vracia skupinovú zhodu daného regulárneho výrazu. Zvážte jeho premenovanie, pokiaľ chcete takto nazvanú vlastnosť použiť na extrahovanie čiastočnej zhody v zadanom texte.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Názov záznamu {0} skrýva preddefinovanú vlastnosť, ktorá vracia miesto, kde nastala zhoda s daným regulárnym výrazom. Zvážte jeho premenovanie, pokiaľ chcete takto nazvanú vlastnosť použiť na extrahovanie pozície úplnej zhody v zadanom texte.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Názvy záznamov v množine {0} skrývajú preddefinované vlastnosti, ktoré vracajú informácie o zhode. Ak chcete získať prístup k informáciám o zhode, zvážte ich premenovanie.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
