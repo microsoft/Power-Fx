@@ -161,12 +161,14 @@ namespace Microsoft.PowerFx.Connectors.Execution
             // if connector has null as a type but "array" is provided, let's write it down. this is possible in case of x-ms-dynamic-properties
             if (fv is TableValue tableValue && ((propertySchema.Type ?? "array") == "array"))
             {
+                StartArray(propertyName);
+
                 // If we have an object schema, we will try to follow it
                 if (propertySchema.Items?.Type == "object" || propertySchema.Items?.Type == "array")
                 {
                     foreach (DValue<RecordValue> item in tableValue.Rows)
                     {
-                        StartArrayElement(propertyName);
+                        StartArrayElement(null);
                         RecordValue rva = item.Value;
 
                         await WritePropertyAsync(null, propertySchema.Items, rva).ConfigureAwait(false);
@@ -177,7 +179,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     // Working with an array of simply types
                     foreach (DValue<RecordValue> item in tableValue.Rows)
                     {
-                        StartArrayElement(propertyName);
+                        StartArrayElement(null);
                         RecordValue rva = item.Value;
                         WriteValue(rva.Fields.First().Value);
                     }
@@ -188,7 +190,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     foreach (DValue<RecordValue> item in tableValue.Rows)
                     {
                         // Add objects
-                        StartArrayElement(propertyName);
+                        StartArrayElement(null);
                         RecordValue rva = item.Value;
                         await WriteObjectAsync(
                             null,
