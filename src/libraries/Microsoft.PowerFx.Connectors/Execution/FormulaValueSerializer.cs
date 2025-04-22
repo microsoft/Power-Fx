@@ -161,32 +161,43 @@ namespace Microsoft.PowerFx.Connectors.Execution
             // if connector has null as a type but "array" is provided, let's write it down. this is possible in case of x-ms-dynamic-properties
             if (fv is TableValue tableValue && ((propertySchema.Type ?? "array") == "array"))
             {
-                StartArray(propertyName);
-
-                foreach (DValue<RecordValue> item in tableValue.Rows)
+                // If we have an object schema, we will try to follow it
+                if (propertySchema.Items?.Type == "object" || propertySchema.Items?.Type == "array")
                 {
-                    StartArrayElement(propertyName);
-                    RecordValue rva = item.Value;
-
-                    // If we have an object schema, we will try to follow it
-                    if (propertySchema.Items?.Type == "object" || propertySchema.Items?.Type == "array")
+                    foreach (DValue<RecordValue> item in tableValue.Rows)
                     {
+                        StartArrayElement(propertyName);
+                        RecordValue rva = item.Value;
+
                         await WritePropertyAsync(null, propertySchema.Items, rva).ConfigureAwait(false);
-                        continue;
                     }
-
-                    // Else, we write primitive types only
-                    if (rva.Fields.Count() != 1)
+                }
+                else if (tableValue.Rows.All(r => r.Value.Fields.Count() == 1 && r.Value.Fields.First().Name == "Value"))
+                {
+                    // Working with an array of simply types
+                    foreach (DValue<RecordValue> item in tableValue.Rows)
                     {
-                        throw new PowerFxConnectorException($"Incompatible Table for supporting array, RecordValue has more than one column - propertyName {propertyName}, number of fields {rva.Fields.Count()}");
+                        StartArrayElement(propertyName);
+                        RecordValue rva = item.Value;
+                        WriteValue(rva.Fields.First().Value);
                     }
-
-                    if (rva.Fields.First().Name != "Value")
+                }
+                else 
+                {
+                    // Working with untyped and unknown complex objects
+                    foreach (DValue<RecordValue> item in tableValue.Rows)
                     {
-                        throw new PowerFxConnectorException($"Incompatible Table for supporting array, RecordValue doesn't have 'Value' column - propertyName {propertyName}");
+                        // Add objects
+                        StartArrayElement(propertyName);
+                        RecordValue rva = item.Value;
+                        await WriteObjectAsync(
+                            null,
+                            new SwaggerSchema(
+                                type: GetType(rva.Type),
+                                format: GetFormat(rva.Type)),
+                            rva.Fields)
+                        .ConfigureAwait(false);
                     }
-
-                    WriteValue(rva.Fields.First().Value);
                 }
 
                 EndArray();
