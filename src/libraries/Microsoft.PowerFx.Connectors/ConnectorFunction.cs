@@ -1028,11 +1028,10 @@ namespace Microsoft.PowerFx.Connectors
             ConnectorPermission tablePermission = tableSchema.GetPermission();
 
             JsonElement jsonElement = ExtractFromJson(stringValue, valuePath, out string name, out string displayName);
-            bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;
-            IList<ReferencedEntity> referencedEntities = GetReferenceEntities(connectorName, stringValue);
+            bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;            
 
             SymbolTable symbolTable = new SymbolTable();
-            ConnectorType connectorType = new ConnectorType(jsonElement, tableName, symbolTable, settings, referencedEntities, datasetName, name, displayName, connectorName, tableResolver, serviceCapabilities, isTableReadOnly);
+            ConnectorType connectorType = new ConnectorType(jsonElement, tableName, symbolTable, settings, datasetName, name, displayName, connectorName, tableResolver, serviceCapabilities, isTableReadOnly);
             delegationInfo = ((DataSourceInfo)connectorType.FormulaType._type.AssociatedDataSources.First()).DelegationInfo;
             optionSets = symbolTable.OptionSets.Select(kvp => kvp.Value);
 
