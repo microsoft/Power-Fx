@@ -146,9 +146,13 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         private IReadOnlyCollection<DValue<RecordValue>> GetResult(string text)
-        {
-            // $$$ Is this always this type?
-            RecordValue rv = FormulaValueJSON.FromJson(text, RecordType.Empty().Add("value", TableType)) as RecordValue;
+        {            
+            if (FormulaValueJSON.FromJson(text, RecordType.Empty().Add("value", TableType)) is not RecordValue rv)
+            {
+                // FromJson can return an ErrorValue and in that case let's return an empty result
+                return Enumerable.Empty<DValue<RecordValue>>().ToArray();
+            }
+
             TableValue tv = rv.Fields.FirstOrDefault(field => field.Name == "value").Value as TableValue;
 
             // The call we make contains more fields and we want to remove them here ('@odata.etag')

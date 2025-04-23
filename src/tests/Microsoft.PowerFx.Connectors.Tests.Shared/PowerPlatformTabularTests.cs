@@ -737,6 +737,50 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         [Fact]
+        public async Task SP_CdpTabular2()
+        {
+            using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            using var httpClient = new HttpClient(testConnector);
+            string connectionId = "0b905132239e463a9d12f816be201da9";
+            string jwt = "eyJ0eXAiOiJKV....";
+            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", connectionId, () => jwt, httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832384"
+            };
+
+            CdpTable tabularService = new CdpTable("https://microsofteur.sharepoint.com/teams/pfxtest", "Documents", tables: null);
+
+            Assert.False(tabularService.IsInitialized);
+            Assert.Equal("Documents", tabularService.TableName);
+
+            testConnector.SetResponseFromFiles(@"Responses\SP GetDatasetsMetadata.json", @"Responses\SP GetTable.json");
+            await tabularService.InitAsync(client, $"/apim/sharepointonline/{connectionId}", CancellationToken.None, logger);
+            Assert.True(tabularService.IsInitialized);
+
+            CdpTableValue spTable = tabularService.GetTableValue();
+            Assert.True(spTable._tabularService.IsInitialized);
+            Assert.True(spTable.IsDelegable);
+           
+            SymbolValues symbolValues = new SymbolValues().Add("Documents", spTable);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
+
+            // Expression with tabular connector
+            string expr = @"First(Documents).Name";
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            // return some malformed Json and confirm we return an empty set
+            testConnector.SetResponseFromFile(@"Responses\SP GetData Malformed.json");
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
+
+            Assert.IsType<BlankValue>(result);            
+        }
+
+        [Fact]
         public async Task SF_CountRows()
         {
             using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
