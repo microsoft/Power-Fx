@@ -116,7 +116,14 @@ namespace Microsoft.PowerFx.Connectors
                 throw new InvalidOperationException("value Table should always have 1 rows for aggregation result");
             }
 
-            var valueRecord = valueTable.Rows.First().Value;
+            var row = valueTable.Rows.First();
+
+            if (row.IsError)
+            {
+                return row.Error;
+            }
+
+            var valueRecord = row.Value;
             var result = await valueRecord.GetFieldAsync(DelegationParameters.ODataAggregationResultFieldName, cancellationToken).ConfigureAwait(false);
             result = ConvertToExpectedType(parameters.ExpectedReturnType, result);
             return result;

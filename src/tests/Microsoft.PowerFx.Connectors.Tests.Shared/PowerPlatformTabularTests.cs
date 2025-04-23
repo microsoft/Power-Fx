@@ -777,7 +777,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SP GetData Malformed.json");
             FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
 
-            Assert.IsType<BlankValue>(result);            
+            ErrorValue ev = Assert.IsType<ErrorValue>(result);
+            Assert.Equal("JsonReaderException Expected depth to be zero at the end of the JSON payload. There is an open JSON object or array that should be closed. LineNumber: 1 | BytePositionInLine: 0.", ev.Errors.First().Message);
         }
 
         [Fact]

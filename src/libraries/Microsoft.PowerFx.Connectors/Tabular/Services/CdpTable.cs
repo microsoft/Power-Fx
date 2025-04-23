@@ -146,11 +146,25 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         private IReadOnlyCollection<DValue<RecordValue>> GetResult(string text)
-        {            
-            if (FormulaValueJSON.FromJson(text, RecordType.Empty().Add("value", TableType)) is not RecordValue rv)
+        {
+            RecordType rt = RecordType.Empty().Add("value", TableType);
+            FormulaValue fv = FormulaValueJSON.FromJson(text, rt);
+
+            if (fv is ErrorValue ev)
             {
-                // FromJson can return an ErrorValue and in that case let's return an empty result
-                return Enumerable.Empty<DValue<RecordValue>>().ToArray();
+                return new List<DValue<RecordValue>>() { DValue<RecordValue>.Of(ev) };
+            }
+
+            if (fv is not RecordValue rv)
+            {
+                ErrorValue err = new ErrorValue(IRContext.NotInSource(rt), new ExpressionError()
+                {
+                    Message = $"FormulaValueJSON.FromJson doesn't return a RecordValue - Received {fv.GetType().Name}",
+                    Span = new Syntax.Span(0, 0),
+                    Kind = ErrorKind.InvalidJSON
+                });
+
+                return new List<DValue<RecordValue>>() { DValue<RecordValue>.Of(err) };
             }
 
             TableValue tv = rv.Fields.FirstOrDefault(field => field.Name == "value").Value as TableValue;
