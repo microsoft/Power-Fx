@@ -162,9 +162,21 @@ namespace Microsoft.PowerFx.Types
                     {
                         return FormulaValue.NewBlob(element.GetBytesFromBase64());
                     }
-                    else if (formulaType is OptionSetValueType osvt && osvt.TryGetValue(new DName(element.GetString()), out OptionSetValue osv))
+                    else if (formulaType is OptionSetValueType osvt)
                     {
-                        return osv;
+                        string el = element.GetString();
+
+                        if (osvt.TryGetValue(new DName(el), out OptionSetValue osv))
+                        {
+                            return osv;
+                        }
+
+                        // If the OptionSetValue isn't found, let's just return an error
+                        return new ErrorValue(IRContext.NotInSource(osvt), new ExpressionError()
+                        {
+                            Kind = ErrorKind.Validation,
+                            Message = $"Invalid OptionSet value '{el}'"
+                        });                        
                     }
                     else 
                     {
