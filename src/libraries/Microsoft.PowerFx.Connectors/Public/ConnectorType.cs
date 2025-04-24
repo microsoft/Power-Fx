@@ -241,7 +241,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Called by ConnectorFunction.GetCdpTableType
-        internal ConnectorType(JsonElement schema, string tableName, SymbolTable optionSets, ConnectorSettings settings, IList<ReferencedEntity> referencedEntities, string datasetName, string name, string displayName, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
+        internal ConnectorType(JsonElement schema, string tableName, SymbolTable optionSets, ConnectorSettings settings, string datasetName, string name, string displayName, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
             : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(tableName, optionSets, settings))
         {
             Name = name;

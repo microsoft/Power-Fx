@@ -237,6 +237,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetSchema.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetTables.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SP GetData.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SP GetData Malformed.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SP GetDatasetsMetadata.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SP GetTable.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SP GetTables.json" />

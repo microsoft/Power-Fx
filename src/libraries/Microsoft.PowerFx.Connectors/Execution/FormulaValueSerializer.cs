@@ -168,10 +168,13 @@ namespace Microsoft.PowerFx.Connectors.Execution
                 {
                     foreach (DValue<RecordValue> item in tableValue.Rows)
                     {
-                        StartArrayElement(null);
-                        RecordValue rva = item.Value;
+                        if (!item.IsError)
+                        {
+                            StartArrayElement(null);
+                            RecordValue rva = item.Value;
 
-                        await WritePropertyAsync(null, propertySchema.Items, rva).ConfigureAwait(false);
+                            await WritePropertyAsync(null, propertySchema.Items, rva).ConfigureAwait(false);
+                        }
                     }
                 }
                 else if (tableValue.Rows.All(r => r.Value.Fields.Count() == 1 && r.Value.Fields.First().Name == "Value"))
@@ -179,9 +182,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     // Working with an array of simply types
                     foreach (DValue<RecordValue> item in tableValue.Rows)
                     {
-                        StartArrayElement(null);
-                        RecordValue rva = item.Value;
-                        WriteValue(rva.Fields.First().Value);
+                        if (!item.IsError)
+                        {
+                            StartArrayElement(null);
+                            RecordValue rva = item.Value;
+                            WriteValue(rva.Fields.First().Value);
+                        }
                     }
                 }
                 else 
@@ -189,16 +195,13 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     // Working with untyped and unknown complex objects
                     foreach (DValue<RecordValue> item in tableValue.Rows)
                     {
-                        // Add objects
-                        StartArrayElement(null);
-                        RecordValue rva = item.Value;
-                        await WriteObjectAsync(
-                            null,
-                            new SwaggerSchema(
-                                type: GetType(rva.Type),
-                                format: GetFormat(rva.Type)),
-                            rva.Fields)
-                        .ConfigureAwait(false);
+                        if (!item.IsError)
+                        {
+                            // Add objects
+                            StartArrayElement(null);
+                            RecordValue rva = item.Value;
+                            await WriteObjectAsync(null, new SwaggerSchema(type: GetType(rva.Type), format: GetFormat(rva.Type)), rva.Fields).ConfigureAwait(false);
+                        }
                     }
                 }
 
