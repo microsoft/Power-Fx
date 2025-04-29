@@ -2262,7 +2262,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             string ft = returnType.FormulaType.ToStringWithDisplayNames();
 
             string expected =
-               "!['@odata.nextLink'`'Next link':s, value:*[Array:!['@odata.id'`'OData Id':s, _createdby_value`'Created By (Value)':s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created " +
+               "!['@odata.nextLink'`'Next link':s, value:*[value:!['@odata.id'`'OData Id':s, _createdby_value`'Created By (Value)':s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created " +
                 "By (Type)':s, _createdbyexternalparty_value`'Created By (External Party) (Value)':s, '_createdbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (External Party) " +
                 "(Type)':s, _createdonbehalfby_value`'Created By (Delegate) (Value)':s, '_createdonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (Delegate) (Type)':s, _defaultpricelevelid_value`'" +
                 "Price List (Value)':s, '_defaultpricelevelid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Price List (Type)':s, _masterid_value`'Master ID (Value)':s, '_masterid_value@Microsoft.Dynamics.CRM.lookup" +
