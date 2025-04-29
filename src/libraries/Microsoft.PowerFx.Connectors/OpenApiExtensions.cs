@@ -573,8 +573,7 @@ namespace Microsoft.PowerFx.Connectors
                         return new ConnectorType(schema, openApiParameter, ConnectorType.DefaultType);
                     }
 
-                    //ConnectorType arrayType = new OpenApiParameter() { Name = "Array", Required = true, Schema = schema.Items, Extensions = schema.Items.Extensions }.GetConnectorType(settings.Stack(itemIdentifier));
-                    ConnectorType arrayType = new SwaggerParameter("Array", true, schema.Items, schema.Items.Extensions).GetConnectorType(settings.Stack(itemIdentifier));
+                    ConnectorType arrayType = new SwaggerParameter(openApiParameter.Name, true, schema.Items, schema.Items.Extensions).GetConnectorType(settings.Stack(itemIdentifier));
 
                     settings.UnStack();
 

@@ -801,6 +801,22 @@
           "calculated": false,
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "and", "or", "not", "contains", "startswith", "endswith" ] },
           "x-ms-visibility": "advanced"
+        },
+        "picklist1": {
+          "title": "Picklist 1",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [ "abc", "def" ]
+          }
+        },
+        "picklist2": {
+          "title": "Picklist 2",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [ "123", "456" ]
+          }
         }
       }
     }
