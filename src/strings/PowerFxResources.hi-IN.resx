@@ -2113,6 +2113,14 @@
     <value>{0}' के लिए स्तंभ नाम का विरोध.</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>सिस्टम रिकॉर्ड या सिस्टम रिकॉर्ड की तालिका में कॉलम नहीं जोड़े जा सकते. सबसे पहले जिन विशिष्ट कॉलम की आपको आवश्यकता है उन्हें निकालने के लिए ShowColumns का उपयोग करें।</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>सिस्टम रिकॉर्ड के कॉलम या सिस्टम रिकॉर्ड की तालिका का नाम नहीं बदला जा सकता. सबसे पहले जिन विशिष्ट कॉलम की आपको आवश्यकता है उन्हें निकालने के लिए ShowColumns का उपयोग करें।</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>निर्दिष्ट स्तंभ '{0}' मौजूद नहीं है.</value>
     
@@ -4511,24 +4519,232 @@
     <value>नियमित व्यंजक अमान्य है.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित व्यंजक, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: इनलाइन विकल्प नियमित अभिव्यक्ति के आरंभ में दिखाई देने चाहिए, बाद में "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: इनलाइन विकल्प [imnsx] अक्षरों के संयोजन तक सीमित हैं, विकल्पों को अक्षम नहीं कर सकते हैं, और उप-अभिव्यक्ति पर उपयोग नहीं किए जा सकते हैं, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: ऑक्टल \0 वर्ण कोड समर्थित नहीं हैं, इसके बजाय हेक्साडेसिमल \x या यूनिकोड \u का उपयोग करें, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: लिटरल घुंघराले ब्रेसिज़ को बैकस्लैश के साथ एस्केप किया जाना चाहिए, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: अक्षर वर्गों में भी लिटरल वर्गाकार ब्रेसेज़ को बैकस्लैश के साथ एस्केप किया जाना चाहिए, उदाहरण के लिए \[ या \], जो "{0}" के अंत में पाया जाता है.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित व्यंजक: खुला कैरेक्टर वर्ग वर्गाकार कोष्ठक.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: असमर्थित विशेष समूह, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: कैरेक्टर क्लास के अंदर एस्केप कैरेक्टर की अनुमति नहीं है, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: नकारात्मक एस्केप वर्ण को नकारात्मक वर्ण वर्ग के अंतर्गत अनुमति नहीं है, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: कैरेक्टर क्लास के बाहर एस्केप कैरेक्टर की अनुमति नहीं है, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: अमान्य यूनिकोड श्रेणी नाम, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: दोहराया गया इनलाइन विकल्प, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: बंद नहीं की गई इनलाइन टिप्पणी.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: बंद नहीं की गई इनलाइन टिप्पणी, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: इनलाइन विकल्प MatchOptions.NumberedSubMatches के साथ असंगत है, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: अधिकारपूर्ण परिमाणक समर्थित नहीं हैं, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: सटीक क्वांटिफायर का उपयोग क्वांटिफायर संशोधक के साथ नहीं किया जा सकता है जैसे कि आलसी के लिए ?, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: अमान्य एस्केप कोड, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: उप मिलान "{0}" परिभाषित नहीं है या एक असमर्थित अग्रेषित संदर्भ है।</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: "{0}" के आरंभ में पाए जाने वाले लुक बिहाइंड में उप मिलान समर्थित नहीं हैं।</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: पीछे देखें नेस्ट नहीं किया जा सकता, "{0}" के आरंभ में पाया जाता है।</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: "{0}" के अंत में पाए जाने वाले लुक बिहाइंड में असीमित क्वांटिफायर समर्थित नहीं हैं।</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: क्वांटिफायर पीछे की ओर देखने और आगे की ओर देखने पर समर्थित नहीं हैं, जो "{0}" के अंत में पाए जाते हैं.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: बैक रेफरेंस "{0}" उप मिलान के लिए जो कि प्रत्यावर्तन या शून्य परिमाणक के कारण नहीं हो सकता है.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: स्व-संदर्भित उप मिलान समर्थित नहीं हैं, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: बंद नहीं किए गए समूह, बहुत कम समापन कोष्ठक.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: बंद समूह, बहुत कम प्रारंभिक कोष्ठक.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: नामित उप मिलान एक से अधिक बार परिभाषित किया गया, "{0}" के आरंभ में पाया गया.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: उप मिलान नाम शब्द वर्णों का संयोजन होना चाहिए तथा किसी संख्या से शुरू नहीं होना चाहिए, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: इनलाइन विकल्प नियमित अभिव्यक्ति के आरंभ में दिखाई देने चाहिए, बाद में "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: कैरेक्टर वर्ग में वर्ण एक से अधिक बार प्रकट होता है, "{0}" दोहराया गया.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: वर्गाकार कोष्ठक वर्ण वर्ग रिक्त नहीं हो सकते, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: बैलेंसिंग उप मिलान समर्थित नहीं हैं, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: एकल उद्धृत नामित कैप्चर का उपयोग समर्थित नहीं है, इसके बजाय (?&lt;...&gt;) सिंटैक्स का उपयोग करें, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: सशर्त प्रत्यावर्तन समर्थित नहीं है "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: नामित कैप्चर का उपयोग MatchOptions.NumberedSubMatches सक्षम होने पर नहीं किया जा सकता, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: "(?&lt;name&gt;...)" और "\k&lt;name&gt;" के साथ नामित कैप्चर का उपयोग करें या MatchOptions.NumberedSubMatches सक्षम करें, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: कैरेक्टर वर्ग में लिटरल हाइफ़न को बैकस्लैश से एस्केप किया जाना चाहिए, "\-" से एस्केप किया जाना चाहिए, जो "{0}" में पाया जाता है.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: किसी कैरेक्टर क्लास में प्रयोग किए जाने पर लिटरल कैरेक्टर को बैकस्लैश के साथ एस्केप करना आवश्यक है, जो "{0}" के अंत में पाया जाता है।</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: किसी समूह पर परिमाणक जिसमें कोई अन्य परिमाणक या रिक्त प्रत्यावर्तन हो, जिसके परिणामस्वरूप अस्पष्ट परिणाम हो सकता है, जो "{0}" के अंत में पाया जाता है.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: "{0}" के अंत में दी गई 250 की अधिकतम संभव कैरेक्टर सीमा के पीछे देखें.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: परिमाणक श्रेणी निम्न संख्या उच्च संख्या से अधिक है, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: "{0}" के आरंभ में बहुत अधिक नेस्टेड समूह पाए गए।</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: उप-मिलान का नाम बहुत लंबा है, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: संख्या बहुत बड़ी है, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: कैरेक्टर वर्ग श्रेणी में कैरेक्टर उलटे होते हैं, जो "{0}" के अंत में पाए जाते हैं.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: वर्ण वर्ग श्रेणी में वर्ण वर्ग, या बैकस्लैश के साथ लिटरल हाइफ़न से बचें, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: एक अनएस्केप बैकस्लैश के साथ समाप्त होता है.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: परिमाणक बिना परिमाणित करने योग्य कुछ, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित व्यंजक: MatchOptions.DotAll और MatchOptions.FreeSpacing केवल Power Fx V1 के साथ उपलब्ध हैं, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: बैक रेफरेंस "{0}" उप मिलान के लिए जो लुकबिहाइंड या लुकअहेड के अंदर है.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>नियमित व्यंजकों का मान अचर होना चाहिए.</value>
+    <value>नियमित उक्ति एक अचर मान होना चाहिए.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions का मान अचर होना चाहिए.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>{0}' फ़ंक्शन को पारित मान बदला नहीं जा सकता.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>कैप्चर नाम '{0}' उस पूर्वनिर्धारित गुण को छुपा रहा है जो नियमित व्यंजक का पूर्ण मिलान लौटाता है. यदि आप निर्दिष्ट पाठ के पूर्ण मिलान को निकालने के लिए उस नाम वाले गुण का उपयोग करना चाहते हैं, तो इसका नाम बदल कर देखें.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>कैप्चर नाम '{0}' एक पूर्वनिर्धारित प्रॉपर्टी को छुपा रहा है जो मिलान जानकारी लौटाता है. यदि आप मैच की जानकारी प्राप्त करना चाहते हैं तो इसका नाम बदलने पर विचार करें।</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>कैप्चर नाम '{0}' उस पूर्वनिर्धारित वह गुण को छुपा रहा है जो नियमित व्यंजक के समूह मेल लौटाता है. यदि आप निर्दिष्ट पाठ के सभी उप-मेलों को निकालने के लिए उस नाम वाले गुण का उपयोग करना चाहते हैं, तो इसका नाम बदलने पर विचार करें.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>कैप्चर नाम '{0}' उस पूर्वनिर्धारित गुण को छुपा रहा है जो नियमित व्यंजक के पूर्ण मिलान का स्थान लौटाता है. यदि आप निर्दिष्ट पाठ के पूर्ण मिलान का स्थान निकालने के लिए उस नाम वाले गुण का उपयोग करना चाहते हैं, तो इसका नाम बदल कर देखें.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>सेट '{0}' में कैप्चर नाम पूर्वनिर्धारित गुणों को छिपा रहे हैं जो मिलान जानकारी लौटाते हैं. यदि आप मैच की जानकारी प्राप्त करना चाहते हैं तो उनका नाम बदलने पर विचार करें।</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">

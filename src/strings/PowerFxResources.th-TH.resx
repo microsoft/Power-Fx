@@ -2113,6 +2113,14 @@
     <value>ชื่อคอลัมน์มีข้อขัดแย้งสำหรับ '{0}'</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>ไม่สามารถเพิ่มคอลัมน์ลงในเรกคอร์ดระบบหรือตารางของเรกคอร์ดระบบ ใช้ ShowColumns เพื่อแยกคอลัมน์เฉพาะที่คุณต้องการก่อน</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>ไม่สามารถเปลี่ยนชื่อคอลัมน์ลงในเรกคอร์ดระบบหรือตารางของเรกคอร์ดระบบ ใช้ ShowColumns เพื่อแยกคอลัมน์เฉพาะที่คุณต้องการก่อน</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>ไม่พบคอลัมน์ '{0}' ที่ระบุ</value>
     
@@ -4511,24 +4519,232 @@
     <value>นิพจน์ปกติไม่ถูกต้อง</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ตัวเลือกแบบอินไลน์ต้องปรากฏที่จุดเริ่มต้นของนิพจน์ปกติ พบ "{0}" ในภายหลัง</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ตัวเลือกแบบอินไลน์จำกัดเฉพาะตัวอักษร [imnsx] ผสมกัน ไม่สามารถปิดใช้งานตัวเลือก และไม่สามารถใช้กับนิพจน์ย่อยได้ พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่รองรับรหัสอักขระ \0 รูปแบบฐานแปด ให้ใช้เลขฐานสิบหก \x หรือ Unicode \u แทน พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: เครื่องหมายวงเล็บปีกกาตามตัวอักษรจะต้องใช้เครื่องหมายแบคสแลชเพื่อหลีก พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: วงเล็บปีกกาสี่เหลี่ยมตามตัวอักษรจะต้องใช้เครื่องหมายแบคสแลชเพื่อหลีก แม้ในคลาสอักขระ ตัวอย่างเช่น \[ หรือ \] พบที่ส่วนท้ายของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: วงเล็บเหลี่ยมของคลาสอักขระที่ไม่ได้ปิด</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่รองรับกลุ่มพิเศษ พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่อนุญาตให้ใช้อักขระหลีกภายในคลาสอักขระ พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่อนุญาตให้ใช้อักขระหลีกที่เป็นลบภายในคลาสอักขระที่ถูกปฏิเสธ พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่อนุญาตให้ใช้อักขระหลีกภายนอกคลาสอักขระ พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ชื่อชนิด Unicode ไม่ถูกต้อง พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ตัวเลือกอินไลน์ซ้ำกัน พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ความเห็นแบบอินไลน์ที่ไม่ได้ปิด</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ความเห็นแบบอินไลน์ที่ไม่ได้ปิด พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ตัวเลือกแบบอินไลน์เข้ากันไม่ได้กับ MatchOptions.NumberedSubMatches พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่รองรับตัวระบุความเป็นเจ้าของ พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่สามารถใช้ตัวระบุปริมาณที่แน่นอนกับตัวปรับแต่งตัวระบุปริมาณ เช่น ? สำหรับ lazy พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: อักขระหลีกไม่ถูกต้อง พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: การจับคู่ย่อย "{0}" ไม่ได้กำหนดหรือเป็นการอ้างอิงการส่งต่อที่ไม่รองรับ</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่รองรับการจับคู่ย่อยใน lookbehind ซึ่งอยู่ที่จุดเริ่มต้นของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: Lookbehinds ไม่สามารถซ้อนกันได้ พบที่จุดเริ่มต้นของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่รองรับตัวระบุปริมาณที่ไม่จำกัดใน lookbehinds หรือ lookaheads พบที่ส่วนท้ายของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่รองรับตัวระบุปริมาณใน lookbehinds หรือ lookaheads พบที่ส่วนท้ายของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: การอ้างอิงย้อนกลับ "{0}" ไปยังการจับคู่ย่อยที่อาจไม่เกิดขึ้นเนื่องจากการสลับหรือตัวระบุปริมาณเป็นศูนย์</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่รองรับการจับคู่ย่อยที่อ้างอิงตนเอง พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: กลุ่มที่ไม่ได้ปิด วงเล็บปิดน้อยเกินไป</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: กลุ่มที่ไม่ได้เปิด วงเล็บเปิดน้อยเกินไป</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: มีการกำหนดการจับคู่ย่อยที่กำหนดชื่อมากกว่าหนึ่งครั้ง ซึ่งพบที่จุดเริ่มต้นของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ชื่อการจับคู่ย่อยต้องประกอบด้วยชุดของอักขระคำและไม่ขึ้นต้นด้วยตัวเลข พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ตัวเลือกแบบอินไลน์ต้องปรากฏที่จุดเริ่มต้นของนิพจน์ปกติ พบ "{0}" ในภายหลัง</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: อักขระปรากฏมากกว่าหนึ่งครั้งในคลาสอักขระ พบ "{0}" ซ้ำกัน</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: คลาสอักขระวงเล็บเหลี่ยมต้องไม่ว่างเปล่า พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่รองรับการจับคู่ย่อยที่ปรับสมดุล พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่รองรับการใช้การบันทึกที่ระบุชื่อโดยใช้เครื่องหมายคำพูดเดี่ยว ให้ใช้ไวยากรณ์ (?&lt;... &gt;) แทน พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่รองรับการสลับตามเงื่อนไข พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่สามารถใช้การบันทึกที่กำหนดชื่อกับ MatchOptions.NumberedSubMatches ที่เปิดใช้งาน พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ใช้การบันทึกที่กำหนดชื่อกับ "(?&lt;name&gt;...)" และ "\k&lt;name&gt;" หรือเปิดใช้งาน MatchOptions.NumberedSubMatches พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: เครื่องหมายยัติภังค์ตามตัวอักษรในคลาสอักขระต้องถูกหลีกด้วยเครื่องหมายแบคสแลช, อักขระหลีกที่มี เครื่องหมายยัติภังค์ตามตัวอักษร, พบใน "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: อักขระตามตัวอักษรจะต้องใช้เครื่องหมายแบคสแลชเพื่อหลีก เมื่อใช้ในคลาสอักขระ พบที่ส่วนท้ายของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ตัวระบุปริมาณในกลุ่มที่มีตัวระบุปริมาณอื่นหรือการสลับที่ว่างเปล่า ซึ่งอาจส่งผลให้เกิดผลลัพธ์ที่ไม่ชัดเจน พบที่ส่วนท้ายของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: Lookbehind เกินขีดจำกัดอักขระสูงสุดที่เป็นไปได้ที่ 250 ตัว พบที่ส่วนท้ายของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ตัวเลขต่ำในช่วงตัวระบุปริมาณสูงกว่าตัวเลขสูง พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: พบกลุ่มที่ซ้อนกันมากเกินไปที่จุดเริ่มต้นของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ชื่อของการจับคู่ย่อยยาวเกินไป พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ตัวเลขใหญ่เกินไป พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: อักขระในช่วงคลาสอักขระจะถูกกลับรายการ พบที่ส่วนท้ายของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: คลาสอักขระในช่วงคลาสอักขระ หรือหลีกเครื่องหมายยัติภังค์ตามตัวอักษรด้วยเครื่องหมายแบคสแลช พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ลงท้ายด้วยเครื่องหมายทับขวาที่ไม่มีการหลีก</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ตัวระบุปริมาณที่ไม่มีสิ่งที่จะวัดปริมาณ พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: MatchOptions.DotAll และ MatchOptions.FreeSpacing ใช้ได้เฉพาะกับ Power Fx V1 เท่านั้น พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: การอ้างอิงย้อนกลับ "{0}" ไปยังการจับคู่ย่อยที่อยู่ภายใน lookbehind หรือ lookahead</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>นิพจน์ปกติจะต้องเป็นค่าคงที่</value>
+    <value>นิพจน์ปกติต้องเป็นค่าคงที่</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions ต้องเป็นค่าคงที่</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>ค่าที่ส่งผ่านไปยังฟังก์ชัน '{0}' ไม่สามารถเปลี่ยนแปลงได้</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>ชื่อการจับภาพ '{0}' กำลังซ่อนคุณสมบัติที่กำหนดไว้ล่วงหน้าที่ส่งกลับการจับคู่ที่ตรงกันทั้งหมดของนิพจน์ทั่วไป ลองเปลี่ยนชื่อถ้าคุณต้องการใช้คุณสมบัติที่มีการตั้งชื่อเพื่อแยกการจับคู่ที่ตรงกันทั้งหมดในข้อความที่ระบุ</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>ชื่อการบันทึก '{0}' กำลังซ่อนคุณสมบัติที่กำหนดไว้ล่วงหน้าซึ่งส่งคืนข้อมูลการจับคู่ พิจารณาเปลี่ยนชื่อหากคุณต้องการเข้าถึงข้อมูลการจับคู่</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>ชื่อการจับภาพ '{0}' กำลังซ่อนคุณสมบัติที่กำหนดไว้ล่วงหน้าที่ส่งกลับการจับคู่กลุ่มในนิพจน์ทั่วไป ลองเปลี่ยนชื่อถ้าคุณต้องการใช้คุณสมบัติที่มีการตั้งชื่อเพื่อแยกการจับคู่แบบย่อยทั้งหมดในข้อความที่ระบุ</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>ชื่อการจับภาพ '{0}' กำลังซ่อนคุณสมบัติที่กำหนดไว้ล่วงหน้าที่ส่งกลับตำแหน่งที่ตั้งของการจับคู่ของนิพจน์ทั่วไป ลองเปลี่ยนชื่อถ้าคุณต้องการใช้คุณสมบัติที่มีการตั้งชื่อเพื่อแยกตำแหน่งของการจับคู่ที่ตรงกันทั้งหมดในข้อความที่ระบุ</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>ชื่อการบันทึกในชุด '{0}' กำลังซ่อนคุณสมบัติที่กำหนดไว้ล่วงหน้าซึ่งส่งคืนข้อมูลการจับคู่ พิจารณาเปลี่ยนชื่อหากคุณต้องการเข้าถึงข้อมูลการจับคู่</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">

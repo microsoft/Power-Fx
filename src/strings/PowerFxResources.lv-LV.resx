@@ -2113,6 +2113,14 @@
     <value>Kolonnas nosaukuma konflikts šim: {0}.</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Nevar pievienot kolonnas sistēmas ierakstam vai sistēmas ierakstu tabulai. Izmantojiet ShowColumns, lai vispirms izvilktu noteiktas nepieciešamās kolonnas.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Nevar pārdēvēt sistēmas ieraksta vai sistēmas ierakstu tabulas kolonnas. Izmantojiet ShowColumns , lai vispirms izvilktu noteiktas nepieciešamās kolonnas.</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Norādītā kolonna {0} nepastāv.</value>
     
@@ -4511,24 +4519,232 @@
     <value>Nederīga regulārā izteiksme.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: iekļautajām opcijām ir jābūt redzamām regulārās izteiksmes sākumā, vēlāk atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: iekļautās opcijas ir ierobežotas ar burtu kombināciju [imnsx], nevar atspējot opcijas un tās nevar izmantot apakšizteiksmē, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: oktālā \0 rakstzīmju kodi netiek atbalstīti, tā vietā izmantojiet heksadecimālo skaitli \x vai unikodu \u, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: literāļu figūriekavas ir jānovērš ar atpakaļvērsto slīpsvītru, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: literāļu kvadrātiekavas ir jānovērš ar atpakaļvērsto slīpsvītru pat rakstzīmju klasēs, piemēram, \[ vai \], kas atrodamas "{0}" beigās.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Nederīga parastā izteiksme: neaizvērta rakstzīmju klases kvadrātiekava.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: neatbalstīta īpašā grupa, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: atsoļa rakstzīme nav atļauta rakstzīmju klasē, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: negatīva atsoļa rakstzīme nav atļauta noliegtā rakstzīmju klasē, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: atsoļa rakstzīme nav atļauta ārpus rakstzīmju klases, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Nederīga parastā izteiksme: nederīgs unikoda kategorijas nosaukums, atrasts “{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: atkārtota iekļautā opcija, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: neaizvērts iekļautais komentārs.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: neaizvērts iekļautais komentārs, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: iekļautā opcija nav saderīga ar MatchOptions.NumberedSubMatches, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: netiek atbalstīti piederības kvantifikatori, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: precīzus kvantifikatorus nevar izmantot ar kvantifikatoru modifikatoriem, piemēram ? atlikšanai, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Nederīga parastā izteiksme: nederīgs atsoļa kods, atrasts “{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: apakšatbilstība "{0}" nav definēta vai ir neatbalstīta pārsūtīšanas atsauce.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: apakšatbilstības netiek atbalstītas skatos atpakaļ, kas atrasti "{0}" sākumā.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: skatus atpakaļ nevar ligzdot, atrasts "{0}" sākumā.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: neierobežoti kvantifikatori netiek atbalstīti skatos atpakaļ, atrasts "{0}" beigās.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: kvantifikatori netiek atbalstīti skatos atpakaļ vai skatos uz priekšu, atrasts "{0}" beigās.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: atpakaļatsauce "{0}" uz apakšatbilstību, kas var nenotikt maiņas vai nulles kvantifikatora dēļ.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: netiek atbalstītas apakšatbilstības, kas satur atsauces uz sevi, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: neaizvērtas grupas, pārāk maz aizverošo iekavu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: neatvērtas grupas, pārāk maz atverošo iekavu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: nosauktā apakšatbilstība definēta vairāk nekā vienu reizi, atrasts "{0}" sākumā.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: apakšatbilstības nosaukumam ir jābūt vārdu rakstzīmju kombinācijai, nevis jāsākas ar skaitli, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: iekļautajām opcijām ir jābūt redzamām regulārās izteiksmes sākumā, vēlāk atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: rakstzīme rakstzīmju klasē parādās vairāk nekā vienu reizi, atrasta atkārtota ""{0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: kvadrātiekavu rakstzīmju klases nevar būt tukšas, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: netiek atbalstītas balansēšanas apakšatbilstības, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: vienpēdiņu nosaukumu tveršanas izmantošana netiek atbalstīta, tā vietā izmantojiet (?&lt;... &gt;) sintaksi, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: nosacījuma maiņa netiek atbalstīta, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: tvērumus ar nosaukumu nevar izmantot ar iespējotu MatchOptions.NumberedSubMatches, atrasta "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: izmantojiet tvērumus ar nosaukumu ar "(?&lt;name&gt;...)" un "\k&lt;name&gt;" vai iespējojiet MatchOptions.NumberedSubMatches, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: literāļa pārnesumzīme rakstzīmju klasē jāizlaiž ar atpakaļvērsto slīpsvītru, izlaišana ar "\-", atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: literāļa rakstzīme ir jānovērš ar atpakaļvērsto slīpsvītru, kad tā tiek izmantota rakstzīmju klasē, atrasts "{0}" beigās.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: grupas kvantifikators, kurā ir cits kvantifikators vai tukša maiņa, kas var radīt neviennozīmīgu rezultātu, atrasts "{0}" beigās.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: skats atpakaļ pārsniedza maksimālo iespējamo rakstzīmju skaita ierobežojumu (250), kas atrasts "{0}" beigās.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: kvantifikatora diapazona mazākais skaitlis ir lielāks nekā lielākais skaitlis, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: pārāk daudz ligzdotu grupu, kas atrastas "{0}" sākumā.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: apakšatbilstības nosaukums ir pārāk garš, atrasts "{0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: skaitlis ir pārāk liels, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: rakstzīmju klases diapazona rakstzīmes ir apgrieztas, atrasts "{0}" beigās.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: rakstzīmju klase rakstzīmju klases diapazonā vai literāļa pārnesumzīmes izlaišana ar atpakaļvērsto slīpsvītru, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: beidzas ar neizbēgtu atpakaļvērsto slīpsvītru.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: kvantifikators bez kaut kā, ko kvantificēt, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Nederīga parastā izteiksme: MatchOptions.DotAll un MatchOptions.FreeSpacing ir pieejamas tikai ar Power Fx V1, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Nederīga parastā izteiksme: atpakaļatsauce "{0}" uz apakšatbilstību, kas atrodas skatā atpakaļ vai skatā uz priekšu.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Regulārajām izteiksmēm jābūt konstantām vērtībām.</value>
+    <value>Regulārajai izteiksmei jābūt konstantai vērtībai.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions ir jābūt konstantai vērtībai.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Funkcijai “{0}” nodoto vērtību nevar mainīt.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Tvēruma nosaukumā “{0}” ir iekļauts sākotnēji definēts rekvizīts, kas atgriež pilnu atbilstību parastajai izteiksmei. Lai šo rekvizītu izmantotu pilnīgai norādītā teksta atbilstības izvilkšanai, ieteicams pārdēvēt tvērumu.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Tvēruma nosaukums "{0}" slēpj iepriekš definētu rekvizītu, kas atgriež atbilstības informāciju. Apsveriet iespēju to pārdēvēt, ja vēlaties piekļūt atbilstības informācijai.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Tvēruma nosaukumā “{0}” ir iekļauts sākotnēji definēts rekvizīts, kas atgriež grupu atbilstību parastajai izteiksmei. Lai šo rekvizītu izmantotu visu norādītā teksta pakārtoto atbilstību izvilkšanai, ieteicams pārdēvēt tvērumu.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Tvēruma nosaukumā “{0}” ir iekļauts sākotnēji definēts rekvizīts, kas atgriež atbilstības atrašanās vietu parastajā izteiksmē. Lai šo rekvizītu izmantotu pilnīgas norādītā teksta atbilstības atrašanās vietas izvilkšanai, ieteicams pārdēvēt tvērumu.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Tvērumu nosaukumi kopā "{0}" slēpj iepriekš definētos rekvizītus, kas atgriež atbilstības informāciju. Apsveriet iespēju tos pārdēvēt, ja vēlaties piekļūt atbilstības informācijai.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
