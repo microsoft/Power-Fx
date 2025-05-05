@@ -2113,6 +2113,14 @@
     <value>Διένεξη ονόματος στήλης για '{0}'.</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Δεν είναι δυνατή η προσθήκη στηλών σε μια καρτέλα συστήματος ή σε έναν πίνακα καρτελών συστήματος. Χρησιμοποιήστε το ShowColumns για να εξαγάγετε τις συγκεκριμένες στήλες που χρειάζεστε πρώτα.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Δεν είναι δυνατή η μετονομασία στηλών σε μια καρτέλα συστήματος ή σε έναν πίνακα καρτελών συστήματος. Χρησιμοποιήστε το ShowColumns για να εξαγάγετε τις συγκεκριμένες στήλες που χρειάζεστε πρώτα.</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Η καθορισμένη στήλη '{0}' δεν υπάρχει.</value>
     
@@ -4511,24 +4519,240 @@
     <value>Μη έγκυρη κανονική παράσταση.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Οι ενσωματωμένες επιλογές πρέπει να εμφανίζονται στην αρχή της κανονικής παράστασης, που βρέθηκαν "{0}" αργότερα.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Οι ενσωματωμένες επιλογές περιορίζονται σε έναν συνδυασμό των γραμμάτων [imnsx], δεν είναι δυνατή η απενεργοποίηση των επιλογών και δεν μπορούν να χρησιμοποιηθούν σε μια δευτερεύουσα παράσταση, που βρέθηκαν "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Οι οκταδικοί κωδικοί χαρακτήρων \0 δεν υποστηρίζονται. Χρησιμοποιήστε δεκαεξαδικό \x ή Unicode \u, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: πρέπει να γίνεται διαφυγή των κυριολεκτικών καμπύλων αγκύλων με μια ανάστροφη κάθετο, που βρέθηκαν "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: πρέπει να γίνεται διαφυγή των κυριολεκτικών τετραγωνικών αγκύλων με ανάστροφη κάθετο ακόμα και σε κλάσεις χαρακτήρων, για παράδειγμα \[ ή \], που βρίσκονται στο τέλος του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: τετράγωνη αγκύλη κλάσης μη κλειστών χαρακτήρων.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Μη υποστηριζόμενη ειδική ομάδα, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Ο χαρακτήρας διαφυγής δεν επιτρέπεται εντός της κλάσης χαρακτήρων, που βρίσκεται στο τέλος του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Ο αρνητικός χαρακτήρας διαφυγής δεν επιτρέπεται εντός της κλάσης χαρακτήρων που απορρίφθηκε, που βρίσκεται στο τέλος του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Ο χαρακτήρας διαφυγής δεν επιτρέπεται εκτός μιας κλάσης χαρακτήρων, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: μη έγκυρο όνομα κατηγορίας Unicode, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Επαναλαμβανόμενη ενσωματωμένη επιλογή, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Μη κλεισμένο ενσωματωμένο σχόλιο.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Μη κλεισμένο ενσωματωμένο σχόλιο, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Η ενσωματωμένη επιλογή δεν είναι συμβατή με MatchOptions.NumberedSubMatches, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Δεν υποστηρίζονται κτητικοί δευτερεύουσες ποσοδείκτες, που βρέθηκαν "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Δεν είναι δυνατή η χρήση ακριβών ποσοδεικτών με τροποποιητές ποσοδεικτών όπως; Για τεμπέλης, βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: μη έγκυρος κώδικας διαφυγής, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Η δευτερεύουσα αντιστοίχιση "{0}" δεν έχει οριστεί ή είναι μη υποστηριζόμενη αναφορά προώθησης.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Οι δευτερεύουσες αντιστοιχίσεις δεν υποστηρίζονται σε αναζήτηση πίσω, που βρίσκονται στην αρχή του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: οι αναζητήσεις πίσω δεν μπορούν να είναι ένθετες, που βρίσκονται στην αρχή του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Οι απεριόριστοι ποσοδείκτες δεν υποστηρίζονται σε αναζητήσεις πίσω, που βρίσκονται στο τέλος του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Οι ποσοδείκτες δεν υποστηρίζονται σε αναζητήσεις πίσω ή αναζητήσεις μπροστά, που βρίσκονται στο τέλος του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: αναφορά πίσω "{0}" σε δευτερεύουσα αντιστοίχιση που ενδέχεται να μην συμβεί λόγω εναλλαγής ή μηδενικού ποσοδείκτη.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Δεν υποστηρίζονται δευτερεύουσες αντιστοιχίσεις αυτοαναφορών, που βρίσκονται "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Μη κλειστές ομάδες, πολύ λίγες παρενθέσεις κλεισίματος.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Μη ανοιχτές ομάδες, πολύ λίγες παρενθέσεις ανοίγματος.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Κατονομαζόμενη δευτερεύουσα αντιστοίχιση που ορίζεται περισσότερες από μία φορές, βρίσκεται στην αρχή του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Το όνομα δευτερεύουσας αντιστοίχισης πρέπει να είναι συνδυασμός χαρακτήρων λέξης και να μην αρχίζει με αριθμό, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Οι ενσωματωμένες επιλογές πρέπει να εμφανίζονται στην αρχή της κανονικής παράστασης, που βρέθηκαν "{0}" αργότερα.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Ο χαρακτήρας επαναλαμβάνεται στην κλάση χαρακτήρων, που βρίσκεται στο τέλος του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Οι κλάσεις χαρακτήρων τετράγωνης αγκύλης δεν μπορούν να είναι κενές, που βρέθηκαν "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Δεν υποστηρίζονται δευτερεύουσες αντιστοιχίσεις εξισορρόπησης, που βρίσκονται "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Η χρήση καταγραφών με όνομα με μονά εισαγωγικά δεν υποστηρίζεται, χρησιμοποιήστε σύνταξη (?&lt;... &gt;), που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Η εναλλαγή υπό όρους δεν υποστηρίζεται, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη τακτική παράσταση: Δεν είναι δυνατή η χρήση κατονομαζόμενων καταγραφών με MatchOptions.NumberedSubMatches ενεργοποιημένο, που βρέθηκαν "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Χρησιμοποιήστε κατονομαζόμενες καταγραφές με "(?&lt;name&gt;..)" και "\k&lt;name&gt;" ή ενεργοποιήστε MatchOptions.NumberedSubMatches, που βρέθηκαν "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: πρέπει να γίνεται διαφυγή κυριολεκτικής παύλας σε κλάση χαρακτήρων με ανάστροφη κάθετο, διαφυγή με "\-", που βρίσκεται στο τέλος του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: πρέπει να γίνεται διαφυγή του κυριολεκτικού χαρακτήρα με ανάστροφη κάθετο, όταν χρησιμοποιείται σε κλάση χαρακτήρων, που βρίσκεται στο τέλος του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Ποσοδείκτης σε μια ομάδα που περιέχει έναν άλλο ποσοδείκτη ή κενή εναλλαγή που θα μπορούσε να οδηγήσει σε ένα διφορούμενο αποτέλεσμα, το οποίο βρίσκεται στο τέλος του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Η αναζήτηση πίσω υπερέβη το μέγιστο δυνατό όριο χαρακτήρων των 250 χαρακτήρων, το οποίο βρίσκεται στο τέλος του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη τακτική παράσταση: ο χαμηλός αριθμός εύρους ποσοδείκτη είναι μεγαλύτερος από υψηλό αριθμό, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Υπάρχουν πάρα πολλές ένθετες ομάδες, που βρέθηκαν στην αρχή του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Το όνομα της δευτερεύουσας αντιστοίχισης είναι υπερβολικά μεγάλο, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Ο αριθμός είναι πολύ μεγάλος, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Οι χαρακτήρες σε μια περιοχή κλάσης χαρακτήρων αντιστρέφονται, που βρίσκονται στο τέλος του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: κλάση χαρακτήρων σε μια περιοχή κλάσης χαρακτήρων ή διαφυγή μιας κυριολεκτικής παύλας με ανάστροφη κάθετο, που βρίσκεται στο τέλος του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Τελειώνει με ανάστροφη κάθετο χωρίς διαφυγή.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Ποσοδείκτης χωρίς κάτι για ποσοτικό προσδιορισμό, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: MatchOptions.DotAll και MatchOptions.FreeSpacing είναι διαθέσιμες μόνο με Power Fx V1, που βρέθηκαν "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: αναφορά πίσω "{0}" σε δευτερεύουσα αντιστοίχιση που βρίσκεται μέσα σε μια αναζήτηση πίσω ή μια αναζήτηση μπροστά.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExSurrogatePairInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: οι χαρακτήρες Unicode σε υποκατάστατα ζεύγη (χαρακτήρας U+10000 και άνω) δεν υποστηρίζονται σε κλάσεις χαρακτήρων, που βρίσκονται στο "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMalformedSurrogatePair_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Ακατάλληλο ζεύγος υποκατάστατων Unicode (χαρακτήρας U+10000 και άνω), που βρίσκεται στο τέλος του "{0}".</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Οι κανονικές παραστάσεις πρέπει να είναι τιμές σταθεράς.</value>
+    <value>Η κανονική παράσταση πρέπει να είναι μια τιμή σταθεράς.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>Το MatchOptions πρέπει να είναι τιμή σταθεράς.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Η τιμή που μεταβιβάστηκε στη συνάρτηση '{0}' δεν είναι δυνατό να αλλάξει.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Το όνομα καταγραφής "{0}" αποκρύπτει την προκαθορισμένη ιδιότητα που επιστρέφει την πλήρη αντιστοίχιση της κανονικής παράστασης. Εξετάστε το ενδεχόμενο μετονομασίας της καταγραφής, αν θέλετε να χρησιμοποιήσετε τη συγκεκριμένη ιδιότητα με αυτό το όνομα για την εξαγωγή της πλήρους αντιστοίχισης στο καθορισμένο κείμενο.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Το όνομα καταγραφής '{0}' κρύβει μια προκαθορισμένη ιδιότητα που επιστρέφει πληροφορίες αντιστοίχισης. Εξετάστε το ενδεχόμενο να τη μετονομάσετε, αν θέλετε να αποκτήσετε πρόσβαση στις πληροφορίες αντιστοίχισης.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Το όνομα καταγραφής "{0}" αποκρύπτει την προκαθορισμένη ιδιότητα που επιστρέφει τις αντιστοιχίσεις ομάδας στην κανονική παράσταση. Εξετάστε το ενδεχόμενο μετονομασίας της καταγραφής, αν θέλετε να χρησιμοποιήσετε τη συγκεκριμένη ιδιότητα με αυτό το όνομα για την εξαγωγή όλων των δευτερευουσών αντιστοιχίσεων στο καθορισμένο κείμενο.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Το όνομα καταγραφής "{0}" αποκρύπτει την προκαθορισμένη ιδιότητα που επιστρέφει τη θέση της αντιστοίχισης της κανονικής παράστασης. Εξετάστε το ενδεχόμενο μετονομασίας της καταγραφής, αν θέλετε να χρησιμοποιήσετε τη συγκεκριμένη ιδιότητα με αυτό το όνομα για την εξαγωγή της θέσης της πλήρους αντιστοίχισης στο καθορισμένο κείμενο.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Τα ονόματα καταγραφής στο σύνολο '{0}' αποκρύπτουν προκαθορισμένες ιδιότητες που επιστρέφουν πληροφορίες αντιστοίχισης. Εξετάστε το ενδεχόμενο να τις μετονομάσετε, αν θέλετε να αποκτήσετε πρόσβαση στις πληροφορίες αντιστοίχισης.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">

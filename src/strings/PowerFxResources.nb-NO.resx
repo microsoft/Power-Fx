@@ -2113,6 +2113,14 @@
     <value>Navnekonflikt for kolonne {0}.</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Kan ikke legge til kolonner i en systemoppføring eller tabell med systemoppføringer. Bruk ShowColumns til å trekke ut de spesifikke kolonnene du trenger først.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Kan ikke endre navn på kolonner i en systemoppføring eller tabell med systemoppføringer. Bruk ShowColumns til å trekke ut de spesifikke kolonnene du trenger først.</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Den angitte kolonnen {0} finnes ikke.</value>
     
@@ -4511,24 +4519,240 @@
     <value>Ugyldig regulært uttrykk.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Innebygde alternativer må vises i begynnelsen av det regulære uttrykket. Fant «{0}» senere.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Innebygde alternativer er begrenset til en kombinasjon av bokstavene [imnsx], kan ikke deaktivere alternativer og kan ikke brukes på et underuttrykk. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Oktale \0-tegnkoder støttes ikke. Bruk heksadesimal \x eller Unicode \u i stedet. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Litterale klemmeparenteser må erstattes med en omvendt skråstrek. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Litterale klammeparenteser må erstattes med en omvendt skråstrek selv i tegnklasser, for eksempel \[ eller \], funnet på slutten av «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Ikke-lukket hakeparentes for tegnklasse.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Ikke-støttet spesialgruppe. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Escape-tegn er ikke tillatt i tegnklasse. Funnet på slutten av «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Negativt escape-tegn er ikke tillatt i negert tegnklasse. Funnet på slutten av «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Escape-tegn er ikke tillatt utenfor en tegnklasse. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Ugyldig Unicode-kategorinavn. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Gjentatt innebygd alternativ. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Ikke-lukket innebygd kommentar.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Ikke-lukket innebygd kommentar, fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Innebygd alternativ er ikke kompatibelt med MatchOptions.NumberedSubMatches, fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Eiende kvantifikatorer støttes ikke. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Kan ikke bruke nøyaktige kvantifikatorer med kvantifikatormodifikatorer, for eksempel ? for lat. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Ugyldig escape-kode. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Undertreff «{0}» er ikke definert eller er en ikke-støttet fremoverrettet referanse.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Undertreff støttes ikke i søk bakover, funnet i begynnelsen av «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Søk bakover kan ikke være nestet, funnet i begynnelsen av «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Ubegrensede kvantifikatorer støttes ikke i søk bakover, funnet på slutten av «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Kvantifikatorer støttes ikke ved søk bakover- eller søk fremover-instruksjoner, funnet på slutten av «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Tilbakereferanse «{0}» til undertreff som kanskje ikke skjer på grunn av veksling eller nullkvantifikator.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Selvrefererende undertreff støttes ikke. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Ikke-lukkede grupper, for få avsluttende parenteser.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Ikke-åpnede grupper, for få åpningsparenteser.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Navngitt undertreff er definert mer enn én gang, funnet i begynnelsen av «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Navnet på undertreff må være en kombinasjon av ordtegn og ikke begynne med et tall. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Innebygde alternativer må vises i begynnelsen av det regulære uttrykket. Fant «{0}» senere.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Tegn gjentatt i tegnklassen. Funnet på slutten av «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Hakeparentesklasser kan ikke være tomme. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Justering av undertreff støttes ikke. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Bruk av navngitte registreringer omgitt enkelt anførselstegn støttes ikke. Bruk syntaksen (?&lt;...&gt;) i stedet. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Betinget veksling støttes ikke. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Navngitte registreringer kan ikke brukes med MatchOptions.NumberedSubMatches aktivert. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Bruk navngitte registreringer med (?&lt;name&gt;...) og \k&lt;name&gt; eller aktiver MatchOptions.NumberedSubMatches. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Litteral bindestrek i tegnklasse må være erstattet med omvendt skråstrek, avbryt med \-, funnet på slutten av «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Litteralt tegn må erstattes med en omvendt skråstrek når det brukes i en tegnklasse, funnet på slutten av «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Kvantifikator på en gruppe som inneholder en annen kvantifikator eller tom veksling som kan føre til et tvetydig resultat, funnet på slutten av «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Lookbehind overskred en maksimal mulig tegngrense på 250, funnet på slutten av «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Kvantifikatorområdets lave tall er større enn høyt tall. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: For mange nestede grupper, funnet i begynnelsen av «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Navnet på undertreff er for langt. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Tallet er for stort. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Tegnene i et tegnklasseområde er reversert, funnet på slutten av «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Tegnklasse i et tegnklasseområde, eller erstatt en litteral bindestrek med en omvendt skråstrek. Funnet på slutten av «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Slutter med en ikke-erstattet omvendt skråstrek.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Kvantifikator uten noe å kvantifisere. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: MatchOptions.DotAll og MatchOptions.FreeSpacing er bare tilgjengelig med Power Fx V1. Fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Tilbakereferanse «{0}» til undertreff som er i et lookbehind eller et lookahead.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExSurrogatePairInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Unicode-tegn i surrogatpar (tegn U+10000 og høyere) støttes ikke i tegnklasser, fant «{0}».</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMalformedSurrogatePair_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk: Feil format i Unicode-surrogatpar (tegn U+10000 og høyere), funnet på slutten av «{0}».</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Regulære uttrykk må være konstante verdier.</value>
+    <value>Regulært uttrykk må være en konstant verdi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions må være en konstant verdi.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Verdien som ble sendt til funksjonen {0}, kan ikke endres.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Navnet på opphentingsforekomsten {0} skjuler den forhåndsdefinerte egenskapen som returnerer fullstendig samsvar for RegEx. Vurder å endre navnet hvis du vil bruke den navngitte egenskapen til å trekke ut fullstendig samsvar i den angitte teksten.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Registreringsnavnet {0} skjuler en forhåndsdefinert egenskap som returnerer treffinformasjon. Vurder å gi den nytt navn hvis du vil ha tilgang til treffinformasjonen.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Navnet på opphentingsforekomsten {0} skjuler den forhåndsdefinerte egenskapen som returnerer gruppesamsvaret i RegEx. Vurder å endre navnet hvis du vil bruke den navngitte egenskapen til å trekke ut alle delsamsvar i den angitte teksten.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Navnet på opphentingsforekomsten {0} skjuler den forhåndsdefinerte egenskapen som returnerer plasseringssamsvaret i RegEx. Vurder å endre navnet hvis du vil bruke den navngitte egenskapen til å hente ut plasseringen for fullstendig samsvar i den angitte teksten.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Registreringsnavnene i settet {0} skjuler forhåndsdefinerte egenskaper som returnerer treffinformasjon. Vurder å gi dem nytt navn hvis du vil ha tilgang til treffinformasjonen.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
