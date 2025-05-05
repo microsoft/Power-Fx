@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -47,7 +48,10 @@ namespace Microsoft.PowerFx.Connectors
         public DelegationParameterFeatures SupportedFeatures => DelegationParameterFeatures.Filter |
                 DelegationParameterFeatures.Top |
                 DelegationParameterFeatures.Columns | // $select
-                DelegationParameterFeatures.Sort; // $orderby
+                DelegationParameterFeatures.Sort | // $orderby
+                DelegationParameterFeatures.ApplyGroupBy |
+                DelegationParameterFeatures.ApplyTopLevelAggregation |
+                DelegationParameterFeatures.Count;
 
         public async Task<IReadOnlyCollection<DValue<RecordValue>>> GetRowsAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel)
         {
@@ -56,8 +60,7 @@ namespace Microsoft.PowerFx.Connectors
                 return _cachedRows;
             }
 
-            var op = parameters?.ToOdataParameters();
-            var rows = await _tabularService.GetItemsAsync(services, op, cancel).ConfigureAwait(false);
+            var rows = await _tabularService.GetItemsAsync(services, parameters, cancel).ConfigureAwait(false);
 
             if (parameters == null)
             {
@@ -72,33 +75,85 @@ namespace Microsoft.PowerFx.Connectors
             _cachedRows = null;
         }
 
-        public Task<FormulaValue> ExecuteQueryAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel)
+        public async Task<FormulaValue> ExecuteQueryAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel)
         {
-            throw new NotImplementedException();
-        }
-    }   
-
-    internal static class ODataParametersExtensions
-    {
-        public static ODataParameters ToOdataParameters(this DelegationParameters parameters)
-        {
-            DelegationParameterFeatures allowedFeatures = 
-                DelegationParameterFeatures.Filter | 
-                DelegationParameterFeatures.Top | 
-                DelegationParameterFeatures.Columns | // $select
-                DelegationParameterFeatures.Sort;     // $orderby
-
-            parameters.EnsureOnlyFeatures(allowedFeatures);
-
-            ODataParameters op = new ODataParameters()
+            if (parameters == null)
             {
-                Filter = parameters.GetOdataFilter(),
-                Top = parameters.Top.GetValueOrDefault(),
-                Select = parameters.GetColumns(),
-                OrderBy = parameters.GetOrderBy()
-            };
+                throw new ArgumentNullException(nameof(parameters));
+            }
 
-            return op;
+            var value = await _tabularService.ExecuteQueryAsync(services, parameters, cancel).ConfigureAwait(false);
+
+            var expectedRT = parameters.ExpectedReturnType;
+            if (expectedRT is not AggregateType) 
+            {
+                if (value.Type is not AggregateType)
+                {
+                    var expectedValue = ConvertToExpectedType(expectedRT, value);
+                    return expectedValue;
+                }
+                else if (value.Type is RecordType resultRT)
+                {
+                    var expectedValue = await ExtractResultAsync((RecordValue)value, parameters, cancel).ConfigureAwait(false);
+                    return expectedValue;
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Invalid result type {value.Type}, expected type was {expectedRT}");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException($"Invalid expected type {expectedRT} for {nameof(ExecuteQueryAsync)}");
+            }
+        }
+
+        private static async Task<FormulaValue> ExtractResultAsync(RecordValue value, DelegationParameters parameters, CancellationToken cancellationToken)
+        {
+            var valueTable = (TableValue)(await value.GetFieldAsync(DelegationParameters.ODataResultFieldName, cancellationToken).ConfigureAwait(false));
+            if (valueTable.Rows.Count() != 1)
+            {
+                throw new InvalidOperationException("value Table should always have 1 rows for aggregation result");
+            }
+
+            var row = valueTable.Rows.First();
+
+            if (row.IsError)
+            {
+                return row.Error;
+            }
+
+            var valueRecord = row.Value;
+            var result = await valueRecord.GetFieldAsync(DelegationParameters.ODataAggregationResultFieldName, cancellationToken).ConfigureAwait(false);
+            result = ConvertToExpectedType(parameters.ExpectedReturnType, result);
+            return result;
+        }
+
+        private static FormulaValue ConvertToExpectedType(FormulaType expectedType, FormulaValue value)
+        {
+            var valueType = value.Type;
+
+            if (value is BlankValue)
+            {
+                return value;
+            }
+
+            if (expectedType == valueType)
+            {
+                return value;
+            }
+            else if (expectedType == FormulaType.Number && valueType == FormulaType.Decimal)
+            {
+                return FormulaValue.New(Convert.ToDouble(((DecimalValue)value).Value));
+            }
+            else if (expectedType == FormulaType.Decimal && valueType == FormulaType.Number)
+            {
+                return FormulaValue.New(Convert.ToDecimal(((NumberValue)value).Value));
+            }
+            else
+            {
+                throw new InvalidOperationException($"Expected type {expectedType} can not be converted to {valueType}");
+            }
         }
     }
 }

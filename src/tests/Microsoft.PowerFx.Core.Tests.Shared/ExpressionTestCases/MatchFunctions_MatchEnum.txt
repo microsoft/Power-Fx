@@ -1,0 +1,94 @@
+﻿#SETUP: RegEx,PowerFxV1CompatibilityRules
+
+// Any
+
+>> Match( "a@contoso.com", "@" & Match.Any & Match.Any ).FullMatch
+"@co"
+
+>> Match( "a@contoso.com", Match.Any & "{3,4}" ).FullMatch
+"a@co"
+
+// Comma, Hyphen, Period
+
+>> Match( "asd,afsdf", Match.Comma )
+{FullMatch:",",StartMatch:4}
+
+>> Match( "asd.afsdf", Match.Period )
+{FullMatch:".",StartMatch:4}
+
+>> Match( "asd,fdf ,234,656", Match.MultipleNonSpaces & Match.Comma & Match.MultipleDigits ).FullMatch
+",234,656"
+
+>> Match( "1234-4563", Match.Hyphen )
+{FullMatch:"-",StartMatch:5}
+
+>> Match( "123-45-6789", Match.Digit & Match.Digit & Match.Digit & Match.Hyphen & Match.Digit & Match.Digit & Match.Hyphen & Match.Digit & Match.Digit & Match.Digit & Match.Digit )
+{FullMatch:"123-45-6789",StartMatch:1}
+
+// Digit & Multiples & Optional
+
+>> Match( "---@---9---", Match.Digit )
+{FullMatch:"9",StartMatch:8}
+
+>> Match( "abc84ife925fgr", Match.Digit & Match.Digit & Match.Digit )
+{FullMatch:"925",StartMatch:9}
+
+>> Match( "abc84ife925fgr", Match.MultipleDigits )
+{FullMatch:"84",StartMatch:4}
+
+>> Match( "👻႘႔👻", Match.Digit & Match.Digit )
+{FullMatch:"႘႔",StartMatch:3}
+
+>> Match( "👻႘႔👻", Match.MultipleDigits )
+{FullMatch:"႘႔",StartMatch:3}
+
+>> Match( "54 38Gloves", Match.OptionalDigits & Match.MultipleLetters )
+{FullMatch:"38Gloves",StartMatch:4}
+
+// LeftParen & RightParen
+
+>> Match( "Home: (555) 555-1212", Match.LeftParen )
+{FullMatch:"(",StartMatch:7}
+
+>> Match( "Home: (555) 555-1212", Match.RightParen )
+{FullMatch:")",StartMatch:11}
+
+>> Match( "Home: (555) 555-1212", Match.LeftParen & Match.MultipleDigits & Match.RightParen )
+{FullMatch:"(555)",StartMatch:7}
+
+// Letter & Multiples & Optional
+
+>> Match( "!! Go, Let's !!", Match.Letter & Match.Letter & Match.Letter )
+{FullMatch:"Let",StartMatch:8}
+
+>> Match( "!! Go, Let's !!", Match.MultipleLetters )
+{FullMatch:"Go",StartMatch:4}
+
+>> Match( "ǅ", Match.Letter ) // title case
+{FullMatch:"ǅ",StartMatch:1}
+
+>> Match( "AB CD1234", Match.OptionalLetters & Match.MultipleDigits )
+{FullMatch:"CD1234",StartMatch:4}
+
+// Spaces/NonSpaces and Multiples and Optional
+
+>> Match( "A sentence.  With 2 spaces to the next one.", Match.Space & Match.Space )
+{FullMatch:"  ",StartMatch:12}
+
+>> Match( "A sentence.  With 2 spaces to the next one.", Match.MultipleSpaces )
+{FullMatch:" ",StartMatch:2}
+
+>> Match( "A sentence.  With 2 spaces to the next one.", Match.Space & Match.NonSpace & Match.NonSpace & Match.Space )
+{FullMatch:" to ",StartMatch:27}
+
+>> Match( "A sentence.  With 2 spaces to the next one.", Match.Digit & Match.Any & Match.MultipleNonSpaces )
+{FullMatch:"2 spaces",StartMatch:19}
+
+>> Match( "   A sentence.  With 2 spaces to the next one.", Match.OptionalSpaces & Match.MultipleLetters & Match.OptionalSpaces & Match.MultipleLetters & Match.Period )
+{FullMatch:"   A sentence.",StartMatch:1}
+
+>> Match( "A sentence.  With 2 spaces to the next one.", Match.OptionalSpaces & Match.MultipleLetters & Match.OptionalSpaces & Match.MultipleLetters & Match.Period )
+{FullMatch:"A sentence.",StartMatch:1}
+
+>> Match( "Asentence.  With 2 spaces to the next one.", Match.OptionalSpaces & Match.MultipleLetters & Match.OptionalSpaces & Match.MultipleLetters & Match.Period )
+{FullMatch:"Asentence.",StartMatch:1}

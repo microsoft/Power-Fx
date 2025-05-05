@@ -90,7 +90,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
             RecordType = new FileTabularRecordType(RecordType.Empty().Add("line", FormulaType.String));
         }
 
-        protected override async Task<IReadOnlyCollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken)
+        protected override Task<FormulaValue> GetItemInternalAsync(IServiceProvider serviceProvider, DelegationParameters parameters, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override async Task<IReadOnlyCollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, DelegationParameters parameters, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 

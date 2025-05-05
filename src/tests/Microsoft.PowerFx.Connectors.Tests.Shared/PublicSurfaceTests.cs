@@ -55,7 +55,6 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.MetadataDynamicValues",
               "Microsoft.PowerFx.Connectors.MetadataParameter",
               "Microsoft.PowerFx.Connectors.MetadataTabular",
-              "Microsoft.PowerFx.Connectors.ODataParameters",
               "Microsoft.PowerFx.Connectors.OpenApiExtensions",
               "Microsoft.PowerFx.Connectors.OpenApiParser",
               "Microsoft.PowerFx.Connectors.PowerFxConnectorException",

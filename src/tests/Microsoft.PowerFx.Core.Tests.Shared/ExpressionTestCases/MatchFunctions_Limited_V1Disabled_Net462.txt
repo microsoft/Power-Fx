@@ -1,4 +1,4 @@
-#SETUP: RegEx,disable:PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+#SETUP: RegEx,disable:PowerFxV1CompatibilityRules
 
 // We don't have fine grained error messages for 462, so we can only put out a generic message.
 // That said, we don't have any clients for 462 without V1. Canvas is on 70.
@@ -164,3 +164,7 @@ Errors: Error 13-45: Invalid regular expression.|Error 0-5: The function 'Match'
 #DISABLE.NET: 70
 >> Match( "a", ">>>>>>>>>>>\p{Zz}<<<<<<<<<<<<<<" )
 Errors: Error 12-45: Invalid regular expression.|Error 0-5: The function 'Match' has some invalid arguments.
+
+#DISABLE.NET: 70
+>> IsMatch("Foo", "J(")
+Errors: Error 15-19: Invalid regular expression.|Error 0-7: The function 'IsMatch' has some invalid arguments.

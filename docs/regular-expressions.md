@@ -18,11 +18,15 @@ contributors:
 
 The [**IsMatch**, **Match**, and **MatchAll** functions](reference/function-ismatch.md) are used to extract and validate patterns in text. The pattern they use is called a [regular expression](https://en.wikipedia.org/wiki/Regular_expression). 
 
-Regular expressions are very powerful and are used for a wide variety of purposes. They also often look like a random sequence of punctuation marks. This article doesn't describe all aspects of regular expressions, but a wealth of information, tutorials, and tools are available online.
+Regular expressions are very powerful and are used for a wide variety of purposes. They can also look like a random sequence of punctuation marks. This article doesn't describe all aspects of regular expressions, but a wealth of information, tutorials, and tools are available online.
 
-Regular expressions have a long history and are available in many programming languages. Every programming language has its own dialect of regular expressions and there are few standards. As much as possible, we would like the same regular expression to give the same result across all Power Fx implementations. That isn't easy to accomplish as Power Fx runs on top of JavaScript and .NET which have significant differences. To accommodate running on different platforms, Power Fx regular expressions are limited to a subset of features that are widely supported across the industry.
+Regular expressions have a long history and are available in many programming languages. Every programming language has its own dialect of regular expressions and there are few standards. As much as possible, we are striving to have the same regular expression give the same result across all Power Fx implementations. That isn't easy to accomplish as Power Fx runs on top of JavaScript and .NET which have significant differences. To accommodate running on different platforms, Power Fx regular expressions are limited to a subset of features that are widely supported across the industry.
 
 As a result, some regular expressions that may work in other environments will be blocked in Power Fx. Power Fx will produce an authoring time error when unsupported features are encountered. This is one of the reasons that the regular expression and options must be an authoring time constant and not dynamic (for example, provided in a variable).
+
+## Power Apps
+
+Note that Power Apps uses a pre-V1 regular expression engine and enums, more closely tied to what JavaScript supports. The information in this article will be similar, but different, than Power Apps behavior in some ways. With Power Fx V1 enabled, regular expressions in Power Apps will match the behavior described here.
 
 ## Supported features
 
@@ -36,7 +40,8 @@ The regular expression must be a constant and not calculated or stored in a vari
 |---------|---------|
 | Literal characters | Any Unicode character can be inserted directly, except `\`, `[`, `]`, `^`, `$`, `.`, `|`, `?`, `*`, `+`, `(`, `)`, `{`, and `}`. When using **MatchOptions.FreeSpacing**, `#`, ` `, and other `\s` space characters must be escaped as they have a different meaning. |
 | Escaped literal characters | `\` (backslash) followed by one of the direct literal characters, such as `\?` to insert a question mark. `\#` and `\ ` may also be used even when **MatchOptions.FreeSpacing** is disabled for consistency. | 
-| Hexadecimal and Unicode character codes | `\x20` with two hexadecimal digits, `\u2028` with four hexadecimal digits. |
+| Hexadecimal and Unicode character codes | `\x20` with exactly two hexadecimal digits, `\u2028` with exactly four hexadecimal digits and can be used for high and low surrogates. |
+| Unicode code point | `\u{01F47B}` with up to 8 hexadecimal digits. Must be in the range 0 to U+10FFFF and cannot be used for either a high or low surrogate. May result in a surrogate pair (two characters) if greater than U+FFFF. |
 | Carriage return | `\r`, the same as `Char(13)`. |
 | Newline character | `\n`, the same as `Char(10)`. |
 | Form feed | `\f`, the same as `Char(12)`. |
@@ -90,6 +95,8 @@ Unicode character categories supported by `\p{}` and `\P{}`:
 - Control and Format: `Cc`, `Cf`, while other `C` prefix categories are not supported.
 
 `\W`, `\D`, `\S`, and `\P{}` cannot be used within a negated character class `[^...]`. In order to be implemented on some platforms, these are translated to their Unicode equivalents which could be difficult to do if also negated.
+
+Unicode characters at or above U+10000, requiring surrogate pairs, are not supported in character classes.
 
 ### Quantifiers
 
@@ -273,6 +280,43 @@ MatchAll( "Hello" & Char(13) & Char(10) & "World", "^.+$" )
 // "Hello"
 ```
 
+## Predefined patterns
+
+Predefined patterns provide a simple way to match either one of a set of characters or a sequence of multiple characters. Use the [string-concatenation operator **&**](operators.md) to combine your own text strings with members of the **Match** enum:
+
+| Match enum            | Description                                                                                              | Regular expression    |
+| --------------------- | -------------------------------------------------------------------------------------------------------- | --------------------- |
+| **Any**               | Matches any character.                                                                                   | `.`                   |
+| **Comma**             | Matches a comma.                                                                                         | `,`                   |
+| **Digit**             | Matches a single digit ("0" through "9").                                                                | `\d`                  |
+| **Email**             | Matches an email address that contains an "at" symbol ("\@") and a domain name that contains a dot (".") | *see note*            |
+| **Hyphen**            | Matches a hyphen.                                                                                        | `-` *see note*        |
+| **LeftParen**         | Matches a left parenthesis "(".                                                                          | `\(`                  |
+| **Letter**            | Matches a letter.                                                                                        | `\p{L}`               |
+| **MultipleDigits**    | Matches one or more digits.                                                                              | `\d+`                 |
+| **MultipleLetters**   | Matches one or more letters.                                                                             | `\p{L}+`              |
+| **MultipleNonSpaces** | Matches one or more characters that don't add whitespace (not space, tab, or newline).                   | `\S+`                 |
+| **MultipleSpaces**    | Matches one or more characters that add whitespace (space, tab, or newline).                             | `\s+`                 |
+| **NonSpace**          | Matches a single character that doesn't add whitespace.                                                  | `\S`                  |
+| **OptionalDigits**    | Matches zero, one, or more digits.                                                                       | `\d*`                 |
+| **OptionalLetters**   | Matches zero, one, or more letters.                                                                      | `\p{L}*`              |
+| **OptionalNonSpaces** | Matches zero, one, or more characters that don't add whitespace.                                         | `\S*`                 |
+| **OptionalSpaces**    | Matches zero, one, or more characters that add whitespace.                                               | `\s*`                 |
+| **Period**            | Matches a period or dot (".").                                                                           | `\.`                  |
+| **RightParen**        | Matches a right parenthesis ")".                                                                         | `\)`                  |
+| **Space**             | Matches a character that adds whitespace.                                                                | `\s`                  |
+| **Tab**               | Matches a tab character.                                                                                 | `\t`                  |
+
+For example, the pattern **"A" & Match.MultipleDigits** will match the letter "A" followed by one or more digits.
+
+The **Match.Email** is more complicated than the rest. It is designed to detect and extract common email address of the form **local@hostname.tld**, possibly from a long passages of text, supporting international characters and emojis. Use it to validate a form that takes an email address as an input, as a quick test that the input is in an email form. If not extracting, use **MatchOptions.Complete** to detect an email address in for example a text input control.
+
+However, **Match.Email** does not validate that the email address conforms to all of the many evolving standards for email addresses, domain names, and top-level-domains. That would require a very complicated regular expression that would need to be updated from time to time. Although the vast majority of email address will be treated as one would expect, **Match.Email** will match some things which are not legal, for example an underscore in the hostname, and not match some that are legal, for example quoted email addresses or IP addresses. If needed, there are many regular expressions on the web for detecting a truly legal email address. Always test your regular expression for your specific needs before using in production.
+
+If you want to see the regular expression used, evaluate the formula `Text( Match.Email )`. The first part matches the characters before the `@` and excludes common ASCII punctuation as per RFC 822 and Unicode beginning and ending punctuation for easier extraction, such as `(`, `[`, `“`, `«`, and `「`. It does not support the uncommon and discouraged use of quoted strings or comments. Following the `@`, the second and third parts of the regular expression are the same and separated by a `.`, ensuring that there is always at least one `.` in the address. These parts exclude all Unicode punctuation except for `.`, `-`, and `_`. IP addresses are not supported. Throughout the entire email address, international characters and emojis are supported.
+
+In Power Apps, when not using Power Fx 1.0, **Match.Email** and **Match.Hyphen** have slightly different definitions. **Match.Email** is simpler, but is not suitable for extracting an email address as it will capture spaces. Previously, **Match.Hyphen** was escaped outside of a character class which is now illegal.
+
 ### NumberedSubMatches
 
 Enabled with **MatchOptions.NumberedSubMatches** with no inline option. `(?n)` is supported as the opposite of this option for compatibility and is the default.
@@ -287,12 +331,12 @@ Named and numbered submatches cannot be used together. Some implementations trea
 
 As stated in the introduction, Power Fx's regular expressions are intentionally limited to features that can be consistently implemented on top of .NET, JavaScript, and other programming language regular expression engines. Authoring time errors prevent the use of features that are not a part of this set. 
 
-One area that can be significantly different between implementations is how empty submatches are handled. For example, consider the regular expression `(?<submatch>a*)+` asked to match the text `a`. On .NET, the submatch will result in an empty text string, while on JavaScript it will result in `a`. Both can be argued as  correct implementations, as the `+` quantifier can be satisfied with an empty string since the contents of the group has a `*` quantifier.
+One area that can be significantly different between implementations is how empty submatches are handled. For example, consider the regular expression `(?<submatch>a*)+` asked to match the text `a`. On .NET, the submatch will result in an empty text string, while on JavaScript it will result in `a`. Both can be argued as correct implementations, as the `+` quantifier can be satisfied with an empty string since the contents of the group has a `*` quantifier.
 
 To avoid different results across Power Fx implementations, submatches that could be empty cannot be used with a quantifier. Here are examples of how a submatch could be empty:
 
 | Examples | Description |
-|==========|=============|
+|----------|-------------|
 | `(?<submatch>a{0,}b*)+` | All of the contents of the submatch are optional and so the entire submatch may be empty. |
 | `((<submatch>a)?b)+` | Due to the `?` outside the submatch, the submatch as a whole is optional. |
 | `(?<submatch>a|b*)+` | Alternation within the submatch with something that could be empty could result in the entire submatch being empty. |
@@ -300,3 +344,12 @@ To avoid different results across Power Fx implementations, submatches that coul
 
 Note that the submatch in `(?<submatch>a+)+` cannot be empty, as there must be at least one `a` in he submatch, and is supported.
 
+## Unicode
+
+Power Fx regular expressions use Unicode categories for the definitions of `\w`, `\d`, and `\s`, with specific categories available through `\p{..}`.
+
+There can be some variation in these definitions across platforms. For example, the Unicode standard is updated from time to time with new characters which will later be implemented by platforms at their own pace. Variations of results between platforms on these character changes can be expected until all platforms are updated.
+
+Power Fx regular expressions will ensure that category information is always available for the Basic Multilingual Plane (characters `\u0` to `\uffff`). Some platforms do not implement categories for characters in the Supplementary Multilingual Plane and above (U+10000 through U+10ffff). This is not usually a concern as characters in the Basic Multilingual Plane (`\u0` to `\uffff`) are the most commonly used. Consider using character values directly instead of categories if your scenario involves characters at or above U+10000 and test your formulas on the platforms you intend to use.
+
+There can also be small edge case differences between platforms. For example, some platforms may not see `ſ` as matching `s` when **MatchOptions.IgnoreCase** is invoked. If these characters are important for your scenario, use a character class such as `[ſsS]` to match in a case insensitive manner that explicitly includes the characters desired.

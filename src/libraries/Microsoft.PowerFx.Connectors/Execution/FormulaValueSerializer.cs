@@ -163,30 +163,46 @@ namespace Microsoft.PowerFx.Connectors.Execution
             {
                 StartArray(propertyName);
 
-                foreach (DValue<RecordValue> item in tableValue.Rows)
+                // If we have an object schema, we will try to follow it
+                if (propertySchema.Items?.Type == "object" || propertySchema.Items?.Type == "array")
                 {
-                    StartArrayElement(propertyName);
-                    RecordValue rva = item.Value;
-
-                    // If we have an object schema, we will try to follow it
-                    if (propertySchema.Items?.Type == "object" || propertySchema.Items?.Type == "array")
+                    foreach (DValue<RecordValue> item in tableValue.Rows)
                     {
-                        await WritePropertyAsync(null, propertySchema.Items, rva).ConfigureAwait(false);
-                        continue;
-                    }
+                        if (!item.IsError)
+                        {
+                            StartArrayElement(null);
+                            RecordValue rva = item.Value;
 
-                    // Else, we write primitive types only
-                    if (rva.Fields.Count() != 1)
+                            await WritePropertyAsync(null, propertySchema.Items, rva).ConfigureAwait(false);
+                        }
+                    }
+                }
+                else if (tableValue.Rows.All(r => r.Value.Fields.Count() == 1 && r.Value.Fields.First().Name == "Value"))
+                {
+                    // Working with an array of simply types
+                    foreach (DValue<RecordValue> item in tableValue.Rows)
                     {
-                        throw new PowerFxConnectorException($"Incompatible Table for supporting array, RecordValue has more than one column - propertyName {propertyName}, number of fields {rva.Fields.Count()}");
+                        if (!item.IsError)
+                        {
+                            StartArrayElement(null);
+                            RecordValue rva = item.Value;
+                            WriteValue(rva.Fields.First().Value);
+                        }
                     }
-
-                    if (rva.Fields.First().Name != "Value")
+                }
+                else 
+                {
+                    // Working with untyped and unknown complex objects
+                    foreach (DValue<RecordValue> item in tableValue.Rows)
                     {
-                        throw new PowerFxConnectorException($"Incompatible Table for supporting array, RecordValue doesn't have 'Value' column - propertyName {propertyName}");
+                        if (!item.IsError)
+                        {
+                            // Add objects
+                            StartArrayElement(null);
+                            RecordValue rva = item.Value;
+                            await WriteObjectAsync(null, new SwaggerSchema(type: GetType(rva.Type), format: GetFormat(rva.Type)), rva.Fields).ConfigureAwait(false);
+                        }
                     }
-
-                    WriteValue(rva.Fields.First().Value);
                 }
 
                 EndArray();

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
@@ -90,7 +91,7 @@ namespace Microsoft.PowerFx.Functions
 
                 if (!m.Success)
                 {
-                    return new BlankValue(IRContext.NotInSource(new KnownRecordType(GetRecordTypeFromRegularExpression(regexAltered, regexOptions))));
+                    return new BlankValue(IRContext.NotInSource(new KnownRecordType(GetRecordTypeFromRegularExpression(rex))));
                 }
 
                 return GetRecordFromMatch(rex, m, regexOptions);
@@ -120,7 +121,7 @@ namespace Microsoft.PowerFx.Functions
                     records.Add(GetRecordFromMatch(rex, m, regexOptions));
                 }
 
-                return TableValue.NewTable(new KnownRecordType(GetRecordTypeFromRegularExpression(regexAltered, regexOptions)), records.ToArray());
+                return TableValue.NewTable(new KnownRecordType(GetRecordTypeFromRegularExpression(rex)), records.ToArray());
             }
         }
 
@@ -221,7 +222,7 @@ namespace Microsoft.PowerFx.Functions
 #pragma warning restore SA1119  // Statement should not use unnecessary parenthesis
             }
 
-            protected (string, RegexOptions) AlterRegex_DotNet(string regex, string options)
+            protected static (string, RegexOptions) AlterRegex_DotNet(string regex, string options)
             {
                 var altered = new StringBuilder();
                 bool openCharacterClass = false;                       // are we defining a character class?
@@ -257,6 +258,14 @@ namespace Microsoft.PowerFx.Functions
                     if (freeSpacing && !openCharacterClass && MatchWhiteSpace.IsSpaceNewLine(regex[index]))
                     {
                         altered.Append(' ');
+                    }
+                    else if (!openCharacterClass && char.IsHighSurrogate(regex[index]) && index + 1 < regex.Length && char.IsLowSurrogate(regex[index + 1]))
+                    {
+                        // treat a surrogtae pair as one character
+                        altered.Append("(?:");
+                        altered.Append(regex.Substring(index, 2));
+                        altered.Append(")");
+                        index++;
                     }
                     else
                     {
@@ -312,16 +321,93 @@ namespace Microsoft.PowerFx.Functions
                                 break;
 
                             case '\\':
-                                altered.Append("\\");
-                                if (++index < regex.Length)
+                                Match m;
+
+                                if (index + 1 <= regex.Length && regex[index + 1] == 'u')
                                 {
-                                    altered.Append(regex[index]);
+                                    // convert \u{...} notation to \u notation and surrogate pair if needed
+                                    // \u below 0xffff is allowed in character classes and doesn't require (?:...) wrapping
+                                    if (index + 2 <= regex.Length && regex[index + 2] == '{' &&
+                                        (m = new Regex("\\G\\\\u\\{0*(?<hex>[0-9a-fA-F]{1,6})\\}").Match(regex, index)).Success &&
+                                        int.TryParse(m.Groups["hex"].Value, NumberStyles.HexNumber, null, out var hex) && hex <= 0x10ffff)
+                                    {
+                                        if (hex <= 0xffff)
+                                        {
+                                            altered.Append("\\u");
+                                            altered.Append(hex.ToString("X4", CultureInfo.InvariantCulture));
+                                        }
+                                        else
+                                        {
+                                            if (openCharacterClass)
+                                            {
+                                                // should never hit this, should have been blocked at compile time, just in case as we don't want to transpile incorrectly
+                                                throw new Exception("Surrogate pairs are not allowed in character classes");
+                                            }
+
+                                            var highSurr = 0xd800 + (((hex - 0x10000) >> 10) & 0x3ff);
+                                            var lowSurr = 0xdc00 + ((hex - 0x10000) & 0x3ff);
+                                            altered.Append("(?:\\u");
+                                            altered.Append(highSurr.ToString("X4", CultureInfo.InvariantCulture));
+                                            altered.Append("\\u");
+                                            altered.Append(lowSurr.ToString("X4", CultureInfo.InvariantCulture));
+                                            altered.Append(")");
+                                        }
+
+                                        index += m.Length - 1;
+                                    }
+
+                                    // treat a surrogtae pair, as provided in two back-to-back \uxxxx tokens, as one character with (?...) wrapping
+                                    else if (index + 12 <= regex.Length &&
+                                        (m = new Regex("\\G\\\\u(?<high>[0-9a-fA-F]{4})\\\\u(?<low>[0-9a-fA-F]{4})").Match(regex, index)).Success &&
+                                        int.TryParse(m.Groups["high"].Value, NumberStyles.HexNumber, null, out var high) && char.IsHighSurrogate((char)high) &&
+                                        int.TryParse(m.Groups["low"].Value, NumberStyles.HexNumber, null, out var low) && char.IsLowSurrogate((char)low))
+                                    {
+                                        if (openCharacterClass)
+                                        {
+                                            // should never hit this, should have been blocked at compile time, just in case as we don't want to transpile incorrectly
+                                            throw new Exception("Surrogate pairs are not allowed in character classes");
+                                        }
+
+                                        altered.Append("(?:");
+                                        altered.Append(regex.Substring(index, 12));
+                                        altered.Append(")");
+
+                                        index += 11;
+                                    }
+
+                                    // validate that \uxxxx is not a surrogate character
+                                    else if (index + 6 <= regex.Length &&
+                                        (m = new Regex("\\G\\\\u(?<single>[0-9a-fA-F]{4})").Match(regex, index)).Success &&
+                                        int.TryParse(m.Groups["single"].Value, NumberStyles.HexNumber, null, out var single) && !char.IsSurrogate((char)single))
+                                    {
+                                        altered.Append(regex.Substring(index, 6));
+
+                                        index += 5;
+                                    }
+
+                                    // should never hit this, should have been blocked at compile time, just in case as we don't want to transpile incorrectly
+                                    else
+                                    {
+                                        throw new Exception("Malformed \\u escape sequence");
+                                    }
+                                }
+
+                                // all other escapes and use of \u
+                                else
+                                {
+                                    altered.Append("\\");
+                                    if (++index < regex.Length)
+                                    {
+                                        altered.Append(regex[index]);
+                                    }
                                 }
 
                                 break;
 
                             case '.':
-                                altered.Append(!openCharacterClass && !dotAll ? @"[^" + MatchWhiteSpace.NewLineEscapes + "]" : ".");
+                                altered.Append(openCharacterClass ? "." :
+                                                    (dotAll ? @"(?:[\ud800-\udbff][\udc00-\udfff]|.)" :
+                                                              @"(?:[\ud800-\udbff][\udc00-\udfff]|[^" + MatchWhiteSpace.NewLineEscapes + "])"));  
                                 break;
 
                             case '^':
@@ -394,14 +480,15 @@ namespace Microsoft.PowerFx.Functions
                 return RecordValue.NewRecordFromFields(fields.Values);
             }
 
-            protected static DType GetRecordTypeFromRegularExpression(string regularExpression, RegexOptions regularExpressionOptions)
+            protected static DType GetRecordTypeFromRegularExpression(Regex rex)
             {
-                Dictionary<string, TypedName> propertyNames = new ();
-                Regex rex = new Regex(regularExpression, regularExpressionOptions);
+                Dictionary<string, TypedName> propertyNames = new Dictionary<string, TypedName>()
+                {
+                    { FULLMATCH, new TypedName(DType.String, new DName(FULLMATCH)) },
+                    { STARTMATCH, new TypedName(DType.Number, new DName(STARTMATCH)) }
+                };
 
-                propertyNames.Add(FULLMATCH, new TypedName(DType.String, new DName(FULLMATCH)));
-                propertyNames.Add(STARTMATCH, new TypedName(DType.Number, new DName(STARTMATCH)));
-                if ((regularExpressionOptions & RegexOptions.ExplicitCapture) == 0)
+                if ((rex.Options & RegexOptions.ExplicitCapture) == 0)
                 {
                     propertyNames.Add(SUBMATCHES, new TypedName(DType.CreateTable(new TypedName(DType.String, new DName(TexlFunction.ColumnName_ValueStr))), new DName(SUBMATCHES)));
                 }

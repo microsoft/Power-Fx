@@ -149,6 +149,11 @@ namespace Microsoft.PowerFx.Connectors
             KeyOrder = schema.GetKeyOrder();
             Permission = schema.GetPermission();
 
+            if (!IsValid(Name))
+            {
+                AddError($"ConnectorType Name '{Name}' is not valid");                                
+            }
+
             // We only support one reference for now
             // SalesForce only
             if (schema.ReferenceTo != null && schema.ReferenceTo.Count == 1)
@@ -226,6 +231,24 @@ namespace Microsoft.PowerFx.Connectors
             DynamicList = AggregateErrorsAndWarnings(openApiParameter.GetDynamicList());
         }
 
+        // We don't support names with leading or trailing spaces
+        private static bool IsValid(string str)
+        {
+            // Parameter names could be null (not always defined)
+            if (string.IsNullOrEmpty(str))
+            {
+                return true;
+            }
+                
+            // But when defined, they can't have leading/trailing spaces
+            if (str.Trim() != str)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         internal static readonly FormulaType DefaultType = FormulaType.UntypedObject;
 
         internal ConnectorType(string error, string name, FormulaType formulaType, ExpressionError warning = default)
@@ -241,7 +264,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Called by ConnectorFunction.GetCdpTableType
-        internal ConnectorType(JsonElement schema, string tableName, SymbolTable optionSets, ConnectorSettings settings, IList<ReferencedEntity> referencedEntities, string datasetName, string name, string displayName, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
+        internal ConnectorType(JsonElement schema, string tableName, SymbolTable optionSets, ConnectorSettings settings, string datasetName, string name, string displayName, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
             : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(tableName, optionSets, settings))
         {
             Name = name;

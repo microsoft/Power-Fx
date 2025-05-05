@@ -1,4 +1,4 @@
-#SETUP: RegEx,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+#SETUP: RegEx,PowerFxV1CompatibilityRules
 
 // quantified capture groups
 
@@ -554,6 +554,127 @@ Errors: Error 13-25: Invalid regular expression: Back reference "\2" to sub matc
 
 >> Match( "ab", "(c)|\1", MatchOptions.NumberedSubMatches )
 Errors: Error 13-21: Invalid regular expression: Back reference "\1" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// backref to something in the same group that isn't zero sized
+
+>> Match( "abcabc", "(?<one>abc)\k<one>" )
+{FullMatch:"abcabc",StartMatch:1,one:"abc"}
+
+>> Match( "abcabf", "(?<one>abc)\k<one>" )
+Blank()
+
+>> Match( "abfabc", "(?<one>abc)\k<one>" )
+Blank()
+
+>> Match( "abcabc", "((?<one>abc)\k<one>)*" )
+{FullMatch:"abcabc",StartMatch:1,one:"abc"}
+
+>> Match( "abcabf", "((?<one>abc)\k<one>)*" )
+{FullMatch:"",StartMatch:1,one:Blank()}
+
+>> Match( "abfabc", "((?<one>abc)\k<one>)*" )
+{FullMatch:"",StartMatch:1,one:Blank()}
+
+>> Match( "abcabc", "((((?<one>abc)))\k<one>)*" )
+{FullMatch:"abcabc",StartMatch:1,one:"abc"}
+
+>> Match( "abcabc", "((?<one>))" )
+{FullMatch:"",StartMatch:1,one:""}
+
+>> Match( "abcabc", "((?<one>)\k<one>)*" )
+Errors: Error 17-37: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...e>)\k<one>)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcabc", "((?<one>)\k<one>)" )
+Errors: Error 17-36: Invalid regular expression: Back reference "\k<one>" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcabc", "((?<one>abc)*\k<one>)" )
+Errors: Error 17-40: Invalid regular expression: Back reference "\k<one>" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcabc", "((?<one>abc)*\k<one>)*" )
+Errors: Error 17-41: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...c)*\k<one>)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcabc", "((((?<one>abc))*)\k<one>)" )
+Errors: Error 17-44: Invalid regular expression: Back reference "\k<one>" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcabc", "((((?<one>abc))+)\k<one>)" )
+{FullMatch:"abcabc",StartMatch:1,one:"abc"}
+
+>> Match( "abcabc", "((((?<one>abc))?)\k<one>)" )
+Errors: Error 17-44: Invalid regular expression: Back reference "\k<one>" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcabc", "((((?<one>abc)){0,})\k<one>)" )
+Errors: Error 17-47: Invalid regular expression: Back reference "\k<one>" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcabc", "((((?<one>abc)){1,})\k<one>)" )
+{FullMatch:"abcabc",StartMatch:1,one:"abc"}
+
+>> Match( "abcabc", "(?<one>abc)\k<one>|(?<two>def)\k<two>" )
+{FullMatch:"abcabc",StartMatch:1,one:"abc",two:Blank()}
+
+>> Match( "defdef", "(?<one>abc)\k<one>|(?<two>def)\k<two>" )
+{FullMatch:"defdef",StartMatch:1,one:Blank(),two:"def"}
+
+>> Match( "dedefdefab", "(?<one>abc)\k<one>|(?<two>def)\k<two>" )
+{FullMatch:"defdef",StartMatch:3,one:Blank(),two:"def"}
+
+>> Match( "dedefefab", "(?<one>abc)\k<one>|(?<two>def)\k<two>" )
+Blank()
+
+>> Match( "defdef", "(?<one>abc)\k<one>|(?<two>def)\k<one>" )
+Errors: Error 17-56: Invalid regular expression: Back reference "\k<one>" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "defdef", "(((?<one>abc)\k<one>|(?<two>def)\k<two>))" )
+{FullMatch:"defdef",StartMatch:1,one:Blank(),two:"def"}
+
+>> Match( "defdef", "(((?<one>abc)\k<one>|(?<two>def)\k<one>))" )
+Errors: Error 17-60: Invalid regular expression: Back reference "\k<one>" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcabc", "(abc)\1", MatchOptions.NumberedSubMatches )
+{FullMatch:"abcabc",StartMatch:1,SubMatches:Table({Value:"abc"})}
+
+>> Match( "abcabc", "((abc)\2)*", MatchOptions.NumberedSubMatches )
+{FullMatch:"abcabc",StartMatch:1,SubMatches:Table({Value:"abcabc"},{Value:"abc"})}
+
+>> Match( "abcabc", "((((abc))))\4", MatchOptions.NumberedSubMatches )
+{FullMatch:"abcabc",StartMatch:1,SubMatches:Table({Value:"abc"},{Value:"abc"},{Value:"abc"},{Value:"abc"})}
+
+>> Match( "abcabc", "(abc)\1|(def)\2", MatchOptions.NumberedSubMatches )
+{FullMatch:"abcabc",StartMatch:1,SubMatches:Table({Value:"abc"},{Value:Blank()})}
+
+>> Match( "defdef", "(abc)\1|(def)\2", MatchOptions.NumberedSubMatches )
+{FullMatch:"defdef",StartMatch:1,SubMatches:Table({Value:Blank()},{Value:"def"})}
+
+>> Match( "defdef", "(abc)\1|(def)\1", MatchOptions.NumberedSubMatches )
+Errors: Error 17-34: Invalid regular expression: Back reference "\1" to sub match that may not happen due to alternation or zero quantifier.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Concat(MatchAll( Concat(ForAll(Sequence(50,0),If( Value < 10 Or Value > 20, Dec2Hex(Value,3) & ",", "" ) ),Value ),
+    "((?<x>..)0,\k<x>1,\k<x>2,\k<x>3,\k<x>4,\k<x>5,\k<x>6,\k<x>7,\k<x>8,\k<x>9,\k<x>A,\k<x>B,\k<x>C,\k<x>D,\k<x>E,\k<x>F|(?<l>..)0,\k<l>1,\k<l>2,\k<l>3,\k<l>4,\k<l>5,\k<l>6,\k<l>7|(?<h>..)8,\k<h>9,\k<h>A,\k<h>B,\k<h>C,\k<h>D,\k<h>E,\k<h>F|.)") 
+    As m,If(Not IsBlank(m.x), m.x & "*", Not IsBlank(m.l), m.l & "_", Not IsBlank(m.h), m.h & "^", m.FullMatch))
+"00_,008,009,015,016,017,01^,02*,030,031,"
+
+>> Match( "a", "((?<one>b)\k<one>)*" )
+{FullMatch:"",StartMatch:1,one:Blank()}
+
+>> Match( "a", "((?<one>b)\k<one>|a)*" )
+Errors: Error 12-35: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...)\k<one>|a)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "((?<one>b)\k<one>|a)" )
+{FullMatch:"a",StartMatch:1,one:Blank()}
+
+>> Match( "a", "(?<one>b)\k<one>|a" )
+{FullMatch:"a",StartMatch:1,one:Blank()}
+
+>> Match( "b", "((?<one>b)\k<one>)*" )
+{FullMatch:"",StartMatch:1,one:Blank()}
+
+>> Match( "b", "((?<one>b)\k<one>|a)*" )
+Errors: Error 12-35: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...)\k<one>|a)*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "b", "((?<one>b)\k<one>|a)" )
+Blank()
+
+>> Match( "b", "(?<one>b)\k<one>|a" )
+Blank()
 
 // non capture group tests (note no MatchOptions.NumberedSubMatches)
 

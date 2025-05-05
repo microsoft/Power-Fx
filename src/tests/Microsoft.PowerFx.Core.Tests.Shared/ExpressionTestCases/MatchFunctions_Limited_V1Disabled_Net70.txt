@@ -1,4 +1,4 @@
-#SETUP: RegEx,disable:PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+#SETUP: RegEx,disable:PowerFxV1CompatibilityRules
 
 // 0: Uknown
 // Failsafe
@@ -130,7 +130,7 @@ Errors: Error 12-62: Invalid regular expression: The characters in a character c
 // 25: ShorthandClassInCharacterRange
 #DISABLE.NET: 462
 >> Match( "ab", ">>>>>>>>>>>>>[a-\d]<<<<<<<<<<<<<<<<" )
-Errors: Error 13-50: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found "...>>>>>>>[a-\d".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 13-50: Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found at the end of "...>>>>>>>[a-\d".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // 26: InsufficientClosingParentheses
 #DISABLE.NET: 462
@@ -161,3 +161,7 @@ Errors: Error 13-45: Invalid regular expression: Unopened groups, too few openin
 #DISABLE.NET: 462
 >> Match( "a", ">>>>>>>>>>>\p{Zz}<<<<<<<<<<<<<<" )
 Errors: Error 12-45: Invalid regular expression: Invalid Unicode category name, found "...>>>>>>\p{Zz}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+#DISABLE.NET: 462
+>> IsMatch("Foo", "J(")
+Errors: Error 15-19: Invalid regular expression: Unclosed groups, too few closing parenthesis.|Error 0-7: The function 'IsMatch' has some invalid arguments.

@@ -48,9 +48,6 @@ Error({Kind:ErrorKind.Div0})
 >> IsMatch(Blank(), "Hi")
 false
 
->> IsMatch("Foo", Blank())
-Errors: Error 15-22: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
-
 >> IsMatch(28, "Bar")
 false
 
@@ -59,9 +56,6 @@ true
 
 >> IsMatch(Blank(), ".")
 false
-
->> IsMatch(Blank(), Blank())
-Errors: Error 17-24: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
 
 >> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` A 1234567890", "\p{L}", MatchOptions.Complete)
 false
@@ -82,12 +76,6 @@ false
 // With Icelandic Eth
 >> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` Ð 1234567890", "\p{L}", MatchOptions.Contains)
 true
-
->> IsMatch( "28", Concat( [2,8], Value ) )
-Errors: Error 15-37: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
-
->> IsMatch( "28", Concat( [2,8], If( false, Text(Now()), Value ) ) )
-Errors: Error 15-63: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
 
 >> IsMatch("(555) 123-4567", "^[\+]?[\(]?[0-9]{3}[\)]?[\-\s\.]?[0-9]{3}[\-\s\.]?[0-9]{4,6}$")
 true
@@ -118,12 +106,6 @@ true
 
 >> IsMatch(UniChar(Hex2Dec("1f47d")) & "Hello world", UniChar(128125) & "Hello", MatchOptions.Contains)
 true
-
->> IsMatch("""Hello world""", Mid( "Hello", 1 ), MatchOptions.Contains)
-Errors: Error 27-44: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
-
->> IsMatch("Hello 123 world", $"Hello {Sqrt(1)}{Sqrt(4)}{Sqrt(9)} world")
-Errors: Error 27-69: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
 
 >> IsMatch("Hello 123 world", $"Hello", MatchOptions.Contains)
 true
@@ -165,5 +147,18 @@ true
 false
 
 >> IsMatch( "abcba", "abcb", MatchOptions.BeginsWith )
+true
+
+// newer IsMatch "contains" semantics by default, even when in V1CompatDisabled as the C# interpreter is always in this mode
+
+>> IsMatch( "ihi", "h" )
+true
+
+// being explicit, for comparison
+
+>> IsMatch( "ihi", "h", MatchOptions.Complete )
+false
+
+>> IsMatch( "ihi", "h", MatchOptions.Contains )
 true
 

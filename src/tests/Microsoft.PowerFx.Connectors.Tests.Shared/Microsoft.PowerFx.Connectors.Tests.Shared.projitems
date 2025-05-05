@@ -24,7 +24,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)O365GroupTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)O365OutlookTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)O365UserTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ODataParametersTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenAITests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiExtensionTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiFormUrlEncoderTests.cs" />
@@ -238,6 +237,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetSchema.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetTables.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SP GetData.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SP GetData Malformed.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SP GetDatasetsMetadata.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SP GetTable.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SP GetTables.json" />
@@ -313,6 +313,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestConnector05.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestConnector12.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestConnectorDateTimeFormat.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestConnectorNoOutput.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestOpenAPI.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestSwagger1.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\ZenDesk.json" />

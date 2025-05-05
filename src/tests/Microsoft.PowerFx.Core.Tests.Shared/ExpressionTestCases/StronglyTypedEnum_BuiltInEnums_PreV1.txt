@@ -79,7 +79,7 @@ Blank()
 >> JSON( [1,2,3], MatchOptions.IgnoreCase )
 "[{""Value"":1},{""Value"":2},{""Value"":3}]"
 
->> JSON( [1,2,3], Match.Email )
+>> JSON( [1,2,3], Match.Letter )
 "[{""Value"":1},{""Value"":2},{""Value"":3}]"
 
 >> JSON( [1,2,3], StartOfWeek.Tuesday )
@@ -173,10 +173,10 @@ Table({Value:3},{Value:2},{Value:1})
 "h"
 
 >> IsMatch("Foo", 17)
-Errors: Error 15-17: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+Errors: Error 15-17: Regular expression must be a constant value.
 
 >> IsMatch("Foo", 1/0)
-Errors: Error 16-17: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+Errors: Error 16-17: Regular expression must be a constant value.
 
 //===========================================================================================================
 //
@@ -1457,4 +1457,7 @@ true
 false
 
 >> IsMatch( "28", 28 )
-Errors: Error 15-17: Regular expression must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+Errors: Error 15-17: Regular expression must be a constant value.
+
+>> "^" & Match.Email & "$"
+"^.+@.+\.[^.]{2,}$"

@@ -4556,11 +4556,11 @@
     <comment>Error message indicating that the regular expression that starts with a paren.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Escape character not permitted within character class, found "{0}".</value>
+    <value>Invalid regular expression: Escape character not permitted within character class, found at the end of "{0}".</value>
     <comment>Error message indicating that the regular expression has an escape character within a character class.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Negative escape character not permitted within negated character class, found "{0}".</value>
+    <value>Invalid regular expression: Negative escape character not permitted within negated character class, found at the end of "{0}".</value>
     <comment>Error message indicating that the regular expression has an escape character within a negated character class.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
@@ -4648,7 +4648,7 @@
     <comment>Error message indicating that the regular expression has inline options not at the front.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Character appears more than once in character class, found repeated "{0}".</value>
+    <value>Invalid regular expression: Character repeated in character class, found at the end of "{0}".</value>
     <comment>Error message indicating that the regular expression has repeated characters in a character class definition.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
@@ -4676,7 +4676,7 @@
     <comment>{Locked=(?&lt;name&gt;...)}{Locked=\k&lt;name&gt;} Error message indicating that the regular expression is not enabled for numbered captures.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "{0}".</value>
+    <value>Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found at the end of "{0}".</value>
     <comment>{Locked=\-}Error message indicating that the regular expression has a hyphen in a character class.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
@@ -4712,7 +4712,7 @@
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found "{0}".</value>
+    <value>Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found at the end of "{0}".</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
@@ -4729,6 +4729,14 @@
   </data>
   <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Back reference "{0}" to sub match that is inside a lookbehind or lookahead.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExSurrogatePairInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "{0}".</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMalformedSurrogatePair_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "{0}".</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">

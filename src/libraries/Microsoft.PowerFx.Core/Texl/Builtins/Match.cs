@@ -12,8 +12,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -41,6 +39,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             yield return new[] { TexlStrings.IsMatchArg1, TexlStrings.IsMatchArg2 };
             yield return new[] { TexlStrings.IsMatchArg1, TexlStrings.IsMatchArg2, TexlStrings.IsMatchArg3 };
+        }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            // most errors should be caught in CheckTypes, but we deliberately don't erorr for IsMatch in Pre-V1 and wait for this check instead
+            // for cases in Power Apps where IsConstant will be true but TryGetConstantValue in CheckTypes will fail
+            if (!binding.Features.PowerFxV1CompatibilityRules && ((argTypes[1].Kind != DKind.String && argTypes[1].Kind != DKind.OptionSetValue) || !binding.IsConstant(args[1])))
+            {
+                errors.EnsureError(args[1], TexlStrings.ErrVariableRegEx);
+            }
         }
     }
 
@@ -171,11 +179,23 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(returnType.IsRecord || returnType.IsTable || returnType == DType.Boolean);
 
             var regExNode = args[1];
+            var isMatchCheckSemanticsLater = false;
 
             if ((argTypes[1].Kind != DKind.String && argTypes[1].Kind != DKind.OptionSetValue) || !BinderUtils.TryGetConstantValue(context, regExNode, out var regularExpression))
             {
-                errors.EnsureError(regExNode, TexlStrings.ErrVariableRegEx);
-                return false;
+                regularExpression = null;
+
+                if (returnType == DType.Boolean && !context.Features.PowerFxV1CompatibilityRules)
+                {
+                    // error check is delayed until CheckSemantics for IsMatch only, where we have the binding
+                    // don't leave CheckTypes until after we review the third argument, can still report a problem with a constant third argument and the new enum flags
+                    isMatchCheckSemanticsLater = true;
+                }
+                else
+                {
+                    errors.EnsureError(regExNode, TexlStrings.ErrVariableRegEx);
+                    return false;
+                }
             }
 
             string regularExpressionOptions = string.Empty;
@@ -204,6 +224,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 // having pre-V1 variable regex options that we can't process here is OK, as pre-V1 options would not impact the schema.
                 // regularExpressionOptions will remain empty for the cache work below which is fine.
+            }
+
+            if (isMatchCheckSemanticsLater)
+            {
+                return true;
             }
 
             if (!context.Features.PowerFxV1CompatibilityRules)
@@ -246,7 +271,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (typeCacheEntry.Error != null)
             {
-                errors.EnsureError(typeCacheEntry.ErrorSeverity, regExNode, (ErrorResourceKey)typeCacheEntry.Error, typeCacheEntry.ErrorParam);
+                // remove newlines and other characters that don't display
+                // surrogate pairs will be fine
+                var cleanParam = Regex.Replace(typeCacheEntry.ErrorParam ?? string.Empty, @"[\p{Cc}\p{Cf}\p{Z}]+", " ").Replace("\"", "\"\"");
+
+                errors.EnsureError(typeCacheEntry.ErrorSeverity, regExNode, (ErrorResourceKey)typeCacheEntry.Error, cleanParam);
                 if (typeCacheEntry.ErrorSeverity == DocumentErrorSeverity.Severe)
                 {
                     return false;
@@ -274,10 +303,36 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 regexDotNetOptions |= RegexOptions.IgnorePatternWhitespace;
 
                 // In x mode, comment line endings are any newline character (as per PCRE2), but .NET only supports \n.
-                // For our purposes here to determine the type, we can just replace the other newline characters wtih \n.
+                // For our purposes here to determine the type, we can just replace all the other newline characters wtih \n.
                 var regexPatternWhitespace = new Regex("[" + MatchWhiteSpace.NewLineEscapes + "]");
                 regexPattern = regexPatternWhitespace.Replace(regexPattern, "\n");
             }
+
+            // .NET doesn't support \u{...} notation, so we translate to \u... notation (no curly braces).
+            // We retain as much of the original as possible for error message context, if an error is encountered after this.
+            // Canvas pre-V1 allowed \u{...}, with as many digits as desired (but no spaces), so long as the result was less that or equal to 0xffff.
+            string ReplaceUCurly(Match m)
+            {
+                // hex will be limited to 6 hex digits by the regular expression, so will not overflow or be negative
+                if (int.TryParse(m.Groups["hex"].Value, NumberStyles.HexNumber, null, out var hex))
+                {
+                    if (hex <= 0xffff)
+                    {
+                        return "\\u" + hex.ToString("X4", CultureInfo.InvariantCulture);
+                    }
+                    else if (hex <= 0x10ffff)
+                    {
+                        var highSurr = 0xd800 + (((hex - 0x10000) >> 10) & 0x3ff);
+                        var lowSurr = 0xdc00 + ((hex - 0x10000) & 0x3ff);
+                        return "\\u" + highSurr.ToString("X4", CultureInfo.InvariantCulture) + "\\u" + lowSurr.ToString("X4", CultureInfo.InvariantCulture);
+                    }
+                }
+
+                // number is out of range, just pass it through and the .NET regex engine will error
+                return m.Value;
+            }
+
+            regexPattern = Regex.Replace(regexPattern, "\\\\u\\{0*(?<hex>[0-9a-fA-F]{1,6})\\}", new MatchEvaluator(ReplaceUCurly));
 
             // always .NET compile the regular expression, even if we don't need the return type (boolean), to ensure it is legal in .NET
             try
@@ -517,7 +572,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // Configurable constants
         public const int MaxNamedCaptureNameLength = 62;            // maximum length of a capture name, in UTF-16 code units. PCRE2 has a 128 limit, cut in half for possible UFT-8 usage.
         public const int MaxLookBehindPossibleCharacters = 250;     // maximum possible number of characters in a look behind. PCRE2 has a 255 limit.
-        public const int MaxGroupStackDepth = 32;                   // maximum number of nested grouping levels, avoids performance issues with a complex group tree.
+        public const int MaxGroupStackDepth = 32 * 2;               // 2x maximum number of nested grouping levels (2 used per level), avoids performance issues with a complex group tree.
         public const int ErrorContextLength = 12;                   // number of characters to include in error message context excerpt from formula.
 
         private static RegexTypeCacheEntry IsSupportedRegularExpression(TexlNode regExNode, string regexPattern, string regexOptions, out string alteredOptions)
@@ -548,12 +603,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<badOctal>\\0\d*)                                | # \0 and octal are not accepted, ambiguous and not needed (use \x instead)
                     \\k<(?<backRefName>\w+)>                           | # named backreference
                     \\(?<backRefNumber>[1-9]\d*)                       | # numeric backreference, must be enabled with MatchOptions.NumberedSubMatches
+                    (?<goodUSurrPair>\\u[dD][89a-bA-B][0-9a-fA-F]{2}     # \u... syntax, valid surrogate pair
+                                     \\u[dD][c-fC-F][0-9a-fA-F]{2}) |    # \u{...} syntax is not supported for surrogate pairs (same as JavaScript and PCRE2)
+                    (?<badUSurr>\\u[dD][89a-fA-F][0-9a-fA-F]{2}     |    # \u... syntax, surrogate that is not in a pair as it didn't match <goodUSurrPair>
+                         \\u\{0{0,2}[dD][89a-fA-F][0-9a-fA-F]{2}\})    | # \u{...} syntax, surrogates are not supported with this syntax
                     (?<goodEscape>\\
-                           ([dfnrstw]                              |     # standard regex character classes, missing from .NET are aAeGzZv (no XRegExp support), other common are u{} and o
+                            ([dfnrstw]                             |     # standard regex character classes, missing from .NET are aAeGzZv (no XRegExp support), other common are u{} and o
                             [\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/]       |     # acceptable escaped characters with Unicode aware ECMAScript
                             [\#\ ]                                 |     # added for free spacing, always accepted for conssitency even in character classes, escape needs to be removed on Unicode aware ECMAScript
                             x[0-9a-fA-F]{2}                        |     # hex character, must be exactly 2 hex digits
-                            u[0-9a-fA-F]{4}))                          | # Unicode characters, must be exactly 4 hex digits
+                            u[0-9a-fA-F]{4}))                          | # unicode character, must be exactly 4 hex digits
+                    (?<goodUSmall>\\u\{0{0,4}[0-9a-fA-F]{1,4})\}       | # small (< U+10000) \u{...} code point, can stay as one UTF-16 word, up to 8 hex digits (our arbitrary cutoff, at 32-bits)
+                    (?<goodULarge>\\u\{0{0,2}
+                            (0?[1-9a-fA-F]|10)[0-9a-fA-F]{4})\}        | # large (>=U+10000) \u{...} code point, must be broken into surrogate pairs, up to 8 hex digits (our arbitrary cutoff, at 32-bits)
                     \\(?<goodUEscape>[pP])\{(?<UCategory>[\w=:-]+)\}   | # Unicode character classes, extra characters here for a better error message
                     (?<goodAnchorOutsideCC>\\[bB])                     | # acceptable outside a character class, includes negative classes until we have character class subtraction, include \P for future MatchOptions.LocaleAware
                     (?<goodEscapeOutsideAndInsideCCIfPositive>\\[DWS]) |
@@ -561,13 +623,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<badEscape>\\.)                                  | # all other escaped characters are invalid and reserved for future use
                 ";
 
+            const string elseRE =
+                @"
+# end of both REs, checks for surrogate pair characters and everything else
+                    (?<elseUSurrPair>[\ud800-\udbff][\udc00-\udfff])   | # surrogate pairs need to be both inline characters, or both \u codes, but not mixed
+                    (?<elseBadUSurr>[\ud800-\udfff])                   |
+                    (?<else>.)
+                ";
+
             Regex generalRE = new Regex(
                 escapeRE +
                 @"
 # leading (?<, named captures
                     \(\?<(?<goodNamedCapture>[_\p{L}][_\p{L}\p{Nd}]*)> | # named capture group, name characters are the lowest common denonminator with Unicode PCRE2
-# .NET uses \w with \u200c and \u200d allowing a number in the first character (seems like it could be confused with numbered captures),
-# while JavaScript uses identifer characters, including $, and does not allow a number for the first character
+                                                                         # .NET uses \w with \u200c and \u200d allowing a number in the first character (seems like it could be confused with numbered captures),
+                                                                         # while JavaScript uses identifer characters, including $, and does not allow a number for the first character
                     (?<goodLookAhead>\(\?(=|!))                        |
                     (?<goodLookBehind>\(\?(<=|<!))                     | # Look behind has many limitations
                     (?<badBalancing>\(\?<\w*-\w*>)                     | # .NET balancing captures are not supported
@@ -576,7 +646,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
 # leading (?, misc
                     (?<goodNonCapture>\(\?:)                           | # non-capture group, still need to track to match with closing paren
-                    \A\(\?(?<goodInlineOptions>[imnsx]+)\)             | # inline options
+                    ^\(\?(?<goodInlineOptions>[imnsx]+)\)              | # inline options
                     (?<goodInlineComment>\(\?\#)                       | # inline comment
                     (?<badInlineOptions>\(\?(\w+|\w*-\w+)[\:\)])       | # inline options, including disable of options
                     (?<badConditional>\(\?\()                          | # .NET conditional alternations are not supported
@@ -591,11 +661,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<goodZeroOrOne>[\?]\??)                          |
 
 # leading {, exact and limited quantifiers
-                    (?<badExact>{\d+}[\+\*\?])                         | # exact quantifier can't be used with a modifier
+                    (?<badExact>{\d+}[\+\*\?])                         | # exact quantifier can't be used with a modifier, lazy makes no sense
                     {(?<goodExact>\d+)}                                | # standard exact quantifier, no optional lazy
-                    (?<badLimited>{\d+,\d+}[\+|\*])                    | # possessive and useless quantifiers
+                    (?<badLimited>{\d+,\d+}[\+\*])                     | # possessive and useless quantifiers
                     {(?<goodLimitedL>\d+),(?<goodLimitedH>\d+)}\??     | # standard limited quantifiers, with optional lazy
-                    (?<badUnlimited>{\d+,}[\+|\*])                     |
+                    (?<badUnlimited>{\d+,}[\+\*])                      |
                     {(?<goodUnlimited>\d+),}\??                        |
                     (?<badCurly>[{}])                                  | # more constrained, blocks {,3} and Java/Rust semantics that does not treat this as a literal
 
@@ -611,8 +681,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<anchors>[\^\$])                                 |
                     (?<poundComment>\#)                                | # used in free spacing mode (to detect start of comment), treated as else otherwise
                     (?<newline>[" + MatchWhiteSpace.NewLineEscapes + @"])    | # used in free spacing mode (to detect end of comment), treated as else otherwise
-                    (?<else>.)
-                ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
+                "
+                + elseRE, 
+                RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
 
             Regex characterClassRE = new Regex(
                 escapeRE +
@@ -624,9 +695,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         @@ | `` | ~~ | %% | && | ;; | ,, | !!    |       # and https://www.unicode.org/reports/tr18/#Subtraction_and_Intersection
                         \|\| | \#\# | \$\$ | \*\* | \+\+ | \.\.  |       # includes set subtraction 
                         \?\? | \^\^ | \-\-)                            | # 
-                    (?<goodHyphen>-)                                   |
-                    (?<else>.)
-                ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
+                    (?<goodHyphen>\-)                                   |
+                "
+                + elseRE, 
+                RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
 
             int captureNumber = 0;                                  // last numbered capture encountered
             var groupTracker = new GroupTracker();
@@ -637,23 +709,42 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             foreach (Match token in generalRE.Matches(regexPattern))
             {
-                RegexTypeCacheEntry RegExError(ErrorResourceKey? error, Match errToken = null, bool startContext = false, bool endContext = false, string postContext = null)
+                RegexTypeCacheEntry RegExError(ErrorResourceKey? error, int index = -1, int len = 1, bool startContext = false, bool endContext = false, string postContext = null)
                 {
-                    if (errToken == null)
+                    if (index == -1)
                     {
-                        errToken = token;
+                        index = token.Index;
+                        len = token.Length;
                     }
 
-                    string found = errToken.Value;
+                    if (index + len < regexPattern.Length && char.IsHighSurrogate(regexPattern[index + len - 1]) && char.IsLowSurrogate(regexPattern[index + len]))
+                    {
+                        len++;
+                    }
+
+                    string found;
 
                     if (endContext)
                     {
-                        var tokenEnd = errToken.Index + errToken.Length;
-                        found = tokenEnd > ErrorContextLength ? "..." + regexPattern.Substring(tokenEnd - ErrorContextLength, ErrorContextLength) : regexPattern.Substring(0, tokenEnd);
+                        var tokenEnd = index + len;
+                        var tokenStart = tokenEnd > ErrorContextLength ? tokenEnd - ErrorContextLength : 0;
+                        var tokenLen = tokenEnd > ErrorContextLength ? ErrorContextLength : tokenEnd;
+                        if (char.IsLowSurrogate(regexPattern[tokenStart]))
+                        {
+                            tokenStart++;
+                            tokenLen--;
+                        }
+
+                        found = (tokenStart == 0 ? string.Empty : "...") + regexPattern.Substring(tokenStart, tokenLen);
                     }
                     else if (startContext)
                     {
-                        found = errToken.Index + ErrorContextLength >= regexPattern.Length ? regexPattern.Substring(errToken.Index) : regexPattern.Substring(errToken.Index, ErrorContextLength) + "...";
+                        found = index + ErrorContextLength >= regexPattern.Length ? regexPattern.Substring(index) : regexPattern.Substring(index, ErrorContextLength) + "...";
+                    }
+                    else
+                    {
+                        // token won't start in the middle of a surrogate pair
+                        found = regexPattern.Substring(index, len);
                     }
 
                     return new RegexTypeCacheEntry()
@@ -667,9 +758,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (openPoundComment && token.Groups["newline"].Success)
                 {
                     openPoundComment = false;
-                }
+                }                
                 else if (openInlineComment && (token.Groups["closeParen"].Success || token.Groups["goodEscape"].Value == "\\)"))
                 {
+                    // goodEscape with \\) too as you can't escape the closing paren of an inline comment
                     openInlineComment = false;
                 }
                 else if (!openPoundComment && !openInlineComment)
@@ -740,7 +832,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             return RegExError(error, endContext: true);
                         }
                     }
-                    else if (token.Groups["else"].Success || token.Groups["newline"].Success || token.Groups["goodEscape"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
+                    else if (token.Groups["else"].Success)
                     {
                         if (token.Value == "\\" && token.Index == regexPattern.Length - 1)
                         {
@@ -748,6 +840,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         }
 
                         groupTracker.SeenNonGroup();
+                    }
+                    else if (token.Groups["newline"].Success || token.Groups["goodEscape"].Success || token.Groups["goodUSmall"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
+                    {
+                        groupTracker.SeenNonGroup();
+                    }
+                    else if (token.Groups["goodUSurrPair"].Success || token.Groups["goodULarge"].Success || token.Groups["elseUSurrPair"].Success)
+                    {
+                        groupTracker.SeenNonGroup(min: 2, max: 2);
                     }
                     else if (token.Groups["characterClass"].Success)
                     {
@@ -760,10 +860,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         {
                             RegexTypeCacheEntry CCRegExError(ErrorResourceKey errKey)
                             {
-                                return RegExError(errKey, errToken: ccToken);
+                                return RegExError(
+                                    errKey,
+                                    index: ccToken.Index + token.Index + 1 + (characterClassNegative ? 1 : 0), // 1 for opening [ and possibly 1 more for ^
+                                    len: ccToken.Length,
+                                    endContext: true);
                             }
 
-                            if (ccToken.Groups["goodEscape"].Success || ccToken.Groups["goodEscapeInsideCCOnly"].Success || ccToken.Groups["else"].Success)
+                            if (ccToken.Groups["else"].Success || ccToken.Groups["goodEscape"].Success || ccToken.Groups["goodUSmall"].Success || ccToken.Groups["goodEscapeInsideCCOnly"].Success)
                             {
                                 int charVal;
 
@@ -789,7 +893,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                             break;
                                         case 'x':
                                         case 'u':
-                                            int.TryParse(ccToken.Value.Substring(2), System.Globalization.NumberStyles.HexNumber, null, out charVal);
+                                            if (!int.TryParse(ccToken.Groups["goodUSmall"].Success ? ccToken.Groups["goodUSmall"].Value.Substring(3) : ccToken.Value.Substring(2), NumberStyles.HexNumber, null, out charVal))
+                                            {
+                                                // should never happen, goodEscape match implies that we have valid hex digits in roughly Unicode range
+                                                throw new Exception("hex character did not parse in character class");
+                                            }
+
                                             break;
                                         case 'd':
                                         case 's':
@@ -807,7 +916,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                     return CCRegExError(TexlStrings.ErrInvalidRegExCharacterClassCategoryUse);
                                 }
 
-                                if (hyphenWait > 1 && hyphenStart != -1 && charVal != -1 && (charVal - hyphenStart < 0))
+                                if (hyphenWait > 1 && hyphenStart != -1 && charVal != -1 && charVal < hyphenStart)
                                 {
                                     return CCRegExError(TexlStrings.ErrInvalidRegExCharacterClassRangeReverse);
                                 }
@@ -864,11 +973,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 }
 
                                 // we need to see two characters after a hyphen, to end and start another range, before we can entertain another hyphen
-                                hyphenWait = 2; 
+                                hyphenWait = 2;
                             }
                             else if (ccToken.Groups["badEscape"].Success)
                             {
                                 return CCRegExError(TexlStrings.ErrInvalidRegExBadEscape);
+                            }
+                            else if (ccToken.Groups["goodUSurrPair"].Success || ccToken.Groups["elseUSurrPair"].Success || ccToken.Groups["goodULarge"].Success)
+                            {
+                                return CCRegExError(TexlStrings.ErrInvalidRegExSurrogatePairInCharacterClass);
+                            }
+                            else if (ccToken.Groups["badUSurr"].Success || ccToken.Groups["elseBadUSurr"].Success)
+                            {
+                                return CCRegExError(TexlStrings.ErrInvalidRegExMalformedSurrogatePair);
                             }
                             else if (ccToken.Groups["goodAnchorOutsideCC"].Success || ccToken.Groups["backRefName"].Success || ccToken.Groups["backRefNumber"].Success)
                             {
@@ -888,8 +1005,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             }
                             else if (ccToken.Groups["badHyphen"].Success)
                             {
-                                // intentionally RegExError to get the whole character class as this is on the ends
-                                return RegExError(TexlStrings.ErrInvalidRegExLiteralHyphenInCharacterClass);
+                                return CCRegExError(TexlStrings.ErrInvalidRegExLiteralHyphenInCharacterClass);
                             }
                             else
                             {
@@ -1097,6 +1213,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         return RegExError(TexlStrings.ErrInvalidRegExEmptyCharacterClass);
                     }
+                    else if (token.Groups["badUSurr"].Success || token.Groups["elseBadUSurr"].Success)
+                    {
+                        return RegExError(TexlStrings.ErrInvalidRegExMalformedSurrogatePair);
+                    }
                     else
                     {
                         // This should never be hit. It is here in case one of the Groups names checked doesn't match the RE, in which case running tests would hit this.
@@ -1147,10 +1267,24 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // Tracks the groups in the regular expression.  Groups includes named and numbered capture groups, non-capture groups, and look arounds.
         // Groups that have been closed, even though they aren't still on the stack, may still have references through GroupInfo.Parent, captures, and backRefs lists.
         // The depth is limited so that the tree walk in GroupInfo.IsPossibleZeroCapture() is limited.
+        //
+        // For each group, there are two items put on the stack: one for the group, and one for the first (and possibly only) alternation in that group.
+        // The stack will always be a multiple of 2, and hence the max size MaxGroupStackDepth is defined in terms of a multiple of 2.
+        // If an alternation is seen, the first is closed and a second opened, etc. This allows us to see if a capture group is in the same alternation as a back reference.
+        //
+        // Graphically, it looks something like this (with lots of whitspace, think (?x):
+        //
+        //               a  (  b  |   (  c  )  |  d  )    e   |  f 
+        //  Stack 5:                    ---                             if there are any alternation in that group (there are not)
+        //  Stack 4:                  -------                           container for the group starting at "( c ..."
+        //  Stack 3:          ---    ---------   ---                    if there are any alternations in that group (there are)
+        //  Stack 2:        --------------------------                  container for the group starting at "( b ..."
+        //  Stack 1:    -------------------------------------   ---     if there are any alternations at the top level (there are)
+        //  Stack 0:   ---------------------------------------------    base for the entire RE
         private class GroupTracker
         {
             private readonly Stack<GroupInfo> _groupStack = new Stack<GroupInfo>();         // current stack of open groups
-            private GroupInfo _quantTarget;                                                 // pointer to the literal or group seen, to apply quantifiers to
+            private GroupInfo _quantTarget;                                                 // pointer to the literal or group seen, to apply next quantifier to
             private GroupInfo _inLookBehind;                                                // are we in a look behind?  they have special rules
             private readonly Dictionary<string, GroupInfo> _captureNames = new Dictionary<string, GroupInfo>();       // named and numbered group lookup
             private readonly List<string> _backRefs = new List<string>();                   // backrefs seen, processed in Complete to ensure they are non empty
@@ -1207,6 +1341,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 _groupStack.Push(groupInfo);
 
+                var child = new GroupInfo
+                {
+                    Parent = groupInfo
+                };
+                _groupStack.Push(child);
+
                 _quantTarget = null;
 
                 error = null;
@@ -1216,7 +1356,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             public void SeenAlternation()
             {
                 _quantTarget = null;
-                _groupStack.Peek().SeenAlternation();
+
+                // close existing subgroup
+                var closed = _groupStack.Pop();
+                closed.CloseSubGroup();
+
+                // open new subgroup, same parent
+                var group = new GroupInfo
+                {
+                    Parent = closed.Parent
+                };
+                _groupStack.Push(group);
+
+                // set this only after closing
+                closed.Parent.HasAlternation = true;
             }
 
             public void SeenNonGroup(int min = 1, int max = 1)
@@ -1246,12 +1399,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             public bool SeenClose(out ErrorResourceKey? error)
             {
-                if (_groupStack.Count <= 1)
+                if (_groupStack.Count <= 2)
                 {
                     error = TexlStrings.ErrInvalidRegExUnopenedCaptureGroups;
                     return false;
                 }
 
+                var subGroup = _groupStack.Pop();
+                subGroup.CloseSubGroup();
                 _quantTarget = _groupStack.Pop();
                 
                 // Look behinds are limited in number of characters, PCRE2 doesn't support more than 255.
@@ -1301,7 +1456,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Backref maxsize is based on the size inside the capture, not any quantifiers on the capture
                 SeenNonGroup(_captureNames[name].MinSize, _captureNames[name].MaxSize);
 
-                _backRefs.Add(name);
+                // If a backref is in the same group as its capture, even if the group is possibly empty, it is OK.
+                // If that isn't the case, no need to add the backRef for later checking (but it may be added later from another location)
+                if (!_backRefs.Contains(name) && _captureNames[name].IsBlockedBackRef(out _, _groupStack.Peek()))
+                {
+                    _backRefs.Add(name);
+                }
 
                 error = null;
                 return true;
@@ -1309,9 +1469,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             public bool Complete(out ErrorResourceKey? error, out string errorArg)
             {
-                _groupStack.Peek().SeenEnd();
+                var subGroup = _groupStack.Pop();
+                subGroup.CloseSubGroup();
+                var topGroup = _groupStack.Pop();
+                topGroup.SeenEnd();
 
-                if (_groupStack.Count != 1)
+                if (_groupStack.Count != 0)
                 {
                     error = TexlStrings.ErrInvalidRegExUnclosedCaptureGroups;
                     errorArg = null;
@@ -1333,7 +1496,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return true;
             }
 
-            // Information tracked for each group and its parent
+            // Information tracked for each group
             private class GroupInfo
             {
                 public bool IsNonCapture;               // this group is a non-capture group
@@ -1345,11 +1508,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 public bool HasZeroQuant;               // this group has a quantifier
                 public bool HasAlternation;             // this group has an alternation within
                 public bool ContainsCapture;            // this gruop contains a cpature, perhaps nested down
-                public bool KnownGoodBackRef;           // we've checked previously; this group is known not to be zero sized
                 public int MaxSize;                     // maximum size of this group, -1 for unlimited
                 public int MinSize;                     // minimum size of this group, 0 being the minimum
-                public int MaxSizeAlternation;          // maximum size of the largest alternation option
-                public int MinSizeAlternation;          // minimim size of the smallest alternation option
                 public GroupInfo Parent;                // reference to the next level down
 
                 // for characters that aren't in a group, such as literal characters, anchors, escapes, character classes, etc.
@@ -1358,6 +1518,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     MinSize += minSize;
                     MaxSize += maxSize;
 
+                    // this is a disconnected GroupInfo just for this literal, something for the next quantifier (if there is one) to work on
                     return new GroupInfo()
                     {
                         MinSize = minSize,
@@ -1409,37 +1570,37 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     return true;
                 }
 
-                public void SeenAlternation()
+                public void CloseSubGroup()
                 {
-                    // we need to examine each part of the alternation for a potential empty result
-                    // PossibleEmpty is reset and PossibleEmptyAlternation is the accumulator for any empty parts
-                    // HasAlternation is important because 
-                    if (HasAlternation)
+                    if (Parent.HasAlternation)
                     {
-                        MinSizeAlternation = Math.Min(MinSizeAlternation, MinSize);
-                        MaxSizeAlternation = MaxSizeAlternation == -1 || MaxSize == -1 ? -1 : Math.Max(MaxSizeAlternation, MaxSize);
+                        Parent.MaxSize = Math.Max(Parent.MaxSize, MaxSize);
+                        Parent.MinSize = Math.Min(Parent.MinSize, MinSize);
                     }
                     else
                     {
-                        MinSizeAlternation = MinSize;
-                        MaxSizeAlternation = MaxSize;
+                        Parent.MaxSize = MaxSize;
+                        Parent.MinSize = MinSize;
                     }
 
-                    HasAlternation = true;
+                    SeenEnd();
 
-                    MinSize = 0;
-                    MaxSize = 0;
+                    Parent.ErrorOnQuant |= ErrorOnQuant;
+                    Parent.ErrorOnQuant_LookBehind |= ErrorOnQuant_LookBehind;
+                    Parent.ContainsCapture |= ContainsCapture;
                 }
 
                 // broken out from SeenClose for the end of the regular expression which may not have a closing paren
                 public void SeenEnd()
                 {
+                    // If we are possibly empty, we can't suport a zero quantifier.
+                    if (MinSize == 0)
+                    {
+                        ErrorOnQuant = true;
+                    }
+
                     if (HasAlternation)
                     {
-                        SeenAlternation();                                // closes the last part of the alternation, the "c" in "(a|b|c)"
-                        MinSize = MinSizeAlternation;
-                        MaxSize = MaxSizeAlternation;
-
                         // an alternation with a capture can effectively be empty, for example "(a|(b)|c)".
                         // The capture group "b" in this case is not empty, but it is a capture in an alternation.
                         ErrorOnQuant = ErrorOnQuant || ContainsCapture;
@@ -1452,28 +1613,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     IsClosed = true;
 
-                    // If we are possibly empty, we can't suport a zero quantifier.
-                    if (MinSize == 0)
+                    Parent.ErrorOnQuant |= ErrorOnQuant;
+                    Parent.ErrorOnQuant_LookBehind |= ErrorOnQuant_LookBehind;
+
+                    if (!IsNonCapture)
                     {
-                        ErrorOnQuant = true;
+                        Parent.ContainsCapture = true;
                     }
 
-                    if (Parent != null)
+                    // Look arounds have no size with respect to their parent
+                    if (!IsLookAround)
                     {
-                        Parent.ErrorOnQuant |= ErrorOnQuant;
-                        Parent.ErrorOnQuant_LookBehind |= ErrorOnQuant_LookBehind;
-
-                        if (!IsNonCapture)
-                        {
-                            Parent.ContainsCapture = true;
-                        }
-
-                        // Look arounds have no size with respect to their parent
-                        if (!IsLookAround)
-                        {
-                            Parent.MaxSize = Parent.MaxSize == -1 || MaxSize == -1 ? -1 : Parent.MaxSize + MaxSize;
-                            Parent.MinSize += MinSize;
-                        }
+                        Parent.MaxSize = Parent.MaxSize == -1 || MaxSize == -1 ? -1 : Parent.MaxSize + MaxSize;
+                        Parent.MinSize += MinSize;
                     }
 
                     error = null;
@@ -1481,14 +1633,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 // used to determine if a backref is acceptable
-                public bool IsBlockedBackRef(out ErrorResourceKey? error)
+                // descent down the tree will stop if a stop GroupInfo is provided, used for detecting backrefs that are in the same group as their definition
+                public bool IsBlockedBackRef(out ErrorResourceKey? error, GroupInfo stop = null)
                 {
-                    // short circuit in case we are asked about the same capture
-                    if (KnownGoodBackRef)
-                    {
-                        error = null;
-                        return false;
-                    }
+                    GroupInfo ptr;
+                    error = null;
 
                     int maxDepth = MaxGroupStackDepth;
 
@@ -1502,7 +1651,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // walk nested groups up to the base
                     // if we weren't already erroring on lookarounds,
                     // we would want to stop at a a lookaround, as it will appear to be zero below and quantifiers are not allowed on lookarounds and below
-                    for (var ptr = this.Parent; ptr != null && maxDepth-- >= 0; ptr = ptr.Parent)
+                    for (ptr = this.Parent; ptr != null && ptr != stop && maxDepth-- >= 0; ptr = ptr.Parent)
                     {
                         if (ptr.HasZeroQuant || ptr.HasAlternation || ptr.MinSize == 0)
                         {
@@ -1523,9 +1672,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         throw new IndexOutOfRangeException("regular expression maximum GroupTracker depth exceeded");
                     }
 
-                    KnownGoodBackRef = true;
+                    // if we are checking for a specific group, and we didn't hit that gruop, the backref is not OK.
+                    // no error message required, we'll report it later on the final scan.
+                    if (stop != null && stop != ptr)
+                    {
+                        return true;
+                    }
 
-                    error = null;
                     return false;
                 }
             }

@@ -5,7 +5,7 @@
 
 // This file implements our Regular Expression functions using PCRE2 instead of .NET.
 // We run tests with this to find semantic differences between our regular expression language and what Excel supports.
-// To run this code, make sure that pcre2-32d.dll in your path, built from https://github.com/PCRE2Project/pcre2
+// To run this code, make sure that pcre2-16.dll in your path, built from https://github.com/PCRE2Project/pcre2
 // with cmake-gui, shared library, AnyCRLF, UTF and UDP suppport.  When done properly, "pcre2test -C" will display:
 //   C:\>pcre2test -C
 //   PCRE2 version 10.44 2024-06-07
@@ -28,6 +28,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -47,67 +48,68 @@ namespace Microsoft.PowerFx.Functions
         {
             internal static class NativeMethods
             {
-                // use 32 bit version as PCRE2 as it doesn't support surrogate pairs, we manually convert in/out of surrogate pairs to UTF-32.
+                // Use version 10.45 or later, as there are bugfixes to pick up that aren't in 10.44
+                // Edit the source and comment out any reference to \u180e, about 6 of them. You don't need to worry about pcre2_study.c. PCRE2 treats this as a space character, but few others do.
 
-                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-16.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-                internal static extern IntPtr pcre2_compile_32(byte[] pattern, int patternLength, uint patternOptions, ref int errorNumber, ref int errorOffset, IntPtr context);
+                internal static extern IntPtr pcre2_compile_16(string pattern, int patternLength, uint patternOptions, ref int errorNumber, ref int errorOffset, IntPtr context);
 
-                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-16.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-                internal static extern int pcre2_match_32(IntPtr code, byte[] subject, int subjectLength, int subjectOffset, uint subjectOptions, IntPtr matchData, IntPtr matchContext);
+                internal static extern int pcre2_match_16(IntPtr code, string subject, int subjectLength, int subjectOffset, uint subjectOptions, IntPtr matchData, IntPtr matchContext);
 
-                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-16.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-                internal static extern int pcre2_exec_32(IntPtr code, IntPtr extra, byte[] subject, int subjectLength, int subjectOffset, uint subjectOptions, IntPtr ovector, IntPtr ovectorSize);
+                internal static extern int pcre2_exec_16(IntPtr code, IntPtr extra, string subject, int subjectLength, int subjectOffset, uint subjectOptions, IntPtr ovector, IntPtr ovectorSize);
 
-                [DllImport("pcre2-32.dll")]
+                [DllImport("pcre2-16.dll")]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-                internal static extern IntPtr pcre2_match_data_create_32(int ovecSize, IntPtr generalContext);
+                internal static extern IntPtr pcre2_match_data_create_16(int ovecSize, IntPtr generalContext);
 
-                [DllImport("pcre2-32.dll")]
+                [DllImport("pcre2-16.dll")]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-                internal static extern IntPtr pcre2_match_data_create_from_pattern_32(IntPtr code, IntPtr generalContext);
+                internal static extern IntPtr pcre2_match_data_create_from_pattern_16(IntPtr code, IntPtr generalContext);
 
-                [DllImport("pcre2-32.dll")]
+                [DllImport("pcre2-16.dll")]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-                internal static extern int pcre2_get_startchar_32(IntPtr matchData);
+                internal static extern int pcre2_get_startchar_16(IntPtr matchData);
 
-                [DllImport("pcre2-32.dll")]
+                [DllImport("pcre2-16.dll")]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-                internal static extern int pcre2_get_ovector_count_32(IntPtr matchData);
+                internal static extern int pcre2_get_ovector_count_16(IntPtr matchData);
 
-                [DllImport("pcre2-32.dll")]
+                [DllImport("pcre2-16.dll")]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-                internal static extern IntPtr pcre2_get_ovector_pointer_32(IntPtr matchData);
+                internal static extern IntPtr pcre2_get_ovector_pointer_16(IntPtr matchData);
 
-                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-16.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-                internal static extern int pcre2_substring_number_from_name_32(IntPtr code, byte[] name);
+                internal static extern int pcre2_substring_number_from_name_16(IntPtr code, string name);
 
-                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-16.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-                internal static extern void pcre2_match_data_free_32(IntPtr data);
+                internal static extern void pcre2_match_data_free_16(IntPtr data);
 
-                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-16.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-                internal static extern void pcre2_code_free_32(IntPtr code);
+                internal static extern void pcre2_code_free_16(IntPtr code);
 
-                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-16.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-                internal static extern int pcre2_get_error_message_32(int code, IntPtr buffer, int bufferLength);
+                internal static extern int pcre2_get_error_message_16(int code, IntPtr buffer, int bufferLength);
 
-                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-16.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-                internal static extern int pcre2_set_compile_extra_options_32(IntPtr context, uint extraOptions);
+                internal static extern int pcre2_set_compile_extra_options_16(IntPtr context, uint extraOptions);
 
-                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-16.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-                internal static extern IntPtr pcre2_compile_context_create_32(IntPtr generalContext);
+                internal static extern IntPtr pcre2_compile_context_create_16(IntPtr generalContext);
 
-                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-16.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-                internal static extern int pcre2_set_newline_32(IntPtr generalContext, uint newlineOptions);
+                internal static extern int pcre2_set_newline_16(IntPtr generalContext, uint newlineOptions);
             }
 
             internal enum PCRE2_OPTIONS : uint
@@ -119,6 +121,7 @@ namespace Microsoft.PowerFx.Functions
                 UCP = 0x00020000,
                 UTF = 0x00080000,
                 NO_AUTO_CAPTURE = 0x00002000,
+                ALT_BSUX = 0x00000002,
             }
 
             // from https://www.pcre.org/current/doc/html/pcre2api.html#SEC16
@@ -139,6 +142,7 @@ namespace Microsoft.PowerFx.Functions
             internal enum PCRE2_EXTRA_OPTIONS : uint
             {
                 ALLOW_SURROGATE_ESCAPES = 0x00000001,
+                ALT_BSUX = 0x00000020,
             }
 
             internal enum PCRE2_MATCH_OPTIONS : uint
@@ -156,22 +160,6 @@ namespace Microsoft.PowerFx.Functions
 
             private static readonly Mutex PCRE2Mutex = new Mutex();  // protect concurrent access to the node process
 
-            private static string Extract(byte[] bytes, int start, int end)
-            {
-                StringBuilder result = new StringBuilder();
-
-                for (int i = start; i < end; i++)
-                {
-                    int number = BitConverter.ToInt32(bytes, i * 4);
-                    string s = char.ConvertFromUtf32(number);
-                    result.Append(s);
-                }
-
-                result.Replace('\uf8ff', '\u180e');
-
-                return result.ToString();
-            }
-
             internal static FormulaValue Match(string subject, string pattern, string flags, bool matchAll = false)
             {
                 int errorNumber = 0;
@@ -179,7 +167,7 @@ namespace Microsoft.PowerFx.Functions
                 IntPtr matchContext = (IntPtr)0;
                 IntPtr generalContext = (IntPtr)0;
 
-                PCRE2_OPTIONS pcreOptions = PCRE2_OPTIONS.UTF | PCRE2_OPTIONS.UCP;
+                PCRE2_OPTIONS pcreOptions = PCRE2_OPTIONS.UCP | PCRE2_OPTIONS.UTF;
                 RegexOptions options = RegexOptions.None;
 
                 Match inlineOptions = Regex.Match(pattern, @"^\(\?([imnsx]+)\)");
@@ -257,47 +245,57 @@ namespace Microsoft.PowerFx.Functions
                     pattern = pattern + "$";
                 }
 
-                // convert out of surrogate pairs and into UTF-32 for the pattern manually
-                // convesion of the subject is handled with Encoding.UTF32.GetBytes below
-
+                // pcre2 does not allow surrogate pairs in the form /uxxxx/uyyyy as each /u individually is not a valid Unicode code point
+                // so we need to translate out of those pairs here, into a single /u{...} code point.
                 StringBuilder patternSurrogates = new StringBuilder();
 
                 for (int i = 0; i < pattern.Length; i++)
                 {
-                    if (i + 11 < pattern.Length && pattern[i] == '\\' && pattern[i + 1] == 'u' && pattern[i + 6] == '\\' && pattern[i + 7] == 'u')
+                    if (pattern[i] == '\\' && i + 2 < pattern.Length && pattern[i + 1] == 'u')
                     {
-                        var s1 = Convert.ToInt32(Convert.ToInt32(pattern.Substring(i + 2, 4), 16));
-                        var s2 = Convert.ToInt32(Convert.ToInt32(pattern.Substring(i + 8, 4), 16));
-                        if (s1 >= 0xd800 && s1 <= 0xdbff && s2 >= 0xdc00 && s2 <= 0xdfff)
+                        Match m;
+
+                        if ((m = new Regex("\\G\\\\u(?<high>[0-9a-fA-F]{4})\\\\u(?<low>[0-9a-fA-F]{4})").Match(pattern, i)).Success &&
+                           int.TryParse(m.Groups["high"].Value, NumberStyles.HexNumber, null, out var high) && char.IsHighSurrogate((char)high) &&
+                           int.TryParse(m.Groups["low"].Value, NumberStyles.HexNumber, null, out var low) && char.IsLowSurrogate((char)low))
                         {
-                            patternSurrogates.Append("\\x{" + Convert.ToString(((s1 - 0xd800) * 0x400) + (s2 - 0xdc00) + 0x10000, 16) + "}");
-                            i += 11;
+                            patternSurrogates.Append("\\x{" + Convert.ToString(((high - 0xd800) * 0x400) + (low - 0xdc00) + 0x10000, 16) + "}");
+                            i += m.Length - 1;
+                        }
+                        else if (i + 3 < pattern.Length && pattern[i + 2] == '{' &&
+                                 (m = new Regex("\\G\\\\u\\{0*(?<hex>[0-9a-fA-F]{1,6})\\}").Match(pattern, i)).Success &&
+                                 int.TryParse(m.Groups["hex"].Value, NumberStyles.HexNumber, null, out var hex) && hex >= 0 && hex <= 0x10ffff)
+                        {
+                            patternSurrogates.Append("\\x{" + Convert.ToString(hex, 16) + "}");
+                            i += m.Length - 1;
+                        }
+                        else if (i + 5 < pattern.Length)
+                        {
+                            patternSurrogates.Append("\\x{" + pattern[i + 2] + pattern[i + 3] + pattern[i + 4] + pattern[i + 5] + "}");
+                            i += 5;
                         }
                     }
-                    else if (i + 5 < pattern.Length && pattern[i] == '\\' && pattern[i + 1] == 'u')
-                    {
-                        patternSurrogates.Append("\\x{" + pattern[i + 2] + pattern[i + 3] + pattern[i + 4] + pattern[i + 5] + "}");
-                        i += 5;
-                    }
                     else
-                    { 
+                    {
                         patternSurrogates.Append(pattern[i]);
                     }
                 }
 
-                var patternPCRE2 = patternSurrogates.ToString();
+                var pcrePattern = patternSurrogates.ToString();
 
+                // uses .NET compatible pattern
+                var (regexAltered, regexOptions) = AlterRegex_DotNet(pattern, flags);
+                Regex rex = new Regex(regexAltered, regexOptions, new TimeSpan(0, 0, 1));
+
+                // pcre2 should be thread safe, but we have seen odd behaviors, just making sure
                 PCRE2Mutex.WaitOne();
 
-                var context = NativeMethods.pcre2_compile_context_create_32(generalContext);
-                NativeMethods.pcre2_set_newline_32(context, (uint)PCRE2_NEWLINE.ANY);
+                var context = NativeMethods.pcre2_compile_context_create_16(generalContext);
+                NativeMethods.pcre2_set_newline_16(context, (uint)PCRE2_NEWLINE.ANY);
 
-#if false
-                // not needed as we convert out of surrogate pairs above
-                NativeMethods.pcre2_set_compile_extra_options_32(context, (uint)PCRE2_EXTRA_OPTIONS.ALLOW_SURROGATE_ESCAPES);
-#endif
+                var encoder = new UnicodeEncoding(bigEndian: false, byteOrderMark: false, throwOnInvalidBytes: true);
 
-                var code = NativeMethods.pcre2_compile_32(Encoding.UTF32.GetBytes(patternPCRE2), -1, (uint)pcreOptions, ref errorNumber, ref errorOffset, context);
+                var code = NativeMethods.pcre2_compile_16(pcrePattern, pcrePattern.Length, (uint)pcreOptions, ref errorNumber, ref errorOffset, context);
                 if (code == IntPtr.Zero)
                 {
                     byte[] buffer = new byte[4096];
@@ -305,9 +303,9 @@ namespace Microsoft.PowerFx.Functions
                     GCHandle pinnedArray = GCHandle.Alloc(buffer, GCHandleType.Pinned);
                     IntPtr pointer = pinnedArray.AddrOfPinnedObject();
 
-                    NativeMethods.pcre2_get_error_message_32(errorNumber, pointer, buffer.Length);
+                    NativeMethods.pcre2_get_error_message_16(errorNumber, pointer, buffer.Length);
                     var message = System.Text.Encoding.Unicode.GetString(buffer);
-                    var fullMessage = $"PCRE2 error compiling {patternPCRE2}, errorNumber={errorNumber} ({message}), errorOffset={errorOffset}";
+                    var fullMessage = $"PCRE2 error compiling {pattern}, errorNumber={errorNumber} ({message}), errorOffset={errorOffset}";
 
                     pinnedArray.Free();
 
@@ -315,93 +313,34 @@ namespace Microsoft.PowerFx.Functions
                     throw new Exception(fullMessage);
                 }
 
-                var md = NativeMethods.pcre2_match_data_create_from_pattern_32(code, generalContext);
+                var md = NativeMethods.pcre2_match_data_create_from_pattern_16(code, generalContext);
+                
+                var subjectBytes = encoder.GetBytes(subject);
+                var subjectLen = subject.Length;
 
-                var startMatch = 0;
                 List<RecordValue> allMatches = new ();
 
-                // PCRE2 uses an older definition of Unicode where 180e is a space character, moving it to something else (user defined cahracter) here for category comparisons tests
-                subject = subject.Replace('\u180e', '\uf8ff');
-
-                // see https://pcre.org/current/doc/html/pcre2demo.html for the full demo of using the PCRE2 API
-                var subjectBytes = Encoding.UTF32.GetBytes(subject);
-                PCRE2_MATCH_OPTIONS matchOptions = 0;
-                while (startMatch >= 0)
+                (int, int) ProcessMatch()
                 {
-                    var rc = NativeMethods.pcre2_match_32(code, subjectBytes, -1, startMatch, (uint)matchOptions, md, matchContext);
-
-                    if (matchAll && rc == (int)PCRE2_RETURNCODES.ERROR_NOMATCH)
-                    {
-                        if (startMatch + 1 < subject.Length && subject[startMatch] == '\r' && subject[startMatch + 1] == '\n')
-                        {
-                            startMatch += 2;
-                        }
-                        else
-                        {
-                            startMatch++;
-                        }
-
-                        if (startMatch > subject.Length)
-                        {
-                            break;
-                        }
-
-                        matchOptions = 0;
-                        continue;
-                    }
-                    else if (rc < 0)
-                    {
-                        break;
-                    }
-
                     Dictionary<string, NamedValue> fields = new ();
 
-                    var sc = NativeMethods.pcre2_get_startchar_32(md);
+                    var sc = NativeMethods.pcre2_get_startchar_16(md);
                     fields.Add(STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New((double)sc + 1)));
 
-                    IntPtr op = NativeMethods.pcre2_get_ovector_pointer_32(md);
+                    IntPtr op = NativeMethods.pcre2_get_ovector_pointer_16(md);
                     var start0 = Marshal.ReadInt32(op, 0);
                     var end0 = Marshal.ReadInt32(op, Marshal.SizeOf(typeof(long)));
-                    fields.Add(FULLMATCH, new NamedValue(FULLMATCH, StringValue.New(Extract(subjectBytes, start0, end0))));
-
-                    // for next iteration
-                    if (matchAll)
-                    {
-                        startMatch = end0;
-                        if (end0 == start0)
-                        {
-#if false
-                            startMatch++;
-#else
-                            if (matchOptions == 0)
-                            {
-                                matchOptions = PCRE2_MATCH_OPTIONS.NOTEMPTY_ATSTART | PCRE2_MATCH_OPTIONS.ANCHORED;
-                            }
-                            else
-                            {
-                                throw new Exception("PCRE2 repeated empty result");
-                            }
-#endif
-                        }
-                        else
-                        {
-                            matchOptions = 0;
-                        }
-                    }
-                    else
-                    {
-                        startMatch = -1;
-                    }
+                    fields.Add(FULLMATCH, new NamedValue(FULLMATCH, StringValue.New(subject.Substring(start0, end0 - start0))));
 
                     List<FormulaValue> subMatches = new List<FormulaValue>();
-                    var oc = NativeMethods.pcre2_get_ovector_count_32(md);
+                    var oc = NativeMethods.pcre2_get_ovector_count_16(md);
                     for (var i = 1; i < oc; i++)
                     {
                         var start = Marshal.ReadInt32(op, i * 2 * Marshal.SizeOf(typeof(long)));
                         var end = Marshal.ReadInt32(op, ((i * 2) + 1) * Marshal.SizeOf(typeof(long)));
                         if (start >= 0 && end >= 0)
                         {
-                            subMatches.Add(StringValue.New(Extract(subjectBytes, start, end)));
+                            subMatches.Add(StringValue.New(subject.Substring(start, end - start)));
                         }
                         else
                         {
@@ -416,31 +355,75 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        // In x mode, comment line endings are [\r\n], but .NET only supports \n.  For our purposes here, we can just replace the \r.
-                        pattern = pattern.Replace('\r', '\n');
-                        var regex = new Regex(pattern, options);
-                        foreach (var name in regex.GetGroupNames())
+                        foreach (var name in rex.GetGroupNames())
                         {
                             if (!int.TryParse(name, out _))
                             {
-                                var ni = NativeMethods.pcre2_substring_number_from_name_32(code, Encoding.UTF32.GetBytes(name));
+                                var ni = NativeMethods.pcre2_substring_number_from_name_16(code, name);
                                 fields.Add(name, new NamedValue(name, subMatches[ni - 1]));
                             }
                         }
                     }
 
                     allMatches.Add(RecordValue.NewRecordFromFields(fields.Values));
+
+                    return (start0, end0);
                 }
 
-                NativeMethods.pcre2_match_data_free_32(md);
-                NativeMethods.pcre2_code_free_32(code);
+                // translated more or less verbatim from https://pcre.org/current/doc/html/pcre2demo.html for proper usage of the PCRE2 API
+
+                var rc = NativeMethods.pcre2_match_16(code, subject, subject.Length, 0, 0, md, matchContext);
+
+                if (rc != (int)PCRE2_RETURNCODES.ERROR_NOMATCH)
+                {
+                    (var start0, var end0) = ProcessMatch();
+
+                    while (matchAll)
+                    {
+                        int startMatch = end0;
+                        PCRE2_MATCH_OPTIONS matchOptions = 0;
+
+                        if (end0 == start0)
+                        {
+                            if (end0 >= subjectLen)
+                            {
+                                break;
+                            }
+
+                            matchOptions = PCRE2_MATCH_OPTIONS.NOTEMPTY_ATSTART | PCRE2_MATCH_OPTIONS.ANCHORED;
+                        }
+
+                        rc = NativeMethods.pcre2_match_16(code, subject, subject.Length, startMatch, (uint)matchOptions, md, matchContext);
+
+                        if (rc == (int)PCRE2_RETURNCODES.ERROR_NOMATCH)
+                        {
+                            if (matchOptions == 0)
+                            {
+                                break;
+                            }
+
+                            end0 = startMatch + 1;
+                            if (end0 + 1 < subjectLen && subjectBytes[end0] == '\r' && subjectBytes[end0 + 1] == '\n')
+                            {
+                                end0++;
+                            }
+
+                            continue;
+                        }
+
+                        (start0, end0) = ProcessMatch();
+                    }
+                }
+
+                NativeMethods.pcre2_match_data_free_16(md);
+                NativeMethods.pcre2_code_free_16(code);
 
                 PCRE2Mutex.ReleaseMutex();
 
                 if (allMatches.Count == 0)
                 {
-                    return matchAll ? FormulaValue.NewTable(new KnownRecordType(GetRecordTypeFromRegularExpression(pattern, options))) 
-                                    : new BlankValue(IRContext.NotInSource(new KnownRecordType(GetRecordTypeFromRegularExpression(pattern, options))));
+                    return matchAll ? FormulaValue.NewTable(new KnownRecordType(GetRecordTypeFromRegularExpression(rex))) 
+                                    : new BlankValue(IRContext.NotInSource(new KnownRecordType(GetRecordTypeFromRegularExpression(rex))));
                 }
                 else
                 {

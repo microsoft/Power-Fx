@@ -858,8 +858,8 @@ namespace Microsoft.PowerFx.Connectors
             {
                 return ev;
             }
-
-            BaseRuntimeConnectorContext context = ReturnParameterType.Binary ? runtimeContext.WithRawResults() : runtimeContext;
+            
+            BaseRuntimeConnectorContext context = (ReturnParameterType.Binary && outputTypeOverride == null) ? runtimeContext.WithRawResults() : runtimeContext;
             ScopedHttpFunctionInvoker invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(Namespace, out _)), Name, Namespace, new HttpFunctionInvoker(this, context), context.ThrowOnError);
             FormulaValue result = await invoker.InvokeAsync(arguments, context, outputTypeOverride, cancellationToken).ConfigureAwait(false);
             FormulaValue formulaValue = await PostProcessResultAsync(result, runtimeContext, invoker, cancellationToken).ConfigureAwait(false);
@@ -1028,11 +1028,10 @@ namespace Microsoft.PowerFx.Connectors
             ConnectorPermission tablePermission = tableSchema.GetPermission();
 
             JsonElement jsonElement = ExtractFromJson(stringValue, valuePath, out string name, out string displayName);
-            bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;
-            IList<ReferencedEntity> referencedEntities = GetReferenceEntities(connectorName, stringValue);
+            bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;            
 
             SymbolTable symbolTable = new SymbolTable();
-            ConnectorType connectorType = new ConnectorType(jsonElement, tableName, symbolTable, settings, referencedEntities, datasetName, name, displayName, connectorName, tableResolver, serviceCapabilities, isTableReadOnly);
+            ConnectorType connectorType = new ConnectorType(jsonElement, tableName, symbolTable, settings, datasetName, name, displayName, connectorName, tableResolver, serviceCapabilities, isTableReadOnly);
             delegationInfo = ((DataSourceInfo)connectorType.FormulaType._type.AssociatedDataSources.First()).DelegationInfo;
             optionSets = symbolTable.OptionSets.Select(kvp => kvp.Value);
 

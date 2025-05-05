@@ -737,6 +737,51 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         [Fact]
+        public async Task SP_CdpTabular2()
+        {
+            using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            using var httpClient = new HttpClient(testConnector);
+            string connectionId = "0b905132239e463a9d12f816be201da9";
+            string jwt = "eyJ0eXAiOiJKV....";
+            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", connectionId, () => jwt, httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832384"
+            };
+
+            CdpTable tabularService = new CdpTable("https://microsofteur.sharepoint.com/teams/pfxtest", "Documents", tables: null);
+
+            Assert.False(tabularService.IsInitialized);
+            Assert.Equal("Documents", tabularService.TableName);
+
+            testConnector.SetResponseFromFiles(@"Responses\SP GetDatasetsMetadata.json", @"Responses\SP GetTable.json");
+            await tabularService.InitAsync(client, $"/apim/sharepointonline/{connectionId}", CancellationToken.None, logger);
+            Assert.True(tabularService.IsInitialized);
+
+            CdpTableValue spTable = tabularService.GetTableValue();
+            Assert.True(spTable._tabularService.IsInitialized);
+            Assert.True(spTable.IsDelegable);
+           
+            SymbolValues symbolValues = new SymbolValues().Add("Documents", spTable);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
+
+            // Expression with tabular connector
+            string expr = @"First(Documents).Name";
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            // return some malformed Json and confirm we return an empty set
+            testConnector.SetResponseFromFile(@"Responses\SP GetData Malformed.json");
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
+
+            ErrorValue ev = Assert.IsType<ErrorValue>(result);
+            Assert.Equal("JsonReaderException Expected depth to be zero at the end of the JSON payload. There is an open JSON object or array that should be closed. LineNumber: 1 | BytePositionInLine: 0.", ev.Errors.First().Message);
+        }
+
+        [Fact]
         public async Task SF_CountRows()
         {
             using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
@@ -887,7 +932,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "Modified By ID'[User]:~User:s, LastModifiedDate`'Last Modified Date':d, LastReferencedDate`'Last Referenced Date':d, LastViewedDate`'Last Viewed Date':d, MasterRecordId`'Master Record ID'[Account]:~Account:s, " +
                 "Name`'Account Name':s, NumberOfEmployees`Employees:w, OwnerId`'Owner ID'[User]:~User:s, ParentId`'Parent Account ID'[Account]:~Account:s, Phone`'Account Phone':s, PhotoUrl`'Photo URL':s, ShippingCity`'Shipping " +
                 "City':s, ShippingCountry`'Shipping Country':s, ShippingGeocodeAccuracy`'Shipping Geocode Accuracy':l, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping " +
-                "Zip/Postal Code':s, ShippingState`'Shipping State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':l, Website:s]",
+                "Zip/Postal Code':s, ShippingState`'Shipping State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':l, Website:s, picklist1`'Picklist 1':*[Value:l], picklist2`'Picklist 2':*[Value:l]]",
                 ((CdpRecordType)sfTable.RecordType).ToStringWithDisplayNames());
 
             Assert.Equal("Account", sfTable.RecordType.TableSymbolName);
@@ -1054,7 +1099,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "Modified By ID':~User:s, LastModifiedDate`'Last Modified Date':d, LastReferencedDate`'Last Referenced Date':d, LastViewedDate`'Last Viewed Date':d, MasterRecordId`'Master Record ID':~Account:s, Name`'Account " +
                 "Name':s, NumberOfEmployees`Employees:w, OwnerId`'Owner ID':~User:s, ParentId`'Parent Account ID':~Account:s, Phone`'Account Phone':s, PhotoUrl`'Photo URL':s, ShippingCity`'Shipping City':s, ShippingCountry`'Shipping " +
                 "Country':s, ShippingGeocodeAccuracy`'Shipping Geocode Accuracy':l, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping Zip/Postal Code':s, ShippingState`'Shipping " +
-                "State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':l, Website:s]", sfTable.Type.ToStringWithDisplayNames());
+                "State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':l, Website:s, picklist1`'Picklist 1':*[Value:l], picklist2`'Picklist 2':*[Value:l]]", sfTable.Type.ToStringWithDisplayNames());
 
             SymbolValues symbolValues = new SymbolValues().Add("Accounts", sfTable);
             RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
