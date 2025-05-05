@@ -670,5 +670,24 @@ namespace Microsoft.PowerFx.Core.Tests
                 Assert.Contains(errors, x => x.MessageKey == "ErrUDF_UnknownType" || x.MessageKey == "ErrUDF_InvalidReturnType");
             }
         }
+
+        [Fact]
+        public void TestUDFRestrictedParameterTypes()
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = true,
+            };
+
+            foreach (var type in UserDefinitions.RestrictedParameterTypes)
+            {
+                var script = $"func(x: {type.GetKindString()}): Number = 42;";
+                var parseResult = UserDefinitions.Parse(script, parserOptions);
+                var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+                errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+                Assert.Contains(errors, x => x.MessageKey == "ErrUDF_UnknownType" || x.MessageKey == "ErrUDF_InvalidParamType");
+            }
+        }
     }
 }
