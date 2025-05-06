@@ -321,7 +321,7 @@ namespace Microsoft.PowerFx.Core.Functions
                         errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
                         isParamCheckSuccessful = false;
                     }
-                    else if (IsRestrictedType(parameterType))
+                    else if (IsRestrictedType(parameterType, UserDefinitions.RestrictedParameterTypes))
                     {
                         errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_InvalidParamType, arg.TypeIdent.Name));
                         isParamCheckSuccessful = false;
@@ -347,7 +347,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 return false;
             }
             
-            if (IsRestrictedType(returnTypeFormulaType))
+            if (IsRestrictedType(returnTypeFormulaType, UserDefinitions.RestrictedTypes))
             {
                 errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_InvalidReturnType, returnTypeToken.Name));
                 returnType = DType.Invalid;
@@ -359,7 +359,7 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         // To prevent aggregate types from containing restricted types
-        internal static bool IsRestrictedType(FormulaType ft)
+        internal static bool IsRestrictedType(FormulaType ft, ISet<DType> restrictedTypes)
         {
             Contracts.AssertValue(ft);
 
@@ -367,13 +367,13 @@ namespace Microsoft.PowerFx.Core.Functions
             // We can avoid calling this method on these types containing expand info.
             if (!ft._type.HasExpandInfo && ft is AggregateType aggType)
             {
-                if (aggType.GetFieldTypes().Any(ct => IsRestrictedType(ct.Type)))
+                if (aggType.GetFieldTypes().Any(ct => IsRestrictedType(ct.Type, restrictedTypes)))
                 {
                     return true;
                 }
             }
 
-            if (UserDefinitions.RestrictedTypes.Contains(ft._type))
+            if (restrictedTypes.Contains(ft._type))
             {
                 return true;
             }

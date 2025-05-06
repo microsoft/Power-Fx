@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -30,7 +31,9 @@ namespace Microsoft.PowerFx.Syntax
         private readonly Features _features;
 
         // Exposing it so hosts can filter out the intellisense suggestions
-        public static readonly ISet<DType> RestrictedTypes = new HashSet<DType> { DType.DateTimeNoTimeZone, DType.ObjNull, DType.Decimal };
+        public static readonly ISet<DType> RestrictedTypes = ImmutableHashSet.Create(DType.DateTimeNoTimeZone, DType.ObjNull, DType.Decimal);
+
+        public static readonly ISet<DType> RestrictedParameterTypes = ImmutableHashSet.Create(DType.Void).Union(RestrictedTypes);
 
         private UserDefinitions(string script, ParserOptions parserOptions, Features features = null)
         {
