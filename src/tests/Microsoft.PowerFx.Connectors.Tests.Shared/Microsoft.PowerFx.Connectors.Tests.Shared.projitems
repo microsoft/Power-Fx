@@ -313,6 +313,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestConnector05.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestConnector12.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestConnectorDateTimeFormat.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestConnectorNoOutput.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestOpenAPI.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestSwagger1.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\ZenDesk.json" />

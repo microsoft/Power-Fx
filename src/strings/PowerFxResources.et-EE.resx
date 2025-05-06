@@ -2113,6 +2113,14 @@
     <value>{0}: veerunime konflikt.</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Süsteemikirjele või süsteemikirjete tabelile ei saa veerge lisada. Esimesena vajatavate konkreetsete veergude ekstraktimiseks kasutage valikut ShowColumns.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Süsteemikirjete veerge või süsteemikirjete tabelit ei saa ümber nimetada. Esimesena vajatavate konkreetsete veergude ekstraktimiseks kasutage valikut ShowColumns.</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Määratud veergu {0} pole olemas.</value>
     
@@ -4511,24 +4519,232 @@
     <value>Kehtetu regulaaravaldis.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: tekstisisesed suvandid tuleb kuvada regulaaravaldise alguses, hiljem leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: tekstisisesed suvandid on piiratud tähtede [imnsx] kombinatsiooniga, suvandeid ei saa keelata ja neid ei saa kasutada alamavaldises, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: Octal \0 märgikoode ei toetata, kasutage selle asemel kuueteistkümnendsüsteemi \x või Unicode \u, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: sõnasõnalised looksulud tuleb eraldada kurakriipsuga, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: sõnasõnalised nurksulud tuleb eraldada kurakriipsuga, isegi märgiklassides, näiteks \[ või \], leiti {0} lõpust.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: sulgemata märgiklassi nurksulg.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: toetuseta erirühm, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: paomärk pole märgiklassis lubatud, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: negatiivne paomärk pole eitavas märgiklassis lubatud, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: paomärk pole märgiklassist väljaspool lubatud, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: sobimatu Unicode’i kategoorianimi, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: korduv tekstisisene suvand, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: sulgemata tekstisisene kommentaar.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: sulgemata tekstisisene kommentaar, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: tekstisisene suvand ei ühildu alamvastetega MatchOptions.NumberedSubMatches, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: omastavaid kvantoreid ei toetata, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: täpseid kvantoreid ei saa kasutada koos kvantorite muutujatega, näiteks ? laisa jaoks, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: sobimatu paomärk, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: alamvaste {0} pole määratletud või on toetuseta edasisuunas viide.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: alamvasteid ei toetata tagasivaadetes, leiti {0} algusest.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: tagasivaateid ei saa pesastada, leiti {0} algusest.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: piiramatud kvantorid pole toetatud tagasivaadetes, leiti {0} lõpust.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: kvantorid pole toetatud tagasi- või edasivaates, leiti {0} lõpust.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: tagasiviide {0} alamvastele, mis ei pruugi juhtuda vaheldumise või nullkvantori tõttu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: enesele viitavaid alamvasteid ei toetata, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: sulgemata rühmad, liiga vähe sulgevaid ümarsulge.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: avamata rühmad, liiga vähe avavaid ümarsulge.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: nimega alamvaste, mis on määratletud mitu korda, leiti {0} algusest.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: alamvaste nimi peab olema sõnamärkide kombinatsioon ja mitte algama arvuga, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: tekstisisesed suvandid tuleb kuvada regulaaravaldise alguses, hiljem leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: märk esineb märgiklassis mitu korda, leiti korduv {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: nurksulgudes märgiklassid ei tohi olla tühiväärtusega, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: tasakaalustavaid alamvasteid ei toetata, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: üksikjutumärgiga nimega jäädvustuste kasutamist ei toetata, kasutage selle asemel (?&lt;... &gt;) süntaksit, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: tingimuslikku vaheldumist ei toetata, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: nimega jäädvustusi ei saa kasutada lubatud alamvastetega MatchOptions.NumberedSubMatches, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: kasutage nimega jäädvustusi koos suvandiga (?&lt;name&gt;...) ja "\k&lt;name&gt; või lubage MatchOptions.NumberedSubMatches, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: sõnasõnaline sidekriips märgiklassivahemikus tuleb eraldada kurakriipsuga \-, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: sõnasõnaline märk tuleb eraldada kurakriipsuga, kui seda kasutatakse märgiklassis, leiti {0} lõpust.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: kvantor rühmas, mis sisaldab teist kvantorit või tühja vaheldumist, mis võib anda mitmetähendusliku tulemuse, leiti {0} lõpust.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: tagasivaade ületas maksimaalse lubatud märkide arvu 250, leiti {0} lõpust.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: kvantorivahemik väike arv on suurem kui suur arv, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: {0} alguses leiti liiga palju pesastatud rühmi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: alamvaste nimi on liiga pikk, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: arv on liiga suur, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: märgiklassi vahemikus olevad märgid pööratakse ümber, leiti {0} lõpust.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: märgiklass märgiklassivahemikus või eraldage sõnasõnaline sidekriips kurakriipsuga, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: lõpeb paomärgita kurakriips.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: kvantor, millel pole midagi kvantifitseerida, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: MatchOptions.DotAll ja MatchOptions.FreeSpacing on saadaval ainult Power Fx V1-ga , leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: tagasiviide {0} alamvastele, mis asub tagasi- või edasivaate sees.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Regulaaravaldised peavad olema konstantsed väärtused.</value>
+    <value>Regulaaravaldis peab olema konstandi väärtus.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions peab olema konstandi väärtus.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Funktsioonile „{0}“ edastatud väärtust ei saa muuta.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Hõive nimi '{0}' peidab eelnevalt määratletud atribuuti, mis tagastab regulaaravaldise täieliku vaste. Soovitame selle ümber nimetada, kui soovite kasutada selle nimega atribuuti, et ekstraktida määratud tekstis täielik vaste.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Jäädvustusnimi {0} peidab eelmääratletud atribuuti, mis tagastab vastendusteabe. Kaaluge selle ümbernimetamist, kui soovite vasteteabele juurde pääseda.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Hõive nimi '{0}' peidab eelnevalt määratletud atribuuti, mis tagastab regulaaravaldise rühma vasted. Soovitame selle ümber nimetada, kui soovite kasutada selle nimega atribuuti, et ekstraktida määratud tekstis kõik alamvasted.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Hõive nimi '{0}' peidab eelnevalt määratletud atribuuti, mis tagastab regulaaravaldise vaste asukoha. Soovitame selle ümber nimetada, kui soovite kasutada selle nimega atribuuti, et ekstraktida määratud tekstis täieliku vaste asukoha.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Komplektis {0} olevad jäädvustusnimed peidavad eelmääratletud atribuudid, mis tagastavad vastendusteabe. Kaaluge nende ümbernimetamist, kui soovite vasteteabele juurde pääseda.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">

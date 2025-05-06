@@ -346,6 +346,44 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         [Fact]
+        public async Task ACSL_InvokeFunctionWithoutOutputsWithOutputOverride()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\TestConnectorNoOutput.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+            ConsoleLogger logger = new ConsoleLogger(_output);
+
+            PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
+            ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, apiDoc).OrderBy(cf => cf.Name).ToList()[0];
+            Assert.Equal("AnalyzeConversationTextSubmitJob", function.Name);
+            Assert.Equal("s", function.ReturnType.ToStringWithDisplayNames());
+
+            using var testConnector2 = new LoggingTestServer(@"Swagger\TestConnectorNoOutput.json", _output);
+            using var httpClient2 = new HttpClient(testConnector2);
+            testConnector2.SetResponseFromFile(@"Responses\TestConnectorDateTimeFormatResponse.json");
+            using PowerPlatformConnectorClient client2 = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient2)
+            {
+                SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
+            };
+
+            BaseRuntimeConnectorContext context2 = new TestConnectorRuntimeContext("ACSL", client2, console: _output);
+
+            DType.TryParse("![createdDateTime:d, displayName:d]", out DType dtype);
+            var expectedFormulaType = FormulaType.Build(dtype);
+
+            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[0], context2, expectedFormulaType, CancellationToken.None);
+
+            RecordValue httpResultValue = (RecordValue)httpResult;
+            FormulaValue displayName = httpResultValue.GetField("displayName");
+            FormulaValue createdDateTime = httpResultValue.GetField("createdDateTime");
+
+            Assert.NotNull(httpResult);
+            Assert.True(httpResult is RecordValue);
+            Assert.True(displayName is DateTimeValue);
+            Assert.True(createdDateTime is DateTimeValue);
+            Assert.True(function.ReturnType != expectedFormulaType);
+        }
+
+        [Fact]
         public async Task ACSL_InvokeFunctionWithOutputOverride()
         {
             // this test is asserting that we can provide the expected output type that should be used during deserialization

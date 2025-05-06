@@ -2113,6 +2113,14 @@
     <value>Zutabe-izena gatazkan dago honekin: '{0}'.</value>
     
   </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Ezin dira gehitu zutabeak sistema-erregistro batean edo sistema-erregistroen taula batean. Erabili ShowColumns lehenik behar dituzun zutabe zehatzak ateratzeko.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Ezin dira aldatu sistema-erregistro baten zutabeak edo sistema-erregistroen taulak. Erabili ShowColumns lehenik behar dituzun zutabe zehatzak ateratzeko.</value>
+    
+  </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
     <value>Zehaztutako '{0}' zutabea ez dago.</value>
     
@@ -4511,24 +4519,232 @@
     <value>Espresio erregularrak ez du balio.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: txertatutako aukerek adierazpen erregularraren hasieran agertu behar dute; "{0}" geroago aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: txertatutako aukerak [imnsx] hizkien konbinazio batera mugatzen dira, ezin dira desgaitu aukerak eta ezin dira erabili azpiadierazpen batean; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: \0 karaktere-kode zortzitarrak ez dira onartzen; erabili \x hamaseitarra edo Unicode-ko \u karakterea; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: giltza literalen aurrean atzerako barra bat jarri behar da ihes-karaktere gisa; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: kortxete literalen aurrean atzerako barra bat jarri behar da ihes-karaktere gisa (adibidez, \[ edo \]); honen amaieran aurkitu da: "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: itxi gabeko karaktere-klaseko kortxetea.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: onartzen ez den talde berezia; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: ihes-karakterea ez da onartzen karaktere-klasean; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: ihes-karaktere negatiboa ez da onartzen karaktere-klase negatiboan; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: ihes-karakterea ez da onartzen karaktere-klase baten kanpoan; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: Unicode kategoriaren izenak ez du balio; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: txertatutako aukera errepikatua, "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: itxi gabeko txertatutako iruzkina.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: itxi gabeko txertatutako iruzkina, "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: txertatutako aukera ez da MatchOptions.NumberedSubMatches-ekin bateragarria; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: zenbatzaile posesiboak ez dira onartzen; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: zenbatzaile zehatzak ezin dira erabili zenbatzaile-aldatzaileekin (adibidez, "?" karga alferrerako); "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: ihes-kodeak ez du balio; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: "{0}" azpiemaitza ez dago definituta edo onartzen ez den aurrerako erreferentzia bat da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: azpiemaitzak ez dira onartzen "look behind" elementuetan; honen hasieran aurkitu da: "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: "look behind" elementuak ezin dira habiaratu; honen hasieran aurkitu da: "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: zenbatzaile mugagabeak ez dira onartzen "look behind" elementuetan; honen amaieran aurkitu da: "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: zenbatzaileak ez dira onartzen "look behind" edo "look ahead" elementuetan; honen amaieran aurkitu da: "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: azpiemaitzarako atzerako "{0}" erreferentzia agian ez da gertatuko alternantzia edo zero zenbatzailea dela eta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: autoerreferentzia egiten duten azpiemaitzak ez dira onartzen; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: itxi gabeko taldeak, itxierako parentesi gutxiegi daude.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: ireki gabeko taldeak, irekierako parentesi gutxiegi daude.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: izendatutako azpiemaitza behin baino gehiagotan definitu da eta honen hasieran aurkitu da: "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: azpiemaitzaren izenak hitzen karaktereen konbinazio bat izan behar du eta ezin da zenbaki batekin hasi; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: txertatutako aukerek adierazpen erregularraren hasieran agertu behar dute; "{0}" geroago aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: karakterea behin baino gehiagotan agertzen da karaktere-klasean; "{0}" errepikatua aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: kortxeteen karaktere-klaseek ezin dute hutsik egon; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: orekatzeko azpiemaitzak ez dira onartzen; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: izendatutako komatxo bakarreko kapturak erabiltzea ez da onartzen; horren ordez, erabili (?&lt;...&gt;); "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: baldintzazko alternantzia ez da onartzen; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: izendatutako kapturak ezin dira erabili MatchOptions.NumberedSubMatches gaituta badago; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: erabili izendatutako kapturak "(?&lt;name&gt;...)" eta "\k&lt;name&gt;" elementuekin, edo gaitu MatchOptions.NumberedSubMatches; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: karaktere-klaseko marratxo literalen aurrean atzerako barra bat jarri behar da ihes-karaktere gisa ("\-"); hemen aurkitu da: "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: karaktere literalaren aurrean atzerako barra bat jarri behar da ihes-karaktere gisa, karaktere-klase batean erabiltzen denean; honen amaieran aurkitu da: "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: beste zenbatzaile bat daukan talde batean dagoen zenbatzaile bat edo emaitza anbiguo bat sor dezakeen alternantzia huts bat; honen amaieran aurkitu da: "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: Lookbehind-ek gehieneko karaktere-muga (250) gainditu du; honen amaieran aurkitu da: "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: zenbatzailearen barrutiko zenbaki txikiena handiena baino handiagoa da; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: habiaratutako talde gehiegi daude; honen hasieran aurkitu da: "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: azpiemaitzaren izena luzeegia da; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: zenbakia handiegia da; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: karaktere-klaseen barruti bateko karaktereak alderantzikatu egin dira; honen amaieran aurkitu da: "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: karaktere-klaseen barruti bateko karaktere-klasea, edo marratxo literalen aurrean atzerako barra bat jarri behar da ihes-karaktere gisa: "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: ihes-karaktererik gabeko atzerako barra batekin amaitzen da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: zenbatzeko ezer ez duen zenbakitzailea; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: MatchOptions.DotAll eta MatchOptions.FreeSpacing Power Fx-en 1. bertsioarekin soilik daude erabilgarri; "{0}" aurkitu da.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Adierazpen erregularrak ez du balio: azpiemaitzarako atzerako "{0}" erreferentzia lookbehind edo lookahead baten barruan dago.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Espresio erregularrek aldaketarik gabeko balioak izan behar dute.</value>
+    <value>Adierazpen erregularrak balio konstante bat izan behar du.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions-ek balio konstante bat izan behar du.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Ezin da aldatu "{0}" funtzioari pasatako balioa.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>"{0}" kaptura-izena espresio erregularraren bat-etortze osoa itzultzen duen eta aurrez zehaztuta dagoen propietatea ezkutatzen ari da. Izen hori duen propietatea erabili nahi baduzu bat-etortze osoa ateratzeko zehaztutako testutik, alda iezaiozu izena kapturari.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>"{0}" kaptura-izenak emaitzaren informazioa itzultzen duen aurredefinitutako propietate bat ezkutatzen du. Haren izena aldatzea gomendatzen dugu, emaitzari buruzko informazioa atzitu nahi baduzu.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>"{0}" kaptura-izena espresio erregularreko taldearen bat-etortzeak itzultzen dituen eta aurrez zehaztuta dagoen propietatea ezkutatzen ari da. Izen hori duen propietatea erabili nahi baduzu bat datozen azpielementu guztiak ateratzeko zehaztutako testutik, alda iezaiozu izena kapturari.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>"{0}" kaptura-izena espresio erregularraren bat-etortzearen kokalekua itzultzen duen eta aurrez zehaztuta dagoen propietatea ezkutatzen ari da. Izen hori duen propietatea erabili nahi baduzu bat-etortze osoaren kokalekua ateratzeko zehaztutako testutik, alda iezaiozu izena kapturari.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>"{0}" multzoko kaptura-izenek emaitzaren informazioa itzultzen duten aurredefinitutako propietateak ezkutatzen dituzte. Haien izena aldatzea gomendatzen dugu, emaitzari buruzko informazioa atzitu nahi baduzu.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
