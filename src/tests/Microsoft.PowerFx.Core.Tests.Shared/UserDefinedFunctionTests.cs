@@ -660,14 +660,16 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowsSideEffects = true,
             };
 
-            foreach (var type in UserDefinitions.RestrictedTypes)
+            foreach (var type in FormulaType.PrimitiveTypes)
             {
-                var script = $"func():{type.GetKindString()} = Blank();";
-                var parseResult = UserDefinitions.Parse(script, parserOptions);
-                var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
-                errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
-
-                Assert.Contains(errors, x => x.MessageKey == "ErrUDF_UnknownType" || x.MessageKey == "ErrUDF_InvalidReturnType");
+                if (UserDefinitions.RestrictedTypes.Contains(type.Value._type))
+                {
+                    var script = $"func():{type.Key} = Blank();";
+                    var parseResult = UserDefinitions.Parse(script, parserOptions);
+                    var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+                    errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+                    Assert.Contains(errors, x => x.MessageKey == "ErrUDF_InvalidReturnType");
+                }
             }
         }
 
@@ -679,14 +681,16 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowsSideEffects = true,
             };
 
-            foreach (var type in UserDefinitions.RestrictedParameterTypes)
+            foreach (var type in FormulaType.PrimitiveTypes)
             {
-                var script = $"func(x: {type.GetKindString()}): Number = 42;";
-                var parseResult = UserDefinitions.Parse(script, parserOptions);
-                var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
-                errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
-
-                Assert.Contains(errors, x => x.MessageKey == "ErrUDF_UnknownType" || x.MessageKey == "ErrUDF_InvalidParamType");
+                if (UserDefinitions.RestrictedParameterTypes.Contains(type.Value._type))
+                {
+                    var script = $"func(x: {type.Key}): Number = 42;";
+                    var parseResult = UserDefinitions.Parse(script, parserOptions);
+                    var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+                    errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+                    Assert.Contains(errors, x => x.MessageKey == "ErrUDF_InvalidParamType");
+                }
             }
         }
     }
