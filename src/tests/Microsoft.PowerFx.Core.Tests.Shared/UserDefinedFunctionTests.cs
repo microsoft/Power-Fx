@@ -655,10 +655,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestUDFRestrictedTypes()
         {
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = true,
-            };
+            var parserOptions = new ParserOptions();
 
             foreach (var type in FormulaType.PrimitiveTypes)
             {
@@ -676,10 +673,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestUDFRestrictedParameterTypes()
         {
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = true,
-            };
+            var parserOptions = new ParserOptions();
 
             foreach (var type in FormulaType.PrimitiveTypes)
             {
