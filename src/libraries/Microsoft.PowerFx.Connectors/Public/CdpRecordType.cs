@@ -4,14 +4,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading; 
+using System.Threading;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class CdpRecordType : RecordType
+    internal class CdpRecordType : RecordType, ICDPAggregateMetadata
     {
         internal ConnectorType ConnectorType { get; }
 
@@ -31,19 +31,15 @@ namespace Microsoft.PowerFx.Connectors
             _fieldMetadata = fieldMetadata;
         }
 
-        public override bool TryGetMetadata(out AggregateMetadata aggregateMetadata)
+        public bool TryGetSensitivityLabelInfo(out IEnumerable<CDPSensitivityLabelInfo> sensitivityLabelInfo)
         {
             if (_fieldMetadata != null) 
             {
-                aggregateMetadata = new AggregateMetadata() 
-                { 
-                    SensitivityLabels = _fieldMetadata.SensitivityLabels.Select(label => label.ToSensitivityLabel()) 
-                };
-
+                sensitivityLabelInfo = _fieldMetadata.SensitivityLabels;
                 return true;
             }
 
-            aggregateMetadata = default;
+            sensitivityLabelInfo = default;
             return false;
         }
 

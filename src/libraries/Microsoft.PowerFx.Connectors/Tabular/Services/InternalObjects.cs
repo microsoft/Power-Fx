@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Connectors
         public IEnumerable<CDPSensitivityLabelInfo> SensitivityLabels { get; set; }
     }
 
-    internal class CDPSensitivityLabelInfo
+    public class CDPSensitivityLabelInfo
     {
         [JsonPropertyName("sensitivityLabelId")]
         public string SensitivityLabelId { get; set; }
@@ -66,20 +66,6 @@ namespace Microsoft.PowerFx.Connectors
 
         [JsonPropertyName("isParent")]
         public bool IsParent { get; set; }
-
-        public SensitivityLabelInfo ToSensitivityLabel()
-        {
-            return new SensitivityLabelInfo(
-                id: SensitivityLabelId,
-                name: Name,
-                displayName: DisplayName,
-                tooltip: Tooltip,
-                priority: Priority,
-                color: Color,
-                isEncrypted: IsEncrypted,
-                isEnabled: IsEnabled,
-                isParent: IsParent);
-        }
     }
 
     internal class RawTable

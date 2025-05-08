@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Syntax;
@@ -293,9 +294,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
             RuntimeConfig rc = new RuntimeConfig(symValues);
             var some = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
             var table = Assert.IsAssignableFrom<TableValue>(some);
-            Assert.True(table.Type.ToRecord().TryGetMetadata(out var metadata));
-            Assert.NotEmpty(metadata.SensitivityLabels);
-            Assert.Equal("FTE Only", metadata.SensitivityLabels.First().Name);
+            var recordType = table.Type.ToRecord();
+            var metadata = Assert.IsAssignableFrom<ICDPAggregateMetadata>(recordType);
+            Assert.True(metadata.TryGetSensitivityLabelInfo(out var sensitivityLabels));
+            Assert.NotEmpty(sensitivityLabels);
+            Assert.Equal("FTE Only", sensitivityLabels.First().Name);
         }
 
         [Fact]

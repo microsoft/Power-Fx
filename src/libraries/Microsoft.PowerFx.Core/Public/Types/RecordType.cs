@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -154,12 +153,6 @@ namespace Microsoft.PowerFx.Types
         public static RecordType Polymorphic()
         {
             return new KnownRecordType(DType.Polymorphic);
-        }
-
-        public virtual bool TryGetMetadata(out AggregateMetadata metadata)
-        {
-            metadata = null;
-            return false;
         }
 
         internal override void DefaultExpressionValue(StringBuilder sb)
