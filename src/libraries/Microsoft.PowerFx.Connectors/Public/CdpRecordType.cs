@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading; 
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -18,13 +19,32 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly IEnumerable<string> _primaryKeyNames;
 
-        internal CdpRecordType(ConnectorType connectorType, ICdpTableResolver tableResolver, TableDelegationInfo delegationInfo)
+        private readonly CDPMetadataItem _fieldMetadata;
+
+        internal CdpRecordType(ConnectorType connectorType, ICdpTableResolver tableResolver, TableDelegationInfo delegationInfo, CDPMetadataItem fieldMetadata)
             : base(connectorType.DisplayNameProvider, delegationInfo)
         {
             ConnectorType = connectorType;
             TableResolver = tableResolver;
 
             _primaryKeyNames = delegationInfo.PrimaryKeyNames;
+            _fieldMetadata = fieldMetadata;
+        }
+
+        public override bool TryGetMetadata(out AggregateMetadata aggregateMetadata)
+        {
+            if (_fieldMetadata != null) 
+            {
+                aggregateMetadata = new AggregateMetadata() 
+                { 
+                    SensitivityLabels = _fieldMetadata.SensitivityLabels.Select(label => label.ToSensitivityLabel()) 
+                };
+
+                return true;
+            }
+
+            aggregateMetadata = default;
+            return false;
         }
 
         public bool TryGetFieldExternalTableName(string fieldName, out string tableName, out string foreignKey)

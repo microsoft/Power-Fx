@@ -48,15 +48,22 @@ namespace Microsoft.PowerFx.Connectors
 
         private IReadOnlyDictionary<string, Relationship> _relationships;
 
-        internal CdpTable(string dataset, string table, IReadOnlyCollection<RawTable> tables)
+        // this can be null.
+        internal readonly CDPMetadataItem _fieldMetadata;
+
+        private readonly ConnectorSettings _connectorSettings;
+
+        internal CdpTable(string dataset, string table, IReadOnlyCollection<RawTable> tables, ConnectorSettings connectorSettings,  CDPMetadataItem fieldMetadata = null)
         {
             DatasetName = dataset ?? throw new ArgumentNullException(nameof(dataset));
             TableName = table ?? throw new ArgumentNullException(nameof(table));
             Tables = tables;
+            _connectorSettings = connectorSettings ?? ConnectorSettings.NewCDPConnectorSettings();
+            _fieldMetadata = fieldMetadata;
         }
 
-        internal CdpTable(string dataset, string table, DatasetMetadata datasetMetadata, IReadOnlyCollection<RawTable> tables)
-            : this(dataset, table, tables)
+        internal CdpTable(string dataset, string table, DatasetMetadata datasetMetadata, IReadOnlyCollection<RawTable> tables, ConnectorSettings connectorSettings, CDPMetadataItem fieldMetadata)
+            : this(dataset, table, tables, connectorSettings, fieldMetadata)
         {
             DatasetMetadata = datasetMetadata;
         }
@@ -81,7 +88,7 @@ namespace Microsoft.PowerFx.Connectors
 
             _uriPrefix = uriPrefix;
 
-            CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, logger);
+            CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, _connectorSettings, logger);
             TabularTableDescriptor = await tableResolver.ResolveTableAsync(TableName, cancellationToken).ConfigureAwait(false);
             
             if (TabularTableDescriptor.HasErrors)

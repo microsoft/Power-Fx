@@ -28,13 +28,17 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly bool _doubleEncoding;
 
-        public CdpTableResolver(CdpTable tabularTable, HttpClient httpClient, string uriPrefix, bool doubleEncoding, ConnectorLogger logger = null)
+        private readonly ConnectorSettings _connectorSettings;
+
+        public ConnectorSettings ConnectorSettings => _connectorSettings;
+
+        public CdpTableResolver(CdpTable tabularTable, HttpClient httpClient, string uriPrefix, bool doubleEncoding, ConnectorSettings connectorSettings, ConnectorLogger logger = null)
         {
             _tabularTable = tabularTable;
             _httpClient = httpClient;
             _uriPrefix = uriPrefix;
             _doubleEncoding = doubleEncoding;
-
+            _connectorSettings = connectorSettings;
             Logger = logger;
         }
 
@@ -60,8 +64,8 @@ namespace Microsoft.PowerFx.Connectors
             string text = await CdpServiceBase.GetObject(_httpClient, $"Get table metadata", uri, null, cancellationToken, Logger).ConfigureAwait(false);
 
             if (string.IsNullOrWhiteSpace(text))
-            {                
-                return null;
+            {
+                throw new InvalidOperationException($"{nameof(ResolveTableAsync)} didn't receive any response");
             }
             
             // We don't need SQL relationships as those are not equivalent as those we find in Dataverse or ServiceNow
@@ -97,7 +101,7 @@ namespace Microsoft.PowerFx.Connectors
             var parts = _uriPrefix.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
             string connectorName = (parts.Length > 1) ? parts[1] : string.Empty;
 
-            ConnectorType connectorType = ConnectorFunction.GetCdpTableType(this, connectorName, _tabularTable.TableName, "Schema/Items", FormulaValue.New(text), ConnectorSettings.DefaultCdp, _tabularTable.DatasetName, 
+            ConnectorType connectorType = ConnectorFunction.GetCdpTableType(this, connectorName, _tabularTable.TableName, "Schema/Items", FormulaValue.New(text), _connectorSettings, _tabularTable.DatasetName, _tabularTable._fieldMetadata,
                                                                             out TableDelegationInfo delegationInfo, out IEnumerable<OptionSet> optionSets);
 
             OptionSets = optionSets;
