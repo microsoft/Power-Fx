@@ -1,73 +1,104 @@
 {
   "@odata.context": "https://sql-wcus.azconn-wcus-001.p.azurewebsites.net/v2/$metadata#datasets('pfxdev-sql.database.windows.net%2CSampleDB')/tables",
-  "value": [
+  "@metadata": [
     {
-      "Name": "[dbo].[BuildVersion]",
-      "DisplayName": "BuildVersion"
-    },
-    {
-      "Name": "[dbo].[ErrorLog]",
-      "DisplayName": "ErrorLog"
-    },
-    {
-      "Name": "[dbo].[sysdiagrams]",
-      "DisplayName": "sysdiagrams"
-    },
-    {
-      "Name": "[SalesLT].[Address]",
-      "DisplayName": "SalesLT.Address"
-    },
-    {
-      "Name": "[SalesLT].[Customer]",
-      "DisplayName": "SalesLT.Customer"
-    },
-    {
-      "Name": "[SalesLT].[CustomerAddress]",
-      "DisplayName": "SalesLT.CustomerAddress"
-    },
-    {
-      "Name": "[SalesLT].[Product]",
-      "DisplayName": "SalesLT.Product"
-    },
-    {
-      "Name": "[SalesLT].[ProductCategory]",
-      "DisplayName": "SalesLT.ProductCategory"
-    },
-    {
-      "Name": "[SalesLT].[ProductDescription]",
-      "DisplayName": "SalesLT.ProductDescription"
-    },
-    {
-      "Name": "[SalesLT].[ProductModel]",
-      "DisplayName": "SalesLT.ProductModel"
-    },
-    {
-      "Name": "[SalesLT].[ProductModelProductDescription]",
-      "DisplayName": "SalesLT.ProductModelProductDescription"
-    },
-    {
-      "Name": "[SalesLT].[SalesOrderDetail]",
-      "DisplayName": "SalesLT.SalesOrderDetail"
-    },
-    {
-      "Name": "[SalesLT].[SalesOrderHeader]",
-      "DisplayName": "SalesLT.SalesOrderHeader"
-    },
-    {
-      "Name": "[SalesLT].[vGetAllCategories]",
-      "DisplayName": "SalesLT.vGetAllCategories"
-    },
-    {
-      "Name": "[SalesLT].[vProductAndDescription]",
-      "DisplayName": "SalesLT.vProductAndDescription"
-    },
-    {
-      "Name": "[SalesLT].[vProductModelCatalogDescription]",
-      "DisplayName": "SalesLT.vProductModelCatalogDescription"
-    },
-    {
-      "Name": "[sys].[database_firewall_rules]",
-      "DisplayName": "sys.database_firewall_rules"
+      "name": "[SalesLT].[Customer]",
+      "sensitivityLabelInfo": [
+        {
+          "sensitivityLabelId": "34e4c2bf-bc71-4680-897b-bd559ad79cd2",
+          "name": "FTE Only",
+          "displayName": "FTE Only",
+          "tooltip": "FTE Only",
+          "priority": 65,
+          "color": "",
+          "isEncrypted": false,
+          "isEnabled": true,
+          "isParent": false,
+          "parentSensitivityLabelId": "ef85f0be-9819-46dd-b114-3d99fc96b702"
+        },
+        {
+          "sensitivityLabelId": "7bb18415-09cf-41fc-afb8-316027661da0",
+          "name": "defa4170-0d19-0005-0000-bc88714345d2",
+          "displayName": "Personal",
+          "tooltip": "Non-business data, for personal use only.",
+          "priority": 68,
+          "color": "",
+          "isEncrypted": false,
+          "isEnabled": true,
+          "isParent": false,
+          "parentSensitivityLabelId": ""
+        }
+      ]
     }
-  ]
-}
+  ],
+    "value": [
+        {
+          "Name": "[dbo].[BuildVersion]",
+          "DisplayName": "BuildVersion"
+        },
+        {
+          "Name": "[dbo].[ErrorLog]",
+          "DisplayName": "ErrorLog"
+        },
+        {
+          "Name": "[dbo].[sysdiagrams]",
+          "DisplayName": "sysdiagrams"
+        },
+        {
+          "Name": "[SalesLT].[Address]",
+          "DisplayName": "SalesLT.Address"
+        },
+        {
+          "Name": "[SalesLT].[Customer]",
+          "DisplayName": "SalesLT.Customer"
+        },
+        {
+          "Name": "[SalesLT].[CustomerAddress]",
+          "DisplayName": "SalesLT.CustomerAddress"
+        },
+        {
+          "Name": "[SalesLT].[Product]",
+          "DisplayName": "SalesLT.Product"
+        },
+        {
+          "Name": "[SalesLT].[ProductCategory]",
+          "DisplayName": "SalesLT.ProductCategory"
+        },
+        {
+          "Name": "[SalesLT].[ProductDescription]",
+          "DisplayName": "SalesLT.ProductDescription"
+        },
+        {
+          "Name": "[SalesLT].[ProductModel]",
+          "DisplayName": "SalesLT.ProductModel"
+        },
+        {
+          "Name": "[SalesLT].[ProductModelProductDescription]",
+          "DisplayName": "SalesLT.ProductModelProductDescription"
+        },
+        {
+          "Name": "[SalesLT].[SalesOrderDetail]",
+          "DisplayName": "SalesLT.SalesOrderDetail"
+        },
+        {
+          "Name": "[SalesLT].[SalesOrderHeader]",
+          "DisplayName": "SalesLT.SalesOrderHeader"
+        },
+        {
+          "Name": "[SalesLT].[vGetAllCategories]",
+          "DisplayName": "SalesLT.vGetAllCategories"
+        },
+        {
+          "Name": "[SalesLT].[vProductAndDescription]",
+          "DisplayName": "SalesLT.vProductAndDescription"
+        },
+        {
+          "Name": "[SalesLT].[vProductModelCatalogDescription]",
+          "DisplayName": "SalesLT.vProductModelCatalogDescription"
+        },
+        {
+          "Name": "[sys].[database_firewall_rules]",
+          "DisplayName": "sys.database_firewall_rules"
+        }
+      ]
+    }

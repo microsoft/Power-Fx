@@ -10,6 +10,8 @@ namespace Microsoft.PowerFx.Connectors
     {
         ConnectorLogger Logger { get; }
 
+        ConnectorSettings ConnectorSettings { get; }
+
         Task<ConnectorType> ResolveTableAsync(string tableName, CancellationToken cancellationToken);
     }
 }

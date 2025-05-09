@@ -124,6 +124,8 @@ namespace Microsoft.PowerFx.Connectors
 
         internal string ForeignKey { get; set; }
 
+        internal CDPMetadataItem FieldMetadata { get; }
+
         internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, FormulaType formulaType, ExpressionError warning = default, IEnumerable<KeyValuePair<DName, DName>> list = null, bool isNumber = false)
         {
             Name = openApiParameter?.Name;
@@ -264,18 +266,19 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Called by ConnectorFunction.GetCdpTableType
-        internal ConnectorType(JsonElement schema, string tableName, SymbolTable optionSets, ConnectorSettings settings, string datasetName, string name, string displayName, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
+        internal ConnectorType(JsonElement schema, string tableName, SymbolTable optionSets, ConnectorSettings settings, string datasetName, string name, string displayName, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly, CDPMetadataItem fieldMetadata)
             : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(tableName, optionSets, settings))
         {
             Name = name;
             DisplayName = displayName;
+            FieldMetadata = fieldMetadata;
 
             foreach (ConnectorType field in Fields.Where(f => f.Capabilities != null))
             {
                 serviceCapabilities.AddColumnCapability(field.Name, field.Capabilities);
             }
 
-            FormulaType = new CdpRecordType(this, resolver, ServiceCapabilities.ToDelegationInfo(serviceCapabilities, name, isTableReadOnly, this, datasetName));
+            FormulaType = new CdpRecordType(this, resolver, ServiceCapabilities.ToDelegationInfo(serviceCapabilities, name, isTableReadOnly, this, datasetName), FieldMetadata);
         }
 
         internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, ConnectorType connectorType)

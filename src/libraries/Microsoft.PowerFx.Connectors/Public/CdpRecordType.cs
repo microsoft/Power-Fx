@@ -4,13 +4,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading; 
+using System.Threading;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class CdpRecordType : RecordType
+    internal class CdpRecordType : RecordType, ICDPAggregateMetadata
     {
         internal ConnectorType ConnectorType { get; }
 
@@ -18,13 +19,28 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly IEnumerable<string> _primaryKeyNames;
 
-        internal CdpRecordType(ConnectorType connectorType, ICdpTableResolver tableResolver, TableDelegationInfo delegationInfo)
+        private readonly CDPMetadataItem _fieldMetadata;
+
+        internal CdpRecordType(ConnectorType connectorType, ICdpTableResolver tableResolver, TableDelegationInfo delegationInfo, CDPMetadataItem fieldMetadata)
             : base(connectorType.DisplayNameProvider, delegationInfo)
         {
             ConnectorType = connectorType;
             TableResolver = tableResolver;
 
             _primaryKeyNames = delegationInfo.PrimaryKeyNames;
+            _fieldMetadata = fieldMetadata;
+        }
+
+        public bool TryGetSensitivityLabelInfo(out IEnumerable<CDPSensitivityLabelInfo> sensitivityLabelInfo)
+        {
+            if (_fieldMetadata != null) 
+            {
+                sensitivityLabelInfo = _fieldMetadata.SensitivityLabels;
+                return true;
+            }
+
+            sensitivityLabelInfo = default;
+            return false;
         }
 
         public bool TryGetFieldExternalTableName(string fieldName, out string tableName, out string foreignKey)

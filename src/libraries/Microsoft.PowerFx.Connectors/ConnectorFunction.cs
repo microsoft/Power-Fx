@@ -1017,7 +1017,7 @@ namespace Microsoft.PowerFx.Connectors
 
         // Only called by ConnectorTable.GetSchema
         // Returns a FormulaType with AssociatedDataSources set (done in AddTabularDataSource)
-        internal static ConnectorType GetCdpTableType(ICdpTableResolver tableResolver, string connectorName, string tableName, string valuePath, StringValue stringValue, ConnectorSettings settings, string datasetName,
+        internal static ConnectorType GetCdpTableType(ICdpTableResolver tableResolver, string connectorName, string tableName, string valuePath, StringValue stringValue, ConnectorSettings settings, string datasetName, CDPMetadataItem fieldMetadata,
                                                       out TableDelegationInfo delegationInfo, out IEnumerable<OptionSet> optionSets)
         {
             // There are some errors when parsing this Json payload but that's not a problem here as we only need x-ms-capabilities parsing to work
@@ -1031,7 +1031,7 @@ namespace Microsoft.PowerFx.Connectors
             bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;            
 
             SymbolTable symbolTable = new SymbolTable();
-            ConnectorType connectorType = new ConnectorType(jsonElement, tableName, symbolTable, settings, datasetName, name, displayName, connectorName, tableResolver, serviceCapabilities, isTableReadOnly);
+            ConnectorType connectorType = new ConnectorType(jsonElement, tableName, symbolTable, settings, datasetName, name, displayName, connectorName, tableResolver, serviceCapabilities, isTableReadOnly, fieldMetadata);
             delegationInfo = ((DataSourceInfo)connectorType.FormulaType._type.AssociatedDataSources.First()).DelegationInfo;
             optionSets = symbolTable.OptionSets.Select(kvp => kvp.Value);
 

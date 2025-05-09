@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Syntax;
@@ -285,6 +286,19 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
             await connectorTable.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
             Assert.True(connectorTable.IsInitialized);
+
+            var sqlTableValue = connectorTable.GetTableValue();
+            var symValues = new SymbolValues().Add("Customer", sqlTableValue);
+            var check = engine.Check("Customer", symbolTable: symValues.SymbolTable);
+
+            RuntimeConfig rc = new RuntimeConfig(symValues);
+            var some = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
+            var table = Assert.IsAssignableFrom<TableValue>(some);
+            var recordType = table.Type.ToRecord();
+            var metadata = Assert.IsAssignableFrom<ICDPAggregateMetadata>(recordType);
+            Assert.True(metadata.TryGetSensitivityLabelInfo(out var sensitivityLabels));
+            Assert.NotEmpty(sensitivityLabels);
+            Assert.Equal("FTE Only", sensitivityLabels.First().Name);
         }
 
         [Fact]
@@ -533,7 +547,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
 
             ConsoleLogger logger = new ConsoleLogger(_output);
-            CdpTable tabularService = new CdpTable("pfxdev-sql.database.windows.net,connectortest", "Customers", tables: null);
+            CdpTable tabularService = new CdpTable("pfxdev-sql.database.windows.net,connectortest", "Customers", tables: null, connectorSettings: ConnectorSettings.NewCDPConnectorSettings());
 
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Customers", tabularService.TableName);
@@ -699,7 +713,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832384"
             };
 
-            CdpTable tabularService = new CdpTable("https://microsofteur.sharepoint.com/teams/pfxtest", "Documents", tables: null);
+            CdpTable tabularService = new CdpTable("https://microsofteur.sharepoint.com/teams/pfxtest", "Documents", tables: null, connectorSettings: ConnectorSettings.NewCDPConnectorSettings());
 
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Documents", tabularService.TableName);
@@ -752,7 +766,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832384"
             };
 
-            CdpTable tabularService = new CdpTable("https://microsofteur.sharepoint.com/teams/pfxtest", "Documents", tables: null);
+            CdpTable tabularService = new CdpTable("https://microsofteur.sharepoint.com/teams/pfxtest", "Documents", tables: null, connectorSettings: null, fieldMetadata: null);
 
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Documents", tabularService.TableName);
@@ -1079,7 +1093,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832384"
             };
 
-            CdpTable tabularService = new CdpTable("default", "Account", tables: null);
+            CdpTable tabularService = new CdpTable("default", "Account", tables: null, connectorSettings: ConnectorSettings.NewCDPConnectorSettings());
 
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Account", tabularService.TableName);
