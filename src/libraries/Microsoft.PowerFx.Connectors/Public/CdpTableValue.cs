@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Connectors.Tabular;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
@@ -43,7 +44,7 @@ namespace Microsoft.PowerFx.Connectors
             _cachedRows = null;
         }
 
-        public override IEnumerable<DValue<RecordValue>> Rows => GetRowsAsync(null, null, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+        public override IEnumerable<DValue<RecordValue>> Rows => GetRowsAsync(null, new DefaultCDPDelegationParameter(RecordType.ToTable(), _tabularService.ConnectorSettings.MaxRows), CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
 
         public DelegationParameterFeatures SupportedFeatures => DelegationParameterFeatures.Filter |
                 DelegationParameterFeatures.Top |

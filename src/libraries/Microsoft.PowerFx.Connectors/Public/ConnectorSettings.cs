@@ -11,13 +11,19 @@ namespace Microsoft.PowerFx.Connectors
     [ThreadSafeImmutable]
     public class ConnectorSettings
     {
-        public static ConnectorSettings NewCDPConnectorSettings(bool extractSensitivityLabel = false, string purviewAccountName = null)
+        /// <summary>
+        /// Default number of rows to return for connector, per page. I.E. $top=1000.
+        /// </summary>
+        internal const int DefaultConnectorTop = 1000;
+
+        public static ConnectorSettings NewCDPConnectorSettings(bool extractSensitivityLabel = false, string purviewAccountName = null, int maxRows = DefaultConnectorTop)
         {
             var connectorSettings = new ConnectorSettings(null)
             {
                 Compatibility = ConnectorCompatibility.CdpCompatibility,
                 SupportXMsEnumValues = true,
                 ReturnEnumsAsPrimitive = false,
+                MaxRows = maxRows,
                 ExtractSensitivityLabel = extractSensitivityLabel,
                 PurviewAccountName = purviewAccountName
             };
@@ -38,7 +44,7 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// Maximum number of rows to return, per page.
         /// </summary>
-        public int MaxRows { get; init; } = 1000;
+        public int MaxRows { get; init; } = DefaultConnectorTop;
 
         /// <summary>
         /// If this is enabled it will extract MIP Labels.

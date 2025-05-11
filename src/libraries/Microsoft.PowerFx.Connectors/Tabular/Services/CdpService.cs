@@ -26,6 +26,8 @@ namespace Microsoft.PowerFx.Connectors
 
         public abstract HttpClient HttpClient { get; }
 
+        public abstract ConnectorSettings ConnectorSettings { get; }
+
         public virtual CdpTableValue GetTableValue()
         {
             return IsInitialized
