@@ -648,7 +648,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [Theory]
         [InlineData("ParseJSON(\"42\", Nu|", "Number")]
         [InlineData("AsType(ParseJSON(\"42\"), Da|", "Date", "DateTime", "DateTimeTZInd")]
-        [InlineData("IsType(ParseJSON(\"42\"),|", "'My Type With Space'", "'Some \" DQuote'", "Boolean", "Date", "DateTime", "DateTimeTZInd", "Decimal", "GUID", "Hyperlink", "MyNewType", "Number", "Text", "Time", "UntypedObject")]
+        [InlineData("IsType(ParseJSON(\"42\"),|", "'My Type With Space'", "'Some \" DQuote'", "Boolean", "Date", "DateTime", "DateTimeTZInd", "Decimal", "Dynamic", "GUID", "Hyperlink", "MyNewType", "Number", "Text", "Time")]
         [InlineData("ParseJSON(\"42\", Voi|")]
         [InlineData("ParseJSON(\"42\", MyN|", "MyNewType")]
         [InlineData("ParseJSON(\"42\", Tim|", "DateTime", "DateTimeTZInd", "Time")]
