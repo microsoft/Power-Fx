@@ -53,10 +53,10 @@ DateTime(1900,12,31,0,0,0,0)
 >> AsType(ParseJSON("""1900-12-31T00:00:00.000-08:00"""), DateTimeTZInd)
 DateTime(1900,12,31,8,0,0,0)
 
->> Value(AsType(ParseJSON("42"), UntypedObject))
+>> Value(AsType(ParseJSON("42"), Dynamic))
 42
 
->> Value(AsType(ParseJSON("true"), UntypedObject))
+>> Value(AsType(ParseJSON("true"), Dynamic))
 1
 
 >> If(AsType(ParseJSON("false"), Boolean), "MyFalse", "MyTrue")
