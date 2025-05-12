@@ -381,6 +381,32 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
+        internal bool HasSameDefintion(string definitionsScript, UserDefinedFunction targetUDF, string targetUDFbody)
+        {
+            Contracts.AssertValue(targetUDF);
+
+            if (Name != targetUDF.Name ||
+                UdfBody.GetCompleteSpan().GetFragment(definitionsScript) != targetUDFbody || 
+                _args.Count() != targetUDF._args.Count())
+            {
+                return false;
+            }
+
+            var argLookup = _args.ToDictionary(arg => arg.ArgIndex, arg => (arg.NameIdent.Name, ParamTypes[arg.ArgIndex]));
+
+            foreach (var arg in targetUDF._args)
+            {
+                if (!argLookup.TryGetValue(arg.ArgIndex, out var argInfo) || 
+                    argInfo.Name != arg.NameIdent.Name || 
+                    argInfo.Item2 != targetUDF.ParamTypes[arg.ArgIndex])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// NameResolver that combines global named resolver and params for user defined function.
         /// </summary>
