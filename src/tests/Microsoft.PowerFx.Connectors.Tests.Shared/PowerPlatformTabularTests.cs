@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("DisplayName", dm.Parameters.Skip(1).First().XMsDynamicValues.ValueTitle);
             Assert.Equal("Database name", dm.Parameters.Skip(1).First().XMsSummary);
 
-            CdpDataSource cds = new CdpDataSource("pfxdev-sql.database.windows.net,connectortest");
+            CdpDataSource cds = new CdpDataSource("pfxdev-sql.database.windows.net,connectortest", ConnectorSettings.NewCDPConnectorSettings(maxRows: 101));
 
             testConnector.SetResponseFromFiles(@"Responses\SQL GetDatasetsMetadata.json", @"Responses\SQL GetTables.json");
             IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
@@ -140,6 +140,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // Rows are not cached here as the cache is stored in CdpTableValue which is created by InjectServiceProviderFunction, itself added during Engine.Check
             testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
             result = await engine.EvalAsync("Last(Customers).Phone", CancellationToken.None, runtimeConfig: rc);
+
+            // Verify that we have the right URL with correct $top
+            Assert.Contains("x-ms-request-url: /apim/sql/c1a4e9f52ec94d55bb82f319b3e33a6a/v2/datasets/pfxdev-sql.database.windows.net%2Cconnectortest/tables/%5Bdbo%5D.%5BCustomers%5D/items?api-version=2015-09-01&$top=101", testConnector._log.ToString(), StringComparison.InvariantCulture);
+
             StringValue phone = Assert.IsType<StringValue>(result);
             Assert.Equal("+1-425-705-0000", phone.Value);
         }
