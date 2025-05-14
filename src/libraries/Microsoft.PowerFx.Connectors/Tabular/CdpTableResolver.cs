@@ -63,6 +63,7 @@ namespace Microsoft.PowerFx.Connectors
             // URI to fetch table metadata.
             string uri = (_uriPrefix ?? string.Empty) + (UseV2(_uriPrefix) ? "/v2" : string.Empty) + $"/$metadata.json/datasets/{dataset}/tables/{CdpServiceBase.DoubleEncode(logicalName)}?api-version=2015-09-01";
 
+            // $$$ we need to return POCO
             string text = await CdpServiceBase.GetObject(_httpClient, $"Get table metadata", uri, null, cancellationToken, Logger).ConfigureAwait(false);
 
             if (string.IsNullOrWhiteSpace(text))
