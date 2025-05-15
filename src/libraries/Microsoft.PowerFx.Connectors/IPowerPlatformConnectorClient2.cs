@@ -21,6 +21,18 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// Sends an HTTP request to the Power Platform connector.
         /// </summary>
+        /// <param name="requestMessage">HTTP request message. URI path will be used as a relative path for the connector request.</param>
+        /// <param name="diagnosticOptions">Diagnostic options.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns><see cref="HttpResponseMessage"/>.</returns>
+        Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage requestMessage,
+            PowerPlatformConnectorClient2DiagnosticOptions diagnosticOptions,
+            CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Sends an HTTP request to the Power Platform connector.
+        /// </summary>
         /// <param name="method">HTTP method.</param>
         /// <param name="operationPathAndQuery">Operation path and query string.</param>
         /// <param name="headers">Headers.</param>
