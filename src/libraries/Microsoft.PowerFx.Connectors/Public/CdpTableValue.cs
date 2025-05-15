@@ -24,6 +24,9 @@ namespace Microsoft.PowerFx.Connectors
 
         internal readonly IReadOnlyDictionary<string, Relationship> Relationships;
 
+        /// <summary>
+        /// caches result of <see cref="Rows"/>.
+        /// </summary>
         private IReadOnlyCollection<DValue<RecordValue>> _cachedRows;
 
         internal readonly HttpClient HttpClient;
@@ -44,7 +47,24 @@ namespace Microsoft.PowerFx.Connectors
             _cachedRows = null;
         }
 
-        public override IEnumerable<DValue<RecordValue>> Rows => GetRowsAsync(null, new DefaultCDPDelegationParameter(RecordType.ToTable(), _tabularService.ConnectorSettings.MaxRows), CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+        public override IEnumerable<DValue<RecordValue>> Rows
+        {
+            get
+            {
+                if (_cachedRows == null)
+                {
+                    // first time through, fetch and cache
+                    _cachedRows = GetRowsAsync(
+                        services: null,
+                        parameters: new DefaultCDPDelegationParameter(
+                            RecordType.ToTable(),
+                            _tabularService.ConnectorSettings.MaxRows),
+                        cancel: CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+                }
+
+                return _cachedRows;
+            }
+        }
 
         public DelegationParameterFeatures SupportedFeatures => DelegationParameterFeatures.Filter |
                 DelegationParameterFeatures.Top |
@@ -56,18 +76,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public async Task<IReadOnlyCollection<DValue<RecordValue>>> GetRowsAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel)
         {
-            if (parameters == null && _cachedRows != null)
-            {
-                return _cachedRows;
-            }
-
             var rows = await _tabularService.GetItemsAsync(services, parameters, cancel).ConfigureAwait(false);
-
-            if (parameters == null)
-            {
-                _cachedRows = rows;
-            }
-
             return rows;
         }
 
