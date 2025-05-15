@@ -70,23 +70,6 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // <inheritdoc />
-        public Task<HttpResponseMessage> SendAsync(
-            HttpMethod method,
-            string operationPathAndQuery,
-            IEnumerable<KeyValuePair<string, IEnumerable<string>>> headers,
-            HttpContent content,
-            CancellationToken cancellationToken)
-        {
-            return this.SendAsync(
-                method: method,
-                operationPathAndQuery: operationPathAndQuery,
-                headers: headers,
-                content: content,
-                diagnosticOptions: null,
-                cancellationToken: cancellationToken);
-        }
-
-        // <inheritdoc />
         public async Task<HttpResponseMessage> SendAsync(
             HttpMethod method,
             string operationPathAndQuery,
