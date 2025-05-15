@@ -71,28 +71,6 @@ namespace Microsoft.PowerFx.Connectors
 
         // <inheritdoc />
         public Task<HttpResponseMessage> SendAsync(
-            HttpRequestMessage requestMessage,
-            PowerPlatformConnectorClient2DiagnosticOptions diagnosticOptions,
-            CancellationToken cancellationToken)
-        {
-            if (requestMessage is null)
-            {
-                throw new ArgumentNullException(nameof(requestMessage));
-            }
-
-            var uri = this.CombineBaseUrlWithOperationPathAndQuery(requestMessage.RequestUri.PathAndQuery);
-
-            return this.InternalSendAsync(
-                requestMessage.Method,
-                uri,
-                requestMessage.Headers,
-                requestMessage.Content,
-                diagnosticOptions,
-                cancellationToken);
-        }
-
-        // <inheritdoc />
-        public Task<HttpResponseMessage> SendAsync(
             HttpMethod method,
             string operationPathAndQuery,
             IEnumerable<KeyValuePair<string, IEnumerable<string>>> headers,
