@@ -70,7 +70,29 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // <inheritdoc />
-        public async Task<HttpResponseMessage> SendAsync(
+        public Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage requestMessage,
+            PowerPlatformConnectorClient2DiagnosticOptions diagnosticOptions,
+            CancellationToken cancellationToken)
+        {
+            if (requestMessage is null)
+            {
+                throw new ArgumentNullException(nameof(requestMessage));
+            }
+
+            var uri = this.CombineBaseUrlWithOperationPathAndQuery(requestMessage.RequestUri.PathAndQuery);
+
+            return this.InternalSendAsync(
+                requestMessage.Method,
+                uri,
+                requestMessage.Headers,
+                requestMessage.Content,
+                diagnosticOptions,
+                cancellationToken);
+        }
+
+        // <inheritdoc />
+        public Task<HttpResponseMessage> SendAsync(
             HttpMethod method,
             string operationPathAndQuery,
             IEnumerable<KeyValuePair<string, IEnumerable<string>>> headers,
@@ -83,9 +105,32 @@ namespace Microsoft.PowerFx.Connectors
                 throw new ArgumentNullException(nameof(operationPathAndQuery));
             }
 
+            var uri = this.CombineBaseUrlWithOperationPathAndQuery(operationPathAndQuery);
+
+            if (!uri.AbsoluteUri.StartsWith(this._baseUrlStr, StringComparison.Ordinal))
+            {
+                throw new ArgumentException("Path traversal detected during combination of base URL path and operation path.", nameof(operationPathAndQuery));
+            }
+
+            return this.InternalSendAsync(
+                method,
+                uri,
+                headers,
+                content,
+                diagnosticOptions,
+                cancellationToken);
+        }
+
+        private async Task<HttpResponseMessage> InternalSendAsync(
+            HttpMethod method,
+            Uri uri,
+            IEnumerable<KeyValuePair<string, IEnumerable<string>>> headers,
+            HttpContent content,
+            PowerPlatformConnectorClient2DiagnosticOptions diagnosticOptions,
+            CancellationToken cancellationToken)
+        {
             var authToken = await this._tokenProvider(cancellationToken).ConfigureAwait(false);
 
-            var uri = this.CombineBaseUrlWithOperationPathAndQuery(operationPathAndQuery);
             using (var req = new HttpRequestMessage(method, uri))
             {
                 req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
