@@ -50,6 +50,17 @@ namespace Microsoft.PowerFx.Connectors
 
         private static string GetUriElement(this OpenApiDocument openApiDocument, Func<Uri, string> getElement, SupportsConnectorErrors errors)
         {
+            var uri = GetFirstServerUri(openApiDocument, errors);
+            if (uri is null)
+            {
+                return null;
+            }
+
+            return getElement(uri);
+        }
+
+        internal static Uri GetFirstServerUri(this OpenApiDocument openApiDocument, SupportsConnectorErrors errors)
+        {
             if (openApiDocument?.Servers == null)
             {
                 return null;
@@ -70,8 +81,7 @@ namespace Microsoft.PowerFx.Connectors
                     // This is a full URL that will pull in 'basePath' property from connectors.
                     // Extract BasePath back out from this.
                     var fullPath = openApiDocument.Servers[0].Url;
-                    var uri = new Uri(fullPath);
-                    return getElement(uri);
+                    return new Uri(fullPath);
 
                 default:
                     errors.AddError($"Multiple servers in OpenApiDocument is not supported");
@@ -520,7 +530,7 @@ namespace Microsoft.PowerFx.Connectors
                         case "currency":
                             return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
 
-                        default:                            
+                        default:
                             // ex: Format = "date" or "string"
                             return new ConnectorType($"Unsupported type of number: '{schema.Format}'", openApiParameter.Name, FormulaType.BindingError);
                     }
@@ -660,7 +670,7 @@ namespace Microsoft.PowerFx.Connectors
                                 return new ConnectorType(schema, openApiParameter, FormulaType.String, hiddenfields.ToRecordType());
                             }
 
-                            ConnectorType propertyType = new SwaggerParameter(propLogicalName, schema.Required.Contains(propLogicalName), kv.Value, kv.Value.Extensions).GetConnectorType(settings.Stack(schemaIdentifier));                            
+                            ConnectorType propertyType = new SwaggerParameter(propLogicalName, schema.Required.Contains(propLogicalName), kv.Value, kv.Value.Extensions).GetConnectorType(settings.Stack(schemaIdentifier));
 
                             settings.UnStack();
 
@@ -690,7 +700,7 @@ namespace Microsoft.PowerFx.Connectors
                 case "file":
                     return new ConnectorType(schema, openApiParameter, FormulaType.Blob);
 
-                default:                    
+                default:
                     // ex: type = "null" or "decimal"
                     return new ConnectorType($"Unsupported schema type '{schema.Type}'", openApiParameter.Name, FormulaType.BindingError);
             }
@@ -702,7 +712,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (settings.Settings.Compatibility.IsCDP() || schema.Format == "enum" || settings.Settings.SupportXMsEnumValues)
             {
-                // Try getting enum from 'x-ms-enum-values'                
+                // Try getting enum from 'x-ms-enum-values'
                 (IEnumerable<KeyValuePair<DName, DName>> list, bool isNumber) = openApiParameter.GetEnumValues();
 
                 if (list != null && list.Any())
@@ -758,7 +768,7 @@ namespace Microsoft.PowerFx.Connectors
                         return new ConnectorType("Unsupported enum type (int)", openApiParameter.Name, FormulaType.BindingError);
                     }
                     else
-                    {                        
+                    {
                         return new ConnectorType($"Unsupported enum type '{schema.Enum.GetType().Name}'", openApiParameter.Name, FormulaType.BindingError);
                     }
                 }
@@ -1192,7 +1202,7 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     // https://github.com/microsoft/OpenAPI.NET/issues/533
                     // https://github.com/microsoft/Power-Fx/pull/1987 - https://github.com/microsoft/Power-Fx/issues/1982
-                    // api-version, x-ms-api-version, X-GitHub-Api-Version...                    
+                    // api-version, x-ms-api-version, X-GitHub-Api-Version...
                     if (prm.Key.EndsWith("api-version", StringComparison.OrdinalIgnoreCase))
                     {
                         fv = FormulaValue.New(dtv.GetConvertedValue(TimeZoneInfo.Utc).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
