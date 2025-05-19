@@ -609,8 +609,6 @@ namespace Microsoft.PowerFx.Core.Functions
                 nodeToCoercedTypeMap = null;
             }
 
-            ScopeInfo?.CheckLiteralPredicates(args, errors);
-
             // Default return type.
             returnType = ReturnType;
 
