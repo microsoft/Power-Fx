@@ -94,6 +94,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("DateAdd(\"2000-01-01\", 1)", "d")] // Coercion on date argument from string
         [InlineData("DateAdd(45678, 1)", "d")] // Coercion on date argument from number
         [InlineData("DateAdd(Time(12,34,56), 1)", "T")] // Coercion on date argument from time
+        [InlineData("Workday(Date(2024,9,13),999)", "D")]
+        [InlineData("Workday(Date(2024,9,13),-101)", "D")]
         public void TexlDateAdd(string script, string expectedType)
         {
             Assert.True(DType.TryParse(expectedType, out var type));
