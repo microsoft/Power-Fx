@@ -2,9 +2,12 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.PowerFx.Core.Functions.Delegation;
 
 namespace Microsoft.PowerFx.Connectors
 {
@@ -26,6 +29,16 @@ namespace Microsoft.PowerFx.Connectors
                 JsonValueKind.Undefined => throw new NotImplementedException(),
                 _ => throw new NotImplementedException()
             };
+        }
+
+        public static IEnumerable<string> ToStr(this IEnumerable<DelegationOperator> ops)
+        {
+            if (ops == null)
+            {
+                return null;
+            }
+
+            return ops.Select(op => op.ToString().ToLowerInvariant());
         }
     }
 }
