@@ -30,19 +30,19 @@
 2
 
 >> Date(2000,1,1)^Decimal("2.000000000000000000000002")
-Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> DateTime(2000,1,1,12,0,0)^Decimal("2.0000000000000000000002")
-Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Time(9,0,0)^Decimal("0.125")
-Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> 1+(Time(9,0,0)^Decimal("0.125")/1e20)
-Errors: Error 3-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 3-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Time(9,0,0)^Decimal("0.125000000000000000000001")
-Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 // Decimal
 
@@ -69,13 +69,13 @@ Error({Kind:ErrorKind.Numeric})
 1
 
 >> Decimal("16.0000000000000000000001")^Date(1900,1,7)
-Errors: Error 37-51: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 37-51: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Decimal("16.0000000000000000000001")^DateTime(1900,1,1,12,0,0)
-Errors: Error 37-62: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 37-62: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Decimal("16.000000000000000000001")^Time(12,0,0)
-Errors: Error 36-48: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 36-48: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Decimal("16.000000000000000000000002")^Decimal("2.000000000000000000000001")
 256

@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("A := Type(Blob); B := Type({x: Currency}); C := Type([DateTime]); D := Type(None)", 2)]
 
         // Have named formulas and udf in the script
-        [InlineData("NAlias := Type(Number);X := 5; ADDX(n:Number): Number = n + X; SomeType := Type(UntypedObject)", 2)]
+        [InlineData("NAlias := Type(Number);X := 5; ADDX(n:Number): Number = n + X; SomeType := Type(Dynamic)", 2)]
 
         // Have RecordOf with/ without errors
         [InlineData("Numbers := Type([Number]);T1 := Type(RecordOf([Number])); Num := Type(RecordOf(Numbers)); T2 := Type(Num);", 3)]

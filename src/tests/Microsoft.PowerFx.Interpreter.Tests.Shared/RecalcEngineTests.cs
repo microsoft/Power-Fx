@@ -2083,7 +2083,7 @@ namespace Microsoft.PowerFx.Tests
             "",
             false)]
         [InlineData(
-            "Account := Type(RecordOf(UntypedObject));",
+            "Account := Type(RecordOf(Dynamic));",
             "",
             false)]
 

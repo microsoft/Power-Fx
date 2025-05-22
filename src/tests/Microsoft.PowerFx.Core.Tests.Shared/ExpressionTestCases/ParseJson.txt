@@ -199,22 +199,22 @@ Errors: Error 29-37: Name isn't valid. 'ThisItem' isn't recognized.|Error 0-6: T
 1
 
 >> ParseJSON("5") = ParseJSON("5")
-Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: Dynamic, Dynamic.
 
 >> ParseJSON("5") > ParseJSON("5")
-Errors: Error 15-16: This operation isn't valid on these types: UntypedObject, UntypedObject.
+Errors: Error 15-16: This operation isn't valid on these types: Dynamic, Dynamic.
 
 >> ParseJSON("5") < ParseJSON("5")
-Errors: Error 15-16: This operation isn't valid on these types: UntypedObject, UntypedObject.
+Errors: Error 15-16: This operation isn't valid on these types: Dynamic, Dynamic.
 
 >> ParseJSON("5") <> ParseJSON("5")
-Errors: Error 15-17: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+Errors: Error 15-17: Incompatible types for comparison. These types can't be compared: Dynamic, Dynamic.
 
 >> ParseJSON("5") >= ParseJSON("5")
-Errors: Error 15-17: This operation isn't valid on these types: UntypedObject, UntypedObject.
+Errors: Error 15-17: This operation isn't valid on these types: Dynamic, Dynamic.
 
 >> ParseJSON("5") <= ParseJSON("5")
-Errors: Error 15-17: This operation isn't valid on these types: UntypedObject, UntypedObject.
+Errors: Error 15-17: This operation isn't valid on these types: Dynamic, Dynamic.
 
 >> CountRows(ParseJSON("[1, 2, 3]"))
 3
