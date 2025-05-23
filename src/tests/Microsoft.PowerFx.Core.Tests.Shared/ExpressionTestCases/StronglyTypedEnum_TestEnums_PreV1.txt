@@ -482,19 +482,19 @@ false
 Errors: Error 0-4: The function 'Text' has some invalid arguments.|Error 18-25: Expected text or number. We expect text or a number at this point in the formula.
 
 >> "Label:" & TestBlueRamp.Blue50
-Errors: Error 23-30: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+Errors: Error 23-30: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.
 
 >> Concatenate( "Label:", TestBlueRamp.Blue50 )
 Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 35-42: Invalid argument type (Color). Expecting a Text value instead.
 
 >> TestBlueRamp.Blue50 & " is the sky"
-Errors: Error 12-19: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+Errors: Error 12-19: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.
 
 >> Concatenate( TestBlueRamp.Blue50, " is the sky")
 Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 25-32: Invalid argument type (Color). Expecting a Text value instead.
 
 >> "The sky is so very " & TestBlueRamp.Blue50 & " !!!"
-Errors: Error 36-43: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+Errors: Error 36-43: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.
 
 >> Concatenate( "The sky is so very ", TestBlueRamp.Blue50, " !!!")
 Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 48-55: Invalid argument type (Color). Expecting a Text value instead.
@@ -509,7 +509,7 @@ Errors: Error 17-24: Invalid argument type (Color). Expecting a Text value inste
 Errors: Error 0-4: The function 'Text' has some invalid arguments.|Error 17-23: Expected text or number. We expect text or a number at this point in the formula.
 
 >> "Label:" & TestRedRamp.Red25
-Errors: Error 22-28: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+Errors: Error 22-28: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.
 
 >> Mid( TestRedRamp.Red25, 2 )
 Errors: Error 0-3: The function 'Mid' has some invalid arguments.|Error 16-22: Invalid argument type (Color). Expecting a Text value instead.
@@ -518,22 +518,22 @@ Errors: Error 0-3: The function 'Mid' has some invalid arguments.|Error 16-22: I
 Errors: Error 16-22: Invalid argument type (Color). Expecting a Text value instead.
 
 >> true & TestRedRamp.Red25
-Errors: Error 18-24: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+Errors: Error 18-24: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.
 
 >> 1 & TestRedRamp.Red25
-Errors: Error 15-21: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+Errors: Error 15-21: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.
 
 >> "hi" & TestRedRamp.Red25
-Errors: Error 18-24: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+Errors: Error 18-24: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.
 
 >> TestRedRamp.Red25 & true
-Errors: Error 11-17: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+Errors: Error 11-17: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.
 
 >> TestRedRamp.Red25 & 1
-Errors: Error 11-17: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+Errors: Error 11-17: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.
 
 >> TestRedRamp.Red25 & "hi"
-Errors: Error 11-17: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+Errors: Error 11-17: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.
 
 >> Concatenate( true, TestRedRamp.Red25 )
 Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 30-36: Invalid argument type (Color). Expecting a Text value instead.
@@ -601,16 +601,16 @@ true
 true
 
 >> TestYesNo.No >= Blank()
-Errors: Error 9-12: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 9-12: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> TestYesNo.No < Blank()
-Errors: Error 9-12: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 9-12: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> Blank() < TestYesNo.Yes
-Errors: Error 19-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 19-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> Blank() <= TestYesNo.Yes
-Errors: Error 20-24: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 20-24: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> TestNumberCompareNumeric.V2 < Blank()
 false
@@ -798,10 +798,10 @@ false
 // Can't compare numerically (CanCompareNumeric = false)
 
 >> TestYesNo.Yes < TestYesNo.No
-Errors: Error 9-13: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 25-28: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.|Error 25-28: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> TestYesNo.Yes >= TestYesNo.No
-Errors: Error 9-13: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 26-29: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.|Error 26-29: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 // Can't concatenate strongly typed (CanConcatenateStronglyTyped = false)
 
