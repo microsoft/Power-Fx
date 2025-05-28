@@ -149,11 +149,6 @@ namespace Microsoft.PowerFx.Connectors
             KeyOrder = schema.GetKeyOrder();
             Permission = schema.GetPermission();
 
-            if (!IsValid(Name))
-            {
-                AddError($"ConnectorType Name '{Name}' is not valid");                                
-            }
-
             // We only support one reference for now
             // SalesForce only
             if (schema.ReferenceTo != null && schema.ReferenceTo.Count == 1)
@@ -229,24 +224,6 @@ namespace Microsoft.PowerFx.Connectors
             DynamicProperty = AggregateErrorsAndWarnings(openApiParameter.GetDynamicProperty());
             DynamicValues = AggregateErrorsAndWarnings(openApiParameter.GetDynamicValue());
             DynamicList = AggregateErrorsAndWarnings(openApiParameter.GetDynamicList());
-        }
-
-        // We don't support names with leading or trailing spaces
-        private static bool IsValid(string str)
-        {
-            // Parameter names could be null (not always defined)
-            if (string.IsNullOrEmpty(str))
-            {
-                return true;
-            }
-                
-            // But when defined, they can't have leading/trailing spaces
-            if (str.Trim() != str)
-            {
-                return false;
-            }
-
-            return true;
         }
 
         internal static readonly FormulaType DefaultType = FormulaType.UntypedObject;
