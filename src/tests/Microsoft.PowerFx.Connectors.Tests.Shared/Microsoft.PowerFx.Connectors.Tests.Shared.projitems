@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyProperties2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BaseConnectorTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BasicRestTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CDPDelegationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CompatibilityTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConnectorWizardTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DynamicTests.cs" />
@@ -48,6 +49,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\LoggingTestServer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\BlankTopLevelAggregation.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server Get First Customers_Aßþ.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server Load Customers_Aßþ.json" />
     <None Include="$(MSBuildThisFileDirectory)Owl.png">
