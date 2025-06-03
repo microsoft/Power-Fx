@@ -1,0 +1,14 @@
+﻿>> If(false, 3, TimeUnit.Years)
+Error 0-28: A void expression cannot be used in this context.
+
+>> Switch(1, 1, 1/0, 10, {x:4})
+Error 0-28: A void expression cannot be used in this context.
+
+>> IfError(1, {x:1}, {x:1}, {y:1}, 1) 
+Error 0-34: A void expression cannot be used in this context.
+
+>> Switch(1, 1, 2, If(1<0, 1, {x:4}))
+Error 16-33: A void expression cannot be used in this context. | Error 0-34: A void expression cannot be used in this context.
+
+>> ForAll([1,2], If(Value = 1, Value * 2, {Result: Value}))
+Error 14-55: A void expression cannot be used in this context. | Error 0-56: A void expression cannot be used in this context.

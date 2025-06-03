@@ -433,6 +433,12 @@ namespace Microsoft.PowerFx.Core.Binding
             var vis = new Visitor(txb, resolver, ruleScope, bindingConfig.UseThisRecordForRuleScope, features);
             vis.Run();
 
+            if (!bindingConfig.AllowsSideEffects)
+            {
+                var v2e = new VoidToErrorTexlVisitor(txb);
+                v2e.Run();
+            }
+
             // Determine if a rename has occured at the top level
             if (txb.Top is AsNode asNode)
             {
