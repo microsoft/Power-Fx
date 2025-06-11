@@ -6,8 +6,8 @@ DateTime(2008,1,1,4,12,12,100)
 >> ParseJSON("""2008-01-01T12:12:12.100-08:00""", DateTime)
 DateTime(2008,1,1,12,12,12,100)
 
->> DateTimeValue(ParseJSON("""1900-12-31T00:00:00.000Z""", UntypedObject))
+>> DateTimeValue(ParseJSON("""1900-12-31T00:00:00.000Z""", Dynamic))
 DateTime(1900,12,30,16,0,0,0)
 
->> DateValue(ParseJSON("""1900-12-31T00:00:00.000Z""", UntypedObject))
+>> DateValue(ParseJSON("""1900-12-31T00:00:00.000Z""", Dynamic))
 Date(1900,12,30)

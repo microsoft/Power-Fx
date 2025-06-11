@@ -1047,6 +1047,11 @@ namespace Microsoft.PowerFx.Core.Types
                 return "Control";
             }
 
+            if (Kind == DKind.UntypedObject)
+            {
+                return "Dynamic";
+            }
+
             if (IsLazyType)
             {
                 Contracts.AssertValue(LazyTypeProvider);

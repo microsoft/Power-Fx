@@ -82,6 +82,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
         // No need for files
         public override HttpClient HttpClient => null;
 
+        public override ConnectorSettings ConnectorSettings => ConnectorSettings.NewCDPConnectorSettings();
+
         internal override IReadOnlyDictionary<string, Relationship> Relationships => null;
 
         // Initialization can be synchronous

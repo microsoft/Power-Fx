@@ -8,7 +8,7 @@
 Errors: Error 0-29: Numeric value is too large.
 
 >> -79228162514264337593543950336
-Errors: Error 1-30: Numeric value is too large.|Error 1-30: Invalid argument type. Expecting one of the following: Decimal, Text, Boolean, UntypedObject.
+Errors: Error 1-30: Numeric value is too large.|Error 1-30: Invalid argument type. Expecting one of the following: Decimal, Text, Boolean, Dynamic.
 
 >> 79228162514264337593543950335.1
 79228162514264337593543950335
@@ -20,7 +20,7 @@ Errors: Error 1-30: Numeric value is too large.|Error 1-30: Invalid argument typ
 Errors: Error 0-31: Numeric value is too large.
 
 >> -79228162514264337593543950335.5
-Errors: Error 1-32: Numeric value is too large.|Error 1-32: Invalid argument type. Expecting one of the following: Decimal, Text, Boolean, UntypedObject.
+Errors: Error 1-32: Numeric value is too large.|Error 1-32: Invalid argument type. Expecting one of the following: Decimal, Text, Boolean, Dynamic.
 
 >> 79228162514264337593543950335 * 1
 79228162514264337593543950335

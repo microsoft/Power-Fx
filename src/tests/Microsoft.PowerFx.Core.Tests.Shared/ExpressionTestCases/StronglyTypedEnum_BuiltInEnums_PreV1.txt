@@ -405,7 +405,7 @@ true
 false
 
 >> Match.Digit > "\d"
-Errors: Error 5-11: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 14-18: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 5-11: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.|Error 14-18: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> "\d" = Match.Digit
 true
@@ -414,7 +414,7 @@ true
 false
 
 >> "\d" > Match.Digit
-Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 12-18: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.|Error 12-18: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 // Most other enums do not, see section 1 above
 
@@ -769,25 +769,25 @@ false
 true
 
 >> Match.Letter < Blank()
-Errors: Error 5-12: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 5-12: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> Match.Letter = Blank()
 false
 
 >> Blank() >= Match.Letter
-Errors: Error 16-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 16-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> Blank() <> Match.Letter
 true
 
 >> Color.Gray < Blank()
-Errors: Error 5-10: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 5-10: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> Color.Gray = Blank()
 false
 
 >> Blank() >= Color.Gray
-Errors: Error 16-21: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 16-21: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> Blank() <> Color.Gray
 true
@@ -988,10 +988,10 @@ Error({Kind:ErrorKind.InvalidArgument})
 // Can't compare numerically (CanCompareNumeric = false)
 
 >> TimeUnit.Years < TimeUnit.Months
-Errors: Error 8-14: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 25-32: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 8-14: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.|Error 25-32: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> TimeUnit.Years >= TimeUnit.Months
-Errors: Error 8-14: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 26-33: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 8-14: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.|Error 26-33: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 // Can't concatenate strongly typed (CanConcatenateStronglyTyped = false)
 
@@ -1029,7 +1029,7 @@ true
 Errors: Error 0-4: The function 'Text' has some invalid arguments.|Error 11-15: Expected text or number. We expect text or a number at this point in the formula.
 
 >> "Option: " & Color.Yellow
-Errors: Error 18-25: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+Errors: Error 18-25: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.
 
 >> Len( Color.Yellow )
 Errors: Error 10-17: Invalid argument type (Color). Expecting a Text value instead.
@@ -1041,13 +1041,13 @@ Errors: Error 0-4: The function 'Left' has some invalid arguments.|Error 11-18: 
 Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 30-37: Invalid argument type (Color). Expecting a Text value instead.
 
 >> Color.Yellow & " banana"
-Errors: Error 5-12: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+Errors: Error 5-12: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.
 
 >> Concatenate( Color.Yellow, " banana" )
 Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 18-25: Invalid argument type (Color). Expecting a Text value instead.
 
 >> Color.Green & " bananas are riper than " & Color.Yellow & " bananas"
-Errors: Error 5-11: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.|Error 48-55: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+Errors: Error 5-11: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.|Error 48-55: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.
 
 >> Concatenate( Color.Green, " bananas are riper than ", Color.Yellow, " bananas" )
 Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 18-24: Invalid argument type (Color). Expecting a Text value instead.|Error 59-66: Invalid argument type (Color). Expecting a Text value instead.
@@ -1092,10 +1092,10 @@ Errors: Errors: Error 0-4: The function 'Sqrt' has some invalid arguments.|Error
 Errors: Error 0-3: The function 'Mod' has some invalid arguments.|Error 10-14: Invalid argument type (Color). Expecting a Decimal value instead.
 
 >> Color.Red + 3
-Errors: Error 5-9: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 5-9: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> Color.Red + Color.Red
-Errors: Error 5-9: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 17-21: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 5-9: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.|Error 17-21: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> If( false, RGBA(120,120,12,1), Color.Red )  // first type rule
 RGBA(255,0,0,1)
@@ -1103,18 +1103,18 @@ RGBA(255,0,0,1)
 // Can't compare numerically (CanCompareNumeric = false)
 
 >> Color.Red < Color.Yellow
-Errors: Error 5-9: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 17-24: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 5-9: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.|Error 17-24: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> Color.Red >= Color.Yellow
-Errors: Error 5-9: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 18-25: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 5-9: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.|Error 18-25: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> Color.Red >= SortOrder.Descending
-Errors: Error 5-9: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 22-33: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 5-9: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.|Error 22-33: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 // Can't concatenate strongly typed (CanConcatenateStronglyTyped = false)
 
 >> Color.Red & Color.Yellow
-Errors: Error 5-9: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.|Error 17-24: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+Errors: Error 5-9: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.|Error 17-24: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.
 
 //===========================================================================================================
 //
@@ -1334,10 +1334,10 @@ Error({Kind:ErrorKind.InvalidArgument})
 // Can't compare numerically (CanCompareNumeric = false)
 
 >> DateTimeFormat.LongDate < DateTimeFormat.ShortDate
-Errors: Error 14-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 40-50: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 14-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.|Error 40-50: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> DateTimeFormat.LongDate >= DateTimeFormat.ShortDate
-Errors: Error 14-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 41-51: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 14-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.|Error 41-51: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 // Can't concatenate strongly typed (CanConcatenateStronglyTyped = false)
 
@@ -1437,10 +1437,10 @@ Error({Kind:ErrorKind.InvalidArgument})
 // Can't compare numerically (CanCompareNumeric = false)
 
 >> Match.MultipleDigits < Match.Digits
-Errors: Error 28-35: Name isn't valid. 'Digits' isn't recognized.|Error 5-20: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 28-35: Name isn't valid. 'Digits' isn't recognized.|Error 5-20: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> Match.MultipleDigits >= Match.Digits
-Errors: Error 29-36: Name isn't valid. 'Digits' isn't recognized.|Error 5-20: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 29-36: Name isn't valid. 'Digits' isn't recognized.|Error 5-20: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 // Can concatenate strongly typed (CanConcatenateStronglyTyped = true)
 

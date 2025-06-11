@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Connectors.Tabular;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
@@ -52,6 +53,8 @@ namespace Microsoft.PowerFx.Connectors
         internal readonly CDPMetadataItem _fieldMetadata;
 
         private readonly ConnectorSettings _connectorSettings;
+
+        public override ConnectorSettings ConnectorSettings => _connectorSettings;
 
         internal CdpTable(string dataset, string table, IReadOnlyCollection<RawTable> tables, ConnectorSettings connectorSettings,  CDPMetadataItem fieldMetadata = null)
         {
@@ -138,7 +141,8 @@ namespace Microsoft.PowerFx.Connectors
         {
             cancellationToken.ThrowIfCancellationRequested();
             ConnectorLogger executionLogger = serviceProvider?.GetService<ConnectorLogger>();
-            string queryParams = parameters?.GetODataQueryString() ?? string.Empty;
+            parameters ??= new DefaultCDPDelegationParameter(ConnnectorType.FormulaType, _connectorSettings.MaxRows);
+            string queryParams = parameters.GetODataQueryString();
             if (!string.IsNullOrEmpty(queryParams))
             {
                 queryParams = "&" + queryParams;
