@@ -120,6 +120,8 @@ namespace Microsoft.PowerFx.Connectors
         /// </summary>
         public string PropertyEntityType { get; }
 
+        internal RecordType HiddenRecordType { get; }
+
         /// <summary>
         /// Gets a value indicating whether dynamic values or list are supported locally.
         /// </summary>
