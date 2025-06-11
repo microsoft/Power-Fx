@@ -82,6 +82,12 @@ namespace Microsoft.PowerFx.Connectors
         /// </summary>
         public Visibility Visibility { get; internal set; }
 
+        // Supports x-ms-capabilities
+        internal ColumnCapabilities Capabilities { get; }
+
+        // Supports x-ms-relationships
+        internal Dictionary<string, Relationship> Relationships { get; }
+
         /// <summary>
         /// Gets the key type (supports x-ms-keyType).
         /// </summary>
