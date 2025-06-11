@@ -395,14 +395,13 @@ namespace Microsoft.PowerFx.Core.Functions
                 return false;
             }
 
-            var argLookup = _args.ToDictionary(arg => arg.ArgIndex, arg => (arg.NameIdent.Name, ParamTypes[arg.ArgIndex]));
+            var argLookup = _args.ToDictionary(arg => arg.NameIdent.Name, arg => ParamTypes[arg.ArgIndex]);
 
-            foreach (var arg in targetUDF._args)
+            foreach (var targetUDFArg in targetUDF._args)
             {
-                if (!argLookup.TryGetValue(arg.ArgIndex, out var argInfo) || 
-                    argInfo.Name != arg.NameIdent.Name || 
-                    argInfo.Item2.AssociatedDataSources.SetEquals(targetUDF.ParamTypes[arg.ArgIndex].AssociatedDataSources) == false ||
-                    argInfo.Item2 != targetUDF.ParamTypes[arg.ArgIndex])
+                if (!argLookup.TryGetValue(targetUDFArg.NameIdent.Name, out var argType) ||
+                    argType.AssociatedDataSources.SetEquals(targetUDF.ParamTypes[targetUDFArg.ArgIndex].AssociatedDataSources) == false ||
+                    argType != targetUDF.ParamTypes[targetUDFArg.ArgIndex])
                 {
                     return false;
                 }

@@ -1,18 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Text;
-using Microsoft.CodeAnalysis;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Glue;
-using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Utils;
@@ -52,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Foo(x: Number): Number = Abs(x);", "Foo(x: Number): Boolean = Abs(x);", false)]
 
         // test with different parameter order
-        [InlineData("Foo(a: Number, b: Number, c: Number): Number = a+b+c;", "Foo(b: Number, c: Number, a: Number): Number = a+b+c;", false)]
+        [InlineData("Foo(a: Number, b: Number, c: Number): Number = a+b+c;", "Foo(b: Number, c: Number, a: Number): Number = a+b+c;", true)]
         public void TestSimpleUDFSameness(string udfFormula1, string udfFormula2, bool areSame)
         {
             var parserOptions = new ParserOptions()
