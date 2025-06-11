@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Connectors
     public class ConnectorType : SupportsConnectorErrors
     {
         /// <summary>
-        /// Gets or sets the name of the connector type.
+        /// Gets the name of the connector type.
         /// </summary>
         public string Name { get; internal set; }
 
@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.Connectors
         public string Description { get; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the field is required.
+        /// Gets a value indicating whether the field is required.
         /// </summary>
         public bool IsRequired { get; internal set; }
 
