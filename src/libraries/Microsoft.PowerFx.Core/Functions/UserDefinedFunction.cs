@@ -381,13 +381,16 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-        internal bool HasSameDefintion(string definitionsScript, UserDefinedFunction targetUDF, string targetUDFbody)
+        // Checks if the current UDF has the same definition as the target UDF.
+        public bool HasSameDefintion(string definitionsScript, UserDefinedFunction targetUDF, string targetUDFbody)
         {
             Contracts.AssertValue(targetUDF);
 
             if (Name != targetUDF.Name ||
                 UdfBody.GetCompleteSpan().GetFragment(definitionsScript) != targetUDFbody || 
-                _args.Count() != targetUDF._args.Count())
+                _args.Count() != targetUDF._args.Count() ||
+                ReturnType.AssociatedDataSources.SetEquals(targetUDF.ReturnType.AssociatedDataSources) == false ||
+                ReturnType != targetUDF.ReturnType)
             {
                 return false;
             }
@@ -398,6 +401,7 @@ namespace Microsoft.PowerFx.Core.Functions
             {
                 if (!argLookup.TryGetValue(arg.ArgIndex, out var argInfo) || 
                     argInfo.Name != arg.NameIdent.Name || 
+                    argInfo.Item2.AssociatedDataSources.SetEquals(targetUDF.ParamTypes[arg.ArgIndex].AssociatedDataSources) == false ||
                     argInfo.Item2 != targetUDF.ParamTypes[arg.ArgIndex])
                 {
                     return false;
