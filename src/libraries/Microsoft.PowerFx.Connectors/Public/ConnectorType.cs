@@ -47,6 +47,8 @@ namespace Microsoft.PowerFx.Connectors
         /// </summary>
         public ConnectorType[] Fields { get; }
 
+        internal ConnectorType[] HiddenFields { get; }
+
         /// <summary>
         /// Gets the formula type.
         /// </summary>
