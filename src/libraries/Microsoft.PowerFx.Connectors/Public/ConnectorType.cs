@@ -250,11 +250,14 @@ namespace Microsoft.PowerFx.Connectors
             DisplayName = displayName;
             FieldMetadata = fieldMetadata;
 
-            foreach (ConnectorType field in Fields.Where(f => f.Capabilities != null))
+            if (serviceCapabilities != null)
             {
-                serviceCapabilities.AddColumnCapability(field.Name, field.Capabilities);
+                foreach (ConnectorType field in Fields.Where(f => f.Capabilities != null))
+                {
+                    serviceCapabilities.AddColumnCapability(field.Name, field.Capabilities);
+                }
             }
-
+            
             FormulaType = new CdpRecordType(this, resolver, ServiceCapabilities.ToDelegationInfo(serviceCapabilities, name, isTableReadOnly, this, datasetName), FieldMetadata);
         }
 

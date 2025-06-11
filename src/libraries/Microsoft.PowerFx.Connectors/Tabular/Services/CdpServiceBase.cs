@@ -25,12 +25,6 @@ namespace Microsoft.PowerFx.Connectors
 
             string result = await GetObject(httpClient, message, uri, content, cancellationToken, logger, $"{callingMethod}<{typeof(T).Name}>").ConfigureAwait(false);
             T res = string.IsNullOrWhiteSpace(result) ? null : JsonSerializer.Deserialize<T>(result);
-
-            if (res is ISupportsPostProcessing postProcessing)
-            {
-                postProcessing.PostProcess();
-            }
-
             return res;
         }
 

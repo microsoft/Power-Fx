@@ -9,23 +9,30 @@ using Microsoft.PowerFx.Core.Public.Types;
 namespace Microsoft.PowerFx.Connectors
 {
     // Used by ConnectorDataSource.GetTablesAsync
-    internal class GetTables : ISupportsPostProcessing
+    public class GetTables
     {
         [JsonPropertyName("@metadata")]
-        public List<CDPMetadataItem> Metadata { get; set; }
+        internal List<CDPMetadataItem> Metadata { get; set; }
+
+        private IEnumerable<RawTable> _value;
 
         [JsonPropertyName("value")]
-        public List<RawTable> Value { get; set; }
-
-        public void PostProcess()
+        public IEnumerable<RawTable> Value
         {
-            Value = Value.Select(rt => new RawTable() { Name = rt.Name, DisplayName = rt.DisplayName.Split('.').Last().Replace("[", string.Empty).Replace("]", string.Empty) }).ToList();
+            get => _value; 
+            set =>                                        
+                _value = value?
+                    .Select(rt => new RawTable
+                    {
+                        Name = rt.Name,
+                        DisplayName = rt.DisplayName
+                                            .Split('.')
+                                            .Last()
+                                            .Replace("[", string.Empty)
+                                            .Replace("]", string.Empty)
+                    })
+                    .ToList();
         }
-    }
-
-    internal interface ISupportsPostProcessing
-    {
-        void PostProcess();
     }
 
     internal class CDPMetadataItem
@@ -68,12 +75,17 @@ namespace Microsoft.PowerFx.Connectors
         public bool IsParent { get; set; }
     }
 
-    internal class RawTable
+    public class RawTable
     {
-        // Logical Name
+        /// <summary>
+        /// Logical name of the table.
+        /// </summary>
         [JsonPropertyName("Name")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Display name of the table.
+        /// </summary>
         [JsonPropertyName("DisplayName")]
         public string DisplayName { get; set; }
 

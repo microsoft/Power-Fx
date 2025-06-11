@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal ConnectorType TabularTableDescriptor;
 
-        internal IReadOnlyCollection<RawTable> Tables;
+        internal IEnumerable<RawTable> Tables;
 
         private string _uriPrefix;
 
@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public override ConnectorSettings ConnectorSettings => _connectorSettings;
 
-        internal CdpTable(string dataset, string table, IReadOnlyCollection<RawTable> tables, ConnectorSettings connectorSettings,  CDPMetadataItem fieldMetadata = null)
+        internal CdpTable(string dataset, string table, IEnumerable<RawTable> tables, ConnectorSettings connectorSettings,  CDPMetadataItem fieldMetadata = null)
         {
             DatasetName = dataset ?? throw new ArgumentNullException(nameof(dataset));
             TableName = table ?? throw new ArgumentNullException(nameof(table));
@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Connectors
             _fieldMetadata = fieldMetadata;
         }
 
-        internal CdpTable(string dataset, string table, DatasetMetadata datasetMetadata, IReadOnlyCollection<RawTable> tables, ConnectorSettings connectorSettings, CDPMetadataItem fieldMetadata)
+        internal CdpTable(string dataset, string table, DatasetMetadata datasetMetadata, IEnumerable<RawTable> tables, ConnectorSettings connectorSettings, CDPMetadataItem fieldMetadata)
             : this(dataset, table, tables, connectorSettings, fieldMetadata)
         {
             DatasetMetadata = datasetMetadata;
