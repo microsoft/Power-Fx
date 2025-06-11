@@ -16,90 +16,130 @@ using static Microsoft.PowerFx.Connectors.Constants;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    // Wrapper class around FormulaType and ConnectorType
-    // FormulaType is used to represent the type of the parameter in the Power Fx expression as used in Power Apps
-    // ConnectorType contains more details information coming from the swagger file and extensions
+    /// <summary>
+    /// Wrapper class around FormulaType and ConnectorType. Contains detailed information from the swagger file and extensions.
+    /// </summary>
     [DebuggerDisplay("{FormulaType._type}")]
     public class ConnectorType : SupportsConnectorErrors
     {
-        // "name"
+        /// <summary>
+        /// Gets or sets the name of the connector type.
+        /// </summary>
         public string Name { get; internal set; }
 
-        // "x-ms-summary" or "title"
+        /// <summary>
+        /// Gets the display name ("x-ms-summary" or "title").
+        /// </summary>
         public string DisplayName { get; }
 
-        // "description"
+        /// <summary>
+        /// Gets the description.
+        /// </summary>
         public string Description { get; }
 
-        // "required"
+        /// <summary>
+        /// Gets or sets a value indicating whether the field is required.
+        /// </summary>
         public bool IsRequired { get; internal set; }
 
-        // Only used for RecordType and TableType
+        /// <summary>
+        /// Gets the fields for RecordType and TableType.
+        /// </summary>
         public ConnectorType[] Fields { get; }
 
-        internal ConnectorType[] HiddenFields { get; }
-
-        // FormulaType
+        /// <summary>
+        /// Gets the formula type.
+        /// </summary>
         public FormulaType FormulaType { get; private set; }
 
-        // "x-ms-explicit-input"
+        /// <summary>
+        /// Gets a value indicating whether the input is explicit ("x-ms-explicit-input").
+        /// </summary>
         public bool ExplicitInput { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this type is an enum.
+        /// </summary>
         public bool IsEnum { get; }
 
-        // Enumeration value, only defined if IsEnum is true
+        /// <summary>
+        /// Gets the enumeration values, only defined if IsEnum is true.
+        /// </summary>
         public FormulaValue[] EnumValues { get; }
 
-        // Enumeration display name ("x-ms-enum-display-name"), only defined if IsEnum is true
-        // If not defined, this array will be empty
+        /// <summary>
+        /// Gets the enumeration display names ("x-ms-enum-display-name"), only defined if IsEnum is true.
+        /// </summary>
         public string[] EnumDisplayNames { get; }
 
+        /// <summary>
+        /// Gets the enum dictionary.
+        /// </summary>
         public Dictionary<string, FormulaValue> Enum => GetEnum();
 
-        // Supports x-ms-visibility
+        /// <summary>
+        /// Gets the visibility (supports x-ms-visibility).
+        /// </summary>
         public Visibility Visibility { get; internal set; }
 
-        // Supports x-ms-capabilities
-        internal ColumnCapabilities Capabilities { get; }
-
-        // Supports x-ms-relationships
-        internal Dictionary<string, Relationship> Relationships { get; }
-
-        // Supports x-ms-keyType
+        /// <summary>
+        /// Gets the key type (supports x-ms-keyType).
+        /// </summary>
         public ConnectorKeyType KeyType { get; }
 
-        // Supports x-ms-keyOrder (only valid if KeyType = Primary)
+        /// <summary>
+        /// Gets the key order (supports x-ms-keyOrder, only valid if KeyType = Primary).
+        /// </summary>
         public double KeyOrder { get; }
 
+        /// <summary>
+        /// Gets the permission.
+        /// </summary>
         public ConnectorPermission Permission { get; }
 
-        // Supports x-ms-notification-url
+        /// <summary>
+        /// Gets a value indicating whether notification URL is supported (supports x-ms-notification-url).
+        /// </summary>
         public bool? NotificationUrl { get; }
 
-        // Supports x-ms-ai-sensitivity
+        /// <summary>
+        /// Gets the AI sensitivity (supports x-ms-ai-sensitivity).
+        /// </summary>
         public AiSensitivity AiSensitivity { get; }
 
-        // Supports x-ms-property-entity-type
+        /// <summary>
+        /// Gets the property entity type (supports x-ms-property-entity-type).
+        /// </summary>
         public string PropertyEntityType { get; }
 
-        internal RecordType HiddenRecordType { get; }
-
-        // Supports x-ms-dynamic-values or -list locally
+        /// <summary>
+        /// Gets a value indicating whether dynamic values or list are supported locally.
+        /// </summary>
         public bool SupportsDynamicValuesOrList => DynamicValues != null || DynamicList != null;
 
-        // Supports x-ms-dynamic-values or -list locally or anywhere in the tree
+        /// <summary>
+        /// Gets a value indicating whether dynamic values or list are supported locally or anywhere in the tree.
+        /// </summary>
         public bool ContainsDynamicValuesOrList => SupportsDynamicValuesOrList || (Fields != null && Fields.Any(f => f.ContainsDynamicValuesOrList));
 
-        // Supports x-ms-dynamic-schema or -property locally
+        /// <summary>
+        /// Gets a value indicating whether dynamic schema or property are supported locally.
+        /// </summary>
         public bool SupportsDynamicSchemaOrProperty => DynamicSchema != null || DynamicProperty != null;
 
-        // Supports x-ms-dynamic-schema or -property locally or anywhere in the tree
+        /// <summary>
+        /// Gets a value indicating whether dynamic schema or property are supported locally or anywhere in the tree.
+        /// </summary>
         public bool ContainsDynamicSchemaOrProperty => SupportsDynamicSchemaOrProperty || (Fields != null && Fields.Any(f => f.ContainsDynamicSchemaOrProperty));
 
-        // Supports x-ms-dynamic-values, -list, -schema, or -property locally
+        /// <summary>
+        /// Gets a value indicating whether dynamic intellisense is supported locally.
+        /// </summary>
         public bool SupportsDynamicIntellisense => SupportsDynamicValuesOrList || SupportsDynamicSchemaOrProperty;
 
-        // Supports x-ms-dynamic-values, -list, -schema, or -property locally or anywhere in the tree
+        /// <summary>
+        /// Gets a value indicating whether dynamic intellisense is supported locally or anywhere in the tree.
+        /// </summary>
         public bool ContainsDynamicIntellisense => ContainsDynamicValuesOrList || ContainsDynamicSchemaOrProperty;
 
         internal ConnectorDynamicSchema DynamicSchema { get; private set; }
@@ -112,7 +152,9 @@ namespace Microsoft.PowerFx.Connectors
 
         internal bool Binary { get; private set; }
 
-        // Supports x-ms-media-kind
+        /// <summary>
+        /// Gets the media kind (supports x-ms-media-kind).
+        /// </summary>
         internal MediaKind MediaKind { get; private set; }
 
         internal ISwaggerSchema Schema { get; private set; } = null;

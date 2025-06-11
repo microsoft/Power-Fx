@@ -8,6 +8,9 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
+    /// <summary>
+    /// Represents a connector parameter with suggestions and values.
+    /// </summary>
     public class ConnectorParameterWithSuggestions : ConnectorParameter
     {
         /// <summary>

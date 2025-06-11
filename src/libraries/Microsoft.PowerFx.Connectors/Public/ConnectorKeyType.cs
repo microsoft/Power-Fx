@@ -3,15 +3,24 @@
 
 namespace Microsoft.PowerFx.Connectors
 {
-    // x-ms-keyType
+    /// <summary>
+    /// Specifies the key type for a connector (x-ms-keyType).
+    /// </summary>
     public enum ConnectorKeyType
     {
+        /// <summary>
+        /// Undefined key type.
+        /// </summary>
         Undefined = -1,
 
-        // "primary"
+        /// <summary>
+        /// Primary key type.
+        /// </summary>
         Primary,
 
-        // "none"
+        /// <summary>
+        /// No key type.
+        /// </summary>
         None
     }
 }

@@ -3,18 +3,29 @@
 
 namespace Microsoft.PowerFx.Connectors
 {
+    /// <summary>
+    /// "x-ms-ai-sensitivity" enum.
+    /// </summary>
     public enum AiSensitivity : int
     {
-        // "x-ms-ai-sensitivity" is not corresponding to any valid value (normally, only "low", "high")
+        /// <summary>
+        /// "x-ms-ai-sensitivity" is not corresponding to any valid value (normally, only "low", "high")
+        /// </summary>
         Unknown = -1,
 
-        // "x-ms-ai-sensitivity" is not defined
+        /// <summary>
+        /// "x-ms-ai-sensitivity" is not defined
+        /// </summary>
         None = 0,
 
-        // "x-ms-ai-sensitivity" is "low"
+        /// <summary>
+        /// "x-ms-ai-sensitivity" is "low"
+        /// </summary>
         Low,
 
-        // "x-ms-ai-sensitivity" is "high"
+        /// <summary>
+        /// "x-ms-ai-sensitivity" is "high"
+        /// </summary>
         High
     }
 }

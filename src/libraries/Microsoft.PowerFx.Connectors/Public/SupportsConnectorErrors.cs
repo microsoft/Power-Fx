@@ -5,14 +5,29 @@ using System.Collections.Generic;
 
 namespace Microsoft.PowerFx.Connectors
 {
+    /// <summary>
+    /// Base class for supporting connector errors and warnings.
+    /// </summary>
     public class SupportsConnectorErrors
     {
+        /// <summary>
+        /// Gets a value indicating whether there are errors.
+        /// </summary>
         public bool HasErrors => _errors != null && _errors.Count != 0;
 
+        /// <summary>
+        /// Gets a value indicating whether there are warnings.
+        /// </summary>
         public bool HasWarnings => _warnings != null && _warnings.Count != 0;
 
+        /// <summary>
+        /// Gets the collection of errors.
+        /// </summary>
         public IReadOnlyCollection<string> Errors => _errors;
 
+        /// <summary>
+        /// Gets the collection of warnings.
+        /// </summary>
         public IReadOnlyCollection<ExpressionError> Warnings => _warnings;
 
         protected HashSet<string> _errors = null;
