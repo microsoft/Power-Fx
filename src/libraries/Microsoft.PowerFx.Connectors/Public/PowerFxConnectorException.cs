@@ -7,10 +7,10 @@ using System.Runtime.Serialization;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    [Serializable]
     /// <summary>
     /// Represents errors that occur during Power Fx connector operations.
     /// </summary>
+    [Serializable]
     public class PowerFxConnectorException : Exception
     {
         /// <summary>
