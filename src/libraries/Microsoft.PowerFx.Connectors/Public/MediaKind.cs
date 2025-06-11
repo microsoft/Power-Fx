@@ -8,22 +8,34 @@ namespace Microsoft.PowerFx.Connectors
     /// </summary>
     public enum MediaKind : int
     {
-        // "x-ms-media-kind" is not defined / dynamic intellisense, we use a string to store results while all others are byte[]
+        /// <summary>
+        /// Not a binary media kind (dynamic intellisense, string results).
+        /// </summary>
         NotBinary = -2,
 
-        // "x-ms-media-kind" is not corresponding to any valid value (normally, only "audio", "video" or "image")
+        /// <summary>
+        /// Unknown media kind.
+        /// </summary>
         Unknown = -1,
 
-        // "x-ms-media-kind" is not defined, defaulting to "File"
+        /// <summary>
+        /// File media kind (default).
+        /// </summary>
         File = 0,
 
-        // "x-ms-media-kind" is "audio"
+        /// <summary>
+        /// Audio media kind.
+        /// </summary>
         Audio,
 
-        // "x-ms-media-kind" is "video"
+        /// <summary>
+        /// Video media kind.
+        /// </summary>
         Video,
 
-        // "x-ms-media-kind" is "image"
+        /// <summary>
+        /// Image media kind.
+        /// </summary>
         Image
     }
 }

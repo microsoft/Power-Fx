@@ -3,14 +3,24 @@
 
 namespace Microsoft.PowerFx.Connectors
 {
+    /// <summary>
+    /// Defines permission levels for a connector.
+    /// </summary>
     public enum ConnectorPermission
     {
+        /// <summary>
+        /// Undefined permission.
+        /// </summary>
         Undefined = -1,
 
-        // "read-only"
+        /// <summary>
+        /// Read-only permission.
+        /// </summary>
         PermissionReadOnly,
 
-        // "read-write"
+        /// <summary>
+        /// Read-write permission.
+        /// </summary>
         PermissionReadWrite
     }
 }

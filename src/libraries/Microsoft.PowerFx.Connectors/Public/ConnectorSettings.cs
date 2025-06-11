@@ -16,6 +16,9 @@ namespace Microsoft.PowerFx.Connectors
         /// </summary>
         internal const int DefaultConnectorTop = 1000;
 
+        /// <summary>
+        /// Creates a new instance of ConnectorSettings for CDP connectors.
+        /// </summary>
         public static ConnectorSettings NewCDPConnectorSettings(bool extractSensitivityLabel = false, string purviewAccountName = null, int maxRows = DefaultConnectorTop)
         {
             var connectorSettings = new ConnectorSettings(null)
@@ -31,6 +34,9 @@ namespace Microsoft.PowerFx.Connectors
             return connectorSettings;
         }
         
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConnectorSettings"/> class.
+        /// </summary>
         public ConnectorSettings(string @namespace)
         {
             Namespace = @namespace;
@@ -126,8 +132,14 @@ namespace Microsoft.PowerFx.Connectors
         public ConnectorCompatibility Compatibility { get; init; } = ConnectorCompatibility.Default;
     }
 
+    /// <summary>
+    /// Specifies compatibility modes for connectors.
+    /// </summary>
     public enum ConnectorCompatibility
     {
+        /// <summary>
+        /// Default compatibility mode (PowerAppsCompatibility).
+        /// </summary>
         Default = PowerAppsCompatibility,
 
         // Power Apps Compatibility

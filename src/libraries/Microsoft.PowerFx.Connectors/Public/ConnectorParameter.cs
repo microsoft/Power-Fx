@@ -13,11 +13,19 @@ namespace Microsoft.PowerFx.Connectors
     [DebuggerDisplay("{Name} {ConnectorType}")]
     public class ConnectorParameter : ConnectorSchema
     {
+        /// <summary>
+        /// Gets the name of the parameter.
+        /// </summary>
         public string Name { get; private set; }
 
+        /// <summary>
+        /// Gets the description of the parameter.
+        /// </summary>
         public string Description { get; }
 
-        // Query, Header, Path or Cookie (not supported yet)
+        /// <summary>
+        /// Gets the location of the parameter (Query, Header, Path, or Cookie).
+        /// </summary>
         public ParameterLocation? Location { get; }
 
         internal bool IsBodyParameter = false;

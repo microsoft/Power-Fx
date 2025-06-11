@@ -15,10 +15,14 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    // Created by TabularService.GetTableValue
-    // Doesn't contain any ServiceProvider which is runtime only
+    /// <summary>
+    /// Represents a table value created by TabularService.GetTableValue. Does not contain any ServiceProvider which is runtime only.
+    /// </summary>
     public class CdpTableValue : TableValue, IRefreshable, IDelegatableTableValue
     {
+        /// <summary>
+        /// Gets a value indicating whether the table is delegable.
+        /// </summary>
         public bool IsDelegable => _tabularService.IsDelegable;
 
         protected internal readonly CdpService _tabularService;        
@@ -48,6 +52,9 @@ namespace Microsoft.PowerFx.Connectors
             _cachedRows = null;
         }
 
+        /// <summary>
+        /// Gets the rows of the table, fetching and caching them if necessary.
+        /// </summary>
         public override IEnumerable<DValue<RecordValue>> Rows
         {
             get
@@ -67,6 +74,9 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
+        /// <summary>
+        /// Gets the supported delegation features for this table.
+        /// </summary>
         public DelegationParameterFeatures SupportedFeatures => DelegationParameterFeatures.Filter |
                 DelegationParameterFeatures.Top |
                 DelegationParameterFeatures.Columns | // $select
@@ -75,17 +85,26 @@ namespace Microsoft.PowerFx.Connectors
                 DelegationParameterFeatures.ApplyTopLevelAggregation |
                 DelegationParameterFeatures.Count;
 
+        /// <summary>
+        /// Asynchronously gets the rows of the table.
+        /// </summary>
         public async Task<IReadOnlyCollection<DValue<RecordValue>>> GetRowsAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel)
         {
             var rows = await _tabularService.GetItemsAsync(services, parameters, cancel).ConfigureAwait(false);
             return rows;
         }
 
+        /// <summary>
+        /// Refreshes the cached rows.
+        /// </summary>
         public void Refresh()
         {
             _cachedRows = null;
         }
 
+        /// <summary>
+        /// Asynchronously executes a query and returns the result as a FormulaValue.
+        /// </summary>
         public async Task<FormulaValue> ExecuteQueryAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel)
         {
             if (parameters == null)
