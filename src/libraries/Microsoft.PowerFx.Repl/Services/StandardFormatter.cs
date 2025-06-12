@@ -321,7 +321,7 @@ namespace Microsoft.PowerFx.Repl.Services
             }
             else if (value is UntypedObjectValue)
             {
-                resultString = minimalLocal ? "<untyped>" : "<Untyped: Use Value, Text, Boolean, or other functions to establish the type>";
+                resultString = minimalLocal ? "<dynamic>" : "<Dynamic: Use Value, Text, Boolean, or other functions to establish the type>";
             }
             else if (value is StringValue str)
             {
