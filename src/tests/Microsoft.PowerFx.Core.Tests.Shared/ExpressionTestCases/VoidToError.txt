@@ -1,0 +1,29 @@
+﻿#SETUP: PowerFxV2CompatibilityRules
+
+>> If(false, 3, TimeUnit.Years)
+Errors: Error 0-28: A void expression cannot be used in this context.
+
+>> Switch(1, 1, 1/0, 10, {x:4})
+Errors: Error 0-28: A void expression cannot be used in this context.
+
+>> IfError(1, {x:1}, {x:1}, {y:1}, 1) 
+Errors: Error 0-34: A void expression cannot be used in this context.
+
+>> Switch(1, 1, 2, If(1<0, 1, {x:4}))
+Errors: Error 16-33: A void expression cannot be used in this context.|Error 0-34: A void expression cannot be used in this context.
+
+>> ForAll([1,2], If(Value = 1, Value * 2, {Result: Value}))
+Errors: Error 14-55: A void expression cannot be used in this context.|Error 0-56: A void expression cannot be used in this context.
+
+>> ForAll([1,2,3] As p, Switch(p.Value, 1, {a:1}, 2, [{a:2}], 3, "Hello"))
+Errors: Error 21-70: A void expression cannot be used in this context.|Error 0-71: A void expression cannot be used in this context.
+
+>> ForAll(ParseJSON("[1,2]"), If(Value(ThisRecord) = 1, Value(ThisRecord) * 2, {Result: Value(ThisRecord)}))
+Errors: Error 27-104: A void expression cannot be used in this context.|Error 0-105: A void expression cannot be used in this context.
+
+>> ForAll(ParseJSON("[1,2,3]"), Switch(Value(ThisRecord), 1, {a:1}, 2, [{a:2}], 3, "Hello"))
+Errors: Error 29-88: A void expression cannot be used in this context.|Error 0-89: A void expression cannot be used in this context.
+
+// Compiletime error over runtime.
+>> ForAll([1,2], If(Value = 1, Sqrt(-Value), {Result: Value}))
+Errors: Error 14-58: A void expression cannot be used in this context.|Error 0-59: A void expression cannot be used in this context.
