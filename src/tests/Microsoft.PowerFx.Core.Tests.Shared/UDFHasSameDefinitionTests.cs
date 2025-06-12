@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Foo(x: Number): Number = Abs(x);", "Foo(x: Number): Boolean = Abs(x);", false)]
 
         // test with different parameter order
-        [InlineData("Foo(a: Number, b: Number, c: Number): Number = a+b+c;", "Foo(b: Number, c: Number, a: Number): Number = a+b+c;", true)]
+        [InlineData("Foo(a: Number, b: Number, c: Number): Number = a+b+c;", "Foo(b: Number, c: Number, a: Number): Number = a+b+c;", false)]
         public void TestSimpleUDFSameness(string udfFormula1, string udfFormula2, bool areSame)
         {
             var parserOptions = new ParserOptions()
