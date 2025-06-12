@@ -57,6 +57,9 @@ namespace Microsoft.PowerFx.Core.Tests
                 case "PowerFxV1CompatibilityRules":
                     this.Features = new Features(this.Features) { PowerFxV1CompatibilityRules = featureValue };
                     return true;
+                case "PowerFxV2CompatibilityRules":
+                    this.Features = Features.PowerFxV2;
+                    return true;
                 case "PrimaryOutputPropertyCoercionDeprecated":
                     this.Features = new Features(this.Features) { PrimaryOutputPropertyCoercionDeprecated = featureValue };
                     return true;

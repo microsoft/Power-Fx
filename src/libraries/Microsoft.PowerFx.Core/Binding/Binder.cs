@@ -433,6 +433,13 @@ namespace Microsoft.PowerFx.Core.Binding
             var vis = new Visitor(txb, resolver, ruleScope, bindingConfig.UseThisRecordForRuleScope, features);
             vis.Run();
 
+            // If the expression is dataflow only Ie non-side effecting, void doesn't have any practical use and should be converted to errors.
+            if (!bindingConfig.AllowsSideEffects && features.IsVoidError)
+            {
+                var v2e = new VoidToErrorTexlVisitor(txb);
+                v2e.Run();
+            }
+
             // Determine if a rename has occured at the top level
             if (txb.Top is AsNode asNode)
             {

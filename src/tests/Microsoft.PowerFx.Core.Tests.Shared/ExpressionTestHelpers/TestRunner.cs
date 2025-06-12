@@ -104,6 +104,7 @@ namespace Microsoft.PowerFx.Core.Tests
             possible.Add("TraceSetup");
             possible.Add("CultureInfo");
             possible.Add("Net7");
+            possible.Add("PowerFxV2CompatibilityRules");
 
             foreach (Match match in Regex.Matches(setup, @"(disable:)?(([\w]+|//)(\([^\)]*\))?)"))
             {
