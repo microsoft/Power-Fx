@@ -82,6 +82,11 @@ namespace Microsoft.PowerFx
         /// </summary>
         internal bool IsUserDefinedTypesEnabled { get; init; } = false;
 
+        /// <summary>
+        /// Enables treating void type expression as error in non-side-effecting expressions <see cref="ParserOptions.AllowsSideEffects"/>.
+        /// </summary>
+        internal bool IsVoidError { get; init; } = false;
+
         internal static readonly Features None = new Features();
 
         /// <summary>
@@ -102,7 +107,15 @@ namespace Microsoft.PowerFx
             PrimaryOutputPropertyCoercionDeprecated = true,
             AsTypeLegacyCheck = false,
             JsonFunctionAcceptsLazyTypes = true,
-            IsUserDefinedTypesEnabled = true
+            IsUserDefinedTypesEnabled = true,
+            IsVoidError = false,
+        };
+
+        public static Features PowerFxV2 => _powerFxV2;
+
+        private static readonly Features _powerFxV2 = new Features(PowerFxV1)
+        {
+            IsVoidError = true,
         };
 
         internal Features()
