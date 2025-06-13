@@ -39,6 +39,9 @@ namespace Microsoft.PowerFx.Core.Tests
                 case "ConsistentOneColumnTableResult":
                     this.Features = new Features(this.Features) { ConsistentOneColumnTableResult = featureValue };
                     return true;
+                case "IsVoidToError":
+                    this.Features = new Features(this.Features) { IsVoidError = featureValue };
+                    return true;
                 case "DisableRowScopeDisambiguationSyntax":
                     this.Features = new Features(this.Features) { DisableRowScopeDisambiguationSyntax = featureValue };
                     return true;
@@ -56,9 +59,6 @@ namespace Microsoft.PowerFx.Core.Tests
                     return true;
                 case "PowerFxV1CompatibilityRules":
                     this.Features = new Features(this.Features) { PowerFxV1CompatibilityRules = featureValue };
-                    return true;
-                case "PowerFxV2CompatibilityRules":
-                    this.Features = Features.PowerFxV2;
                     return true;
                 case "PrimaryOutputPropertyCoercionDeprecated":
                     this.Features = new Features(this.Features) { PrimaryOutputPropertyCoercionDeprecated = featureValue };

@@ -62,3 +62,19 @@
 
 >> IfError( 1/0, First( [First(AllErrors), Last(AllErrors)] ).Kind )
 13
+
+// IfError accepts the void value. But then result of the expression can't be used. If(true, 1, {x:4}) => void value.
+>> IfError(1/0, 1, If(true, 1, {x:4}), 1)
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> IfError( If(true, 1, {a:1}), 1, 2 )
+2
+
+>> IfError( If(true, 1/0, {a:1}), 1, 2 )
+1
+
+>> IfError( 1, "hello", If(true,1/0,{a:1}), "great", "world")
+"great"
+
+>> IfError( 1, "one", If(true,1,{a:1}), "two", "three")
+"three"

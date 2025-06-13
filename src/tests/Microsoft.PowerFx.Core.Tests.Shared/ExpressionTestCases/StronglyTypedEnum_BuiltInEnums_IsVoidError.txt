@@ -1,0 +1,34 @@
+#SETUP: StronglyTypedBuiltinEnums,PowerFxV1CompatibilityRules,AllEnumsSetup,RegEx,EnableJsonFunctions,IsVoidToError
+
+>> If(true, 1, TimeUnit.Seconds)
+Errors: Error 0-29: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.
+
+// Since there is no longer an Accepts relationship between enums and their backing kinds, more likely to get Void results
+>> If( false, 3, StartOfWeek.Sunday )  // first type rule
+Errors: Error 0-34: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.
+
+>> If( false, StartOfWeek.Monday, 3 )
+Errors: Error 0-34: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.
+
+>> If(true, 1, StartOfWeek.Tuesday)
+Errors: Error 0-32: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.
+
+>> If(true, StartOfWeek.Tuesday, 1)
+Errors: Error 0-32: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.
+
+>> If(true, TimeUnit.Seconds, "A")
+Errors: Error 0-31: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.
+
+>> If( false, TimeUnit.Years, 3 )  // first type rule
+Errors: Error 0-30: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.
+
+>> If( false, 3, TimeUnit.Years )  // first type rule
+Errors: Error 0-30: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.
+
+>> If( false, Color.Red, RGBA(120,120,12,1) )  // first type rule
+Errors: Error 0-42: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.
+
+// No ErrorKind functions are strongly typed at this time
+
+>> If( false, ErrorKind.Div0, 3 )  // first type rule
+Errors: Error 0-30: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.

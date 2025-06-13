@@ -108,13 +108,6 @@ namespace Microsoft.PowerFx
             AsTypeLegacyCheck = false,
             JsonFunctionAcceptsLazyTypes = true,
             IsUserDefinedTypesEnabled = true,
-            IsVoidError = false,
-        };
-
-        public static Features PowerFxV2 => _powerFxV2;
-
-        private static readonly Features _powerFxV2 = new Features(PowerFxV1)
-        {
             IsVoidError = true,
         };
 
@@ -137,6 +130,7 @@ namespace Microsoft.PowerFx
             AsTypeLegacyCheck = other.AsTypeLegacyCheck;
             JsonFunctionAcceptsLazyTypes = other.JsonFunctionAcceptsLazyTypes;
             IsLookUpReductionDelegationEnabled = other.IsLookUpReductionDelegationEnabled;
+            IsVoidError = other.IsVoidError;
         }
     }
 }
