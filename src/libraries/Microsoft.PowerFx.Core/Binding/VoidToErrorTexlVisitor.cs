@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Binding
         {
             if (_txb.GetTypeAllowInvalid(node) == DType.Void)
             {
-                _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrBadType_VoidExpression);
+                _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrBadType_NonBehavioralVoidExpression);
             }
         }
 
