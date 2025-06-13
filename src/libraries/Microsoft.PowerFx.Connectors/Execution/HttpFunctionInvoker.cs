@@ -209,7 +209,6 @@ namespace Microsoft.PowerFx.Connectors
         public Dictionary<string, FormulaValue> ConvertToNamedParameters(IReadOnlyList<FormulaValue> args)
         {
             // First N are required params.
-            // Last param is a record with each field being an optional.
             // Parameter names are case sensitive.
 
             Dictionary<string, FormulaValue> map = new ();
@@ -226,10 +225,11 @@ namespace Microsoft.PowerFx.Connectors
                 map[param.Name] = param.DefaultValue;
             }
 
-            // Required parameters are always first
-            for (int i = 0; i < _function.RequiredParameters.Length; i++)
+            var parameters = _function.RequiredParameters.Union(_function.OptionalParameters).ToArray();
+
+            for (var i = 0; i < args.Count; i++)
             {
-                string parameterName = _function.RequiredParameters[i].Name;
+                string parameterName = parameters[i].Name;
                 FormulaValue paramValue = args[i];
                 
                 // Objects are always flattenned
@@ -251,34 +251,6 @@ namespace Microsoft.PowerFx.Connectors
                 else
                 {
                     map[parameterName] = paramValue;
-                }
-            }
-
-            // Optional parameters are next and stored in a Record
-            if (_function.OptionalParameters.Length > 0 && args.Count > _function.RequiredParameters.Length)
-            {
-                FormulaValue optionalArg = args[args.Count - 1];
-
-                // Objects are always flattenned
-                if (optionalArg is RecordValue record)
-                {
-                    foreach (NamedValue field in record.Fields)
-                    {
-                        if (map.ContainsKey(field.Name))
-                        {
-                            // if optional parameters are defined and a default value is already present
-                            map[field.Name] = field.Value;
-                        }
-                        else
-                        {
-                            map.Add(field.Name, field.Value);
-                        }
-                    }
-                }
-                else
-                {
-                    // Type check should have caught this.
-                    throw new PowerFxConnectorException($"Optional arguments must be the last argument and a record");
                 }
             }
 
