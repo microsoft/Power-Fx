@@ -44,11 +44,14 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // test with different parameter order
         [InlineData("Foo(a: Number, b: Number, c: Number): Number = a+b+c;", "Foo(b: Number, c: Number, a: Number): Number = a+b+c;", false)]
+
+        // Imperative UDF vs Declarative UDF
+        [InlineData("Foo(x: Number): Number = Abs(x);", "Foo(x: Number): Number = {Abs(x)};", false)]
         public void TestSimpleUDFSameness(string udfFormula1, string udfFormula2, bool areSame)
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = true
             };
 
             var types = FormulaType.PrimitiveTypes.Union(new Dictionary<DName, FormulaType>() 
@@ -79,7 +82,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = true
             };
 
             var schema = TestUtils.DT("*[a: n, b:s]");

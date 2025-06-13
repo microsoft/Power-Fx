@@ -390,7 +390,8 @@ namespace Microsoft.PowerFx.Core.Functions
                 UdfBody.GetCompleteSpan().GetFragment(definitionsScript) != targetUDFbody || 
                 _args.Count() != targetUDF._args.Count() ||
                 ReturnType.AssociatedDataSources.SetEquals(targetUDF.ReturnType.AssociatedDataSources) == false ||
-                ReturnType != targetUDF.ReturnType)
+                ReturnType != targetUDF.ReturnType ||
+                _isImperative != targetUDF._isImperative)
             {
                 return false;
             }
