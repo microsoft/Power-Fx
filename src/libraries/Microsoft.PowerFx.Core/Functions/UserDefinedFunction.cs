@@ -381,6 +381,38 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
+        // Checks if the current UDF has the same definition as the target UDF.
+        public bool HasSameDefintion(string definitionsScript, UserDefinedFunction targetUDF, string targetUDFbody)
+        {
+            Contracts.AssertValue(targetUDF);
+
+            if (Name != targetUDF.Name ||
+                UdfBody.GetCompleteSpan().GetFragment(definitionsScript) != targetUDFbody || 
+                _args.Count() != targetUDF._args.Count() ||
+                ReturnType.AssociatedDataSources.SetEquals(targetUDF.ReturnType.AssociatedDataSources) == false ||
+                ReturnType != targetUDF.ReturnType ||
+                _isImperative != targetUDF._isImperative)
+            {
+                return false;
+            }
+
+            // Argument indices should match - change in index would affect caller
+            var argLookup = _args.ToDictionary(arg => arg.ArgIndex, arg => (arg.NameIdent.Name, ParamTypes[arg.ArgIndex]));
+
+            foreach (var arg in targetUDF._args)
+            {
+                if (!argLookup.TryGetValue(arg.ArgIndex, out var argInfo) || 
+                    argInfo.Name != arg.NameIdent.Name || 
+                    argInfo.Item2.AssociatedDataSources.SetEquals(targetUDF.ParamTypes[arg.ArgIndex].AssociatedDataSources) == false ||
+                    argInfo.Item2 != targetUDF.ParamTypes[arg.ArgIndex])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// NameResolver that combines global named resolver and params for user defined function.
         /// </summary>
