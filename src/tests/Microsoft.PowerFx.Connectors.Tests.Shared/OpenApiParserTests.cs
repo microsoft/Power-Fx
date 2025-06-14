@@ -1322,9 +1322,8 @@ POST https://tip1-shared.azure-apim.net/invoke
                 {
                    FormulaValue.New("card"),
                    FormulaValue.NewRecordFromFields(
-                           new NamedValue("inputs", FormulaValue.NewRecordFromFields(
                                 new NamedValue("property1", FormulaValue.New("test1")),
-                                new NamedValue("property2", FormulaValue.New("test2"))))),
+                                new NamedValue("property2", FormulaValue.New("test2"))),
                 },
                 runtimeContext,
                 CancellationToken.None);
@@ -1470,6 +1469,48 @@ POST https://tip1-shared.azure-apim.net/invoke
             Assert.Equal("Channel", suggestions1.Suggestions[0].DisplayName);
             Assert.Equal("Group chat", suggestions1.Suggestions[1].DisplayName);
             Assert.Equal("Chat with Flow bot", suggestions1.Suggestions[2].DisplayName);
+        }
+
+        [Fact]
+        public async Task UIPath_StartAndWaitForJobCompletion_WithSuggestions_OptionalInput()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\UIPath.yaml", _output);
+            using var httpClient = new HttpClient(testConnector);
+            
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "7592282b-e371-e3f6-8e04-e8f23e64227c" /* environment Id */, "eafc4fa0-c560-4eba-a5b2-3e1ebc63193a" /* connectionId */, () => "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dC...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("UIPath", client, console: _output);
+
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions(
+                new ConnectorSettings("UIPath") 
+                { 
+                    Compatibility = ConnectorCompatibility.SwaggerCompatibility, 
+                    ReturnUnknownRecordFieldsAsUntypedObjects = true,
+                    IncludeWebhookFunctions = true, // Note: By default, OpenApiParser will filter out those operations with 'x-ms-notification-content'. MCS needs to set it to true.
+                    AllowSuggestionMappingFallback = false, // Note: Some connector's swagger and actual response is not aligned. This option will try parse suggestions result using fallback property keys.
+                    UseItemDynamicPropertiesSpecialHandling = false, // Enables a fix for certain operations with special handling of the body parameter
+                    SupportXMsEnumValues = true,
+                    ReturnEnumsAsPrimitive = true,
+                }, 
+                testConnector._apiDocument)
+                .ToArray();
+            
+            ConnectorFunction startAndWaitForJobCompletion = functions.First(f => f.Name == "StartAndWaitForJobCompletion");
+
+            var dynamicListSchemaParameter = startAndWaitForJobCompletion.OptionalParameters.Single(p => p.Name == "dynamicListSchema");
+
+            ConnectorParameters result = await startAndWaitForJobCompletion.GetParameterSuggestionsAsync(
+                new NamedValue[]
+                {
+                    new NamedValue("X-UIPATH-OrganizationUnitId", FormulaValue.New(12345)),
+                    new NamedValue("processId", FormulaValue.New(6789))
+                },
+                dynamicListSchemaParameter,
+                runtimeContext,
+                CancellationToken.None);
+
+            var expectedLog = "POST https://tip1002-002.azure-apihub.net/invoke\r\n authority: tip1002-002.azure-apihub.net\r\n Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dC...\r\n path: /invoke\r\n scheme: https\r\n x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/7592282b-e371-e3f6-8e04-e8f23e64227c\r\n x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878\r\n x-ms-request-method: GET\r\n x-ms-request-url: /schema/input/6789\r\n x-ms-user-agent: PowerFx/1.99.0-local\r\n X-UIPATH-OrganizationUnitId: 12345\r\n";
+
+            Assert.Equal(expectedLog, testConnector._log.ToString());
         }
 
         [Fact]
