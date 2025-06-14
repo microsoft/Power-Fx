@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Connectors.Tabular;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -145,7 +146,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (value is BlankValue)
             {
-                return value;
+                return FormulaValue.NewBlank(expectedType);
             }
 
             if (expectedType == valueType)
