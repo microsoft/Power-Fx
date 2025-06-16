@@ -311,7 +311,8 @@ namespace Microsoft.PowerFx.Core.Entities
         Min,
         Max,
         Count,
-        CountRows
+        CountRows,
+        CountDistinct,
     }
 
     [Obsolete("preview")]

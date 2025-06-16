@@ -29,6 +29,7 @@ namespace Microsoft.PowerFx.Connectors
         public const string Selectable = "selectable";
         public const string SelectionRestriction = "selectRestrictions";
         public const string SelectRestriction = "selectRestrictions";
+        public const string CountRestrictions = "countRestrictions";
         public const string ServerPagingOptions = "serverPagingOptions";
         public const string Sortable = "sortable";
         public const string SortRestrictions = "sortRestrictions";

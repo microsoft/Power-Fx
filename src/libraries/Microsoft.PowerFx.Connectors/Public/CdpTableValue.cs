@@ -135,6 +135,13 @@ namespace Microsoft.PowerFx.Connectors
 
             var valueRecord = row.Value;
             var result = await valueRecord.GetFieldAsync(DelegationParameters.ODataAggregationResultFieldName, cancellationToken).ConfigureAwait(false);
+
+            // Total count returning query is special then other aggregations.
+            if (result is BlankValue && parameters.ReturnTotalCount())
+            {
+                result = await valueRecord.GetFieldAsync(DelegationParameters.ODataCountFieldName, cancellationToken).ConfigureAwait(false);
+            }
+
             result = ConvertToExpectedType(parameters.ExpectedReturnType, result);
             return result;
         }

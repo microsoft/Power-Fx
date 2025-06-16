@@ -50,6 +50,11 @@ namespace Microsoft.PowerFx.Connectors
         public readonly SelectionRestriction SelectionRestriction;
 
         [JsonInclude]
+        [JsonPropertyName(CapabilityConstants.CountRestrictions)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public readonly CountRestriction CountRestriction;
+
+        [JsonInclude]
         [JsonPropertyName(CapabilityConstants.GroupRestriction)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public readonly GroupRestriction GroupRestriction;
