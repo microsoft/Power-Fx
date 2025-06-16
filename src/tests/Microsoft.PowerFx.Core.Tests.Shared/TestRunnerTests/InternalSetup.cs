@@ -39,9 +39,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 case "ConsistentOneColumnTableResult":
                     this.Features = new Features(this.Features) { ConsistentOneColumnTableResult = featureValue };
                     return true;
-                case "IsVoidToError":
-                    this.Features = new Features(this.Features) { IsVoidError = featureValue };
-                    return true;
                 case "DisableRowScopeDisambiguationSyntax":
                     this.Features = new Features(this.Features) { DisableRowScopeDisambiguationSyntax = featureValue };
                     return true;

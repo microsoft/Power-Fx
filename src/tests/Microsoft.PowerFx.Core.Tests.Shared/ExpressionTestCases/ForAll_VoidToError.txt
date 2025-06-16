@@ -1,19 +1,16 @@
-#SETUP: PowerFxV1CompatibilityRules,IsVoidToError
-
 // ************ ForAll and Void expressions ****************
 
 >> ForAll([1,2], If(Value = 1, Value * 2, {Result: Value}))
-Errors: Error 14-55: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.|Error 0-56: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.
+Errors: Error 14-55: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 >> ForAll([1,2,3] As p, Switch(p.Value, 1, {a:1}, 2, [{a:2}], 3, "Hello"))
-Errors: Error 21-70: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.|Error 0-71: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.
+Errors: Error 21-70: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 >> ForAll(ParseJSON("[1,2]"), If(Value(ThisRecord) = 1, Value(ThisRecord) * 2, {Result: Value(ThisRecord)}))
-Errors: Error 27-104: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.|Error 0-105: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.
+Errors: Error 27-104: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 >> ForAll(ParseJSON("[1,2,3]"), Switch(Value(ThisRecord), 1, {a:1}, 2, [{a:2}], 3, "Hello"))
-Errors: Error 29-88: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.|Error 0-89: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.
+Errors: Error 29-88: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
-// Errors are returned
 >> ForAll([1,2], If(Value = 1, Sqrt(-Value), {Result: Value}))
-Errors: Error 14-58: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.|Error 0-59: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.
+Errors: Error 14-58: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.

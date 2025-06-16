@@ -1982,7 +1982,7 @@
     <comment>Error message shown to the user when they try to use a void expression in a function argument that requires a value.</comment>
   </data>
   <data name="ErrBadType_NonBehavioralVoidExpression" xml:space="preserve">
-    <value>Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.</value>
+    <value>Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.</value>
     <comment>Error message shown when a void expression is used as a function argument in a non-behavioral context.</comment>
   </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">

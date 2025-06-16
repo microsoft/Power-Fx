@@ -1,9 +1,7 @@
-#SETUP: PowerFxV1CompatibilityRules,IsVoidToError
-
 // Demos expression that generates Void will result in error.
 >> If(true, {a:1}, "test")
-Errors: Error 0-23: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.
+Errors: Error 0-23: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 // Void can not be passed through another If statment
 >> If( true, If(1<0, {x:3}, 1), 1)
-Errors: Error 10-27: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.|Error 0-31: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.
+Errors: Error 10-27: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
