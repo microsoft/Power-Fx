@@ -1,5 +1,3 @@
-#SETUP: PowerFxV1CompatibilityRules,IsVoidToError
-
 // void types are not allowed in With function's argument.
 >> With({y:1}, If(true, {a:1}, "test"))
-Errors: Error 12-35: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.|Error 0-36: Argument type mismatch. All function arguments must be of the same type or types that can be coerced into each other.
+Errors: Error 12-35: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.

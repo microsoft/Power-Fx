@@ -434,7 +434,7 @@ namespace Microsoft.PowerFx.Core.Binding
             vis.Run();
 
             // If the expression is dataflow only Ie non-side effecting, void doesn't have any practical use and should be converted to errors.
-            if (!bindingConfig.AllowsSideEffects && features.PowerFxV1CompatibilityRules && features.IsVoidError)
+            if (!bindingConfig.AllowsSideEffects)
             {
                 var v2e = new VoidToErrorTexlVisitor(txb);
                 v2e.Run();
