@@ -79,7 +79,7 @@ Set(z, x * 5 + y)
 Notify(z)
 ";
             var lines = file.Split('\n');
-            
+
             foreach (var line in lines)
             {
                 _repl.HandleLine(line);
@@ -152,7 +152,7 @@ Notify(z)
 
             // Failed to define at all. 
             var ok = _repl.Engine.TryGetVariableType("x", out var type);
-            Assert.False(ok);            
+            Assert.False(ok);
         }
 
         [Fact]
@@ -229,8 +229,8 @@ Notify(z)
             SymbolTable st = new SymbolTable() { DebugName = "ExtraValues" };
             var slot = st.AddVariable("Const1", FormulaType.Decimal, new SymbolProperties
             {
-                 CanMutate = false,
-                 CanSet = false
+                CanMutate = false,
+                CanSet = false
             });
             var extraValues = st.CreateValues();
             extraValues.Set(slot, FormulaValue.New(10));
@@ -245,7 +245,7 @@ Notify(z)
 
             // But can't set (doesn't declare a shadow copy).
             var replResult = await _repl.HandleCommandAsync("Set(Const1, 99)");
-            Assert.False(replResult.IsSuccess); 
+            Assert.False(replResult.IsSuccess);
         }
 
         [Fact]
@@ -652,6 +652,80 @@ true
             Assert.True(_output.Get(OutputKind.Repl, trim: false) == string.Empty);
             Assert.True(_output.Get(OutputKind.Control, trim: false) == string.Empty);
             Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
+        }
+
+        // Paris with "NoSideEffects" test below.
+        [Fact]
+        public void WithSideEffects()
+        {
+            _repl.HandleLine("Help()");
+            _repl.HandleLine("Notify( \"hello\" )");
+
+            _repl.HandleLine("Set( collection1, [0] )");
+            _repl.HandleLine("Collect( collection1, [1,2,3] )");
+            _repl.HandleLine("Remove( collection1, {Value:2} )");
+            _repl.HandleLine("Set( variable1, 45 )");
+            _repl.HandleLine("Set( variable1, variable1+1 )");
+
+            var log = _output.Get(OutputKind.Error);
+            Assert.True(log.Length == 0);
+        }
+    }
+
+    public class ReplNoSideEffectsTests
+    {
+        private readonly PowerFxREPL _repl;
+        private readonly TestReplOutput _output = new TestReplOutput();
+
+        public ReplNoSideEffectsTests()
+        {
+            var config = new PowerFxConfig();
+            config.SymbolTable.EnableMutationFunctions();
+
+            // config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            _repl = new PowerFxREPL
+            {
+                Engine = engine,
+                Output = _output,
+                AllowSetDefinitions = false,
+                AllowUserDefinedFunctions = true,
+                ParserOptions = new ParserOptions() { AllowsSideEffects = false }
+            };
+        }
+
+        // Pairs with "WithSideEffects" test above. 
+        [Fact]
+        public void NoSideEffects()
+        {
+            _repl.HandleLine("Help()");
+            var log0h = _output.Get(OutputKind.Error);
+            Assert.True(log0h.Length == 0);
+
+            _repl.HandleLine("Notify( \"hello\" )");
+            var log0n = _output.Get(OutputKind.Error);
+            Assert.True(log0n.Length == 0);
+
+            _repl.HandleLine("Set( collection1, [0] )");
+            var log1 = _output.Get(OutputKind.Error);
+            Assert.Contains("Behavior function in a non-behavior property", log1);
+
+            _repl.HandleLine("Collect( collection1, [1,2,3] )");
+            var log2 = _output.Get(OutputKind.Error);
+            Assert.Contains("Behavior function in a non-behavior property", log2);
+
+            _repl.HandleLine("Remove( collection1, {Value:2} )");
+            var log3 = _output.Get(OutputKind.Error);
+            Assert.Contains("Behavior function in a non-behavior property", log3);
+
+            _repl.HandleLine("Set( variable1, 45 )");
+            var log4 = _output.Get(OutputKind.Error);
+            Assert.Contains("Behavior function in a non-behavior property", log4);
+
+            _repl.HandleLine("Set( variable1, variable1+1 )");
+            var log5 = _output.Get(OutputKind.Error);
+            Assert.Contains("Behavior function in a non-behavior property", log5);
         }
     }
 
