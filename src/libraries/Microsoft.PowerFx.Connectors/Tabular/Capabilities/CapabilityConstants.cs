@@ -40,5 +40,6 @@ namespace Microsoft.PowerFx.Connectors
         public const string SupportsJoin = "supportsJoin";
         public const string UngroupableProperties = "ungroupableProperties";
         public const string UnsortableProperties = "unsortableProperties";        
+        public const string IsCountable = "isCountable";
     }
 }
