@@ -540,12 +540,27 @@ Options.AllowSideEffects
     Enables functions with side effects (Set, Notify, Collect, etc).
     Resets the engine.
 
+Options.EnableUDFs
+    Enables UserDefinedFunctions to be added.
+    Resets the engine.
+
 Options.FormatTable
     Displays tables in a tabular format rather than using Table() function notation.
+
+Options.PowerFxV1
+    Sets all the feature flags for Power Fx 1.0.
+    Resets the engine.
 
 Options.HashCodes        
     When printing, includes hash codes of each object to better understand references.
     This can be very helpful for debugging copy-on-mutation semantics.
+
+Options.None
+    Removed all the feature flags, which is even less than Canvas uses.
+    Resets the engine.
+
+Options.NumberedPrompts
+    Adds a prompt number to make it easier to discuss results with others.
 
 Options.NumberIsFloat
     By default, literal numeric values such as ""1.23"" and the return type from the 
@@ -559,18 +574,6 @@ Options.LargeCallDepth
 
 Options.StackTrace
     Displays the full stack trace when an exception is encountered.
-
-Options.PowerFxV1
-    Sets all the feature flags for Power Fx 1.0.
-    Resets the engine.
-
-Options.None
-    Removed all the feature flags, which is even less than Canvas uses.
-    Resets the engine.
-
-Options.EnableUDFs
-    Enables UserDefinedFunctions to be added.
-    Resets the engine.
 
 Options.TextFirst
     Use the Text First parser mode, where the formula is interpreted as if it 
