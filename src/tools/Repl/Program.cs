@@ -561,7 +561,7 @@ Options.None
 
 Options.NumberedPrompts
     Adds a prompt number to make it easier to discuss results with others.
-    Reset, by changing an option that resets or calling Reset(), will restart the numbering.
+    Reset, by calling Reset() or changing an option that resets, will restart the numbering.
 
 Options.NumberIsFloat
     By default, literal numeric values such as ""1.23"" and the return type from the 
