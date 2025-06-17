@@ -2599,6 +2599,10 @@
     <value>Бірліктердің көрсетілген санын күнге қосады.</value>
     
   </data>
+  <data name="AboutWorkday_date" xml:space="preserve">
+    <value>Күннен бұрын немесе кейін жұмыс күндерінің санын қосыңыз.</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Екі күн арасындағы аралықты есептеу.</value>
     
