@@ -15,6 +15,7 @@ using Microsoft.PowerFx.Repl;
 using Microsoft.PowerFx.Repl.Functions;
 using Microsoft.PowerFx.Repl.Services;
 using Microsoft.PowerFx.Types;
+using YamlDotNet.Serialization;
 
 namespace Microsoft.PowerFx
 {
@@ -44,6 +45,9 @@ namespace Microsoft.PowerFx
 
         private const string OptionAllowSideEffects = "AllowSideEffects";
         private static bool _allowSideEffects = true;
+
+        private const string OptionNumberedPrompts = "NumberedPrompts";
+        private static bool _numberedPrompts = false;
 
 #if MATCHCOMPARE
         // to enable, place this in Solution Items/Directiory.Build.Props:
@@ -86,6 +90,7 @@ namespace Microsoft.PowerFx
                 { OptionStackTrace, OptionStackTrace },
                 { OptionTextFirst, OptionTextFirst },
                 { OptionAllowSideEffects, OptionAllowSideEffects },
+                { OptionNumberedPrompts, OptionNumberedPrompts },
 #if MATCHCOMPARE
                 { OptionMatchCompare, OptionMatchCompare },
 #endif
@@ -162,6 +167,10 @@ namespace Microsoft.PowerFx
         // Hook repl engine with customizations.
         private class MyRepl : PowerFxREPL
         {
+            public int _promptNumber = 1;
+
+            public override string Prompt => _numberedPrompts ? $"\n{_promptNumber++}>> " : "\n>> ";
+
             public MyRepl()
             {
                 this.Engine = ReplRecalcEngine();
@@ -303,6 +312,7 @@ namespace Microsoft.PowerFx
                 sb.Append(CultureInfo.InvariantCulture, $"{"TextFirst:",-42}{_textFirst}\n");
                 sb.Append(CultureInfo.InvariantCulture, $"{"UserDefinedFunctions:",-42}{_enableUDFs}\n");
                 sb.Append(CultureInfo.InvariantCulture, $"{"AllowSideEffects:",-42}{_allowSideEffects}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"NumberedPrompts:",-42}{_numberedPrompts}\n");
 #if MATCHCOMPARE
                 sb.Append(CultureInfo.InvariantCulture, $"{"MatchCompare:",-42}{_matchCompare}\n");
 #endif
@@ -434,6 +444,12 @@ namespace Microsoft.PowerFx
                 if (string.Equals(option.Value, OptionStackTrace, StringComparison.OrdinalIgnoreCase))
                 {
                     _stackTrace = value.Value;
+                    return value;
+                }
+
+                if (string.Equals(option.Value, OptionNumberedPrompts, StringComparison.OrdinalIgnoreCase))
+                {
+                    _numberedPrompts = value.Value;
                     return value;
                 }
 
