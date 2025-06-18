@@ -60,6 +60,9 @@ Date(2011,1,16)
 >> If(true, "A", TimeUnit.Seconds)
 "A"
 
+>> If(true, 1, TimeUnit.Seconds)
+Errors: Error 0-29: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
+
 >> Text(Date(1970, 1, 1), DateTimeFormat.LongDate) 
 "Thursday, January 1, 1970"
 

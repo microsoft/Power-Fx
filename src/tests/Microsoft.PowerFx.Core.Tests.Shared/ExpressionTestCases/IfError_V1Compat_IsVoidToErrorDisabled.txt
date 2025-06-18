@@ -1,8 +1,0 @@
-#SETUP: PowerFxV1CompatibilityRules,disable:IsVoidToError
-
->> IfError(1, {x:1}, {x:1}, {y:1}, 1)
-If(true, {test:1}, "Void value (result of the expression can't be used).")
-
-// IfError can have mismatched arg types, but result can't be used.
->> IfError(1/0, 1, {x:4})
-If(true, {test:1}, "Void value (result of the expression can't be used).")

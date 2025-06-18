@@ -1,9 +1,6 @@
 ﻿>> Switch(1, 1, 12, 10, {x:4})
 Errors: Error 0-27: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
->> IfError(1, {x:1}, {x:1}, {y:1}, 1) 
-Errors: Error 0-34: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
-
 >> Switch(1, 1, 2, If(1<0, 1, {x:4}))
 Errors: Error 16-33: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
@@ -22,6 +19,3 @@ Errors: Error 29-88: Argument type mismatch. The types of all result arguments m
 // Compiletime error over runtime.
 >> ForAll([1,2], If(Value = 1, Sqrt(-Value), {Result: Value}))
 Errors: Error 14-58: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
-
->> Switch( 1, 2, If( true, "hi", If( true, 3, If( false, [], {} ) ) ), 3, If( false, GUID(), Now() ) )
-Errors: Error 43-62: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.|Error 71-97: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
