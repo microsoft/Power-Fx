@@ -211,6 +211,8 @@ Defined in `x-ms-capabilities`
 | | IsReadOnly | ReadOnly table, when `x-ms-permission` is set to `read-only`<br> When a table is defining no primary column, it is also marked `read-only` and a fake primary key column is added to it ("KeyId", number)|
 | `sortRestrictions` | SortRestriction | Sort Restrictions |
 |  | IsSortable| When SortRestriction is not null |
+| `countRestrictions` | CountRestriction | Count Restrictions |
+|  | IsCountable | When `countRestrictions` is not null and `countable=true`, the table supports `$count` in OData queries |
 | `filterRestrictions` | FilterRestriction | Filter Restrictions |
 | `selectRestrictions`  | SelectionRestriction | Select Restrictions |
 |  | IsSelectable | When SelectionRestriction is not null && SelectionRestriction.IsSelectable |
@@ -300,6 +302,52 @@ OData optional parameters (in query string)
 - $count
 
 The supported runtime operations here should be consistent with the capabilities described in the metadata.
+
+#### Sample 200 Response (without `$count`)
+
+<details>
+<summary>Response</summary>
+
+
+```text
+HTTP/1.1 200 OK
+OData-Version: 4.0
+```
+```json
+{
+  "@odata.context": "[Organization URI]/api/data/v9.2/$metadata#accounts(accountid)",
+  "value": [
+    {
+      "@odata.etag": "W/\"81359849\"",
+      "accountid": "78914942-34cb-ed11-b596-0022481d68cd"
+    }
+    // ... more rows
+  ]
+}
+```
+</details>
+
+#### Sample 200 Response (with $count=true)
+<details> <summary>Response</summary>
+    
+```text
+HTTP/1.1 200 OK
+OData-Version: 4.0
+```
+```json
+{
+  "@odata.context": "[Organization URI]/api/data/v9.2/$metadata#accounts(accountid)",
+  "@odata.count": 9,
+  "value": [
+    {
+      "@odata.etag": "W/\"81359849\"",
+      "accountid": "78914942-34cb-ed11-b596-0022481d68cd"
+    }
+    // ... more rows
+  ]
+}
+```
+</details>
 
 ### DELETE /datasets/{datasetName}/tables/{tableName}/items/{id}
 Delete a row
