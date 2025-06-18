@@ -1,4 +1,4 @@
-﻿#SETUP: StronglyTypedBuiltinEnums,PowerFxV1CompatibilityRules,AllEnumsSetup,RegEx,EnableJsonFunctions,disable:IsVoidToError
+﻿#SETUP: StronglyTypedBuiltinEnums,PowerFxV1CompatibilityRules,AllEnumsSetup,RegEx,EnableJsonFunctions
 
 // **** Using built in enums only, V1 compat. ****
 // Some enum varients are not represented in the Builtin set, including, for example, any Boolean enums.
@@ -677,8 +677,17 @@ Match.CalculatedOptionSetValue
 // 15. Since there is no longer an Accepts relationship between enums and their backing kinds, more likely to get Void results
 //
 
+>> If(true, TimeUnit.Seconds, "A")
+Errors: Error 0-31: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
+
 >> If(true, TimeUnit.Minutes, TimeUnit.Seconds)
 TimeUnit.Minutes
+
+>> If(true, 1, StartOfWeek.Tuesday)
+Errors: Error 0-32: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
+
+>> If(true, StartOfWeek.Tuesday, 1)
+Errors: Error 0-32: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 //===========================================================================================================
 //
@@ -900,6 +909,9 @@ Errors: Error 19-20: Incompatible types for comparison. These types can't be com
 >> StartOfWeek.Sunday > 0
 Errors: Error 19-20: Incompatible types for comparison. These types can't be compared: Enum (StartOfWeek), Decimal.
 
+>> If( false, StartOfWeek.Monday, 3 )
+Errors: Error 0-34: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
+
 // Can't be used as a number (CanCoerceToBackingKind = false)
 
 >> Sqrt( StartOfWeek.Sunday )
@@ -913,6 +925,9 @@ Errors: Error 11-18: Invalid argument type. Expecting one of the following: Deci
 
 >> StartOfWeek.Sunday + StartOfWeek.Monday
 Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.|Error 32-39: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
+
+>> If( false, 3, StartOfWeek.Sunday )  // first type rule
+Errors: Error 0-34: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 // Can't compare numerically (CanCompareNumeric = false)
 
@@ -1000,6 +1015,9 @@ Errors: Error 28-36: Invalid argument type (Text). Expecting a Enum (TimeUnit) v
 >> TimeUnit.Years = "years"
 Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: Enum (TimeUnit), Text.
 
+>> If( false, TimeUnit.Years, 3 )  // first type rule
+Errors: Error 0-30: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
+
 // Can't be used as a number (CanCoerceToBackingKind = false)
 
 >> Sqrt( TimeUnit.Years )
@@ -1013,6 +1031,9 @@ Errors: Error 8-14: Invalid argument type. Expecting one of the following: Decim
 
 >> TimeUnit.Years + TimeUnit.Months
 Errors: Error 8-14: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.|Error 25-32: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
+
+>> If( false, 3, TimeUnit.Years )  // first type rule
+Errors: Error 0-30: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 // Can't compare numerically (CanCompareNumeric = false)
 
@@ -1109,6 +1130,9 @@ Errors: Error 0-9: The function 'ColorFade' has some invalid arguments.|Error 20
 >> ColorFade( RGBA( 120, 120, 60, 1 ), 15% )
 RGBA(140,140,89,1)
 
+>> If( false, Color.Red, RGBA(120,120,12,1) )  // first type rule
+Errors: Error 0-42: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
+
 // Can be used as a color (CanCoerceToBackingKind = true)
 
 >> RGBA( 255, 0, 0, 1 ) = Color.Red
@@ -1199,6 +1223,11 @@ Errors: Error 18-19: Incompatible types for comparison. These types can't be com
 Errors: Error 18-20: Incompatible types for comparison. These types can't be compared: Enum (ErrorKind), Enum (StartOfWeek).
 
 // Number can't be used in place (CanCoerceFromBackingKind = false)
+
+// No ErrorKind functions are strongly typed at this time
+
+>> If( false, ErrorKind.Div0, 3 )  // first type rule
+Errors: Error 0-30: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 // Can be used as a number (CanCoerceToBackingKind = true)
 
@@ -1491,6 +1520,3 @@ false
 
 >> IsMatch( "28", 28 )
 Errors: Error 15-17: Invalid argument type (Decimal). Expecting a Enum (Match) value instead.
-
->> If(true, 1, TimeUnit.Seconds)
-If(true, {test:1}, "Void value (result of the expression can't be used).")

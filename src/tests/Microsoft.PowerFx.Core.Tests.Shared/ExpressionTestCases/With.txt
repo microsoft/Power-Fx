@@ -10,6 +10,10 @@ Blank()
 >> With({x : 5}, With({ x : x*2}, x))
 10
 
+// void values are not allowed in With function's argument.
+>> With({y:1}, If(true, {a:1}, "test"))
+Errors: Error 12-35: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
+
 >> With(First(First(LastN(ForAll(Table({Value:1}, {Value:0}, {Value:2}), Table({a: 1/ThisRecord.Value})), 2)).Value), a * a)
 Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Div0}))
 

@@ -1,3 +1,0 @@
-// void types are not allowed in With function's argument.
->> With({y:1}, If(true, {a:1}, "test"))
-Errors: Error 12-35: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.

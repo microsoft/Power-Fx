@@ -89,7 +89,7 @@ Table({Value:true})
 >> ForAll([Blank()],IsBlank(ThisRecord))
 Table({Value:false})
 
-/ ************ ForAll and Void expressions ****************
+// ************ ForAll and Void expressions ****************
 
 >> ForAll([1,2], If(Value = 1, Value * 2, {Result: Value}))
 Errors: Error 14-55: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.

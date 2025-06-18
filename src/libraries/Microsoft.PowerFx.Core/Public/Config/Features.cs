@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx
             PrimaryOutputPropertyCoercionDeprecated = true,
             AsTypeLegacyCheck = false,
             JsonFunctionAcceptsLazyTypes = true,
-            IsUserDefinedTypesEnabled = true,
+            IsUserDefinedTypesEnabled = true
         };
 
         internal Features()
