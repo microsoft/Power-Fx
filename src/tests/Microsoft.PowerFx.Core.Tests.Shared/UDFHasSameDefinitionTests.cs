@@ -19,6 +19,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("Foo(x: Number): Number = Abs(x);", "Foo(x: Number): Number = Abs(x);", true)]
+        [InlineData("Foo(x: Number): Void = { Notify(\"Hello\"); };", "Foo(x: Number): Void = { Notify(\"Hello\"); };", true)]
         
         // test with different udf body
         [InlineData("Foo(x: Number): Number = Abs(x);", "Foo(x: Number): Number = Abs( /*Hello*/ x);", false)]
@@ -78,6 +79,9 @@ namespace Microsoft.PowerFx.Core.Tests
         // test with deeply nested types
         [InlineData("F(x: CT1): CT1 = x;", "F(x: CT2): CT2 = x;", false)]
         [InlineData("F(x: CT1): CT1 = x;", "F(/*same*/ x: CT1): CT1 = x;", true)]
+
+        // more/less fields in complex types
+        [InlineData("F(x: CT3): CT3 = x;", "F(x: CT4): CT4 = x;", false)]
         public void TestComplexUDFSameness(string udfFormula1, string udfFormula2, bool areSame)
         {
             var parserOptions = new ParserOptions()
@@ -91,6 +95,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var complexType1 = TestUtils.DT("*[a: ![b: ![c: *[d: n, e:s]]]]");
             var complexType2 = TestUtils.DT("*[a: ![b: ![c: *[d: n, e:b]]]]");
+            var complexType3 = TestUtils.DT("*[a: n, b:s, c: b]");
+            var complexType4 = TestUtils.DT("*[a: n, b:s]");
 
             var types = FormulaType.PrimitiveTypes.Union(new Dictionary<DName, FormulaType>()
             {
@@ -100,6 +106,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 { new DName("T2"), FormulaType.Build(schema) },
                 { new DName("CT1"), FormulaType.Build(complexType1) },
                 { new DName("CT2"), FormulaType.Build(complexType2) },
+                { new DName("CT3"), FormulaType.Build(complexType3) },
+                { new DName("CT4"), FormulaType.Build(complexType4) },
             });
 
             TestSameness(udfFormula1, udfFormula2, parserOptions, types, areSame);
