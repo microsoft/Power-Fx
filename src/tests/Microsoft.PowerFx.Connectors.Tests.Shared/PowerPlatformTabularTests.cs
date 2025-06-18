@@ -290,19 +290,6 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
             await connectorTable.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
             Assert.True(connectorTable.IsInitialized);
-
-            var sqlTableValue = connectorTable.GetTableValue();
-            var symValues = new SymbolValues().Add("Customer", sqlTableValue);
-            var check = engine.Check("Customer", symbolTable: symValues.SymbolTable);
-
-            RuntimeConfig rc = new RuntimeConfig(symValues);
-            var some = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
-            var table = Assert.IsAssignableFrom<TableValue>(some);
-            var recordType = table.Type.ToRecord();
-            var metadata = Assert.IsAssignableFrom<ICDPAggregateMetadata>(recordType);
-            Assert.True(metadata.TryGetSensitivityLabelInfo(out var sensitivityLabels));
-            Assert.NotEmpty(sensitivityLabels);
-            Assert.Equal("FTE Only", sensitivityLabels.First().Name);
         }
 
         [Fact]
@@ -426,20 +413,37 @@ namespace Microsoft.PowerFx.Connectors.Tests
             string jwt = "eyJ0eX...";
             using var client = new PowerPlatformConnectorClient("49970107-0806-e5a7-be5e-7c60e2750f01.12.common.firstrelease.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
             
-            CdpDataSource cds = new CdpDataSource("pfxdev-sql.database.windows.net,SampleDB");
+            CdpDataSource cds = new CdpDataSource("pfxdev-sql.database.windows.net,SampleDB", ConnectorSettings.NewCDPConnectorSettings(extractSensitivityLabel: true));
 
-            testConnector.SetResponseFromFiles(@"Responses\SQL GetDatasetsMetadata.json", @"Responses\SQL GetSchema Products.json");
+            testConnector.SetResponseFromFiles(@"Responses\SQL GetDatasetsMetadata.json", @"Responses\SQL GetSchema Products.json", @"Responses\SQL GetItems Products.json");
             CdpTable table = await cds.GetTableAsync(client, $"/apim/sql/{connectionId}", "[SalesLT].[Product]", CancellationToken.None, logger);
 
             Assert.Equal("[SalesLT].[Product]", table.TableName);
             Assert.Equal("[SalesLT].[Product]", table.DisplayName);
             Assert.True(table.IsInitialized);
 
+            var tv = table.GetTableValue();
+            var symValues = new SymbolValues().Add(table.TableName, tv);
+            var check = engine.Check($"'{table.TableName}'", symbolTable: symValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            var tv2 = await check.GetEvaluator().EvalAsync(CancellationToken.None, new RuntimeConfig(symValues).AddService<ConnectorLogger>(logger));
+            var tv3 = Assert.IsAssignableFrom<TableValue>(tv2);
+            var rType = tv3.Type.ToRecord();
+            var metadata = Assert.IsAssignableFrom<ICDPAggregateMetadata>(rType);
+            Assert.True(metadata.TryGetSensitivityLabelInfo(out var sensitivityLabels));
+            Assert.True(sensitivityLabels.Count() == 1);
+            Assert.Equal("FTE Only", sensitivityLabels.First().Name);
+
+            Assert.True(metadata.TryGetMetadataItems(out var metadataItem));
+            Assert.True(metadataItem.Count() == 1);
+            Assert.Equal("ProductID", metadataItem.First().Name);
+
             // Trying with a wrong table name (2nd network call ends up with a 400)
             testConnector.SetResponseFromFiles((@"Responses\SQL GetDatasetsMetadata.json", HttpStatusCode.OK), (@"Responses\SQL Wrong Table.json", HttpStatusCode.BadRequest));
             PowerFxConnectorException e = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await cds.GetTableAsync(client, $"/apim/sql/{connectionId}", "UnknownTable123", CancellationToken.None, logger).ConfigureAwait(false));
 
-            Assert.StartsWith(@"CDP call to /apim/sql/29941b77eb0a40fe925cd7a03cb85b40/v2/$metadata.json/datasets/pfxdev-sql.database.windows.net%2CSampleDB/tables/UnknownTable123?api-version=2015-09-01 failed with 400 error:  (Bad Request)", e.Message);
+            Assert.StartsWith(@"CDP call to /apim/sql/29941b77eb0a40fe925cd7a03cb85b40/v2/$metadata.json/datasets/pfxdev-sql.database.windows.net%2CSampleDB/tables/UnknownTable123?api-version=2015-09-01&extractSensitivityLabel=True failed with 400 error:  (Bad Request)", e.Message);
         }
 
         [Fact]
@@ -770,7 +774,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832384"
             };
 
-            CdpTable tabularService = new CdpTable("https://microsofteur.sharepoint.com/teams/pfxtest", "Documents", tables: null, connectorSettings: null, fieldMetadata: null);
+            CdpTable tabularService = new CdpTable("https://microsofteur.sharepoint.com/teams/pfxtest", "Documents", tables: null, connectorSettings: null);
 
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Documents", tabularService.TableName);

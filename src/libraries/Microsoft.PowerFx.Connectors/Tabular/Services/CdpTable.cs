@@ -49,30 +49,27 @@ namespace Microsoft.PowerFx.Connectors
 
         private IReadOnlyDictionary<string, Relationship> _relationships;
 
-        // this can be null.
-        internal readonly CDPMetadataItem _fieldMetadata;
-
         private readonly ConnectorSettings _connectorSettings;
 
         public override ConnectorSettings ConnectorSettings => _connectorSettings;
 
-        internal CdpTable(string dataset, string table, IReadOnlyCollection<RawTable> tables, ConnectorSettings connectorSettings,  CDPMetadataItem fieldMetadata = null)
+        internal CdpTable(string dataset, string table, IReadOnlyCollection<RawTable> tables, ConnectorSettings connectorSettings)
         {
             DatasetName = dataset ?? throw new ArgumentNullException(nameof(dataset));
             TableName = table ?? throw new ArgumentNullException(nameof(table));
             Tables = tables;
             _connectorSettings = connectorSettings ?? ConnectorSettings.NewCDPConnectorSettings();
-            _fieldMetadata = fieldMetadata;
         }
 
-        internal CdpTable(string dataset, string table, DatasetMetadata datasetMetadata, IReadOnlyCollection<RawTable> tables, ConnectorSettings connectorSettings, CDPMetadataItem fieldMetadata)
-            : this(dataset, table, tables, connectorSettings, fieldMetadata)
+        internal CdpTable(string dataset, string table, DatasetMetadata datasetMetadata, IReadOnlyCollection<RawTable> tables, ConnectorSettings connectorSettings)
+            : this(dataset, table, tables, connectorSettings)
         {
             DatasetMetadata = datasetMetadata;
         }
 
         //// TABLE METADATA SERVICE
         // GET: /$metadata.json/datasets/{datasetName}/tables/{tableName}?api-version=2015-09-01        
+        // get MIP Data here.
         public virtual async Task InitAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {            
             cancellationToken.ThrowIfCancellationRequested();

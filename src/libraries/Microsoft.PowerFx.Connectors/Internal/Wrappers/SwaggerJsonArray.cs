@@ -17,6 +17,8 @@ namespace Microsoft.PowerFx.Connectors
     {
         private readonly JsonElement _je;
 
+        internal JsonElement BackingJsonElement => _je;
+
         public SwaggerJsonArray(JsonElement je)
         {
             _je = je;
