@@ -1,0 +1,1264 @@
+﻿swagger: '2.0'
+info:
+  title: UiPath
+  description: >-
+    UiPath allows you to trigger jobs in UiPath Orchestrator. It provides the
+    ability to initiate job runs and listen for job completion through trigger,
+    ensuring seamless automation workflows and real-time monitoring.
+  version: '2.0'
+  contact:
+    name: Plugin Ecosystem Team
+    email: pludevsupport@uipath.com
+    url: https://www.uipath.com/support
+host: cloud.uipath.com
+basePath: /
+schemes:
+  - https
+x-ms-connector-metadata:
+  - propertyName: Website
+    propertyValue: https://www.uipath.com
+  - propertyName: Privacy policy
+    propertyValue: https://www.uipath.com/legal/privacy-policy
+  - propertyName: Categories
+    propertyValue: AI;Business Intelligence
+consumes: []
+produces: []
+parameters:
+  filter:
+    in: query
+    name: $filter
+    description: >-
+      Restricts the set of items returned. The maximum number of expressions is
+      100.
+    type: string
+    x-ms-summary: Filter
+    x-ms-visibility: advanced
+  orderBy:
+    in: query
+    name: $orderby
+    description: >-
+      Specifies the order in which items are returned. The maximum number of
+      expressions is 5.
+    type: string
+    x-ms-summary: Order By
+    x-ms-visibility: advanced
+  top:
+    in: query
+    name: $top
+    description: >-
+      Limits the number of items returned from a collection. The maximum value
+      is 1000.
+    type: integer
+    format: int32
+    x-ms-summary: Top
+    x-ms-visibility: advanced
+  skip:
+    in: query
+    name: $skip
+    description: >-
+      Excludes the specified number of items of the queried collection from the
+      result.
+    type: integer
+    format: int32
+    x-ms-summary: Skip
+    x-ms-visibility: advanced
+paths:
+  /startJobAndWaitForCompletion/{processId}:
+    x-ms-notification-content:
+      description: Result of Job Completion
+      schema:
+        x-ms-dynamic-schema:
+          operationId: GetProcessOutputSchema
+          parameters:
+            processId:
+              parameter: processId
+            X-UIPATH-OrganizationUnitId:
+              parameter: X-UIPATH-OrganizationUnitId
+          value-path: schema
+    post:
+      responses:
+        '201':
+          description: Success
+      x-ms-summary: Start job and wait for completion
+      summary: Start job and wait for completion
+      description: Start job and receive the job completion notification.
+      operationId: StartAndWaitForJobCompletion
+      x-ms-visibility: important
+      parameters:
+        - in: header
+          name: X-UIPATH-OrganizationUnitId
+          description: Folder/OrganizationUnit Id
+          type: integer
+          format: int64
+          required: true
+          x-ms-summary: Folder
+          x-ms-dynamic-values:
+            operationId: GetFoldersForCurrentUser
+            value-path: Id
+            value-collection: PageItems
+            value-title: DisplayName
+        - name: processId
+          in: path
+          required: true
+          type: number
+          x-ms-summary: Process Name
+          description: Select the process name
+          x-ms-dynamic-values:
+            operationId: GetReleases
+            value-path: Id
+            value-collection: value
+            value-title: Name
+            parameters:
+              X-UIPATH-OrganizationUnitId:
+                parameter: X-UIPATH-OrganizationUnitId
+        - name: url
+          in: header
+          required: true
+          type: string
+          description: Webhook URL
+          x-ms-summary: Webhook URL
+          x-ms-notification-url: true
+          x-ms-visibility: internal
+        - name: dynamicListSchema
+          in: body
+          description: Get the schema of the selected process.
+          schema:
+            type: object
+            x-ms-dynamic-schema:
+              operationId: GetProcessInputSchema
+              parameters:
+                processId:
+                  parameter: processId
+                X-UIPATH-OrganizationUnitId:
+                  parameter: X-UIPATH-OrganizationUnitId
+              value-path: schema
+          x-ms-summary: Process Input Schema
+        - name: runAsMe
+          in: query
+          x-ms-summary: RunAsMe
+          description: Execute the job under your own identity
+          type: boolean
+          default: true
+  /jobupdate/webhook/{processId}:
+    x-ms-notification-content:
+      description: Result of Job Completion
+      schema:
+        x-ms-dynamic-schema:
+          operationId: GetProcessOutputSchema
+          parameters:
+            processId:
+              parameter: processId
+            X-UIPATH-OrganizationUnitId:
+              parameter: X-UIPATH-OrganizationUnitId
+          value-path: schema
+    post:
+      responses:
+        default:
+          description: default
+          schema:
+            x-ms-dynamic-schema:
+              operationId: GetProcessOutputSchema
+              parameters:
+                processId:
+                  parameter: processId
+                X-UIPATH-OrganizationUnitId:
+                  parameter: X-UIPATH-OrganizationUnitId
+              value-path: schema
+      x-ms-summary: Wait for Job Completion
+      summary: Wait for Job Completion
+      description: Trigger to receive the job completion notification.
+      x-ms-visibility: important
+      parameters:
+        - in: header
+          name: X-UIPATH-OrganizationUnitId
+          description: Folder/OrganizationUnit Id
+          type: integer
+          format: int64
+          required: true
+          x-ms-summary: Folder
+          x-ms-dynamic-values:
+            operationId: GetFoldersForCurrentUser
+            value-path: Id
+            value-collection: PageItems
+            value-title: DisplayName
+        - name: body
+          in: body
+          required: false
+          x-ms-summary: Webhook URL
+          schema:
+            type: object
+            properties:
+              url:
+                type: string
+                description: Webhook URL
+                x-ms-notification-url: true
+                x-ms-visibility: internal
+                title: URL
+              jobKey:
+                type: string
+                description: Job Id
+                title: Job Id
+                x-ms-summary: Job Id
+                x-ms-visibility: important
+            required:
+              - url
+              - jobKey
+        - name: processId
+          in: path
+          description: Select the process name
+          required: true
+          type: number
+          x-ms-summary: Process Name
+          x-ms-dynamic-values:
+            operationId: GetReleases
+            value-path: Id
+            value-collection: value
+            value-title: Name
+            parameters:
+              X-UIPATH-OrganizationUnitId:
+                parameter: X-UIPATH-OrganizationUnitId
+      operationId: GetJobUpdate
+  /jobs/startjob:
+    post:
+      consumes:
+        - application/json;odata.metadata=minimal;odata.streaming=true
+        - application/json;odata.metadata=minimal;odata.streaming=false
+        - application/json;odata.metadata=minimal
+        - application/json;odata.metadata=full;odata.streaming=true
+        - application/json;odata.metadata=full;odata.streaming=false
+        - application/json;odata.metadata=full
+        - application/json;odata.metadata=none;odata.streaming=true
+        - application/json;odata.metadata=none;odata.streaming=false
+        - application/json;odata.metadata=none
+        - application/json;odata.streaming=true
+        - application/json;odata.streaming=false
+        - application/json
+      description: >-
+        Creates a new job and sets it in Pending state for each robot based on
+        the input parameters and notifies the respective robots about the
+        pending job.
+      operationId: StartJobs
+      parameters:
+        - name: dynamicListSchema
+          in: body
+          description: Get the schema of the selected process.
+          schema:
+            type: object
+            x-ms-dynamic-schema:
+              operationId: GetProcessInputSchema
+              parameters:
+                processId:
+                  parameter: processId
+                X-UIPATH-OrganizationUnitId:
+                  parameter: X-UIPATH-OrganizationUnitId
+              value-path: schema
+          x-ms-summary: Process Input Schema
+        - in: header
+          name: X-UIPATH-OrganizationUnitId
+          description: Folder/OrganizationUnit Id
+          type: integer
+          format: int64
+          required: true
+          x-ms-summary: Folder
+          x-ms-dynamic-values:
+            operationId: GetFoldersForCurrentUser
+            value-path: Id
+            value-collection: PageItems
+            value-title: DisplayName
+        - name: processId
+          in: query
+          x-ms-summary: Process Name
+          description: Select the process you want to run
+          required: true
+          type: number
+          x-ms-dynamic-values:
+            operationId: GetReleases
+            value-path: Id
+            value-collection: value
+            value-title: Name
+            parameters:
+              X-UIPATH-OrganizationUnitId:
+                parameter: X-UIPATH-OrganizationUnitId
+              $filter: >-
+                ((ProcessType eq 'Process') or (ProcessType eq 'Agent') or
+                (ProcessType eq 'ProcessOrchestration'))
+        - name: runAsMe
+          in: query
+          x-ms-summary: RunAsMe
+          description: Execute the job under your own identity
+          type: boolean
+          default: true
+      produces:
+        - application/json
+      responses:
+        '201':
+          description: Success
+          schema:
+            $ref: '#/definitions/JobDto'
+      summary: Start Job
+      tags:
+        - Jobs
+  /odata/Releases:
+    get:
+      tags:
+        - Releases
+      summary: Get Releases
+      description: Gets a list of releases.
+      operationId: GetReleases
+      x-ms-visibility: internal
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: X-UIPATH-OrganizationUnitId
+          description: Folder/OrganizationUnit Id
+          type: integer
+          format: int64
+          x-ms-summary: Folder Id
+          required: true
+        - $ref: '#/parameters/filter'
+        - $ref: '#/parameters/orderBy'
+        - $ref: '#/parameters/top'
+        - $ref: '#/parameters/skip'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ODataValueOfIEnumerableOfReleaseDto'
+  /schema/input/{processId}:
+    get:
+      description: Get the input schema of the selected process.
+      summary: Get Process Input Schema
+      operationId: GetProcessInputSchema
+      parameters:
+        - in: header
+          name: X-UIPATH-OrganizationUnitId
+          description: Folder/OrganizationUnit Id
+          type: integer
+          format: int64
+          x-ms-summary: Folder Id
+          required: false
+          x-ms-visibility: important
+        - name: processId
+          type: number
+          in: path
+          description: Process Id of the selected process
+          required: true
+          x-ms-summary: Process Name
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ProcessSchemaMetadata'
+      x-ms-visibility: internal
+  /schema/output/{processId}:
+    get:
+      description: Get Process Output Schema.
+      summary: Get Process Output Schema
+      operationId: GetProcessOutputSchema
+      parameters:
+        - in: header
+          name: X-UIPATH-OrganizationUnitId
+          description: Folder/OrganizationUnit Id
+          type: integer
+          format: int64
+          x-ms-summary: Folder Id
+          required: false
+          x-ms-visibility: important
+        - name: processId
+          type: number
+          in: path
+          description: Process Id of the selected process
+          required: true
+          x-ms-summary: Process Name
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ProcessSchemaMetadata'
+      x-ms-visibility: internal
+  /api/Folders/GetAllForCurrentUser:
+    get:
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              PageItems:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    Key:
+                      type: string
+                      description: Key
+                    DisplayName:
+                      type: string
+                      description: DisplayName
+                    FullyQualifiedName:
+                      type: string
+                      description: FullyQualifiedName
+                    Description:
+                      type: string
+                      description: Description
+                    FolderType:
+                      type: string
+                      description: FolderType
+                    ParentId:
+                      type: integer
+                      format: int32
+                      description: ParentId
+                    ParentKey:
+                      type: string
+                      description: ParentKey
+                    Id:
+                      type: integer
+                      format: int32
+                      description: Id
+                description: PageItems
+              Count:
+                type: integer
+                format: int32
+                description: Count
+      summary: Get Folders for Current User
+      description: Get all folders accessible by Current User
+      operationId: GetFoldersForCurrentUser
+      x-ms-visibility: internal
+      parameters: []
+definitions:
+  ProcessSchemaMetadata:
+    description: Process Schema metadata
+    type: object
+    properties:
+      schema:
+        $ref: '#/definitions/Object'
+  Object:
+    type: object
+    properties: {}
+  ArgumentMetadata:
+    type: object
+    properties:
+      Input:
+        type: string
+      Output:
+        type: string
+  EntryPointDataVariationDto:
+    type: object
+    properties:
+      Content:
+        type: string
+      ContentType:
+        enum:
+          - Json
+        type: string
+        x-ms-enum:
+          name: EntryPointDataVariationDtoContentType
+          modelAsString: false
+      Id:
+        format: int64
+        type: integer
+  EntryPointDto:
+    type: object
+    properties:
+      UniqueId:
+        format: uuid
+        type: string
+      Path:
+        type: string
+      InputArguments:
+        type: string
+      OutputArguments:
+        type: string
+      DataVariation:
+        $ref: '#/definitions/EntryPointDataVariationDto'
+      Id:
+        format: int32
+        type: integer
+  EnvironmentDto:
+    description: A grouping of Robots.
+    required:
+      - Name
+    type: object
+    properties:
+      Name:
+        description: A custom name for the environment.
+        maxLength: 100
+        minLength: 0
+        type: string
+      Description:
+        description: >-
+          Used to add additional information about an environment in order to
+          better identify it.
+        maxLength: 500
+        minLength: 0
+        type: string
+      Robots:
+        description: The collection of robots associated with the current environment.
+        type: array
+        items:
+          $ref: '#/definitions/SimpleRobotDto'
+      Type:
+        description: "DEPRECATED. The environment type specifies how it should be used.\r\nThis property is deprecated and should no longer be used."
+        enum:
+          - Dev
+          - Test
+          - Prod
+        type: string
+        x-ms-enum:
+          name: EnvironmentDtoType
+          modelAsString: false
+        x-deprecated: true
+      Id:
+        format: int64
+        type: integer
+  JobDto:
+    description: Represents a scheduled or manual execution of a process on a robot.
+    type: object
+    properties:
+      Id:
+        format: int32
+        type: integer
+        description: The Unique Job Id
+        x-ms-summary: Job Id
+      Key:
+        description: The unique job identifier.
+        type: string
+        x-ms-summary: Job Key
+      StartTime:
+        description: >-
+          The date and time when the job execution started or null if the job
+          hasn't started yet.
+        type: string
+        x-ms-summary: Start Time
+      EndTime:
+        description: >-
+          The date and time when the job execution ended or null if the job
+          hasn't ended yet.
+        type: string
+        x-ms-summary: End Time
+      State:
+        description: The state in which the job is.
+        enum:
+          - Pending
+          - Running
+          - Stopping
+          - Terminating
+          - Faulted
+          - Successful
+          - Stopped
+          - Suspended
+          - Resumed
+        type: string
+        x-ms-summary: Job State
+        x-ms-enum:
+          name: JobDtoState
+          modelAsString: false
+      JobPriority:
+        description: Execution priority.
+        enum:
+          - Low
+          - Normal
+          - High
+        type: string
+        x-ms-summary: Job Priority
+        x-ms-enum:
+          name: JobDtoJobPriority
+          modelAsString: false
+      Robot:
+        $ref: '#/definitions/SimpleRobotDto'
+      Release:
+        $ref: '#/definitions/SimpleReleaseDto'
+      Source:
+        description: The Source name of the job.
+        type: string
+        x-ms-summary: Source
+      SourceType:
+        description: The Source type of the job.
+        enum:
+          - Manual
+          - Schedule
+          - Agent
+          - Queue
+          - StudioWeb
+        type: string
+        x-ms-summary: Source Type
+        x-ms-enum:
+          name: JobDtoSourceType
+          modelAsString: false
+      BatchExecutionKey:
+        description: >-
+          The unique identifier grouping multiple jobs. It is usually generated
+          when the job is created by a schedule.
+        type: string
+        x-ms-summary: Batch Execution Key
+      Info:
+        description: Additional information about the current job.
+        type: string
+        x-ms-summary: Info
+      CreationTime:
+        description: The date and time when the job was created.
+        type: string
+        x-ms-summary: Creation Time
+      StartingScheduleId:
+        description: >-
+          The Id of the schedule that started the job, or null if the job was
+          started by the user.
+        type: string
+        x-ms-summary: Starting Schedule Id
+      ReleaseName:
+        description: The name of the release associated with the current name.
+        type: string
+        x-ms-summary: Release Name
+      Type:
+        description: >-
+          The type of the job, Attended if started via the robot, Unattended
+          otherwise
+        enum:
+          - Unattended
+          - Attended
+        type: string
+        x-ms-summary: Type
+        x-ms-enum:
+          name: JobDtoType
+          modelAsString: false
+      InputArguments:
+        description: Input parameters in JSON format to be passed to job execution
+        type: string
+        x-ms-summary: Input Arguments
+      OutputArguments:
+        description: Output parameters in JSON format resulted from job execution
+        type: string
+        x-ms-summary: Output Arguments
+      HostMachineName:
+        description: The name of the machine where the Robot run the job.
+        type: string
+        x-ms-summary: Host Machine Name
+      HasMediaRecorded:
+        description: >-
+          True if any execution media has been recorded for this job, false
+          otherwise.
+        type: boolean
+      PersistenceId:
+        description: The persistence instance id for a suspended job
+        type: string
+      ResumeVersion:
+        description: Distinguishes between multiple job suspend/resume cycles
+        type: string
+      StopStrategy:
+        enum:
+          - SoftStop
+          - Kill
+        type: string
+        x-ms-enum:
+          name: JobDtoStopStrategy
+          modelAsString: false
+      RuntimeType:
+        description: The runtime type of the robot which can pick up the job
+        enum:
+          - NonProduction
+          - Attended
+          - Unattended
+          - Studio
+          - RpaDeveloper
+          - Development
+          - StudioX
+          - CitizenDeveloper
+          - Headless
+          - RpaDeveloperPro
+          - StudioPro
+          - TestAutomation
+        type: string
+        x-ms-enum:
+          name: JobDtoRuntimeType
+          modelAsString: false
+      RequiresUserInteraction:
+        type: boolean
+      ReleaseVersionId:
+        format: int32
+        type: integer
+      EntryPointPath:
+        description: >-
+          Path to the entry point workflow (XAML) that will be executed by the
+          robot
+        maxLength: 512
+        type: string
+      OrganizationUnitId:
+        format: int32
+        description: Id of the folder this job is part of.
+        type: integer
+      OrganizationUnitFullyQualifiedName:
+        description: Fully qualified name of the folder this job is part of.
+        type: string
+      Reference:
+        description: Reference identifier for the job
+        type: string
+      ProcessType:
+        enum:
+          - Undefined
+          - Process
+          - TestAutomationProcess
+        type: string
+        x-ms-enum:
+          name: JobDtoProcessType
+          modelAsString: false
+      Machine:
+        $ref: '#/definitions/MachineDto'
+      ProfilingOptions:
+        description: >-
+          Options to instruct the robot what profiling info to collect (code
+          coverage, CPU / memory utilization, etc)
+        type: string
+  MachineDto:
+    description: The Machine that hosts the Robot
+    required:
+      - Name
+    type: object
+    properties:
+      LicenseKey:
+        description: >-
+          The key is automatically generated from the server for the Robot
+          machine. For the robot to work, the same key must exist on both the
+          robot and Orchestrator.
+        maxLength: 255
+        minLength: 0
+        type: string
+      Name:
+        description: The name of the Machine a Robot is hosted on.
+        maxLength: 450
+        minLength: 0
+        type: string
+      Description:
+        maxLength: 500
+        minLength: 0
+        type: string
+      Type:
+        description: The type of the Machine (Standard / Template).
+        enum:
+          - Standard
+          - Template
+        type: string
+        x-ms-enum:
+          name: MachineDtoType
+          modelAsString: false
+      Scope:
+        description: The scope of the Machine (Default / Shared / PW / Cloud).
+        enum:
+          - Default
+          - Shared
+          - PersonalWorkspace
+          - Cloud
+        type: string
+        x-ms-enum:
+          name: MachineDtoScope
+          modelAsString: false
+      NonProductionSlots:
+        format: int32
+        description: Number of NonProduction slots to be reserved at runtime
+        type: integer
+      UnattendedSlots:
+        format: int32
+        description: Number of Unattended slots to be reserved at runtime
+        type: integer
+      HeadlessSlots:
+        format: int32
+        description: Number of Headless slots to be reserved at runtime
+        type: integer
+      TestAutomationSlots:
+        format: int32
+        description: Number of TestAutomation slots to be reserved at runtime
+        type: integer
+      Key:
+        format: uuid
+        description: >-
+          An immutable unique identifier that is preserved during tenant
+          migration
+        type: string
+      RobotVersions:
+        description: The versions of the Robots hosted on the Machine.
+        type: array
+        items:
+          $ref: '#/definitions/MachinesRobotVersionDto'
+      RobotUsers:
+        description: Robots assigned to template machine.
+        type: array
+        items:
+          $ref: '#/definitions/RobotUserDto'
+      AutoScalingProfile:
+        description: The profile that drives auto scaling.
+        enum:
+          - CostEfficient
+          - Balanced
+          - Fast
+          - Custom
+        type: string
+        x-ms-enum:
+          name: MachineDtoAutoScalingProfile
+          modelAsString: false
+      Id:
+        format: int64
+        type: integer
+  MachinesRobotVersionDto:
+    type: object
+    properties:
+      Count:
+        format: int64
+        description: The number of Robots on the Machine with the specified version.
+        type: integer
+      Version:
+        description: The Version of the Robot hosted on the Machine.
+        type: string
+      MachineId:
+        format: int64
+        description: The Id of the Machine.
+        type: integer
+  ODataValueOfIEnumerableOfReleaseDto:
+    type: object
+    properties:
+      value:
+        type: array
+        items:
+          $ref: '#/definitions/ReleaseDto'
+  ProcessSettingsDto:
+    type: string
+    properties:
+      ErrorRecordingEnabled:
+        type: boolean
+      Duration:
+        format: int32
+        type: integer
+      Frequency:
+        format: int32
+        type: integer
+      Quality:
+        format: int32
+        type: integer
+      AutoStartProcess:
+        type: boolean
+      AlwaysRunning:
+        type: boolean
+  ReleaseDto:
+    required:
+      - Name
+      - ProcessKey
+      - ProcessVersion
+    type: object
+    properties:
+      Key:
+        description: A unique identifier associated to each release.
+        type: string
+      ProcessKey:
+        description: The unique identifier of the process associated with the release.
+        type: string
+      ProcessVersion:
+        description: The version of the process associated with the release.
+        type: string
+      IsLatestVersion:
+        description: >-
+          States whether the version of process associated with the release is
+          latest or not.
+        type: boolean
+      IsProcessDeleted:
+        description: >-
+          States whether the process associated with the release is deleted or
+          not.
+        type: boolean
+      Description:
+        description: >-
+          Used to add additional information about a release in order to better
+          identify it.
+        type: string
+      Name:
+        description: >-
+          A custom name of the release. The default name format is
+          ProcessName_EnvironmentName.
+        type: string
+      EnvironmentId:
+        description: The Id of the environment associated with the release.
+        type: string
+      EnvironmentName:
+        description: The name of the environment associated with the release.
+        type: string
+      Environment:
+        $ref: '#/definitions/EnvironmentDto'
+      EntryPointId:
+        format: int32
+        type: integer
+      EntryPoint:
+        $ref: '#/definitions/EntryPointDto'
+      InputArguments:
+        description: >-
+          Input parameters in JSON format to be passed as default values to job
+          execution.
+        maxLength: 10000
+        type: string
+      ProcessType:
+        enum:
+          - Undefined
+          - Process
+          - TestAutomationProcess
+        type: string
+        x-ms-enum:
+          name: ReleaseDtoProcessType
+          modelAsString: false
+      SupportsMultipleEntryPoints:
+        type: boolean
+      RequiresUserInteraction:
+        type: boolean
+      CurrentVersion:
+        $ref: '#/definitions/ReleaseVersionDto'
+      ReleaseVersions:
+        description: The collection of release versions that current release had over time.
+        type: array
+        items:
+          $ref: '#/definitions/ReleaseVersionDto'
+      Arguments:
+        $ref: '#/definitions/ArgumentMetadata'
+      ProcessSettings:
+        $ref: '#/definitions/ProcessSettingsDto'
+      AutoUpdate:
+        type: boolean
+      FeedId:
+        type: string
+      JobPriority:
+        description: The execution priority. If null, it defaults to Normal.
+        enum:
+          - Low
+          - Normal
+          - High
+        type: string
+        x-ms-enum:
+          name: ReleaseDtoJobPriority
+          modelAsString: false
+      CreationTime:
+        description: Creation time of this release.
+        type: string
+      OrganizationUnitId:
+        format: int32
+        description: Id of the folder this release is part of.
+        type: integer
+      OrganizationUnitFullyQualifiedName:
+        description: Fully qualified name of the folder this release is part of.
+        type: string
+      Id:
+        format: int32
+        type: integer
+  ReleaseVersionDto:
+    description: >-
+      Stores data about a version of the various versions of the process
+      associated with a certain release. If a certain version is associated on
+      and off with a release a new ReleaseVersion object is created for each
+      association.
+    required:
+      - ReleaseId
+      - VersionNumber
+    type: object
+    properties:
+      ReleaseId:
+        format: int64
+        description: The Id of the parent release.
+        type: integer
+      VersionNumber:
+        description: The version of process associated with the release.
+        maxLength: 50
+        type: string
+      CreationTime:
+        format: date-time
+        description: The date and time when the version was associated with the release.
+        type: string
+      ReleaseName:
+        description: The name of the process associated with the release.
+        type: string
+      Id:
+        format: int64
+        type: integer
+  RobotUserDto:
+    required:
+      - RobotId
+    type: object
+    properties:
+      UserName:
+        description: The name of the user.
+        type: string
+      RobotId:
+        format: int64
+        description: The Id of the Robot.
+        type: integer
+      HasTriggers:
+        description: Whether the machine robot has triggers defined or not.
+        type: boolean
+  SimpleReleaseDto:
+    description: >-
+      Entity derived from BaseReleaseDto. It shares all the properties of the
+      base entity except the navigation properties.
+    required:
+      - Name
+      - ProcessKey
+      - ProcessVersion
+    type: object
+    properties:
+      Key:
+        description: A unique identifier associated to each release.
+        type: string
+      ProcessKey:
+        description: The unique identifier of the process associated with the release.
+        type: string
+      ProcessVersion:
+        description: The version of the process associated with the release.
+        type: string
+      IsLatestVersion:
+        description: >-
+          States whether the version of process associated with the release is
+          latest or not.
+        type: boolean
+      IsProcessDeleted:
+        description: >-
+          States whether the process associated with the release is deleted or
+          not.
+        type: boolean
+      Description:
+        description: >-
+          Used to add additional information about a release in order to better
+          identify it.
+        type: string
+      Name:
+        description: >-
+          A custom name of the release. The default name format is
+          ProcessName_EnvironmentName.
+        type: string
+      EnvironmentId:
+        format: int64
+        description: The Id of the environment associated with the release.
+        type: integer
+      EnvironmentName:
+        description: The name of the environment associated with the release.
+        type: string
+      Environment:
+        $ref: '#/definitions/EnvironmentDto'
+      EntryPointId:
+        format: int32
+        type: integer
+      EntryPoint:
+        $ref: '#/definitions/EntryPointDto'
+      InputArguments:
+        description: >-
+          Input parameters in JSON format to be passed as default values to job
+          execution.
+        maxLength: 10000
+        type: string
+      ProcessType:
+        enum:
+          - Undefined
+          - Process
+          - TestAutomationProcess
+        type: string
+        x-ms-enum:
+          name: ReleaseDtoProcessType
+          modelAsString: false
+      SupportsMultipleEntryPoints:
+        type: boolean
+      RequiresUserInteraction:
+        type: boolean
+      CurrentVersion:
+        $ref: '#/definitions/ReleaseVersionDto'
+      ReleaseVersions:
+        description: The collection of release versions that current release had over time.
+        type: array
+        items:
+          $ref: '#/definitions/ReleaseVersionDto'
+      Arguments:
+        $ref: '#/definitions/ArgumentMetadata'
+      ProcessSettings:
+        $ref: '#/definitions/ProcessSettingsDto'
+      AutoUpdate:
+        type: boolean
+      FeedId:
+        type: string
+      JobPriority:
+        description: The execution priority. If null, it defaults to Normal.
+        enum:
+          - Low
+          - Normal
+          - High
+        type: string
+        x-ms-enum:
+          name: ReleaseDtoJobPriority
+          modelAsString: false
+      CreationTime:
+        format: date-time
+        description: Creation time of this release.
+        type: string
+      OrganizationUnitId:
+        format: int64
+        description: Id of the folder this release is part of.
+        type: integer
+      OrganizationUnitFullyQualifiedName:
+        description: Fully qualified name of the folder this release is part of.
+        type: string
+      Id:
+        format: int64
+        type: integer
+  SimpleRobotDto:
+    description: >-
+      Entity derived from RobotDto. Is shares all the properties of the base
+      entity except the navigation properties.
+    required:
+      - HostingType
+      - Name
+      - Type
+      - Username
+    type: object
+    properties:
+      LicenseKey:
+        description: >-
+          The key is automatically generated from the server for the Robot
+          machine. For the robot to work, the same key must exist on both the
+          robot and Orchestrator.
+        maxLength: 255
+        minLength: 0
+        type: string
+      MachineName:
+        description: The name of the machine a Robot is hosted on.
+        maxLength: 450
+        minLength: 0
+        type: string
+      MachineId:
+        format: int64
+        description: The Id of the machine a Robot is hosted on
+        type: integer
+      Name:
+        description: A custom name for the robot.
+        maxLength: 19
+        minLength: 0
+        type: string
+      Username:
+        description: >-
+          The machine username. If the user is under a domain, you are required
+          to also specify it in a DOMAIN\username format. Note: You must use
+          short domain names, such as desktop\administrator and NOT
+          desktop.local/administrator.
+        maxLength: 100
+        minLength: 0
+        type: string
+      ExternalName:
+        description: >-
+          Contains the value of the key in the external store used to store the
+          password.
+        maxLength: 450
+        minLength: 0
+        type: string
+      Description:
+        description: >-
+          Used to add additional information about a robot in order to better
+          identify it.
+        maxLength: 500
+        minLength: 0
+        type: string
+      Type:
+        description: The Robot type.
+        enum:
+          - NonProduction
+          - Attended
+          - Unattended
+          - Studio
+          - RpaDeveloper
+          - Development
+          - StudioX
+          - CitizenDeveloper
+          - Headless
+          - RpaDeveloperPro
+          - StudioPro
+          - TestAutomation
+        type: string
+        x-ms-enum:
+          name: RobotDtoType
+          modelAsString: false
+      HostingType:
+        description: The Robot hosting type (Standard / Floating).
+        enum:
+          - Standard
+          - Floating
+        type: string
+        x-ms-enum:
+          name: RobotDtoHostingType
+          modelAsString: false
+      ProvisionType:
+        description: The Robot provision type.
+        enum:
+          - Manual
+          - Automatic
+        type: string
+        x-ms-enum:
+          name: RobotDtoProvisionType
+          modelAsString: false
+      Password:
+        description: The Windows password associated with the machine username.
+        maxLength: 100
+        minLength: 0
+        type: string
+      CredentialStoreId:
+        format: int64
+        description: The Credential Store used to store the password.
+        type: integer
+      UserId:
+        format: int64
+        description: The associated user's Id.
+        type: integer
+      Enabled:
+        description: >-
+          Specificies the state of the Robot (enabled/disabled) - a disabled
+          robot cannot connect to Orchestrator
+        type: boolean
+      CredentialType:
+        description: The robot credentials type (Default/ SmartCard)
+        enum:
+          - Default
+          - SmartCard
+          - NCipher
+          - SafeNet
+        type: string
+        x-ms-enum:
+          name: RobotDtoCredentialType
+          modelAsString: false
+      Environments:
+        description: The collection of environments the robot is part of.
+        type: array
+        items:
+          $ref: '#/definitions/EnvironmentDto'
+      RobotEnvironments:
+        description: >-
+          The comma separated textual representation of environment names the
+          robot is part of.
+        type: string
+      ExecutionSettings:
+        description: >-
+          A collection of key value pairs containing execution settings for this
+          robot.
+        type: object
+        additionalProperties: {}
+      IsExternalLicensed:
+        description: Flag to indicate if the robot uses an external license
+        type: boolean
+      LimitConcurrentExecution:
+        description: Specifies if the robot can be used concurrently on multiple machines
+        type: boolean
+      Id:
+        format: int64
+        type: integer
+responses: {}
+securityDefinitions:
+  oauth2-auth:
+    type: oauth2
+    flow: accessCode
+    authorizationUrl: https://cloud.uipath.com/identity_/connect/authorize
+    tokenUrl: https://cloud.uipath.com/identity_/connect/token
+    scopes:
+      openid profile email OrchestratorApiUserAccess IdentityServerApi offline_access: >-
+        openid profile email OrchestratorApiUserAccess IdentityServerApi
+        offline_access
+security:
+  - oauth2-auth:
+      - >-
+        openid profile email OrchestratorApiUserAccess IdentityServerApi
+        offline_access
+tags: []
