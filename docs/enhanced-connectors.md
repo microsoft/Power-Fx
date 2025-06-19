@@ -184,12 +184,12 @@ Get metdata for a specific table. This includes:
 | `enum` | This one isn't an extension and described in [OpenAPI Specification - Version 2.0 Swagger](https://swagger.io/specification/v2/)<br> It only describes logical names |  
 | `x-ms-enum` | Provides the name of an OptionSet<br> Documented in [AutoRest/Documentation/swagger-extensions.md at master · stankovski/AutoRest · GitHub](https://github.com/stankovski/AutoRest/blob/master/Documentation/swagger-extensions.md#x-ms-enum)| 
 | `x-ms-enum-values` | Describes logical and display names <br><br>![image.png](/.attachments/image-c49313ce-b104-45cd-b1f8-0b99260e144c.png)| 
-| `x-ms-content-sensitivityLabelInfo`                      | Metadata about a sensitivity label applied to this column. The value is a JSON object with these properties:<br>- <code>sensitivityLabelId</code> (<code>string</code>): GUID of the label<br>- <code>name</code> (<code>string</code>): Internal label name<br>- <code>displayName</code> (<code>string\|null</code>): Friendly label name<br>- <code>tooltip</code> (<code>string\|null</code>): Optional help text<br>- <code>priority</code> (<code>number</code>): Label priority (number); lower = higher importance)<br>- <code>color</code> (<code>string</code>): Hex color code for UI badge<br>- <code>isEncrypted</code> (<code>true/false</code>): Whether content is encrypted<br>- <code>isEnabled</code> (<code>true/false</code>): Whether the label is active<br>- <code>isParent</code> (<code>true/false</code>): True if it has child labels<br>- <code>parentSensitivityLabelId</code> (<code>string\|null</code>): GUID of its parent label, if any |
+| `x-ms-content-sensitivityLabelInfo`                      | Metadata about a sensitivity label applied to this column. The value is a JSON Array with an object with these properties:<br>- <code>sensitivityLabelId</code> (<code>string</code>): GUID of the label<br>- <code>name</code> (<code>string</code>): Internal label name<br>- <code>displayName</code> (<code>string\|null</code>): Friendly label name<br>- <code>tooltip</code> (<code>string\|null</code>): Optional help text<br>- <code>priority</code> (<code>number</code>): Label priority (number); lower = higher importance)<br>- <code>color</code> (<code>string</code>): Hex color code for UI badge<br>- <code>isEncrypted</code> (<code>true/false</code>): Whether content is encrypted<br>- <code>isEnabled</code> (<code>true/false</code>): Whether the label is active<br>- <code>isParent</code> (<code>true/false</code>): True if it has child labels<br>- <code>parentSensitivityLabelId</code> (<code>string\|null</code>): GUID of its parent label, if any |
 
 ##### Example of `x-ms-content-sensitivityLabelInfo`
 
 ```json
-"x-ms-content-sensitivityLabelInfo": {
+"x-ms-content-sensitivityLabelInfo": [{
   "sensitivityLabelId":       "8ff7c975-dd7e-422d-8675-8d2aceaf54b3",
   "name":                     "Confidential Microsoft FTE",
   "displayName":              "Microsoft FTE",
@@ -200,7 +200,7 @@ Get metdata for a specific table. This includes:
   "isEnabled":                true,
   "isParent":                 false,
   "parentSensitivityLabelId": "c181f07c-4e5f-4dac-b7cf-207b8ca6b35b"
-}
+}]
 ```
 
 OptionSets have a name which is defined as `propertyName (tableName)` when no `x-ms-enum` extension is used.
