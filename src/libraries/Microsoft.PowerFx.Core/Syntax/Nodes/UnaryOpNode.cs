@@ -11,11 +11,12 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
-    /// Unary operation parse node. Examples:
-    /// 
+    /// Unary operation parse node.
+    /// </summary>
+    /// <example>
     /// <code>Op Child</code>
     /// <code>Child %</code>
-    /// </summary>
+    /// </example>
     public sealed class UnaryOpNode : TexlNode
     {
         /// <summary>
