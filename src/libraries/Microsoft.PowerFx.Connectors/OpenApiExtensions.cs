@@ -31,6 +31,7 @@ namespace Microsoft.PowerFx.Connectors
         public const string ContentType_ApplicationOctetStream = "application/octet-stream";
         public const string ContentType_TextCsv = "text/csv";
         public const string ContentType_TextPlain = "text/plain";
+        public const string ContentType_TextHtml = "text/html";
         public const string ContentType_Any = "*/*";
         public const string ContentType_Multipart = "multipart/form-data";
 
@@ -520,7 +521,7 @@ namespace Microsoft.PowerFx.Connectors
                         case "currency":
                             return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
 
-                        default:                            
+                        default:
                             // ex: Format = "date" or "string"
                             return new ConnectorType($"Unsupported type of number: '{schema.Format}'", openApiParameter.Name, FormulaType.BindingError);
                     }
@@ -660,7 +661,7 @@ namespace Microsoft.PowerFx.Connectors
                                 return new ConnectorType(schema, openApiParameter, FormulaType.String, hiddenfields.ToRecordType());
                             }
 
-                            ConnectorType propertyType = new SwaggerParameter(propLogicalName, schema.Required.Contains(propLogicalName), kv.Value, kv.Value.Extensions).GetConnectorType(settings.Stack(schemaIdentifier));                            
+                            ConnectorType propertyType = new SwaggerParameter(propLogicalName, schema.Required.Contains(propLogicalName), kv.Value, kv.Value.Extensions).GetConnectorType(settings.Stack(schemaIdentifier));
 
                             settings.UnStack();
 
@@ -690,7 +691,7 @@ namespace Microsoft.PowerFx.Connectors
                 case "file":
                     return new ConnectorType(schema, openApiParameter, FormulaType.Blob);
 
-                default:                    
+                default:
                     // ex: type = "null" or "decimal"
                     return new ConnectorType($"Unsupported schema type '{schema.Type}'", openApiParameter.Name, FormulaType.BindingError);
             }
@@ -758,7 +759,7 @@ namespace Microsoft.PowerFx.Connectors
                         return new ConnectorType("Unsupported enum type (int)", openApiParameter.Name, FormulaType.BindingError);
                     }
                     else
-                    {                        
+                    {
                         return new ConnectorType($"Unsupported enum type '{schema.Enum.GetType().Name}'", openApiParameter.Name, FormulaType.BindingError);
                     }
                 }
@@ -923,7 +924,8 @@ namespace Microsoft.PowerFx.Connectors
                     string.Equals(mediaType, ContentType_TextPlain, StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(mediaType, ContentType_Any, StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(mediaType, ContentType_ApplicationOctetStream, StringComparison.OrdinalIgnoreCase) ||
-                    string.Equals(mediaType, ContentType_TextCsv, StringComparison.OrdinalIgnoreCase))
+                    string.Equals(mediaType, ContentType_TextCsv, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(mediaType, ContentType_TextHtml, StringComparison.OrdinalIgnoreCase))
                 {
                     if (openApiMediaType.Schema == null)
                     {

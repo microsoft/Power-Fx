@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Models;
@@ -194,6 +195,35 @@ namespace Microsoft.PowerFx.Connectors.Tests
             string str = record.ToStringWithDisplayNames();
 
             Assert.Equal("![]", str);
+        }
+
+        [Theory]
+        [InlineData("text/html", typeof(StringType), false)]
+        [InlineData("application/pdf", typeof(UntypedObjectType), true)]
+        public void GetConnectorReturnType_MediaTypeChecks(string mediaType, Type expectedType, bool expectError)
+        {
+            var operation = new OpenApiOperation
+            {
+                Responses = new OpenApiResponses
+                {
+                    ["200"] = new OpenApiResponse
+                    {
+                        Content = new Dictionary<string, OpenApiMediaType>
+                        {
+                            [mediaType] = new OpenApiMediaType
+                            {
+                                Schema = new OpenApiSchema { Type = "string" }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var settings = new ConnectorSettings(null);
+            var connectorType = OpenApiExtensions.GetConnectorReturnType(operation, settings);
+
+            Assert.Equal(expectError, connectorType.HasErrors);
+            Assert.IsType(expectedType, connectorType.FormulaType);
         }
     }
 }
