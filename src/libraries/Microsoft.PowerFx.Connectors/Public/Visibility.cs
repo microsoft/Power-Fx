@@ -8,19 +8,29 @@ namespace Microsoft.PowerFx.Connectors
     /// </summary>
     public enum Visibility : int
     {
-        // "x-ms-visibility" is not corresponding to any valid value (normally, only "important", "advanced" or "internal")
+        /// <summary>
+        /// "x-ms-visibility" is not corresponding to any valid value (normally, only "important", "advanced" or "internal")
+        /// </summary>
         Unknown = -1,
 
-        // "x-ms-visibility" is not defined
+        /// <summary>
+        /// "x-ms-visibility" is not defined
+        /// </summary>
         None = 0,
 
-        // "x-ms-visibility" is "important"
+        /// <summary>
+        /// "x-ms-visibility" is "important"
+        /// </summary>
         Important,
 
-        // "x-ms-visibility" is "advanced"
+        /// <summary>
+        /// "x-ms-visibility" is "advanced"
+        /// </summary>
         Advanced,
 
-        // "x-ms-visibility" is "internal"
+        /// <summary>
+        /// "x-ms-visibility" is "internal"
+        /// </summary>
         Internal
     }
 }

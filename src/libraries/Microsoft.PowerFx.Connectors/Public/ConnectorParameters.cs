@@ -3,6 +3,9 @@
 
 namespace Microsoft.PowerFx.Connectors
 {
+    /// <summary>
+    /// Represents a set of connector parameters.
+    /// </summary>
     public class ConnectorParameters
     {
         /// <summary>
@@ -10,6 +13,9 @@ namespace Microsoft.PowerFx.Connectors
         /// </summary>
         public bool IsCompleted { get; internal set; }
 
+        /// <summary>
+        /// Gets the parameters with suggestions.
+        /// </summary>
         public ConnectorParameterWithSuggestions[] ParametersWithSuggestions { get; internal set; }
     }
 }
