@@ -476,14 +476,14 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("IfError(\"Hello\", {a:\"one\"})")]
-        [InlineData("IfError(\"Hello\", 1, {a:2})", false, true)]
+        [InlineData("IfError(\"Hello\", 1, {a:2})", true)]
         [InlineData("IfError(\"Hello\", 1, 3, [true])")]
         [InlineData("IfError({a:1}, true)")]
-        [InlineData("IfError(1, [1], true, {a:1}, \"hello\")", false, true)]
+        [InlineData("IfError(1, [1], true, {a:1}, \"hello\")", true)]
         [InlineData("IfError(IfError({a:1}, true), true)")]
-        [InlineData("false; IfError({a:1}, true); true", true)]
-        [InlineData("IsError(false; IfError({a:1}, true); true)", true)]
-        public void TexlFunctionTypeSemanticsIfError_MismatchedTypes(string expression, bool usesChain = false, bool preV1Bug = false)
+        [InlineData("false; IfError({a:1}, true); true")]
+        [InlineData("IsError(false; IfError({a:1}, true); true)")]
+        public void TexlFunctionTypeSemanticsIfError_MismatchedTypes(string expression, bool preV1Bug = false)
         {
             foreach (var usePowerFxV1Rules in new[] { false, true })
             {
@@ -504,10 +504,9 @@ namespace Microsoft.PowerFx.Core.Tests
                     var parserOptions = new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = isBehavior };
                     var result = engine.Check(expression, parserOptions);
 
-                    if (usePowerFxV1Rules && !usesChain)
+                    if (usePowerFxV1Rules && !isBehavior)
                     {
-                        Assert.True(result.IsSuccess);
-                        Assert.Equal(DType.Void, result.Binding.ResultType);
+                        Assert.True(!result.IsSuccess);
                     }
                     else
                     {
@@ -921,9 +920,10 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("If(A < 10, 1, \"2\")", "n", true)]
         [InlineData("If(A < 1, \"one\", A < 2, 2, A < 3, true, false)", "s", true)]
         [InlineData("If(A < 1, true, A < 2, 2, A < 3, false, \"true\")", "b", true)]
-        [InlineData("If(A < 10, 1, [1,2,3])", "-", true)]
-        [InlineData("If(A < 10, 1, {Value: 2})", "-", true)]
-        [InlineData("If(0 < 1, [1], 2)", "-", true)]
+
+        [InlineData("If(A < 10, 1, [1,2,3])", "-", false)]
+        [InlineData("If(A < 10, 1, {Value: 2})", "-", false)]
+        [InlineData("If(0 < 1, [1], 2)", "-", false)]
 
         // negative cases, when if produces void type
         // If(1 < 0, [1], 2) => V which is void value
@@ -951,8 +951,8 @@ namespace Microsoft.PowerFx.Core.Tests
         // Hour(V)
         [InlineData("Hour(If(1 < 0, [1], 2))", "n", false)]
 
-        // ForAll([1,2,3], V)
-        [InlineData("ForAll([1,2,3], If(1 < 0, [1], 2))", "-", true)]
+        // ForAll([1,2,3], V) is Error, since Void type is not allowed in non-behavioral context.
+        [InlineData("ForAll([1,2,3], If(1 < 0, [1], 2))", "-", false)]
         public void TexlFunctionTypeSemanticsIfWithArgumentCoercion(string expression, string expectedType, bool checkSuccess)
         {
             var symbol = new SymbolTable();

@@ -1,0 +1,7 @@
+#SETUP: PowerFxV1CompatibilityRules
+
+>> IfError(1, {x:1}, {x:1}, {y:1}, 1) 
+Errors: Error 0-34: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
+
+>> Switch( 1, 2, If( true, "hi", If( true, 3, If( false, [], {} ) ) ), 3, If( false, GUID(), Now() ) )
+Errors: Error 43-62: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.|Error 71-97: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.

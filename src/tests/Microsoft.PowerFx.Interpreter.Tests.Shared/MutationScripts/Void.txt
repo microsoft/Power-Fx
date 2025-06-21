@@ -1,0 +1,94 @@
+﻿#SETUP: PowerFxV1CompatibilityRules
+
+// These formulas will result in a Void error when evaluated without side effects enabled.
+// But with side effects enabled, these are legitimate formulas and the Void value will flow through.
+
+>> ForAll([1,2], If(Value = 1, Value * 2, {Result: Value}))
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> ForAll([1,2,3] As p, Switch(p.Value, 1, {a:1}, 2, [{a:2}], 3, "Hello"))
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> Switch(1, 1, 12, 10, {x:4})
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> Switch(1, 1, 2, If(1<0, 1, {x:4}))
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> Switch( 1, 2, If( true, "hi", If( true, 3, If( false, [], {} ) ) ), 3, If( false, GUID(), Now() ) )
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> With({y:1}, If(true, {a:1}, "test"))
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> Switch(10, 1, 1/0, 10, {x:4})
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> If(true, 1, TimeUnit.Seconds)
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> If( false, ErrorKind.Div0, 3 )  // first type rule
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> If( false, Color.Red, RGBA(120,120,12,1) )  // first type rule
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> If( false, 3, StartOfWeek.Sunday )  // first type rule
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> If( false, StartOfWeek.Monday, 3 )
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+// These should not produce a compile time error when side effects are enabled.
+// The reason we turn a blind eye to Void results in Canvas app Button.OnSelect is so that makers can write control flow with the If function. 
+//
+// For example, in this case where Orders {Value: Number} and BadSessions {Value: GUID} have incompatible schemas: 
+//     ​If( allGood, 
+//         Collect( Orders, {Value:Int(TextInput1.Text)} ), 
+//         Collect( BadSessions, {Value:SessionGUID} ) 
+//     )
+// Makers should be able to wrap that whole formula with IfError or IsError to detect runtime problems and take appropriate actions. 
+// For example, the value of TextInput1.Text in this example may not be a parseable number.
+//
+// But without side effects, the If function isn't about control flow, the formula is expected to produce a single, non Void return value. 
+// That is the breaking change that we all think is appropriate from the discussion above.
+
+>> IsError( If(true,1,{a:1}) )
+false
+
+>> IsError( If(true,1/0,{a:1}) )
+true
+
+>> IfError( 1, "one", If(true,1,{a:1}), "two", "three")
+"three"
+
+>> IfError( 1, "one", If(true,1,{a:1}), "two")
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> IfError( 1, "hello", If(true,1/0,{a:1}), "great", "world")
+"great"
+
+>> IfError( If(true, 1, {a:1}), 1, 2 )
+2
+
+>> IfError( If(true, 1/0, {a:1}), 1, 2 )
+1
+
+// These should return a runtime error. The return type is Void, as it should be, but if there is a problem in evaluation we will report runtime errors.
+// Think of the case in a Canvas app's Button.OnSelect with side effects enabled, and we aren't going to look at the result, except to report errors.
+
+>> If(false, {Result: 1}, Sqrt(-1))
+Error({Kind:ErrorKind.Numeric})
+
+>> If(true, Sqrt(-1), {Result: 1})
+Error({Kind:ErrorKind.Numeric})
+
+>> ForAll([1,2], If(Value = 1, Sqrt(-Value), {Result: Value}))
+Error({Kind:ErrorKind.Numeric})
+
+// return value is Void, but the test harness will return the result of the Set
+>> If(false, Set(x, Sqrt(-1)), Set(x, Sqrt(4)))
+2
+
+>> If(true, Set(x, Sqrt(-1)), Set(x, Sqrt(4)))
+Error({Kind:ErrorKind.Numeric})
