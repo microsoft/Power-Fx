@@ -8,10 +8,11 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
-    /// Decimal literal parse node. Example:
-    /// 
-    /// <code>12.34</code>
+    /// Decimal literal parse node.
     /// </summary>
+    /// <example>
+    /// <code>12.34</code>
+    /// </example>
     public sealed class DecLitNode : TexlNode
     {
         // If Value is non-null, then the token represents its value.
