@@ -30,22 +30,22 @@ namespace Microsoft.PowerFx.Core.Entities
         /// </summary>
         public SelectionRestrictions SelectionRestriction { get; init; }
 
-        [Obsolete("preview")]
         /// <summary>
         /// Gets the summarize capabilities for the table.
         /// </summary>
+        [Obsolete("preview")]
         public SummarizeCapabilities SummarizeCapabilities { get; init; }
 
-        [Obsolete("preview")]
         /// <summary>
         /// Gets the count capabilities for the table.
         /// </summary>
+        [Obsolete("preview")]
         public CountCapabilities CountCapabilities { get; init; }
 
-        [Obsolete("preview")]
         /// <summary>
         /// Gets the top level aggregation capabilities for the table.
         /// </summary>
+        [Obsolete("preview")]
         public TopLevelAggregationCapabilities TopLevelAggregationCapabilities { get; init; }
 
         /// <summary>
@@ -67,10 +67,10 @@ namespace Microsoft.PowerFx.Core.Entities
         // Supports per record permission
         internal bool SupportsRecordPermission { get; init; }
 
-        [Obsolete("preview")]
         /// <summary>
         /// Gets a value indicating whether the table supports join function.
         /// </summary>
+        /// [Obsolete("preview")]
         public bool SupportsJoinFunction { get; init; }
 
         /// <summary>
@@ -325,8 +325,7 @@ namespace Microsoft.PowerFx.Core.Entities
             IsOnlyServerPagable = isOnlyServerPagable;
 
             // List of supported server-driven paging capabilities, null for CDS
-            // ex: top, skiptoken
-            // used in https://msazure.visualstudio.com/OneAgile/_git/PowerApps-Client?path=/src/AppMagic/js/AppMagic.Services/ConnectedData/CdpConnector.ts&_a=contents&version=GBmaster
+            // ex: top, skiptoken       
             ServerPagingOptions = serverPagingOptions;
         }
     }
