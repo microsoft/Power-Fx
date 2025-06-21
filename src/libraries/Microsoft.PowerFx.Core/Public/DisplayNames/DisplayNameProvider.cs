@@ -11,10 +11,10 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core
 {
-    [ThreadSafeImmutable]
     /// <summary>
     /// Provides an abstract base for mapping between logical and display names.
     /// </summary>
+    [ThreadSafeImmutable]
     public abstract class DisplayNameProvider
     {
         /// <summary>
