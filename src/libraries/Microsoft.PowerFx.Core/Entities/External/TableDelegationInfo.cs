@@ -401,15 +401,45 @@ namespace Microsoft.PowerFx.Core.Entities
         }
     }
 
+    /// <summary>
+    /// Specifies the available summarize methods for table aggregation operations.
+    /// </summary>
     [Obsolete("preview")]
     public enum SummarizeMethod
     {
+        /// <summary>
+        /// No summarize method is applied.
+        /// </summary>
         None,
+
+        /// <summary>
+        /// Sums the values of the specified column.
+        /// </summary>
         Sum,
+
+        /// <summary>
+        /// Calculates the average of the values in the specified column.
+        /// </summary>
         Average,
+
+        /// <summary>
+        /// Finds the minimum value in the specified column.
+        /// </summary>
         Min,
+
+        /// <summary>
+        /// Finds the maximum value in the specified column.
+        /// </summary>
         Max,
+
+        /// <summary>
+        /// Counts the number of non-null values in the specified column.
+        /// </summary>
         Count,
+
+        /// <summary>
+        /// Counts the number of rows in the table.
+        /// </summary>
         CountRows
     }
 
