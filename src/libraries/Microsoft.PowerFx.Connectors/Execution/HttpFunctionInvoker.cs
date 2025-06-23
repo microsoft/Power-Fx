@@ -10,7 +10,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using Microsoft.CodeAnalysis;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors.Execution;
@@ -359,9 +358,15 @@ namespace Microsoft.PowerFx.Connectors
 
                 if (map.Count == 1 && map.First().Value.Value is BlobValue bv)
                 {
-                    var bac = new ByteArrayContent(await bv.GetAsByteArrayAsync(cancellationToken).ConfigureAwait(false));
-                    bac.Headers.ContentType = new MediaTypeHeaderValue(ct);
-                    return bac;
+                    var schema = map.First().Value.Schema;
+
+                    if (!schema.Extensions.ContainsKey("x-ms-property-name-alias"))
+                    {
+                        var bac = new ByteArrayContent(content: await bv.GetAsByteArrayAsync(cancellationToken).ConfigureAwait(false));
+                        bac.Headers.ContentType = new MediaTypeHeaderValue(mediaType: ct);
+
+                        return bac;
+                    }
                 }
 
                 serializer = ct switch
