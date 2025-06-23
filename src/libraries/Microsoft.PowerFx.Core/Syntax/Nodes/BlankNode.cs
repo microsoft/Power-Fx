@@ -8,6 +8,9 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 
 namespace Microsoft.PowerFx.Syntax
 {
+    /// <summary>
+    /// Represents a blank node in the syntax tree.
+    /// </summary>
     public sealed class BlankNode : TexlNode
     {
         /// <inheritdoc />

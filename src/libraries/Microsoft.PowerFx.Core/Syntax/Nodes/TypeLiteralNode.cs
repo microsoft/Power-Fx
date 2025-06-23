@@ -13,14 +13,24 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 
 namespace Microsoft.PowerFx.Syntax
 {
-    // CallNode :: Type ( TypeLiteralNode )
-    // CallNode :: IsType ( Expr, TypeLiteralNode )
-    // CallNode :: AsType ( Expr, TypeLiteralNode )
-    // TypeLiteralNode will allow us to store information about a new kind of syntax, that being the Type Literal syntax, and manipulate it.
-    // TypeLiteral syntax needs to *only* work for these partial-compile time functions that evaluate the Type Literal syntax into some sort of 
-    // Representation so we can evaluate and compare it. We want to make sure that this Type Literal information isn't able to be
-    // Passed around in undesirable ways be users of PowerFx. A TypeLiteralNode allows us to strictly enforce requirements.
+    /*
+     CallNode :: Type ( TypeLiteralNode )
+     CallNode :: IsType ( Expr, TypeLiteralNode )
+     CallNode :: AsType ( Expr, TypeLiteralNode )
+     TypeLiteralNode will allow us to store information about a new kind of syntax, that being the Type Literal syntax, and manipulate it.
+     TypeLiteral syntax needs to *only* work for these partial-compile time functions that evaluate the Type Literal syntax into some sort of 
+     Representation so we can evaluate and compare it. We want to make sure that this Type Literal information isn't able to be
+     Passed around in undesirable ways be users of PowerFx. A TypeLiteralNode allows us to strictly enforce requirements.
+    */
 
+    /// <summary>
+    /// Represents a node in the syntax tree that encapsulates a type literal expression.
+    /// </summary>
+    /// <remarks>A <see cref="TypeLiteralNode"/> is used to store and manipulate information about type
+    /// literal syntax. This syntax is specifically designed for partial compile-time functions that evaluate type
+    /// literals into a representation suitable for evaluation and comparison. The <see cref="TypeLiteralNode"/>
+    /// enforces strict requirements to ensure that type literal information is not misused or passed around in
+    /// undesirable ways.</remarks>
     public sealed class TypeLiteralNode : TexlNode
     {
         private IEnumerable<TexlError> _errors;

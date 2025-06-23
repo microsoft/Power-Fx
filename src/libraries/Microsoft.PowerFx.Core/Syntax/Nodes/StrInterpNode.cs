@@ -14,10 +14,10 @@ namespace Microsoft.PowerFx.Syntax
     /// <summary>
     /// String interpolation parse node.
     /// A variadic node where each child represents a single element of the interpolation.
-    /// 
-    /// Example:
-    /// <code>$"Hello {name}!"</code>
     /// </summary>
+    /// <example>
+    /// <code>$"Hello {name}!"</code>
+    /// </example>
     public sealed class StrInterpNode : VariadicBase
     {
         // StrInterpEnd can be null.

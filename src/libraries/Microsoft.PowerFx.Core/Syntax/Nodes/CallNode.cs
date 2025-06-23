@@ -15,19 +15,20 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
-    /// Function call parse node. Example:
-    /// 
-    /// <code>Head(Args...)</code>
+    /// Function call parse node.
     /// </summary>
+    /// <example>
+    /// <code>Head(Args...)</code>
+    /// </example>
     public sealed class CallNode : TexlNode
     {
         /// <summary>
-        /// The identifier of the function call.
+        /// Gets the identifier of the function call.
         /// </summary>
         public Identifier Head { get; }
 
         /// <summary>
-        /// The argument list of the function call.
+        /// Gets the argument list of the function call.
         /// </summary>
         public ListNode Args { get; }
 

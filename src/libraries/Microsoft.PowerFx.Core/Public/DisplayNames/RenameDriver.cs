@@ -12,6 +12,9 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core
 {
+    /// <summary>
+    /// Provides functionality to rename fields in expressions and types.
+    /// </summary>
     public sealed class RenameDriver
     {
         private readonly RecordType _baseParameters;
@@ -47,10 +50,10 @@ namespace Microsoft.PowerFx.Core
             : this(parameters, pathToRename, updatedName, engine, resolver, binderGlue, CultureInfo.InvariantCulture, renameOptionSet) => _parserOptions = parserOptions;
 
         /// <summary>
-        /// Applies rename operation to <paramref name="expressionText"/>.
+        /// Applies rename operation to the specified expression text.
         /// </summary>
-        /// <param name="expressionText">Expression in which to rename the parameter field.</param>
-        /// <returns>Expression with rename applied, in invariant locale.</returns>
+        /// <param name="expressionText">The expression in which to rename the parameter field.</param>
+        /// <returns>The expression with rename applied, in invariant locale.</returns>
         public string ApplyRename(string expressionText)
         {
             // Ensure expression is converted to invariant before applying rename.
@@ -65,10 +68,10 @@ namespace Microsoft.PowerFx.Core
         }
 
         /// <summary>
-        /// Tells if the expression contains will get changed.
+        /// Determines if the expression will be changed by the rename operation.
         /// </summary>
-        /// <param name="expressionText"></param>
-        /// <returns>True if the full path to change is contained in the expression.</returns>
+        /// <param name="expressionText">The expression to check for rename impact.</param>
+        /// <returns>True if the full path to change is contained in the expression; otherwise, false.</returns>
         public bool Find(string expressionText)
         {
             var invariantExpression = _engine.GetInvariantExpressionParserOption(expressionText, _baseParameters, _parserOptions);
