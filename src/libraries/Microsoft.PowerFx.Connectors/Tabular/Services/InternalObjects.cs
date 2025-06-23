@@ -11,9 +11,6 @@ namespace Microsoft.PowerFx.Connectors
     // Used by ConnectorDataSource.GetTablesAsync
     internal class GetTables : ISupportsPostProcessing
     {
-        [JsonPropertyName("@metadata")]
-        public List<CDPMetadataItem> Metadata { get; set; }
-
         [JsonPropertyName("value")]
         public List<RawTable> Value { get; set; }
 
@@ -28,7 +25,7 @@ namespace Microsoft.PowerFx.Connectors
         void PostProcess();
     }
 
-    internal class CDPMetadataItem
+    public class CDPMetadataItem
     {
         [JsonPropertyName("name")]
         public string Name { get; set; }
@@ -66,6 +63,9 @@ namespace Microsoft.PowerFx.Connectors
 
         [JsonPropertyName("isParent")]
         public bool IsParent { get; set; }
+
+        [JsonPropertyName("parentSensitivityLabelId")]
+        public string ParentSensitivityLabelId { get; set; }
     }
 
     internal class RawTable

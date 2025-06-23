@@ -19,27 +19,52 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly IEnumerable<string> _primaryKeyNames;
 
-        private readonly CDPMetadataItem _fieldMetadata;
+        private readonly Lazy<IEnumerable<CDPMetadataItem>> _metadataItemsCache;
 
-        internal CdpRecordType(ConnectorType connectorType, ICdpTableResolver tableResolver, TableDelegationInfo delegationInfo, CDPMetadataItem fieldMetadata)
+        private readonly Lazy<IEnumerable<CDPSensitivityLabelInfo>> _sensitivityLabelCache;
+
+        internal CdpRecordType(ConnectorType connectorType, ICdpTableResolver tableResolver, TableDelegationInfo delegationInfo)
             : base(connectorType.DisplayNameProvider, delegationInfo)
         {
             ConnectorType = connectorType;
             TableResolver = tableResolver;
 
             _primaryKeyNames = delegationInfo.PrimaryKeyNames;
-            _fieldMetadata = fieldMetadata;
+
+            // build metadata items on first use
+            _metadataItemsCache = new Lazy<IEnumerable<CDPMetadataItem>>(
+                BuildMetadataItemsCache,
+                LazyThreadSafetyMode.ExecutionAndPublication);
+
+            // build sensitivity labels by flattening the already‐cached metadata items
+            _sensitivityLabelCache = new Lazy<IEnumerable<CDPSensitivityLabelInfo>>(
+                BuildSensitivityLabelCache,
+                LazyThreadSafetyMode.ExecutionAndPublication);
         }
 
         public bool TryGetSensitivityLabelInfo(out IEnumerable<CDPSensitivityLabelInfo> sensitivityLabelInfo)
         {
-            if (_fieldMetadata != null) 
+            var val = _sensitivityLabelCache.Value;
+            if (val?.Any() == true)
             {
-                sensitivityLabelInfo = _fieldMetadata.SensitivityLabels;
+                sensitivityLabelInfo = val;
                 return true;
             }
 
             sensitivityLabelInfo = default;
+            return false;
+        }
+
+        public bool TryGetMetadataItems(out IEnumerable<CDPMetadataItem> cdpMetadataItems)
+        {
+            var val = _metadataItemsCache.Value;
+            if (val?.Any() == true)
+            {
+                cdpMetadataItems = val;
+                return true;
+            }
+
+            cdpMetadataItems = default;
             return false;
         }
 
@@ -126,5 +151,30 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         public override IEnumerable<string> FieldNames => ConnectorType.Fields.Select(field => field.Name);
+
+        private IEnumerable<CDPMetadataItem> BuildMetadataItemsCache()
+        {
+            if (ConnectorType?.Fields == null)
+            {
+                return Array.Empty<CDPMetadataItem>();
+            }
+
+            return ConnectorType.Fields
+                .Where(f => f.FieldMetadata?.Any() == true)
+                .Select(f => new CDPMetadataItem
+                {
+                    Name = f.Name,
+                    SensitivityLabels = f.FieldMetadata
+                })
+                .ToList();
+        }
+
+        private IEnumerable<CDPSensitivityLabelInfo> BuildSensitivityLabelCache()
+        {
+            // this will trigger BuildMetadataItemsCache if it hasn't run yet
+            return _metadataItemsCache.Value
+                .SelectMany(mi => mi.SensitivityLabels)
+                .ToList();
+        }
     }
 }
