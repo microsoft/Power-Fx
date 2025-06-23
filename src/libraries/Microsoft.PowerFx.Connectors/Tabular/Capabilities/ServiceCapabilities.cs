@@ -50,6 +50,11 @@ namespace Microsoft.PowerFx.Connectors
         public readonly SelectionRestriction SelectionRestriction;
 
         [JsonInclude]
+        [JsonPropertyName(CapabilityConstants.CountRestrictions)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public readonly CountRestriction CountRestriction;
+
+        [JsonInclude]
         [JsonPropertyName(CapabilityConstants.GroupRestriction)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public readonly GroupRestriction GroupRestriction;
@@ -101,7 +106,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public const int CurrentODataVersion = 4;
 
-        public ServiceCapabilities(SortRestriction sortRestriction, FilterRestriction filterRestriction, SelectionRestriction selectionRestriction, GroupRestriction groupRestriction, IEnumerable<string> filterFunctions,
+        public ServiceCapabilities(SortRestriction sortRestriction, FilterRestriction filterRestriction, SelectionRestriction selectionRestriction, GroupRestriction groupRestriction, CountRestriction countRestriction, IEnumerable<string> filterFunctions,
                                    IEnumerable<string> filterSupportedFunctions, PagingCapabilities pagingCapabilities, bool recordPermissionCapabilities, int oDataVersion = CurrentODataVersion, bool supportsDataverseOffline = false,
                                    bool supportsJoinFunction = false)
         {
@@ -200,7 +205,7 @@ namespace Microsoft.PowerFx.Connectors
 #pragma warning disable CS0618 // Type or member is obsolete
                 SupportsJoinFunction = serviceCapabilities?.SupportsJoinFunction ?? false,
 #pragma warning disable CS0612 // Type or member is obsolete
-                CountCapabilities = new CDPCountCapabilities(primaryKeyNames, serviceCapabilities?.FilterSupportedFunctionsEnum),
+                CountCapabilities = new CDPCountCapabilities(serviceCapabilities?.CountRestriction.IsCountable ?? false),
                 TopLevelAggregationCapabilities = new CDPToplLevelAggregationCapabilities(columnCapabilities)
 #pragma warning restore CS0612 // Type or member is obsolete
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -266,10 +271,11 @@ namespace Microsoft.PowerFx.Connectors
 
             private readonly IEnumerable<string> _primaryKeyNames;
 
-            public CDPCountCapabilities(IEnumerable<string> primaryKeyNames, IEnumerable<DelegationOperator> filterSupportedFunctions)
+            private readonly bool _isCountable;
+
+            public CDPCountCapabilities(bool isCountable)
             {
-                _primaryKeyNames = primaryKeyNames;
-                _filterSupportedFunctions = filterSupportedFunctions;
+                _isCountable = isCountable;
             }
 
             public override bool IsCountableAfterFilter()
@@ -279,12 +285,7 @@ namespace Microsoft.PowerFx.Connectors
 
             public override bool IsCountableTable()
             {
-                if (_primaryKeyNames != null && _primaryKeyNames.Count() == 1 && _filterSupportedFunctions != null && _filterSupportedFunctions.Contains(DelegationOperator.Countdistinct))
-                {
-                    return true;
-                }
-
-                return false;
+                return _isCountable;
             }
         }
 
@@ -322,6 +323,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             FilterRestriction filterRestriction = ParseFilterRestriction(capabilitiesMetaData);
             SortRestriction sortRestriction = ParseSortRestriction(capabilitiesMetaData);
+            CountRestriction countRestriction = ParseCountRestriction(capabilitiesMetaData);
             SelectionRestriction selectionRestriction = ParseSelectionRestriction(capabilitiesMetaData);
             GroupRestriction groupRestriction = ParseGroupRestriction(capabilitiesMetaData);
             string[] filterFunctions = ParseFilterFunctions(capabilitiesMetaData);
@@ -336,7 +338,7 @@ namespace Microsoft.PowerFx.Connectors
                 throw new PowerFxConnectorException("Table capabilities specifies an unsupported oDataVersion");
             }
 
-            return new ServiceCapabilities(sortRestriction, filterRestriction, selectionRestriction, groupRestriction, filterFunctions, filterSupportedFunctions, pagingCapabilities, recordPermissionCapabilities, oDataVersion, supportsJoinFunction: supportsJoinFunction);
+            return new ServiceCapabilities(sortRestriction, filterRestriction, selectionRestriction, groupRestriction, countRestriction, filterFunctions, filterSupportedFunctions, pagingCapabilities, recordPermissionCapabilities, oDataVersion, supportsJoinFunction: supportsJoinFunction);
         }
 
         private static FilterRestriction ParseFilterRestriction(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
@@ -355,6 +357,14 @@ namespace Microsoft.PowerFx.Connectors
             return sortRestrictionMetaData?.GetBool(CapabilityConstants.Sortable) == true
                     ? new SortRestriction(sortRestrictionMetaData.GetList(CapabilityConstants.UnsortableProperties), sortRestrictionMetaData.GetList(CapabilityConstants.AscendingOnlyProperties))
                     : null;
+        }
+
+        private static CountRestriction ParseCountRestriction(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
+        {
+            IDictionary<string, IOpenApiAny> countRestrictionMetaData = capabilitiesMetaData.GetObject(CapabilityConstants.CountRestrictions);
+            return countRestrictionMetaData == null
+                    ? null
+                    : new CountRestriction(countRestrictionMetaData.GetBool(CapabilityConstants.Countable, "countable property is mandatory and not found."));
         }
 
         private static SelectionRestriction ParseSelectionRestriction(IDictionary<string, IOpenApiAny> capabilitiesMetaData)

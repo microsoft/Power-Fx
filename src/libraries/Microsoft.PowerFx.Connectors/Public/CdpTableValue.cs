@@ -135,7 +135,18 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             var valueRecord = row.Value;
-            var result = await valueRecord.GetFieldAsync(DelegationParameters.ODataAggregationResultFieldName, cancellationToken).ConfigureAwait(false);
+
+            FormulaValue result;
+            if (parameters.ReturnTotalCount())
+            {
+                // Total count returning query is special then other aggregations.
+                result = await valueRecord.GetFieldAsync(DelegationParameters.ODataCountFieldName, cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                result = await valueRecord.GetFieldAsync(DelegationParameters.ODataAggregationResultFieldName, cancellationToken).ConfigureAwait(false);
+            }
+                
             result = ConvertToExpectedType(parameters.ExpectedReturnType, result);
             return result;
         }
