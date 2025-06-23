@@ -770,6 +770,13 @@ namespace Microsoft.PowerFx.Core.Binding
         // When getting projections from a chain rule, ensure that the projection belongs to the same DS as the one we're operating on (using match param)
         internal bool TryGetDataQueryOptions(TexlNode node, bool forCodegen, out DataSourceToQueryOptionsMap tabularDataQueryOptionsMap)
         {
+            // This method is only needed in Canvas when running legacy analysis.
+            if (Document == null || Document.IsRunningDataflowAnalysis())
+            {
+                tabularDataQueryOptionsMap = null;
+                return false;
+            }
+
             Contracts.AssertValue(node);
 
             if (node.Kind == NodeKind.As)
@@ -918,6 +925,12 @@ namespace Microsoft.PowerFx.Core.Binding
 
         internal IEnumerable<string> GetDataQuerySelects(TexlNode node)
         {
+            // This method is only needed in Canvas when running legacy analysis.
+            if (Document == null || Document.IsRunningDataflowAnalysis())
+            {
+                return Enumerable.Empty<string>();
+            }
+
             if (!Document.Properties.EnabledFeatures.IsProjectionMappingEnabled)
             {
                 return Enumerable.Empty<string>();
@@ -2226,6 +2239,12 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertNonEmpty(fieldName);
             Contracts.AssertValue(QueryOptions);
 
+            // This method is a bit expensive and only needed in Canvas when running legacy analysis.
+            if (Document == null || Document.IsRunningDataflowAnalysis())
+            {
+                return false;
+            }
+
             var retVal = false;
 
             if (type.AssociatedDataSources == null)
@@ -2566,7 +2585,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.AssertValue(node);
                 
                 _txb.SetType(node, DType.Error);
-                _txb.ErrorContainer.Error(node, TexlStrings.ErrTypeLiteral_UnsupportedUsage);
+                _txb.ErrorContainer.Error(node, TexlStrings.ErrTypeFunction_UnsupportedUsage);
             }
 
             // Method to bind TypeLiteralNode from valid context where a type is expected.
@@ -2592,7 +2611,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 else
                 {
                     _txb.SetType(node, DType.Error);
-                    _txb.ErrorContainer.Error(node, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString());
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString());
                 }
             }
 
@@ -4878,7 +4897,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Update field projection info
-                if (_txb.QueryOptions != null)
+                // Only needed when running legacy analysis in Canvas Apps
+                if (_txb.QueryOptions != null && _txb.Document != null && !_txb.Document.IsRunningDataflowAnalysis())
                 {
                     func.UpdateDataQuerySelects(node, _txb, _txb.QueryOptions);
                 }
@@ -5430,9 +5450,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     if (sdf.Warnings != null)
                     {
-                        foreach (ErrorResourceKey erk in sdf.Warnings)
+                        foreach (ExpressionError erk in sdf.Warnings)
                         {
-                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, erk, func.Name, func.Namespace);
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, erk.ResourceKey, func.Name, func.Namespace);
                         }
                     }
                 }
@@ -5721,10 +5741,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                 }
 
+                // Tables that are created from sealed records become sealed
+                // Among other things, this avoids someone writing First( Table( SealedRecord ) ) to remove the seal
                 DType tableType = exprType.IsValid
                     ? (_features.TableSyntaxDoesntWrapRecords && exprType.IsRecord
-                        ? DType.CreateTable(exprType.GetNames(DPath.Root))
-                        : DType.CreateTable(new TypedName(exprType, TableValue.ValueDName)))
+                        ? DType.CreateTable(exprType.GetNames(DPath.Root), isSealed: exprType.IsSealed)
+                        : DType.CreateTable(new TypedName(exprType, TableValue.ValueDName), isSealed: exprType.IsSealed))
                     : DType.EmptyTable;
 
                 _txb.SetType(node, tableType);

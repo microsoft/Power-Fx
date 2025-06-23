@@ -30,6 +30,15 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.AssertValue(nodeCur);
             Contracts.AssertValue(bind);
 
+            iarg = -1;
+            carg = -1;
+            funcCur = null;
+
+            if (nodeCur == null || bind == null)
+            {
+                return false;
+            }
+
             var nodeParent = nodeCur.Parent;
             var nodeCallArg = nodeCur;
             CallNode callNode = null;
@@ -53,16 +62,13 @@ namespace Microsoft.PowerFx.Intellisense
 
             if (callNode == null)
             {
-                iarg = -1;
-                carg = -1;
-                funcCur = null;
                 return false;
             }
 
             Contracts.AssertValue(nodeCallArg);
 
             var info = bind.GetInfo(callNode);
-            if (info.Function != null)
+            if (info?.Function != null)
             {
                 carg = callNode.Args.Count;
                 for (iarg = 0; iarg < carg; iarg++)

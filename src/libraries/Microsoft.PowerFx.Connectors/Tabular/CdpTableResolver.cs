@@ -28,40 +28,46 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly bool _doubleEncoding;
 
-        public CdpTableResolver(CdpTable tabularTable, HttpClient httpClient, string uriPrefix, bool doubleEncoding, ConnectorLogger logger = null)
+        private readonly ConnectorSettings _connectorSettings;
+
+        public ConnectorSettings ConnectorSettings => _connectorSettings;
+
+        public CdpTableResolver(CdpTable tabularTable, HttpClient httpClient, string uriPrefix, bool doubleEncoding, ConnectorSettings connectorSettings, ConnectorLogger logger = null)
         {
             _tabularTable = tabularTable;
             _httpClient = httpClient;
             _uriPrefix = uriPrefix;
             _doubleEncoding = doubleEncoding;
-
+            _connectorSettings = connectorSettings;
             Logger = logger;
         }
 
-        public async Task<ConnectorType> ResolveTableAsync(string tableName, CancellationToken cancellationToken)
+        public async Task<ConnectorType> ResolveTableAsync(string logicalName, CancellationToken cancellationToken)
         {
-            // out string name, out string displayName, out ServiceCapabilities tableCapabilities
+            // out string name, out string displayName, out ServiceCapabilities tableCapabilities            
             cancellationToken.ThrowIfCancellationRequested();
 
+            // if we have the list of table, we can convert from display name to logical name
             if (_tabularTable.Tables != null)
             {
-                RawTable t = _tabularTable.Tables.FirstOrDefault(tbl => tbl.DisplayName == tableName);
+                RawTable t = _tabularTable.Tables.FirstOrDefault(tbl => tbl.DisplayName == logicalName);
                 if (t != null)
                 {
-                    tableName = t.Name;
+                    // Use logical name
+                    logicalName = t.Name;
                 }
             }
 
-            string dataset = _doubleEncoding ? CdpServiceBase.DoubleEncode(_tabularTable.DatasetName) : _tabularTable.DatasetName;
-            string uri = (_uriPrefix ?? string.Empty) + (UseV2(_uriPrefix) ? "/v2" : string.Empty) + $"/$metadata.json/datasets/{dataset}/tables/{CdpServiceBase.DoubleEncode(tableName)}?api-version=2015-09-01";
+            string dataset = _doubleEncoding ? CdpServiceBase.DoubleEncode(_tabularTable.DatasetName) : CdpServiceBase.SingleEncode(_tabularTable.DatasetName);
+            string uri = (_uriPrefix ?? string.Empty) + (UseV2(_uriPrefix) ? "/v2" : string.Empty) + $"/$metadata.json/datasets/{dataset}/tables/{CdpServiceBase.DoubleEncode(logicalName)}?api-version=2015-09-01";
 
             string text = await CdpServiceBase.GetObject(_httpClient, $"Get table metadata", uri, null, cancellationToken, Logger).ConfigureAwait(false);
 
             if (string.IsNullOrWhiteSpace(text))
             {
-                return null;
+                throw new InvalidOperationException($"{nameof(ResolveTableAsync)} didn't receive any response");
             }
-
+            
             // We don't need SQL relationships as those are not equivalent as those we find in Dataverse or ServiceNow
             // Foreign Key constrainsts are not enough and equivalent.
             // Only keeping code for future use, if we'd need to get those relationships.
@@ -95,8 +101,8 @@ namespace Microsoft.PowerFx.Connectors
             var parts = _uriPrefix.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
             string connectorName = (parts.Length > 1) ? parts[1] : string.Empty;
 
-            ConnectorType connectorType = ConnectorFunction.GetCdpTableType(this, connectorName, _tabularTable.TableName, "Schema/Items", FormulaValue.New(text), ConnectorCompatibility.CdpCompatibility, _tabularTable.DatasetName, 
-                                                                            out string name, out string displayName, out TableDelegationInfo delegationInfo, out IEnumerable<OptionSet> optionSets);
+            ConnectorType connectorType = ConnectorFunction.GetCdpTableType(this, connectorName, _tabularTable.TableName, "Schema/Items", FormulaValue.New(text), _connectorSettings, _tabularTable.DatasetName, _tabularTable._fieldMetadata,
+                                                                            out TableDelegationInfo delegationInfo, out IEnumerable<OptionSet> optionSets);
 
             OptionSets = optionSets;
 

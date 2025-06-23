@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -58,6 +59,32 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Equal("Documents", detectSentimentV3.OptionalParameters[0].Summary);
             Assert.Equal("The documents to analyze.", detectSentimentV3.OptionalParameters[0].Description);
+        }
+
+        [Fact]
+        public void DocuSign_ListEnvelopes_DefaultValue()
+        {
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\DocuSign.json", _output);
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("DocuSign") { IncludeInternalFunctions = true, AllowUnsupportedFunctions = true }, doc, new ConsoleLogger(_output)).OrderBy(cf => cf.Name).ToList();
+            ConnectorFunction listEnvelopes = functions.First(cf => cf.Name == "ListEnvelopes");
+
+            Assert.True(listEnvelopes.IsSupported, listEnvelopes.NotSupportedReason);
+            Assert.Equal("from_date", listEnvelopes.OptionalParameters[10].Name);
+
+            DateTimeValue dtv = Assert.IsType<DateTimeValue>(listEnvelopes.OptionalParameters[10].DefaultValue);
+            Assert.Equal(new DateTime(2000, 1, 2, 12, 45, 0, DateTimeKind.Utc), dtv.GetConvertedValue(TimeZoneInfo.Utc));
+        }
+
+        [Fact]
+        public void SwaggerWithArrayBody()
+        {
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\TestSwagger1.json", _output);
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("swagger") { AllowUnsupportedFunctions = true, IncludeInternalFunctions = true }, doc, new ConsoleLogger(_output)).OrderBy(cf => cf.Name).ToList();
+            ConnectorFunction createFileWithTable = functions.First(cf => cf.Name == "CreateFileWithTable");
+
+            Assert.Single(createFileWithTable.RequiredParameters);
+            Assert.Equal("rows", createFileWithTable.RequiredParameters[0].Name);
+            Assert.Equal("*[Value:*[]]", createFileWithTable.RequiredParameters[0].FormulaType.ToStringWithDisplayNames());
         }
 
         [Fact]
@@ -316,6 +343,44 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal((FormulaType)expectedReturnType, connectorReturnType.FormulaType);
             Assert.Equal(2, connectorReturnType.Fields.Length);
             Assert.Equal("The results of a Conversation task.", connectorReturnType.Description);
+        }
+
+        [Fact]
+        public async Task ACSL_InvokeFunctionWithoutOutputsWithOutputOverride()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\TestConnectorNoOutput.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+            ConsoleLogger logger = new ConsoleLogger(_output);
+
+            PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
+            ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, apiDoc).OrderBy(cf => cf.Name).ToList()[0];
+            Assert.Equal("AnalyzeConversationTextSubmitJob", function.Name);
+            Assert.Equal("s", function.ReturnType.ToStringWithDisplayNames());
+
+            using var testConnector2 = new LoggingTestServer(@"Swagger\TestConnectorNoOutput.json", _output);
+            using var httpClient2 = new HttpClient(testConnector2);
+            testConnector2.SetResponseFromFile(@"Responses\TestConnectorDateTimeFormatResponse.json");
+            using PowerPlatformConnectorClient client2 = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient2)
+            {
+                SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
+            };
+
+            BaseRuntimeConnectorContext context2 = new TestConnectorRuntimeContext("ACSL", client2, console: _output);
+
+            DType.TryParse("![createdDateTime:d, displayName:d]", out DType dtype);
+            var expectedFormulaType = FormulaType.Build(dtype);
+
+            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[0], context2, expectedFormulaType, CancellationToken.None);
+
+            RecordValue httpResultValue = (RecordValue)httpResult;
+            FormulaValue displayName = httpResultValue.GetField("displayName");
+            FormulaValue createdDateTime = httpResultValue.GetField("createdDateTime");
+
+            Assert.NotNull(httpResult);
+            Assert.True(httpResult is RecordValue);
+            Assert.True(displayName is DateTimeValue);
+            Assert.True(createdDateTime is DateTimeValue);
+            Assert.True(function.ReturnType != expectedFormulaType);
         }
 
         [Fact]

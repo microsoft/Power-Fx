@@ -49,13 +49,6 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void GetLanguageForNullCulture()
         {
-            var runtimeConfig = new RuntimeConfig();
-            var runner = new EvalVisitor(runtimeConfig, CancellationToken.None);
-
-            var language = Language(runner, IRContext.NotInSource(FormulaType.String));
-            Assert.Equal("en-US", language.Value);
-
-            _defaultCulture = null;
             TestDefaultCulture(null);
         }
 

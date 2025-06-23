@@ -199,7 +199,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 ["a"] = (SchemaArrayInteger, GetArray(Array.Empty<int>()))
             });
 
-            Assert.Equal("a=", str);
+            Assert.Equal(string.Empty, str);
         }
 
         [Fact]
@@ -257,12 +257,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public async Task UrlEncoderSerializer_Array_Record_Invalid()
         {
-            var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayObject, GetArray(GetRecord(("x", FormulaValue.New(1)))))
-            }));
+            });
 
-            Assert.Equal("Incompatible Table for supporting array, RecordValue doesn't have 'Value' column - propertyName a", ex.Message);
+            Assert.Equal("a.x=1", str);
         }
 
         [Fact]
@@ -279,12 +279,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public async Task UrlEncoderSerializer_Array_Invalid()
         {
-            var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayInteger, GetTable(GetRecord(("a", FormulaValue.New(1)), ("b", FormulaValue.New("foo")))))
-            }));
+            });
 
-            Assert.Equal("Incompatible Table for supporting array, RecordValue has more than one column - propertyName a, number of fields 2", ex.Message);
+            // Note: this is invalid form encoding
+            Assert.Equal("a.a=1&a.b=foo", str);
         }
 
         [Fact]

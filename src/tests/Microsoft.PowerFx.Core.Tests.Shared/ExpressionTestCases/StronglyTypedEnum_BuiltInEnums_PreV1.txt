@@ -50,8 +50,8 @@
 >> Sort( [1,2,3], SortOrder.Descending )
 Table({Value:1},{Value:2},{Value:3})
 
->> Match( "info@contoso.com", Match.Email )
-{FullMatch:"info@contoso.com",StartMatch:1,SubMatches:Table()}
+>> Match( "info@contoso.com", Match.Email ).FullMatch
+"info@contoso.com"
 
 >> JSON( [1,2,3], JSONFormat.FlattenValueTables )
 "[1,2,3]"
@@ -79,7 +79,7 @@ Blank()
 >> JSON( [1,2,3], MatchOptions.IgnoreCase )
 "[{""Value"":1},{""Value"":2},{""Value"":3}]"
 
->> JSON( [1,2,3], Match.Email )
+>> JSON( [1,2,3], Match.Letter )
 "[{""Value"":1},{""Value"":2},{""Value"":3}]"
 
 >> JSON( [1,2,3], StartOfWeek.Tuesday )
@@ -88,8 +88,8 @@ Blank()
 >> Match( "hi", JSONFormat.IndentFour )
 Blank()
 
->> Match( "hi", "h.*", JSONFormat.IndentFour )
-{FullMatch:"hi",StartMatch:1,SubMatches:Table()}
+>> Match( "hi", "h.*", JSONFormat.IndentFour ).FullMatch
+"hi"
 
 >> Match( "hi", Match.Email, JSONFormat.IndentFour )
 Blank()
@@ -106,8 +106,8 @@ false
 >> MatchAll( "hi", JSONFormat.IndentFour )
 Table()
 
->> MatchAll( "hi", "h.*", JSONFormat.IndentFour )
-Table({FullMatch:"hi",StartMatch:1,SubMatches:Table()})
+>> ForAll( MatchAll( "hiha", "h", JSONFormat.IndentFour ), {fm:FullMatch, sm:StartMatch} )
+Table({fm:"h",sm:1},{fm:"h",sm:3})
 
 >> MatchAll( "hi", Match.Email, JSONFormat.IndentFour )
 Table()
@@ -169,14 +169,14 @@ Table({Value:3},{Value:2},{Value:1})
 >> JSON( [1,2,3], "_" )
 "[1,2,3]"
 
->> Match( "howdy", "h", "c" )
-{FullMatch:"h",StartMatch:1,SubMatches:Table()}
+>> Match( "howdy", "h", "c" ).FullMatch
+"h"
 
 >> IsMatch("Foo", 17)
-Errors: Error 15-17: Regular expressions must be constant values.
+Errors: Error 15-17: Regular expression must be a constant value.
 
 >> IsMatch("Foo", 1/0)
-Errors: Error 16-17: Regular expressions must be constant values.
+Errors: Error 16-17: Regular expression must be a constant value.
 
 //===========================================================================================================
 //
@@ -374,23 +374,29 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 // Match (and friends) allows coercion from the backing kind for the regular expression
 
->> Match( "a3d4", Match.Digit )
-{FullMatch:"3",StartMatch:2,SubMatches:Table()}
+>> Match( "a3d4", Match.Digit ).FullMatch
+"3"
 
->> Match( "a3d4", "\d")
-{FullMatch:"3",StartMatch:2,SubMatches:Table()}
+>> Match( "a3d4", "\d").FullMatch
+"3"
 
->> IsMatch( "a3d4", Match.Digit )
+>> IsMatch( "a3d4", Match.Digit, MatchOptions.Complete )
 false
 
->> IsMatch( "a3d4", "\d")
+>> IsMatch( "a3d4", Match.Digit, MatchOptions.Contains )
+true
+
+>> IsMatch( "a3d4", "\d", MatchOptions.Complete )
 false
 
->> MatchAll( "a3d4", Match.Digit )
-Table({FullMatch:"3",StartMatch:2,SubMatches:Table()},{FullMatch:"4",StartMatch:4,SubMatches:Table()})
+>> IsMatch( "a3d4", "\d", MatchOptions.Contains )
+true
 
->> MatchAll( "a3d4", "\d")
-Table({FullMatch:"3",StartMatch:2,SubMatches:Table()},{FullMatch:"4",StartMatch:4,SubMatches:Table()})
+>> ForAll( MatchAll( "a3d4", Match.Digit ), {fm:FullMatch} )
+Table({fm:"3"},{fm:"4"})
+
+>> ForAll( MatchAll( "a3d4", "\d"), {fm:FullMatch} )
+Table({fm:"3"},{fm:"4"})
 
 >> Match.Digit = "\d"
 true
@@ -399,7 +405,7 @@ true
 false
 
 >> Match.Digit > "\d"
-Errors: Error 5-11: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 14-18: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 5-11: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.|Error 14-18: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> "\d" = Match.Digit
 true
@@ -408,7 +414,7 @@ true
 false
 
 >> "\d" > Match.Digit
-Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 12-18: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.|Error 12-18: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 // Most other enums do not, see section 1 above
 
@@ -484,8 +490,8 @@ Table({Value:1},{Value:2},{Value:3})
 "[{""Value"":1},{""Value"":2},{""Value"":3}]"
 
 // Since the Match supports CanCoerceBackingKind, any concatenation combination is supported
->> Match( "334", Match.Digit & Match.Digit & JSONFormat.IndentFour )
-{FullMatch:"334",StartMatch:1,SubMatches:Table()}
+>> Match( "334", Match.Digit & Match.Digit & JSONFormat.IndentFour ).FullMatch
+"334"
 
 // Concatenation can be allowed between members of hte option set and still retain strong typing with IExternalOptionSet.CanConcatenateStronglyTyped
 
@@ -506,17 +512,17 @@ Table({Value:1},{Value:2},{Value:3})
 
 // Concatenation can be allowed with text strings and still retain strong typing with IExternalOptionSet.CanCoerceBackingKind
 
->> Match( "33this is ok", Concatenate( Match.Digit, Match.Digit, "this is ok" ) )
-{FullMatch:"33this is ok",StartMatch:1,SubMatches:Table()}
+>> Match( "33this is ok", Concatenate( Match.Digit, Match.Digit, "this is ok" ) ).FullMatch
+"33this is ok"
 
->> Match( "33this is ok", Match.Digit & Match.Digit & "this is ok" )
-{FullMatch:"33this is ok",StartMatch:1,SubMatches:Table()}
+>> Match( "33this is ok", Match.Digit & Match.Digit & "this is ok" ).FullMatch
+"33this is ok"
 
->> Match( "33this is ok", "\d\dthis is ok" )
-{FullMatch:"33this is ok",StartMatch:1,SubMatches:Table()}
+>> Match( "33this is ok", "\d\dthis is ok" ).FullMatch
+"33this is ok"
 
->> Match( "33this is ok", "\d" & "\d" & "this is ok" )
-{FullMatch:"33this is ok",StartMatch:1,SubMatches:Table()}
+>> Match( "33this is ok", "\d" & "\d" & "this is ok" ).FullMatch
+"33this is ok"
 
 // Strongly typed concatenated results can be compared
 
@@ -572,17 +578,17 @@ true
 // 14. CanConcatenateStronglyTyped & CanCoerceFromBackingKind - An important combination, used by Match, allows strings and enums to be mixed
 //
 
->> Match( "a34d", Match.Digit & "\d" )
-{FullMatch:"34",StartMatch:2,SubMatches:Table()}
+>> Match( "a34d", Match.Digit & "\d" ).FullMatch
+"34"
 
->> Match( "a34d", "\d" & Match.Digit )
-{FullMatch:"34",StartMatch:2,SubMatches:Table()}
+>> Match( "a34d", "\d" & Match.Digit ).FullMatch
+"34"
 
->> Match( "a34d", Concatenate( Match.Digit, "\d" ) )
-{FullMatch:"34",StartMatch:2,SubMatches:Table()}
+>> Match( "a34d", Concatenate( Match.Digit, "\d" ) ).FullMatch
+"34"
 
->> Match( "a34d", Concatenate( "\d", Match.Digit ) )
-{FullMatch:"34",StartMatch:2,SubMatches:Table()}
+>> Match( "a34d", Concatenate( "\d", Match.Digit ) ).FullMatch
+"34"
 
 >> Text(Match.Digit) & Text(SortOrder.Ascending)
 "\dascending"
@@ -763,25 +769,25 @@ false
 true
 
 >> Match.Letter < Blank()
-Errors: Error 5-12: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 5-12: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> Match.Letter = Blank()
 false
 
 >> Blank() >= Match.Letter
-Errors: Error 16-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 16-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> Blank() <> Match.Letter
 true
 
 >> Color.Gray < Blank()
-Errors: Error 5-10: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 5-10: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> Color.Gray = Blank()
 false
 
 >> Blank() >= Color.Gray
-Errors: Error 16-21: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 16-21: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> Blank() <> Color.Gray
 true
@@ -982,10 +988,10 @@ Error({Kind:ErrorKind.InvalidArgument})
 // Can't compare numerically (CanCompareNumeric = false)
 
 >> TimeUnit.Years < TimeUnit.Months
-Errors: Error 8-14: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 25-32: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 8-14: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.|Error 25-32: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> TimeUnit.Years >= TimeUnit.Months
-Errors: Error 8-14: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 26-33: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 8-14: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.|Error 26-33: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 // Can't concatenate strongly typed (CanConcatenateStronglyTyped = false)
 
@@ -1023,7 +1029,7 @@ true
 Errors: Error 0-4: The function 'Text' has some invalid arguments.|Error 11-15: Expected text or number. We expect text or a number at this point in the formula.
 
 >> "Option: " & Color.Yellow
-Errors: Error 18-25: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+Errors: Error 18-25: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.
 
 >> Len( Color.Yellow )
 Errors: Error 10-17: Invalid argument type (Color). Expecting a Text value instead.
@@ -1035,13 +1041,13 @@ Errors: Error 0-4: The function 'Left' has some invalid arguments.|Error 11-18: 
 Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 30-37: Invalid argument type (Color). Expecting a Text value instead.
 
 >> Color.Yellow & " banana"
-Errors: Error 5-12: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+Errors: Error 5-12: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.
 
 >> Concatenate( Color.Yellow, " banana" )
 Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 18-25: Invalid argument type (Color). Expecting a Text value instead.
 
 >> Color.Green & " bananas are riper than " & Color.Yellow & " bananas"
-Errors: Error 5-11: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.|Error 48-55: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+Errors: Error 5-11: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.|Error 48-55: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.
 
 >> Concatenate( Color.Green, " bananas are riper than ", Color.Yellow, " bananas" )
 Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 18-24: Invalid argument type (Color). Expecting a Text value instead.|Error 59-66: Invalid argument type (Color). Expecting a Text value instead.
@@ -1086,10 +1092,10 @@ Errors: Errors: Error 0-4: The function 'Sqrt' has some invalid arguments.|Error
 Errors: Error 0-3: The function 'Mod' has some invalid arguments.|Error 10-14: Invalid argument type (Color). Expecting a Decimal value instead.
 
 >> Color.Red + 3
-Errors: Error 5-9: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 5-9: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> Color.Red + Color.Red
-Errors: Error 5-9: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 17-21: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 5-9: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.|Error 17-21: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> If( false, RGBA(120,120,12,1), Color.Red )  // first type rule
 RGBA(255,0,0,1)
@@ -1097,18 +1103,18 @@ RGBA(255,0,0,1)
 // Can't compare numerically (CanCompareNumeric = false)
 
 >> Color.Red < Color.Yellow
-Errors: Error 5-9: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 17-24: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 5-9: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.|Error 17-24: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> Color.Red >= Color.Yellow
-Errors: Error 5-9: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 18-25: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 5-9: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.|Error 18-25: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> Color.Red >= SortOrder.Descending
-Errors: Error 5-9: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 22-33: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 5-9: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.|Error 22-33: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 // Can't concatenate strongly typed (CanConcatenateStronglyTyped = false)
 
 >> Color.Red & Color.Yellow
-Errors: Error 5-9: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.|Error 17-24: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+Errors: Error 5-9: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.|Error 17-24: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, Dynamic.
 
 //===========================================================================================================
 //
@@ -1328,10 +1334,10 @@ Error({Kind:ErrorKind.InvalidArgument})
 // Can't compare numerically (CanCompareNumeric = false)
 
 >> DateTimeFormat.LongDate < DateTimeFormat.ShortDate
-Errors: Error 14-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 40-50: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 14-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.|Error 40-50: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> DateTimeFormat.LongDate >= DateTimeFormat.ShortDate
-Errors: Error 14-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 41-51: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 14-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.|Error 41-51: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 // Can't concatenate strongly typed (CanConcatenateStronglyTyped = false)
 
@@ -1431,10 +1437,10 @@ Error({Kind:ErrorKind.InvalidArgument})
 // Can't compare numerically (CanCompareNumeric = false)
 
 >> Match.MultipleDigits < Match.Digits
-Errors: Error 28-35: Name isn't valid. 'Digits' isn't recognized.|Error 5-20: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 28-35: Name isn't valid. 'Digits' isn't recognized.|Error 5-20: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> Match.MultipleDigits >= Match.Digits
-Errors: Error 29-36: Name isn't valid. 'Digits' isn't recognized.|Error 5-20: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 29-36: Name isn't valid. 'Digits' isn't recognized.|Error 5-20: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 // Can concatenate strongly typed (CanConcatenateStronglyTyped = true)
 
@@ -1451,4 +1457,7 @@ true
 false
 
 >> IsMatch( "28", 28 )
-Errors: Error 15-17: Regular expressions must be constant values.
+Errors: Error 15-17: Regular expression must be a constant value.
+
+>> "^" & Match.Email & "$"
+"^.+@.+\.[^.]{2,}$"

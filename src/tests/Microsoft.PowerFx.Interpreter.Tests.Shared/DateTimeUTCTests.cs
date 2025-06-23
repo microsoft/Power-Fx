@@ -3,10 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -22,6 +20,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private readonly RuntimeConfig _localSymbol;
         private readonly DateTime _utcNow = DateTime.UtcNow;
         private readonly DateTime _istNow;
+        private readonly IClockService _clockService;
 
         public DateTimeUTCTests() 
         {
@@ -29,14 +28,29 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                new PowerFxConfig());
             _symbolTable = new SymbolTable();
             _symbolValues = new SymbolValues(_symbolTable);
+            _clockService = new TestClockService(_utcNow);
 
             _utcSymbol = new RuntimeConfig(_symbolValues);
             _utcSymbol.SetTimeZone(TimeZoneInfo.Utc);
+            _utcSymbol.SetClock(_clockService);
 
             _localSymbol = new RuntimeConfig(_symbolValues);
             _localSymbol.SetTimeZone(_istTimeZone);
+            _localSymbol.SetClock(_clockService);
 
             _istNow = TimeZoneInfo.ConvertTimeFromUtc(_utcNow, _istTimeZone);
+        }
+
+        public class TestClockService : IClockService
+        {
+            private readonly DateTime _utcNow;
+
+            public TestClockService(DateTime utcNow)
+            {
+                _utcNow = utcNow;
+            }
+
+            public DateTime UtcNow => _utcNow;
         }
 
         [Fact]

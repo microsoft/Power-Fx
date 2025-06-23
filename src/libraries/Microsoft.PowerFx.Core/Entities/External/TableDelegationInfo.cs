@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -22,6 +23,15 @@ namespace Microsoft.PowerFx.Core.Entities
         // Used to indicate whether this table has selectable columns
         public SelectionRestrictions SelectionRestriction { get; init; }
 
+        [Obsolete("preview")]
+        public SummarizeCapabilities SummarizeCapabilities { get; init; }
+
+        [Obsolete("preview")]
+        public CountCapabilities CountCapabilities { get; init; }
+
+        [Obsolete("preview")]
+        public TopLevelAggregationCapabilities TopLevelAggregationCapabilities { get; init; }
+
         // Defines ungroupable columns
         public GroupRestrictions GroupRestriction { get; init; }
 
@@ -36,6 +46,9 @@ namespace Microsoft.PowerFx.Core.Entities
 
         // Supports per record permission
         internal bool SupportsRecordPermission { get; init; }
+
+        [Obsolete("preview")]
+        public bool SupportsJoinFunction { get; init; }
 
         // Logical name of table
         public string TableName { get; init; }
@@ -67,7 +80,7 @@ namespace Microsoft.PowerFx.Core.Entities
             PagingCapabilities = new PagingCapabilities()
             {
                 IsOnlyServerPagable = false,
-                ServerPagingOptions = new string[0]
+                ServerPagingOptions = new ServerPagingOptions[0]
             };
             SupportsRecordPermission = true;
             ColumnsWithRelationships = new Dictionary<string, string>();
@@ -216,16 +229,15 @@ namespace Microsoft.PowerFx.Core.Entities
         // If true, @odata.nextlink URL is used instead of $skip and $top query parameters
         // If false, $top and $skip will be used
         public bool IsOnlyServerPagable { get; init; }
-
-        // Only supported values "top" and "skiptoken"
+        
         // Used to define paging options to use 
-        public IEnumerable<string> ServerPagingOptions { get; init; }
+        public IEnumerable<ServerPagingOptions> ServerPagingOptions { get; init; }
 
         public PagingCapabilities()
         {
         }
 
-        public PagingCapabilities(bool isOnlyServerPagable, string[] serverPagingOptions)
+        public PagingCapabilities(bool isOnlyServerPagable, ServerPagingOptions[] serverPagingOptions)
         {
             // Server paging restrictions, true for CDS
             // Setting 'IsOnlyServerPagable' to true in the table metadata response lets PowerApps application to use
@@ -238,6 +250,13 @@ namespace Microsoft.PowerFx.Core.Entities
             // used in https://msazure.visualstudio.com/OneAgile/_git/PowerApps-Client?path=/src/AppMagic/js/AppMagic.Services/ConnectedData/CdpConnector.ts&_a=contents&version=GBmaster
             ServerPagingOptions = serverPagingOptions;
         }
+    }
+
+    internal enum ServerPagingOptions
+    {
+        Unknown,
+        Top,
+        SkipToken
     }
 
     public sealed class GroupRestrictions
@@ -259,6 +278,105 @@ namespace Microsoft.PowerFx.Core.Entities
 
         public SelectionRestrictions()
         {
+        }
+    }
+
+    /// <summary>
+    /// If the table supports summarize, return true.
+    /// e.g. Summarize(Table, ColumnName, Sum(ColumnName)).
+    /// For top level aggregation Sum(Table, ColumnName), use <see cref="TopLevelAggregationCapabilities"/>.
+    /// </summary>
+    [Obsolete("preview")]
+    public class SummarizeCapabilities
+    {
+        /// <summary>
+        /// If the table property supports summarize, return true.
+        /// </summary>
+        public virtual bool IsSummarizableProperty(string propertyName, SummarizeMethod method)
+        {
+            return false;
+        }
+
+        public SummarizeCapabilities()
+        {
+        }
+    }
+
+    [Obsolete("preview")]
+    public enum SummarizeMethod
+    {
+        None,
+        Sum,
+        Average,
+        Min,
+        Max,
+        Count,
+        CountRows
+    }
+
+    [Obsolete("preview")]
+    public class CountCapabilities
+    {
+        public CountCapabilities()
+        {
+        }
+
+        /// <summary>
+        /// If the table is countable, return true. 
+        /// Relevant expression: CountRows(Table).
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool IsCountableTable()
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// If the table is countable after filter, return true.
+        /// Relevant expression: CountRows(Filter(Table, Condition)); / CountIf(Table, Condition).
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool IsCountableAfterFilter()
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// If the table is countable after join, return true.
+        /// Relevant expression: CountRows(Join(Table1, Table2, ...)).
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool IsCountableAfterJoin()
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// If the table is countable after summarize, return true.
+        /// Relevant expression: CountRows(Summarize(Table, ...)).
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool IsCountableAfterSummarize()
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// If the table supports top level aggregation for a column, return true.
+    /// e.g. Sum, Average, Min, Max, Count without Summarize(). 
+    /// e.g. expression: Sum(Table, ColumnName).
+    /// For aggregation with grouping, Summarize(Table, ColumnName, Sum(ColumnName)), use <see cref="SummarizeCapabilities"/>.
+    /// </summary>
+    [Obsolete("preview")]
+    public class TopLevelAggregationCapabilities
+    {
+        /// <summary>
+        /// If the table supports top level aggregation for a column, return true.
+        /// </summary>
+        public virtual bool IsTopLevelAggregationSupported(SummarizeMethod method, string propertyName)
+        {
+            return false;
         }
     }
 

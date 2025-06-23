@@ -1917,6 +1917,10 @@
     <value>'{0}' ialah fungsi yang tidak diketahui atau tidak disokong.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' diiktiraf sebagai fungsi pemilih jenis dan hanya boleh digunakan dalam fungsi Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>'{0}' ialah fungsi yang tidak diketahui atau tidak disokong dalam ruang nama '{1}'.</value>
     
@@ -2107,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Konflik nama lajur untuk '{0}'.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Tidak dapat menambahkan lajur pada rekod sistem atau jadual rekod sistem. Gunakan ShowColumns untuk mengekstrak lajur tertentu yang anda perlukan terlebih dahulu.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Tidak dapat menamakan semula lajur pada rekod sistem atau jadual rekod sistem. Gunakan ShowColumns untuk mengekstrak lajur tertentu yang anda perlukan terlebih dahulu.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -3221,9 +3233,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Koleksi baharu atau sedia ada ke augmen.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Rekod atau jadual untuk dikumpulkan. Rekod akan ditambahkan pada koleksi. Jadual akan mempunyai baris yang ditambahkan pada koleksi.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Kosongkan koleksi terlebih dahulu dan tambahkan satu atau lebih item pada koleksi yang ditentukan. Item boleh terdiri daripada jadual atau koleksi (e.g. ClearCollect(collection, source_collection)) yang berbeza atau satu atau lebih rekod ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3713,23 @@
     <value>Edit formula anda supaya mengandungi tanda kurung.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Tanda penutup pengecam dijangka. Kami menjangkakan tanda penutup (') di bahagian ini dalam formula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Tanda petik tunggal penutup menunjukkan penghujung pengecam (sebagai contoh, 'Nama Pertama').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Edit formula anda supaya mengandungi tanda petik tunggal.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Pengecam tidak mempunyai teks yang sah.</value>
+    <value>Pengecam kosong atau mengandungi aksara yang tidak sah, seperti tab atau baris baharu.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Pastikan anda mempunyai teks untuk pengecam anda. Ralat ini berlaku apabila pengecam semuanya ruang kosong atau ruang.</value>
+    <value>Pastikan anda mempunyai teks sah dalam pengecam anda. Ralat ini berlaku apabila pengecam kosong, hanya mempunyai ruang kosong atau mengandungi tab atau baris baharu.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4201,8 @@
     <value>Formula yang dinamakan mestilah ungkapan.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Jenis yang dinamakan hendaklah literal jenis.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Perisytiharan jenis yang dinamakan mestilah ungkapan jenis yang sah.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4499,24 +4519,232 @@
     <value>Ungkapan biasa tidak sah.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Pilihan sebaris mesti muncul pada permulaan ungkapan biasa, ditemui "{0}" kemudian.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Pilihan sebaris terhad kepada gabungan huruf [imnsx], tidak boleh menyahdayakan pilihan dan tidak boleh digunakan pada subungkapan, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Kod aksara Oktal \0 tidak disokong, gunakan perenambelasan \x atau Unikod \u sebaliknya, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Tanda kurung kurawal literal mesti terlepas dengan tanda garis miring, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Tanda kurung tegak literal mesti terlepas dengan tanda garis miring walaupun dalam kelas aksara, sebagai contoh \[ atau \], ditemui pada penghujung "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Tanda kurung tegak kelas aksara tidak ditutup.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Kumpulan khas tidak disokong, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Aksara terlepas tidak dibenarkan dalam kelas aksara, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Aksara lepas negatif tidak dibenarkan dalam kelas aksara negatif, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Aksara terlepas tidak dibenarkan di luar kelas aksara, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Nama kategori Unikod tidak sah, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Pilihan sebaris berulang, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Komen sebaris tidak didedahkan.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Komen sebaris tidak didedahkan, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Pilihan sebaris tidak serasi dengan MatchOptions.NumberedSubMatches, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Pengkuantiti milikan tidak disokong, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Pengkuantiti tepat tidak boleh digunakan dengan pengubah suai pengkuantiti seperti ? untuk malas, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Kod lepas tidak sah, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Subpadanan "{0}" tidak ditakrifkan atau merupakan rujukan hadapan yang tidak disokong.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Subpadanan tidak disokong dalam cari selepas, ditemui pada permulaan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Lookbehind tidak boleh disarang, ditemui pada permulaan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Pengkuantiti tanpa had tidak disokong dalam cari selepas, ditemui pada penghujung "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Pengkuantiti tidak disokong untuk cari sebelum atau cari selepas, ditemui di penghujung "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Rujukan kembali "{0}" kepada subpadanan yang mungkin tidak berlaku disebabkan oleh penyelangan atau pengkuantiti sifar.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Subpadanan rujukan kendiri tidak disokong, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Kumpulan tidak didedahkan, terlalu sedikit tanda kurung tutup.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Kumpulan tidak dibuka, terlalu sedikit tanda kurung buka.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Subpadanan yang dinamakan ditakrifkan lebih daripada sekali, ditemui pada permulaan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Nama subpadanan mestilah merupakan gabungan aksara perkataan dan tidak bermula dengan nombor, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Pilihan sebaris mesti muncul pada permulaan ungkapan biasa, ditemui "{0}" kemudian.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Aksara muncul lebih daripada sekali dalam kelas aksara, ditemui mengulangi "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Kelas aksara tanda kurung tegak tidak boleh kosong, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Subpadanan pengimbang tidak disokong, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Penggunaan penawanan dinamakan tanda petik tunggal tidak disokong, gunakan sintaks (?&lt;... &gt;) sebaliknya, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Penyelangan bersyarat tidak disokong, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Penawanan dinamakan tidak boleh digunakan dengan MatchOptions.NumberedSubMatches didayakan, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Gunakan penawanan dinamakan dengan "(?&lt;name&gt;...)" dan "\k&lt;name&gt;" atau dayakan MatchOptions.NumberedSubMatches, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Tanda sempang literal dalam kelas aksara mestilah terlepas dengan tanda garis miring, lepas dengan "\-", ditemui dalam "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Aksara literal perlu terlepas dengan tanda garis miring apabila digunakan dalam kelas aksara, ditemui pada penghujung "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Pengkuantiti pada kumpulan yang mengandungi pengkuantiti lain atau penyelangan kosong yang boleh mengakibatkan hasil tidak jelas, ditemui pada penghujung "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Lookbehind melebihi had aksara maksimum yang berkemungkinan sebanyak 250, ditemui pada penghujung "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Julat pengkuantiti nombor rendah lebih besar daripada nombor tinggi, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Terlalu banyak kumpulan bersarang, ditemui pada permulaan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Nama subpadanan terlalu panjang, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Nombor terlalu besar, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Aksara dalam julat kelas aksara diterbalikkan, ditemui pada penghujung "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Kelas aksara dalam julat kelas aksara atau lepaskan tanda sempang literal dengan tanda garis miring, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Tamat dengan tanda garis miring yang tidak terlepas.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Pengkuantiti tanpa sesuatu untuk menyatakan kuantiti, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: MatchOptions.DotAll dan MatchOptions.FreeSpacing hanya tersedia dengan Power Fx V1, ditemui "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah: Rujukan kembali "{0}" untuk subpadanan yang berada di dalam lookbehind atau lookahead.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Ungkapan biasa mestilah nilai yang tetap.</value>
+    <value>Ungkapan biasa mestilah nilai pemalar.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions mestilah nilai pemalar.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Nilai yang dihantar kepada fungsi '{0}' tidak boleh diubah.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Nama tangkapan '{0}' menyembunyikan sifat dipratentukan yang mengembalikan padanan penuh bagi ungkapan biasa. Pertimbangkan untuk menamakan semula jika anda ingin menggunakan sifat yang bernama itu untuk mengekstrak padanan penuh dalam teks yang ditentukan.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Nama penawanan '{0}' menyembunyikan sifat yang ditakrifkan terlebih dahulu yang mengembalikan maklumat padanan. Pertimbangkan untuk menamakan semula jika anda mahu mengakses maklumat padanan.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Nama tangkapan '{0}' menyembunyikan sifat dipratentukan yang mengembalikan kumpulan yang sepadan dalam ungkapan biasa. Pertimbangkan untuk menamakan semula jika anda ingin menggunakan sifat yang bernama itu untuk mengekstrak semua subpadanan dalam teks yang ditentukan.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Nama tangkapan '{0}' menyembunyikan sifat dipratentukan yang mengembalikan lokasi padanan bagi ungkapan biasa. Pertimbangkan untuk menamakan semula jika anda ingin menggunakan sifat yang bernama itu untuk mengekstrak kedudukan padanan penuh dalam teks yang ditentukan.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Nama penawanan dalam set '{0}' menyembunyikan sifat yang ditakrifkan terlebih dahulu yang mengembalikan maklumat padanan. Pertimbangkan untuk menamakan semula jika anda mahu mengakses maklumat padanan.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4552,20 +4780,20 @@
     <value>Penetapan pemboleh ubah dengan nilai sumber data dalam talian (jadual atau rekod) boleh menyebabkan berbilang permintaan kepada pelayan. Ini akan disekat tidak lama lagi.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Perisytiharan secara literal jenis tidak sah. Ungkapan '{0}' tidak dapat digunakan dalam takrif jenis.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Ungkapan jenis tidak sah. '{0}' tidak dapat digunakan dalam ungkapan jenis.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Penggunaan tidak disokong: literal jenis hanya boleh digunakan dalam argumen jenis dan definisi jenis.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Penggunaan tidak disokong: Fungsi Type hanya boleh digunakan dalam argumen jenis dan pengisytiharan jenis.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Takrif jenis {0} tidak sah.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Pengisytiharan jenis {0} tidak sah.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Takrif jenis {0} tidak sah dan mungkin mengandungi kitaran.</value>
+    <value>Pengisytiharan jenis {0} tidak sah dan mungkin mengandungi kitaran.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +5095,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Argumen tidak sah '{0}'. Nama jenis atau jenis literal sah yang dijangkakan.</value>
+    <value>Argumen tidak sah '{0}'. Nama jenis atau ungkapan jenis sebaris yang sah dijangkakan.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

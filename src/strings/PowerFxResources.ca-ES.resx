@@ -1917,6 +1917,10 @@
     <value>"{0}" és una funció desconeguda o no admesa.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>"{0}" es reconeix com a funció d'ajuda de tipus i només es pot utilitzar dins de la funció Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>"{0}" és una funció desconeguda o no admesa a l'espai de noms "{1}".</value>
     
@@ -2107,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>El nom de columna es troba en conflicte amb '{0}'.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>No es poden afegir columnes a un registre del sistema ni a una taula de registres del sistema. Utilitzeu ShowColumns per extreure primer les columnes específiques que necessiteu.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>No es pot canviar el nom de columnes a un registre del sistema ni a una taula de registres del sistema. Utilitzeu ShowColumns per extreure primer les columnes específiques que necessiteu.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -3221,9 +3233,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Col·lecció nova o existent que s'augmentarà.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Registre o taula que es recollirà. S'annexarà un registre a la col·lecció. S'annexaran les files de la taula a la col·lecció.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Esborra la col·lecció i, després, afegeix un o més elements a la col·lecció especificada. Els elements poden ser d'una taula o d'una col·lecció diferent (p. ex., ClearCollect(collection, source_collection)) o d'un o més registres ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3713,23 @@
     <value>Editeu la fórmula perquè inclogui un claudàtor.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>S'esperava el tancament de l'identificador. S'espera una cometa de tancament (') en aquest punt de la fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Una cometa simple de tancament indica el final d'un identificador (per exemple, 'Nom').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Editeu la fórmula perquè inclogui un cometa simple de tancament.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>L'identificador no conté text vàlid.</value>
+    <value>L'identificador està buit o conté un caràcter no vàlid, com ara una tabulació o un salt de línia.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Assegureu-vos que teniu text per a l'identificador. Aquest error es produeix quan l'identificador està buit o només conté espais.</value>
+    <value>Assegureu-vos que teniu text vàlid a l'identificador. Aquest error es produeix quan l'identificador està en blanc, només conté espais o conté una tabulació o un salt de línia.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4201,8 @@
     <value>La fórmula amb nom ha de ser una expressió.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>El tipus de nom ha de ser un tipus literal.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Una declaració de tipus amb nom ha de ser una expressió de tipus vàlida.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4499,24 +4519,232 @@
     <value>L'expressió regular no és vàlida.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>L'expressió regular no és vàlida, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: les opcions en línia han d'aparèixer al principi de l'expressió regular, s'ha trobat "{0}" més endavant.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: les opcions en línia estan limitades a una combinació de les lletres [imnsx], no poden inhabilitar les opcions i no es poden utilitzar en una subexpressió, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: els codis de caràcters Octal \0 no s'admeten, utilitzeu l'hexadecimal \x o el Unicode \u en el seu lloc, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: les claus literals s'han d'escapar amb una barra invertida, es troba "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: els claudàtors literals s'han d'escapar amb una barra invertida fins i tot en classes de caràcters, per exemple \[ o \], s'ha trobat al final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: claudàtor de classe de caràcter no tancat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: grup especial no admès, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: el caràcter d'escapament no està permès dins de la classe de caràcters, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: el caràcter d'escapament negatiu no està permès dins de la classe de caràcters negats, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: el caràcter d'escapament no està permès fora de la classe de caràcters, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: nom de categoria Unicode no vàlida, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: s'ha repetit l'opció en línia, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: comentari en línia no tancat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: comentari en línia no tancat, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: l'opció en línia és incompatible amb MatchOptions.NumberedSubMatches, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: els quantificadors possessius no s'admeten, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: els quantificadors exactes no es poden utilitzar amb modificadors de quantificador com ara ? per a coincidència mínima, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: codi d'escapament no vàlid, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: la subcoincidència "{0}" no està definida o és una referència cap endavant no admesa.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: les subcoincidències no s'admeten en lookbehinds, s'ha trobat al principi de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: els lookbehinds no es poden imbricar, s'ha trobat al principi de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: els quantificadors il·limitats no s'admeten als lookbehinds, s'ha trobat al final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: els quantificadors no s'admeten als lookbehinds o lookaheads, s'ha trobat al final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: referència cap enrere "{0}" a una subcoincidència que es possible que no es produeixi a causa de l'alternança o un quantificador zero.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: les subcoincidències que fan referència a elles mateixes no s'admeten, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: grups no tancats, massa pocs parèntesis de tancament.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: grups no oberts, massa pocs parèntesis d'obertura.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: la subcoincidència amb nom s'ha definit més d'una vegada, s'ha trobat al principi de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: el nom de la subcoincidència ha de ser una combinació de caràcters de paraula i no començar per un número, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: les opcions en línia han d'aparèixer al principi de l'expressió regular, s'ha trobat "{0}" més endavant.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: el caràcter apareix més d'una vegada a la classe de caràcters, s'ha trobat "{0}" repetit.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: les classes de caràcters de claudàtor no poden estar buides, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: les subcoincidències d'equilibri no s'admeten, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: no s'admet l'ús de captures amb nom entre cometes simples, utilitzeu la (?&lt;... &gt;) en el seu lloc, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: l'alternança condicional no està admesa, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: les captures amb nom no es poden utilitzar amb l'opció MatchOptions.NumberedSubMatches habilitada, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: utilitzeu captures amb nom amb "(?&lt;name&gt;...)" i "\k&lt;name&gt;" o habiliteu MatchOptions.NumberedSubMatches, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: el guió literal a la classe de caràcter s'ha d'escapar amb una barra invertida, escapeu-la amb "\-", s'ha trobat a "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: el caràcter literal s'ha d'escapar amb una barra invertida quan s'utilitza en una classe de caràcter, s'ha trobat al final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: quantificador en un grup que conté un altre quantificador o una alternança buida que pot donar lloc a un resultat ambigu, s'ha trobat al final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: el lookbehind ha superat el límit màxim de caràcters possible de 250, s'ha trobat al final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: el número inferior de l'interval de quantificadors és superior al número alt, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: s'han trobat massa grups imbricats al principi de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: el nom de la subcoincidència és massa llarg, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: el nombre és massa gran, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: els caràcters d'un interval de classes de caràcters s'inverteixen, s'ha trobat al final de "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: classe de caràcter en un interval de classes de caràcters o escapament d'un guió literal amb una barra invertida, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: acaba amb una barra invertida sense escapar.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: quantificador sense res per quantificar, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: MatchOptions.DotAll i MatchOptions.FreeSpacing només estan disponibles amb Power Fx V1, s'ha trobat "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Expressió regular no vàlida: referència cap enrere "{0}" a la subcoincidència que es troba dins d'un lookbehind o lookahead.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Les expressions regulars han de ser valors constants.</value>
+    <value>L'expressió regular ha de ser un valors constant.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions ha de ser un valor constant.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>El valor passat a la funció "{0}" no es pot canviar.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>El nom de la captura "{0}" amaga la propietat predefinida que retorna la coincidència completa de l'expressió regular. Considereu la possibilitat de canviar-li el nom si voleu utilitzar aquesta propietat amb nom per extreure la coincidència completa del text especificat.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>El nom de captura "{0}" amaga una propietat predefinida que retorna informació de coincidència. Plantegeu-vos l'opció de canviar-li el nom si voleu accedir a la informació del partit.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>El nom de la captura "{0}" amaga la propietat predefinida que retorna les coincidències de grup de l'expressió regular. Considereu la possibilitat de canviar-li el nom si voleu utilitzar aquesta propietat amb nom per extreure les coincidències secundàries del text especificat.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>El nom de la captura "{0}" amaga la propietat predefinida que retorna la ubicació de la coincidència de l'expressió regular. Considereu la possibilitat de canviar-li el nom si voleu utilitzar aquesta propietat amb nom per extreure la posició de la coincidència completa del text especificat.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Els noms de captura del conjunt "{0}" amaguen propietats predefinides que retornen informació de coincidència. Plantegeu-vos l'opció de canviar-los el nom si voleu accedir a la informació del partit.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4552,20 +4780,20 @@
     <value>Definir una variable amb un valor de font de dades en línia (taula o registre) pot provocar diverses sol·licituds al servidor. Aviat es bloquejarà.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>La declaració literal de tipus no és vàlida. L'expressió "{0}" no es pot utilitzar en una definició de tipus.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>L'expressió de tipus no és vàlida. "{0}" no es pot utilitzar en una expressió de tipus.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Ús no admès: els literals de tipus només es poden utilitzar en arguments de tipus i definicions de tipus.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Ús no admès: la funció Type només es pot utilitzar en arguments de tipus i declaracions de tipus.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>La definició de tipus {0} no és vàlida.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>La declaració de tipus {0} no és vàlida.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>La definició de tipus {0} no és vàlida i pot contenir cicles.</value>
+    <value>La declaració de tipus {0} no és vàlida i pot contenir cicles.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +5095,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Argument "{0}" no vàlid. S'esperava un nom de tipus vàlid o un tipus literal.</value>
+    <value>Argument "{0}" no vàlid. S'esperava un nom de tipus vàlid o una expressió de tipus en línia.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

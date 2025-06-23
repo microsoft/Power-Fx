@@ -63,13 +63,13 @@
 1
 
 >> Value(16)^Date(2000,1,1)
-Errors: Error 10-24: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 10-24: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Value(365265000)^DateTime(2000,1,1,12,0,0)
-Errors: Error 17-42: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 17-42: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Value(16)^Time(12,0,0)
-Errors: Error 10-22: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 10-22: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Value(16)^ParseJSON("2")
 256
@@ -137,13 +137,13 @@ Error({Kind:ErrorKind.Numeric})
 1
 
 >> "32"^Date(2000,1,1)
-Errors: Error 5-19: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 5-19: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> "32"^DateTime(2000,1,1,12,0,0)
-Errors: Error 5-30: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 5-30: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> "16"^Time(12,0,0)
-Errors: Error 5-17: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 5-17: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> "16"^ParseJSON("2")
 256
@@ -220,13 +220,13 @@ Error({Kind:ErrorKind.Numeric})
 1
 
 >> true^Date(1927,5,18)
-Errors: Error 5-20: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 5-20: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> true^DateTime(1927,5,18,0,0,0)
-Errors: Error 5-30: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 5-30: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> true^Time(12,0,0)
-Errors: Error 5-17: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 5-17: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> true^ParseJSON("2")
 1
@@ -264,13 +264,13 @@ Errors: Error 5-17: Invalid argument type. Expecting one of the following: Numbe
 1
 
 >> Blank()^Date(2000,1,1)
-Errors: Error 8-22: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 8-22: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Blank()^DateTime(2000,1,1,12,0,0)
-Errors: Error 8-33: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 8-33: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Blank()^Time(12,0,0)
-Errors: Error 8-20: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 8-20: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Blank()^ParseJSON("2")
 0
@@ -278,104 +278,104 @@ Errors: Error 8-20: Invalid argument type. Expecting one of the following: Numbe
 // Date
 
 >> Date(2000,1,1)^Value(2)
-Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Date(2000,1,1)^"2"
-Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Date(2000,1,1)^true
-Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Date(2000,1,1)^Blank()
-Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Date(1954,10,3)^Date(1927,5,18)
-Errors: Error 0-15: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-15: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Date(1954,10,3)^Date(1900,1,1)
-Errors: Error 0-15: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-15: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Date(1954,10,3)^DateTime(1927,5,18,0,0,0)
-Errors: Error 0-15: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-15: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Date(2000,1,1)^Time(12,0,0)
-Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Date(2000,1,1)^ParseJSON("2")
-Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Date(2000,1,1)^ParseJSON("1e100")
-Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 // DateTime
 
 >> DateTime(2000,1,1,12,0,0)^Value(2)
-Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> DateTime(2000,1,1,12,0,0)^"2"
-Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> DateTime(2000,1,1,12,0,0)^true
-Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> DateTime(2000,1,1,12,0,0)^Blank()
-Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> DateTime(1954,10,3,0,0,0)^Date(1927,5,18)
-Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> DateTime(1954,10,3,0,0,0)^Date(1900,1,1)
-Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> DateTime(1954,10,3,0,0,0)^DateTime(1927,5,18,0,0,0)
-Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> DateTime(1954,10,3,0,0,0)^DateTime(1900,1,1,12,0,0)
-Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> DateTime(2000,1,1,12,0,0)^Time(12,0,0)
-Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> DateTime(2000,1,1,12,0,0)^ParseJSON("2")
-Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> DateTime(2000,1,1,12,0,0)^ParseJSON("1e100")
-Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 // Time
 
 >> Time(9,0,0)^Value(0.125)
-Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Time(9,0,0)^"0.125"
-Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Time(9,0,0)^true
-Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Time(9,0,0)^Blank()
-Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Time(9,0,0)^Time(6,0,0)
-Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Time(9,0,0)^Date(1900,1,2)
-Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> 1+(Time(9,0,0)^Date(1900,1,11)/1e20)
-Errors: Error 3-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 3-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Time(9,0,0)^Time(12,0,0)
-Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> 1+(Time(9,0,0)^Time(12,0,0)/1e20)
-Errors: Error 3-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 3-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Time(9,0,0)^ParseJSON("2")
-Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> Time(9,0,0)^ParseJSON("1e100")
-Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 // Untyped
 
@@ -410,22 +410,22 @@ Error({Kind:ErrorKind.Numeric})
 1
 
 >> ParseJSON("16.0000000000000000000001")^Date(1900,1,7)
-Errors: Error 39-53: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 39-53: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> ParseJSON("1e100")^Date(1900,1,7)
-Errors: Error 19-33: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 19-33: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> ParseJSON("16.0000000000000000000001")^DateTime(1900,1,1,12,0,0)
-Errors: Error 39-64: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 39-64: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> ParseJSON("1e100")^DateTime(1900,1,7,12,0,0)
-Errors: Error 19-44: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 19-44: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> ParseJSON("16.000000000000000000001")^Time(12,0,0)
-Errors: Error 38-50: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 38-50: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> ParseJSON("1e100")^Time(12,0,0)
-Errors: Error 19-31: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 19-31: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> ParseJSON("16.000000000000000000000002")^ParseJSON("2")
 256

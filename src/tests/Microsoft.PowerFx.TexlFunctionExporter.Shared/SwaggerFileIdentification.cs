@@ -125,7 +125,21 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
                             }
                             else
                             {
-                                throw new InvalidDataException($"Two documents with same number of operations, can't determine which one to select {new KeyValuePair<string, List<(string folder, string location, OpenApiDocument document, List<string> errors)>>(swagger.Key, docs).GetString()}");
+                                long firstSize = new FileInfo(first.location).Length;
+                                long secondSize = new FileInfo(second.location).Length;
+
+                                if (firstSize > secondSize)
+                                {
+                                    list2.Add(swagger.Key, first);
+                                }
+                                else if (firstSize < secondSize)
+                                {
+                                    list2.Add(swagger.Key, second);
+                                }
+                                else
+                                {
+                                    throw new InvalidDataException($"Two documents with same number of operations, can't determine which one to select {new KeyValuePair<string, List<(string folder, string location, OpenApiDocument document, List<string> errors)>>(swagger.Key, docs).GetString()}");
+                                }
                             }
                         }
                     }

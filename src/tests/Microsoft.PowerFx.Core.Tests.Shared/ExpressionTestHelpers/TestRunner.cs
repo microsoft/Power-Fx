@@ -102,6 +102,8 @@ namespace Microsoft.PowerFx.Core.Tests
             possible.Add("RegEx");
             possible.Add("TimeZoneInfo");
             possible.Add("TraceSetup");
+            possible.Add("CultureInfo");
+            possible.Add("Net7");
 
             foreach (Match match in Regex.Matches(setup, @"(disable:)?(([\w]+|//)(\([^\)]*\))?)"))
             {
@@ -179,7 +181,7 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
-        public void AddFile(Dictionary<string, bool> setup, string thisFile)
+        public void AddFile(Dictionary<string, bool> setup, string thisFile, Dictionary<string, bool> requiredSetup = null)
         {            
             thisFile = GetFullPath(thisFile, TestRoot);
 
@@ -264,7 +266,19 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     return;
                 }
-            }        
+            }
+
+            // If requiredSetup is supplied, then those setup elements must be present and agree
+            if (requiredSetup != null)
+            {
+                foreach (var flag in requiredSetup)
+                {
+                    if (!fileSetupDict.ContainsKey(flag.Key) || flag.Value != fileSetupDict[flag.Key])
+                    {
+                        return;
+                    }
+                }
+            }
 
             fileSetup = string.Join(",", fileSetupDict.Select(i => (i.Value ? string.Empty : "disable:") + i.Key));
 

@@ -8,8 +8,29 @@ namespace Microsoft.PowerFx.Connectors
     /// <summary>
     /// Settings for a connector.
     /// </summary>
+    [ThreadSafeImmutable]
     public class ConnectorSettings
     {
+        /// <summary>
+        /// Default number of rows to return for connector, per page. I.E. $top=1000.
+        /// </summary>
+        internal const int DefaultConnectorTop = 1000;
+
+        public static ConnectorSettings NewCDPConnectorSettings(bool extractSensitivityLabel = false, string purviewAccountName = null, int maxRows = DefaultConnectorTop)
+        {
+            var connectorSettings = new ConnectorSettings(null)
+            {
+                Compatibility = ConnectorCompatibility.CdpCompatibility,
+                SupportXMsEnumValues = true,
+                ReturnEnumsAsPrimitive = false,
+                MaxRows = maxRows,
+                ExtractSensitivityLabel = extractSensitivityLabel,
+                PurviewAccountName = purviewAccountName
+            };
+
+            return connectorSettings;
+        }
+        
         public ConnectorSettings(string @namespace)
         {
             Namespace = @namespace;
@@ -23,7 +44,14 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// Maximum number of rows to return, per page.
         /// </summary>
-        public int MaxRows { get; init; } = 1000;
+        public int MaxRows { get; init; } = DefaultConnectorTop;
+
+        /// <summary>
+        /// If this is enabled it will extract MIP Labels.
+        /// </summary>
+        internal bool ExtractSensitivityLabel { get; init; } = false;
+
+        internal string PurviewAccountName { get; init; }
 
         /// <summary>
         /// Unknown extensions in swagger file are ignored by default during the validation process.
@@ -70,10 +98,31 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// In Power Apps, all record fields which are not declared in the swagger file will not be part of the Power Fx response.
         /// ReturnUnknownRecordFieldsAsUntypedObjects modifies this behavior to return all unknown fields as UntypedObjects. 
-        /// This flag is only working when Compatibility is set to ConnectorCompatibility.SwaggerCompatibility or  ConnectorCompatibility.CdpCompatibility.
+        /// This flag is only working when Compatibility is set to ConnectorCompatibility.SwaggerCompatibility or ConnectorCompatibility.CdpCompatibility.
         /// </summary>
         public bool ReturnUnknownRecordFieldsAsUntypedObjects { get; init; } = false;
 
+        /// <summary>
+        /// By default action connectors won't parse x-ms-enum-values.
+        /// Only CDP connectors will have this enabled by default.
+        /// </summary>
+        public bool SupportXMsEnumValues { get; init; } = false;
+
+        /// <summary>
+        /// This flag will force all enums to be returns as FormulaType.String or FormulaType.Decimal regardless of x-ms-enum-*.
+        /// This flag is only in effect when SupportXMsEnumValues is true.
+        /// </summary>
+        public bool ReturnEnumsAsPrimitive { get; init; } = false;
+
+        /// <summary>
+        /// This flag enables some special handling for the body parameter, when
+        /// - body name is 'item'
+        /// - body inner object is 'dynamicProperties'
+        /// - there is only one property in inner object
+        /// In that base the body will be fully flattened and we will retain the 'body' name for the parameter.
+        /// </summary>
+        public bool UseItemDynamicPropertiesSpecialHandling { get; init; } = false;
+        
         public ConnectorCompatibility Compatibility { get; init; } = ConnectorCompatibility.Default;
     }
 

@@ -51,19 +51,6 @@ namespace Microsoft.PowerFx.Functions
         {
             var arg0 = args[0];
 
-#pragma warning disable CS0618 // Type or member is obsolete
-            if (arg0 is QueryableTableValue tableQueryable)
-            {
-#pragma warning restore CS0618 // Type or member is obsolete
-                try
-                {
-                    return tableQueryable.FirstN(1).Rows.FirstOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);
-                }
-                catch (NotDelegableException)
-                {
-                }
-            }
-
             return arg0.First(mutationCopy: irContext.IsMutation).ToFormulaValue();
         }
 
@@ -86,19 +73,6 @@ namespace Microsoft.PowerFx.Functions
 
             var arg0 = (TableValue)args[0];
             var arg1 = (NumberValue)args[1];
-
-#pragma warning disable CS0618 // Type or member is obsolete
-            if (arg0 is QueryableTableValue queryableTable)
-#pragma warning restore CS0618 // Type or member is obsolete
-            {
-                try
-                {
-                    return queryableTable.FirstN((int)arg1.Value);
-                }
-                catch (NotDelegableException)
-                {
-                }
-            }
 
             var rows = arg0.Rows.Take((int)arg1.Value);
             return new InMemoryTableValue(irContext, rows);
@@ -506,27 +480,19 @@ namespace Microsoft.PowerFx.Functions
                 });
             }
 
-#pragma warning disable CS0618 // Type or member is obsolete
-            if (arg0 is QueryableTableValue tableQueryable)
-#pragma warning restore CS0618 // Type or member is obsolete
-            {
-                try
-                {
-                    return tableQueryable.Filter(arg1, runner, context);
-                }
-                catch (NotDelegableException)
-                {
-                }
-            }
-
             var rows = await LazyFilterAsync(runner, context, arg0.Rows, arg1).ConfigureAwait(false);
 
             return new InMemoryTableValue(irContext, rows);
         }
 
         // Join(t1, t2, LeftRecord.Id = RightRecord.RefId, JoinType.Inner)
-        public static async ValueTask<FormulaValue> JoinTables(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> JoinTables(FunctionInvokeInfo invokeInfo)
         {
+            var args = invokeInfo.Args;
+            var runner = invokeInfo.Runner;
+            var context = invokeInfo.Context;
+            var irContext = invokeInfo.IRContext;
+
             if (args[0] is not TableValue leftTable)
             {
                 return args[0];
@@ -547,16 +513,16 @@ namespace Microsoft.PowerFx.Functions
             switch (joinType.Option)
             {
                 case "Full":
-                    rows = await LazyJoinAsync(runner, context, leftTable, rightTable, predicate, outerLeft: true, outerRight: true, scopeNameResolver, leftRenaming, rightRenaming).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, irContext, leftTable, rightTable, predicate, outerLeft: true, outerRight: true, scopeNameResolver, leftRenaming, rightRenaming).ConfigureAwait(false);
                     break;
                 case "Inner":
-                    rows = await LazyJoinAsync(runner, context, leftTable, rightTable, predicate, outerLeft: false, outerRight: false, scopeNameResolver, leftRenaming, rightRenaming).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, irContext, leftTable, rightTable, predicate, outerLeft: false, outerRight: false, scopeNameResolver, leftRenaming, rightRenaming).ConfigureAwait(false);
                     break;
                 case "Left":
-                    rows = await LazyJoinAsync(runner, context, leftTable, rightTable, predicate, outerLeft: true, outerRight: false, scopeNameResolver, leftRenaming, rightRenaming).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, irContext, leftTable, rightTable, predicate, outerLeft: true, outerRight: false, scopeNameResolver, leftRenaming, rightRenaming).ConfigureAwait(false);
                     break;
                 case "Right":
-                    rows = await LazyJoinAsync(runner, context, leftTable, rightTable, predicate, outerLeft: false, outerRight: true, scopeNameResolver, leftRenaming, rightRenaming).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, irContext, leftTable, rightTable, predicate, outerLeft: false, outerRight: true, scopeNameResolver, leftRenaming, rightRenaming).ConfigureAwait(false);
                     break;
                 default:
                     throw new InvalidOperationException();
@@ -568,6 +534,7 @@ namespace Microsoft.PowerFx.Functions
         private static async Task<DValue<RecordValue>[]> LazyJoinAsync(
             EvalVisitor runner,
             EvalVisitorContext context,
+            IRContext irContext,
             TableValue leftSource,
             TableValue rightSource,
             LambdaFormulaValue predicate,
@@ -577,15 +544,13 @@ namespace Microsoft.PowerFx.Functions
             RecordValue leftRenaming,
             RecordValue rightRenaming)
         {
-            var innerRows = new List<DValue<RecordValue>>();
-            var outerDict = new Dictionary<DValue<RecordValue>, bool>();
+            var resultRows = new List<DValue<RecordValue>>();
+            var recordContext = IRContext.NotInSource(((TableType)irContext.ResultType).ToRecord());
 
-            // Keep track of which rows have been included in the inner join.
-            // Using a dictionary to avoid duplicates and to make it easier to check if a row is in the inner join.
-            var innerDict = new Dictionary<DValue<RecordValue>, bool>();
-
+            // Inner and Left loops
             foreach (var leftRow in leftSource.Rows)
             {
+                var hasMatch = false;
                 foreach (var rightRow in rightSource.Rows)
                 {
                     runner.CheckCancel();
@@ -597,68 +562,60 @@ namespace Microsoft.PowerFx.Functions
                         if (result.IsValue)
                         {
                             var fields = new List<NamedValue>();
-                            var leftRenamed = (RecordValue)await RenameColumns(runner, context, IRContext.NotInSource(leftRow.Value.Type), BuildRenamingArgs(leftRow.Value, leftRenaming)).ConfigureAwait(false);
+                            var leftRecordValueRenamed = (RecordValue)await RenameColumns(runner, context, recordContext, BuildRenamingArgs(leftRow.Value, leftRenaming)).ConfigureAwait(false);
 
-                            foreach (var field in leftRenamed.OriginalFields)
-                            {
-                                fields.Add(new NamedValue(field.Name, field.Value));
-                            }
+                            fields.AddRange(leftRecordValueRenamed.OriginalFields);
+                            fields.AddRange(rightRenaming.OriginalFields.Select(field => new NamedValue(((StringValue)field.Value).Value, rightRow.Value.GetField(field.Name))));
 
-                            foreach (var field in rightRenaming.OriginalFields)
-                            {
-                                var fieldName = (StringValue)field.Value;
-                                fields.Add(new NamedValue(fieldName.Value, rightRow.Value.GetField(field.Name)));
-                            }
-
-                            innerRows.Add(DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(fields)));
+                            resultRows.Add(DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(fields)));
                         }
                         else if (result.IsError)
                         {
                             // Lambda evaluation resulted in an error. Include the error.
-                            innerRows.Add(result);
+                            resultRows.Add(result);
                         }
 
-                        innerDict[leftRow] = true;
-                        innerDict[rightRow] = true;
+                        hasMatch = true;
+                    }
+                }
 
-                        if (outerLeft)
+                if (!hasMatch && outerLeft)
+                {
+                    // leftRow is value since it would have been added to the resultRows in the inner loop.
+                    var recordValueRenamed = (RecordValue)await RenameColumns(runner, context, recordContext, BuildRenamingArgs(leftRow.Value, leftRenaming)).ConfigureAwait(false);
+                    resultRows.Add(DValue<RecordValue>.Of(recordValueRenamed));
+                }
+            }
+
+            // Right loop
+            if (outerRight)
+            {
+                foreach (var rightRow in rightSource.Rows)
+                {
+                    var hasMatch = false;
+                    foreach (var leftRow in leftSource.Rows)
+                    {
+                        runner.CheckCancel();
+
+                        var result = await LazyCheckPredicateAsync(runner, context, scopeNameResolver, leftRow, rightRow, predicate).ConfigureAwait(false);
+
+                        if (result != null)
                         {
-                            if (outerDict.ContainsKey(leftRow))
-                            {
-                                outerDict.Remove(leftRow);
-                            }
+                            hasMatch = true;
+                            break;
                         }
-
-                        if (outerRight)
-                        {
-                            if (outerDict.ContainsKey(rightRow))
-                            {
-                                outerDict.Remove(rightRow);
-                            }
-                        }
-
-                        continue;
                     }
 
-                    if (outerLeft)
+                    if (!hasMatch)
                     {
-                        if (!innerDict.ContainsKey(leftRow))
-                        {
-                            outerDict[leftRow] = true;
-                        }
-                    }
-
-                    if (outerRight)
-                    {
-                        if (!innerDict.ContainsKey(rightRow))
-                        {
-                            outerDict[rightRow] = true;
-                        }
+                        // rightRow is value since it would have been added to the resultRows in the inner loop.
+                        var recorValueRenamed = (RecordValue)await RenameColumns(runner, context, recordContext, BuildRenamingArgs(rightRow.Value, rightRenaming)).ConfigureAwait(false);
+                        resultRows.Add(DValue<RecordValue>.Of(recorValueRenamed));
                     }
                 }
             }
 
-            return innerRows.Concat(outerDict.Keys).ToArray();
+            return resultRows.ToArray();
         }
 
         private static FormulaValue[] BuildRenamingArgs(RecordValue row, RecordValue renaming)
@@ -685,21 +642,29 @@ namespace Microsoft.PowerFx.Functions
             var leftScopeName = new DName(((StringValue)scopeNameResolver.GetField(FunctionJoinScopeInfo.LeftRecord.Value)).Value);
             var rightScopeName = new DName(((StringValue)scopeNameResolver.GetField(FunctionJoinScopeInfo.RightRecord.Value)).Value);
 
+            if (leftRow.IsError)
+            {
+                return leftRow;
+            }
+            else if (leftRow.IsBlank)
+            {
+                return null;
+            }
+            
+            if (rightRow.IsError)
+            {
+                return rightRow;
+            }
+            else if (rightRow.IsBlank)
+            {
+                return null;
+            }
+
             var scopeValue = FormulaValue.NewRecordFromFields(
                 new NamedValue(leftScopeName, leftRow.Value), 
                 new NamedValue(rightScopeName, rightRow.Value));
 
             SymbolContext childContext = context.SymbolContext.WithScopeValues(scopeValue);
-
-            if (leftRow.IsError)
-            {
-                return leftRow;
-            }
-
-            if (rightRow.IsError)
-            {
-                return rightRow;
-            }
 
             var result = await predicate.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
             var include = false;
@@ -813,19 +778,6 @@ namespace Microsoft.PowerFx.Functions
                     break;
                 default:
                     return CommonErrors.RuntimeTypeMismatch(args[2].IRContext);
-            }
-
-#pragma warning disable CS0618 // Type or member is obsolete
-            if (arg0 is QueryableTableValue queryableTable)
-            {
-#pragma warning restore CS0618 // Type or member is obsolete
-                try
-                {
-                    return queryableTable.Sort(arg1, isDescending, runner, context);
-                }
-                catch (NotDelegableException)
-                {
-                }
             }
 
             var pairs = new List<(DValue<RecordValue> row, FormulaValue distinctValue)>();
@@ -1404,6 +1356,11 @@ namespace Microsoft.PowerFx.Functions
 
         public static async ValueTask<FormulaValue> Summarize(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
+            // This function expects 3 types of arguments:
+            // 1. TableValue (arg0)
+            // 2. StringValue (columns to group by) at any position > 0.
+            // 3. LambdasFormulaValue (aggregates) at any position > 0. Represented by a record value eg {TotalAmount:Sum(Amount)}
+
             if (args[0] is BlankValue)
             {
                 return new BlankValue(irContext);
@@ -1419,6 +1376,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.RuntimeTypeMismatch(irContext);
             }
 
+            // Building a dictionary of key records (based on groupping columns) and a subset of records that match the key.
             var keyRecords = new Dictionary<string, RecordValue>();
             var groupByRecords = new Dictionary<string, List<RecordValue>>();
 
@@ -1442,6 +1400,7 @@ namespace Microsoft.PowerFx.Functions
                 var showColumnsArgs = new List<FormulaValue>() { row.Value };
                 showColumnsArgs.AddRange(stringArgs);
 
+                // We call ShowColumns to keep only the columns that are part of the group by.
                 var keyRecord = await ShowColumns(runner, context, IRContext.NotInSource(FormulaType.Build(irContext.ResultType._type.ToRecord())), showColumnsArgs.ToArray()).ConfigureAwait(false);
                 var key = keyRecord.ToExpression();
 
@@ -1456,12 +1415,13 @@ namespace Microsoft.PowerFx.Functions
 
             var finalRecords = new List<DValue<RecordValue>>();
 
-            foreach (var group in groupByRecords)
+            // Evaluate all aggregates for each group and include the result as columns name and column value in the final record.
+            foreach (var thisGroup in groupByRecords)
             {
                 runner.CancellationToken.ThrowIfCancellationRequested();
 
-                var newTable = FormulaValue.NewTable((RecordType)FormulaType.Build(tableValue.Type._type.ToRecord()), group.Value);
-                var record = (InMemoryRecordValue)keyRecords[group.Key];
+                var thisGroupTableValue = FormulaValue.NewTable(tableValue.Type.ToRecord(), thisGroup.Value);
+                var record = (InMemoryRecordValue)keyRecords[thisGroup.Key];
                 var fields = new Dictionary<string, FormulaValue>();
 
                 foreach (var field in record.Fields)
@@ -1469,7 +1429,7 @@ namespace Microsoft.PowerFx.Functions
                     fields.Add(field.Name, field.Value);
                 }
 
-                SymbolContext childContext = context.SymbolContext.WithScopeValues(newTable);
+                SymbolContext childContext = context.SymbolContext.WithScopeValues(thisGroupTableValue);
 
                 foreach (LambdaFormulaValue arg in args.Where(arg => arg is LambdaFormulaValue))
                 {
@@ -1569,15 +1529,13 @@ namespace Microsoft.PowerFx.Functions
         }
     }
 
-#pragma warning disable CS0618 // Type or member is obsolete
-    internal class JoinImpl : JoinFunction, IAsyncTexlFunctionJoin
-#pragma warning restore CS0618 // Type or member is obsolete
+    internal class JoinImpl : JoinFunction, IFunctionInvoker
     {
         public override Type DeclarationType => typeof(JoinFunction);
 
-        public async Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public async Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
         {
-            return await Library.JoinTables(runner, context, irContext, args).ConfigureAwait(false);
+            return await Library.JoinTables(invokeInfo).ConfigureAwait(false);
         }
     }
 }

@@ -1917,6 +1917,10 @@
     <value>"{0}" è una funzione sconosciuta o non supportata.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>"{0}" è riconosciuta come funzione helper di tipo e può essere usata solo all'interno della funzione Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>"{0}" è una funzione sconosciuta o non supportata nello spazio dei nomi "{1}".</value>
     
@@ -2107,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Conflitto con il nome colonna per '{0}'.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Impossibile aggiungere colonne a un record di sistema o a una tabella di record di sistema. Utilizza ShowColumns per estrarre le colonne specifiche di cui hai bisogno per prime.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Impossibile rinominare le colonne di un record di sistema o una tabella di record di sistema. Utilizza ShowColumns per estrarre le colonne specifiche di cui hai bisogno per prime.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -3221,9 +3233,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Raccolta nuova o esistente da aumentare.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Record o tabella da raccogliere. Alla raccolta verrà aggiunto l'intero record o le righe di una tabella.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Cancella prima di tutto la raccolta e aggiunge uno o più elementi all'oggetto raccolta specificato. Gli elementi possono provenire da una tabella o una raccolta diversa (ad esempio, ClearCollect(collection, source_collection)), o da uno o più record ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3713,23 @@
     <value>Modificare la formula affinché includa una parentesi graffa.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>È prevista la chiusura dell'identificatore. A questo punto della formula è prevista una chiusura (').</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Una virgoletta singola di chiusura indica la fine di un identificatore (ad esempio, 'Nome').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Modifica la formula affinché includa una virgoletta singola di chiusura.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>L'identificatore non contiene testo valido.</value>
+    <value>L'identificatore è vuoto o contiene un carattere non valido, ad esempio una tabulazione o una nuova riga.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Assicurarsi che l'identificatore contenga testo. Questo errore si verifica quando l'identificatore è completamente vuoto o costituito da spazi vuoti.</value>
+    <value>Verifica che l'identificatore contenga testo valido. Questo errore si verifica quando l'identificatore è vuoto, contiene solo spazi vuoti o una tabulazione o una nuova riga.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4201,8 @@
     <value>La formula denominata deve essere un'espressione.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Il tipo denominato deve essere un tipo di valore letterale.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Una dichiarazione di tipo denominato deve essere un'espressione di tipo valida.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4499,24 +4519,232 @@
     <value>Espressione regolare non valida.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: le opzioni inline devono essere visualizzate all'inizio dell'espressione regolare, è stato trovato "{0}" posizionato dopo.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: le opzioni inline sono limitate a una combinazione di lettere [imnsx], non possono disabilitare le opzioni e non possono essere utilizzate in un'espressione secondaria, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: i codici di caratteri \0 ottali non sono supportati, utilizza invece l'esadecimale \x o Unicode \u, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: le parentesi graffe letterali devono includere un escape con barra rovesciata, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: le parentesi quadre letterali devono essere precedute da una barra rovesciata anche nelle classi di caratteri, ad esempio \[ o \], trovato alla fine di "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: parentesi quadra classe di caratteri non chiusa.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: gruppo speciale non supportato, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: carattere di escape non consentito all'interno della classe di caratteri, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: carattere di escape negativo non consentito all'interno della classe di caratteri negativi, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: carattere di escape non consentito al di fuori della classe di caratteri, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: nome categoria Unicode non valido , è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: opzione inline ripetuta, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: commento inline non chiuso.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: commento inline non chiuso, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: l'opzione inline è incompatibile con MatchOptions.NumberedSubMatches "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: i quantificatori possessivi non sono supportati, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: i quantificatori esatti non possono essere utilizzati con modificatori di quantificatori come ? per lazy, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: codice escape non valido, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: la corrispondenza secondaria "{0}" non è definita o è un riferimento in avanti non supportato.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: le corrispondenze secondarie non sono supportate negli elementi look-behind che si trovano all'inizio di "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: i look-behind non possono essere annidati, trovato all'inizio di "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: i quantificatori illimitati non sono supportati nei look-behind, trovati alla fine di "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: i quantificatori non sono supportati nei look-behind o look-ahead, trovati alla fine di "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: riferimento inverso "{0}" a una corrispondenza secondaria che potrebbe non verificarsi a causa dell'alternanza o del quantificatore zero.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: le corrispondenze secondarie con autoriferimento non sono supportate, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: gruppi non chiusi, troppo poche parentesi di chiusura.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: gruppi non aperti, troppo poche parentesi di apertura.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: corrispondenza secondaria denominata definita più di una volta, trovata all'inizio di "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: il nome della corrispondenza secondaria deve essere una combinazione di caratteri alfabetici e non deve iniziare con un numero, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: le opzioni inline devono essere visualizzate all'inizio dell'espressione regolare, è stato trovato "{0}" posizionato dopo.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: il carattere appare più di una volta nella classe di caratteri, è stato trovato un valore "{0}" ripetuto.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: le classi di caratteri tra parentesi quadre non possono essere vuote, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: il bilanciamento delle corrispondenze secondarie non è supportato, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: l'utilizzo di acquisizioni con nome tra virgolette singole non è supportato, utilizza invece la sintassi (?&lt;... &gt;), è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: l'alternanza condizionale non è supportata, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: le acquisizioni denominate non possono essere utilizzate con MatchOptions.NumberedSubMatches abilitato, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: utilizza le acquisizioni denominate con "(?&lt;name&gt;...) e "\k&lt;name&gt;" o abilita MatchOptions.NumberedSubMatches, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: il trattino letterale nella classe di caratteri deve includere un escape con una barra rovesciata, escape con "\-" trovato in "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: i caratteri letterali devono includere un escape con una barra rovesciata quando utilizzati in una classe di caratteri, trovato alla fine di "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: quantificatore su un gruppo contenente un altro quantificatore o un'alternanza vuota che potrebbe restituire un risultato ambiguo, trovato alla fine di "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: look-behind ha superato il limite massimo di caratteri consentito di 250, trovato alla fine di "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: il numero basso dell'intervallo del quantificatore è maggiore del numero alto, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: troppi gruppi annidati, trovati all'inizio di "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: il nome della corrispondenza secondaria è troppo lungo, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: il numero è troppo grande, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: i caratteri in un intervallo di classi di caratteri sono invertiti, trovato alla fine di "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: classe di caratteri in un intervallo di classi di caratteri o escape di un trattino letterale con una barra rovesciata, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: termina con una barra rovesciata senza caratteri di escape.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: quantificatore senza un elemento da quantificare, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: MatchOptions.DotAll e MatchOptions.FreeSpacing sono disponibili solo con Power Fx V1, è stato trovato "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida: riferimento inverso "{0}" alla corrispondenza secondaria all'interno di un look-behind o look-ahead.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Le espressioni regolari devono essere costituite da valori costanti.</value>
+    <value>L'espressione regolare deve essere un valore costante.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions deve essere un valore costante.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Il valore passato alla funzione "{0}" non può essere modificato.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Il nome dell'acquisizione '{0}' nasconde la proprietà predefinita che restituisce la corrispondenza completa nell'espressione regolare. Provare a rinominarla se si vuole usare tale proprietà denominata per estrarre la corrispondenza completa nel testo specificato.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Il nome di acquisizione "{0}" nasconde una proprietà predefinita che restituisce informazioni di corrispondenza. Prendi in considerazione la possibilità di rinominarlo se desideri accedere alle informazioni sulla corrispondenza.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Il nome dell'acquisizione '{0}' nasconde la proprietà predefinita che restituisce le corrispondenze del gruppo nell'espressione regolare. Provare a rinominarla se si vuole usare tale proprietà denominata per estrarre tutte le sottocorrispondenze nel testo specificato.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Il nome dell'acquisizione '{0}' nasconde la proprietà predefinita che restituisce la posizione della corrispondenza nell'espressione regolare. Provare a rinominarla se si vuole usare tale proprietà denominata per estrarre la posizione della corrispondenza completa nel testo specificato.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>I nomi di acquisizione nel set "{0}" nascondono proprietà predefinite che restituiscono informazioni di corrispondenza. Prendi in considerazione la possibilità di rinominarli se desideri accedere alle informazioni sulla corrispondenza.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4552,20 +4780,20 @@
     <value>L'impostazione di una variabile con un valore di origine dati online (tabella o record) può generare più richieste al server. Questa funzionalità verrà presto bloccata.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Dichiarazione valore letterale tipo non valida. Impossibile utilizzare l'espressione "{0}" in una definizione di tipo.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Espressione di tipo non valida. Impossibile usare "{0}" in un'espressione di tipo.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Utilizzo non supportato: i valori letterali tipo possono essere usati solo negli argomenti tipo e nelle definizioni tipo.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Utilizzo non supportato: la funzione Type può essere usata solo negli argomenti di tipo e nelle dichiarazioni di tipo.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definizione di tipo {0} non valida.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Dichiarazione del tipo {0} non valida.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definizione di tipo {0} non valida e può contenere cicli.</value>
+    <value>La dichiarazione del tipo {0} non è valida e può contenere cicli.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +5095,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Argomento non valido "{0}". Nome o valore letterale del tipo valido previsto.</value>
+    <value>Argomento "{0}" non valido. È previsto un nome di tipo o un'espressione di tipo inline valida.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

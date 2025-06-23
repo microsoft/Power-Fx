@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>Neapibrėžto tipo objekto argumentas „{0}“ funkcijai yra netinkamo tipo. Tikimasi: {1}, faktinis: {0}.</value>
+    <value>Neapibrėžto tipo objekto argumentas „{0}“ funkcijai yra netinkamo tipo. Tikimasi: {1}, faktinis: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

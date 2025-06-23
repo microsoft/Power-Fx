@@ -58,14 +58,14 @@ namespace Microsoft.PowerFx.Connectors
             return $"{nameof(ConnectorParameter)} {connectorParameter.Name ?? Null(nameof(connectorParameter.Name))} Param.{LogConnectorType(connectorParameter.ConnectorType)}";
         }
 
-        internal static string LogArguments(FormulaValue[] arguments)
+        internal static string LogArguments(IReadOnlyList<FormulaValue> arguments)
         {
-            if (arguments == null || arguments.Length == 0)
+            if (arguments == null || arguments.Count == 0)
             {
                 return "no argument";
             }
 
-            return $"{arguments.Length} argument{(arguments.Length > 1 ? "s" : string.Empty)} {string.Join(" | ", arguments.Select(a => a.Type._type.ToAnonymousString()))}";
+            return $"{arguments.Count} argument{(arguments.Count > 1 ? "s" : string.Empty)} {string.Join(" | ", arguments.Select(a => a.Type._type.ToAnonymousString()))}";
         }
 
         internal static string LogFormulaValue(FormulaValue formulaValue)

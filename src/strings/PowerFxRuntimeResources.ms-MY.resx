@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>Argumen objek tanpa jenis kepada fungsi '{0}' mempunyai jenis yang salah. Dijangkakan: {1}, Sebenar: {0}.</value>
+    <value>Argumen objek tanpa jenis kepada fungsi '{0}' mempunyai jenis yang salah. Dijangkakan: {1}, Sebenar: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

@@ -15,6 +15,7 @@ using Microsoft.PowerFx.Repl;
 using Microsoft.PowerFx.Repl.Functions;
 using Microsoft.PowerFx.Repl.Services;
 using Microsoft.PowerFx.Types;
+using YamlDotNet.Serialization;
 
 namespace Microsoft.PowerFx
 {
@@ -42,12 +43,30 @@ namespace Microsoft.PowerFx
         private const string OptionTextFirst = "TextFirst";
         private static bool _textFirst = false;
 
+        private const string OptionAllowSideEffects = "AllowSideEffects";
+        private static bool _allowSideEffects = true;
+
+        private const string OptionNumberedPrompts = "NumberedPrompts";
+        private static bool _numberedPrompts = false;
+
+#if MATCHCOMPARE
+        // to enable, place this in Solution Items/Directiory.Build.Props:
+        //  <PropertyGroup>
+        //      <DefineConstants>$(DefineConstants);MATCHCOMPARE</DefineConstants>
+        //  </PropertyGroup>
+
+        private const string OptionMatchCompare = "MatchCompare";
+        private static bool _matchCompare = true;
+#endif
+
         private const string OptionUDF = "UserDefinedFunctions";
         private static bool _enableUDFs = true;
 
         private static readonly Features _features = Features.PowerFxV1;
 
         private static StandardFormatter _standardFormatter;
+
+        private static CultureInfo _cultureInfo = CultureInfo.CurrentCulture;
 
         private static bool _reset;
 
@@ -70,6 +89,11 @@ namespace Microsoft.PowerFx
                 { OptionHashCodes, OptionHashCodes },
                 { OptionStackTrace, OptionStackTrace },
                 { OptionTextFirst, OptionTextFirst },
+                { OptionAllowSideEffects, OptionAllowSideEffects },
+                { OptionNumberedPrompts, OptionNumberedPrompts },
+#if MATCHCOMPARE
+                { OptionMatchCompare, OptionMatchCompare },
+#endif
                 { OptionUDF, OptionUDF },
             };
 
@@ -97,10 +121,24 @@ namespace Microsoft.PowerFx
             config.AddFunction(new Option2Function());
             config.AddFunction(new Run1Function());
             config.AddFunction(new Run2Function());
+            config.AddFunction(new Language1Function());
 
             var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(options));
 
-            config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
+#if MATCHCOMPARE
+            if (_matchCompare)
+            {
+                // requires PCRE2 DLL (pcre2-16d.dll) on the path and Node.JS installed
+                // can also use RegEx_PCRE2 and RegEx_NodeJS directly too
+                Functions.RegEx_Compare.EnableRegExFunctions(config, new TimeSpan(0, 0, 5), regexCacheSize: 100, includeDotNet: true, includeNode: true, includePCRE2: true);
+            }
+            else
+#endif
+            {
+#pragma warning disable CS0618 // Type or member is obsolete
+                config.EnableRegExFunctions(new TimeSpan(0, 0, 5), regexCacheSize: 100);
+#pragma warning restore CS0618 // Type or member is obsolete
+            }
 
             config.AddOptionSet(optionsSet);
 
@@ -124,9 +162,15 @@ namespace Microsoft.PowerFx
             REPL(Console.In, prompt: true, echo: false, printResult: true, lineNumber: null);
         }
 
+#pragma warning disable CS0618
+
         // Hook repl engine with customizations.
         private class MyRepl : PowerFxREPL
         {
+            public int _promptNumber = 1;
+
+            public override string Prompt => _numberedPrompts ? $"\n{_promptNumber++}>> " : "\n>> ";
+
             public MyRepl()
             {
                 this.Engine = ReplRecalcEngine();
@@ -135,15 +179,20 @@ namespace Microsoft.PowerFx
                 this.ValueFormatter = _standardFormatter;
                 this.HelpProvider = new MyHelpProvider();
 
+                var bsp = new BasicServiceProvider();
+                bsp.AddService(_cultureInfo);
+                this.InnerServices = bsp;
+
                 this.AllowSetDefinitions = true;
                 this.AllowUserDefinedFunctions = _enableUDFs;
                 this.AllowImport = true;
 
                 this.EnableSampleUserObject();
                 this.AddPseudoFunction(new IRPseudoFunction());
+                this.AddPseudoFunction(new CIRPseudoFunction());
                 this.AddPseudoFunction(new SuggestionsPseudoFunction());
 
-                this.ParserOptions = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat, TextFirst = _textFirst };
+                this.ParserOptions = new ParserOptions() { AllowsSideEffects = _allowSideEffects, NumberIsFloat = _numberIsFloat, TextFirst = _textFirst };
             }
 
             public override async Task OnEvalExceptionAsync(Exception e, CancellationToken cancel)
@@ -262,6 +311,11 @@ namespace Microsoft.PowerFx
                 sb.Append(CultureInfo.InvariantCulture, $"{"StackTrace:",-42}{_stackTrace}\n");
                 sb.Append(CultureInfo.InvariantCulture, $"{"TextFirst:",-42}{_textFirst}\n");
                 sb.Append(CultureInfo.InvariantCulture, $"{"UserDefinedFunctions:",-42}{_enableUDFs}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"AllowSideEffects:",-42}{_allowSideEffects}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"NumberedPrompts:",-42}{_numberedPrompts}\n");
+#if MATCHCOMPARE
+                sb.Append(CultureInfo.InvariantCulture, $"{"MatchCompare:",-42}{_matchCompare}\n");
+#endif
 
                 foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
@@ -308,6 +362,11 @@ namespace Microsoft.PowerFx
                 if (string.Equals(option.Value, OptionStackTrace, StringComparison.OrdinalIgnoreCase))
                 {
                     return BooleanValue.New(_stackTrace);
+                }
+
+                if (string.Equals(option.Value, OptionAllowSideEffects, StringComparison.OrdinalIgnoreCase))
+                {
+                    return BooleanValue.New(_allowSideEffects);
                 }
 
                 if (string.Equals(option.Value, OptionUDF, StringComparison.OrdinalIgnoreCase))
@@ -362,6 +421,13 @@ namespace Microsoft.PowerFx
                     return value;
                 }
 
+                if (string.Equals(option.Value, OptionAllowSideEffects, StringComparison.OrdinalIgnoreCase))
+                {
+                    _allowSideEffects = value.Value;
+                    _reset = true;
+                    return value;
+                }
+
                 if (string.Equals(option.Value, OptionLargeCallDepth, StringComparison.OrdinalIgnoreCase))
                 {
                     _largeCallDepth = value.Value;
@@ -381,11 +447,26 @@ namespace Microsoft.PowerFx
                     return value;
                 }
 
+                if (string.Equals(option.Value, OptionNumberedPrompts, StringComparison.OrdinalIgnoreCase))
+                {
+                    _numberedPrompts = value.Value;
+                    return value;
+                }
+
+#if MATCHCOMPARE
+                if (string.Equals(option.Value, OptionMatchCompare, StringComparison.OrdinalIgnoreCase))
+                {
+                    _matchCompare = value.Value;
+                    _reset = true;
+                    return value;
+                }
+#endif
+
                 if (string.Equals(option.Value, OptionPowerFxV1, StringComparison.OrdinalIgnoreCase))
                 {
                     foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                     {
-                        if (prop.PropertyType == typeof(bool) && prop.CanWrite && (bool)prop.GetValue(Features.PowerFxV1))
+                            if (prop.PropertyType == typeof(bool) && prop.CanWrite)
                         {
                             prop.SetValue(_features, value.Value);
                         }
@@ -426,6 +507,26 @@ namespace Microsoft.PowerFx
             }
         }
 
+        // set the language
+        private class Language1Function : ReflectionFunction
+        {
+            public Language1Function()
+                : base("Language", FormulaType.Void, new[] { FormulaType.String })
+            {
+            }
+
+            public FormulaValue Execute(StringValue lang)
+            {
+                var cultureInfo = new CultureInfo(lang.Value);
+
+                _cultureInfo = cultureInfo;
+
+                _reset = true;
+
+                return FormulaValue.NewVoid();
+            }
+        }
+
         private class MyHelpProvider : HelpProvider
         {
             public override async Task Execute(PowerFxREPL repl, CancellationToken cancel, string context = null)
@@ -434,34 +535,64 @@ namespace Microsoft.PowerFx
                 {
                     var msg =
 @"
+
+Options.AllowSideEffects
+    Enables functions with side effects (Set, Notify, Collect, etc).
+    Resets the engine.
+
+Options.EnableUDFs
+    Enables UserDefinedFunctions to be added.
+    Resets the engine.
+
 Options.FormatTable
     Displays tables in a tabular format rather than using Table() function notation.
+
+Options.PowerFxV1
+    Sets all the feature flags for Power Fx 1.0.
+    Resets the engine.
 
 Options.HashCodes        
     When printing, includes hash codes of each object to better understand references.
     This can be very helpful for debugging copy-on-mutation semantics.
 
+Options.None
+    Removed all the feature flags, which is even less than Canvas uses.
+    Resets the engine.
+
+Options.NumberedPrompts
+    Adds a prompt number to make it easier to discuss results with others.
+    Reset, by calling Reset() or changing an option that resets, will restart the numbering.
+
 Options.NumberIsFloat
     By default, literal numeric values such as ""1.23"" and the return type from the 
     Value function are treated as decimal values.  Turning this flag on changes that
     to floating point instead.  To test, ""1e300"" is legal in floating point but not decimal.
+    Resets the engine.
 
 Options.LargeCallDepth
     Expands the call stack for testing complex user defined functions.
+    Resets the engine.
 
 Options.StackTrace
     Displays the full stack trace when an exception is encountered.
 
-Options.PowerFxV1
-    Sets all the feature flags for Power Fx 1.0.
+Options.TextFirst
+    Use the Text First parser mode, where the formula is interpreted as if it 
+    started with string interpolation, and formulas that begin with `=` are interpreted
+    as a literal formula.
+    Rests the engine.
 
-Options.None
-    Removed all the feature flags, which is even less than Canvas uses.
+"
+#if MATCHCOMPARE
++
+@"Options.MatchCompare
+    For Match functions, compares the results between the .NET, PCRE2, and Node engines.
+    Performance will be slower than normal as all three engines are consulted.
+    Rests the engine.
 
-Options.EnableUDFs
-    Enables UserDefinedFunctions to be added.
-
-";
+"
+#endif
+;
 
                     await WriteAsync(repl, msg, cancel)
                         .ConfigureAwait(false);
@@ -497,6 +628,8 @@ Records and Tables can be arbitrarily nested.
 Use Option( Options.FormatTable, false ) to disable table formatting.
 Use Option() to see the list of all options with their current value.
 Use Help( ""Options"" ) for more information.
+
+Use Language( ""en-US"" ) to set culture info.
 
 Once a formula is defined or a variable's type is defined, it cannot be changed.
 Use Reset() to clear all formulas and variables.

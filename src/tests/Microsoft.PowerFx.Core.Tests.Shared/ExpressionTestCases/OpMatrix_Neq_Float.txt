@@ -573,16 +573,16 @@ Error({Kind:ErrorKind.InvalidArgument})
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> ParseJSON("2.000000000000000000000000001") <> ParseJSON("2.000000000000000000000000001")
-Errors: Error 43-45: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+Errors: Error 43-45: Incompatible types for comparison. These types can't be compared: Dynamic, Dynamic.
 
 >> ParseJSON("2.000000000000000000000002") <> ParseJSON("2")
-Errors: Error 40-42: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+Errors: Error 40-42: Incompatible types for comparison. These types can't be compared: Dynamic, Dynamic.
 
 >> ParseJSON("1e100") <> ParseJSON("2")
-Errors: Error 19-21: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+Errors: Error 19-21: Incompatible types for comparison. These types can't be compared: Dynamic, Dynamic.
 
 >> ParseJSON("16.000000000000000000000002") <> ParseJSON("1e100")
-Errors: Error 41-43: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+Errors: Error 41-43: Incompatible types for comparison. These types can't be compared: Dynamic, Dynamic.
 
 >> ParseJSON("1e100") <> ParseJSON("1e100")
-Errors: Error 19-21: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+Errors: Error 19-21: Incompatible types for comparison. These types can't be compared: Dynamic, Dynamic.

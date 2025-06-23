@@ -140,8 +140,11 @@ namespace Microsoft.PowerFx.Core.Parser
                 {
                     CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingParamType);
 
-                    // Add incomplete UDFArgs (type is mising) as well, these are needed for intellisense.
-                    args.Add(new UDFArg(varIdent.As<IdentToken>(), typeIdent: null, colonToken, argIndex));
+                    if (varIdent != null)
+                    {
+                        // Add incomplete UDFArgs (type is mising) as well, these are needed for intellisense.
+                        args.Add(new UDFArg(varIdent.As<IdentToken>(), typeIdent: null, colonToken, argIndex));
+                    }
 
                     // If the result was an error, keep moving cursor until end of expression
                     MoveToNextUserDefinition();
@@ -315,7 +318,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     if (_curs.TidCur == TokKind.Semicolon)
                     {
-                        CreateError(thisIdentifier, TexlStrings.ErrNamedType_MissingTypeLiteral);
+                        CreateError(thisIdentifier, TexlStrings.ErrNamedType_MissingTypeExpression);
                     }
 
                     // Extract expression
@@ -343,7 +346,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         }
                         else
                         {
-                            CreateError(_curs.TokCur, TexlStrings.ErrNamedType_MissingTypeLiteral);
+                            CreateError(_curs.TokCur, TexlStrings.ErrNamedType_MissingTypeExpression);
                         }
 
                         // If the result was an error, keep moving cursor until end of named type expression
@@ -1426,13 +1429,13 @@ namespace Microsoft.PowerFx.Core.Parser
             if (_curs.TidCur == TokKind.Ident)
             {
                 tok = _curs.TokMove().As<IdentToken>();
-                if (tok.HasDelimiterStart && !tok.HasDelimiterEnd)
-                {
-                    PostError(tok, TexlStrings.ErrClosingBracketExpected);
-                }
-                else if (tok.IsModified)
+                if (tok.IsModified)
                 {
                     PostError(tok, TexlStrings.ErrEmptyInvalidIdentifier);
+                }
+                else if (tok.HasDelimiterStart && !tok.HasDelimiterEnd)
+                {
+                    PostError(tok, TexlStrings.ErrClosingIdentifierExpected);
                 }
             }
             else

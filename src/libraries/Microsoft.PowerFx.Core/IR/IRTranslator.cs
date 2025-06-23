@@ -30,7 +30,12 @@ namespace Microsoft.PowerFx.Core.IR
 {
     internal class IRResult
     {
+        // IR top node after transformations.
         public IntermediateNode TopNode;
+
+        // Original IR node, without transformations.
+        public IntermediateNode TopOriginalNode;
+
         public ScopeSymbol RuleScopeSymbol;
     }
 

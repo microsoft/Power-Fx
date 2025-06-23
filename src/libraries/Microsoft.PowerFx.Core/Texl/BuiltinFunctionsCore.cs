@@ -17,10 +17,13 @@ namespace Microsoft.PowerFx.Core.Texl
         // This is the list of Power Apps functions that aren't supported/implemeted in Power Fx
         // Binder will recognize these functions names and return a "recognized but not yet supported function" message 
         // instead of the classic "unknown or unsupported function".
+
+        // This list also contains functions that are added to the interpreter at runtime and dont have their definitions
+        // included into the BuiltinFunctionsLibrary library. Examples: Set, Join.
         internal static readonly IReadOnlyCollection<string> OtherKnownFunctions = new HashSet<string>()
         {
             "Assert", "Back", "Choices", "ClearData", "Concurrent", "Confirm", "Copy", "DataSourceInfo", "Defaults", "Disable", "Distinct", "Download", "EditForm", "Enable", "Errors", "Exit",
-            "GroupBy", "HashTags", "IsMatch", "IsType", "JSON", "Launch", "LoadData", "Match", "MatchAll", "Navigate", "NewForm", "Notify", "PDF", "Param", "Pending", "Print", "ReadNFC",
+            "GroupBy", "HashTags", "IsMatch", "IsType", "Join", "JSON", "Launch", "LoadData", "Match", "MatchAll", "Navigate", "NewForm", "Notify", "PDF", "Param", "Pending", "Print", "ReadNFC",
             "RecordInfo", "Relate", "RemoveAll", "RemoveIf", "RequestHide", "Reset", "ResetForm", "Revert", "SaveData", "ScanBarcode", "Select", "SetFocus",
             "SetProperty", "ShowColumns", "State", "SubmitForm", "TraceValue", "Ungroup", "Unrelate", "Update", "UpdateContext", "UpdateIf", "User", "Validate", "ValidateRecord", "ViewForm",
             "Collect", "Clear", "Patch", "Remove", "ClearCollect", "Set"

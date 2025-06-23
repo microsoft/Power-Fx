@@ -1917,6 +1917,10 @@
     <value>„{0}“ е неизвестна или неподдържана функция.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>„{0}“ е разпознато като помощна функция за тип и може да се използва само в рамките на функцията Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>„{0}“ е неизвестна или неподдържана функция в пространството на имената „{1}“.</value>
     
@@ -2107,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Име на колона в конфликт за „{0}“.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Не могат да се добавят колони към системен запис или таблица със системни записи. Първо използвайте ShowColumns за извличане на конкретните колони, от които се нуждаете.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Не могат да се преименуват колони от системен запис или таблица със системни записи. Първо използвайте ShowColumns за извличане на конкретните колони, от които се нуждаете.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -3221,9 +3233,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Нова или съществуваща колекция за увеличаване.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Запис или таблица за събиране. Към колекцията ще се добави запис. Редовете на дадена таблица ще се добавят към колекцията.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Първо изчиства колекцията и добавя един или повече елемента към указаната колекция. Елементите може да са от друга таблица или колекция (например ClearCollect(collection, source_collection)) или един или повече записа ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3713,23 @@
     <value>Редактирайте формулата си така, че да включва скоба.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Очаква се затварящ символ за идентификатора. Очакваме затваряща кавичка (') на този етап във формулата.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Затварящата единична кавичка указва края на идентификатора (например 'Собствено име').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Редактирайте формулата си така, че да включва затваряща единична кавичка.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Идентификаторът няма валиден текст.</value>
+    <value>Идентификаторът е празен или съдържа невалиден знак, като например табулация или нов ред.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Уверете се, че имате текст за вашия идентификатор. Тази грешка възниква, когато идентификаторът се състои изцяло от празни места или интервали.</value>
+    <value>Уверете се, че имате валиден текст в своя идентификатор. Тази грешка възниква, когато идентификаторът е празен, състои се само от интервали или съдържа табулация или нов ред.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4201,8 @@
     <value>Наименуваната формула трябва да бъде израз.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Именуваният тип трябва да е литерал за тип.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Декларацията на наименувания тип трябва да бъде валиден израз за тип.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4499,24 +4519,232 @@
     <value>Невалиден регулярен израз.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Опциите в шаблона трябва да се намират в началото на регулярния израз, намерено е „{0}“ по-късно.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Опциите в шаблона са ограничени до комбинация от буквите [imnsx], не могат да се дезактивират и не могат да се използват за подизраз; намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Не се поддържат осмични кодове на знаците (\0), вместо това използвайте шестнадесетичен код \x или Unicode \u; намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Невалиден обичаен израз: Директно използваните фигурни скоби трябва да бъдат екранирани с обратно наклонена черта, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Директно използваните квадратни скоби трябва да бъдат екранирани с обратно наклонена черта дори в класове от знаци, \[ или \]; намерено в края на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Незатворена квадратна скоба за клас от знаци.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Неподдържана специална група, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Знакът за екраниране не е разрешен в класа от знаци, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Знакът за отрицателно екраниране не е разрешен в класа от отрицателни знаци, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Знакът за екраниране не е разрешен извън клас от знаци, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Невалидно име на категорията в Unicode, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Повтаряща се опция в шаблона, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Незатворен коментар в шаблона.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Незатворен коментар в шаблона, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Опцията в шаблона е несъвместима с MatchOptions.NumberedSubMatches, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Не се поддържат квантори за принадлежност, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Кванторите за точност не могат да се използват с модификатори на кванторите, като например ? за отлагане; намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Невалиден код за екраниране, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Подсъвпадението „{0}“ не е дефинирано или е неподдържана препратка напред.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: В проверките назад не се поддържат подсъвпадения; намерено е в началото на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Проверките назад не могат да се влагат, намерено е в началото на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: С проверките назад не се поддържат неограничени квантори, намерено е в края на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: С проверките назад и напред не се поддържат квантори, намерено е в края на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Препратка назад „{0}“ към подсъвпадение, което може да не се случи поради логическо „или“ или нулев квантор.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Не се поддържат подсъвпадения, които препращат към самите себе си; намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Незатворени групи, твърде малко затварящи скоби.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Неотворени групи, твърде малко отварящи скоби.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Наименувано подсъвпадение е дефинирано повече от веднъж, намерено е в началото на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Името на подсъвпадението трябва да е комбинация от знаци за думи и да не започва с цифра, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Опциите в шаблона трябва да се намират в началото на регулярния израз, намерено е „{0}“ по-късно.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Знакът се появява повече от веднъж в класа от знаци, намерен е повторен „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Класовете от знаци в квадратни скоби не могат да бъдат празни, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Не се поддържат подсъвпадения за изравняване; намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Използването на наименувани улавяния с апострофи не се поддържа, вместо това използвайте синтаксиса (?&lt;... &gt;); намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Не се поддържа условно логическо „или“, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Наименуваните улавяния не могат да се използват с активирано MatchOptions.NumberedSubMatches, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Използвайте наименувани улавяния с „(?&lt;name&gt;...)“ и „\k&lt;name&gt;“ или активирайте MatchOptions.NumberedSubMatches, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Директно използваното тире в клас от знаци трябва да бъде екранирано с обратно наклонена черта; намерено е в „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Директно използваният знак трябва да бъде екраниран с обратно наклонена черта, когато се ползва в клас от знаци; намерено в края на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Квантор за група, съдържаща друг квантор, или празно логическо „или“, което може да доведе до нееднозначен резултат; намерено е в края на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Проверката назад надхвърля лимита от 250 знака; намерено е в края на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Минималната стойност в квантора за диапазон е по-голяма от максималната, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Твърде много вложени групи, намерено в началото на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Името на подсъвпадението е твърде дълго, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Числото е твърде голямо, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Знаците в диапазон за клас от знаци са обърнати; намерено е в края на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Клас от знаци в диапазон за клас от знаци или екраниране на директно използвано тире с обратно наклонена черта; намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Завършва с неекранирана обратно наклонена черта.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Квантор, който не определя нищо, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: MatchOptions.DotAll и MatchOptions.FreeSpacing са налице само с Power Fx V1, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Препратка назад „{0}“ към подсъвпадение, което е вътре в проверка напред или проверка назад.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Регулярните изрази трябва да бъдат константни стойности.</value>
+    <value>Регулярният израз трябва да бъде константна стойност.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions трябва да бъде константна стойност.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Стойността, предадена на функцията „{0}“, не може да бъде променена.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Името на записа „{0}“ крие предварително зададеното свойство, което връща пълното съвпадение на регулярния израз. Обмислете дали да не го преименувате, ако искате да използвате именуваното свойство, за да извлечете пълното съответствие в посочения текст.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Името на улавянето „{0}“ крие предварително зададено свойство, което връща информация за съвпадение. Помислете дали да не го преименувате, ако искате да имате достъп до информацията за съвпадението.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Името на записа „{0}“ крие предварително зададеното свойство, което връща груповите съвпадения в регулярния израз. Обмислете дали да не го преименувате, ако искате да използвате именуваното свойство, за да извлечете всички подсъвпадения в посочения текст.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Името на записа „{0}“ крие предварително зададеното свойство, което връща местоположението на съвпадението в регулярния израз. Обмислете дали да не го преименувате, ако искате да използвате именуваното свойство, за да извлечете позицията на пълното съвпадение в посочения текст.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Имената на улавянията в набора „{0}“ крият предварително зададени свойства, които връщат информация за съвпадение. Помислете дали да не ги преименувате, ако искате да имате достъп до информацията за съвпадението.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4552,20 +4780,20 @@
     <value>Задаването на променлива със стойност от онлайн източник на данни (таблица или запис) може да предизвика множество заявки към сървъра. Скоро той ще бъде блокиран.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Декларацията на литерала за типа е невалидна. Изразът „{0}“ не може да се използва в дефиниция на тип.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Изразът за тип е невалиден. „{0}“ не може да се използва в израз за тип.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Неподдържана употреба: литералите за тип могат да се използват само в аргументи и дефиниции за тип.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Неподдържана употреба: функцията Type може да се използва само в аргументи и декларации за тип.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Дефиницията на тип {0} е невалидна.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Декларацията на тип {0} е невалидна.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Дефиницията на тип {0} е невалидна и може да съдържа цикли.</value>
+    <value>Декларацията на тип {0} е невалидна и може да съдържа цикли.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +5095,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Невалиден аргумент „{0}“. Очаква се валидно име на тип или тип литерал.</value>
+    <value>Невалиден аргумент „{0}“. Очаква се валидно име на тип или вграден израз за тип.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

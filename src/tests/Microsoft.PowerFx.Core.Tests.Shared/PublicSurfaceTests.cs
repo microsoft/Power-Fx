@@ -202,7 +202,11 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Entities.IRefreshable",                
                 "Microsoft.PowerFx.Core.Entities.SelectionRestrictions",
                 "Microsoft.PowerFx.Core.Entities.SortRestrictions",
+                "Microsoft.PowerFx.Core.Entities.CountCapabilities",
+                "Microsoft.PowerFx.Core.Entities.SummarizeCapabilities",
+                "Microsoft.PowerFx.Core.Entities.SummarizeMethod",
                 "Microsoft.PowerFx.Core.Entities.TableDelegationInfo",
+                "Microsoft.PowerFx.Core.Entities.TopLevelAggregationCapabilities",
                 "Microsoft.PowerFx.Core.Functions.Delegation.DelegationOperator",
                 "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
                 "Microsoft.PowerFx.Core.RenameDriver",
@@ -212,7 +216,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Logging.ITracer",
                 "Microsoft.PowerFx.Logging.TraceSeverity",
                 "Microsoft.PowerFx.PowerFxFileInfo",
-                "Microsoft.PowerFx.UserInfo"
+                "Microsoft.PowerFx.UserInfo",
+                "Microsoft.PowerFx.Core.IR.DependencyInfo",
             };
 
             var sb = new StringBuilder();

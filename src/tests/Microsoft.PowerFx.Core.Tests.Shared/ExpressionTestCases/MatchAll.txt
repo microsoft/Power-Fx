@@ -1,34 +1,57 @@
-#SETUP: RegEx
-
->> MatchAll("Hello", "\w")
-Table({FullMatch:"H",StartMatch:1,SubMatches:Table()},{FullMatch:"e",StartMatch:2,SubMatches:Table()},{FullMatch:"l",StartMatch:3,SubMatches:Table()},{FullMatch:"l",StartMatch:4,SubMatches:Table()},{FullMatch:"o",StartMatch:5,SubMatches:Table()})
+﻿#SETUP: RegEx
 
 >> MatchAll("Hello", "llo", MatchOptions.Complete)
 Table()
-
->> MatchAll("Bob Jones <bob.jones@contoso.com>", "<(?<email>" & Match.Email & ")>")
-Table({FullMatch:"<bob.jones@contoso.com>",StartMatch:11,SubMatches:Table({Value:"bob.jones@contoso.com"}),email:"bob.jones@contoso.com"})
-
->> MatchAll("PT2H1M39S", "PT(?:(?<hours>\d+)H)?(?:(?<minutes>\d+)M)?(?:(?<seconds>\d+)S)?")
-Table({FullMatch:"PT2H1M39S",StartMatch:1,SubMatches:Table({Value:"2"},{Value:"1"},{Value:"39"}),hours:"2",minutes:"1",seconds:"39"})
-
->> MatchAll("Hello", "(?<p1>\w)l(?<p2>\w)")
-Table({FullMatch:"ell",StartMatch:2,SubMatches:Table({Value:"e"},{Value:"l"}),p1:"e",p2:"l"})
-
->> MatchAll("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete & MatchOptions.Multiline)
-Table({FullMatch:"Joe 164",StartMatch:1,SubMatches:Table({Value:"Joe"},{Value:"164"})},{FullMatch:"Sam 208",StartMatch:9,SubMatches:Table({Value:"Sam"},{Value:"208"})})
 
 >> MatchAll(Blank(), ".")
 Table()
 
 >> MatchAll(Blank(), Blank())
-Errors: Error 18-25: Regular expressions must be constant values.|Error 0-8: The function 'MatchAll' has some invalid arguments.
+Errors: Error 18-25: Regular expression must be a constant value.|Error 0-8: The function 'MatchAll' has some invalid arguments.
 
 >> MatchAll(1/0, "Hi")
 Error({Kind:ErrorKind.Div0})
 
+>> MatchAll("Hello", "\w")
+Table({FullMatch:"H",StartMatch:1},{FullMatch:"e",StartMatch:2},{FullMatch:"l",StartMatch:3},{FullMatch:"l",StartMatch:4},{FullMatch:"o",StartMatch:5})
+
+>> MatchAll("Bob Jones <bob.jones@contoso.com>", "<(?<email>" & Match.Email & ")>")
+Table({FullMatch:"<bob.jones@contoso.com>",StartMatch:11,email:"bob.jones@contoso.com"})
+
+>> MatchAll("PT2H1M39S", "PT(?:(?<hours>\d+)H)?(?:(?<minutes>\d+)M)?(?:(?<seconds>\d+)S)?")
+Table({FullMatch:"PT2H1M39S",StartMatch:1,hours:"2",minutes:"1",seconds:"39"})
+
+>> MatchAll("Hello", "(?<p1>\w)l(?<p2>\w)")
+Table({FullMatch:"ell",StartMatch:2,p1:"e",p2:"l"})
+
+>> MatchAll("Hello", "(\w)l(\w)")
+Table({FullMatch:"ell",StartMatch:2})
+
+>> MatchAll("Hello", "(\w)l(\w)", MatchOptions.NumberedSubMatches)
+Table({FullMatch:"ell",StartMatch:2,SubMatches:Table({Value:"e"},{Value:"l"})})
+
+>> MatchAll("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete & MatchOptions.Multiline & MatchOptions.NumberedSubMatches)
+Table({FullMatch:"Joe 164",StartMatch:1,SubMatches:Table({Value:"Joe"},{Value:"164"})},{FullMatch:"Sam 208",StartMatch:9,SubMatches:Table({Value:"Sam"},{Value:"208"})})
+
 >> MatchAll("Hello", "Hello", MatchOptions.IgnoreCase)
-Table({FullMatch:"Hello",StartMatch:1,SubMatches:Table()})
+Table({FullMatch:"Hello",StartMatch:1})
 
 >> MatchAll("Hi", "Hi", MatchOptions.Multiline)
-Table({FullMatch:"Hi",StartMatch:1,SubMatches:Table()})
+Table({FullMatch:"Hi",StartMatch:1})
+
+>> MatchAll( "aaa😀😀aaa😀😀😀aaaaa", "a\uD83D\uDE00{2,}a" )
+Table({FullMatch:"a😀😀a",StartMatch:3},{FullMatch:"a😀😀😀a",StartMatch:10})
+
+>> MatchAll( "aaa😀😀aaa😀😀😀aaaaa", "a\u{1F600}{2,}a" )
+Table({FullMatch:"a😀😀a",StartMatch:3},{FullMatch:"a😀😀😀a",StartMatch:10})
+
+>> MatchAll( "aaa😀😀aaa😀😀😀aaaaa", "\u{1F600}{2,}" )
+Table({FullMatch:"😀😀",StartMatch:4},{FullMatch:"😀😀😀",StartMatch:11})
+
+>> MatchAll( "aaa😀😀aaa😀😀😀aaaaa😀a😀aaaaa", "\u{1F600}{2,}" )
+Table({FullMatch:"😀😀",StartMatch:4},{FullMatch:"😀😀😀",StartMatch:11})
+
+>> MatchAll( "aaa😀😀aaa😀😀😀aaaaa😀a😀aaaaa", "\u{1F600}{2}" )
+Table({FullMatch:"😀😀",StartMatch:4},{FullMatch:"😀😀",StartMatch:11})
+
+

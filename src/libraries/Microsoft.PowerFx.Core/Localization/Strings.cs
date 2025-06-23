@@ -692,6 +692,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrCannotCoerce_SourceType_TargetType = new ErrorResourceKey("ErrCannotCoerce_SourceType_TargetType");
         public static ErrorResourceKey ErrNumberOrStringExpected = new ErrorResourceKey("ErrNumberOrStringExpected");
         public static ErrorResourceKey ErrClosingBracketExpected = new ErrorResourceKey("ErrClosingBracketExpected");
+        public static ErrorResourceKey ErrClosingIdentifierExpected = new ErrorResourceKey("ErrClosingIdentifierExpected");
         public static ErrorResourceKey ErrEmptyInvalidIdentifier = new ErrorResourceKey("ErrEmptyInvalidIdentifier");
         public static ErrorResourceKey ErrIncompatibleTypes = new ErrorResourceKey("ErrIncompatibleTypes");
         public static ErrorResourceKey ErrIncompatibleTypesForEquality_Left_Right = new ErrorResourceKey("ErrIncompatibleTypesForEquality_Left_Right");
@@ -711,6 +712,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrArgNotAValidIdentifier_Name = new ErrorResourceKey("ErrArgNotAValidIdentifier_Name");
         public static ErrorResourceKey ErrColExists_Name = new ErrorResourceKey("ErrColExists_Name");
         public static ErrorResourceKey ErrColConflict_Name = new ErrorResourceKey("ErrColConflict_Name");
+        public static ErrorResourceKey ErrAddToSealed = new ErrorResourceKey("ErrAddToSealed");
+        public static ErrorResourceKey ErrRenameOfSealed = new ErrorResourceKey("ErrRenameOfSealed");
         public static ErrorResourceKey ErrColDNE_Name = new ErrorResourceKey("ErrColDNE_Name");
         public static ErrorResourceKey ErrColumnDoesNotExist_Name_Similar = new ErrorResourceKey("ErrColumnDoesNotExist_Name_Similar");
         public static ErrorResourceKey ErrSortIncorrectOrder = new ErrorResourceKey("ErrSortIncorrectOrder");
@@ -740,10 +743,64 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrDecimalRequiresPowerFxV1 = new ErrorResourceKey("ErrDecimalNeedsPowerFxV1");
 
         public static ErrorResourceKey ErrInvalidRegEx = new ErrorResourceKey("ErrInvalidRegEx");
+        public static ErrorResourceKey ErrInvalidRegExWithContext = new ErrorResourceKey("ErrInvalidRegExWithContext");
+        public static ErrorResourceKey ErrInvalidRegExBadInlineOptions = new ErrorResourceKey("ErrInvalidRegExBadInlineOptions");
+        public static ErrorResourceKey ErrInvalidRegExInlineOptionNotAtStart = new ErrorResourceKey("ErrInvalidRegExInlineOptionNotAtStart");
+        public static ErrorResourceKey ErrInvalidRegExBadOctal = new ErrorResourceKey("ErrInvalidRegExBadOctal");
+        public static ErrorResourceKey ErrInvalidRegExBadCurly = new ErrorResourceKey("ErrInvalidRegExBadCurly");
+        public static ErrorResourceKey ErrInvalidRegExBadSquare = new ErrorResourceKey("ErrInvalidRegExBadSquare");
+        public static ErrorResourceKey ErrInvalidRegExUnterminatedSquare = new ErrorResourceKey("ErrInvalidRegExUnterminatedSquare");
+        public static ErrorResourceKey ErrInvalidRegExBadParen = new ErrorResourceKey("ErrInvalidRegExBadParen");
+        public static ErrorResourceKey ErrInvalidRegExBadEscapeInsideCharacterClass = new ErrorResourceKey("ErrInvalidRegExBadEscapeInsideCharacterClass");
+        public static ErrorResourceKey ErrInvalidRegExBadEscapeInsideNegativeCharacterClass = new ErrorResourceKey("ErrInvalidRegExBadEscapeInsideNegativeCharacterClass");
+        public static ErrorResourceKey ErrInvalidRegExBadEscapeOutsideCharacterClass = new ErrorResourceKey("ErrInvalidRegExBadEscapeOutsideCharacterClass");
+        public static ErrorResourceKey ErrInvalidRegExRepeatInCharClass = new ErrorResourceKey("ErrInvalidRegExRepeatInCharClass");
+        public static ErrorResourceKey ErrInvalidRegExRepeatedInlineOption = new ErrorResourceKey("ErrInvalidRegExRepeatedInlineOption");
+        public static ErrorResourceKey ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches = new ErrorResourceKey("ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches");
+        public static ErrorResourceKey ErrInvalidRegExBadQuantifier = new ErrorResourceKey("ErrInvalidRegExBadQuantifier");
+        public static ErrorResourceKey ErrInvalidRegExBadExactQuantifier = new ErrorResourceKey("ErrInvalidRegExBadExactQuantifier");
+        public static ErrorResourceKey ErrInvalidRegExBadBackRefSelfReferencing = new ErrorResourceKey("ErrInvalidRegExBadBackRefSelfReferencing");
+        public static ErrorResourceKey ErrInvalidRegExBadBackRefNotDefined = new ErrorResourceKey("ErrInvalidRegExBadBackRefNotDefined");
+        public static ErrorResourceKey ErrInvalidRegExBadBalancing = new ErrorResourceKey("ErrInvalidRegExBadBalancing");
+        public static ErrorResourceKey ErrInvalidRegExBadSingleQuoteNamedCapture = new ErrorResourceKey("ErrInvalidRegExBadSingleQuoteNamedCapture");
+        public static ErrorResourceKey ErrInvalidRegExBadEscape = new ErrorResourceKey("ErrInvalidRegExBadEscape");
+        public static ErrorResourceKey ErrInvalidRegExBadConditional = new ErrorResourceKey("ErrInvalidRegExBadConditional");
+        public static ErrorResourceKey ErrInvalidRegExBadNamedCaptureAlreadyExists = new ErrorResourceKey("ErrInvalidRegExBadNamedCaptureAlreadyExists");
+        public static ErrorResourceKey ErrInvalidRegExBadNamedCaptureName = new ErrorResourceKey("ErrInvalidRegExBadNamedCaptureName");
+        public static ErrorResourceKey ErrInvalidRegExUnclosedCaptureGroups = new ErrorResourceKey("ErrInvalidRegExUnclosedCaptureGroups");
+        public static ErrorResourceKey ErrInvalidRegExUnclosedInlineComment = new ErrorResourceKey("ErrInvalidRegExUnclosedInlineComment");
+        public static ErrorResourceKey ErrInvalidRegExUnclosedInlineCommentWithContext = new ErrorResourceKey("ErrInvalidRegExUnclosedInlineCommentWithContext");
+        public static ErrorResourceKey ErrInvalidRegExUnopenedCaptureGroups = new ErrorResourceKey("ErrInvalidRegExUnopenedCaptureGroups");
+        public static ErrorResourceKey ErrInvalidRegExMixingNamedAndNumberedSubMatches = new ErrorResourceKey("ErrInvalidRegExMixingNamedAndNumberedSubMatches");
+        public static ErrorResourceKey ErrInvalidRegExNumberedSubMatchesDisabled = new ErrorResourceKey("ErrInvalidRegExNumberedSubMatchesDisabled");
+        public static ErrorResourceKey ErrInvalidRegExLiteralHyphenInCharacterClass = new ErrorResourceKey("ErrInvalidRegExLiteralHyphenInCharacterClass");
+        public static ErrorResourceKey ErrInvalidRegExUnescapedCharInCharacterClass = new ErrorResourceKey("ErrInvalidRegExUnescapedCharInCharacterClass");
+        public static ErrorResourceKey ErrInvalidRegExBadUnicodeCategory = new ErrorResourceKey("ErrInvalidRegExBadUnicodeCategory");
+        public static ErrorResourceKey ErrInvalidRegExEmptyCharacterClass = new ErrorResourceKey("ErrInvalidRegExEmptyCharacterClass");
+        public static ErrorResourceKey ErrInvalidRegExQuantifiedCapture = new ErrorResourceKey("ErrInvalidRegExQuantifiedCapture");
+        public static ErrorResourceKey ErrInvalidRegExCaptureInLookAround = new ErrorResourceKey("ErrInvalidRegExCaptureInLookAround");
+        public static ErrorResourceKey ErrInvalidRegExNestedLookAround = new ErrorResourceKey("ErrInvalidRegExNestedLookAround");
+        public static ErrorResourceKey ErrInvalidRegExUnlimitedQuantifierInLookAround = new ErrorResourceKey("ErrInvalidRegExUnlimitedQuantifierInLookAround");
+        public static ErrorResourceKey ErrInvalidRegExBackRefToZeroCapture = new ErrorResourceKey("ErrInvalidRegExBackRefToZeroCapture");
+        public static ErrorResourceKey ErrInvalidRegExGroupTrackerOverflow = new ErrorResourceKey("ErrInvalidRegExGroupTrackerOverflow");
+        public static ErrorResourceKey ErrInvalidRegExQuantifierOursideLookAround = new ErrorResourceKey("ErrInvalidRegExQuantifierOursideLookAround");
+        public static ErrorResourceKey ErrInvalidRegExNamedCaptureNameTooLong = new ErrorResourceKey("ErrInvalidRegExNamedCaptureNameTooLong");
+        public static ErrorResourceKey ErrInvalidRegExLowHighQuantifierFlip = new ErrorResourceKey("ErrInvalidRegExLowHighQuantifierFlip");
+        public static ErrorResourceKey ErrInvalidRegExLookbehindTooManyChars = new ErrorResourceKey("ErrInvalidRegExLookbehindTooManyChars");
+        public static ErrorResourceKey ErrInvalidRegExNumberOverflow = new ErrorResourceKey("ErrInvalidRegExNumberOverflow");
+        public static ErrorResourceKey ErrInvalidRegExV1Options = new ErrorResourceKey("ErrInvalidRegExV1Options");
+        public static ErrorResourceKey ErrInvalidRegExCharacterClassCategoryUse = new ErrorResourceKey("ErrInvalidRegExCharacterClassCategoryUse");
+        public static ErrorResourceKey ErrInvalidRegExCharacterClassRangeReverse = new ErrorResourceKey("ErrInvalidRegExCharacterClassRangeReverse");
+        public static ErrorResourceKey ErrInvalidRegExEndsWithBackslash = new ErrorResourceKey("ErrInvalidRegExEndsWithBackslash");
+        public static ErrorResourceKey ErrInvalidRegExQuantifierOnNothing = new ErrorResourceKey("ErrInvalidRegExQuantifierOnNothing");
+        public static ErrorResourceKey ErrInvalidRegExBackRefToCaptureInLookaround = new ErrorResourceKey("ErrInvalidRegExBackRefToCaptureInLookaround");
+        public static ErrorResourceKey ErrInvalidRegExSurrogatePairInCharacterClass = new ErrorResourceKey("ErrInvalidRegExSurrogatePairInCharacterClass");
+        public static ErrorResourceKey ErrInvalidRegExMalformedSurrogatePair = new ErrorResourceKey("ErrInvalidRegExMalformedSurrogatePair");
+
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
-        public static ErrorResourceKey InfoRegExCaptureNameHidesPredefinedFullMatchField = new ErrorResourceKey("InfoRegExCaptureNameHidesPredefinedFullMatchField");
-        public static ErrorResourceKey InfoRegExCaptureNameHidesPredefinedSubMatchesField = new ErrorResourceKey("InfoRegExCaptureNameHidesPredefinedSubMatchesField");
-        public static ErrorResourceKey InfoRegExCaptureNameHidesPredefinedStartMatchField = new ErrorResourceKey("InfoRegExCaptureNameHidesPredefinedStartMatchField");
+        public static ErrorResourceKey ErrVariableRegExOptions = new ErrorResourceKey("ErrVariableRegExOptions");
+        public static ErrorResourceKey InfoRegExCaptureNameHidesPredefinedSingular = new ErrorResourceKey("InfoRegExCaptureNameHidesPredefinedSingular");
+        public static ErrorResourceKey InfoRegExCaptureNameHidesPredefinedPlural = new ErrorResourceKey("InfoRegExCaptureNameHidesPredefinedPlural");
 
         public static ErrorResourceKey ErrErrorIrrelevantField = new ErrorResourceKey("ErrErrorIrrelevantField");
         public static ErrorResourceKey ErrAsNotInContext = new ErrorResourceKey("ErrAsNotInContext");
@@ -774,7 +831,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static ErrorResourceKey ErrNamedFormula_MissingSemicolon = new ErrorResourceKey("ErrNamedFormula_MissingSemicolon");
         public static ErrorResourceKey ErrNamedFormula_MissingValue = new ErrorResourceKey("ErrNamedFormula_MissingValue");
-        public static ErrorResourceKey ErrNamedType_MissingTypeLiteral = new ErrorResourceKey("ErrNamedType_MissingTypeLiteral");
+        public static ErrorResourceKey ErrNamedType_MissingTypeExpression = new ErrorResourceKey("ErrNamedType_MissingTypeExpression");
         public static ErrorResourceKey ErrUDF_MissingFunctionBody = new ErrorResourceKey("ErrUDF_MissingFunctionBody");
         public static ErrorResourceKey ErrNamedFormula_AlreadyDefined = new ErrorResourceKey("ErrNamedFormula_AlreadyDefined");
         public static ErrorResourceKey ErrorResource_NameConflict = new ErrorResourceKey("ErrorResource_NameConflict");
@@ -791,10 +848,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUDF_InvalidParamType = new ErrorResourceKey("ErrUDF_InvalidParamType");
         public static ErrorResourceKey WrnUDF_ShadowingBuiltInFunction = new ErrorResourceKey("WrnUDF_ShadowingBuiltInFunction");
 
-        public static ErrorResourceKey ErrTypeLiteral_InvalidTypeDefinition = new ErrorResourceKey("ErrTypeLiteral_InvalidTypeDefinition");
-        public static ErrorResourceKey ErrTypeLiteral_UnsupportedUsage = new ErrorResourceKey("ErrTypeLiteral_UnsupportedUsage");
+        public static ErrorResourceKey ErrTypeFunction_InvalidTypeExpression = new ErrorResourceKey("ErrTypeFunction_InvalidTypeExpression");
+        public static ErrorResourceKey ErrTypeFunction_UnsupportedUsage = new ErrorResourceKey("ErrTypeFunction_UnsupportedUsage");
         public static ErrorResourceKey ErrNamedType_InvalidCycles = new ErrorResourceKey("ErrNamedType_InvalidCycles");
-        public static ErrorResourceKey ErrNamedType_InvalidTypeDefinition = new ErrorResourceKey("ErrNamedType_InvalidTypeDefinition");
+        public static ErrorResourceKey ErrNamedType_InvalidTypeDeclaration = new ErrorResourceKey("ErrNamedType_InvalidTypeDeclaration");
         public static ErrorResourceKey ErrNamedType_InvalidTypeName = new ErrorResourceKey("ErrNamedType_InvalidTypeName");
         public static ErrorResourceKey ErrNamedType_TypeAlreadyDefined = new ErrorResourceKey("ErrNamedType_TypeAlreadyDefined");
         public static ErrorResourceKey ErrRecordContainsInvalidFields_Arg = new ErrorResourceKey("ErrRecordContainsInvalidFields_Arg");

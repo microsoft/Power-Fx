@@ -4,12 +4,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using Microsoft.PowerFx.Core.Public.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
     // Used by ConnectorDataSource.GetTablesAsync
     internal class GetTables : ISupportsPostProcessing
     {
+        [JsonPropertyName("@metadata")]
+        public List<CDPMetadataItem> Metadata { get; set; }
+
         [JsonPropertyName("value")]
         public List<RawTable> Value { get; set; }
 
@@ -22,6 +26,46 @@ namespace Microsoft.PowerFx.Connectors
     internal interface ISupportsPostProcessing
     {
         void PostProcess();
+    }
+
+    internal class CDPMetadataItem
+    {
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        [JsonPropertyName("sensitivityLabelInfo")]
+        public IEnumerable<CDPSensitivityLabelInfo> SensitivityLabels { get; set; }
+    }
+
+    public class CDPSensitivityLabelInfo
+    {
+        [JsonPropertyName("sensitivityLabelId")]
+        public string SensitivityLabelId { get; set; }
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        [JsonPropertyName("displayName")]
+        public string DisplayName { get; set; }
+
+        [JsonPropertyName("tooltip")]
+        public string Tooltip { get; set; }
+
+        [JsonPropertyName("priority")]
+        public int Priority { get; set; }
+
+        [JsonPropertyName("color")]
+        public string Color { get; set; }
+
+        // These are strings in your JSON; if you'd rather parse to bool, you can add a converter.
+        [JsonPropertyName("isEncrypted")]
+        public bool IsEncrypted { get; set; }
+
+        [JsonPropertyName("isEnabled")]
+        public bool IsEnabled { get; set; }
+
+        [JsonPropertyName("isParent")]
+        public bool IsParent { get; set; }
     }
 
     internal class RawTable

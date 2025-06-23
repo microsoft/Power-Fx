@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>"{0}" funtziorako motarik gabeko objektuaren argumentu mota ez da egokia. Esperotakoa: {1}, Benetakoa: {0}.</value>
+    <value>"{0}" funtziorako motarik gabeko objektuaren argumentu mota ez da egokia. Esperotakoa: {1}, Benetakoa: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

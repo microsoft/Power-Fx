@@ -1917,6 +1917,10 @@
     <value>A(z) "{0}" egy ismeretlen vagy nem támogatott függvény.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>A(z) „{0}” típussegítő függvényként ismerhető fel, és csak a Type függvényen belül használható.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>A(z) "{0}" egy ismeretlen vagy nem támogatott függvény a(z) "{1}" névtérben.</value>
     
@@ -2107,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Ütköző oszlopnevek a következő esetében: {0}.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Rendszerrekordokhoz vagy rendszerrekordok táblájához nem lehet hozzáadni oszlopokat. Először a ShowColumns segítségével nyerje ki azokat az oszlopokat, amelyekre szüksége van.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>A rendszerrekordok vagy a rendszerrekordok táblájának oszlopait nem lehet átnevezni. Először a ShowColumns segítségével nyerje ki azokat az oszlopokat, amelyekre szüksége van.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -3221,9 +3233,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Kiterjesztendő új vagy meglévő gyűjtemény.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>A gyűjteménybe felveendő rekord vagy tábla. A megadott rekordot hozzáfűzi a függvény a gyűjteményhez. Tábla megadása esetén a tábla sorait fűzi hozzá a függvény a gyűjteményhez.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Először kiüríti a gyűjteményt, és felvesz egy vagy több elemet a gyűjtemény argumentumban megadott gyűjteménybe. Az elemek származhatnak más táblából vagy gyűjteményből (például ClearCollect(collection, source_collection)), vagy egy vagy több rekordból ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3713,23 @@
     <value>Módosítsa a képletet úgy, hogy az zárójelet tartalmazzon.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Az azonosító várt zárása. A rendszer (') záró idézőjelet vár a képlet ezen pontján.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>A szimpla idézőjel egy azonosító végét jelöli (például 'Utónév').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Módosítsa a képletet úgy, hogy szimpla idézőjelet tartalmazzon.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Az azonosító nem tartalmaz érvényes szöveget.</value>
+    <value>Az azonosító üres vagy érvénytelen karaktert tartalmaz, például tabulátort vagy új sor.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Győződjön meg arról, hogy az azonosító szöveget tartalmaz. Ez a hiba akkor fordul elő, ha az azonosító csak üres vagy szóközkarakterekből áll.</value>
+    <value>Győződjön meg arról, hogy az azonosító érvényes szöveget tartalmaz. Ez a hiba akkor fordul elő, ha az azonosító üres, csak szóközöket, tabulátort vagy egy új sort tartalmaz.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4201,8 @@
     <value>A megnevezett képletnek kifejezésnek kell lennie.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>A megnevezett típusnak literális típusúnak kell lennie.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>A megnevezett típusnyilatkozatnak érvényes típuskifejezésnek kell lennie.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4499,24 +4519,232 @@
     <value>Érvénytelen reguláris kifejezés.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A beágyazott beállításoknak a reguláris kifejezés elején kell megjelenniük, később „{0}” található.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A beágyazott beállítások az [imnsx] betűk kombinációjára korlátozódnak, a beállítások nem tilthatók le, és nem használhatók alkifejezésben, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: az oktális \0 karakterkódok nem támogatottak, helyettük használjon hexadecimális \x vagy Unicode \u kódokat, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A literális kapcsos zárójeleket fordított perjellel feloldani, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A literális szögletes zárójeleket fordított perjellel kell feloldani, még a karakterosztályokban is, például \[ vagy \], a(z) „{0}” végén található.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Lezáratlan karakterosztály szögletes zárójele.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Nem támogatott speciális csoport, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Az escape-karakter nem engedélyezett a karakterosztályon belül, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A negatív escape-karakter nem engedélyezett a negált karakterosztályon belül, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Az escape-karakter nem engedélyezett a karakterosztályon kívül, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Érvénytelen Unicode-kategórianév, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Ismétlődő beágyazott beállítás, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Be nem zárt beágyazott megjegyzés.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Be nem zárt beágyazott megjegyzés, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A sorközi beállítás nem kompatibilis a MatchOptions.NumberedSubMatches lehetőséggel, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A birtokló mennyiségjelzők nem támogatottak, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A pontos mennyiségjelzők nem használhatók a mennyiségjelző-módosítókkal, mint például „?” karakter a lustára, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Érvénytelen feloldókód, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: „{0}” alegyezés nincs meghatározva, vagy nem támogatott átirányítási hivatkozás.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Az alegyezések nem támogatottak a visszaolvasásokban, a(z) „{0}” végén található.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A visszaolvasásokat nem lehet beágyazni, a(z) „{0}” elején található.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A korlátlan minősítők nem támogatottak a visszaolvasásban, a(z) „{0}” végén találhatók.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A minősítők nem támogatottak a vissza- vagy a előreolvasás esetén, a(z) „{0}” végén találhatók.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: „{0}” visszamutató hivatkozás olyan alegyezésre, amely váltakozás vagy nulla mennyiségjelző miatt nem fordulhat elő.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Az önhivatkozó alegyezések nem támogatottak, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Lezáratlan csoportok, túl kevés záró zárójel.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A meg nem nyitott csoportok, túl kevés nyitó zárójel.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Az egynél többször meghatározott megnevezett alegyezés a(z) „{0}” elején található.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Az alegyezés nevének szókarakterek kombinációjából kell állnia, és nem kezdődhet számmal, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A beágyazott beállításoknak a reguláris kifejezés elején kell megjelenniük, később „{0}” található.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A karakter többször is előfordul a karakterosztályban, a(z) „{0}” elemben található ismétlődve.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A szögletes zárójel karakterosztályai nem lehetnek üresek, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A kiegyenlítő alegyezések nem támogatottak, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Az szimpla idézőjellel ellátott elnevezett rögzítések használata nem támogatott, használja inkább a (?&lt;...&gt;) szintaxist, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A feltételes váltakozás nem támogatott, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Az elnevezett rögzítések nem használhatók, ha engedélyezve van a MatchOptions.NumberedSubMatches, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Használjon elnevezett rögzítéseket a „(?&lt;name&gt;...)” és „\k&lt;name&gt;” lehetőséggel, vagy engedélyezze a MatchOptions.NumberedSubMatches elemet, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A karakterosztályban lévő literális kötőjelet fel kell oldani egy fordított perjellel, feloldás a „\-” kombinációval, itt található: „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A literális karaktert fordított perjellel kell lefoglalni, ha karakterosztályban használják, amely a(z) „{0}” végén található.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Olyan csoport mennyiségjelzője, amely egy másik mennyiségjelzőt vagy üres váltakozást tartalmaz, ami kétértelmű eredményhez vezethet, a(z) „{0}” végén található.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A visszaolvasás túllépte a 250-es maximális karakterkorlátot, amely a(z) „{0}” végén található.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A mennyiségjelző tartományának alacsony száma nagyobb, mint a nagy szám, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Túl sok beágyazott csoport található a(z) „{0}” elején.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Az alegyezés neve túl hosszú, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A szám túl nagy, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A karakterosztály-tartomány karakterei meg lettek fordítva, a(z) „{0}” végén találhatók.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Karakterosztály egy karakterosztály-tartományban, vagy egy fordított perjellel oldjon fel egy literális kötőjelet, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Nem feloldott perjellel végződik.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Mennyiségjelző számszerűsítés nélkül, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A MatchOptions.DotAll és a MatchOptions.FreeSpacing csak Power Fx V1 esetén érhető el, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: „{0}” visszamutató hivatkozás olyan alegyezésre, amely egy vissza- vagy előreolvasási ponton belül van.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>A reguláris kifejezéseknek konstans értékeknek kell lenniük.</value>
+    <value>A reguláris kifejezésnek konstans értéknek kell lennie.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>A MatchOptions elemnek állandó értéknek kell lennie.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>A függvénynek átadott '{0}' érték nem módosítható.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>A(z) {0} rögzítésnév elrejti az előre definiált tulajdonságot, amely a reguláris kifejezéssel való teljes egyezést adja vissza. Fontolja meg annak átnevezését, ha ki szeretné nyerni a megadott szövegben található teljes egyezést az elnevezett tulajdonsággal.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>A(z) „{0}” rögzítési név előre meghatározott tulajdonságot rejt, amely egyezéssel kapcsolatos információkat ad vissza. Érdemes lenne átnevezni, ha hozzá szeretne férni az egyezési információkhoz.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>A(z) {0} rögzítésnév elrejti az előre definiált tulajdonságot, amely a reguláris kifejezésben található csoporttalálatokat adja vissza. Fontolja meg annak átnevezését, ha ki szeretné nyerni a megadott szövegben található résztalálatokat az elnevezett tulajdonsággal.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>A(z) {0} rögzítésnév elrejti az előre definiált tulajdonságot, amely a reguláris kifejezéssel való egyezés helyét adja vissza. Fontolja meg annak átnevezését, ha ki szeretné nyerni a megadott szövegben található teljes egyezés helyét az elnevezett tulajdonsággal.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>A(z) „{0}” készletben lévő rögzítési nevek előre meghatározott tulajdonságokat rejtenek, amelyek egyezéssel kapcsolatos információkat adnak vissza. Érdemes lenne átnevezni őket, ha hozzá szeretne férni az egyezési információkhoz.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4552,20 +4780,20 @@
     <value>Ha egy online adatforrásértékkel (tábla vagy rekord) rendelkező változót akar beállítani, az több kérést hozhat létre a kiszolgálón. Ez hamarosan tiltott lesz.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>A literális deklaráció típusa érvénytelen. A(z) '{0}' kifejezés nem használható típusmeghatározásban.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>A típus kifejezése érvénytelen. A(z) „{0}” nem használható típuskifejezésben.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Nem támogatott használat: a konstansérték típusok csak argumentum típusokban és definíció típusokban használható.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Nem támogatott használat: a Type függvény csak típusargumentumokban és típusmeghatározásokban használható.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>A beírt {0} típusmeghatározás érvénytelen.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>A beírt {0} típusnyilatkozat érvénytelen.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>A beírt {0} típusmeghatározás érvénytelen, és ciklusokat tartalmazhat.</value>
+    <value>A beírt {0} típusnyilatkozat érvénytelen, és ciklusokat tartalmazhat.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +5095,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Érvénytelen „{0}” argumentum. A várt érvényes típus neve vagy típus konstansértéke.</value>
+    <value>Érvénytelen „{0}” argumentum. A várt érvényes típus neve vagy beágyazott típusú kifejezés.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

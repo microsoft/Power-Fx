@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Functions
     /// This includings the binding (and hence IR for evaluation) - 
     /// This is conceptually immutable after initialization - if the body or signature changes, you need to create a new instance.
     /// </summary>
-    internal class UserDefinedFunction : TexlFunction, IExternalPageableSymbol, IExternalDelegatableSymbol
+    internal class UserDefinedFunction : TexlFunction, IExternalPageableSymbol
     {
         private readonly bool _isImperative;
         private readonly IEnumerable<UDFArg> _args;
@@ -45,15 +45,23 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public bool IsPageable => _binding.IsPageable(_binding.Top);
 
-        public bool IsDelegatable => _binding.IsDelegatable(_binding.Top);
-
         public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
             Contracts.Assert(binding.GetInfo(callNode).Function is UserDefinedFunction udf && udf.Binding != null);
 
-            return base.IsServerDelegatable(callNode, binding) || IsDelegatable;
+            if (base.IsServerDelegatable(callNode, binding) || _binding.IsDelegatable(_binding.Top))
+            {
+                return true;
+            }
+
+            if (_binding.Top.Kind == NodeKind.FirstName && ArgValidators.DelegatableDataSourceInfoValidator.TryGetValidValue(_binding.Top, _binding, out _))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public override bool SupportsParamCoercion => true;
@@ -349,7 +357,7 @@ namespace Microsoft.PowerFx.Core.Functions
                         errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
                         isParamCheckSuccessful = false;
                     }
-                    else if (IsRestrictedType(parameterType))
+                    else if (IsRestrictedType(parameterType, UserDefinitions.RestrictedParameterTypes))
                     {
                         errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_InvalidParamType, arg.TypeIdent.Name));
                         isParamCheckSuccessful = false;
@@ -375,7 +383,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 return false;
             }
             
-            if (IsRestrictedType(returnTypeFormulaType))
+            if (IsRestrictedType(returnTypeFormulaType, UserDefinitions.RestrictedTypes))
             {
                 errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_InvalidReturnType, returnTypeToken.Name));
                 returnType = DType.Invalid;
@@ -387,7 +395,7 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         // To prevent aggregate types from containing restricted types
-        internal static bool IsRestrictedType(FormulaType ft)
+        internal static bool IsRestrictedType(FormulaType ft, ISet<DType> restrictedTypes)
         {
             Contracts.AssertValue(ft);
 
@@ -395,18 +403,50 @@ namespace Microsoft.PowerFx.Core.Functions
             // We can avoid calling this method on these types containing expand info.
             if (!ft._type.HasExpandInfo && ft is AggregateType aggType)
             {
-                if (aggType.GetFieldTypes().Any(ct => IsRestrictedType(ct.Type)))
+                if (aggType.GetFieldTypes().Any(ct => IsRestrictedType(ct.Type, restrictedTypes)))
                 {
                     return true;
                 }
             }
 
-            if (UserDefinitions.RestrictedTypes.Contains(ft._type))
+            if (restrictedTypes.Contains(ft._type))
             {
                 return true;
             }
 
             return false;
+        }
+
+        // Checks if the current UDF has the same definition as the target UDF.
+        public bool HasSameDefintion(string definitionsScript, UserDefinedFunction targetUDF, string targetUDFbody)
+        {
+            Contracts.AssertValue(targetUDF);
+
+            if (Name != targetUDF.Name ||
+                UdfBody.GetCompleteSpan().GetFragment(definitionsScript) != targetUDFbody || 
+                _args.Count() != targetUDF._args.Count() ||
+                ReturnType.AssociatedDataSources.SetEquals(targetUDF.ReturnType.AssociatedDataSources) == false ||
+                ReturnType != targetUDF.ReturnType ||
+                _isImperative != targetUDF._isImperative)
+            {
+                return false;
+            }
+
+            // Argument indices should match - change in index would affect caller
+            var argLookup = _args.ToDictionary(arg => arg.ArgIndex, arg => (arg.NameIdent.Name, ParamTypes[arg.ArgIndex]));
+
+            foreach (var arg in targetUDF._args)
+            {
+                if (!argLookup.TryGetValue(arg.ArgIndex, out var argInfo) || 
+                    argInfo.Name != arg.NameIdent.Name || 
+                    argInfo.Item2.AssociatedDataSources.SetEquals(targetUDF.ParamTypes[arg.ArgIndex].AssociatedDataSources) == false ||
+                    argInfo.Item2 != targetUDF.ParamTypes[arg.ArgIndex])
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>

@@ -1,0 +1,91 @@
+﻿#SETUP: RegEx,disable:PowerFxV1CompatibilityRules
+
+// submatches included by default
+
+>> Match("Hello", "\w")  
+{FullMatch:"H",StartMatch:1,SubMatches:Table()}
+
+>> Match("Hello", "llo", MatchOptions.Complete).SubMatches
+Blank()
+
+>> Concat(ForAll(Match( "Bob Jones <bob.jones@contoso.com>", "<(?<email>" & Match.Email & ")>").SubMatches, With({x:Value}, x)), Value, ", ")
+"bob.jones@contoso.com"
+
+>> Index(Match("Hello", "(?<p1>\w)l(?<p2>\w)").SubMatches, 1).Value
+"e"
+
+>> Index(Match("Hello", "(?<p1>\w)l(?<p2>\w)").SubMatches, 2).Value
+"l"
+
+>> Concat(ForAll(Match("Hello", "(?<p1>\w)l(?<p2>\w)").SubMatches, With({x:Value}, x)), Value, ", ")
+"e, l"
+
+>> Match("Hello", "(?<p1>\w)l(?<p2>\w)").SubMatches
+Table({Value:"e"},{Value:"l"})
+
+>> Match("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete & MatchOptions.Multiline)
+{FullMatch:"Joe 164",StartMatch:1,SubMatches:Table({Value:"Joe"},{Value:"164"})}
+
+>> Match("JohnDoe@microsoft.com", Match.Email)
+{FullMatch:"JohnDoe@microsoft.com",StartMatch:1,SubMatches:Table()}
+
+// leading - in character class allowed
+
+>> Match("(555) 123-4567", "^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$", MatchOptions.NumberedSubMatches ) 
+{FullMatch:"(555) 123-4567",StartMatch:1,SubMatches:Table()}
+
+>> Match("Hello", "Hello", MatchOptions.IgnoreCase)
+{FullMatch:"Hello",StartMatch:1,SubMatches:Table()}
+
+>> Match("Hi", "Hi", MatchOptions.Multiline)
+{FullMatch:"Hi",StartMatch:1,SubMatches:Table()}
+
+// new options cause an error
+
+>> Match( "Hi", ".", MatchOptions.DotAll )
+Errors: Error 30-37: Invalid regular expression: MatchOptions.DotAll and MatchOptions.FreeSpacing are only available with Power Fx V1, found "MatchOptions.DotAll".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "Hi", " H # a comment " & Char(10) & " i ", MatchOptions.FreeSpacing )
+Errors: Error 63-75: Invalid regular expression: MatchOptions.DotAll and MatchOptions.FreeSpacing are only available with Power Fx V1, found "MatchOptions.FreeSpacing".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "Hi", " H # a comment " & Char(10) & " I ", MatchOptions.IgnoreCase & MatchOptions.FreeSpacing )
+Errors: Error 75-76: Invalid regular expression: MatchOptions.DotAll and MatchOptions.FreeSpacing are only available with Power Fx V1, found "MatchOptions.IgnoreCase & MatchOptions.FreeSpacing".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// but does no harm to use NumberedSubMatches
+
+>> Match( "Hi", "(H)([Ii])", MatchOptions.NumberedSubMatches )
+{FullMatch:"Hi",StartMatch:1,SubMatches:Table({Value:"H"},{Value:"i"})}
+
+// pre-v1 options could be variable, which is very rare, but OK as they couldn't impact the schema
+// post-v1 options such as DotAll or FreeSpacing would not have an impact as they weren't supported by the runtime implementation
+// results shown here are for Canvas, the C# interpreter doesn't know about pre-v1 very much, so this will result in a type mismatch runtime error (testing handled in an override file)
+
+>> With( {opts: MatchOptions.IgnoreCase}, Match( "Hi", "hi", opts ) )
+{FullMatch:"Hi",StartMatch:1,SubMatches:Table()}
+
+>> With( {opts: "i"}, Match( "Hi", "hi", opts ) )
+{FullMatch:"Hi",StartMatch:1,SubMatches:Table()}
+
+// options must be a constant value in V1, but not pre-V1
+// still may not always work with the interpreter when testing in C#
+
+>> Match("28", "28", Blank())
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> IsMatch("28", "28", Blank())
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> MatchAll("28", "28", Blank())
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Match("28", "28", 28)
+{FullMatch:"28",StartMatch:1}
+
+>> Match("""Hello world""", "\w+", If( Sqrt(4) > 0, MatchOptions.Contains, MatchOptions.Complete))
+{FullMatch:"Hello",StartMatch:2}
+
+>> MatchAll("""Hello world""", "\w+", If( Sqrt(4) > 0, MatchOptions.Contains, MatchOptions.Complete))
+Table({FullMatch:"Hello",StartMatch:2},{FullMatch:"world",StartMatch:8})
+
+>> IsMatch("""Hello world""", "\w+", If( Sqrt(4) > 0, MatchOptions.Contains, MatchOptions.Complete))
+true

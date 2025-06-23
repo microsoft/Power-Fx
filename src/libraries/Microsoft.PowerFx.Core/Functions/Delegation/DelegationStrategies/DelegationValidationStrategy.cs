@@ -424,45 +424,19 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             Contracts.AssertValue(binding);
 
             var isAsync = binding.IsAsync(node);
-            var isPure = binding.IsPure(node);
 
-            if (!isAsync && isPure)
-            {
-                return true;
-            }
-
-            // Async predicates and impure nodes are not supported unless Features say otherwise.
             // Let CallNodes for delegatable async functions be marked as being Valid to allow
             // expressions with delegatable async function calls to be delegated
 
-            // Impure nodes should only be marked valid when Feature is enabled.
-            if (!isPure && !binding.Features.AllowImpureNodeDelegation)
+            if (!isAsync)
             {
-                TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.ImpureNode, node, binding, trackingFunction ?? Function, DelegationTelemetryInfo.CreateImpureNodeTelemetryInfo(node, binding));
+                return true;
             }
             else
             {
-                if (!isAsync)
-                {
-                    return true;
-                }
-                else if (binding.Features.AllowAsyncDelegation)
-                {
-                    // If the feature is enabled, enable delegation for
-                    // async call, first name and dotted name nodes.
-                    return (node is CallNode) || (node is FirstNameNode) || (node is DottedNameNode);
-                }
+                // Enable delegation for async call, first name, and dotted name nodes.
+                return (node is CallNode) || (node is FirstNameNode) || (node is DottedNameNode);
             }
-
-            if (isAsync)
-            {
-                TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.AsyncPredicate, node, binding, trackingFunction ?? Function, DelegationTelemetryInfo.CreateAsyncNodeTelemetryInfo(node, binding));
-            }
-
-            var telemetryMessage = string.Format(CultureInfo.InvariantCulture, "Kind:{0}, isAsync:{1}, isPure:{2}", node.Kind, isAsync, isPure);
-            SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
-
-            return false;
         }
     }
 }

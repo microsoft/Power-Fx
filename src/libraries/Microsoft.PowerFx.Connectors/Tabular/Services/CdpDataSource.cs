@@ -18,9 +18,12 @@ namespace Microsoft.PowerFx.Connectors
 
         public DatasetMetadata DatasetMetadata { get; private set; }
 
-        public CdpDataSource(string dataset)
+        private readonly ConnectorSettings _connectorSettings;
+
+        public CdpDataSource(string dataset, ConnectorSettings connectorSettings = null)
         {
             DatasetName = dataset ?? throw new ArgumentNullException(nameof(dataset));
+            _connectorSettings = connectorSettings ?? ConnectorSettings.NewCDPConnectorSettings();
         }
 
         public static async Task<DatasetMetadata> GetDatasetsMetadataAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
@@ -29,7 +32,7 @@ namespace Microsoft.PowerFx.Connectors
                 + (CdpTableResolver.UseV2(uriPrefix) ? "/v2" : string.Empty)
                 + $"/$metadata.json/datasets";
 
-            return await GetObject<DatasetMetadata>(httpClient, "Get datasets metadata", uri, null, cancellationToken, logger).ConfigureAwait(false);            
+            return await GetObject<DatasetMetadata>(httpClient, "Get datasets metadata", uri, null, cancellationToken, logger).ConfigureAwait(false);
         }
 
         public virtual async Task<IEnumerable<CdpTable>> GetTablesAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
@@ -40,14 +43,28 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             _uriPrefix = uriPrefix;
+            var useV2 = CdpTableResolver.UseV2(uriPrefix);
+            var purviewAccountName = _connectorSettings.PurviewAccountName;
+            var extractSensitivityLabel = useV2 && _connectorSettings.ExtractSensitivityLabel ? "?extractSensitivityLabel=True" : string.Empty;
+            if (!string.IsNullOrEmpty(purviewAccountName))
+            {
+                extractSensitivityLabel += $"&purviewAccountName={purviewAccountName}";
+            }
 
+            var purviewAccount = _connectorSettings.PurviewAccountName;
+
+            // add purview account.
             string uri = (_uriPrefix ?? string.Empty)
-                + (CdpTableResolver.UseV2(uriPrefix) ? "/v2" : string.Empty)
-                + $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : DatasetName)}"
-                + (uriPrefix.Contains("/sharepointonline/") ? "/alltables" : "/tables");
+                + (useV2 ? "/v2" : string.Empty)
+                + $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : SingleEncode(DatasetName))}"
+                + (uriPrefix.Contains("/sharepointonline/") ? "/alltables" : "/tables")
+                + extractSensitivityLabel;
 
             GetTables tables = await GetObject<GetTables>(httpClient, "Get tables", uri, null, cancellationToken, logger).ConfigureAwait(false);
-            return tables?.Value?.Select((RawTable rawTable) => new CdpTable(DatasetName, rawTable.Name, DatasetMetadata, tables?.Value) { DisplayName = rawTable.DisplayName });
+
+            // this can be null
+            var metadata = tables.Metadata?.ToDictionary(metadata => metadata.Name);
+            return tables?.Value?.Select((RawTable rawTable) => new CdpTable(DatasetName, rawTable.Name, DatasetMetadata, tables?.Value, _connectorSettings, metadata?.TryGetValue(rawTable.Name, out var metadataItem) == true ? metadataItem : null) { DisplayName = rawTable.DisplayName });
         }
 
         /// <summary>
@@ -79,6 +96,25 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             return filtered.First();
+        }
+
+        /// <summary>
+        /// Retrieves a single CdpTable without testing its existence and initializes it.
+        /// </summary>
+        /// <param name="httpClient">HttpClient.</param>
+        /// <param name="uriPrefix">Connector Uri prefix.</param>
+        /// <param name="logicalTableName">Logical Table Name.</param>
+        /// <param name="cancellation">Cancellation token.</param>
+        /// <param name="logger">Llogger.</param>
+        /// <returns>Initialized CdpTable or null is table doesn't exist.</returns>
+        public virtual async Task<CdpTable> GetTableAsync(HttpClient httpClient, string uriPrefix, string logicalTableName, CancellationToken cancellation, ConnectorLogger logger = null)
+        {
+            cancellation.ThrowIfCancellationRequested();
+
+            CdpTable table = new CdpTable(DatasetName, logicalTableName, null, _connectorSettings);
+            await table.InitAsync(httpClient, uriPrefix, cancellation, logger).ConfigureAwait(false);
+
+            return table;
         }
 
         // logicalOrDisplay

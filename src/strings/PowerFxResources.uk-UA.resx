@@ -1917,6 +1917,10 @@
     <value>"{0}" – невідома або непідтримувана функція.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' розпізнається як допоміжна функція типу, і її можна використовувати лише в функції Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>"{0}" – невідома або непідтримувана функція в просторі імен "{1}".</value>
     
@@ -2107,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Конфлікт імен стовпців для елемента "{0}".</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Не вдалося додати стовпці до системного запису або таблиці системних записів. Спершу застосуйте параметр ShowColumns, щоб видобути потрібні стовпці.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Не вдалося перейменувати стовпці системного запису або таблиці системних записів. Спершу застосуйте параметр ShowColumns, щоб видобути потрібні стовпці.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -3221,9 +3233,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Нова або наявна колекція, яку потрібно поповнити.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Запис або таблиця, що потрібно додати до колекції (у випадку з таблицею додаються її рядки).</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Спершу очищує колекцію, а потім додає один або кілька елементів до вказаної колекції. Елементи можуть походити з іншої таблиці чи колекції (наприклад, ClearCollect(collection, source_collection)) або одного чи кількох записів ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3713,23 @@
     <value>Відредагуйте формулу, щоб вона містила дужку.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Очікувалося закриття ідентифікатора. У цьому місці формули очікується одинарна закривна лапка (').</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Одинарна закривна лапка позначає кінець ідентифікатора (наприклад, 'Ім’я').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Відредагуйте формулу, щоб вона містила одинарну закривну лапку.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Ідентифікатор не містить припустимого тексту.</value>
+    <value>Ідентифікатор пустий або містить неприпустимий символ, наприклад символ табуляції або переходу на новий рядок.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Переконайтеся, що ідентифікатор містить текст. Ця помилка стається, якщо ідентифікатор пустий або містить тільки пробіли.</value>
+    <value>Переконайтеся, що ідентифікатор містить припустимий текст. Ця помилка стається, якщо ідентифікатор пустий, містить лише пробіли або має символ табуляції чи переходу на новий рядок.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4201,8 @@
     <value>Іменована формула має бути виразом.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Іменований тип має бути літералом типу.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Іменований тип оголошення має бути припустимим виразом типу.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4499,24 +4519,232 @@
     <value>Неприпустимий регулярний вираз.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: вбудовані параметри мають відображатися на початку регулярного виразу. "{0}" знайдено не на початку.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: вбудовані параметри обмежено комбінацією літер [imnsx]. Параметри не можна вимкнути або використовувати для підвиразу. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: коди символів вісімкової системи \0 не підтримуються, використовуйте натомість шістнадцяткову систему \x або Unicode \u. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: літеральні фігурні дужки слід екранувати за допомогою зворотної скісної риски. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: літеральні квадратні дужки слід екранувати за допомогою зворотної скісної риски навіть у класах символів (наприклад, \[ або \]). Знайдено в кінці "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: незакрита квадратна дужка класу символів.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: непідтримувана спеціальна група. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: у класі символів заборонено використовувати символ екранування. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: у класі від’ємних символів заборонено використовувати від’ємний символ екранування. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: за межами класу символів заборонено використовувати символ екранування. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: неприпустиме ім’я категорії Unicode. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: повторюваний вбудований параметр. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: незакритий вбудований коментар.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: незакритий вбудований коментар. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: вбудований параметр несумісний з MatchOptions.NumberedSubMatches. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: ревниві квантифікатори не підтримуються. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: точні квантифікатори не можна використовувати з такими модифікаторами, як-от "?", для ледачих квантифікаторів. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: неприпустимий код екранування. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: вторинний збіг "{0}" не визначено або він є непідтримуваним прямим посиланням.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: ретроспективні огляди не підтримують вторинні збіги. Знайдено на початку "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: ретроспективні огляди не можуть бути вкладеними. Знайдено на початку "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: ретроспективні огляди не підтримують необмежені квантифікатори. Знайдено в кінці "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: ретроспективні та перспективні огляди не підтримують квантифікатори. Знайдено в кінці "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: зворотне посилання "{0}" на вторинний збіг, який може не відбутися через чергування або нульовий квантифікатор.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: вторинні збіги, що посилаються самі на себе, не підтримуються. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: незакриті групи, замало закривних дужок.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: невідкриті групи, замало відкривних дужок.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: іменований вторинний збіг, визначений кілька разів, знайдено на початку "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: ім’я вторинного збігу має складатися з комбінації літер і не починатися з цифри. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: вбудовані параметри мають відображатися на початку регулярного виразу. "{0}" знайдено не на початку.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: символ з’являється в класі символів кілька разів. Знайдено повторення "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: класи символів у квадратних дужках не можуть бути пустими. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: вторинні збіги балансування не підтримуються. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: використання іменованих груп захоплення в одиночних лапках не підтримується. Використовуйте натомість синтаксис (?&lt;...&gt;). Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: умовне чергування не підтримується. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: іменовані групи захоплення не можна використовувати з увімкненим параметром MatchOptions.NumberedSubMatches. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: використовуйте іменовані групи захоплення з "(?&lt;name&gt;...)" і "\k&lt;name&gt;" або ввімкніть MatchOptions.NumberedSubMatches. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: літеральний дефіс у класі символів слід екранувати за допомогою зворотної скісної риски ("\-"). Знайдено в "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: літеральний символ, що використовується в класі символів, слід екранувати за допомогою зворотної скісної риски. Знайдено в кінці "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: квантифікатор у групі, що містить інший квантифікатор, або пусте чергування, яке може стати причиною неоднозначного результату. Знайдено в кінці "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: кількість символів у ретроспективному огляді перевищує максимальну (250). Знайдено в кінці "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: менше число діапазону квантифікаторів є більшим за велике число. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: забагато вкладених груп. Знайдено на початку "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: задовге ім’я вторинного збігу. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: завелике число. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: символи в діапазоні класів символів розташовано у зворотному порядку. Знайдено в кінці "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: клас символів у діапазоні класів символів, або екранування літерального дефісу за допомогою зворотної скісної риски. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: закінчується неекранованою зворотною скісною рискою.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: квантифікатор не має даних для кількісної оцінки. Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: параметри MatchOptions.DotAll і MatchOptions.FreeSpacing доступні лише в Power Fx (версія 1). Знайдено "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз: зворотне посилання "{0}" на вторинний збіг у ретроспективному або перспективному огляді.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Регулярні вирази мають бути константами.</value>
+    <value>Регулярний вираз має бути постійним значенням.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions має бути постійним значенням.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Значення, передане функції "{0}" не можна змінити.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Ім’я групи захоплення "{0}" приховує попередньо визначену властивість, що повертає повний збіг із регулярним виразом. Перейменуйте групу, якщо хочете за допомогою цієї іменованої властивості видобути з указаного тексту повний збіг.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Ім’я групи захоплення "{0}" приховує попередньо визначену властивість, яка повертає інформацію про збіг. Перейменуйте групу захоплення, якщо хочете отримати доступ до інформації про збіг.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Ім’я групи захоплення "{0}" приховує попередньо визначену властивість, що повертає групові збіги в регулярному виразі. Перейменуйте групу, якщо хочете за допомогою цієї іменованої властивості видобути з указаного тексту всі вкладені збіги.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Ім’я групи захоплення "{0}" приховує попередньо визначену властивість, що повертає розташування збігу з регулярним виразом. Перейменуйте групу, якщо хочете за допомогою цієї іменованої властивості видобути з указаного тексту розташування повного збігу.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Імена груп захоплення в наборі "{0}" приховують попередньо визначені властивості, які повертають інформацію про збіг. Перейменуйте групи захоплення, якщо хочете отримати доступ до інформації про збіг.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4552,20 +4780,20 @@
     <value>Установлення змінної зі значенням онлайнового джерела даних (таблиці або запису) може призвести до появи кількох запитів до сервера. Незабаром це буде заблоковано.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Неприпустиме оголошення літералу типу. Вираз "{0}" не можна використовувати у визначенні типу.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Неприпустимий вираз типу. "{0}" не можна використовувати у виразі типу.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Непідтримуване використання. Літерали типів можна використовувати лише в аргументах і визначеннях типів.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Непідтримуваний сценарій використання. Функцію Type можна використовувати лише в аргументах й оголошеннях типу.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Визначення типу "{0}" неприпустиме.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Оголошення типу "{0}" неприпустиме.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Визначення типу "{0}" неприпустиме та може містити цикли.</value>
+    <value>Оголошення типу "{0}" неприпустиме та може містити цикли.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +5095,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Неприпустимий аргумент '{0}'. Очікуване припустиме ім’я типу або літерал типу.</value>
+    <value>Неприпустимий аргумент "{0}". Очікується припустиме ім’я типу або вбудований вираз типу.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
