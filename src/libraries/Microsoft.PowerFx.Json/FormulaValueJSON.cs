@@ -88,6 +88,31 @@ namespace Microsoft.PowerFx.Types
             return FromJson(element, settings, new FormulaValueJsonSerializerWorkingData(), formulaType);  
         }
 
+        internal static FormulaValue ParseDate(JsonElement element, Func<DateTime, FormulaValue> funcParse) 
+        {
+            var strValue = element.GetString(); // caller verified this is a string 
+            if (string.IsNullOrWhiteSpace(strValue))
+            {
+                return FormulaValue.NewBlank();
+            }
+
+            try
+            {
+                var dateTime = element.GetDateTime();
+
+                var value = funcParse(dateTime);
+                return value;
+            }
+            catch (Exception ex)
+            {
+                return FormulaValue.NewError(new ExpressionError
+                {
+                    Kind = ErrorKind.Validation,
+                    Message = $"Can't parse date: '{strValue}'"
+                });
+            }
+        }
+
         internal static FormulaValue FromJson(JsonElement element, FormulaValueJsonSerializerSettings settings, FormulaValueJsonSerializerWorkingData data, FormulaType formulaType = null)
         { 
             if (formulaType is UntypedObjectType uot)
@@ -123,29 +148,34 @@ namespace Microsoft.PowerFx.Types
                     }
                     else if (formulaType is DateType)
                     {
-                        DateTime dt1 = element.GetDateTime().Date;
-                        return FormulaValue.NewDateOnly(dt1);
+                        return ParseDate(
+                            element,
+                            (dateTime) => FormulaValue.NewDateOnly(dateTime.Date));
                     }
                     else if (formulaType is DateTimeType)
                     {
-                        DateTime dt2 = element.GetDateTime();
+                        return ParseDate(
+                            element,
+                            (dt2) => 
+                            {
+                                if (dt2.Kind == DateTimeKind.Local)
+                                {
+                                    dt2 = dt2.ToUniversalTime();
+                                }
 
-                        if (dt2.Kind == DateTimeKind.Local)
-                        {
-                            dt2 = dt2.ToUniversalTime();
-                        }
+                                if (settings.ResultTimeZone == TimeZoneInfo.Utc && dt2.Kind == DateTimeKind.Unspecified)
+                                {
+                                    dt2 = new DateTime(dt2.Ticks, DateTimeKind.Utc);
+                                }
 
-                        if (settings.ResultTimeZone == TimeZoneInfo.Utc && dt2.Kind == DateTimeKind.Unspecified)
-                        {
-                            dt2 = new DateTime(dt2.Ticks, DateTimeKind.Utc);
-                        }
-
-                        return DateTimeValue.New(DateTimeValue.GetConvertedDateTimeValue(dt2, settings.ResultTimeZone));
+                                return DateTimeValue.New(DateTimeValue.GetConvertedDateTimeValue(dt2, settings.ResultTimeZone));
+                            });
                     }
                     else if (formulaType is DateTimeNoTimeZoneType)
                     {
-                        DateTime dt3 = element.GetDateTime();
-                        return DateTimeValue.New(TimeZoneInfo.ConvertTimeToUtc(dt3));
+                        return ParseDate(
+                            element, 
+                            dt3 => DateTimeValue.New(TimeZoneInfo.ConvertTimeToUtc(dt3)));
                     }
                     else if (formulaType is TimeType)
                     {
