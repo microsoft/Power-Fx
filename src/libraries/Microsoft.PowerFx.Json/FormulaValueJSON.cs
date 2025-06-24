@@ -88,31 +88,20 @@ namespace Microsoft.PowerFx.Types
             return FromJson(element, settings, new FormulaValueJsonSerializerWorkingData(), formulaType);  
         }
 
-        internal static FormulaValue ParseDate(JsonElement element, FormulaType targetType, Func<DateTime, FormulaValue> funcParse) 
+        // // caller verified element is non-null and is of type string 
+        internal static FormulaValue ParseDate(JsonElement element, FormulaType targetType, Func<DateTime, FormulaValue> funcParse)
         {
-            var strValue = element.GetString(); // caller verified this is a string 
+            var strValue = element.GetString(); 
             if (string.IsNullOrWhiteSpace(strValue))
             {
                 return FormulaValue.NewBlank(targetType);
             }
 
-            try
-            {
-                var dateTime = element.GetDateTime();
+            // Any exceptions will be caught at higher level. 
+            var dateTime = element.GetDateTime();
 
-                var value = funcParse(dateTime);
-                return value;
-            }
-            catch (Exception ex) 
-            {
-                return FormulaValue.NewError(
-                    new ExpressionError
-                    {
-                        Kind = ErrorKind.Validation,
-                        Message = $"Can't parse date: '{strValue}': {ex.Message}"
-                    },
-                    targetType);
-            }
+            var value = funcParse(dateTime);
+            return value;
         }
 
         internal static FormulaValue FromJson(JsonElement element, FormulaValueJsonSerializerSettings settings, FormulaValueJsonSerializerWorkingData data, FormulaType formulaType = null)

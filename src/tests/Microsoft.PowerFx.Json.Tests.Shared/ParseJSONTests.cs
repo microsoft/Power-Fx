@@ -601,10 +601,8 @@ namespace Microsoft.PowerFx.Json.Tests
             using var doc = JsonDocument.Parse("\"123\""); // not a date
             var je = doc.RootElement;
 
-            var value = FormulaValueJSON.ParseDate(je, FormulaType.DateTime, (datetime) => throw new InvalidOperationException($"don't invoke this"));
-
-            Assert.True(value is ErrorValue);
-            Assert.True(value.Type == FormulaType.DateTime);
+            Assert.Throws<FormatException>(() =>
+                FormulaValueJSON.ParseDate(je, FormulaType.DateTime, (datetime) => throw new InvalidOperationException($"don't invoke this")));
         }
 
         [Fact]
