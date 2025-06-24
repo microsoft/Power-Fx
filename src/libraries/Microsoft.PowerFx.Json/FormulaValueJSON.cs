@@ -105,12 +105,13 @@ namespace Microsoft.PowerFx.Types
             }
             catch (Exception ex) 
             {
-                return FormulaValue.NewError(new ExpressionError
-                {
-                    Kind = ErrorKind.Validation,
-                    Message = $"Can't parse date: '{strValue}': {ex.Message}"
-                },
-                targetType);
+                return FormulaValue.NewError(
+                    new ExpressionError
+                    {
+                        Kind = ErrorKind.Validation,
+                        Message = $"Can't parse date: '{strValue}': {ex.Message}"
+                    },
+                    targetType);
             }
         }
 
