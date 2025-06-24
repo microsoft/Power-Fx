@@ -103,7 +103,7 @@ namespace Microsoft.PowerFx.Types
                 var value = funcParse(dateTime);
                 return value;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return FormulaValue.NewError(new ExpressionError
                 {
