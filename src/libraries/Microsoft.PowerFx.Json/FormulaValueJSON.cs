@@ -103,12 +103,12 @@ namespace Microsoft.PowerFx.Types
                 var value = funcParse(dateTime);
                 return value;
             }
-            catch (Exception)
+            catch (Exception ex) 
             {
                 return FormulaValue.NewError(new ExpressionError
                 {
                     Kind = ErrorKind.Validation,
-                    Message = $"Can't parse date: '{strValue}'"
+                    Message = $"Can't parse date: '{strValue}': {ex.Message}"
                 });
             }
         }
