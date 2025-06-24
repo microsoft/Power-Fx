@@ -88,12 +88,12 @@ namespace Microsoft.PowerFx.Types
             return FromJson(element, settings, new FormulaValueJsonSerializerWorkingData(), formulaType);  
         }
 
-        internal static FormulaValue ParseDate(JsonElement element, Func<DateTime, FormulaValue> funcParse) 
+        internal static FormulaValue ParseDate(JsonElement element, FormulaType targetType, Func<DateTime, FormulaValue> funcParse) 
         {
             var strValue = element.GetString(); // caller verified this is a string 
             if (string.IsNullOrWhiteSpace(strValue))
             {
-                return FormulaValue.NewBlank();
+                return FormulaValue.NewBlank(targetType);
             }
 
             try
@@ -109,7 +109,8 @@ namespace Microsoft.PowerFx.Types
                 {
                     Kind = ErrorKind.Validation,
                     Message = $"Can't parse date: '{strValue}': {ex.Message}"
-                });
+                },
+                targetType);
             }
         }
 
@@ -150,12 +151,14 @@ namespace Microsoft.PowerFx.Types
                     {
                         return ParseDate(
                             element,
+                            FormulaType.Date,
                             (dateTime) => FormulaValue.NewDateOnly(dateTime.Date));
                     }
                     else if (formulaType is DateTimeType)
                     {
                         return ParseDate(
                             element,
+                            FormulaType.DateTime,
                             (dt2) => 
                             {
                                 if (dt2.Kind == DateTimeKind.Local)
@@ -175,6 +178,7 @@ namespace Microsoft.PowerFx.Types
                     {
                         return ParseDate(
                             element, 
+                            FormulaType.DateTime,
                             dt3 => DateTimeValue.New(TimeZoneInfo.ConvertTimeToUtc(dt3)));
                     }
                     else if (formulaType is TimeType)

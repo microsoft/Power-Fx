@@ -589,9 +589,10 @@ namespace Microsoft.PowerFx.Json.Tests
             using var doc = JsonDocument.Parse("\"\"");
             var je = doc.RootElement;
 
-            var value = FormulaValueJSON.ParseDate(je, (datetime) => throw new InvalidOperationException($"don't invoke this"));
+            var value = FormulaValueJSON.ParseDate(je, FormulaType.DateTime, (datetime) => throw new InvalidOperationException($"don't invoke this"));
 
             Assert.True(value is BlankValue);
+            Assert.True(value.Type == FormulaType.DateTime);
         }
 
         [Fact]
@@ -600,9 +601,10 @@ namespace Microsoft.PowerFx.Json.Tests
             using var doc = JsonDocument.Parse("\"123\""); // not a date
             var je = doc.RootElement;
 
-            var value = FormulaValueJSON.ParseDate(je, (datetime) => throw new InvalidOperationException($"don't invoke this"));
+            var value = FormulaValueJSON.ParseDate(je, FormulaType.DateTime, (datetime) => throw new InvalidOperationException($"don't invoke this"));
 
             Assert.True(value is ErrorValue);
+            Assert.True(value.Type == FormulaType.DateTime);
         }
 
         [Fact]
@@ -611,7 +613,7 @@ namespace Microsoft.PowerFx.Json.Tests
             using var doc = JsonDocument.Parse("\"2024-10-02T23:13:50.123456\""); // not a date
             var je = doc.RootElement;
 
-            var value = FormulaValueJSON.ParseDate(je, (datetime) => FormulaValue.New(datetime));
+            var value = FormulaValueJSON.ParseDate(je, FormulaType.DateTime, (datetime) => FormulaValue.New(datetime));
 
             var dtValue = Assert.IsType<DateTimeValue>(value);
             var dt = dtValue.GetConvertedValue(TimeZoneInfo.Local);
