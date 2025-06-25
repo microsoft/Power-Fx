@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Tests;
@@ -580,6 +581,41 @@ namespace Microsoft.PowerFx.Json.Tests
         {
             FormulaValue prototypeValue = FormulaValueJSON.FromJson(prototypeJson);
             Assert.Throws<InvalidOperationException>(() => FormulaValueJSON.FromJson(valueJson, prototypeValue.Type));
+        }
+
+        [Fact]
+        public void ParseDates_Blank()
+        {
+            using var doc = JsonDocument.Parse("\"\"");
+            var je = doc.RootElement;
+
+            var value = FormulaValueJSON.ParseDate(je, FormulaType.DateTime, (datetime) => throw new InvalidOperationException($"don't invoke this"));
+
+            Assert.True(value is BlankValue);
+            Assert.True(value.Type == FormulaType.DateTime);
+        }
+
+        [Fact]
+        public void ParseDates_Error()
+        {
+            using var doc = JsonDocument.Parse("\"123\""); // not a date
+            var je = doc.RootElement;
+
+            Assert.Throws<FormatException>(() =>
+                FormulaValueJSON.ParseDate(je, FormulaType.DateTime, (datetime) => throw new InvalidOperationException($"don't invoke this")));
+        }
+
+        [Fact]
+        public void ParseDates_Value()
+        {
+            using var doc = JsonDocument.Parse("\"2024-10-02T23:13:50.123456\""); // not a date
+            var je = doc.RootElement;
+
+            var value = FormulaValueJSON.ParseDate(je, FormulaType.DateTime, (datetime) => FormulaValue.New(datetime));
+
+            var dtValue = Assert.IsType<DateTimeValue>(value);
+            var dt = dtValue.GetConvertedValue(TimeZoneInfo.Local);
+            Assert.Equal(2024, dt.Year);
         }
     }
 }
