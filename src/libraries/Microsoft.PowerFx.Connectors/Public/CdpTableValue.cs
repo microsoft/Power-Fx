@@ -121,8 +121,16 @@ namespace Microsoft.PowerFx.Connectors
 
         private static async Task<FormulaValue> ExtractResultAsync(RecordValue value, DelegationParameters parameters, CancellationToken cancellationToken)
         {
+            if (parameters.ReturnTotalCount())
+            {
+                // Total count returning query is special then other aggregations.
+                var countResult = await value.GetFieldAsync(DelegationParameters.ODataCountFieldName, cancellationToken).ConfigureAwait(false);
+                return ConvertToExpectedType(parameters.ExpectedReturnType, countResult);
+            }
+
             var valueTable = (TableValue)(await value.GetFieldAsync(DelegationParameters.ODataResultFieldName, cancellationToken).ConfigureAwait(false));
-            if (valueTable.Rows.Count() != 1)
+            
+            if (valueTable.Rows.Count() > 1)
             {
                 throw new InvalidOperationException("value Table should always have 1 rows for aggregation result");
             }

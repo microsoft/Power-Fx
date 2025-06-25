@@ -122,6 +122,7 @@ namespace Microsoft.PowerFx.Connectors
             FilterRestriction = filterRestriction;            
             PagingCapabilities = pagingCapabilities;
             SelectionRestriction = selectionRestriction;
+            CountRestriction = countRestriction;
             GroupRestriction = groupRestriction;
             IsDelegable = (SortRestriction != null) || (FilterRestriction != null) || (FilterSupportedFunctions != null);
             IsPagable = PagingCapabilities.IsOnlyServerPagable || IsDelegable;
@@ -205,7 +206,7 @@ namespace Microsoft.PowerFx.Connectors
 #pragma warning disable CS0618 // Type or member is obsolete
                 SupportsJoinFunction = serviceCapabilities?.SupportsJoinFunction ?? false,
 #pragma warning disable CS0612 // Type or member is obsolete
-                CountCapabilities = new CDPCountCapabilities(serviceCapabilities?.CountRestriction.IsCountable ?? false),
+                CountCapabilities = new CDPCountCapabilities(serviceCapabilities?.CountRestriction?.IsCountable ?? false),
                 TopLevelAggregationCapabilities = new CDPToplLevelAggregationCapabilities(columnCapabilities)
 #pragma warning restore CS0612 // Type or member is obsolete
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -267,10 +268,6 @@ namespace Microsoft.PowerFx.Connectors
         [Obsolete]
         private class CDPCountCapabilities : CountCapabilities
         {
-            private readonly IEnumerable<DelegationOperator> _filterSupportedFunctions;
-
-            private readonly IEnumerable<string> _primaryKeyNames;
-
             private readonly bool _isCountable;
 
             public CDPCountCapabilities(bool isCountable)
