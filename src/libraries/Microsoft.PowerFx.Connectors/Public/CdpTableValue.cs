@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Connectors.Tabular;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -144,16 +143,7 @@ namespace Microsoft.PowerFx.Connectors
 
             var valueRecord = row.Value;
 
-            FormulaValue result;
-            if (parameters.ReturnTotalCount())
-            {
-                // Total count returning query is special then other aggregations.
-                result = await valueRecord.GetFieldAsync(DelegationParameters.ODataCountFieldName, cancellationToken).ConfigureAwait(false);
-            }
-            else
-            {
-                result = await valueRecord.GetFieldAsync(DelegationParameters.ODataAggregationResultFieldName, cancellationToken).ConfigureAwait(false);
-            }
+            var result = await valueRecord.GetFieldAsync(DelegationParameters.ODataAggregationResultFieldName, cancellationToken).ConfigureAwait(false);
                 
             result = ConvertToExpectedType(parameters.ExpectedReturnType, result);
             return result;
