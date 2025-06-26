@@ -360,7 +360,7 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     var schema = map.First().Value.Schema;
 
-                    if (!schema.Extensions.ContainsKey("x-ms-property-name-alias"))
+                    if (!schema.Format.Equals(value: "byte", comparisonType: StringComparison.OrdinalIgnoreCase))
                     {
                         var bac = new ByteArrayContent(content: await bv.GetAsByteArrayAsync(cancellationToken).ConfigureAwait(false));
                         bac.Headers.ContentType = new MediaTypeHeaderValue(mediaType: ct);

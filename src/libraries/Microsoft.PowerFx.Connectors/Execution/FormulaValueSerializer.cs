@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected abstract void WriteStringValue(string stringValue);
 
-        protected abstract Task WriteBlobValueAsync(BlobValue blobValue);
+        protected abstract Task WriteBlobValueAsync(BlobValue blobValue, ISwaggerSchema schema);
 
         protected abstract void WriteBooleanValue(bool booleanValue);
 
@@ -302,7 +302,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     }
                     else if (fv is BlobValue bv)
                     {
-                        await WriteBlobValueAsync(bv).ConfigureAwait(false);
+                        await WriteBlobValueAsync(blobValue: bv, schema: propertySchema).ConfigureAwait(false);
                     }
                     else if (fv is OptionSetValue optionSetValue)
                     {
@@ -317,7 +317,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
                 case "file" when fv is BlobValue blobValue:
                     WritePropertyName(propertyName);
-                    await WriteBlobValueAsync(blobValue).ConfigureAwait(false);
+                    await WriteBlobValueAsync(blobValue: blobValue, schema: propertySchema).ConfigureAwait(false);
                     break;
 
                 // some connectors don't set "type" when they have dynamic schema

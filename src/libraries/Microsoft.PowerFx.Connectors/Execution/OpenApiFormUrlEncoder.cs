@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Execution
@@ -164,7 +163,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             // Do nothing
         }
 
-        protected override Task WriteBlobValueAsync(BlobValue blobValue)
+        protected override Task WriteBlobValueAsync(BlobValue blobValue, ISwaggerSchema schema)
         {
             return Task.FromException(new NotImplementedException());
         }

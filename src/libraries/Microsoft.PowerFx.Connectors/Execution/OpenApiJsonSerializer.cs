@@ -87,9 +87,14 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _writer.WriteStringValue(stringValue);
         }
 
-        protected override async Task WriteBlobValueAsync(BlobValue blobValue)
+        protected override async Task WriteBlobValueAsync(BlobValue blobValue, ISwaggerSchema schema)
         {
-            if (blobValue.Content is Base64Blob)
+            var schemaIsBase64 =
+                schema.Format.Equals(value: "string", comparisonType: StringComparison.OrdinalIgnoreCase) &&
+                schema.Format.Equals(value: "byte", comparisonType: StringComparison.OrdinalIgnoreCase);
+
+            if (blobValue.Content is Base64Blob ||
+                schemaIsBase64)
             {
                 _writer.WriteStringValue(await blobValue.GetAsBase64Async(_cancellationToken).ConfigureAwait(false));
             }

@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             throw new NotImplementedException();
         }
 
-        protected override async Task WriteBlobValueAsync(BlobValue blobValue)
+        protected override async Task WriteBlobValueAsync(BlobValue blobValue, ISwaggerSchema schema)
         {
 #pragma warning disable CA2000 // Dispose objects before losing scope
             _formData.Add(new ByteArrayContent(await blobValue.GetAsByteArrayAsync(_cancellationToken).ConfigureAwait(false)), _propName, _propName);

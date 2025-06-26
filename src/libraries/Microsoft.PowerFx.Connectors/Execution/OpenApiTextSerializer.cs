@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _writer.Append(stringValue);
         }
 
-        protected override async Task WriteBlobValueAsync(BlobValue blobValue)
+        protected override async Task WriteBlobValueAsync(BlobValue blobValue, ISwaggerSchema schema)
         {            
             _writer.Append(await blobValue.GetAsStringAsync(null, _cancellationToken).ConfigureAwait(false));
         }
