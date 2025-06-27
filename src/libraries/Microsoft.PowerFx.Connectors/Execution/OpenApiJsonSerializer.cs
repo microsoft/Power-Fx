@@ -89,12 +89,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected override async Task WriteBlobValueAsync(BlobValue blobValue, ISwaggerSchema schema)
         {
-            var schemaIsBase64 =
-                schema.Format.Equals(value: "string", comparisonType: StringComparison.OrdinalIgnoreCase) &&
-                schema.Format.Equals(value: "byte", comparisonType: StringComparison.OrdinalIgnoreCase);
-
-            if (blobValue.Content is Base64Blob ||
-                schemaIsBase64)
+            if (blobValue.Content is Base64Blob || schema.IsBase64ByteString())
             {
                 _writer.WriteStringValue(await blobValue.GetAsBase64Async(_cancellationToken).ConfigureAwait(false));
             }

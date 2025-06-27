@@ -151,6 +151,13 @@ namespace Microsoft.PowerFx.Connectors
             return op.Extensions.ContainsKey(XMsTrigger);
         }
 
+        internal static bool IsBase64ByteString(this ISwaggerSchema schema)
+        {
+            return
+                schema.Type.Equals(value: "string", comparisonType: StringComparison.OrdinalIgnoreCase) &&
+                schema.Format.Equals(value: "byte", comparisonType: StringComparison.OrdinalIgnoreCase);
+        }
+
         internal static bool TryGetDefaultValue(this ISwaggerSchema schema, FormulaType formulaType, out FormulaValue defaultValue, SupportsConnectorErrors errors)
         {
             if (schema.Type == "array" && formulaType is TableType tableType && schema.Items != null)
