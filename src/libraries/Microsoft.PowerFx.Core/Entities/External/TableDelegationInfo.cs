@@ -267,7 +267,7 @@ namespace Microsoft.PowerFx.Core.Entities
         internal bool? IsChoice { get; init; }
 
         private IEnumerable<DelegationOperator> _filterFunctions;
-                
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ColumnCapabilitiesDefinition"/> class.
         /// </summary>
@@ -308,7 +308,7 @@ namespace Microsoft.PowerFx.Core.Entities
         // If true, @odata.nextlink URL is used instead of $skip and $top query parameters
         // If false, $top and $skip will be used
         public bool IsOnlyServerPagable { get; init; }
-        
+
         // Used to define paging options to use 
         public IEnumerable<ServerPagingOptions> ServerPagingOptions { get; init; }
 
@@ -439,7 +439,12 @@ namespace Microsoft.PowerFx.Core.Entities
         /// <summary>
         /// Counts the number of rows in the table.
         /// </summary>
-        CountRows
+        CountRows,
+
+        /// <summary>
+        /// Counts the distinct values in the specified column.
+        /// </summary>
+        CountDistinct,
     }
 
     /// <summary>

@@ -29,6 +29,8 @@ namespace Microsoft.PowerFx.Connectors
         public const string Selectable = "selectable";
         public const string SelectionRestriction = "selectRestrictions";
         public const string SelectRestriction = "selectRestrictions";
+        public const string CountRestrictions = "countRestrictions";
+        public const string Countable = "countable";
         public const string ServerPagingOptions = "serverPagingOptions";
         public const string Sortable = "sortable";
         public const string SortRestrictions = "sortRestrictions";
@@ -38,6 +40,6 @@ namespace Microsoft.PowerFx.Connectors
         public const string SupportsRecordPermission = "supportsRecordPermission";
         public const string SupportsJoin = "supportsJoin";
         public const string UngroupableProperties = "ungroupableProperties";
-        public const string UnsortableProperties = "unsortableProperties";        
+        public const string UnsortableProperties = "unsortableProperties"; 
     }
 }

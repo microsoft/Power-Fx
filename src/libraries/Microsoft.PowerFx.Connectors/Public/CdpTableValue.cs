@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Connectors.Tabular;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -121,8 +120,16 @@ namespace Microsoft.PowerFx.Connectors
 
         private static async Task<FormulaValue> ExtractResultAsync(RecordValue value, DelegationParameters parameters, CancellationToken cancellationToken)
         {
+            if (parameters.ReturnTotalCount())
+            {
+                // Total count returning query is special then other aggregations.
+                var countResult = await value.GetFieldAsync(DelegationParameters.ODataCountFieldName, cancellationToken).ConfigureAwait(false);
+                return ConvertToExpectedType(parameters.ExpectedReturnType, countResult);
+            }
+
             var valueTable = (TableValue)(await value.GetFieldAsync(DelegationParameters.ODataResultFieldName, cancellationToken).ConfigureAwait(false));
-            if (valueTable.Rows.Count() != 1)
+            
+            if (valueTable.Rows.Count() > 1)
             {
                 throw new InvalidOperationException("value Table should always have 1 rows for aggregation result");
             }
@@ -135,7 +142,9 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             var valueRecord = row.Value;
+
             var result = await valueRecord.GetFieldAsync(DelegationParameters.ODataAggregationResultFieldName, cancellationToken).ConfigureAwait(false);
+                
             result = ConvertToExpectedType(parameters.ExpectedReturnType, result);
             return result;
         }
