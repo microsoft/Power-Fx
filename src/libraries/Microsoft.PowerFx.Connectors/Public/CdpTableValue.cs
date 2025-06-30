@@ -128,25 +128,32 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             var valueTable = (TableValue)(await value.GetFieldAsync(DelegationParameters.ODataResultFieldName, cancellationToken).ConfigureAwait(false));
-            
-            if (valueTable.Rows.Count() > 1)
+
+            if (valueTable.Rows.Count() == 0)
+            {
+                // If the value table is empty, return a blank value of the expected type.
+                return FormulaValue.NewBlank(parameters.ExpectedReturnType);
+            }
+            else if (valueTable.Rows.Count() > 1)
             {
                 throw new InvalidOperationException("value Table should always have 1 rows for aggregation result");
             }
-
-            var row = valueTable.Rows.First();
-
-            if (row.IsError)
+            else
             {
-                return row.Error;
+                var row = valueTable.Rows.First();
+
+                if (row.IsError)
+                {
+                    return row.Error;
+                }
+
+                var valueRecord = row.Value;
+
+                var result = await valueRecord.GetFieldAsync(DelegationParameters.ODataAggregationResultFieldName, cancellationToken).ConfigureAwait(false);
+
+                result = ConvertToExpectedType(parameters.ExpectedReturnType, result);
+                return result;
             }
-
-            var valueRecord = row.Value;
-
-            var result = await valueRecord.GetFieldAsync(DelegationParameters.ODataAggregationResultFieldName, cancellationToken).ConfigureAwait(false);
-                
-            result = ConvertToExpectedType(parameters.ExpectedReturnType, result);
-            return result;
         }
 
         private static FormulaValue ConvertToExpectedType(FormulaType expectedType, FormulaValue value)
