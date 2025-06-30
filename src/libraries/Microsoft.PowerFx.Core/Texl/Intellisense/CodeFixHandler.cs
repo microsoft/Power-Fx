@@ -50,17 +50,17 @@ namespace Microsoft.PowerFx.Intellisense
     public class CodeFixSuggestion
     {
         /// <summary>
-        /// Required - Gets or sets code fix expression text to be applied.
+        /// Gets or sets code fix expression text to be applied. (Required).
         /// </summary>
         public string SuggestedText { get; set; }
 
         /// <summary>
-        /// Optional, Gets or sets title to be displayed on code fix suggestion.
+        /// Gets or sets title to be displayed on code fix suggestion. (Optional).
         /// </summary>
         public string Title { get; set; }
 
         /// <summary>
-        /// Optional, Opaque string, passed back to handler if this fix is applied. 
+        /// Gets or sets an opaque string, passed back to handler if this fix is applied. (Optional).
         /// </summary>
         public string ActionIdentifier { get; set; }
     }

@@ -124,7 +124,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal string ForeignKey { get; set; }
 
-        internal CDPMetadataItem FieldMetadata { get; }
+        internal IEnumerable<CDPSensitivityLabelInfo> FieldMetadata { get; }
 
         internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, FormulaType formulaType, ExpressionError warning = default, IEnumerable<KeyValuePair<DName, DName>> list = null, bool isNumber = false)
         {
@@ -150,6 +150,7 @@ namespace Microsoft.PowerFx.Connectors
             KeyType = schema.GetKeyType();
             KeyOrder = schema.GetKeyOrder();
             Permission = schema.GetPermission();
+            FieldMetadata = schema.GetFieldMetadata();
 
             // We only support one reference for now
             // SalesForce only
@@ -243,19 +244,17 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Called by ConnectorFunction.GetCdpTableType
-        internal ConnectorType(JsonElement schema, string tableName, SymbolTable optionSets, ConnectorSettings settings, string datasetName, string name, string displayName, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly, CDPMetadataItem fieldMetadata)
+        internal ConnectorType(JsonElement schema, string tableName, SymbolTable optionSets, ConnectorSettings settings, string datasetName, string name, string displayName, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
             : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(tableName, optionSets, settings))
         {
             Name = name;
             DisplayName = displayName;
-            FieldMetadata = fieldMetadata;
-
             foreach (ConnectorType field in Fields.Where(f => f.Capabilities != null))
             {
                 serviceCapabilities.AddColumnCapability(field.Name, field.Capabilities);
             }
 
-            FormulaType = new CdpRecordType(this, resolver, ServiceCapabilities.ToDelegationInfo(serviceCapabilities, name, isTableReadOnly, this, datasetName), FieldMetadata);
+            FormulaType = new CdpRecordType(this, resolver, ServiceCapabilities.ToDelegationInfo(serviceCapabilities, name, isTableReadOnly, this, datasetName));
         }
 
         internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, ConnectorType connectorType)

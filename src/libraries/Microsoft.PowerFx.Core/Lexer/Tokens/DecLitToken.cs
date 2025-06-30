@@ -7,6 +7,14 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Syntax
 {
+    /// <summary>
+    /// Represents a token containing a decimal literal value.
+    /// </summary>
+    /// <remarks>
+    /// This token is used to encapsulate a numeric value represented as a decimal literal within a
+    /// specific span of text. It provides functionality for cloning, comparison, and string representation of the
+    /// value.
+    /// </remarks>
     public class DecLitToken : Token
     {
         internal DecLitToken(decimal value, Span span)

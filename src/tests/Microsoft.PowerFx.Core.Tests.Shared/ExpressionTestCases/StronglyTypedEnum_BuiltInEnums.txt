@@ -678,16 +678,16 @@ Match.CalculatedOptionSetValue
 //
 
 >> If(true, TimeUnit.Seconds, "A")
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-31: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 >> If(true, TimeUnit.Minutes, TimeUnit.Seconds)
 TimeUnit.Minutes
 
 >> If(true, 1, StartOfWeek.Tuesday)
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-32: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 >> If(true, StartOfWeek.Tuesday, 1)
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-32: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 //===========================================================================================================
 //
@@ -910,7 +910,7 @@ Errors: Error 19-20: Incompatible types for comparison. These types can't be com
 Errors: Error 19-20: Incompatible types for comparison. These types can't be compared: Enum (StartOfWeek), Decimal.
 
 >> If( false, StartOfWeek.Monday, 3 )
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-34: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 // Can't be used as a number (CanCoerceToBackingKind = false)
 
@@ -927,7 +927,7 @@ Errors: Error 11-18: Invalid argument type. Expecting one of the following: Deci
 Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.|Error 32-39: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> If( false, 3, StartOfWeek.Sunday )  // first type rule
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-34: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 // Can't compare numerically (CanCompareNumeric = false)
 
@@ -1016,7 +1016,7 @@ Errors: Error 28-36: Invalid argument type (Text). Expecting a Enum (TimeUnit) v
 Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: Enum (TimeUnit), Text.
 
 >> If( false, TimeUnit.Years, 3 )  // first type rule
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-30: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 // Can't be used as a number (CanCoerceToBackingKind = false)
 
@@ -1033,7 +1033,7 @@ Errors: Error 8-14: Invalid argument type. Expecting one of the following: Decim
 Errors: Error 8-14: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.|Error 25-32: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> If( false, 3, TimeUnit.Years )  // first type rule
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-30: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 // Can't compare numerically (CanCompareNumeric = false)
 
@@ -1131,7 +1131,7 @@ Errors: Error 0-9: The function 'ColorFade' has some invalid arguments.|Error 20
 RGBA(140,140,89,1)
 
 >> If( false, Color.Red, RGBA(120,120,12,1) )  // first type rule
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-42: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 // Can be used as a color (CanCoerceToBackingKind = true)
 
@@ -1227,7 +1227,7 @@ Errors: Error 18-20: Incompatible types for comparison. These types can't be com
 // No ErrorKind functions are strongly typed at this time
 
 >> If( false, ErrorKind.Div0, 3 )  // first type rule
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-30: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 // Can be used as a number (CanCoerceToBackingKind = true)
 
@@ -1520,4 +1520,3 @@ false
 
 >> IsMatch( "28", 28 )
 Errors: Error 15-17: Invalid argument type (Decimal). Expecting a Enum (Match) value instead.
-

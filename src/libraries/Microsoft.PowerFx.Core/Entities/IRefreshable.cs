@@ -5,10 +5,14 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Entities
 {
-    // Used to identify Table or Record values which are refreshable.
-    // Refresh() function will only work if this interface is implemented.
+    /// <summary>
+    /// Represents an entity that can be refreshed, such as a Table or Record value.
+    /// </summary>
     public interface IRefreshable
     {
+        /// <summary>
+        /// Refreshes the entity to update its data or state.
+        /// </summary>
         void Refresh();
     }
 }

@@ -11,10 +11,11 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
-    /// Table expression parse node. Example:
-    /// 
-    /// <code>[E1, ...]</code>
+    /// Table expression parse node.
     /// </summary>
+    /// <example>
+    /// <code>[E1, ...]</code>
+    /// </example>
     public sealed class TableNode : VariadicBase
     {
         internal readonly Token[] Commas;

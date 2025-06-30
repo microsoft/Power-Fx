@@ -10,5 +10,7 @@ namespace Microsoft.PowerFx.Connectors
     public interface ICDPAggregateMetadata
     {
         bool TryGetSensitivityLabelInfo(out IEnumerable<CDPSensitivityLabelInfo> cdpSensitivityLabelInfo);
+
+        bool TryGetMetadataItems(out IEnumerable<CDPMetadataItem> cdpMetadataItems);
     }
 }

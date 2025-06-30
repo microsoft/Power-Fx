@@ -5,83 +5,155 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
     // Keep in sync with src/AppMagic/js/AppMagic.WebAuthoring/Constants/Texl.ts
     // Keep in sync with the @microsoft/power-fx-formulabar package
+
+    /// <summary>
+    /// Represents the types of tokens used in Power Fx IntelliSense.
+    /// </summary>
     public enum TokenType
     {
-        // default(TokenType) will resolve to Unknown.
+        /// <summary>
+        /// Unknown token type. Default value.
+        /// </summary>
         Unknown,
+
+        /// <summary>
+        /// Minimum token type value (alias for Unknown).
+        /// </summary>
         Min = Unknown,
 
-        // Control entity.
+        /// <summary>
+        /// Control entity token type.
+        /// </summary>
         Control,
 
-        // Global data source, such as an Excel table, or a Sharepoint list.
+        /// <summary>
+        /// Global data source token type, such as an Excel table or SharePoint list.
+        /// </summary>
         Data,
 
-        // Function.
+        /// <summary>
+        /// Function token type.
+        /// </summary>
         Function,
 
-        // Screen attribute or alias.
+        /// <summary>
+        /// Screen attribute or alias token type.
+        /// </summary>
         Alias,
 
-        // Enum, such as Color or SortOrder.
+        /// <summary>
+        /// Enum token type, such as Color or SortOrder.
+        /// </summary>
         Enum,
 
-        // A service namespace, such as Facebook or Bing.
+        /// <summary>
+        /// Service namespace token type, such as Facebook or Bing.
+        /// </summary>
         Service,
 
-        // The ThisItem keyword
+        /// <summary>
+        /// The ThisItem keyword token type.
+        /// </summary>
         ThisItem,
 
-        // Punctuators (currently only those that should be hidden).
+        /// <summary>
+        /// Punctuator token type (currently only those that should be hidden).
+        /// </summary>
         Punctuator,
 
-        // A word that is a part of a dotted name (eg. the words "Selected" and "Text" in "Gallery1.Selected.TextBox1.Text").
+        /// <summary>
+        /// A word that is a part of a dotted name (e.g., "Selected" and "Text" in "Gallery1.Selected.TextBox1.Text").
+        /// </summary>
         DottedNamePart,
 
-        // An Operator that takes two operands (Eg. + )
+        /// <summary>
+        /// Binary operator token type (takes two operands, e.g., +).
+        /// </summary>
         BinaryOp,
 
-        // An Operator that gets applied to one operand only (eg. -, Not)
+        /// <summary>
+        /// Unary operator token type (applied to one operand only, e.g., -, Not).
+        /// </summary>
         UnaryOp,
 
-        // An Operator that takes a variable number of operands/args (eg. semi-colon)
+        /// <summary>
+        /// Variadic operator token type (takes a variable number of operands/args, e.g., semicolon).
+        /// </summary>
         VariadicOp,
 
-        // A Constant Boolean value (True, False)
+        /// <summary>
+        /// Constant Boolean value token type (True, False).
+        /// </summary>
         BoolLit,
 
-        // A Constant float value (eg. ~5.1, 4.2, 1e300)
+        /// <summary>
+        /// Constant float value token type (e.g., ~5.1, 4.2, 1e300).
+        /// </summary>
         NumLit,
 
-        // A Constant decimal value (eg. 5.00000000000000000000000000000000001, 4.2, 1e28)
+        /// <summary>
+        /// Constant decimal value token type (e.g., 5.00000000000000000000000000000000001, 4.2, 1e28).
+        /// </summary>
         DecLit,        
 
-        // A Constant String Value (eg. "Hello")
+        /// <summary>
+        /// Constant string value token type (e.g., "Hello").
+        /// </summary>
         StrLit,
 
-        // An argument delemiter (eg. the comma character)
+        /// <summary>
+        /// Argument delimiter token type (e.g., the comma character).
+        /// </summary>
         Delimiter,
 
-        // App/Component variable.
+        /// <summary>
+        /// App/Component variable token type.
+        /// </summary>
         ScopeVariable,
 
-        // A Comment
+        /// <summary>
+        /// Comment token type.
+        /// </summary>
         Comment,
 
-        // Self reference
+        /// <summary>
+        /// Self reference token type.
+        /// </summary>
         Self,
 
-        // Parent reference
+        /// <summary>
+        /// Parent reference token type.
+        /// </summary>
         Parent,
 
-        // String interpolation
+        /// <summary>
+        /// String interpolation start token type.
+        /// </summary>
         StrInterpStart,
+
+        /// <summary>
+        /// String interpolation end token type.
+        /// </summary>
         StrInterpEnd,
+
+        /// <summary>
+        /// Island start token type.
+        /// </summary>
         IslandStart,
+
+        /// <summary>
+        /// Island end token type.
+        /// </summary>
         IslandEnd,
 
+        /// <summary>
+        /// Type token type.
+        /// </summary>
         Type, 
 
+        /// <summary>
+        /// Limit value for token types.
+        /// </summary>
         Lim
     }
 }

@@ -24,7 +24,21 @@
           "x-ms-keyOrder": 1,
           "x-ms-keyType": "primary",
           "x-ms-permission": "read-only",
-          "x-ms-sort": "none"
+          "x-ms-sort": "none",
+          "x-ms-content-sensitivityLabelInfo": [
+            {
+              "sensitivityLabelId": "34e4c2bf-bc71-4680-897b-bd559ad79cd2",
+              "name": "FTE Only",
+              "displayName": "FTE Only",
+              "tooltip": "FTE Only",
+              "priority": 65,
+              "color": "",
+              "isEncrypted": false,
+              "isEnabled": true,
+              "isParent": false,
+              "parentSensitivityLabelId": "ef85f0be-9819-46dd-b114-3d99fc96b702"
+            }
+          ]
         },
         "Name": {
           "title": "Name",

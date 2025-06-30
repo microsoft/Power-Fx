@@ -7,6 +7,7 @@ using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -1067,6 +1068,16 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             return ConnectorPermission.Undefined;
+        }
+
+        internal static IEnumerable<CDPSensitivityLabelInfo> GetFieldMetadata(this ISwaggerExtensions param)
+        {
+            if (param.Extensions != null && param.Extensions.TryGetValue(XMsContentSensitivityLabelInfo, out var ext) && ext is SwaggerJsonArray apiArr && apiArr.Any())
+            {
+                return JsonSerializer.Deserialize<IEnumerable<CDPSensitivityLabelInfo>>(apiArr.BackingJsonElement);
+            }
+
+            return null;
         }
 
         internal static ServiceCapabilities GetTableCapabilities(this ISwaggerExtensions schema)

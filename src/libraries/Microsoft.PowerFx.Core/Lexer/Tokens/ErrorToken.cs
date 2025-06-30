@@ -14,8 +14,10 @@ namespace Microsoft.PowerFx.Syntax
     {
         /// <summary>
         /// Errors description key.
-        /// May produce null, if there is no available detail for this error token.
         /// </summary>
+        /// <remarks>
+        /// May produce null, if there is no available detail for this error token.
+        /// </remarks>
         public ErrorResourceKey? DetailErrorKey { get; }
 
         // Args for ErrorResourceKey("UnexpectedCharacterToken")'s format string used in UnexpectedCharacterTokenError/LexError inside Lexer.cs.

@@ -61,7 +61,7 @@ Date(2011,1,16)
 "A"
 
 >> If(true, 1, TimeUnit.Seconds)
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-29: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 >> Text(Date(1970, 1, 1), DateTimeFormat.LongDate) 
 "Thursday, January 1, 1970"
