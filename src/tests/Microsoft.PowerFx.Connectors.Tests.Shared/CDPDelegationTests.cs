@@ -99,6 +99,25 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var result = await sqlTable.ExecuteQueryAsync(null, delegationParam, CancellationToken.None);
             Assert.IsAssignableFrom<DecimalType>(result.Type);
             Assert.IsAssignableFrom<BlankValue>(result);
+
+            // Execute OData with $count.
+            responseFile = @"Responses\SQL Server Get First Customers.json";    
+            oData = "$count=true";
+            delegationParam = new MockDelegationParameters(DelegationParameterFeatures.Count, FormulaType.Decimal, oData, true);
+            testConnector.SetResponseFromFile(responseFile);
+            result = await sqlTable.ExecuteQueryAsync(null, delegationParam, CancellationToken.None);
+            Assert.IsAssignableFrom<DecimalType>(result.Type);
+            var count = Assert.IsAssignableFrom<DecimalValue>(result);
+            Assert.Equal(2, count.Value);
+
+            // Execute Filter OData but receive empty response.
+            responseFile = @"Responses\EmptyTopLevelAggregation.json";
+            oData = "$apply=aggregate%28Bonus%20with%20sum%20as%20result%29";
+            delegationParam = new MockDelegationParameters(DelegationParameterFeatures.ApplyTopLevelAggregation, FormulaType.Decimal, oData);
+            testConnector.SetResponseFromFile(responseFile);
+            result = await sqlTable.ExecuteQueryAsync(null, delegationParam, CancellationToken.None);
+            Assert.IsAssignableFrom<DecimalType>(result.Type);
+            Assert.IsAssignableFrom<BlankValue>(result);
         }
 
         private class MockDelegationParameters : DelegationParameters
@@ -150,7 +169,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             public override bool ReturnTotalCount()
             {
-                return false;
+                return _returnTotalCount;
             }
         }
     }

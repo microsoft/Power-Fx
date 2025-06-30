@@ -19,5 +19,6 @@
       "Country": "USA",
       "Phone": "+1-425-705-0000"
     }
-  ]
+  ],
+  "@odata.count": 2
 }
