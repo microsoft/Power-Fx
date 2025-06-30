@@ -483,6 +483,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("x = $\"{\"1$\"}.{\"}\";\r\nudf():Text = $\"{\"}\";\r\ny = 2;", 2, 1, 0)]
         [InlineData("x = $\"{$\"{$\"{$\"{.12e4}\"}}\"}\";\r\nudf():Text = $\"{\"}\";\r\ny = 2;", 2, 1, 0)]
         [InlineData("x = $\"{$\"{$\"{$\"{.12e4}\"}\"}\"}{$\"Another nested}\";\r\nudf():Text = $\"{\"}\";\r\ny = 2;", 2, 1, 0)]
+        [InlineData("x = $\"{udf()} inside string interp\";\r\nudf():Text = $\"{\"}\";", 1, 1, 0)]
         public void TestUDF(string formula, int nfCount, int udfCount, int validUdfCount)
         {
             var parserOptions = new ParserOptions()

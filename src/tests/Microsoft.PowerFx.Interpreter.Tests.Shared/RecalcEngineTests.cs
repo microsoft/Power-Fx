@@ -2156,6 +2156,66 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Theory]
+
+        // UDF inside string interpolation should work
+        [InlineData(
+            "x = $\"{udf()} inside string interp\"; udf():Text = $\"{ \"abc\" }\";",
+            "x",
+            true,
+            "abc inside string interp")]
+
+        // UDF inside string interpolation should work using pagable datasource
+        [InlineData(
+            "x = $\"{udf2()} inside string interp\"; udf():MyDataSource = Table({ ID: 1, Value: 2}); udf2():Number = First(udf()).Value;",
+            "x",
+            true,
+            "2 inside string interp")]
+        public void UserDefinedFunctionInsideStringInterpTest(string userDefinitions, string evalExpression, bool isValid, string expectedResult)
+        {
+            var symbolTable = new DelegatableSymbolTable();
+            var schema = DType.CreateTable(
+                new TypedName(DType.Number, new DName("ID")),
+                new TypedName(DType.Number, new DName("Value")));
+            symbolTable.AddEntity(new TestDelegableDataSource(
+                "MyDataSource",
+                schema,
+                new TestDelegationMetadata(
+                        new DelegationCapability(DelegationCapability.Filter),
+                        schema,
+                        new FilterOpMetadata(
+                            schema,
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new DelegationCapability(DelegationCapability.GreaterThan),
+                            null)),
+                true));
+            symbolTable.AddType(new DName("MyDataSource"), FormulaType.Build(schema));
+            var config = new PowerFxConfig()
+            {
+                SymbolTable = symbolTable
+            };
+            config.EnableSetFunction();
+
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+            };
+
+            if (isValid)
+            {
+                var entityType = new Interpreter.Tests.DatabaseSimulationTests.TestEntityType(new Tests.BindingEngineTests.LazyRecursiveRecordType().ToTable()._type);
+                var entityValue = new Interpreter.Tests.DatabaseSimulationTests.TestEntityValue(IRContext.NotInSource(entityType));
+                recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture);
+                Assert.Equal(expectedResult, recalcEngine.Eval(evalExpression, options: parserOptions).ToObject());
+            }
+            else
+            {
+                Assert.Throws<InvalidOperationException>(() => recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture));
+            }
+        }
+
         #region Test
 
         private readonly StringBuilder _updates = new StringBuilder();

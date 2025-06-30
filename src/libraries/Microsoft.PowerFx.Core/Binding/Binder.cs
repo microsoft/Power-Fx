@@ -2226,7 +2226,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 sourceList: node.SourceList,
                 head: new Identifier(ident),
                 headNode: null,
-                new ListNode(ref listNodeId, tok: node.Token, args: new TexlNode[0], delimiters: null, sourceList: node.SourceList),
+                new ListNode(ref listNodeId, tok: node.Token, args: node.Children.ToArray(), delimiters: null, sourceList: node.SourceList),
                 node.StrInterpEnd);
             _compilerGeneratedCallNodes[node.Id] = callNode;
             SetInfo(callNode, new CallInfo(func, callNode));

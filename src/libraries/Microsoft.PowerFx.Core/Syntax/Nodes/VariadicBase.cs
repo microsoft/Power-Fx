@@ -34,7 +34,11 @@ namespace Microsoft.PowerFx.Syntax
             foreach (var child in children)
             {
                 Contracts.AssertValue(child);
-                child.Parent = this;
+                if (child.Parent == null)
+                {
+                    child.Parent = this;
+                }
+
                 if (maxDepth < child.Depth)
                 {
                     maxDepth = child.Depth;

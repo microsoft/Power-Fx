@@ -26,6 +26,7 @@ using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -832,7 +833,9 @@ namespace Microsoft.PowerFx.Core.Functions
         public bool RequiresPagedDataForParam(CallNode callNode, int paramIndex, TexlBinding binding)
         {
             Contracts.AssertValue(callNode);
-            Contracts.AssertValue(callNode.Args);
+
+            // ConcatenateFunction is a special case where we may not have any args on call node.
+            Contracts.Assert(this is ConcatenateFunction || callNode.Args.Count > 0);
             Contracts.Assert(paramIndex >= 0 && paramIndex < callNode.Args.Children.Count());
             Contracts.AssertValue(binding);
 
