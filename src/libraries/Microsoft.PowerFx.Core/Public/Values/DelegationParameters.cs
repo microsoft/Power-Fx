@@ -18,6 +18,11 @@ namespace Microsoft.PowerFx.Types
         public const string ODataAggregationResultFieldName = "result";
 
         /// <summary>
+        /// When using OData with $count=True, the result is returned in below field.
+        /// </summary>
+        public const string ODataCountFieldName = "@odata.count";
+
+        /// <summary>
         /// When returning Records, OData puts them in this field.
         /// </summary>
         internal const string ODataResultFieldName = "value";

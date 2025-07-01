@@ -290,6 +290,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
             await connectorTable.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
             Assert.True(connectorTable.IsInitialized);
+
+#pragma warning disable CS0618 // Type or member is obsolete
+            Assert.True(connectorTable.DelegationInfo.CountCapabilities.IsCountableTable());
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         [Fact]
