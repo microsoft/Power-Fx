@@ -98,10 +98,11 @@ namespace Microsoft.PowerFx.Core.Functions
             for (int i = 0; i < argTypes.Length; i++)
             {
                 if ((argTypes[i].IsTableNonObjNull || argTypes[i].IsRecordNonObjNull) &&
-                    !ParamTypes[i].Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules, true) &&
-                    !argTypes[i].CoercesTo(ParamTypes[i], true, false, context.Features, true))
+                    !ParamTypes[i].Accepts(argTypes[i], out var schemaDiff, out _, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules, restrictiveAggregateTypes: true) &&
+                    !argTypes[i].CoercesTo(ParamTypes[i], aggregateCoercion: true, isTopLevelCoercion: false, features: context.Features, restrictiveAggregateTypes: true))
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBadSchema_ExpectedType, ParamTypes[i].GetKindString());
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBadSchema_AdditionalField, ParamTypes[i].GetKindString(), schemaDiff.Key);
+
                     return false;
                 }
             }
@@ -193,7 +194,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Perform sub-expression type checking and produce a return type for the function declaration, this is only applicable for UDFs.
         /// </summary>
-        public void CheckTypesOnDeclaration(CheckTypesContext context, DType actualBodyReturnType, TexlBinding binding)
+        private void CheckTypesOnDeclaration(CheckTypesContext context, DType actualBodyReturnType, TexlBinding binding)
         {
             Contracts.AssertValue(context);
             Contracts.AssertValue(actualBodyReturnType);
@@ -201,6 +202,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
             if (!ReturnType.Accepts(
                 actualBodyReturnType, 
+                out var schemaDiff,
+                out var diffType,
                 exact: true, 
                 useLegacyDateTimeAccepts: false,
                 usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules,
@@ -216,12 +219,38 @@ namespace Microsoft.PowerFx.Core.Functions
 
                     if ((ReturnType.IsTable && actualBodyReturnType.IsTable) || (ReturnType.IsRecord && actualBodyReturnType.IsRecord))
                     {
-                        binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrUDF_ReturnTypeSchemaDoesNotMatch, ReturnType.GetKindString());
+                        AddAggregateTypeErrors(binding.ErrorContainer, node, ReturnType, schemaDiff, diffType);
                         return;
                     }
 
                     binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch, ReturnType.GetKindString(), actualBodyReturnType.GetKindString());
                 }
+            }
+        }
+
+        private void AddAggregateTypeErrors(IErrorContainer errors, TexlNode node, DType nodeType, KeyValuePair<string, DType> schemaDifference, DType schemaDifferenceType)
+        {
+            Contracts.AssertValue(node);
+            Contracts.AssertValid(nodeType);
+
+            if (schemaDifferenceType.IsValid)
+            {
+                errors.EnsureError(
+                    DocumentErrorSeverity.Severe,
+                    node,
+                    TexlStrings.ErrUDF_ReturnTypeSchemaIncompatible,
+                    schemaDifference.Key,
+                    schemaDifference.Value.GetKindString(),
+                    schemaDifferenceType.GetKindString());
+            }
+            else
+            {
+                errors.EnsureError(
+                    DocumentErrorSeverity.Severe,
+                    node,
+                    TexlStrings.ErrUDF_ReturnTypeSchemaAdditionalFields,
+                    nodeType.GetKindString(),
+                    schemaDifference.Key);
             }
         }
 

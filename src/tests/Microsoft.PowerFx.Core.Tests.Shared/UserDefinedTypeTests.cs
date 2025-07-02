@@ -157,10 +157,11 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("f():T = {x: 5, y: 5}; T := Type({x: Number});", "ErrUDF_ReturnTypeSchemaDoesNotMatch")]
-        [InlineData("f(x:T):Number = x.n; T := Type({n: Number}); g(): Number = f({n: 5, m: 5});", "ErrBadSchema_ExpectedType")]
-        [InlineData("f():T = [{x: 5, y: 5}]; T := Type([{x: Number}]);", "ErrUDF_ReturnTypeSchemaDoesNotMatch")]
-        [InlineData("f(x:T):T = x; T := Type([{n: Number}]); g(): T = f([{n: 5, m: 5}]);", "ErrBadSchema_ExpectedType")]
+        [InlineData("f():T = {x: true, y: 1}; T := Type({x: Boolean});", "ErrUDF_ReturnTypeSchemaAdditionalFields")]
+        [InlineData("f(x:T):Number = x.n; T := Type({n: Number}); g(): Number = f({n: 5, m: 5});", "ErrBadSchema_AdditionalField")]
+        [InlineData("f():T = [{x: 5, y: 5}]; T := Type([{x: Number}]);", "ErrUDF_ReturnTypeSchemaAdditionalFields")]
+        [InlineData("f(x:T):T = x; T := Type([{n: Number}]); g(): T = f([{n: 5, m: 5}]);", "ErrBadSchema_AdditionalField")]
+        [InlineData("f(x:T):T = {n: \"Foo\"}; T := Type({n: GUID});", "ErrUDF_ReturnTypeSchemaIncompatible")]
         public void TestAggregateTypeErrors(string typeDefinition, string expectedMessageKey)
         {
             var checkResult = new DefinitionsCheckResult()

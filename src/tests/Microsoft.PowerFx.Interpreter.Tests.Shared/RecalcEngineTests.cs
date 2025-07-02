@@ -1854,6 +1854,7 @@ namespace Microsoft.PowerFx.Tests
             "Point := Type({x : Number, y : Number}); distance(a: Point, b: Point): Number = Sqrt(Power(b.x-a.x, 2) + Power(b.y-a.y, 2));",
             "distance({x: 0, y: 0}, {x: 0, y: 5})",
             true,
+            true,
             5.0)]
 
         // Table types are accepted
@@ -1861,10 +1862,12 @@ namespace Microsoft.PowerFx.Tests
             "People := Type([{Id:Number, Age: Number}]); countMinors(p: People): Number = CountRows(Filter(p, Age < 18));",
             "countMinors([{Id: 1, Age: 17}, {Id: 2, Age: 21}])",
             true,
+            true,
             1.0)]
         [InlineData(
             "Numbers := Type([Number]); countEven(nums: Numbers): Number = CountRows(Filter(nums, Mod(Value, 2) = 0));",
             "countEven([1,2,3,4,5,6,7,8,9,10])",
+            true,
             true,
             5.0)]
 
@@ -1873,12 +1876,14 @@ namespace Microsoft.PowerFx.Tests
             "CarYear := Type(Number); Car := Type({Model: Text, ModelYear: CarYear}); createCar(model:Number, year: Number): Car = {Model:model, ModelYear: year};",
             "createCar(\"Model Y\", 2024).ModelYear",
             true,
+            true,
             2024.0)]
 
         // Type definitions order shouldn't matter
         [InlineData(
             "Person := Type({Id: IdType, Age: Number}); IdType := Type(Number); createUser(id:Number, a: Number): Person = {Id:id, Age: a};",
             "createUser(1, 42).Age",
+            true,
             true,
             42.0)]
 
@@ -1887,12 +1892,14 @@ namespace Microsoft.PowerFx.Tests
             "Employee := Type({Name: Text, Age: Number, Title: Text}); getAge(e: Employee): Number = e.Age;",
             "getAge({Name: \"Bob\", Age: 21})",
             true,
+            true,
             21.0)]
         [InlineData(
             @"Employee := Type({Name: Text, Age: Number, Title: Text}); 
               getAge(e: Employee): Number = e.Age;
               hasNoAge(e: Employee): Number = IsBlank(getAge(e));",
             "hasNoAge({Name: \"Bob\", Title: \"CEO\"})",
+            true,
             true,
             1.0)]
 
@@ -1902,6 +1909,7 @@ namespace Microsoft.PowerFx.Tests
               Patients := Type([Patient]);
               Dummy():Number = CountRows([]);",
             "Dummy()",
+            true,
             true,
             0.0)]
 
@@ -1954,6 +1962,7 @@ namespace Microsoft.PowerFx.Tests
             "f():TestEntity = Entity; g(e: TestEntity):Number = 1;",
             "g(f())",
             true,
+            true,
             1.0)]
 
         // Aggregate types with more than expected fields are not allowed in UDF args and return types
@@ -1969,6 +1978,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(
             "g(x:T):Number = x.n; T := Type({n: Number});",
             "g({x: 5, y: 5})",
+            true,
             false)]
 
         // Nested Records
@@ -1979,6 +1989,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(
             "g(x:T):Number = x.b.c.d; T := Type({a: Number, b: {c: {d: Number}}});",
             "g({a: 5, b: {c: {d: 5, e:42}}})",
+            true,
             false)]
 
         // Tables
@@ -1989,12 +2000,14 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(
             "People := Type([{Name: Text, Age: Number}]); countMinors(p: People): Number = CountRows(Filter(p, Age < 18));",
             "countMinors([{Name: \"Bob\", Age: 21, Title: \"Engineer\"}, {Name: \"Alice\", Age: 25, Title: \"Manager\"}])",
+            true,
             false)]
         [InlineData(
             @"Employee := Type({Name: Text, Age: Number, Title: Text}); Employees := Type([Employee]);  EmployeeNames := Type([{Name: Text}]); 
               getNames(e: Employees):EmployeeNames = ShowColumns(e, Name); 
               getNamesCount(e: EmployeeNames):Number = CountRows(getNames(e));",
             "getNamesCount([{Name: \"Jim\", Age:25}, {Name: \"Tony\", Age:42}])",
+            true,
             false)]
 
         // Nested Tables
@@ -2005,8 +2018,9 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(
             "g(x:T):Number = First(First(x).b).c.d; T := Type([{a: Number, b: [{c: {d: Number}}]}]);",
             "g({a: 5, b: [{c: {d: 5, e:42}}]})",
+            true,
             false)]
-        public void UserDefinedTypeTest(string userDefinitions, string evalExpression, bool isValid, double expectedResult = 0)
+        public void UserDefinedTypeTest(string userDefinitions, string evalExpression, bool isValidDefinition, bool isValidEval = false, double expectedResult = 0)
         {
             var config = new PowerFxConfig();
             var recalcEngine = new RecalcEngine(config);
@@ -2015,21 +2029,35 @@ namespace Microsoft.PowerFx.Tests
                 AllowsSideEffects = false,
             };
 
-            if (isValid)
+            var entityType = new Interpreter.Tests.DatabaseSimulationTests.TestEntityType(new Tests.BindingEngineTests.LazyRecursiveRecordType().ToTable()._type);
+            var entityValue = new Interpreter.Tests.DatabaseSimulationTests.TestEntityValue(IRContext.NotInSource(entityType));
+            recalcEngine._symbolTable.AddType(new DName("TestEntity"), entityType);
+            recalcEngine._symbolValues.Add("Entity", entityValue);
+
+            if (isValidDefinition)
             {
-                var entityType = new Interpreter.Tests.DatabaseSimulationTests.TestEntityType(new Tests.BindingEngineTests.LazyRecursiveRecordType().ToTable()._type);
-                var entityValue = new Interpreter.Tests.DatabaseSimulationTests.TestEntityValue(IRContext.NotInSource(entityType));
-                recalcEngine._symbolTable.AddType(new DName("TestEntity"), entityType);
-                recalcEngine._symbolValues.Add("Entity", entityValue);
                 recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture);
-                Assert.Equal(expectedResult, recalcEngine.Eval(evalExpression, options: parserOptions).ToObject());
+
+                if (isValidEval)
+                {
+                    Assert.Equal(expectedResult, recalcEngine.Eval(evalExpression, options: parserOptions).ToObject());
+                }
+                else
+                {
+                    var ex = Assert.Throws<AggregateException>(() => 
+                    {
+                        recalcEngine.Eval(evalExpression, options: parserOptions);
+                    });
+
+                    Assert.Single(ex.InnerExceptions);
+                    Assert.IsType<InvalidOperationException>(ex.InnerExceptions[0]);
+                }
             }
             else
             {
-                Assert.ThrowsAny<Exception>(() =>
+                Assert.Throws<InvalidOperationException>(() =>
                 {
                     recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture);
-                    recalcEngine.Eval(evalExpression, options: parserOptions);
                 });
             }
         }

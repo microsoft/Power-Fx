@@ -2298,12 +2298,14 @@ namespace Microsoft.PowerFx.Core.Types
                 }
             }
 
+            // Used in user-defined functions to ensure that the source type does not contain any fields that are not in the destination type.
             if (restrictiveAggregateTypes)
             {
                 foreach (var pairSrc in treeSrc)
                 {
                     if (!treeDst.Contains(pairSrc.Key))
                     {
+                        schemaDifference = new KeyValuePair<string, DType>(pairSrc.Key, pairSrc.Value);
                         return false;
                     }
                 }
