@@ -88,6 +88,22 @@ namespace Microsoft.PowerFx.Types
             return FromJson(element, settings, new FormulaValueJsonSerializerWorkingData(), formulaType);  
         }
 
+        // // caller verified element is non-null and is of type string 
+        internal static FormulaValue ParseDate(JsonElement element, FormulaType targetType, Func<DateTime, FormulaValue> funcParse)
+        {
+            var strValue = element.GetString(); 
+            if (string.IsNullOrWhiteSpace(strValue))
+            {
+                return FormulaValue.NewBlank(targetType);
+            }
+
+            // Any exceptions will be caught at higher level. 
+            var dateTime = element.GetDateTime();
+
+            var value = funcParse(dateTime);
+            return value;
+        }
+
         internal static FormulaValue FromJson(JsonElement element, FormulaValueJsonSerializerSettings settings, FormulaValueJsonSerializerWorkingData data, FormulaType formulaType = null)
         { 
             if (formulaType is UntypedObjectType uot)
@@ -123,29 +139,37 @@ namespace Microsoft.PowerFx.Types
                     }
                     else if (formulaType is DateType)
                     {
-                        DateTime dt1 = element.GetDateTime().Date;
-                        return FormulaValue.NewDateOnly(dt1);
+                        return ParseDate(
+                            element,
+                            FormulaType.Date,
+                            (dateTime) => FormulaValue.NewDateOnly(dateTime.Date));
                     }
                     else if (formulaType is DateTimeType)
                     {
-                        DateTime dt2 = element.GetDateTime();
+                        return ParseDate(
+                            element,
+                            FormulaType.DateTime,
+                            (dt2) => 
+                            {
+                                if (dt2.Kind == DateTimeKind.Local)
+                                {
+                                    dt2 = dt2.ToUniversalTime();
+                                }
 
-                        if (dt2.Kind == DateTimeKind.Local)
-                        {
-                            dt2 = dt2.ToUniversalTime();
-                        }
+                                if (settings.ResultTimeZone == TimeZoneInfo.Utc && dt2.Kind == DateTimeKind.Unspecified)
+                                {
+                                    dt2 = new DateTime(dt2.Ticks, DateTimeKind.Utc);
+                                }
 
-                        if (settings.ResultTimeZone == TimeZoneInfo.Utc && dt2.Kind == DateTimeKind.Unspecified)
-                        {
-                            dt2 = new DateTime(dt2.Ticks, DateTimeKind.Utc);
-                        }
-
-                        return DateTimeValue.New(DateTimeValue.GetConvertedDateTimeValue(dt2, settings.ResultTimeZone));
+                                return DateTimeValue.New(DateTimeValue.GetConvertedDateTimeValue(dt2, settings.ResultTimeZone));
+                            });
                     }
                     else if (formulaType is DateTimeNoTimeZoneType)
                     {
-                        DateTime dt3 = element.GetDateTime();
-                        return DateTimeValue.New(TimeZoneInfo.ConvertTimeToUtc(dt3));
+                        return ParseDate(
+                            element, 
+                            FormulaType.DateTime,
+                            dt3 => DateTimeValue.New(TimeZoneInfo.ConvertTimeToUtc(dt3)));
                     }
                     else if (formulaType is TimeType)
                     {
@@ -162,9 +186,21 @@ namespace Microsoft.PowerFx.Types
                     {
                         return FormulaValue.NewBlob(element.GetBytesFromBase64());
                     }
-                    else if (formulaType is OptionSetValueType osvt && osvt.TryGetValue(new DName(element.GetString()), out OptionSetValue osv))
+                    else if (formulaType is OptionSetValueType osvt)
                     {
-                        return osv;
+                        string el = element.GetString();
+
+                        if (osvt.TryGetValue(new DName(el), out OptionSetValue osv))
+                        {
+                            return osv;
+                        }
+
+                        // If the OptionSetValue isn't found, let's just return an error
+                        return new ErrorValue(IRContext.NotInSource(osvt), new ExpressionError()
+                        {
+                            Kind = ErrorKind.Validation,
+                            Message = $"Invalid OptionSet value '{el}'"
+                        });                        
                     }
                     else 
                     {

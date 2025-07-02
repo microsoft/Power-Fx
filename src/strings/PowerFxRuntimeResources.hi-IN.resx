@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>{0}' फ़ंक्शन के अनटाइप्ड ऑब्जेक्ट तर्क का प्रकार गलत है. अपेक्षित: {1}, वास्तविक: {0}.</value>
+    <value>{0}' फ़ंक्शन के अनटाइप्ड ऑब्जेक्ट तर्क का प्रकार गलत है. अपेक्षित: {1}, वास्तविक: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

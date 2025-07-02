@@ -144,28 +144,28 @@ Errors: Error 30-31: Incompatible types for comparison. These types can't be com
 // Booleans cannot be used in math expressions, even if they support coercion to backing kind
 
 >> TestBooleanNoCoerce.SuperFalse + 2
-Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> TestBooleanNoCoerce.SuperFalse * 2
-Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> TestBooleanNoCoerce.SuperFalse / 2
-Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> TestBooleanNoCoerce.SuperFalse ^ 2
-Errors: Error 19-30: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 19-30: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> TestYesNo.Yes + 2
-Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> TestYesNo.No * 2
-Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> TestYesNo.Yes / 2
-Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> TestYesNo.Yes ^ 2
-Errors: Error 9-13: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 //===========================================================================================================
 //
@@ -173,22 +173,22 @@ Errors: Error 9-13: Invalid argument type. Expecting one of the following: Numbe
 //
 
 >> TestYesNo.Yes && TestBooleanNoCoerce.SuperTrue
-Errors: Error 36-46: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
+Errors: Error 36-46: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, Dynamic.
 
 >> TestBooleanNoCoerce.SuperTrue && TestBooleanNoCoerce.SuperFalse
-Errors: Error 19-29: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.|Error 52-63: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
+Errors: Error 19-29: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, Dynamic.|Error 52-63: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, Dynamic.
 
 >> TestBooleanNoCoerce.SuperTrue && false
-Errors: Error 19-29: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
+Errors: Error 19-29: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, Dynamic.
 
 >> !TestBooleanNoCoerce.SuperTrue
-Errors: Error 20-30: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
+Errors: Error 20-30: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, Dynamic.
 
 >> TestYesNo.Yes Or TestBooleanNoCoerce.SuperTrue
-Errors: Error 36-46: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
+Errors: Error 36-46: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, Dynamic.
 
 >> Not TestBooleanNoCoerce.SuperTrue And Not TestBooleanNoCoerce.SuperFalse
-Errors: Error 23-33: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.|Error 61-72: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
+Errors: Error 23-33: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, Dynamic.|Error 61-72: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, Dynamic.
 
 >> TestBooleanNoCoerce.SuperTrue
 TestBooleanNoCoerce.SuperTrue
@@ -782,10 +782,10 @@ Errors: Error 0-4: The function 'Sqrt' has some invalid arguments.|Error 15-18: 
 Errors: Error 0-3: The function 'Mod' has some invalid arguments.|Error 14-17: Invalid argument type (Enum (TestYesNo)). Expecting a Decimal value instead.
 
 >> TestYesNo.No + 3
-Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> TestYesNo.No + TestYesNo.Yes
-Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 24-28: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.|Error 24-28: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> If( false, true, TestYesNo.No )  // first type rule
 false

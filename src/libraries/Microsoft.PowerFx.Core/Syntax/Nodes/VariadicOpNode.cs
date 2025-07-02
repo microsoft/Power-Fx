@@ -11,14 +11,15 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
-    /// Variadic operation node. Example:
-    /// 
-    /// <code>Formula1 ; Formula2 ; ...</code>
+    /// Variadic operation node.
     /// </summary>
+    /// <example>
+    /// <code>Formula1 ; Formula2 ; ...</code>
+    /// </example>
     public sealed class VariadicOpNode : VariadicBase
     {
         /// <summary>
-        /// Variadic operator.
+        /// Gets the variadic operator.
         /// </summary>
         public VariadicOp Op { get; }
         

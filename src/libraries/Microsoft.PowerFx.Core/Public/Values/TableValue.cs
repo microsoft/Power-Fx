@@ -27,7 +27,21 @@ namespace Microsoft.PowerFx.Types
         /// <param name="parameters">delegation parameters.</param>
         /// <param name="cancel"></param>
         /// <returns></returns>
+        [Obsolete($"Use  {nameof(ExecuteQueryAsync)} instead.")]
         Task<IReadOnlyCollection<DValue<RecordValue>>> GetRowsAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel);
+
+        /// <summary>
+        /// Evaluation will invoke this method on aggregation calls where return value is scaler.
+        /// </summary>
+        /// <param name="services">Pre-eval services.</param>
+        /// <param name="parameters">Delegation parameters.</param>
+        /// <param name="cancel"></param>
+        Task<FormulaValue> ExecuteQueryAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel);
+
+        /// <summary>
+        /// Supported features for delegation to verify correct Features are delegated at runtime.
+        /// </summary>
+        DelegationParameterFeatures SupportedFeatures { get; }
     }
 
     /// <summary>

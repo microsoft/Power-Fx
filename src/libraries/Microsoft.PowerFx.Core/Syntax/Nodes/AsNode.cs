@@ -10,19 +10,20 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
-    /// As operator parse node. Example:
-    /// 
-    /// <code>Left As Identifier</code>
+    /// As operator parse node.
     /// </summary>
+    /// <example>
+    /// <code>Left As Identifier</code>
+    /// </example>
     public sealed class AsNode : TexlNode
     {
         /// <summary>
-        /// Left operand of the as operator.
+        /// Gets the left operand of the as operator.
         /// </summary>
         public TexlNode Left { get; }
 
         /// <summary>
-        /// Right operand (identifier) of the as operator.
+        /// Gets the right operand (identifier) of the as operator.
         /// </summary>
         public Identifier Right { get; }
 

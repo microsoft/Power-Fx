@@ -52,6 +52,7 @@ namespace Microsoft.PowerFx
             set => _symbolTable = value;
         }
 
+        // Remove this: https://github.com/microsoft/Power-Fx/issues/2821
         internal readonly Dictionary<TexlFunction, IAsyncTexlFunction> AdditionalFunctions = new ();
 
         [Obsolete("Use Config.EnumStore or symboltable directly")]

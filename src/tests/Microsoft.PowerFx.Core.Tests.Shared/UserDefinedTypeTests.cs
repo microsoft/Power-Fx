@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("A := Type(Blob); B := Type({x: Currency}); C := Type([DateTime]); D := Type(None)", 2)]
 
         // Have named formulas and udf in the script
-        [InlineData("NAlias := Type(Number);X := 5; ADDX(n:Number): Number = n + X; SomeType := Type(UntypedObject)", 2)]
+        [InlineData("NAlias := Type(Number);X := 5; ADDX(n:Number): Number = n + X; SomeType := Type(Dynamic)", 2)]
 
         // Have RecordOf with/ without errors
         [InlineData("Numbers := Type([Number]);T1 := Type(RecordOf([Number])); Num := Type(RecordOf(Numbers)); T2 := Type(Num);", 3)]
@@ -118,12 +118,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
         //To test DefinitionsCheckResult.ApplyErrors method and error messages
         [InlineData("Point := Type({ x: Number, y: Number }); Point := Type(Number);", 1, "ErrNamedType_TypeAlreadyDefined")]
-        [InlineData("X:= Type({ f:Number, f:Number});", 1, "ErrNamedType_InvalidTypeDefinition")]
+        [InlineData("X:= Type({ f:Number, f:Number});", 1, "ErrNamedType_InvalidTypeDeclaration")]
         [InlineData("B := Type({ x: A }); A := Type(B);", 2, "ErrNamedType_InvalidCycles")]
         [InlineData("B := Type(B);", 1, "ErrNamedType_InvalidCycles")]
         [InlineData("Currency := Type({x: Text}); Record := Type([DateTime]); D := Type(None);", 2, "ErrNamedType_InvalidTypeName")]
-        [InlineData("A = 5;C :=; B := Type(Number);", 1, "ErrNamedType_MissingTypeLiteral")]
-        [InlineData("C := 5; D := [1,2,3];", 2, "ErrNamedType_MissingTypeLiteral")]
+        [InlineData("A = 5;C :=; B := Type(Number);", 1, "ErrNamedType_MissingTypeExpression")]
+        [InlineData("C := 5; D := [1,2,3];", 2, "ErrNamedType_MissingTypeExpression")]
         public void TestUDTErrors(string typeDefinition, int expectedErrorCount, string expectedMessageKey)
         {
             var checkResult = new DefinitionsCheckResult()
@@ -142,11 +142,11 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Points := Type([{ x: Number, y: Number }]); F(): Number = RecordOf(Points).x; ", "ErrKnownTypeHelperFunction")]
 
         // RecordOf record type
-        [InlineData("Point := Type({ x: Number, y: Number }); PointR := Type(RecordOf(Point)); ", "ErrNamedType_InvalidTypeDefinition")]
+        [InlineData("Point := Type({ x: Number, y: Number }); PointR := Type(RecordOf(Point)); ", "ErrNamedType_InvalidTypeDeclaration")]
 
         // Inline definitions within RecordOf
-        [InlineData("T1 := Type(RecordOf(Type([{A:Number}])));", "ErrTypeLiteral_InvalidTypeDefinition")]
-        [InlineData("T1 := Type(RecordOf(RecordOf([{x:Number, y:Number}])));", "ErrTypeLiteral_InvalidTypeDefinition")]
+        [InlineData("T1 := Type(RecordOf(Type([{A:Number}])));", "ErrTypeFunction_InvalidTypeExpression")]
+        [InlineData("T1 := Type(RecordOf(RecordOf([{x:Number, y:Number}])));", "ErrTypeFunction_InvalidTypeExpression")]
         public void TestRecordOfErrors(string typeDefinition, string expectedMessageKey)
         {
             var checkResult = new DefinitionsCheckResult()
@@ -157,10 +157,11 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("f():T = {x: 5, y: 5}; T := Type({x: Number});", "ErrUDF_ReturnTypeSchemaDoesNotMatch")]
-        [InlineData("f(x:T):Number = x.n; T := Type({n: Number}); g(): Number = f({n: 5, m: 5});", "ErrBadSchema_ExpectedType")]
-        [InlineData("f():T = [{x: 5, y: 5}]; T := Type([{x: Number}]);", "ErrUDF_ReturnTypeSchemaDoesNotMatch")]
-        [InlineData("f(x:T):T = x; T := Type([{n: Number}]); g(): T = f([{n: 5, m: 5}]);", "ErrBadSchema_ExpectedType")]
+        [InlineData("f():T = {x: true, y: 1}; T := Type({x: Boolean});", "ErrUDF_ReturnTypeSchemaAdditionalFields")]
+        [InlineData("f(x:T):Number = x.n; T := Type({n: Number}); g(): Number = f({n: 5, m: 5});", "ErrBadSchema_AdditionalField")]
+        [InlineData("f():T = [{x: 5, y: 5}]; T := Type([{x: Number}]);", "ErrUDF_ReturnTypeSchemaAdditionalFields")]
+        [InlineData("f(x:T):T = x; T := Type([{n: Number}]); g(): T = f([{n: 5, m: 5}]);", "ErrBadSchema_AdditionalField")]
+        [InlineData("f(x:T):T = {n: \"Foo\"}; T := Type({n: GUID});", "ErrUDF_ReturnTypeSchemaIncompatible")]
         public void TestAggregateTypeErrors(string typeDefinition, string expectedMessageKey)
         {
             var checkResult = new DefinitionsCheckResult()
@@ -194,7 +195,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var parseResult = checkResult.ApplyParse();
             Assert.True(parseResult.HasErrors);
 
-            var validatorErrors = parseResult.Errors.Where(e => e.MessageKey.Contains("ErrTypeLiteral_InvalidTypeDefinition"));
+            var validatorErrors = parseResult.Errors.Where(e => e.MessageKey.Contains("ErrTypeFunction_InvalidTypeExpression"));
             Assert.Equal(expectedErrorCount, validatorErrors.Count());
         }
     }

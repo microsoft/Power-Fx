@@ -1917,6 +1917,10 @@
     <value>"{0}" — белгісіз немесе қолдау көрсетілмейтін функция.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>"{0}" терудің көмекші функциясы ретінде танылады және оны тек Type функциясының ішінде пайдалануға болады.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>"{0}" — "{1}" атау кеңістігіндегі белгісіз немесе қолдау көрсетілмейтін функция.</value>
     
@@ -2107,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>"{0}" үшін баған атауы қайшылығы.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Жүйе жазбасына немесе жүйе жазбаларының кестесіне бағандарды қосу мүмкін емес. Алдымен сізге қажет арнайы бағандарды шығару үшін ShowColumns опциясын пайдаланыңыз.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Жүйе жазбасының немесе жүйе жазбаларының кестесіндегі бағандардың атауын өзгерту мүмкін емес. Алдымен сізге қажет арнайы бағандарды шығару үшін ShowColumns опциясын пайдаланыңыз.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -3221,9 +3233,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Жеделдетілетін жаңа немесе бар жиынтық.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Жиналатын жазба немесе кесте. Жазба жиынтыққа қосылады. Кестенің жолдары жиынтыққа қосылады.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Алдымен жиынды өшіріп, көрсетілген жиынға бір не одан көп элемент қосады. Элементтер басқа кестеден немесе жиыннан (мысалы, ClearCollect(collection, source_collection)) немесе бір не одан көп ClearCollect(collection, {key1: val1, key2: val2, ...}, ...) жазбасынан болуы мүмкін.</value>
     
@@ -3704,12 +3713,23 @@
     <value>Формуланы ол жақшаны қамтитын етіп өзгертіңіз.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Идентификаторды жабу күтілген. Формуладағы бұл жерде жабатын (') таңбасы күтіледі.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Жалғыз тырнақша идентификатордың соңын көрсетеді (мысалы, 'Аты').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Формуланы жабылатын жалғыз тырнақшаны қамтитын етіп өзгертіңіз.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Идентификаторда жарамды мәтін жоқ.</value>
+    <value>Идентификатор бос немесе қойынша немесе жаңа жол сияқты жарамсыз таңбаны қамтиды.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Идентификатор үшін мәтіннің болуына көз жеткізіңіз. Идентификатор бос немесе бос орындар болса, осы қате пайда болады.</value>
+    <value>Идентификатор ішінде жарамды мәтіннің болуына көз жеткізіңіз. Идентификатор бос немесе бос орындар болса, не болмаса қойынша немесе жаңа жолды қамтитын болса, осы қате пайда болады.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4201,8 @@
     <value>Аталған формула өрнек болуы керек.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Атаулы түр литерал түрі болуы қажет.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Атауы бар түр туралы декларация жарамды түр өрнегі болуы керек.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4499,24 +4519,232 @@
     <value>Жарамсыз тұрақты өрнек.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: кірістірілген опциялар тұрақты өрнектің басында пайда болуы керек, кейінірек «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: кірістірілген опциялар әріптер тіркесімімен [imnsx] шектелген, опцияларды өшіре алмайды және ішкі өрнекте пайдаланылмайды, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: сегіздік \0 таңба кодтарына қолдау көрсетілмейді, оның орнына он алтылық \x немесе Unicode \u кодын пайдаланыңыз, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: әріптік өрнек жақшалар кері қиғаш сызықпен шығарылуы керек, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: әріптік тік жақшалар, мысалы, \[ немесе \], тіпті таңбалар класында да кері қиғаш сызықпен шығуы керек, «{0}» соңында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: жабылмаған таңба класының тік жақшасы.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: қолдау көрсетілмейтін арнайы топ, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: таңбалар класында шығыс таңбаға рұқсат етілмеген, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: жоққа шығарылған таңбалар класында теріс шығыс таңбаға рұқсат етілмеген, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: таңбалар класынан тыс шығыс таңбаға рұқсат етілмеген, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: жарамсыз Unicode санатының атауы, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: қайталанатын кірістірілген опция, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: жабылмаған кірістірілген пікір.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: жабылмаған кірістірілген пікір, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: кірістірілген опция MatchOptions.NumberedSubMatches опциясымен үйлеспейді, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: тәуелдік кванфикаторларға қолдау көрсетілмейді, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: нақты квантификаторларды ? сияқты квантификатор модификаторларымен бірге пайдалануға болмайды, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: жарамсыз шығыс коды, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз қалыпты өрнек: «{0}» ішкі сәйкестігі анықталмаған немесе қолдау көрсетілмейтін бағыттау сілтемесі болып табылады.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: артқы көріністе ішкі сәйкестіктерге қолдау көрсетілмейді, «{0}» басында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: алдыңғы көріністер кірістірілмейді, «{0}» басында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: алдыңғы көріністерде шектеусіз квантификаторларға қолдау көрсетілмейді, «{0}» соңында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: алдыңғы немесе артқы көріністерде квантификаторларға қолдау көрсетілмейді, «{0}» соңында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: баламаға немесе нөлдік кванторға байланысты болмауы мүмкін ішкі сәйкестікке «{0}» кері сілтемесі.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: өзіне сілтеме жасайтын ішкі сәйкестіктерге қолдау көрсетілмейді, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: жабылмаған топтар, жабатын жақша тым аз.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: ашылмаған топтар, ашатын жақша тым аз.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: аталған ішкі сәйкестік бірнеше рет анықталған, «{0}» басында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: ішкі сәйкестік атауы сөздік таңбалардың тіркесімі болуы керек және санмен басталмауы тиіс, «{0}» басында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: кірістірілген опциялар тұрақты өрнектің басында пайда болуы керек, кейінірек «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: таңба таңбалар класында бірнеше рет пайда болады, қайталанатын «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: тік жақша таңба кластары бос болмауы тиіс, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: теңестіретін ішкі сәйкестіктерге қолдау көрсетілмейді, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: дара тырнақшаға қойылған түсірілімдерге қолдау көрсетілмейді, оның орнына (?&lt;...&gt;) синтаксисін пайдаланыңыз, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: шартты баламаға қолдау көрсетілмейді, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: MatchOptions.NumberedSubMatches опциясы қосылған кезде, аталған түсірілімдерді пайдалану мүмкін емес, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: «(?&lt;name&gt;...)» және «\k&lt;name&gt; » мәндері бар түсірілімдерді пайдаланыңыз немесе MatchOptions.NumberedSubMatches опциясын қосыңыз, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: таңбалар класындағы таңбалар класының орнына кері қиғаш сызық қойылуы тиіс, «\-» қойыңыз, «{0}» ішінде табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: таңбалар класында пайдаланылған кезде, әріптік таңба кері қиғаш сызықпен шығуы керек, «{0}» соңында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: топтағы басқа квантификаторды немесе бос баламаны қамтитын квантификатор түсініксіз нәтижеге әкелуі мүмкін, «{0}» соңында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз қалыпты өрнек: артқы көрініс максималды 250 таңба шегінен асып кетті, «{0}» соңында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: квантификатор ауқымының төменгі саны жоғары саннан үлкен, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: "{0}" басында табылған кірістірілген топтар тым көп.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: ішкі сәйкестік атауы тым ұзын, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: сан тым үлкен, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: таңбалар класы ауқымындағы таңбалардың реті өзгертілген, «{0}» соңында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: таңбалар класы ауқымындағы таңбалар класы, немесе кері қиғаш сызықпен әріптік сызықша қоюдан аулақ болыңыз, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: шығарылмаған кері қиғаш сызықпен аяқталады.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: санау қажет мәні жоқ квантификатор, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: MatchOptions.DotAll және MatchOptions.FreeSpacing 1-нұсқадағы Power Fx бағдарламасымен ғана қолжетімді, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: артқы немесе алдыңғы көрініс ішіндегі ішкі сәйкестікке «{0}» кері сілтемесі.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Тұрақты өрнектердің мәндері тұрақты болуы керек.</value>
+    <value>Тұрақты өрнек тұрақты мән болуы керек.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions тұрақты мән болуы керек.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>"{0}" функциясына өткен мән өзгертілмеуі керек.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>"{0}" алу атауы регуляр өрнектің толық сәйкестігін қайтаратын алдын ала анықталған сипатты жасырады. Көрсетілген мәтіндегі толық сәйкестікті шығарып алу үшін сол аталған сипатты пайдаланғыңыз келсе, оның атауын өзгертіп көріңіз.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>«{0}» түсірілім атауында сәйкестік туралы ақпаратты қайтаратын алдын ала анықталған сипат жасырылған. Сәйкестік туралы ақпаратқа қол жеткізгіңіз келсе, оның атауын өзгертуді қарастырыңыз.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>"{0}" алу атауы регуляр өрнектегі топтық сәйкестіктерді қайтаратын алдын ала анықталған сипатты жасырады. Көрсетілген мәтіндегі толық емес сәйкестіктерді шығарып алу үшін сол аталған сипатты пайдаланғыңыз келсе, оның атауын өзгертіп көріңіз.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>"{0}" алу атауы регуляр өрнектің сәйкестік орнын қайтаратын алдын ала анықталған сипатты жасырады. Көрсетілген мәтіндегі толық сәйкестіктің орнын шығарып алу үшін сол аталған сипатты пайдаланғыңыз келсе, оның атауын өзгертіп көріңіз.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>«{0}» жинағындағы түсірілім атауларында сәйкестік туралы ақпаратты қайтаратын алдын ала анықталған сипаттар жасырылған. Сәйкестік туралы ақпаратқа қол жеткізгіңіз келсе, олардың атауларын өзгертуді қарастырыңыз.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4552,20 +4780,20 @@
     <value>Онлайн дереккөз мәні (кесте немесе жазба) бар айнымалыны орнату серверге бірнеше сұрау тудыруы мүмкін. Жақын арада ол бұғатталады.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Түрді литералды етіп жариялау жарамсыз. "{0}" өрнегі түр анықтамасында пайдаланылмауы керек.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Түр өрнегі жарамсыз. "{0}" өрнегі түр өрнегінде пайдаланылмауы керек.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Қолдау көрсетілмейтін пайдалану: литералдар түрін тек аргументтер түрі мен анықтамалар түрінде пайдалануға болады.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Қолдау көрсетілмейтін пайдалану: Type функциясын тек түр аргументтері мен түр декларациясында пайдалануға болады.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>{0} түрін анықтау жарамсыз.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>{0} түріндегі декларация жарамсыз.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>{0} түріндегі анықтама жарамсыз және циклдерді қамтуы мүмкін.</value>
+    <value>{0} түріндегі декларация жарамсыз және циклдерді қамтуы мүмкін.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +5095,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Жарамсыз аргумент '{0}'. Күтілетін жарамды түр атауы немесе литерал түрі.</value>
+    <value>Жарамсыз аргумент '{0}'. Күтілетін жарамды түр атауы немесе кірістірілген түр өрнегі.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

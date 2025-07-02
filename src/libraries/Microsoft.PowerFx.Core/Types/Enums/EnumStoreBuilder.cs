@@ -34,6 +34,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             };
 
         // DefaultEnums, with enum strings, is legacy and only used by Power Apps
+        // Match is using Pre V1 values
         internal static IReadOnlyDictionary<string, string> DefaultEnums { get; } =
             new Dictionary<string, string>()
             {
@@ -65,9 +66,11 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                     LanguageConstants.MatchOptionsEnumString,
                     $"%s[{string.Join(", ", BuiltInEnums.MatchOptionsEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
                 },
+
+                // Note this is the PreV1 definition of Match for Power Apps (the only consumer). If Power Apps wants to opt in to V1, it can use DefaultEnums_MatchEnumV1 defined below.
                 {
                     LanguageConstants.MatchEnumString,
-                    $"%s[{string.Join(", ", BuiltInEnums.MatchEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
+                    $"%s[{string.Join(", ", BuiltInEnums.MatchEnumPreV1.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
                 },
                 {
                     LanguageConstants.JSONFormatEnumString,
@@ -86,6 +89,12 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                     $"%s[{string.Join(", ", BuiltInEnums.JoinTypeEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
                 }
             };
+
+        // V1 MatchEnum values for Power Apps to use in the future under a "Power Fx V1" mode.
+        // As these are combined into a string data structure, any double quotes need to be escaped, Power Fx style with double double quotes. Used by Match.Email.
+        internal static readonly string DefaultEnums_MatchEnumV1 =
+                $"%s[{string.Join(", ", BuiltInEnums.MatchEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{((string)pair.Value.Object).Replace(@"""", @"""""")}"""))}]";
+
         #endregion
 
         private readonly Dictionary<string, EnumSymbol> _enumSymbols = new Dictionary<string, EnumSymbol>();

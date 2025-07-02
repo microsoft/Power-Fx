@@ -1917,6 +1917,10 @@
     <value>„{0}” to nieznana lub nieobsługiwana funkcja.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>Element „{0}” rozpoznano jako funkcję pomocnika typu; tego elementu można używać tylko w ramach funkcji Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>„{0}” to nieznana lub nieobsługiwana funkcja w przestrzeni nazw „{1}”.</value>
     
@@ -2107,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Konflikt nazwy kolumny dla „{0}”.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Nie można dodać kolumn do rekordu systemowego lub tabeli rekordów systemowych. Użyj polecenia ShowColumns, aby wyodrębnić określone kolumny, które są Ci potrzebne w pierwszej kolejności.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Nie można zmieniać nazw kolumn rekordu systemowego lub tabeli rekordów systemowych. Użyj polecenia ShowColumns, aby wyodrębnić określone kolumny, które są Ci potrzebne w pierwszej kolejności.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -3221,9 +3233,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Nowa lub istniejąca kolekcja do rozszerzenia.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Rekord lub tabela na potrzeby gromadzenia danych. Rekord zostanie dołączony do kolekcji. W przypadku tabeli do kolekcji zostaną dołączone jej wiersze.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Najpierw czyści kolekcję, a następnie dodaje co najmniej jeden element do określonej kolekcji. Elementy mogą pochodzić z innej tabeli lub kolekcji (np. ClearCollect(collection, source_collection)) lub co najmniej jednego rekordu ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3713,23 @@
     <value>Edytuj formułę tak, aby zawierała nawias.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Oczekiwano symbolu zamykającego identyfikator. W tym miejscu w formule oczekiwany jest symbol zamykający (').</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Pojedynczy zamykający cudzysłów wskazuje koniec identyfikatora (na przykład 'Imię').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Edytuj formułę tak, aby zawierała pojedynczy zamykający cudzysłów.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Identyfikator nie ma prawidłowego tekstu.</value>
+    <value>Identyfikator jest pusty lub zawiera nieprawidłowy znak, taki jak tabulator lub znak końca wiersza.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Upewnij się, że podano tekst dla identyfikatora. Ten błąd występuje, gdy identyfikator zawiera same wartości puste lub spacje.</value>
+    <value>Upewnij się, że identyfikator zawiera prawidłowy tekst. Ten błąd występuje, gdy identyfikator jest pusty, zawiera same spacje lub tabulator albo znak końca wiersza.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4201,8 @@
     <value>Nazwana formuła musi być wyrażeniem.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Nazwany typ musi być typem literał.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Deklaracja nazwanego typu musi być prawidłowym wyrażeniem typu.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4499,24 +4519,232 @@
     <value>Nieprawidłowe wyrażenie regularne.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: opcje w tekście muszą znajdować się na początku wyrażenia regularnego. Znaleziono „{0}” w dalszej części.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: opcje w tekście są ograniczone do kombinacji liter [imnsx], nie można ich wyłączyć i nie można ich używać w podwyrażeniu. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: kody znaków ósemkowych \0 nie są obsługiwane. Zamiast tego użyj kodu szesnastkowego \x lub Unicode \u. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: nawiasy klamrowe, które nie pełnią funkcji składniowych, muszą być poprzedzane ukośnikiem odwrotnym. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: nawiasy kwadratowe, które nie pełnią funkcji składniowych, muszą być poprzedzane ukośnikiem odwrotnym nawet w klasach znaków, na przykład \[ lub \]. Znaleziono na końcu „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: niezamknięty nawias kwadratowy klasy znaków.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: nieobsługiwana grupa specjalna. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: znak modyfikacji jest niedozwolony w klasie znaków. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: odwrotny znak modyfikacji jest niedozwolony w klasie znaków odwróconych. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: znak modyfikacji jest niedozwolony poza klasą znaków. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: nieprawidłowa nazwa kategorii Unicode. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: powtarzająca się opcja w tekście. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: niezamknięty komentarz w tekście.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: niezamknięty komentarz w tekście. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: opcja w tekście jest niezgodna z pozycją MatchOptions.NumberedSubMatches. Znalezionym „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: kwantyfikatory własnościowe nie są obsługiwane. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: dokładnych kwantyfikatorów nie można używać z modyfikatorami kwantyfikatora, takimi jak ? dla kwantyfikatora leniwego. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: nieprawidłowy kod modyfikacji. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: dopasowanie podrzędne „{0}” nie zostało zdefiniowane lub jest nieobsługiwanym odwołaniem do przodu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: dopasowania podrzędne nie są obsługiwane w encjach lookbehind. Znaleziono na początku „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: encje lookbehind nie mogą być zagnieżdżane. Znaleziono na początku „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: nieograniczone kwantyfikatory nie są obsługiwane w przypadku encji lookbehind lub lookahead. Znaleziono na końcu „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: kwantyfikatory nie są obsługiwane w przypadku encji lookbehind lub lookahead. Znaleziono na końcu „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: Odwołanie wsteczne „{0}” do dopasowania podrzędnego, które może nie wystąpić z powodu przemienności lub kwantyfikatora zerowego.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: dopasowania podrzędne odwołujące się do samych siebie nie są obsługiwane. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: niezamknięte grupy, za mało nawiasów zamykających.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: nieotwarte grupy, za mało nawiasów otwierających.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: nazwane dopasowanie podrzędne zdefiniowano więcej niż raz znalezione na początku grupy „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: nazwa dopasowania podrzędnego musi być kombinacją liter i nie może rozpoczynać się od cyfry. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: opcje w tekście muszą znajdować się na początku wyrażenia regularnego. Znaleziono „{0}” w dalszej części.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: znak występuje więcej niż raz w klasie znaków. Znaleziono powtarzające się elementy „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: klasy znaków nawiasów kwadratowych nie mogą być puste. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: równoważące dopasowania podrzędne nie są obsługiwane. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: używanie nazwanych funkcji przechwytywania w pojedynczym cudzysłowie nie jest obsługiwane. Zamiast tego użyj składni (?&lt;...&gt;). Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: Przemienność warunkowa nie jest obsługiwana. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: nazwane funkcje przechwytywania nie mogą być używane z włączoną opcją MatchOptions.NumberedSubMatches. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: należy użyć nazwanych funkcji przechwytywania zawierających „(?&lt;name&gt;...)” i „\k&lt;name&gt;” lub włączyć opcję MatchOptions.NumberedSubMatches. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: literał z łącznikiem w klasie znaków musi być poprzedzony ukośnikiem odwrotnym. Modyfikację z ciągiem „\-” znaleziono w „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: znak typu literał musi być poprzedzony ukośnikiem odwrotnym, gdy jest używany w klasie znaków. Znaleziono na końcu „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: kwantyfikator w grupie zawierającej inny kwantyfikator lub pustą przemienność, która może powodować niejednoznaczny wynik. Znaleziono na końcu „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: encja lookbehind przekroczyła maksymalny dopuszczalny limit liczby znaków równy 250. Znaleziono na końcu „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: dolna liczba zakresu kwantyfikatora jest większa niż górna liczba. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: zbyt wiele zagnieżdżonych grup. Znaleziono na początku „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: nazwa dopasowania podrzędnego jest zbyt długa. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: liczba jest za duża. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: znaki w zakresie klasy znaków są odwrócone. Znaleziono na końcu „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: klasa znaku w zakresie klas znaków lub modyfikacja literału z łącznikiem za pomocą ukośnika odwrotnego. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: kończy się ukośnikiem odwrotnym bez znaku modyfikacji.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: kwantyfikator bez elementu do określenia ilościowego. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: MatchOptions.DotAll i MatchOptions.FreeSpacing są dostępne tylko w rozwiązaniu Power Fx w wersji 1. Znaleziono „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne: Odwołanie wsteczne „{0}” do dopasowania podrzędnego, które znajduje się wewnątrz encji lookbehind lub lookahead.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Wyrażenia regularne muszą być wartościami stałymi.</value>
+    <value>Wyrażenie regularne musi być wartością stałą.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>Argument „MatchOptions” musi być wartością stałą.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Nie można zmienić wartości przekazanej do funkcji „{0}”.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>W nazwie funkcji przechwytywania „{0}” jest ukryta wstępnie zdefiniowana właściwość, które zwraca pełne dopasowanie wyrażenia regularnego. Rozważ zmianę nazwy, jeśli chcesz używać tej nazwanej właściwości do wyodrębniania pełnego dopasowania w wybranym tekście.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Nazwa funkcji przechwytywania „{0}” ukrywa wstępnie zdefiniowaną właściwość, która zwraca informacje o dopasowaniu. Rozważ zmianę jej nazwy, jeśli chcesz uzyskać dostęp do informacji o dopasowaniu.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>W nazwie funkcji przechwytywania „{0}” jest ukryta wstępnie zdefiniowana właściwość, które zwraca dopasowania grupowe w wyrażeniu regularnym. Rozważ zmianę nazwy, jeśli chcesz używać tej nazwanej właściwości do wyodrębniania wszystkich dopasowań podrzędnych w wybranym tekście.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>W nazwie funkcji przechwytywania „{0}” jest ukryta wstępnie zdefiniowana właściwość, które zwraca lokalizację dopasowania wyrażenia regularnego. Rozważ zmianę nazwy, jeśli chcesz używać tej nazwanej właściwości do wyodrębniania położenia pełnego dopasowania w wybranym tekście.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Nazwy funkcji przechwytywania w zestawie „{0}” ukrywają wstępnie zdefiniowane właściwości, które zwracają informacje o dopasowaniu. Rozważ zmianę ich nazw, jeśli chcesz uzyskać dostęp do informacji o dopasowaniu.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4552,20 +4780,20 @@
     <value>Ustawienie zmiennej z wartością źródła danych online (tabelą lub rekordem) może spowodować wysłanie wielu żądań do serwera. Wkrótce to zostanie zablokowane.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Deklaracja literału typu jest nieprawidłowa. W definicji typu nie można użyć wyrażenia „{0}”.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie typu. W wyrażeniu typu nie można użyć wyrażenia „{0}”.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Nieobsługiwane użycie: literałów typu można używać tylko w argumentach typu i definicjach typu.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Nieobsługiwane użycie: funkcji Type można używać tylko w argumentach typu i deklaracjach typu.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definicja typu {0} jest nieprawidłowa.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Deklaracja typu {0} jest nieprawidłowa.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definicja typu {0} jest nieprawidłowa i może zawierać cykle.</value>
+    <value>Deklaracja typu {0} jest nieprawidłowa i może zawierać cykle.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +5095,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Nieprawidłowy argument „{0}”. Oczekiwano prawidłowej nazwy typu lub typu dosłownego.</value>
+    <value>Nieprawidłowy argument „{0}”. Oczekiwano prawidłowej nazwy typu lub wyrażenia typu w tekście.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

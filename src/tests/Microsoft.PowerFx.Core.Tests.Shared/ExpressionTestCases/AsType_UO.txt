@@ -53,10 +53,10 @@ DateTime(1900,12,31,0,0,0,0)
 >> AsType(ParseJSON("""1900-12-31T00:00:00.000-08:00"""), DateTimeTZInd)
 DateTime(1900,12,31,8,0,0,0)
 
->> Value(AsType(ParseJSON("42"), UntypedObject))
+>> Value(AsType(ParseJSON("42"), Dynamic))
 42
 
->> Value(AsType(ParseJSON("true"), UntypedObject))
+>> Value(AsType(ParseJSON("true"), Dynamic))
 1
 
 >> If(AsType(ParseJSON("false"), Boolean), "MyFalse", "MyTrue")
@@ -98,13 +98,13 @@ Error({Kind:ErrorKind.InvalidArgument})
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> AsType(ParseJSON("1"), 1)
-Errors: Error 23-24: Invalid argument '1'. Expected valid type name or type literal.
+Errors: Error 23-24: Invalid argument '1'. Expected valid type name or inline type expression.
 
 >> AsType(ParseJSON("5"), Type(5))
-Errors: Error 28-29: Type literal declaration is invalid. The expression '5' cannot be used in a type definition.|Error 27-28: Type literal declaration is invalid. The expression 'Type(5)' cannot be used in a type definition.
+Errors: Error 28-29: Type expression is invalid. '5' cannot be used in a type expression.|Error 27-28: Type expression is invalid. 'Type(5)' cannot be used in a type expression.
 
 >> AsType(ParseJSON("true"), UnKnown)
-Errors: Error 26-33: Name isn't valid. 'UnKnown' isn't recognized.|Error 0-34: Invalid argument 'UnKnown'. Expected valid type name or type literal.
+Errors: Error 26-33: Name isn't valid. 'UnKnown' isn't recognized.|Error 0-34: Invalid argument 'UnKnown'. Expected valid type name or inline type expression.
 
 >> AsType(ParseJSON("fasle"), Boolean)
 Error({Kind:ErrorKind.InvalidJSON})
@@ -134,7 +134,7 @@ Error({Kind:ErrorKind.Div0})
 Blank()
 
 >> AsType(ParseJSON("42"), Blank())
-Errors: Error 24-31: Invalid argument 'Blank()'. Expected valid type name or type literal.
+Errors: Error 24-31: Invalid argument 'Blank()'. Expected valid type name or inline type expression.
 
 >> AsType(ParseJSON("42"), 1/0)
-Errors: Error 25-26: Invalid argument '1 / 0'. Expected valid type name or type literal.
+Errors: Error 25-26: Invalid argument '1 / 0'. Expected valid type name or inline type expression.

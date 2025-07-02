@@ -1,0 +1,65 @@
+﻿#SETUP: RegEx,disable:PowerFxV1CompatibilityRules
+
+// Changes in case insensitive matching in .NET 7 causes different answers that are consistent with PCRE2 and Node
+// See https://devblogs.microsoft.com/dotnet/regular-expression-improvements-in-dotnet-7/#case-insensitive-matching-and-regexoptions-ignorecase
+
+#DISABLE.NET:70
+>> Match( UniChar(Hex2Dec("03a9")), "\u2126", MatchOptions.IgnoreCase ).FullMatch
+Blank()
+
+#DISABLE.NET:70
+>> Match( UniChar(Hex2Dec("03c9")), "\u2126", MatchOptions.IgnoreCase ).FullMatch
+Blank()
+
+#DISABLE.NET:70
+>> Match( UniChar(Hex2Dec("2126")), "\u03c9", MatchOptions.IgnoreCase ).FullMatch
+Blank()
+
+#DISABLE.NET:70
+>> Match( UniChar(Hex2Dec("2126")), "\u03a9", MatchOptions.IgnoreCase ).FullMatch
+Blank()
+
+#DISABLE.NET:70
+>> Match( "K", "k", MatchOptions.IgnoreCase )
+Blank()
+
+#DISABLE.NET:70
+>> Match( "K", "[a-z]", MatchOptions.IgnoreCase )
+Blank()
+
+#DISABLE.NET:70
+>> Match( UniChar( Hex2Dec( "2126" ) ), "\u03c9", MatchOptions.IgnoreCase )
+Blank()
+
+#DISABLE.NET:70
+>> Match( UniChar( Hex2Dec( "2126" ) ), "\u03a9", MatchOptions.IgnoreCase )
+Blank()
+
+// With .NET 462, with Power Fx V1 turned off, we report a very terse "Invalid regular expression" error message since .NET can't supply us with error details.
+// With .NET 70, .NET supplies errror messages
+// With Power Fx V1, we do our own error checking
+
+// spaces are not
+#DISABLE.NET:70
+>> IsMatch( "a", "\u{ 00061}" )
+Errors: Error 14-26: Invalid regular expression.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+#DISABLE.NET:70
+>> IsMatch( "a", "\u{00061 }" )
+Errors: Error 14-26: Invalid regular expression.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// checking the error message if the \u{...} is in the context of another error
+#DISABLE.NET:70
+>> IsMatch( "a", "\u{0061}[z-a]" )
+Errors: Error 14-29: Invalid regular expression.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// \u{...} replaced with surrogate pairs
+#DISABLE.NET:70
+>> IsMatch( "a", "\u{010ff41}[z-a]" )
+Errors: Error 14-32: Invalid regular expression.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// out of range and illegal
+#DISABLE.NET:70
+>> IsMatch( "a", "\u{014ff41}[z-a]" )
+Errors: Error 14-32: Invalid regular expression.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+

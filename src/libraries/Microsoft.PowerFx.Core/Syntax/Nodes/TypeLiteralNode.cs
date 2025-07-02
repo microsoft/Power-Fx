@@ -13,14 +13,24 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 
 namespace Microsoft.PowerFx.Syntax
 {
-    // CallNode :: Type ( TypeLiteralNode )
-    // CallNode :: IsType ( Expr, TypeLiteralNode )
-    // CallNode :: AsType ( Expr, TypeLiteralNode )
-    // TypeLiteralNode will allow us to store information about a new kind of syntax, that being the Type Literal syntax, and manipulate it.
-    // TypeLiteral syntax needs to *only* work for these partial-compile time functions that evaluate the Type Literal syntax into some sort of 
-    // Representation so we can evaluate and compare it. We want to make sure that this Type Literal information isn't able to be
-    // Passed around in undesirable ways be users of PowerFx. A TypeLiteralNode allows us to strictly enforce requirements.
+    /*
+     CallNode :: Type ( TypeLiteralNode )
+     CallNode :: IsType ( Expr, TypeLiteralNode )
+     CallNode :: AsType ( Expr, TypeLiteralNode )
+     TypeLiteralNode will allow us to store information about a new kind of syntax, that being the Type Literal syntax, and manipulate it.
+     TypeLiteral syntax needs to *only* work for these partial-compile time functions that evaluate the Type Literal syntax into some sort of 
+     Representation so we can evaluate and compare it. We want to make sure that this Type Literal information isn't able to be
+     Passed around in undesirable ways be users of PowerFx. A TypeLiteralNode allows us to strictly enforce requirements.
+    */
 
+    /// <summary>
+    /// Represents a node in the syntax tree that encapsulates a type literal expression.
+    /// </summary>
+    /// <remarks>A <see cref="TypeLiteralNode"/> is used to store and manipulate information about type
+    /// literal syntax. This syntax is specifically designed for partial compile-time functions that evaluate type
+    /// literals into a representation suitable for evaluation and comparison. The <see cref="TypeLiteralNode"/>
+    /// enforces strict requirements to ensure that type literal information is not misused or passed around in
+    /// undesirable ways.</remarks>
     public sealed class TypeLiteralNode : TexlNode
     {
         private IEnumerable<TexlError> _errors;
@@ -103,7 +113,7 @@ namespace Microsoft.PowerFx.Syntax
             {
                 if (node.ChildNodes.Count > 1)
                 {
-                    _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                    _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));
                     return false;
                 }
 
@@ -121,7 +131,7 @@ namespace Microsoft.PowerFx.Syntax
                     return true;
                 }
 
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));
                 return false;
             }
 
@@ -132,89 +142,89 @@ namespace Microsoft.PowerFx.Syntax
                     return true;
                 }
 
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));
                 return false;
             }
 
             // Invalid nodes
             public override void Visit(ErrorNode node)
             {
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));
             }
 
             public override void Visit(BlankNode node)
             {
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));
             }
 
             public override void Visit(BoolLitNode node)
             {
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));
             }
 
             public override void Visit(StrLitNode node)
             {
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));
             }
 
             public override void Visit(NumLitNode node)
             {
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));
             }
 
             public override void Visit(DecLitNode node)
             {
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));
             }
 
             public override void Visit(ParentNode node)
             {
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));
             }
 
             public override void Visit(SelfNode node)
             {
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));
             }
 
             public override void Visit(TypeLiteralNode node)
             {
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));
             }
 
             public override bool PreVisit(StrInterpNode node)
             {
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));
                 return false;
             }
 
             public override bool PreVisit(DottedNameNode node)
             {
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));
                 return false;
             }
 
             public override bool PreVisit(UnaryOpNode node)
             {
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));
                 return false;
             }
 
             public override bool PreVisit(BinaryOpNode node)
             {
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));
                 return false;
             }
 
             public override bool PreVisit(VariadicOpNode node)
             {
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));
                 return false;
             }
 
             public override bool PreVisit(AsNode node)
             {
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));
                 return false;
             }
 

@@ -4,9 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Syntax;
@@ -77,15 +79,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("DisplayName", dm.Parameters.Skip(1).First().XMsDynamicValues.ValueTitle);
             Assert.Equal("Database name", dm.Parameters.Skip(1).First().XMsSummary);
 
-            CdpDataSource cds = new CdpDataSource("pfxdev-sql.database.windows.net,connectortest");
+            CdpDataSource cds = new CdpDataSource("pfxdev-sql.database.windows.net,connectortest", ConnectorSettings.NewCDPConnectorSettings(maxRows: 101));
 
             testConnector.SetResponseFromFiles(@"Responses\SQL GetDatasetsMetadata.json", @"Responses\SQL GetTables.json");
             IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
 
             Assert.NotNull(tables);
-            Assert.Equal(4, tables.Count());
-            Assert.Equal("[dbo].[Customers],[dbo].[Orders],[dbo].[Products],[sys].[database_firewall_rules]", string.Join(",", tables.Select(t => t.TableName)));
-            Assert.Equal("Customers,Orders,Products,database_firewall_rules", string.Join(",", tables.Select(t => t.DisplayName)));
+            Assert.Equal(5, tables.Count());
+            Assert.Equal("[dbo].[Customers],[dbo].[Orders],[dbo].[Products],[sys].[database_firewall_rules],[dbo].[Customers_Aßþ]", string.Join(",", tables.Select(t => t.TableName)));
+            Assert.Equal("Customers,Orders,Products,database_firewall_rules,Customers_Aßþ", string.Join(",", tables.Select(t => t.DisplayName)));
 
             CdpTable connectorTable = tables.First(t => t.DisplayName == "Customers");
 
@@ -138,6 +140,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // Rows are not cached here as the cache is stored in CdpTableValue which is created by InjectServiceProviderFunction, itself added during Engine.Check
             testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
             result = await engine.EvalAsync("Last(Customers).Phone", CancellationToken.None, runtimeConfig: rc);
+
+            // Verify that we have the right URL with correct $top
+            Assert.Contains("x-ms-request-url: /apim/sql/c1a4e9f52ec94d55bb82f319b3e33a6a/v2/datasets/pfxdev-sql.database.windows.net%2Cconnectortest/tables/%5Bdbo%5D.%5BCustomers%5D/items?api-version=2015-09-01&$top=101", testConnector._log.ToString(), StringComparison.InvariantCulture);
+
             StringValue phone = Assert.IsType<StringValue>(result);
             Assert.Equal("+1-425-705-0000", phone.Value);
         }
@@ -240,7 +246,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // For SQL we don't have relationships
             bool b = sqlTable.RecordType.TryGetFieldExternalTableName("ProductModelID", out string externalTableName, out string foreignKey);
             Assert.False(b);
-            
+
             testConnector.SetResponseFromFiles(@"Responses\SQL GetSchema ProductModel.json");
             b = sqlTable.RecordType.TryGetFieldType("ProductModelID", out FormulaType productModelID);
 
@@ -249,6 +255,239 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.False(productModelId is null);
 
             Assert.Equal("ProductID", string.Join("|", GetPrimaryKeyNames(sqlTable.RecordType)));
+        }
+
+        [Fact]
+        public async Task SQL_CdpTabular_GetTables3()
+        {
+            using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            using var httpClient = new HttpClient(testConnector);
+            string connectionId = "29941b77eb0a40fe925cd7a03cb85b40";
+            string jwt = "eyJ0eX...";
+            using var client = new PowerPlatformConnectorClient("49970107-0806-e5a7-be5e-7c60e2750f01.12.common.firstrelease.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };                      
+
+            testConnector.SetResponseFromFile(@"Responses\SQL GetDatasetsMetadata.json");
+            DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+
+            Assert.NotNull(dm);
+            Assert.Null(dm.Blob);
+
+            // Use of Unicode characters in DataSource
+            CdpDataSource cds = new CdpDataSource("pfxdev-sql.database.windows.net,Aßþ");
+
+            testConnector.SetResponseFromFiles(@"Responses\SQL GetDatasetsMetadata.json", @"Responses\SQL GetTables SampleDB.json");
+            IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+
+            Assert.NotNull(tables);             
+            
+            CdpTable connectorTable = tables.First(t => t.DisplayName == "Customer");
+            Assert.False(connectorTable.IsInitialized);
+
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
+            await connectorTable.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+            Assert.True(connectorTable.IsInitialized);
+
+#pragma warning disable CS0618 // Type or member is obsolete
+            Assert.True(connectorTable.DelegationInfo.CountCapabilities.IsCountableTable());
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
+
+        [Fact]
+        public async Task SQL_CdpTabular_GetTables4()
+        {
+            using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            using var httpClient = new HttpClient(testConnector);
+            string connectionId = "c1a4e9f52ec94d55bb82f319b3e33a6a";
+            string jwt = "eyJ0eXAiOiJKV1QiL...";
+            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+
+            testConnector.SetResponseFromFile(@"Responses\SQL GetDatasetsMetadata.json");
+            DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+
+            Assert.NotNull(dm);
+            Assert.Null(dm.Blob);
+
+            Assert.Equal("{server},{database}", dm.DatasetFormat);
+            Assert.NotNull(dm.Tabular);
+            Assert.Equal("dataset", dm.Tabular.DisplayName);
+            Assert.Equal("mru", dm.Tabular.Source);
+            Assert.Equal("Table", dm.Tabular.TableDisplayName);
+            Assert.Equal("Tables", dm.Tabular.TablePluralName);
+            Assert.Equal("single", dm.Tabular.UrlEncoding);
+            Assert.NotNull(dm.Parameters);
+            Assert.Equal(2, dm.Parameters.Count);
+
+            Assert.Equal("Server name.", dm.Parameters.First().Description);
+            Assert.Equal("server", dm.Parameters.First().Name);
+            Assert.True(dm.Parameters.First().Required);
+            Assert.Equal("string", dm.Parameters.First().Type);
+            Assert.Equal("double", dm.Parameters.First().UrlEncoding);
+            Assert.Null(dm.Parameters.First().XMsDynamicValues);
+            Assert.Equal("Server name", dm.Parameters.First().XMsSummary);
+
+            Assert.Equal("Database name.", dm.Parameters.Skip(1).First().Description);
+            Assert.Equal("database", dm.Parameters.Skip(1).First().Name);
+            Assert.True(dm.Parameters.Skip(1).First().Required);
+            Assert.Equal("string", dm.Parameters.Skip(1).First().Type);
+            Assert.Equal("double", dm.Parameters.Skip(1).First().UrlEncoding);
+            Assert.NotNull(dm.Parameters.Skip(1).First().XMsDynamicValues);
+            Assert.Equal("/v2/databases?server={server}", dm.Parameters.Skip(1).First().XMsDynamicValues.Path);
+            Assert.Equal("value", dm.Parameters.Skip(1).First().XMsDynamicValues.ValueCollection);
+            Assert.Equal("Name", dm.Parameters.Skip(1).First().XMsDynamicValues.ValuePath);
+            Assert.Equal("DisplayName", dm.Parameters.Skip(1).First().XMsDynamicValues.ValueTitle);
+            Assert.Equal("Database name", dm.Parameters.Skip(1).First().XMsSummary);
+
+            CdpDataSource cds = new CdpDataSource("pfxdev-sql.database.windows.net,connectortest");
+
+            testConnector.SetResponseFromFiles(@"Responses\SQL GetDatasetsMetadata.json", @"Responses\SQL GetTables.json");
+            IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+
+            Assert.NotNull(tables);
+            Assert.Equal(5, tables.Count());
+            Assert.Equal("[dbo].[Customers],[dbo].[Orders],[dbo].[Products],[sys].[database_firewall_rules],[dbo].[Customers_Aßþ]", string.Join(",", tables.Select(t => t.TableName)));
+            Assert.Equal("Customers,Orders,Products,database_firewall_rules,Customers_Aßþ", string.Join(",", tables.Select(t => t.DisplayName)));
+
+            CdpTable connectorTable = tables.First(t => t.DisplayName == "Customers_Aßþ");
+
+            Assert.False(connectorTable.IsInitialized);
+            Assert.Equal("Customers_Aßþ", connectorTable.DisplayName);
+
+            testConnector.SetResponseFromFiles(@"Responses\SQL Server Load Customers_Aßþ.json");
+            await connectorTable.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+            Assert.True(connectorTable.IsInitialized);
+
+            CdpTableValue sqlTable = connectorTable.GetTableValue();
+            Assert.True(sqlTable._tabularService.IsInitialized);
+            Assert.True(sqlTable.IsDelegable);
+            Assert.Equal("r*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type.ToStringWithDisplayNames());
+
+            HashSet<IExternalTabularDataSource> ads = sqlTable.Type._type.AssociatedDataSources;
+            Assert.NotNull(ads);
+            Assert.Single(ads);
+
+            DataSourceInfo dataSourceInfo = Assert.IsType<DataSourceInfo>(ads.First());
+            Assert.NotNull(dataSourceInfo);
+
+            Assert.Equal("Customers_Aßþ", dataSourceInfo.EntityName.Value);
+            Assert.True(dataSourceInfo.IsDelegatable);
+            Assert.True(dataSourceInfo.IsPageable);
+            Assert.True(dataSourceInfo.IsRefreshable);
+            Assert.True(dataSourceInfo.IsSelectable);
+            Assert.True(dataSourceInfo.IsWritable);
+
+            Assert.Equal("Customers_Aßþ", dataSourceInfo.Name);
+            Assert.True(dataSourceInfo.RequiresAsync);
+
+            Assert.Null(sqlTable.Relationships);
+
+            SymbolValues symbolValues = new SymbolValues().Add("Customers_Aßþ", sqlTable);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
+
+            // Expression with tabular connector
+            string expr = @"First(Customers_Aßþ).Address";
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            // Use tabular connector. Internally we'll call CdpTableValue.GetRowsInternal to get the data
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers_Aßþ.json");
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
+
+            StringValue name = Assert.IsType<StringValue>(result);
+            Assert.Equal("Juigné", name.Value);
+        }
+
+        [Fact]
+        public async Task SQL_CdpTabular_GetTables5()
+        {
+            using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            using var httpClient = new HttpClient(testConnector);
+            string connectionId = "29941b77eb0a40fe925cd7a03cb85b40";
+            string jwt = "eyJ0eX...";
+            using var client = new PowerPlatformConnectorClient("49970107-0806-e5a7-be5e-7c60e2750f01.12.common.firstrelease.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+            
+            CdpDataSource cds = new CdpDataSource("pfxdev-sql.database.windows.net,SampleDB", ConnectorSettings.NewCDPConnectorSettings(extractSensitivityLabel: true));
+
+            testConnector.SetResponseFromFiles(@"Responses\SQL GetDatasetsMetadata.json", @"Responses\SQL GetSchema Products.json", @"Responses\SQL GetItems Products.json");
+            CdpTable table = await cds.GetTableAsync(client, $"/apim/sql/{connectionId}", "[SalesLT].[Product]", CancellationToken.None, logger);
+
+            Assert.Equal("[SalesLT].[Product]", table.TableName);
+            Assert.Equal("[SalesLT].[Product]", table.DisplayName);
+            Assert.True(table.IsInitialized);
+
+            var tv = table.GetTableValue();
+            var symValues = new SymbolValues().Add(table.TableName, tv);
+            var check = engine.Check($"'{table.TableName}'", symbolTable: symValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            var tv2 = await check.GetEvaluator().EvalAsync(CancellationToken.None, new RuntimeConfig(symValues).AddService<ConnectorLogger>(logger));
+            var tv3 = Assert.IsAssignableFrom<TableValue>(tv2);
+            var rType = tv3.Type.ToRecord();
+            var metadata = Assert.IsAssignableFrom<ICDPAggregateMetadata>(rType);
+            Assert.True(metadata.TryGetSensitivityLabelInfo(out var sensitivityLabels));
+            Assert.True(sensitivityLabels.Count() == 1);
+            Assert.Equal("FTE Only", sensitivityLabels.First().Name);
+
+            Assert.True(metadata.TryGetMetadataItems(out var metadataItem));
+            Assert.True(metadataItem.Count() == 1);
+            Assert.Equal("ProductID", metadataItem.First().Name);
+
+            // Trying with a wrong table name (2nd network call ends up with a 400)
+            testConnector.SetResponseFromFiles((@"Responses\SQL GetDatasetsMetadata.json", HttpStatusCode.OK), (@"Responses\SQL Wrong Table.json", HttpStatusCode.BadRequest));
+            PowerFxConnectorException e = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await cds.GetTableAsync(client, $"/apim/sql/{connectionId}", "UnknownTable123", CancellationToken.None, logger).ConfigureAwait(false));
+
+            Assert.StartsWith(@"CDP call to /apim/sql/29941b77eb0a40fe925cd7a03cb85b40/v2/$metadata.json/datasets/pfxdev-sql.database.windows.net%2CSampleDB/tables/UnknownTable123?api-version=2015-09-01&extractSensitivityLabel=True failed with 400 error:  (Bad Request)", e.Message);
+        }
+
+        [Fact]
+        public async Task SQL_CdpTabular_JoinCapabilityTest()
+        {
+            using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            using var httpClient = new HttpClient(testConnector);
+            string connectionId = "2cc03a388d38465fba53f05cd2c76181";
+            string jwt = "eyJ0eXAiOiJKSuA...";
+            using var client = new PowerPlatformConnectorClient("dac64a92-df6a-ee6e-a6a2-be41a923e371.15.common.tip1002.azure-apihub.net", "dac64a92-df6a-ee6e-a6a2-be41a923e371", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+
+            string realTableName = "Product";
+
+            CdpDataSource cds = new CdpDataSource("default,default");
+
+            testConnector.SetResponseFromFiles(@"Responses\SQL GetDatasetsMetadata.json", @"Responses\SQL GetTables SampleDB.json");
+            IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+
+            CdpTable table = tables.First(t => t.DisplayName == realTableName);
+
+            testConnector.SetResponseFromFiles(@"Responses\SQL GetSchema Products v2.json");
+            await table.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+            Assert.True(table.IsInitialized);
+
+            CdpTableValue sqlTable = table.GetTableValue();
+            Assert.True(sqlTable._tabularService.IsInitialized);
+            Assert.True(sqlTable.IsDelegable);
+
+            HashSet<IExternalTabularDataSource> ads = sqlTable.Type._type.AssociatedDataSources;
+            Assert.NotNull(ads);
+            Assert.Single(ads);
+
+            DataSourceInfo dsi = Assert.IsType<DataSourceInfo>(ads.First());
+#pragma warning disable CS0618 // Type or member is obsolete
+            Assert.True(dsi.DelegationInfo.SupportsJoinFunction);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         [Fact]
@@ -320,7 +559,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
 
             ConsoleLogger logger = new ConsoleLogger(_output);
-            CdpTable tabularService = new CdpTable("pfxdev-sql.database.windows.net,connectortest", "Customers", tables: null);
+            CdpTable tabularService = new CdpTable("pfxdev-sql.database.windows.net,connectortest", "Customers", tables: null, connectorSettings: ConnectorSettings.NewCDPConnectorSettings());
 
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Customers", tabularService.TableName);
@@ -486,7 +725,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832384"
             };
 
-            CdpTable tabularService = new CdpTable("https://microsofteur.sharepoint.com/teams/pfxtest", "Documents", tables: null);
+            CdpTable tabularService = new CdpTable("https://microsofteur.sharepoint.com/teams/pfxtest", "Documents", tables: null, connectorSettings: ConnectorSettings.NewCDPConnectorSettings());
 
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Documents", tabularService.TableName);
@@ -524,6 +763,51 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         [Fact]
+        public async Task SP_CdpTabular2()
+        {
+            using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            using var httpClient = new HttpClient(testConnector);
+            string connectionId = "0b905132239e463a9d12f816be201da9";
+            string jwt = "eyJ0eXAiOiJKV....";
+            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", connectionId, () => jwt, httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832384"
+            };
+
+            CdpTable tabularService = new CdpTable("https://microsofteur.sharepoint.com/teams/pfxtest", "Documents", tables: null, connectorSettings: null);
+
+            Assert.False(tabularService.IsInitialized);
+            Assert.Equal("Documents", tabularService.TableName);
+
+            testConnector.SetResponseFromFiles(@"Responses\SP GetDatasetsMetadata.json", @"Responses\SP GetTable.json");
+            await tabularService.InitAsync(client, $"/apim/sharepointonline/{connectionId}", CancellationToken.None, logger);
+            Assert.True(tabularService.IsInitialized);
+
+            CdpTableValue spTable = tabularService.GetTableValue();
+            Assert.True(spTable._tabularService.IsInitialized);
+            Assert.True(spTable.IsDelegable);
+           
+            SymbolValues symbolValues = new SymbolValues().Add("Documents", spTable);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
+
+            // Expression with tabular connector
+            string expr = @"First(Documents).Name";
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            // return some malformed Json and confirm we return an empty set
+            testConnector.SetResponseFromFile(@"Responses\SP GetData Malformed.json");
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
+
+            ErrorValue ev = Assert.IsType<ErrorValue>(result);
+            Assert.Equal("JsonReaderException Expected depth to be zero at the end of the JSON payload. There is an open JSON object or array that should be closed. LineNumber: 1 | BytePositionInLine: 0.", ev.Errors.First().Message);
+        }
+
+        [Fact]
         public async Task SF_CountRows()
         {
             using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
@@ -540,10 +824,17 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             testConnector.SetResponseFromFiles(@"Responses\SF GetDatasetsMetadata.json", @"Responses\SF GetTables.json");
             IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
-            CdpTable connectorTable = tables.First(t => t.DisplayName == "Accounts");
+            CdpTable connectorTable = tables.First(t => t.DisplayName == "Accounts");            
 
             testConnector.SetResponseFromFile(@"Responses\SF GetSchema.json");
             await connectorTable.InitAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
+
+            // No error but we have 2 warnings as we don't support compound properties in SalesForce
+            Assert.Empty(connectorTable.ConnnectorType.Errors);
+            string[] warnings = connectorTable.ConnnectorType.Warnings.Select(ee => ee.Message).OrderBy(x => x).ToArray();
+            Assert.Equal<object>("Required property 'BillingAddress' is not an existing field in x-ms-capabilities/sortRestrictions/unsortableProperties.", warnings[0]);
+            Assert.Equal<object>("Required property 'ShippingAddress' is not an existing field in x-ms-capabilities/sortRestrictions/unsortableProperties.", warnings[1]);
+
             CdpTableValue sfTable = connectorTable.GetTableValue();
 
             SymbolValues symbolValues = new SymbolValues().Add("Accounts", sfTable);
@@ -605,7 +896,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         [Fact]
         public async Task SF_CdpTabular_GetTables()
-        {                       
+        {
             using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
             var config = new PowerFxConfig(Features.PowerFxV1);
             var engine = new RecalcEngine(config);
@@ -667,7 +958,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "Modified By ID'[User]:~User:s, LastModifiedDate`'Last Modified Date':d, LastReferencedDate`'Last Referenced Date':d, LastViewedDate`'Last Viewed Date':d, MasterRecordId`'Master Record ID'[Account]:~Account:s, " +
                 "Name`'Account Name':s, NumberOfEmployees`Employees:w, OwnerId`'Owner ID'[User]:~User:s, ParentId`'Parent Account ID'[Account]:~Account:s, Phone`'Account Phone':s, PhotoUrl`'Photo URL':s, ShippingCity`'Shipping " +
                 "City':s, ShippingCountry`'Shipping Country':s, ShippingGeocodeAccuracy`'Shipping Geocode Accuracy':l, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping " +
-                "Zip/Postal Code':s, ShippingState`'Shipping State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':l, Website:s]",
+                "Zip/Postal Code':s, ShippingState`'Shipping State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':l, Website:s, picklist1`'Picklist 1':*[Value:l], picklist2`'Picklist 2':*[Value:l]]",
                 ((CdpRecordType)sfTable.RecordType).ToStringWithDisplayNames());
 
             Assert.Equal("Account", sfTable.RecordType.TableSymbolName);
@@ -814,7 +1105,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832384"
             };
 
-            CdpTable tabularService = new CdpTable("default", "Account", tables: null);
+            CdpTable tabularService = new CdpTable("default", "Account", tables: null, connectorSettings: ConnectorSettings.NewCDPConnectorSettings());
 
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Account", tabularService.TableName);
@@ -834,7 +1125,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "Modified By ID':~User:s, LastModifiedDate`'Last Modified Date':d, LastReferencedDate`'Last Referenced Date':d, LastViewedDate`'Last Viewed Date':d, MasterRecordId`'Master Record ID':~Account:s, Name`'Account " +
                 "Name':s, NumberOfEmployees`Employees:w, OwnerId`'Owner ID':~User:s, ParentId`'Parent Account ID':~Account:s, Phone`'Account Phone':s, PhotoUrl`'Photo URL':s, ShippingCity`'Shipping City':s, ShippingCountry`'Shipping " +
                 "Country':s, ShippingGeocodeAccuracy`'Shipping Geocode Accuracy':l, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping Zip/Postal Code':s, ShippingState`'Shipping " +
-                "State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':l, Website:s]", sfTable.Type.ToStringWithDisplayNames());
+                "State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':l, Website:s, picklist1`'Picklist 1':*[Value:l], picklist2`'Picklist 2':*[Value:l]]", sfTable.Type.ToStringWithDisplayNames());
 
             SymbolValues symbolValues = new SymbolValues().Add("Accounts", sfTable);
             RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
@@ -902,7 +1193,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(zdTable._tabularService.IsInitialized);
             Assert.True(zdTable.IsDelegable);
 
-            Assert.Equal( 
+            Assert.Equal(
                 "r![active:b, alias:s, created_at:d, custom_role_id:w, details:s, email:s, external_id:s, id:w, last_login_at:d, locale:s, locale_id:w, moderator:b, name:s, notes:s, only_private_comments:b, organization_id:w, " +
                 "phone:s, photo:s, restricted_agent:b, role:s, shared:b, shared_agent:b, signature:s, suspended:b, tags:s, ticket_restriction:s, time_zone:s, updated_at:d, url:s, user_fields:s, verified:b]", ((CdpRecordType)zdTable.RecordType).ToStringWithDisplayNames());
 

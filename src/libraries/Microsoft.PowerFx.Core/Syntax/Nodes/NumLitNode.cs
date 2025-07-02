@@ -8,10 +8,11 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
-    /// Numeric literal parse node. Example:
-    /// 
-    /// <code>3.14</code>
+    /// Numeric literal parse node.
     /// </summary>
+    /// <example>
+    /// <code>3.14</code>
+    /// </example>
     public sealed class NumLitNode : TexlNode
     {
         // If Value is non-null, then the token represents its value.

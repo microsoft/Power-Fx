@@ -19,7 +19,8 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
-using RecordNode = Microsoft.PowerFx.Core.IR.Nodes.RecordNode;
+using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
+using IRRecordNode = Microsoft.PowerFx.Core.IR.Nodes.RecordNode;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -450,7 +451,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (arg.IRContext.ResultType._type.IsPrimitive)
                 {
                     newArgs.Add(
-                        new RecordNode(
+                        new IRRecordNode(
                             new IRContext(arg.IRContext.SourceContext, RecordType.Empty().Add(TableValue.ValueName, arg.IRContext.ResultType)),
                             new Dictionary<DName, IntermediateNode>
                             {
@@ -464,6 +465,34 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return newArgs;
+        }
+
+        public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
+        {
+            var tableType = (TableType)node.Args[0].IRContext.ResultType;
+
+            foreach (var arg in node.Args.Skip(1))
+            {
+                var argType = arg.IRContext.ResultType;
+                string argTableSymbolName = null;
+
+                if (argType is AggregateType aggregateType)
+                {
+                    // If argN is a record/table and has a table symbol name, it means we are referencing another entity.
+                    // We then need to add a dependency to the table symbol name as well.
+                    argTableSymbolName = aggregateType.TableSymbolName;
+                }
+
+                foreach (var name in argType._type.GetAllNames(DPath.Root))
+                {
+                    visitor.AddDependency(tableType.TableSymbolName, name.Name.Value);
+                    visitor.AddDependency(argTableSymbolName, name.Name.Value);
+                }
+
+                arg.Accept(visitor, context);
+            }
+
+            return true;
         }
     }
 
@@ -489,6 +518,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         internal override IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslator.IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
         {
             return base.CreateIRCallNode(node, context, CreateIRCallNodeCollect(node, context, args, scope), scope);
+        }
+
+        public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
+        {
+            var tableType = (TableType)node.Args[0].IRContext.ResultType;
+            visitor.AddDependency(tableType.TableSymbolName, "Value");
+
+            return true;
         }
     }
 

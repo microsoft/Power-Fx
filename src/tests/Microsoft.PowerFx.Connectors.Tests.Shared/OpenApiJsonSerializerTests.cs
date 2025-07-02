@@ -282,12 +282,12 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task JsonSerializer_Array_Record_Invalid()
         {
-            var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var str = await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayObject, GetArray(GetRecord(("x", FormulaValue.New(1)))))
-            }));
+            });
 
-            Assert.Equal("Incompatible Table for supporting array, RecordValue doesn't have 'Value' column - propertyName a", ex.Message);
+            Assert.Equal(@"{""a"":[{""x"":1}]}", str);
         }
 
         [Fact]
@@ -304,12 +304,12 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task JsonSerializer_Array_Invalid()
         {
-            var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            var str = await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayInteger, GetTable(GetRecord(("a", FormulaValue.New(1)), ("b", FormulaValue.New("foo")))))
-            }));
+            });
 
-            Assert.Equal("Incompatible Table for supporting array, RecordValue has more than one column - propertyName a, number of fields 2", ex.Message);
+            Assert.Equal(@"{""a"":[{""a"":1,""b"":""foo""}]}", str);
         }
 
         [Fact]

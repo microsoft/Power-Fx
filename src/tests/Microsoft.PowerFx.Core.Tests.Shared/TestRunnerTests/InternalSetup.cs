@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Parser;
@@ -19,6 +20,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal TimeZoneInfo TimeZoneInfo { get; set; }
 
+        internal CultureInfo CultureInfo { get; set; }
+
         /// <summary>
         /// By default, we run expressions with a memory governor to enforce a limited amount of memory. 
         /// When true, disable memory checks and allow expression to use as much memory as it needs. 
@@ -29,13 +32,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             switch (featureName)
             {
-                // When we move to C# 12 we can use nameof(Features.AllowAsyncDelegation):
-                case "AllowAsyncDelegation":
-                    this.Features = new Features(this.Features) { AllowAsyncDelegation = featureValue };
-                    return true;
-                case "AllowImpureNodeDelegation":
-                    this.Features = new Features(this.Features) { AllowImpureNodeDelegation = featureValue };
-                    return true;
+                // When we move to C# 12 we can use nameof(Features.AsTypeLegacyCheck):
                 case "AsTypeLegacyCheck":
                     this.Features = new Features(this.Features) { AsTypeLegacyCheck = featureValue };
                     return true;
@@ -113,6 +110,11 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 if (string.Equals(part, "DisableMemChecks", StringComparison.OrdinalIgnoreCase))
                 {
+                    if (isDisable)
+                    {
+                        throw new ArgumentException("Invalid DisableMemChecks setup!");
+                    }
+
                     iSetup.DisableMemoryChecks = true;
                     parts.Remove(part);
                 }
@@ -135,6 +137,11 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
                 else if (part.StartsWith("TimeZoneInfo", StringComparison.OrdinalIgnoreCase))
                 {
+                    if (isDisable)
+                    {
+                        throw new ArgumentException("Invalid TimeZoneInfo setup!");
+                    }
+
                     var m = new Regex(@"TimeZoneInfo\(""(?<tz>[^)]+)""\)", RegexOptions.IgnoreCase).Match(part);
 
                     if (m.Success)
@@ -148,6 +155,28 @@ namespace Microsoft.PowerFx.Core.Tests
                     else
                     {
                         throw new ArgumentException("Invalid TimeZoneInfo setup!");
+                    }
+                }
+                else if (part.StartsWith("CultureInfo", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (isDisable)
+                    {
+                        throw new ArgumentException("Invalid CultureInfo setup!");
+                    }
+
+                    var m = new Regex(@"CultureInfo\(""(?<culture>[^)]+)""\)", RegexOptions.IgnoreCase).Match(part);
+
+                    if (m.Success)
+                    {
+                        var culture = m.Groups["culture"].Value;
+
+                        // This call will throw if the Language tag in invalid
+                        iSetup.CultureInfo = new CultureInfo(culture);
+                        parts.Remove(part);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Invalid CultureInfo setup!");
                     }
                 }
             }           

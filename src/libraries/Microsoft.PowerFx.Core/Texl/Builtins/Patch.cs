@@ -10,14 +10,15 @@ using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.DLP;
-using Microsoft.PowerFx.Core.IR.Nodes;
-using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using static Microsoft.PowerFx.Core.IR.IRTranslator;
+using Microsoft.PowerFx.Types;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
+using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
+using IRRecordNode = Microsoft.PowerFx.Core.IR.Nodes.RecordNode;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -300,11 +301,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            bool isValid = base.CheckTypes(context, args, argTypes, errors, out _, out nodeToCoercedTypeMap);
+            // CheckTypes serves two purposes: 1) Check the types and sets the errors if any, 2) Compute the return type.
+            // During dataflow analysis, we only care about the 2) and we make that clear by passing in DefaultNoOpErrorContainer.
+            // So when errors is a noop error container, we omly really care about the return type so we can skip the base.CheckTypes.
+            if (errors is DefaultNoOpErrorContainer)
+            {
+                nodeToCoercedTypeMap = null;
+                return CheckTypesCore(context, args, argTypes, errors, out returnType, ref nodeToCoercedTypeMap, expectsTableArgs: ExpectsTableArgs);
+            }
+
+            var isValid = base.CheckTypes(context, args, argTypes, errors, out _, out nodeToCoercedTypeMap);
 
             // We are going to discard the returnType infered by base.CheckTypes.
             // Use DType.Error until we can correctly infer the return type.
             returnType = DType.Error;
+
             if (!isValid)
             {
                 return false;
@@ -447,6 +458,35 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 MutationUtils.CheckForReadOnlyFields(argTypes[0], args.Skip(2).ToArray(), argTypes.Skip(2).ToArray(), errors);
             }
         }
+
+        public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
+        {
+            var tableType = (TableType)node.Args[0].IRContext.ResultType;
+            var recordType = (RecordType)node.Args[1].IRContext.ResultType;
+
+            // arg1 might refere both to arg0 and arg1.
+            // Examples:
+            // Patch(t1, {...}, {...}) => arg1 is inmemory record and the fields refers to t1.
+            // Patch(t1, First(t2), {...}) => arg1 fields refers to t2 and t1. 
+            foreach (var fieldName in recordType.FieldNames)
+            {
+                visitor.AddDependency(recordType.TableSymbolName, fieldName);
+            }
+
+            foreach (var arg in node.Args.Skip(1))
+            {
+                arg.Accept(visitor, context);
+                if (arg.IRContext.ResultType is AggregateType aggregateType)
+                {
+                    foreach (var fieldName in aggregateType.FieldNames)
+                    {
+                        visitor.AddDependency(tableType.TableSymbolName, fieldName);
+                    }
+                }
+            }
+
+            return true;
+        }
     }
 
     // Patch(DS, record_with_keys_and_updates)
@@ -474,6 +514,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             yield return new[] { TexlStrings.PatchArg_Source, TexlStrings.PatchArg_Record };
         }
+
+        public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
+        {            
+            var tableType = (TableType)node.Args[0].IRContext.ResultType;
+            var recordType = (RecordType)node.Args[1].IRContext.ResultType;
+
+            var datasource = tableType._type.AssociatedDataSources.First();
+
+            foreach (var fieldName in recordType.FieldNames)
+            {
+                visitor.AddDependency(tableType.TableSymbolName, fieldName);
+            }
+
+            return true;
+        }
     }
 
     // Patch(DS, table_of_rows, table_of_updates)
@@ -500,6 +555,25 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 MutationUtils.CheckForReadOnlyFields(argTypes[0], args.Skip(2).ToArray(), argTypes.Skip(2).ToArray(), errors);
             }
         }
+
+        public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
+        {
+            var tableType0 = (TableType)node.Args[0].IRContext.ResultType;
+            var tableType1 = (TableType)node.Args[1].IRContext.ResultType;
+            var tableType2 = (TableType)node.Args[2].IRContext.ResultType;
+
+            foreach (var fieldName in tableType1.FieldNames)
+            {
+                visitor.AddDependency(tableType0.TableSymbolName, fieldName);
+            }
+
+            foreach (var fieldName in tableType2.FieldNames)
+            {
+                visitor.AddDependency(tableType0.TableSymbolName, fieldName);
+            }
+
+            return true;
+        }
     }
 
     // Patch(DS, table_of_rows_with_updates)
@@ -515,6 +589,28 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.PatchArg_Source, TexlStrings.PatchArg_Rows };
+        }
+
+        public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
+        {
+            var tableType0 = (TableType)node.Args[0].IRContext.ResultType;
+            var tableType1 = (TableType)node.Args[1].IRContext.ResultType;
+
+            var datasource = tableType0._type.AssociatedDataSources.First();
+
+            foreach (var fieldName in tableType1.FieldNames)
+            {
+                if (datasource != null && datasource.GetKeyColumns().Contains(fieldName))
+                {
+                    visitor.AddDependency(tableType0.TableSymbolName, fieldName);
+                }
+                else
+                {
+                    visitor.AddDependency(tableType0.TableSymbolName, fieldName);
+                }
+            }
+
+            return true;
         }
     }
 
@@ -567,7 +663,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            bool isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            nodeToCoercedTypeMap = null;
+            var isValid = true;
+
+            // CheckTypes serves two purposes: 1) Check the types and sets the errors if any, 2) Compute the return type.
+            // During dataflow analysis, we only care about the 2) and we make that clear by passing in DefaultNoOpErrorContainer.
+            // So when errors is a noop error container, we omly really care about the return type so we can skip the base.CheckTypes.
+            if (errors is not DefaultNoOpErrorContainer)
+            {
+                isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            }
 
             // We are going to discard the returnType infered by base.CheckTypes.
             // Use DType.Error until we can correctly infer the return type.

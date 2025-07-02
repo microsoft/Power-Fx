@@ -33,11 +33,13 @@ namespace Microsoft.PowerFx.Connectors
 
         public AiSensitivity AiSensitivity => ConnectorType.AiSensitivity;
 
-        internal ConnectorSchema(ISwaggerParameter openApiParameter, ISwaggerExtensions bodyExtensions, bool useHiddenTypes, ConnectorCompatibility compatibility)
+        public string PropertyEntityType => ConnectorType.PropertyEntityType;
+
+        internal ConnectorSchema(ISwaggerParameter openApiParameter, ISwaggerExtensions bodyExtensions, bool useHiddenTypes, ConnectorSettings settings)
         {
             Schema = openApiParameter.Schema;
             UseHiddenTypes = useHiddenTypes;
-            ConnectorType = AggregateErrorsAndWarnings(openApiParameter.GetConnectorType(compatibility));
+            ConnectorType = AggregateErrorsAndWarnings(openApiParameter.GetConnectorType(settings));
             DefaultValue = openApiParameter.Schema.TryGetDefaultValue(FormulaType, out FormulaValue defaultValue, this) && defaultValue is not BlankValue ? defaultValue : null;
             ConnectorExtensions = new ConnectorExtensions(openApiParameter, bodyExtensions);
         }

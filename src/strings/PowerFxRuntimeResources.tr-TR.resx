@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>'{0}' işlevine yönelik türü belirtilmemiş nesne bağımsız değişkeninin türü yanlış. Beklenen: {1}, Mevcut: {0}.</value>
+    <value>'{0}' işlevine yönelik türü belirtilmemiş nesne bağımsız değişkeninin türü yanlış. Beklenen: {1}, Mevcut: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

@@ -4,19 +4,23 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading; 
+using System.Threading;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class CdpRecordType : RecordType
+    internal class CdpRecordType : RecordType, ICDPAggregateMetadata
     {
         internal ConnectorType ConnectorType { get; }
 
         internal ICdpTableResolver TableResolver { get; }
 
         private readonly IEnumerable<string> _primaryKeyNames;
+
+        private readonly IEnumerable<CDPMetadataItem> _metadataItems;
+        private readonly IEnumerable<CDPSensitivityLabelInfo> _sensitivityLabels;
 
         internal CdpRecordType(ConnectorType connectorType, ICdpTableResolver tableResolver, TableDelegationInfo delegationInfo)
             : base(connectorType.DisplayNameProvider, delegationInfo)
@@ -25,6 +29,36 @@ namespace Microsoft.PowerFx.Connectors
             TableResolver = tableResolver;
 
             _primaryKeyNames = delegationInfo.PrimaryKeyNames;
+
+            // build metadata items first.
+            _metadataItems = BuildMetadataItems();
+
+            // build sensitivity labels by flattening the already‐cached metadata items
+            _sensitivityLabels = BuildSensitivityLabel();
+        }
+
+        public bool TryGetSensitivityLabelInfo(out IEnumerable<CDPSensitivityLabelInfo> sensitivityLabelInfo)
+        {
+            if (_sensitivityLabels.Any())
+            {
+                sensitivityLabelInfo = _sensitivityLabels;
+                return true;
+            }
+
+            sensitivityLabelInfo = null;
+            return false;
+        }
+
+        public bool TryGetMetadataItems(out IEnumerable<CDPMetadataItem> cdpMetadataItems)
+        {
+            if (_metadataItems.Any())
+            {
+                cdpMetadataItems = _metadataItems;
+                return true;
+            }
+
+            cdpMetadataItems = null;
+            return false;
         }
 
         public bool TryGetFieldExternalTableName(string fieldName, out string tableName, out string foreignKey)
@@ -110,5 +144,33 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         public override IEnumerable<string> FieldNames => ConnectorType.Fields.Select(field => field.Name);
+
+        private IEnumerable<CDPMetadataItem> BuildMetadataItems()
+        {
+            if (ConnectorType?.Fields == null)
+            {
+                return Array.Empty<CDPMetadataItem>();
+            }
+
+            return ConnectorType.Fields
+                .Where(f => f.FieldMetadata?.Any() == true)
+                .Select(f => new CDPMetadataItem
+                {
+                    Name = f.Name,
+                    SensitivityLabels = f.FieldMetadata
+                })
+                .ToList();
+        }
+
+        /// <summary>
+        /// build sensitivity labels by flattening the already‐cached metadata items.
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<CDPSensitivityLabelInfo> BuildSensitivityLabel()
+        {
+            return _metadataItems
+                .SelectMany(mi => mi.SensitivityLabels)
+                .ToList();
+        }
     }
 }

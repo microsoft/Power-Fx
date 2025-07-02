@@ -1,26 +1,26 @@
-#SETUP: PowerFxV1CompatibilityRules
+#SETUP: PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers,TableSyntaxDoesntWrapRecords
 
 >> IfError(1, 1/0, Time(12,0,0))
 Time(12,0,0,0)
 
 >> IfError(1, {x:1}, {x:1}, {y:1}, 1)
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-34: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
-// IfError can have mismatched arg types, but result can't be used.
+// IfError can't have mismatched arg types in non-behavioral context.
 >> IfError(1/0, 1, {x:4})
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-22: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
-// IfError accepts the void value. But then result of the expression can't be used. If(true, 1, {x:4}) => void value.
+// IfError doesn't accepts the void value. If(true, 1, {x:4}) => void value => error.
 >> IfError(1/0, 1, If(true, 1, {x:4}), 1)
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 16-34: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 // Errors are still returned.
 >> IfError(1, 2, 3/0, If(true, 1/0, {x:4}))
-Error({Kind:ErrorKind.Div0})
+Errors: Error 19-39: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 // Error is not returned.
 >> IfError(1, 2, 3/0, If(false, 1/0, {x:4}))
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 19-40: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 >> IfError(1, a)
 Errors: Error 11-12: Name isn't valid. 'a' isn't recognized.|Error 0-7: The function 'IfError' has some invalid arguments.
@@ -29,16 +29,16 @@ Errors: Error 11-12: Name isn't valid. 'a' isn't recognized.|Error 0-7: The func
 Errors: Error 8-9: Name isn't valid. 'a' isn't recognized.|Error 0-7: The function 'IfError' has some invalid arguments.
 
 >> IfError( If(true, 1, {a:1}), 1, 2 )
-2
+Errors: Error 9-27: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 >> IfError( If(true, 1/0, {a:1}), 1, 2 )
-1
+Errors: Error 9-29: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 >> IfError( 1, "hello", If(true,1/0,{a:1}), "great", "world")
-"great"
+Errors: Error 21-39: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 >> IfError( 1, "one", If(true,1,{a:1}), "two", "three")
-"three"
+Errors: Error 19-35: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 >> IfError(1/0, 2, Time(12, 0, 0), 2)
 Time(0,0,0,0)
@@ -83,3 +83,66 @@ Time(0,0,0,0)
 
 >> IfError(0, {a:1,b:2}, {b:"3",c:"4"})
 {a:Blank(),b:"3",c:"4"}
+
+// *********** Sealed *****************
+
+// FirstError
+
+>> IfError( 1/0, Value( FirstError.Kind ) )
+13
+
+>> IfError( 1/0, AddColumns( FirstError, Foo, 1 ).Foo )
+Errors: Error 26-36: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 14-24: The function 'AddColumns' has some invalid arguments.|Error 46-50: Deprecated use of '.'. Please use the 'ShowColumns' function instead.|Error 0-7: The function 'IfError' has some invalid arguments.
+
+>> IfError( 1/0, Value( DropColumns( FirstError, Message ).Kind ) )
+13
+
+>> IfError( 1/0, Value( AddColumns( DropColumns( FirstError, Message ), Foo, 1 ).Kind ) )
+Errors: Error 33-67: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 21-31: The function 'AddColumns' has some invalid arguments.|Error 77-82: Deprecated use of '.'. Please use the 'ShowColumns' function instead.|Error 14-19: The function 'Value' has some invalid arguments.
+
+>> IfError( 1/0, Value( RenameColumns( FirstError, Message, Msg ).Kind ) )
+Errors: Error 36-46: Can't rename columns of a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 21-34: The function 'RenameColumns' has some invalid arguments.|Error 62-67: Deprecated use of '.'. Please use the 'ShowColumns' function instead.|Error 14-19: The function 'Value' has some invalid arguments.
+
+>> IfError( 1/0, Value( ShowColumns( FirstError, Kind ).Kind ) )
+13
+
+>> IfError( 1/0, First( [FirstError, {Kind: 2}] ).Kind )
+Errors: Error 34-43: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
+
+>> IfError( 1/0, First( [FirstError, FirstError] ).Kind )
+13
+
+>> IfError( 1/0, Value( With( FirstError, ThisRecord ).Kind ) )
+13
+
+>> IfError( 1/0, Value( { a: With( FirstError, ThisRecord ) }.a.Kind ) )
+13
+
+>> IfError( 1/0, Value( AddColumns( { a: FirstError }, foo, 2 ).a.Kind ) )
+13
+
+// AllErrors
+
+>> IfError( 1/0, First( AddColumns( AllErrors, Foo, 1 ) ).Foo )
+Errors: Error 33-42: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 21-31: The function 'AddColumns' has some invalid arguments.|Error 54-58: Name isn't valid. 'Foo' isn't recognized.|Error 0-7: The function 'IfError' has some invalid arguments.
+
+>> IfError( 1/0, Value( First( DropColumns( AllErrors, Message ) ).Kind ) )
+13
+
+>> IfError( 1/0, Value( First( AddColumns( DropColumns( AllErrors, Message ), Foo, 1 ) ).Kind ) )
+Errors: Error 40-73: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 28-38: The function 'AddColumns' has some invalid arguments.|Error 85-90: Name isn't valid. 'Kind' isn't recognized.|Error 14-19: The function 'Value' has some invalid arguments.
+
+>> IfError( 1/0, Value( First( AddColumns( ShowColumns( DropColumns( AllErrors, Message ), Kind ), Foo, 1 ) ).Kind ) )
+13
+
+>> IfError( 1/0, Value( First( RenameColumns( AllErrors, Message, Msg ) ).Kind ) )
+Errors: Error 43-52: Can't rename columns of a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 28-41: The function 'RenameColumns' has some invalid arguments.|Error 70-75: Name isn't valid. 'Kind' isn't recognized.|Error 14-19: The function 'Value' has some invalid arguments.
+
+>> IfError( 1/0, Value( First( ShowColumns( AllErrors, Kind ) ).Kind ) )
+13
+
+>> IfError( 1/0, First( [First( AllErrors ), {Kind: 2}] ).Kind )
+Errors: Error 42-51: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
+
+>> IfError( 1/0, First( [First(AllErrors), Last(AllErrors)] ).Kind )
+13

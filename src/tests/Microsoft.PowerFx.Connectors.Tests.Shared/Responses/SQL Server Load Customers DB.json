@@ -6,6 +6,7 @@
     "sortRestrictions": { "sortable": true },
     "filterRestrictions": { "filterable": true },
     "selectRestrictions": { "selectable": true },
+    "countRestrictions": { "countable": true },
     "filterFunctionSupport": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "now", "not", "and", "or", "day", "month", "year", "hour", "minute", "second", "date", "time", "totaloffsetminutes", "totalseconds", "round", "floor", "ceiling", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat", "sum", "min", "max", "average", "countdistinct", "null" ]
   },
   "schema": {

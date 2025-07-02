@@ -440,7 +440,7 @@ namespace Microsoft.PowerFx
 
             // Pre-scan expression for declarations, like Set(x, y)
             // If found, declare 'x'. And the proceed with eval like normal. 
-            if (check.IsSuccess && this.AllowSetDefinitions)
+            if (check.IsSuccess && this.AllowSetDefinitions && this.ParserOptions.AllowsSideEffects)
             {
                 var vis = new FindDeclarationVisitor();
                 check.Parse.Root.Accept(vis);

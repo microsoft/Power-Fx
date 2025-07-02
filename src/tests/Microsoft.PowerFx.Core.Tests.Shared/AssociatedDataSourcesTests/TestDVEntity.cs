@@ -76,6 +76,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             displayNameMapping.Add("address1_line1", "Address 1: Street 1");
             displayNameMapping.Add("nonsearchablestringcol", "Non-searchable string column");
             displayNameMapping.Add("nonsortablestringcolumn", "Non-sortable string column");
+            displayNameMapping.Add("numberofemployees", "Number of employees");
             
             return DType.AttachDataSourceInfo(accountsType, dataSource);
         }

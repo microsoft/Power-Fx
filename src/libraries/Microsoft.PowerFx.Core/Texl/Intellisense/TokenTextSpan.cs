@@ -38,16 +38,34 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         bool CanBeHidden { get; }
     }
 
+    /// <summary>
+    /// Represents a span of text for a token, including its name, indices, type, and text context flag.
+    /// </summary>
     public sealed class TokenTextSpan : ITokenTextSpan, ITextFirstFlag
     {
+        /// <summary>
+        /// Gets the predefined name for the token or a variable name.
+        /// </summary>
         public string TokenName { get; private set; }
 
+        /// <summary>
+        /// Gets the 0-based index starting point of the token.
+        /// </summary>
         public int StartIndex { get; private set; }
 
+        /// <summary>
+        /// Gets the 0-based index ending point of the token.
+        /// </summary>
         public int EndIndex { get; private set; }
 
+        /// <summary>
+        /// Gets the type of the token.
+        /// </summary>
         public TokenType TokenType { get; private set; }
 
+        /// <summary>
+        /// Gets a value indicating whether the token is in a TextFirst context.
+        /// </summary>
         public bool IsTextFirst { get; private set; }
 
         bool ITokenTextSpan.CanBeHidden => this.CanBeHidden;

@@ -1,0 +1,512 @@
+﻿#SETUP: RegEx,PowerFxV1CompatibilityRules
+
+// Unicode character behavior in Power Fx regular expressions.
+// This file consolidates Unicode testing for IsMatch, Match, and MatchAll
+
+// We chose to use canonical .NET instead of RegexOptions.ECMAScript because we wanted the unicode definitions for words.
+// See https://learn.microsoft.com/dotnet/standard/base-types/regular-expression-options#ecmascript-matching-behavior for more details
+
+// Changes in case insensitive matching in .NET 7 causes different answers that are consistent with PCRE2 and Node
+// See https://devblogs.microsoft.com/dotnet/regular-expression-improvements-in-dotnet-7/#case-insensitive-matching-and-regexoptions-ignorecase
+
+>> Match( UniChar(Hex2Dec("03a9")), "\u03c9", MatchOptions.IgnoreCase ).FullMatch
+"Ω"
+
+>> Match( UniChar(Hex2Dec("03c9")), "\u03a9", MatchOptions.IgnoreCase ).FullMatch
+"ω"
+
+#DISABLE.NET:462
+>> Match( UniChar(Hex2Dec("03a9")), "\u2126", MatchOptions.IgnoreCase ).FullMatch
+"Ω"
+
+#DISABLE.NET:462
+>> Match( UniChar(Hex2Dec("03c9")), "\u2126", MatchOptions.IgnoreCase ).FullMatch
+"ω"
+
+#DISABLE.NET:462
+>> Match( UniChar(Hex2Dec("2126")), "\u03c9", MatchOptions.IgnoreCase ).FullMatch
+"Ω"
+
+#DISABLE.NET:462
+>> Match( UniChar(Hex2Dec("2126")), "\u03a9", MatchOptions.IgnoreCase ).FullMatch
+"Ω"
+
+// case folding ſ (U+017F LATIN SMALL LETTER LONG S) case-folds to s (U+0073 LATIN SMALL LETTER S) 
+// case folding K (U+212A KELVIN SIGN) case-folds to k (U+006B LATIN SMALL LETTER K).
+
+>> UniChar( Hex2Dec( "017f" )) = "ſ"
+true
+
+>> UniChar( Hex2Dec( "212a" )) = "K"
+true
+
+>> Match( "K", "[a-z]" )
+Blank()
+
+>> Match( "ſ", "[a-z]" )
+Blank()
+
+#DISABLE.NET:462
+>> Match( "K", "k", MatchOptions.IgnoreCase )
+{FullMatch:"K",StartMatch:1}
+
+// .net does not match this, but node and PCRE2 do: {FullMatch:"ſ",StartMatch:1}
+>> Match( "ſ", "s", MatchOptions.IgnoreCase )
+Blank()
+
+// .net does not match this, but node and PCRE2 do: {FullMatch:"ſ",StartMatch:1}
+>> Match( "ſ", "[a-z]", MatchOptions.IgnoreCase )
+Blank()
+
+#DISABLE.NET:462
+>> Match( "K", "[a-z]", MatchOptions.IgnoreCase )
+{FullMatch:"K",StartMatch:1}
+
+>> Match( "ß", "ss", MatchOptions.IgnoreCase )
+Blank()
+
+#DISABLE.NET:462
+>> Match( UniChar( Hex2Dec( "2126" ) ), "\u03c9", MatchOptions.IgnoreCase )
+{FullMatch:"Ω",StartMatch:1}
+
+#DISABLE.NET:462
+>> Match( UniChar( Hex2Dec( "2126" ) ), "\u03a9", MatchOptions.IgnoreCase )
+{FullMatch:"Ω",StartMatch:1}
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` A 1234567890", "\p{L}")
+true
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~`  1234567890", "\p{L}")
+false
+
+// With Icelandic Eth
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` Ð 1234567890", "\p{L}")
+true
+
+// newline characters not matched by "."
+
+>> JSON( MatchAll( Char(9) & Char(13) & Char(10) & Char(Hex2Dec("85")) & UniChar(Hex2Dec("2028")) & UniChar(Hex2Dec("2029")) & Char(Hex2Dec("C")) & Char(Hex2Dec("B")) & Char(14), "." ) )
+"[{""FullMatch"":""\t"",""StartMatch"":1},{""FullMatch"":""\u000E"",""StartMatch"":9}]"
+
+// \p{Lu}, \p{Ll}, and \p{Lt} are treated as a set with ignore case
+
+>> Len( Match( Concat(["01c5","01c8","01cb","01f2","1fbc","1fcc","1ffc"],UniChar(Hex2Dec(Value))) & Concat( Sequence(8,Hex2Dec("1f88")),UniChar(Value)) & 
+    Concat(Sequence(8,Hex2Dec("1f98")),UniChar(Value)) & Concat(Sequence(8,Hex2Dec("1fa8")),UniChar(Value)),
+    "\p{Lt}+", MatchOptions.IgnoreCase ).FullMatch )
+31
+
+>> Len( Match( Concat(["01c5","01c8","01cb","01f2","1fbc","1fcc","1ffc"],UniChar(Hex2Dec(Value))) & Concat( Sequence(8,Hex2Dec("1f88")),UniChar(Value)) & 
+    Concat(Sequence(8,Hex2Dec("1f98")),UniChar(Value)) & Concat(Sequence(8,Hex2Dec("1fa8")),UniChar(Value)),
+    "\p{Lt}+" ).FullMatch )
+31
+
+>> Len( Match( Concat(["01c5","01c8","01cb","01f2","1fbc","1fcc","1ffc"],UniChar(Hex2Dec(Value))) & Concat( Sequence(8,Hex2Dec("1f88")),UniChar(Value)) & 
+    Concat(Sequence(8,Hex2Dec("1f98")),UniChar(Value)) & Concat(Sequence(8,Hex2Dec("1fa8")),UniChar(Value)),
+    "\p{Lu}+", MatchOptions.IgnoreCase ).FullMatch )
+31
+
+>> Len( Match( Concat(["01c5","01c8","01cb","01f2","1fbc","1fcc","1ffc"],UniChar(Hex2Dec(Value))) & Concat( Sequence(8,Hex2Dec("1f88")),UniChar(Value)) & 
+    Concat(Sequence(8,Hex2Dec("1f98")),UniChar(Value)) & Concat(Sequence(8,Hex2Dec("1fa8")),UniChar(Value)),
+    "\p{Lu}+" ).FullMatch )
+0
+
+>> Len( Match( Concat(["01c5","01c8","01cb","01f2","1fbc","1fcc","1ffc"],UniChar(Hex2Dec(Value))) & Concat( Sequence(8,Hex2Dec("1f88")),UniChar(Value)) & 
+    Concat(Sequence(8,Hex2Dec("1f98")),UniChar(Value)) & Concat(Sequence(8,Hex2Dec("1fa8")),UniChar(Value)),
+    "\p{Ll}+", MatchOptions.IgnoreCase ).FullMatch )
+31
+
+>> Len( Match( Concat(["01c5","01c8","01cb","01f2","1fbc","1fcc","1ffc"],UniChar(Hex2Dec(Value))) & Concat( Sequence(8,Hex2Dec("1f88")),UniChar(Value)) & 
+    Concat(Sequence(8,Hex2Dec("1f98")),UniChar(Value)) & Concat(Sequence(8,Hex2Dec("1fa8")),UniChar(Value)),
+    "\p{Ll}+" ).FullMatch )
+0
+
+>> Len( Match( "abcdefghijklmnopqrstuvwxyz", "\p{Ll}+" ).FullMatch )
+26
+
+>> Len( Match( "abcdefghijklmnopqrstuvwxyz", "\p{Ll}+", MatchOptions.IgnoreCase ).FullMatch )
+26
+
+>> Len( Match( "abcdefghijklmnopqrstuvwxyz", "\p{Lu}+" ).FullMatch )
+0
+
+>> Len( Match( "abcdefghijklmnopqrstuvwxyz", "\p{Lu}+", MatchOptions.IgnoreCase ).FullMatch )
+26
+
+>> Len( Match( "abcdefghijklmnopqrstuvwxyz", "\p{Lt}+" ).FullMatch )
+0
+
+>> Len( Match( "abcdefghijklmnopqrstuvwxyz", "\p{Lt}+", MatchOptions.IgnoreCase ).FullMatch )
+26
+
+>> Len( Match( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "\p{Lu}+" ).FullMatch )
+26
+
+>> Len( Match( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "\p{Lu}+", MatchOptions.IgnoreCase ).FullMatch )
+26
+
+>> Len( Match( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "\p{Ll}+" ).FullMatch )
+0
+
+>> Len( Match( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "\p{Ll}+", MatchOptions.IgnoreCase ).FullMatch )
+26
+
+>> Len( Match( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "\p{Lt}+" ).FullMatch )
+0
+
+>> Len( Match( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "\p{Lt}+", MatchOptions.IgnoreCase ).FullMatch )
+26
+
+// surrogate pairs not supported in character class. .NET does not support, JavaScript supports with /u or /v regex modifier, PCRE2 supports
+
+>> UniChar(Hex2Dec("1f600")) = "😀"
+true
+
+>> UniChar(Hex2Dec("1F47B")) = "👻"
+true
+
+>> Len( "😀" )
+2
+
+>> Match( "😀", "[\uD83D\uDE00]" )
+Errors: Error 13-29: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "...\uD83D\uDE00".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "😀", "[😀]" )
+Errors: Error 13-19: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "[😀".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Len( Match( "😀", "\uD83D\uDE00" ).FullMatch )
+2
+
+>> Len( Match( "😀", "😀" ).FullMatch )
+2
+
+>> Match( "😀", "[a-\uD83D\uDE06]" )
+Errors: Error 13-31: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "...\uD83D\uDE06".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "😀", "[\uD83D\uDE00-\uD83D\uDE06]" )
+Errors: Error 13-42: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "...\uD83D\uDE00".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "😀", "[😀-👻]" )
+Errors: Error 13-22: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "[😀".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "😀", "[a\uD83D\uDE00-👻b]" )
+Errors: Error 13-34: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "...\uD83D\uDE00".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "😀", "[a\uD83D\uDE00-\ud83d\udc7bb]" )
+Errors: Error 13-44: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "...\uD83D\uDE00".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "😀", "[abc\uD83D\uDE00\ud83d\udc7bdef]" )
+Errors: Error 13-47: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "...\uD83D\uDE00".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "😀", "\u{1F600}" )
+{FullMatch:"😀",StartMatch:1}
+
+>> Match( "😀", "[a-\u{1F600}]" )
+Errors: Error 13-28: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "[a-\u{1F600}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "😀", "[\u{1F47B}-\u{1F600}]" )
+Errors: Error 13-36: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "[\u{1F47B}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "😀", "[\u{1F47B}-z]" )
+Errors: Error 13-28: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "[\u{1F47B}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "😀", "[\u{1F47B}-👻]" )
+Errors: Error 13-29: Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "[\u{1F47B}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "😀😀😀😀😀", "😀+" )
+{FullMatch:"😀😀😀😀😀",StartMatch:1}
+
+>> Match( "ab👻👻cd😀😀ef", "😀+" )  // ghosts each add two characters from StartMatch perspective
+{FullMatch:"😀😀",StartMatch:9}
+
+>> Match( "😀😀😀😀😀", "😀{2}" )
+{FullMatch:"😀😀",StartMatch:1}
+
+>> Match( "😀😀😀😀😀", "😀?" )
+{FullMatch:"😀",StartMatch:1}
+
+>> Match( "👻👻👻👻👻", "😀?" )
+{FullMatch:"",StartMatch:1}
+
+>> Match( "👻👻👻👻👻", "😀+" )
+Blank()
+
+>> Match( "👻", "\u{1F47B}" )
+{FullMatch:"👻",StartMatch:1}
+
+>> Match( "👻👻👻👻👻", "\u{1f47b}+" )
+{FullMatch:"👻👻👻👻👻",StartMatch:1}
+
+>> Match( "👻", UniChar(Hex2Dec("1F47B")) )
+{FullMatch:"👻",StartMatch:1}
+
+>> Match( "👻👻👻👻👻", UniChar(Hex2Dec("1F47B")) & "+" )
+{FullMatch:"👻👻👻👻👻",StartMatch:1}
+
+>> Match( "👻👻👻👻👻", "\uD83D\uDC7B" )
+{FullMatch:"👻",StartMatch:1}
+
+>> Match( "👻👻👻👻👻", "\uD83D\uDC7B+" )
+{FullMatch:"👻👻👻👻👻",StartMatch:1}
+
+>> Match( "👻👻👻👻👻", "\uD83D\uDC7B?" )
+{FullMatch:"👻",StartMatch:1}
+
+>> Match( "👻👻👻👻👻", "\uD83D\uDC7B{3}" )
+{FullMatch:"👻👻👻",StartMatch:1}
+
+>> Match( "👻👻👻👻👻", "\uD83D\uDC7B{3,4}" )
+{FullMatch:"👻👻👻👻",StartMatch:1}
+
+>> Match( "👻👻👻👻👻", "\uD83D\uDC7B{3,}" )
+{FullMatch:"👻👻👻👻👻",StartMatch:1}
+
+// surrogates must come immediately next to each other
+>> Match( "👻👻👻👻👻", "\uD83D(\uDC7B)" )
+Errors: Error 21-37: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\uD83D".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "\uD83D[\uDC7B-\uDC7C]" )
+Errors: Error 21-44: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\uD83D".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "\uD83D\uD87B" )
+Errors: Error 21-35: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\uD83D".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "\uDc3D\uDC7B" )
+Errors: Error 21-35: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\uDc3D".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "[\uD83D]" )
+Errors: Error 21-31: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "[\uD83D".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "[\uDC7B]" )
+Errors: Error 21-31: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "[\uDC7B".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "\uD83D" )
+Errors: Error 21-29: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\uD83D".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "\uDc3D" )
+Errors: Error 21-29: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\uDc3D".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "\uD83Da" )
+Errors: Error 21-30: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\uD83D".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "b\uDc3D" )
+Errors: Error 21-30: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\uDc3D".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "😀", "." )
+{FullMatch:"😀",StartMatch:1}
+
+>> Match( "😀", ".*" )
+{FullMatch:"😀",StartMatch:1}
+
+>> Match( "😀", ".+" )
+{FullMatch:"😀",StartMatch:1}
+
+>> Match( "a😀c%👻%def", "%.%" )
+{FullMatch:"%👻%",StartMatch:5}
+
+>> Match( "a😀c%👻%def", "%.%", MatchOptions.DotAll )
+{FullMatch:"%👻%",StartMatch:5}
+
+>> Match( "%👻👻a👻👻b👻c👻👻%", "%.{3,}%", MatchOptions.DotAll )
+{FullMatch:"%👻👻a👻👻b👻c👻👻%",StartMatch:1}
+
+>> JSON( Match( "%👻👻" & Char(13) & "👻👻" & Char(10) & "👻c👻👻%", "%.{3,}%" ) )
+"null"
+
+>> JSON( Match( "%👻👻" & Char(13) & "👻👻" & Char(10) & "👻c👻👻%", "%.{3,}%", MatchOptions.DotAll ) )
+"{""FullMatch"":""%\uD83D\uDC7B\uD83D\uDC7B\r\uD83D\uDC7B\uD83D\uDC7B\n\uD83D\uDC7Bc\uD83D\uDC7B\uD83D\uDC7B%"",""StartMatch"":1}"
+
+// .net doesn't cover unicode categories above the BMP, node and pcre2 do
+
+>> Match( "👻", "\p{So}" )  // \u{01F47B}
+Blank()
+
+>> Match( "𝟭", "\p{Nd}" )   // \u{01D7ED}
+Blank()
+
+>> Match( "𐓶", "\p{Ll}" )   // \u{0104F6}
+Blank()
+
+// Unicode chars in errors, want to avoid breaking up surrogate pairs in message
+
+>> Match( "a", "\👻" )
+Errors: Error 12-17: Invalid regular expression: Invalid escape code, found "\👻".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", Char(13) & "[\Q]" )
+Errors: Error 21-22: Invalid regular expression: Invalid escape code, found " [\Q".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "👻👻👻👻👻[\Q]" )
+Errors: Error 12-28: Invalid regular expression: Invalid escape code, found "...👻👻👻👻[\Q".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "👻👻👻👻👻a[\Q]" )
+Errors: Error 12-29: Invalid regular expression: Invalid escape code, found "...👻👻👻👻a[\Q".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "👻👻👻👻👻ab[\Q]" )
+Errors: Error 12-30: Invalid regular expression: Invalid escape code, found "...👻👻👻ab[\Q".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "👻👻👻👻[\Q]" )
+Errors: Error 12-26: Invalid regular expression: Invalid escape code, found "👻👻👻👻[\Q".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// \u{...}
+
+>> JSON( Match( Char(9), "\u{9}") )
+"{""FullMatch"":""\t"",""StartMatch"":1}"
+
+>> Match( "👻", "\u{1F47B}")
+{FullMatch:"👻",StartMatch:1}
+
+>> Match( "zzz👻👻👻👻wwww", "\u{1F47B}+")
+{FullMatch:"👻👻👻👻",StartMatch:4}
+
+>> Match( "a", "\u{61}")
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "zzzzaaaaoooo", "\u{61}+")
+{FullMatch:"aaaa",StartMatch:5}
+
+>> Match( "qqqq❶qqqq", "q\u{2776}q")
+{FullMatch:"q❶q",StartMatch:4}
+
+>> Match( "qqqq❶❶qqqq", "q\u{2776}{2,4}q")
+{FullMatch:"q❶❶q",StartMatch:4}
+
+>> Match( Concat( Sequence(5,0), Char(Value+97) & UniChar(Value+Hex2Dec("1d7ec")) ), "a\u{1d7ec}b(\u{1d7ed})c(?:\u{1d7ee})d(\u{1d7ef})e\u{1d7f0}", MatchOptions.NumberedSubMatches)
+{FullMatch:"a𝟬b𝟭c𝟮d𝟯e𝟰",StartMatch:1,SubMatches:Table({Value:"𝟭"},{Value:"𝟯"})}
+
+// \u{...} limits
+
+>> Match( "👻👻👻👻👻", "\u{1000ff}" )
+Blank()
+
+>> Match( "👻👻👻👻👻", "\u{110000}" )
+Errors: Error 21-33: Invalid regular expression: Invalid escape code, found "\u".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "\u{200000}" )
+Errors: Error 21-33: Invalid regular expression: Invalid escape code, found "\u".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// 8 hex digits are OK
+
+>> Match( "👻👻👻👻👻", "\u{00000001}" )
+Blank()
+
+>> Match( "👻👻👻👻👻", "\u{00010001}" )
+Blank()
+
+>> Match( "👻👻👻👻👻", "\u{00090001}" )
+Blank()
+
+>> Match( "👻👻👻👻👻", "\u{000e0001}" )
+Blank()
+
+>> Match( "👻👻👻👻👻", "\u{00100001}" )
+Blank()
+
+// 9 or more digits is not OK
+
+>> Match( "👻👻👻👻👻", "\u{000000001}" )
+Errors: Error 21-36: Invalid regular expression: Invalid escape code, found "\u".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "\u{00000000000001}" )
+Errors: Error 21-41: Invalid regular expression: Invalid escape code, found "\u".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// surrogate characters not allowed (they aren't legitimate code points)
+
+>> Match( "👻👻👻👻👻", "\u{d800}" )
+Errors: Error 21-31: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\u{d800}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "\u{deff}" )
+Errors: Error 21-31: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\u{deff}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "\u{df00}" )
+Errors: Error 21-31: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\u{df00}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "\u{dfff}" )
+Errors: Error 21-31: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\u{dfff}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "👻👻👻👻👻", "\u{e000}" )
+Blank()
+
+// can't use \u{...} for surrogate pairs, use \u... instead.
+
+>> Match( "👻👻👻👻👻", "\u{D83D}\u{DC7B}" )
+Errors: Error 21-39: Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "\u{D83D}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// \u codes
+
+>> IsMatch( "a", "\u{0061}" )
+true
+
+>> IsMatch( "a", "\u{1F47B}" )
+false
+
+>> IsMatch( "😀", "\u{1F600}" )
+true
+
+>> IsMatch( "aaa😀😀aaaa", "\u{1F600}{2}" )
+true
+
+>> IsMatch( "aaa😀😀aaaa", "\u{1F600}{3}" )
+false
+
+>> IsMatch( "aaa😀😀aaaa", "\uD83D\uDE00{2}" )
+true
+
+>> IsMatch( "aaa😀😀aaaa", "\uD83D\uDE00{3}" )
+false
+
+// leading zeros are fine, up to 8
+>> IsMatch( "a", "\u{00000061}" )
+true
+
+// spaces are not
+>> IsMatch( "a", "\u{ 00061}" )
+Errors: Error 14-26: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "a", "\u{00061 }" )
+Errors: Error 14-26: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "a", "\u{ 00061 }" )
+Errors: Error 14-27: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// checking the error message if the \u{...} is in the context of another error
+>> IsMatch( "a", "\u{0061}[z-a]" )
+Errors: Error 14-29: Invalid regular expression: The characters in a character class range are reversed, found at the end of "\u{0061}[z-a".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// \u{...} replaced with surrogate pairs
+>> IsMatch( "a", "\u{010ff41}[z-a]" )
+Errors: Error 14-32: Invalid regular expression: The characters in a character class range are reversed, found at the end of "...010ff41}[z-a".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// out of range and illegal
+>> IsMatch( "a", "\u{014ff41}[z-a]" )
+Errors: Error 14-32: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+// range checking, bypasses surrogate range
+
+>> JSON( Match( Concat( Sequence(8,Hex2Dec("00021"),Hex2Dec("4000")), Dec2Hex(Value,6) & UniChar(Value) ), "(\w+\u{00021})(\w+\u{04021})(\w+\u{08021})(\w+\u{0c021})(\w+\u{10021})(\w+\u{14021})(\w+\u{18021})(\w+\u{1c021})", MatchOptions.NumberedSubMatches ) )
+"{""FullMatch"":""000021!004021䀡008021耡00C021쀡010021\uD800\uDC21014021\uD810\uDC21018021\uD820\uDC2101C021\uD830\uDC21"",""StartMatch"":1,""SubMatches"":[{""Value"":""000021!""},{""Value"":""004021䀡""},{""Value"":""008021耡""},{""Value"":""00C021쀡""},{""Value"":""010021\uD800\uDC21""},{""Value"":""014021\uD810\uDC21""},{""Value"":""018021\uD820\uDC21""},{""Value"":""01C021\uD830\uDC21""}]}"
+
+>> JSON( Match( Concat( Sequence(8,Hex2Dec("20021"),Hex2Dec("4000")), Dec2Hex(Value,6) & UniChar(Value) ), "(\w+\u{20021})(\w+\u{24021})(\w+\u{28021})(\w+\u{2c021})(\w+\u{30021})(\w+\u{34021})(\w+\u{38021})(\w+\u{3c021})", MatchOptions.NumberedSubMatches ) )
+"{""FullMatch"":""020021\uD840\uDC21024021\uD850\uDC21028021\uD860\uDC2102C021\uD870\uDC21030021\uD880\uDC21034021\uD890\uDC21038021\uD8A0\uDC2103C021\uD8B0\uDC21"",""StartMatch"":1,""SubMatches"":[{""Value"":""020021\uD840\uDC21""},{""Value"":""024021\uD850\uDC21""},{""Value"":""028021\uD860\uDC21""},{""Value"":""02C021\uD870\uDC21""},{""Value"":""030021\uD880\uDC21""},{""Value"":""034021\uD890\uDC21""},{""Value"":""038021\uD8A0\uDC21""},{""Value"":""03C021\uD8B0\uDC21""}]}"
+
+>> JSON( Match( Concat( Sequence(8,Hex2Dec("40021"),Hex2Dec("4000")), Dec2Hex(Value,6) & UniChar(Value) ), "(\w+\u{40021})(\w+\u{44021})(\w+\u{48021})(\w+\u{4c021})(\w+\u{50021})(\w+\u{54021})(\w+\u{58021})(\w+\u{5c021})", MatchOptions.NumberedSubMatches ) )
+"{""FullMatch"":""040021\uD8C0\uDC21044021\uD8D0\uDC21048021\uD8E0\uDC2104C021\uD8F0\uDC21050021\uD900\uDC21054021\uD910\uDC21058021\uD920\uDC2105C021\uD930\uDC21"",""StartMatch"":1,""SubMatches"":[{""Value"":""040021\uD8C0\uDC21""},{""Value"":""044021\uD8D0\uDC21""},{""Value"":""048021\uD8E0\uDC21""},{""Value"":""04C021\uD8F0\uDC21""},{""Value"":""050021\uD900\uDC21""},{""Value"":""054021\uD910\uDC21""},{""Value"":""058021\uD920\uDC21""},{""Value"":""05C021\uD930\uDC21""}]}"
+
+>> JSON( Match( Concat( Sequence(8,Hex2Dec("60021"),Hex2Dec("4000")), Dec2Hex(Value,6) & UniChar(Value) ), "(\w+\u{60021})(\w+\u{64021})(\w+\u{68021})(\w+\u{6c021})(\w+\u{70021})(\w+\u{74021})(\w+\u{78021})(\w+\u{7c021})", MatchOptions.NumberedSubMatches ) )
+"{""FullMatch"":""060021\uD940\uDC21064021\uD950\uDC21068021\uD960\uDC2106C021\uD970\uDC21070021\uD980\uDC21074021\uD990\uDC21078021\uD9A0\uDC2107C021\uD9B0\uDC21"",""StartMatch"":1,""SubMatches"":[{""Value"":""060021\uD940\uDC21""},{""Value"":""064021\uD950\uDC21""},{""Value"":""068021\uD960\uDC21""},{""Value"":""06C021\uD970\uDC21""},{""Value"":""070021\uD980\uDC21""},{""Value"":""074021\uD990\uDC21""},{""Value"":""078021\uD9A0\uDC21""},{""Value"":""07C021\uD9B0\uDC21""}]}"
+
+>> JSON( Match( Concat( Sequence(8,Hex2Dec("80021"),Hex2Dec("4000")), Dec2Hex(Value,6) & UniChar(Value) ), "(\w+\u{80021})(\w+\u{84021})(\w+\u{88021})(\w+\u{8c021})(\w+\u{90021})(\w+\u{94021})(\w+\u{98021})(\w+\u{9c021})", MatchOptions.NumberedSubMatches ) )
+"{""FullMatch"":""080021\uD9C0\uDC21084021\uD9D0\uDC21088021\uD9E0\uDC2108C021\uD9F0\uDC21090021\uDA00\uDC21094021\uDA10\uDC21098021\uDA20\uDC2109C021\uDA30\uDC21"",""StartMatch"":1,""SubMatches"":[{""Value"":""080021\uD9C0\uDC21""},{""Value"":""084021\uD9D0\uDC21""},{""Value"":""088021\uD9E0\uDC21""},{""Value"":""08C021\uD9F0\uDC21""},{""Value"":""090021\uDA00\uDC21""},{""Value"":""094021\uDA10\uDC21""},{""Value"":""098021\uDA20\uDC21""},{""Value"":""09C021\uDA30\uDC21""}]}"
+
+>> JSON( Match( Concat( Sequence(8,Hex2Dec("a0021"),Hex2Dec("4000")), Dec2Hex(Value,6) & UniChar(Value) ), "(\w+\u{a0021})(\w+\u{A4021})(\w+\u{a8021})(\w+\u{Ac021})(\w+\u{b0021})(\w+\u{B4021})(\w+\u{b8021})(\w+\u{Bc021})", MatchOptions.NumberedSubMatches ) )
+"{""FullMatch"":""0A0021\uDA40\uDC210A4021\uDA50\uDC210A8021\uDA60\uDC210AC021\uDA70\uDC210B0021\uDA80\uDC210B4021\uDA90\uDC210B8021\uDAA0\uDC210BC021\uDAB0\uDC21"",""StartMatch"":1,""SubMatches"":[{""Value"":""0A0021\uDA40\uDC21""},{""Value"":""0A4021\uDA50\uDC21""},{""Value"":""0A8021\uDA60\uDC21""},{""Value"":""0AC021\uDA70\uDC21""},{""Value"":""0B0021\uDA80\uDC21""},{""Value"":""0B4021\uDA90\uDC21""},{""Value"":""0B8021\uDAA0\uDC21""},{""Value"":""0BC021\uDAB0\uDC21""}]}"
+
+>> JSON( Match( Concat( Sequence(8,Hex2Dec("c0021"),Hex2Dec("4000")), Dec2Hex(Value,6) & UniChar(Value) ), "(\w+\u{c0021})(\w+\u{C4021})(\w+\u{c8021})(\w+\u{Cc021})(\w+\u{d0021})(\w+\u{D4021})(\w+\u{d8021})(\w+\u{Dc021})", MatchOptions.NumberedSubMatches ) )
+"{""FullMatch"":""0C0021\uDAC0\uDC210C4021\uDAD0\uDC210C8021\uDAE0\uDC210CC021\uDAF0\uDC210D0021\uDB00\uDC210D4021\uDB10\uDC210D8021\uDB20\uDC210DC021\uDB30\uDC21"",""StartMatch"":1,""SubMatches"":[{""Value"":""0C0021\uDAC0\uDC21""},{""Value"":""0C4021\uDAD0\uDC21""},{""Value"":""0C8021\uDAE0\uDC21""},{""Value"":""0CC021\uDAF0\uDC21""},{""Value"":""0D0021\uDB00\uDC21""},{""Value"":""0D4021\uDB10\uDC21""},{""Value"":""0D8021\uDB20\uDC21""},{""Value"":""0DC021\uDB30\uDC21""}]}"
+
+>> JSON( Match( Concat( Sequence(8,Hex2Dec("e0021"),Hex2Dec("4000")), Dec2Hex(Value,6) & UniChar(Value) ), "(\w+\u{e0021})(\w+\u{E4021})(\w+\u{e8021})(\w+\u{Ec021})(\w+\u{F0021})(\w+\u{f4021})(\w+\u{F8021})(\w+\u{fc021})", MatchOptions.NumberedSubMatches ) )
+"{""FullMatch"":""0E0021\uDB40\uDC210E4021\uDB50\uDC210E8021\uDB60\uDC210EC021\uDB70\uDC210F0021\uDB80\uDC210F4021\uDB90\uDC210F8021\uDBA0\uDC210FC021\uDBB0\uDC21"",""StartMatch"":1,""SubMatches"":[{""Value"":""0E0021\uDB40\uDC21""},{""Value"":""0E4021\uDB50\uDC21""},{""Value"":""0E8021\uDB60\uDC21""},{""Value"":""0EC021\uDB70\uDC21""},{""Value"":""0F0021\uDB80\uDC21""},{""Value"":""0F4021\uDB90\uDC21""},{""Value"":""0F8021\uDBA0\uDC21""},{""Value"":""0FC021\uDBB0\uDC21""}]}"
+
+>> JSON( Match( Concat( Sequence(4,Hex2Dec("100021"),Hex2Dec("4000")), Dec2Hex(Value,6) & UniChar(Value) ), "(\w+\u{100021})(\w+\u{104021})(\w+\u{108021})(\w+\u{10c021})", MatchOptions.NumberedSubMatches ) )
+"{""FullMatch"":""100021\uDBC0\uDC21104021\uDBD0\uDC21108021\uDBE0\uDC2110C021\uDBF0\uDC21"",""StartMatch"":1,""SubMatches"":[{""Value"":""100021\uDBC0\uDC21""},{""Value"":""104021\uDBD0\uDC21""},{""Value"":""108021\uDBE0\uDC21""},{""Value"":""10C021\uDBF0\uDC21""}]}"
+
+
+

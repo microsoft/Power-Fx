@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>L'argomento dell'oggetto non tipizzato nella funzione "{0}" ha un tipo non corretto. Previsto: {1}, Effettivo: {0}.</value>
+    <value>L'argomento dell'oggetto non tipizzato nella funzione "{0}" ha un tipo non corretto. Previsto: {1}, Effettivo: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

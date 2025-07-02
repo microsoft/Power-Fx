@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
-        public async Task<HttpRequestMessage> BuildRequest(FormulaValue[] args, IConvertToUTC utcConverter, CancellationToken cancellationToken)
+        public async Task<HttpRequestMessage> BuildRequest(IReadOnlyList<FormulaValue> args, IConvertToUTC utcConverter, CancellationToken cancellationToken)
         {
             HttpContent body = null;
             var path = _function.OperationPath;
@@ -57,15 +57,28 @@ namespace Microsoft.PowerFx.Connectors
             // Header names are not case sensitive.
             // From RFC 2616 - "Hypertext Transfer Protocol -- HTTP/1.1", Section 4.2, "Message Headers"
             var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            Dictionary<string, (ISwaggerSchema, FormulaValue)> bodyParts = new ();
+            Dictionary<string, (ISwaggerSchema, FormulaValue)> bodyParts = new ();            
             Dictionary<string, FormulaValue> incomingParameters = ConvertToNamedParameters(args);
             string contentType = null;
 
             foreach (KeyValuePair<ConnectorParameter, FormulaValue> param in _function._internals.OpenApiBodyParameters)
-            {
+            {                
                 if (incomingParameters.TryGetValue(param.Key.Name, out var paramValue))
                 {
-                    bodyParts.Add(param.Key.Name, (param.Key.Schema, paramValue));
+                    if (_function._internals.SpecialBodyHandling && paramValue is RecordValue rv)
+                    {
+                        foreach (NamedValue field in rv.Fields)
+                        {
+                            string type = FormulaValueSerializer.GetType(field.Value.Type);
+                            string format = FormulaValueSerializer.GetFormat(field.Value.Type);
+
+                            bodyParts.Add(field.Name, (new SwaggerSchema(type, format), field.Value));
+                        }
+                    }
+                    else
+                    {
+                        bodyParts.Add(param.Key.Name, (param.Key.Schema, paramValue));
+                    }
                 }
                 else if (param.Key.Schema.Default != null && param.Value != null)
                 {
@@ -193,13 +206,14 @@ namespace Microsoft.PowerFx.Connectors
             return request;
         }
 
-        public Dictionary<string, FormulaValue> ConvertToNamedParameters(FormulaValue[] args)
+        public Dictionary<string, FormulaValue> ConvertToNamedParameters(IReadOnlyList<FormulaValue> args)
         {
             // First N are required params.
             // Last param is a record with each field being an optional.
             // Parameter names are case sensitive.
 
             Dictionary<string, FormulaValue> map = new ();
+            bool specialBodyHandling = _function._internals.SpecialBodyHandling;
 
             // Seed with default values. This will get overwritten if provided.
             foreach (KeyValuePair<string, (bool required, FormulaValue fValue, DType dType)> kv in _function._internals.ParameterDefaultValues)
@@ -217,9 +231,9 @@ namespace Microsoft.PowerFx.Connectors
             {
                 string parameterName = _function.RequiredParameters[i].Name;
                 FormulaValue paramValue = args[i];
-
+                
                 // Objects are always flattenned
-                if (paramValue is RecordValue record && !_function.RequiredParameters[i].IsBodyParameter)
+                if (paramValue is RecordValue record && (specialBodyHandling || !_function.RequiredParameters[i].IsBodyParameter))
                 {
                     foreach (NamedValue field in record.Fields)
                     {
@@ -241,9 +255,9 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             // Optional parameters are next and stored in a Record
-            if (_function.OptionalParameters.Length > 0 && args.Length > _function.RequiredParameters.Length)
+            if (_function.OptionalParameters.Length > 0 && args.Count > _function.RequiredParameters.Length)
             {
-                FormulaValue optionalArg = args[args.Length - 1];
+                FormulaValue optionalArg = args[args.Count - 1];
 
                 // Objects are always flattenned
                 if (optionalArg is RecordValue record)
@@ -469,7 +483,7 @@ namespace Microsoft.PowerFx.Connectors
                     _function.ReturnType);
         }
 
-        public async Task<FormulaValue> InvokeAsync(IConvertToUTC utcConverter, string cacheScope, FormulaValue[] args, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, FormulaType expectedType, bool throwOnError = false)
+        public async Task<FormulaValue> InvokeAsync(IConvertToUTC utcConverter, string cacheScope, IReadOnlyList<FormulaValue> args, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, FormulaType expectedType, bool throwOnError = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -537,7 +551,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal HttpFunctionInvoker Invoker => _invoker;
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, BaseRuntimeConnectorContext runtimeContext, FormulaType outputTypeOverride, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(IReadOnlyList<FormulaValue> args, BaseRuntimeConnectorContext runtimeContext, FormulaType outputTypeOverride, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -554,6 +568,7 @@ namespace Microsoft.PowerFx.Connectors
         }
     }
 
+    [ThreadSafeImmutable]
     internal interface IConvertToUTC
     {
         DateTime ToUTC(DateTimeValue d);

@@ -11,19 +11,20 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
-    /// Dotted identifier name parse node. Example:
-    /// 
-    /// <code>Left.Right</code>
+    /// Dotted identifier name parse node.
     /// </summary>
+    /// <example>
+    /// <code>Left.Right</code>
+    /// </example>
     public sealed class DottedNameNode : NameNode
     {
         /// <summary>
-        /// The left node of the dotted name.
+        /// Gets the left node of the dotted name.
         /// </summary>
         public TexlNode Left { get; }
 
         /// <summary>
-        /// The right identifier of the dotted name.
+        /// Gets the right identifier of the dotted name.
         /// </summary>
         public Identifier Right { get; }
 
@@ -38,17 +39,17 @@ namespace Microsoft.PowerFx.Syntax
         public override NodeKind Kind => NodeKind.DottedName;
 
         /// <summary>
-        /// True if the name uses dots, e.g. A.B.C.
+        /// Gets a value indicating whether the name uses dots, e.g. A.B.C.
         /// </summary>
         internal bool UsesDot => Token.Kind == TokKind.Dot;
 
         /// <summary>
-        /// True if the name uses bangs, e.g. A!B!C.
+        /// Gets a value indicating whether the name uses bangs, e.g. A!B!C.
         /// </summary>
         internal bool UsesBang => Token.Kind == TokKind.Bang;
 
         /// <summary>
-        /// True if the name uses brackets, e.g. A[B].
+        /// Gets a value indicating whether the name uses brackets, e.g. A[B].
         /// </summary>
         internal bool UsesBracket => Token.Kind == TokKind.BracketOpen;
 
@@ -137,9 +138,9 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         /// <summary>
-        /// The <see cref=" DPath" /> representation of the dotted name parse node.
+        /// Gets the <see cref="DPath" /> representation of the dotted name parse node.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The <see cref="DPath" /> representation of the dotted name.</returns>
         public DPath ToDPath()
         {
             Contracts.Assert(HasPossibleNamespaceQualifier);

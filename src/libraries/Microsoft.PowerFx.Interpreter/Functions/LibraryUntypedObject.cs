@@ -561,12 +561,13 @@ namespace Microsoft.PowerFx.Functions
 
         private static ErrorValue GetTypeMismatchError(IRContext irContext, string functionName, string expectedType, IUntypedObject actualValue)
         {
+            var actualType = actualValue.Type is ExternalType et ? et.Kind.ToString() : actualValue.Type.ToString();
             return new ErrorValue(irContext, new ExpressionError
             {
                 ResourceKey = RuntimeStringResources.ErrUntypedObjectIncorrectTypeArg,
                 Kind = ErrorKind.InvalidArgument,
                 Span = irContext.SourceContext,
-                MessageArgs = new[] { functionName, expectedType, actualValue.Type.ToString() }
+                MessageArgs = new[] { functionName, expectedType, actualType }
             });
         }
 

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Entities;
@@ -475,14 +476,14 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("IfError(\"Hello\", {a:\"one\"})")]
-        [InlineData("IfError(\"Hello\", 1, {a:2})", false, true)]
+        [InlineData("IfError(\"Hello\", 1, {a:2})", true)]
         [InlineData("IfError(\"Hello\", 1, 3, [true])")]
         [InlineData("IfError({a:1}, true)")]
-        [InlineData("IfError(1, [1], true, {a:1}, \"hello\")", false, true)]
+        [InlineData("IfError(1, [1], true, {a:1}, \"hello\")", true)]
         [InlineData("IfError(IfError({a:1}, true), true)")]
-        [InlineData("false; IfError({a:1}, true); true", true)]
-        [InlineData("IsError(false; IfError({a:1}, true); true)", true)]
-        public void TexlFunctionTypeSemanticsIfError_MismatchedTypes(string expression, bool usesChain = false, bool preV1Bug = false)
+        [InlineData("false; IfError({a:1}, true); true")]
+        [InlineData("IsError(false; IfError({a:1}, true); true)")]
+        public void TexlFunctionTypeSemanticsIfError_MismatchedTypes(string expression, bool preV1Bug = false)
         {
             foreach (var usePowerFxV1Rules in new[] { false, true })
             {
@@ -503,10 +504,9 @@ namespace Microsoft.PowerFx.Core.Tests
                     var parserOptions = new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = isBehavior };
                     var result = engine.Check(expression, parserOptions);
 
-                    if (usePowerFxV1Rules && !usesChain)
+                    if (usePowerFxV1Rules && !isBehavior)
                     {
-                        Assert.True(result.IsSuccess);
-                        Assert.Equal(DType.Void, result.Binding.ResultType);
+                        Assert.True(!result.IsSuccess);
                     }
                     else
                     {
@@ -920,9 +920,10 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("If(A < 10, 1, \"2\")", "n", true)]
         [InlineData("If(A < 1, \"one\", A < 2, 2, A < 3, true, false)", "s", true)]
         [InlineData("If(A < 1, true, A < 2, 2, A < 3, false, \"true\")", "b", true)]
-        [InlineData("If(A < 10, 1, [1,2,3])", "-", true)]
-        [InlineData("If(A < 10, 1, {Value: 2})", "-", true)]
-        [InlineData("If(0 < 1, [1], 2)", "-", true)]
+
+        [InlineData("If(A < 10, 1, [1,2,3])", "-", false)]
+        [InlineData("If(A < 10, 1, {Value: 2})", "-", false)]
+        [InlineData("If(0 < 1, [1], 2)", "-", false)]
 
         // negative cases, when if produces void type
         // If(1 < 0, [1], 2) => V which is void value
@@ -950,8 +951,8 @@ namespace Microsoft.PowerFx.Core.Tests
         // Hour(V)
         [InlineData("Hour(If(1 < 0, [1], 2))", "n", false)]
 
-        // ForAll([1,2,3], V)
-        [InlineData("ForAll([1,2,3], If(1 < 0, [1], 2))", "-", true)]
+        // ForAll([1,2,3], V) is Error, since Void type is not allowed in non-behavioral context.
+        [InlineData("ForAll([1,2,3], If(1 < 0, [1], 2))", "-", false)]
         public void TexlFunctionTypeSemanticsIfWithArgumentCoercion(string expression, string expectedType, bool checkSuccess)
         {
             var symbol = new SymbolTable();
@@ -1812,6 +1813,127 @@ namespace Microsoft.PowerFx.Core.Tests
                 var expectedDType = TestUtils.DT(expectedType);
                 TestBindingErrors(script, expectedDType, features: features);
             }
+        }
+
+        [Theory]
+        [InlineData("Match(\"a\", \"a\")", "![FullMatch:s, StartMatch:n]")]
+        [InlineData("Match(\"a\", \"(a)\")", "![FullMatch:s, StartMatch:n]")]
+        [InlineData("Match(\"a\", \"(?<one>a)\")", "![FullMatch:s, StartMatch:n, one:s]")]
+        [InlineData("Match(\"a\", \"(a)\", MatchOptions.NumberedSubMatches)", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        [InlineData("MatchAll(\"a\", \"a\")", "*[FullMatch:s, StartMatch:n]")]
+        [InlineData("MatchAll(\"a\", \"(a)\")", "*[FullMatch:s, StartMatch:n]")]
+        [InlineData("MatchAll(\"a\", \"(?<one>a)\")", "*[FullMatch:s, StartMatch:n, one:s]")]
+        [InlineData("MatchAll(\"a\", \"(a)\", MatchOptions.NumberedSubMatches)", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        public void TexlFunctionTypeSemanticsMatch_V1Enabled(string script, string expectedType)
+        {
+            var features = new Features
+            {
+                PowerFxV1CompatibilityRules = true
+            };
+            var config = new PowerFxConfig(features);
+
+            RegexTypeCache regexCache = new (-1);
+            config.InternalConfigSymbols.AddFunction(new MatchFunction(regexCache));
+            config.InternalConfigSymbols.AddFunction(new MatchAllFunction(regexCache));
+
+            var expectedDType = TestUtils.DT(expectedType);
+            TestSimpleBindingSuccess(script, expectedDType, config: config);
+        }
+
+        [Theory]
+        [InlineData("Match(\"a\", \"a\")", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        [InlineData("Match(\"a\", \"(a)\")", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        [InlineData("Match(\"a\", \"(?<one>a)\")", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s], one:s]")]
+        [InlineData("Match(\"a\", \"(a)\", MatchOptions.NumberedSubMatches)", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        [InlineData("MatchAll(\"a\", \"a\")", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        [InlineData("MatchAll(\"a\", \"(a)\")", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        [InlineData("MatchAll(\"a\", \"(?<one>a)\")", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s], one:s]")]
+        [InlineData("MatchAll(\"a\", \"(a)\", MatchOptions.NumberedSubMatches)", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        public void TexlFunctionTypeSemanticsMatch_V1Disabled(string script, string expectedType)
+        {
+            var features = new Features();
+            var config = new PowerFxConfig(features);
+
+            RegexTypeCache regexCache = new (-1);
+            config.InternalConfigSymbols.AddFunction(new MatchFunction(regexCache));
+            config.InternalConfigSymbols.AddFunction(new MatchAllFunction(regexCache));
+
+            var expectedDType = TestUtils.DT(expectedType);
+            TestSimpleBindingSuccess(script, expectedDType, config: config);
+        }
+
+        [Fact]
+        public void TexlFunctionTypeSemantics_RegexTypeCache()
+        {
+            var features = new Features
+            {
+                PowerFxV1CompatibilityRules = true
+            };
+            var config = new PowerFxConfig(features);
+
+            RegexTypeCache regexCache = new (100);
+            config.InternalConfigSymbols.AddFunction(new IsMatchFunction(regexCache));
+            config.InternalConfigSymbols.AddFunction(new MatchFunction(regexCache));
+            config.InternalConfigSymbols.AddFunction(new MatchAllFunction(regexCache));
+
+            var engine = new Engine(config);
+            var opts = new ParserOptions();
+
+            void Test(string regex, string type)
+            {
+                var result = engine.Check(regex, opts);
+
+                if (type == "*ERROR*")
+                {
+                    Assert.True(result.Binding.ErrorContainer.HasErrors());
+                    Assert.False(result.IsSuccess);
+                }
+                else
+                {
+                    Assert.Equal(TestUtils.DT(type), result.Binding.ResultType);
+                    Assert.False(result.Binding.ErrorContainer.HasErrors());
+                    Assert.True(result.IsSuccess);
+                }
+            }
+
+            // Cache entry can vary on:
+            // - Table (MatchAll) vs. Record (Match) vs. Boolean (IsMatch)
+            // - Regular expression pattern
+            // - NumberedSubMatches and FreeSpacing which impact parse validation results and output schema.
+            //   If another MatchOption is added which impacts the return type, this will need to be updated
+
+            // all these test cases need to be run within the same test, so that the same cache is used for all
+
+            Test("   Match(\"a\", \"a # (b)\")                                                             ", "![FullMatch:s, StartMatch:n]");
+            Test("   Match(\"a\", \"a # (b)\", MatchOptions.NumberedSubMatches)                            ", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]");
+            Test("   Match(\"a\", \"a # (b)\", MatchOptions.NumberedSubMatches & MatchOptions.FreeSpacing) ", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]");
+            Test("MatchAll(\"a\", \"a # (b)\")                                                             ", "*[FullMatch:s, StartMatch:n]");
+            Test("MatchAll(\"a\", \"a # (b)\", MatchOptions.NumberedSubMatches)                            ", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]");
+            Test("MatchAll(\"a\", \"a # (b)\", MatchOptions.NumberedSubMatches & MatchOptions.FreeSpacing) ", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]");
+            Test(" IsMatch(\"a\", \"a # (b)\")                                                             ", "b");
+            Test(" IsMatch(\"a\", \"a # (b)\", MatchOptions.NumberedSubMatches)                            ", "b");
+            Test(" IsMatch(\"a\", \"a # (b)\", MatchOptions.NumberedSubMatches & MatchOptions.FreeSpacing) ", "b");
+
+            // check that previous positive validation doesn't impact validation with options that would make the regex illegal
+
+            Test(" IsMatch(\"a\", \"a # (?<cap>b\", MatchOptions.FreeSpacing) ", "b");
+            Test(" IsMatch(\"a\", \"a # (?<cap>b\")", "*ERROR*");
+
+            Test("   Match(\"a\", \"a # (?<cap>b)\")                                                             ", "![FullMatch:s, StartMatch:n, cap:s]");
+            Test("   Match(\"a\", \"a # (?<cap>b)\", MatchOptions.FreeSpacing)                                   ", "![FullMatch:s, StartMatch:n]");
+            Test("   Match(\"a\", \"a # (?<cap>b)\", MatchOptions.NumberedSubMatches & MatchOptions.FreeSpacing) ", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]");
+            Test("   Match(\"a\", \"a # (?<cap>b)\", MatchOptions.NumberedSubMatches)                            ", "*ERROR*");
+            Test("   Match(\"a\", \"a # (?<one>b)\")                                                             ", "![FullMatch:s, StartMatch:n, one:s]");
+            Test("MatchAll(\"a\", \"a # (?<cap>b)\")                                                             ", "*[FullMatch:s, StartMatch:n, cap:s]");
+            Test("MatchAll(\"a\", \"a # (?<cap>b)\", MatchOptions.FreeSpacing)                                   ", "*[FullMatch:s, StartMatch:n]");
+            Test("MatchAll(\"a\", \"a # (?<cap>b)\", MatchOptions.NumberedSubMatches & MatchOptions.FreeSpacing) ", "*[FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]");
+            Test("MatchAll(\"a\", \"a # (?<cap>b)\", MatchOptions.NumberedSubMatches)                            ", "*ERROR*");
+            Test("MatchAll(\"a\", \"a # (?<one>b)\")                                                             ", "*[FullMatch:s, StartMatch:n, one:s]");
+            Test(" IsMatch(\"a\", \"a # (?<cap>b)\")                                                             ", "b");
+            Test(" IsMatch(\"a\", \"a # (?<cap>b)\", MatchOptions.FreeSpacing)                                   ", "b");
+            Test(" IsMatch(\"a\", \"a # (?<cap>b)\", MatchOptions.NumberedSubMatches & MatchOptions.FreeSpacing) ", "b");
+            Test(" IsMatch(\"a\", \"a # (?<cap>b)\", MatchOptions.NumberedSubMatches)                            ", "*ERROR*");
+            Test(" IsMatch(\"a\", \"a # (?<one>b)\")                                                             ", "b");
         }
 
         [Theory]
@@ -4474,19 +4596,25 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
-        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null, bool numberIsFloat = true, OptionSet[] optionSets = null, Features features = null)
+        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null, bool numberIsFloat = true, OptionSet[] optionSets = null, Features features = null, PowerFxConfig config = null)
         {
-            features = features ?? Features.None;
-            var config = new PowerFxConfig(features)
+            if (config == null)
             {
-                SymbolTable = symbolTable
-            };
-
-            if (optionSets != null)
-            {
-                foreach (var optionSet in optionSets)
+                features = features ?? Features.None;
+                config = new PowerFxConfig(features)
                 {
-                    config.AddOptionSet(optionSet);
+                    SymbolTable = symbolTable
+                };
+            }
+
+            if (symbolTable != null)
+            {
+                if (optionSets != null)
+                {
+                    foreach (var optionSet in optionSets)
+                    {
+                        config.AddEntity(optionSet);
+                    }
                 }
             }
 
@@ -4498,13 +4626,16 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
-        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = null, bool numberIsFloat = true, IExternalOptionSet[] optionSets = null)
+        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = null, bool numberIsFloat = true, IExternalOptionSet[] optionSets = null, PowerFxConfig config = null)
         {
-            features ??= Features.None;
-            var config = new PowerFxConfig(features)
+            if (config == null)
             {
-                SymbolTable = symbolTable
-            };
+                features = features ?? Features.None;
+                config = new PowerFxConfig(features)
+                {
+                    SymbolTable = symbolTable
+                };
+            }
 
             if (symbolTable != null)
             {

@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>L'argument de l'objecte sense tipus a la funció "{0}" té un tipus incorrecte. Valor esperat: {1}, valor real: {0}.</value>
+    <value>L'argument de l'objecte sense tipus a la funció "{0}" té un tipus incorrecte. Valor esperat: {1}, valor real: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -21,7 +22,6 @@ using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Intellisense;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Abstractions;
@@ -43,6 +43,188 @@ namespace Microsoft.PowerFx.Tests
         private static void AssertEqual(string expected, string actual)
         {
             Assert.Equal(expected.Replace("\r", string.Empty), actual.Replace("\r", string.Empty));
+        }
+
+        [Theory]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true, false)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false, false)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true, true)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false, true)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, true, false)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false, false)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, true, true)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false, true)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, true, false)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, false, false)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, true, true)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, false, true)]
+        public void MSNWeather_OptionSets(ConnectorCompatibility connectorCompatibility, bool supportXMsEnumValues, bool returnEnumsAsPrimitive)
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\MSNWeather.json", _output);
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(
+                new ConnectorSettings("MSNWeather")
+                {
+                    Compatibility = connectorCompatibility,
+                    SupportXMsEnumValues = supportXMsEnumValues,
+                    ReturnEnumsAsPrimitive = returnEnumsAsPrimitive
+                },
+                testConnector._apiDocument).ToList();
+
+            ConnectorFunction currentWeather = functions.First(f => f.Name == "CurrentWeather");
+
+            Assert.Equal(2, currentWeather.RequiredParameters.Length);
+            Assert.Equal("Location", currentWeather.RequiredParameters[0].Name);
+            Assert.Equal(FormulaType.String, currentWeather.RequiredParameters[0].FormulaType);
+
+            Assert.Equal("units", currentWeather.RequiredParameters[1].Name);
+            Assert.Equal("units", currentWeather.RequiredParameters[1].ConnectorType.Name);
+            Assert.Null(currentWeather.RequiredParameters[1].ConnectorType.DisplayName);
+            Assert.True(currentWeather.RequiredParameters[1].ConnectorType.IsEnum);
+
+            if (connectorCompatibility == ConnectorCompatibility.CdpCompatibility || supportXMsEnumValues)
+            {
+                if (returnEnumsAsPrimitive)
+                {
+                    Assert.Equal(FormulaType.String, currentWeather.RequiredParameters[1].FormulaType);
+                }
+                else
+                {
+                    Assert.Equal(FormulaType.OptionSetValue, currentWeather.RequiredParameters[1].FormulaType);
+                }
+
+                // Dictionary is used here, so we need to reorder
+                Assert.Equal("Imperial,Metric", string.Join(",", currentWeather.RequiredParameters[1].ConnectorType.Enum.OrderBy(kvp => kvp.Key).Select(kvp => kvp.Key)));
+                Assert.Equal("I,C", string.Join(",", currentWeather.RequiredParameters[1].ConnectorType.Enum.OrderBy(kvp => kvp.Key).Select(kvp => (kvp.Value as StringValue).Value)));
+
+                Assert.Equal("Imperial,Metric", string.Join(",", currentWeather.RequiredParameters[1].ConnectorType.EnumDisplayNames));
+            }
+            else
+            {
+                Assert.Equal(FormulaType.String, currentWeather.RequiredParameters[1].FormulaType);
+            }
+
+            Assert.Equal("I,C", string.Join(",", currentWeather.RequiredParameters[1].ConnectorType.EnumValues.Select(fv => (fv as StringValue).Value)));
+        }
+
+        [Theory]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true, false)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false, false)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true, true)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false, true)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, true, false)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false, false)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, true, true)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false, true)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, true, false)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, false, false)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, true, true)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, false, true)]
+
+        // Option set with numeric logical names
+        public void DimeScheduler_OptionSets(ConnectorCompatibility connectorCompatibility, bool supportXMsEnumValues, bool returnEnumsAsPrimitive)
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Dime.Scheduler.json", _output);
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(
+                new ConnectorSettings("DimeScheduler")
+                {
+                    Compatibility = connectorCompatibility,
+                    SupportXMsEnumValues = supportXMsEnumValues,
+                    ReturnEnumsAsPrimitive = returnEnumsAsPrimitive
+                },
+                testConnector._apiDocument).ToList();
+
+            ConnectorFunction actionUriUpsert = functions.First(f => f.Name == "actionUriUpsert");
+
+            Assert.Equal(5, actionUriUpsert.OptionalParameters.Length);
+            Assert.Equal("uriType", actionUriUpsert.OptionalParameters[2].Name);
+            Assert.True(actionUriUpsert.OptionalParameters[2].ConnectorType.IsEnum);
+
+            if (connectorCompatibility == ConnectorCompatibility.CdpCompatibility || supportXMsEnumValues)
+            {
+                if (returnEnumsAsPrimitive)
+                {
+                    Assert.Equal(FormulaType.Decimal, actionUriUpsert.OptionalParameters[2].FormulaType);
+                }
+                else
+                {
+                    Assert.Equal(FormulaType.OptionSetValue, actionUriUpsert.OptionalParameters[2].FormulaType);
+                }
+
+                // Dictionary is used here, so we need to reorder
+                Assert.Equal("Planning Board,Appointment,Task,Map", string.Join(",", actionUriUpsert.OptionalParameters[2].ConnectorType.Enum.Select(kvp => kvp.Key)));
+                Assert.Equal("0,1,2,3", string.Join(",", actionUriUpsert.OptionalParameters[2].ConnectorType.Enum.Select(kvp => (kvp.Value as DecimalValue).Value)));
+
+                Assert.Equal("Planning Board,Appointment,Task,Map", string.Join(",", actionUriUpsert.OptionalParameters[2].ConnectorType.EnumDisplayNames));
+            }
+            else
+            {
+                Assert.Equal(FormulaType.Decimal, actionUriUpsert.OptionalParameters[2].FormulaType);
+            }
+
+            Assert.Equal("0,1,2,3", string.Join(",", actionUriUpsert.OptionalParameters[2].ConnectorType.EnumValues.Select(fv => (fv as DecimalValue).Value)));
+        }
+
+        [Theory]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true, false)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false, false)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true, true)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false, true)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, true, false)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false, false)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, true, true)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false, true)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, true, false)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, false, false)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, true, true)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, false, true)]
+        public void ACSL_OptionSets(ConnectorCompatibility connectorCompatibility, bool supportXMsEnumValues, bool returnEnumsAsPrimitive)
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language v2.2.json", _output);
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(
+                new ConnectorSettings("ACSL") 
+                { 
+                    Compatibility = connectorCompatibility, 
+                    SupportXMsEnumValues = supportXMsEnumValues,
+                    ReturnEnumsAsPrimitive = returnEnumsAsPrimitive
+                },
+                testConnector._apiDocument).ToList();
+
+            ConnectorFunction analyzeConversationTranscriptSubmitJob = functions.Single(f => f.Name == "AnalyzeConversationTranscriptSubmitJob");
+
+            // AnalyzeConversationTranscript_SubmitJob defined at line 1226 of swagger file
+            // body parameter at line 1240, defined at line 2557(TranscriptJobsInput)
+            // analysisInput parameter at line 2566, defined at line 2573(TranscriptMultiLanguageConversationAnalysisInput)
+            // conversations parameter at line 2577, defined at line 2580(TranscriptConversation)
+            // conversationItems parameter at line 2585, defined at line 2624(TranscriptConversationItem)
+            // role parameter at line 2641 is having extension x-ms-enum with modelAsString set to true
+            ConnectorType connectorType = analyzeConversationTranscriptSubmitJob.RequiredParameters[0].ConnectorType;
+            ConnectorType role = connectorType.Fields[0].Fields[0].Fields[0].Fields[connectorCompatibility == ConnectorCompatibility.Default ? 4 : 3];
+            Assert.Equal("role", role.Name);
+
+            // Type is always a string here as to be an optionset, we need (ConnectorCompatibility = CdpCompatibility or SupportXMsEnumValues = true) AND (modelAsString = false)
+            Assert.Equal(FormulaType.String, role.FormulaType);
+            Assert.True(role.IsEnum);
+
+            Assert.Equal<object>(
+                connectorCompatibility != ConnectorCompatibility.Default
+                ? "![conversations:![conversationItems:*[audioTimings:*[duration:w, offset:w, word:s], id:s, itn:s, language:s, lexical:s, maskedItn:s, participantId:s, role:s, text:s], domain:s, language:s]]"
+                : "![conversations:![conversationItems:*[audioTimings:*[duration:w, offset:w, word:s], id:s, itn:s, language:s, lexical:s, maskedItn:s, modality:s, participantId:s, role:s, text:s], domain:s, language:s]]",
+                connectorType.FormulaType._type.ToString());
+
+            if (connectorCompatibility == ConnectorCompatibility.CdpCompatibility || supportXMsEnumValues)
+            {
+                // Dictionary is used here, so we need to reorder
+                Assert.Equal("agent,customer,generic", string.Join(",", role.Enum.Select(kvp => kvp.Key)));
+                Assert.Equal("agent,customer,generic", string.Join(",", role.Enum.Select(kvp => (kvp.Value as StringValue).Value)));
+                Assert.Equal("agent,customer,generic", string.Join(",", role.EnumDisplayNames.OrderBy(x => x)));
+            }
+            else
+            {
+                Assert.Empty(role.Enum);
+                Assert.Empty(role.EnumDisplayNames);
+            }
+
+            Assert.Equal("agent,customer,generic", string.Join(",", role.EnumValues.Select(fv => (fv as StringValue).Value)));
         }
 
         // Exercise calling the MSNWeather connector against mocked Swagger and Response.json.
@@ -1821,40 +2003,45 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.True(functions.First(f => f.Name == "ReceiptParser").IsSupported);
         }
 
-        [Fact]
-        public async Task SendEmail()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SendEmail(bool useItemDynamicPropertiesSpecialHandling)
         {
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\shared_sendmail.json", _output);
             OpenApiDocument apiDoc = testConnector._apiDocument;
 
             ConnectorSettings connectorSettings = new ConnectorSettings("sendmail")
             {
-                Compatibility = ConnectorCompatibility.SwaggerCompatibility
+                Compatibility = ConnectorCompatibility.SwaggerCompatibility,
+                UseItemDynamicPropertiesSpecialHandling = useItemDynamicPropertiesSpecialHandling,
             };
 
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
 
             Assert.Single(functions.Where(x => x.Name == "SendEmailV3"));
+            var sendEmailFunction = Assert.Single(functions.Where(x => x.Name == "SendEmail"));
+            Assert.Equal(3, sendEmailFunction.RequiredParameters.Length);
         }
 
         [Fact]
-        public async Task AiSensitivityTest()
+        public async Task AiSensitivity_PropertyEntityType_Test()
         {
-            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SendMail.json", _output);
-            OpenApiDocument apiDoc = testConnector._apiDocument;            
-           
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SendMail_Modified.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+
             ConnectorSettings connectorSettings = new ConnectorSettings("exob")
-            {            
+            {
                 Compatibility = ConnectorCompatibility.SwaggerCompatibility,
                 AllowUnsupportedFunctions = true,
                 IncludeInternalFunctions = true,
-                ReturnUnknownRecordFieldsAsUntypedObjects = true                
+                ReturnUnknownRecordFieldsAsUntypedObjects = true
             };
-            
+
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
 
             ConnectorFunction sendmail = functions.First(f => f.Name == "SendEmailV3");
-            IEnumerable<ConnectorParameter> parameters = sendmail.RequiredParameters.Union(sendmail.OptionalParameters);
+            List<ConnectorParameter> parameters = sendmail.RequiredParameters.Union(sendmail.OptionalParameters).ToList();
 
             string unknownAiSensitivity = string.Join(", ", parameters.Where(p => p.AiSensitivity == AiSensitivity.Unknown).Select(p => p.Name));
             string noAiSensitivity = string.Join(", ", parameters.Where(p => p.AiSensitivity == AiSensitivity.None).Select(p => p.Name));
@@ -1865,6 +2052,26 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal("subject, text, toname, ccname, bccname, files, filenames", noAiSensitivity);
             Assert.Equal(string.Empty, lowAiSensitivity);
             Assert.Equal("to, cc, bcc", highAiSensitivity);
+
+            Assert.Equal("to", sendmail.RequiredParameters[0].Name);
+            Assert.Equal("The email message to send.", sendmail.RequiredParameters[0].Description);
+            Assert.Equal("Comma separated list of email addresses", sendmail.RequiredParameters[0].PropertyEntityType);
+
+            Assert.Equal("subject", sendmail.RequiredParameters[1].Name);
+            Assert.Equal("The email message to send.", sendmail.RequiredParameters[1].Description);
+            Assert.Null(sendmail.RequiredParameters[1].PropertyEntityType);
+
+            Assert.Equal("text", sendmail.RequiredParameters[2].Name);
+            Assert.Equal("The email message to send.", sendmail.RequiredParameters[2].Description);
+            Assert.Null(sendmail.RequiredParameters[2].PropertyEntityType);
+
+            Assert.Equal("toname", sendmail.OptionalParameters[0].Name);
+            Assert.Equal("The email message to send.", sendmail.OptionalParameters[0].Description);
+            Assert.Equal("Comma separated list of display names", sendmail.OptionalParameters[0].PropertyEntityType);
+
+            Assert.Equal("response", sendmail.ReturnParameterType.Name);
+            Assert.Null(sendmail.ReturnParameterType.Description);
+            Assert.Equal("Some object!", sendmail.ReturnParameterType.PropertyEntityType);
         }
 
         [Fact]
@@ -2055,7 +2262,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             string ft = returnType.FormulaType.ToStringWithDisplayNames();
 
             string expected =
-                "!['@odata.nextLink'`'Next link':s, value:*[Array:!['@odata.id'`'OData Id':s, _createdby_value`'Created By (Value)':s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created " +
+               "!['@odata.nextLink'`'Next link':s, value:*[value:!['@odata.id'`'OData Id':s, _createdby_value`'Created By (Value)':s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created " +
                 "By (Type)':s, _createdbyexternalparty_value`'Created By (External Party) (Value)':s, '_createdbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (External Party) " +
                 "(Type)':s, _createdonbehalfby_value`'Created By (Delegate) (Value)':s, '_createdonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (Delegate) (Type)':s, _defaultpricelevelid_value`'" +
                 "Price List (Value)':s, '_defaultpricelevelid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Price List (Type)':s, _masterid_value`'Master ID (Value)':s, '_masterid_value@Microsoft.Dynamics.CRM.lookup" +
@@ -2215,6 +2422,111 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 ";
 
             Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ExchangeOnlineTest2(bool useItemDynamicPropertiesSpecialHandling)
+        {
+            bool live = false;
+            using var testConnector = new LoggingTestServer(@"Swagger\ExcelOnlineBusiness.swagger.json", _output);
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(
+                new ConnectorSettings("ExcelOnline")
+                {
+                    Compatibility = ConnectorCompatibility.Default,
+                    UseItemDynamicPropertiesSpecialHandling = useItemDynamicPropertiesSpecialHandling
+                },
+                testConnector._apiDocument).ToList();
+
+            ConnectorFunction patchItem = functions.First(f => f.Name == "PatchItem");
+            ConnectorParameter itemparam = useItemDynamicPropertiesSpecialHandling ? patchItem.RequiredParameters[6] : patchItem.OptionalParameters[2];
+
+            Assert.Equal(useItemDynamicPropertiesSpecialHandling, patchItem.SpecialBodyHandling);
+            Assert.Equal(!useItemDynamicPropertiesSpecialHandling ? "dynamicProperties" : "item", itemparam.Name);
+            
+            FormulaValue[] parameters = new FormulaValue[7];
+            parameters[0] = FormulaValue.New("b!IbvdIRe4LEGypNQpzV_eHMlG3PtubVREtOzk7doKeFvkIs8VRqloT4mtkIOb6aTB");
+            parameters[1] = FormulaValue.New("013DZ3QDGY2Y23HOQN5BC2HUMJWD7G4UPL");
+            parameters[2] = FormulaValue.New("{E5A21CC6-3B17-48DE-84D7-0326A06B38F4}");
+            parameters[3] = FormulaValue.New("035fd7a2-34d6-4a6f-a885-a646b1398012"); 
+            parameters[4] = FormulaValue.New("me");
+            parameters[5] = FormulaValue.New("__PowerAppsId__");
+
+            parameters[6] = useItemDynamicPropertiesSpecialHandling
+
+                            ? // Required parameter
+                              RecordValue.NewRecordFromFields(
+                                  new NamedValue("item", RecordValue.NewRecordFromFields(
+                                    new NamedValue("Column1", FormulaValue.New(171)))))
+
+                            : // Optional parameters
+                              RecordValue.NewRecordFromFields(                                
+                                new NamedValue("dynamicProperties", RecordValue.NewRecordFromFields(
+                                    new NamedValue("Column1", FormulaValue.New(171)))));
+
+            using var httpClient = live ? new HttpClient() : new HttpClient(testConnector);
+
+            if (!live)
+            {
+                string output = @"{
+	""@odata.context"": ""https://excelonline-wcus.azconn-wcus-001.p.azurewebsites.net/$metadata#drives('b%21IbvdIRe4LEGypNQpzV_eHMlG3PtubVREtOzk7doKeFvkIs8VRqloT4mtkIOb6aTB')/Files('013DZ3QDGY2Y23HOQN5BC2HUMJWD7G4UPL')/Tables('%7BE5A21CC6-3B17-48DE-84D7-0326A06B38F4%7D')/items/$entity"",
+	""@odata.etag"": """",
+	""ItemInternalId"": ""035fd7a2-34d6-4a6f-a885-a646b1398012"",
+	""Column1"": ""171"",
+	""Column2"": ""Customer1"",
+	""Column3"": """",
+	""__PowerAppsId__"": ""035fd7a2-34d6-4a6f-a885-a646b1398012""
+}";
+                testConnector.SetResponse(output, HttpStatusCode.OK);
+            }
+
+            string jwt = "eyJ0e...";
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://49970107-0806-e5a7-be5e-7c60e2750f01.12.common.firstrelease.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", "e24a1ac719284479a4817a0c5bb6ef58", () => jwt, httpClient)
+            {
+                SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
+            };
+
+            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ExcelOnline", client, console: _output);
+            FormulaValue result = await patchItem.InvokeAsync(parameters, context, CancellationToken.None);
+
+            // Can't test the result as it's ![] and is an empty RecordValue
+
+            if (live)
+            {
+                return;
+            }
+
+            string version = PowerPlatformConnectorClient.Version;
+            string expected = useItemDynamicPropertiesSpecialHandling
+                ? $@"POST https://49970107-0806-e5a7-be5e-7c60e2750f01.12.common.firstrelease.azure-apihub.net/invoke
+ authority: 49970107-0806-e5a7-be5e-7c60e2750f01.12.common.firstrelease.azure-apihub.net
+ Authorization: Bearer {jwt}
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/49970107-0806-e5a7-be5e-7c60e2750f01
+ x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-request-method: PATCH
+ x-ms-request-url: /apim/excelonlinebusiness/e24a1ac719284479a4817a0c5bb6ef58/drives/b%21IbvdIRe4LEGypNQpzV_eHMlG3PtubVREtOzk7doKeFvkIs8VRqloT4mtkIOb6aTB/files/013DZ3QDGY2Y23HOQN5BC2HUMJWD7G4UPL/tables/%7BE5A21CC6-3B17-48DE-84D7-0326A06B38F4%7D/items/035fd7a2-34d6-4a6f-a885-a646b1398012?source=me&idColumn=__PowerAppsId__
+ x-ms-user-agent: PowerFx/{version}
+ [content-header] Content-Type: application/json; charset=utf-8
+ [body] {{""Column1"":171}}
+"
+                : $@"POST https://49970107-0806-e5a7-be5e-7c60e2750f01.12.common.firstrelease.azure-apihub.net/invoke
+ authority: 49970107-0806-e5a7-be5e-7c60e2750f01.12.common.firstrelease.azure-apihub.net
+ Authorization: Bearer {jwt}
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/49970107-0806-e5a7-be5e-7c60e2750f01
+ x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-request-method: PATCH
+ x-ms-request-url: /apim/excelonlinebusiness/e24a1ac719284479a4817a0c5bb6ef58/drives/b%21IbvdIRe4LEGypNQpzV_eHMlG3PtubVREtOzk7doKeFvkIs8VRqloT4mtkIOb6aTB/files/013DZ3QDGY2Y23HOQN5BC2HUMJWD7G4UPL/tables/%7BE5A21CC6-3B17-48DE-84D7-0326A06B38F4%7D/items/035fd7a2-34d6-4a6f-a885-a646b1398012?source=me&idColumn=__PowerAppsId__
+ x-ms-user-agent: PowerFx/{version}
+ [content-header] Content-Type: application/json; charset=utf-8
+ [body] {{""dynamicProperties"":{{""Column1"":171}}}}
+";
+
+            Assert.Equal<object>(expected, testConnector._log.ToString());
         }
 
         public class HttpLogger : HttpClient
