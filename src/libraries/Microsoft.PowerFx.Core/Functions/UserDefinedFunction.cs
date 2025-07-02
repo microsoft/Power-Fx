@@ -8,6 +8,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.App.Controls;
+using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
@@ -65,6 +66,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public override bool SupportsParamCoercion => true;
 
+        public override bool HasPreciseErrors => true;
+
         private const int MaxParameterCount = 30;
 
         public TexlNode UdfBody { get; }
@@ -84,6 +87,28 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         public bool HasDelegationWarning => _binding?.ErrorContainer.GetErrors().Any(error => error.MessageKey.Contains("SuggestRemoteExecutionHint")) ?? false;
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            if (!base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap))
+            {
+                return false;
+            }
+
+            for (int i = 0; i < argTypes.Length; i++)
+            {
+                if ((argTypes[i].IsTableNonObjNull || argTypes[i].IsRecordNonObjNull) &&
+                    !ParamTypes[i].Accepts(argTypes[i], out var schemaDiff, out _, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules, restrictiveAggregateTypes: true) &&
+                    !argTypes[i].CoercesTo(ParamTypes[i], aggregateCoercion: true, isTopLevelCoercion: false, features: context.Features, restrictiveAggregateTypes: true))
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBadSchema_AdditionalField, ParamTypes[i].GetKindString(), schemaDiff.Key);
+
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserDefinedFunction"/> class.
@@ -169,23 +194,63 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Perform sub-expression type checking and produce a return type for the function declaration, this is only applicable for UDFs.
         /// </summary>
-        public void CheckTypesOnDeclaration(CheckTypesContext context, DType actualBodyReturnType, TexlBinding binding)
+        private void CheckTypesOnDeclaration(CheckTypesContext context, DType actualBodyReturnType, TexlBinding binding)
         {
             Contracts.AssertValue(context);
             Contracts.AssertValue(actualBodyReturnType);
             Contracts.AssertValue(binding);
 
-            if (!ReturnType.Accepts(actualBodyReturnType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+            if (!ReturnType.Accepts(
+                actualBodyReturnType, 
+                out var schemaDiff,
+                out var diffType,
+                exact: true, 
+                useLegacyDateTimeAccepts: false,
+                usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules,
+                restrictiveAggregateTypes: true))
             {
-                if (actualBodyReturnType.CoercesTo(ReturnType, true, false, context.Features))
+                if (actualBodyReturnType.CoercesTo(ReturnType, true, false, context.Features, restrictiveAggregateTypes: true))
                 {
                     _binding.SetCoercedType(binding.Top, ReturnType);
                 }
                 else
                 {
                     var node = UdfBody is VariadicOpNode variadicOpNode ? variadicOpNode.Children.Last() : UdfBody;
+
+                    if ((ReturnType.IsTable && actualBodyReturnType.IsTable) || (ReturnType.IsRecord && actualBodyReturnType.IsRecord))
+                    {
+                        AddAggregateTypeErrors(binding.ErrorContainer, node, ReturnType, schemaDiff, diffType);
+                        return;
+                    }
+
                     binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch, ReturnType.GetKindString(), actualBodyReturnType.GetKindString());
                 }
+            }
+        }
+
+        private void AddAggregateTypeErrors(IErrorContainer errors, TexlNode node, DType nodeType, KeyValuePair<string, DType> schemaDifference, DType schemaDifferenceType)
+        {
+            Contracts.AssertValue(node);
+            Contracts.AssertValid(nodeType);
+
+            if (schemaDifferenceType.IsValid)
+            {
+                errors.EnsureError(
+                    DocumentErrorSeverity.Severe,
+                    node,
+                    TexlStrings.ErrUDF_ReturnTypeSchemaIncompatible,
+                    schemaDifference.Key,
+                    schemaDifference.Value.GetKindString(),
+                    schemaDifferenceType.GetKindString());
+            }
+            else
+            {
+                errors.EnsureError(
+                    DocumentErrorSeverity.Severe,
+                    node,
+                    TexlStrings.ErrUDF_ReturnTypeSchemaAdditionalFields,
+                    nodeType.GetKindString(),
+                    schemaDifference.Key);
             }
         }
 
