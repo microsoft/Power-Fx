@@ -43,28 +43,15 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             _uriPrefix = uriPrefix;
-            var useV2 = CdpTableResolver.UseV2(uriPrefix);
-            var purviewAccountName = _connectorSettings.PurviewAccountName;
-            var extractSensitivityLabel = useV2 && _connectorSettings.ExtractSensitivityLabel ? "?extractSensitivityLabel=True" : string.Empty;
-            if (!string.IsNullOrEmpty(purviewAccountName))
-            {
-                extractSensitivityLabel += $"&purviewAccountName={purviewAccountName}";
-            }
-
-            var purviewAccount = _connectorSettings.PurviewAccountName;
-
-            // add purview account.
+            
             string uri = (_uriPrefix ?? string.Empty)
-                + (useV2 ? "/v2" : string.Empty)
+                + (CdpTableResolver.UseV2(_uriPrefix) ? "/v2" : string.Empty)
                 + $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : SingleEncode(DatasetName))}"
-                + (uriPrefix.Contains("/sharepointonline/") ? "/alltables" : "/tables")
-                + extractSensitivityLabel;
+                + (uriPrefix.Contains("/sharepointonline/") ? "/alltables" : "/tables");
 
             GetTables tables = await GetObject<GetTables>(httpClient, "Get tables", uri, null, cancellationToken, logger).ConfigureAwait(false);
 
-            // this can be null
-            var metadata = tables.Metadata?.ToDictionary(metadata => metadata.Name);
-            return tables?.Value?.Select((RawTable rawTable) => new CdpTable(DatasetName, rawTable.Name, DatasetMetadata, tables?.Value, _connectorSettings, metadata?.TryGetValue(rawTable.Name, out var metadataItem) == true ? metadataItem : null) { DisplayName = rawTable.DisplayName });
+            return tables?.Value?.Select((RawTable rawTable) => new CdpTable(DatasetName, rawTable.Name, DatasetMetadata, tables?.Value, _connectorSettings) { DisplayName = rawTable.DisplayName });
         }
 
         /// <summary>

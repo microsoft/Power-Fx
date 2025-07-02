@@ -28,19 +28,20 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         /// <summary>
-        /// The value of the name.
+        /// Gets the value of the name, or an empty string if the value is null.
         /// </summary>
         public string Value => _value ?? string.Empty;
 
         /// <summary>
-        /// Whether the name is valid.
+        /// Gets a value indicating whether the name is valid.
         /// </summary>
         public bool IsValid => _value != null;
 
         /// <summary>
-        /// String representation of the name value.
+        /// Converts the <see cref="DName"/> to its string representation.
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">The <see cref="DName"/> instance.</param>
+        /// <returns>The string value of the name.</returns>
         public static implicit operator string(DName name) => name.Value;
 
         /// <inheritdoc />
@@ -69,48 +70,84 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         /// <summary>
-        /// Whether two names are equal.
+        /// Determines whether the specified <see cref="DName"/> is equal to the current <see cref="DName"/>.
         /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
+        /// <param name="other">The <see cref="DName"/> to compare with the current <see cref="DName"/>.</param>
+        /// <returns>true if the specified <see cref="DName"/> is equal to the current <see cref="DName"/>; otherwise, false.</returns>
         public bool Equals(DName other)
         {
             return Value == other.Value;
         }
 
         /// <summary>
-        /// Whether the name is equal to a string value.
+        /// Determines whether the value of the current <see cref="DName"/> is equal to the specified string.
         /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
+        /// <param name="other">The string to compare with the current <see cref="DName"/>.</param>
+        /// <returns>true if the value of the current <see cref="DName"/> is equal to the specified string; otherwise, false.</returns>
         public bool Equals(string other)
         {
             Contracts.AssertValueOrNull(other);
             return Value == other;
         }
 
+        /// <summary>
+        /// Determines whether two <see cref="DName"/> instances have the same value.
+        /// </summary>
+        /// <param name="name1">The first <see cref="DName"/> to compare.</param>
+        /// <param name="name2">The second <see cref="DName"/> to compare.</param>
+        /// <returns>true if the values of the two <see cref="DName"/> instances are equal; otherwise, false.</returns>
         public static bool operator ==(DName name1, DName name2) => name1.Value == name2.Value;
 
+        /// <summary>
+        /// Determines whether the specified string and <see cref="DName"/> have the same value.
+        /// </summary>
+        /// <param name="str">The string to compare.</param>
+        /// <param name="name">The <see cref="DName"/> to compare.</param>
+        /// <returns>true if the string and <see cref="DName"/> have the same value; otherwise, false.</returns>
         public static bool operator ==(string str, DName name)
         {
             Contracts.AssertValueOrNull(str);
             return str == name.Value;
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="DName"/> and string have the same value.
+        /// </summary>
+        /// <param name="name">The <see cref="DName"/> to compare.</param>
+        /// <param name="str">The string to compare.</param>
+        /// <returns>true if the <see cref="DName"/> and string have the same value; otherwise, false.</returns>
         public static bool operator ==(DName name, string str)
         {
             Contracts.AssertValueOrNull(str);
             return name.Value == str;
         }
 
+        /// <summary>
+        /// Determines whether two <see cref="DName"/> instances have different values.
+        /// </summary>
+        /// <param name="name1">The first <see cref="DName"/> to compare.</param>
+        /// <param name="name2">The second <see cref="DName"/> to compare.</param>
+        /// <returns>true if the values of the two <see cref="DName"/> instances are not equal; otherwise, false.</returns>
         public static bool operator !=(DName name1, DName name2) => name1.Value != name2.Value;
 
+        /// <summary>
+        /// Determines whether the specified string and <see cref="DName"/> have different values.
+        /// </summary>
+        /// <param name="str">The string to compare.</param>
+        /// <param name="name">The <see cref="DName"/> to compare.</param>
+        /// <returns>true if the string and <see cref="DName"/> have different values; otherwise, false.</returns>
         public static bool operator !=(string str, DName name)
         {
             Contracts.AssertValueOrNull(str);
             return str != name.Value;
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="DName"/> and string have different values.
+        /// </summary>
+        /// <param name="name">The <see cref="DName"/> to compare.</param>
+        /// <param name="str">The string to compare.</param>
+        /// <returns>true if the <see cref="DName"/> and string have different values; otherwise, false.</returns>
         public static bool operator !=(DName name, string str)
         {
             Contracts.AssertValueOrNull(str);
@@ -120,8 +157,8 @@ namespace Microsoft.PowerFx.Core.Utils
         /// <summary>
         /// Returns whether the given name is a valid <see cref="DName" />. 
         /// </summary>
-        /// <param name="strName"></param>
-        /// <returns></returns>
+        /// <param name="strName">The name to validate.</param>
+        /// <returns>true if the name is valid; otherwise, false.</returns>
         public static bool IsValidDName(string strName)
         {
             Contracts.AssertValueOrNull(strName);
@@ -143,14 +180,13 @@ namespace Microsoft.PowerFx.Core.Utils
             return false;
         }
 
-        // $$$ Needs optimization $$$
-
         /// <summary>
         /// Takes a name and makes it into a valid <see cref="DName" />.
         /// If the name contains all spaces, an underscore is prepended to the name.
         /// </summary>
-        /// <param name="strName"></param>
-        /// <param name="fModified">Whether it had to be changed to be a valid <see cref="DName" />.</param>
+        /// <param name="strName">The name to validate and possibly modify.</param>
+        /// <param name="fModified">Set to true if the name was modified to be valid; otherwise, false.</param>
+        /// <returns>A valid <see cref="DName"/> instance.</returns>
         public static DName MakeValid(string strName, out bool fModified)
         {
             Contracts.AssertValueOrNull(strName);

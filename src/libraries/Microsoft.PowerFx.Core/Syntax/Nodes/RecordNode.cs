@@ -13,9 +13,10 @@ namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
     /// Record expression parse node.
-    /// 
-    /// <code>{X1: E1, X2: E2, ...}</code>
     /// </summary>
+    /// <example>
+    /// <code>{X1: E1, X2: E2, ...}</code>
+    /// </example>
     public sealed class RecordNode : VariadicBase
     {
         internal readonly Token[] Commas;

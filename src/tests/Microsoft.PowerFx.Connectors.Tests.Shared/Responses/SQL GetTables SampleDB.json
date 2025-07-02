@@ -1,37 +1,6 @@
 {
   "@odata.context": "https://sql-wcus.azconn-wcus-001.p.azurewebsites.net/v2/$metadata#datasets('pfxdev-sql.database.windows.net%2CSampleDB')/tables",
-  "@metadata": [
-    {
-      "name": "[SalesLT].[Customer]",
-      "sensitivityLabelInfo": [
-        {
-          "sensitivityLabelId": "34e4c2bf-bc71-4680-897b-bd559ad79cd2",
-          "name": "FTE Only",
-          "displayName": "FTE Only",
-          "tooltip": "FTE Only",
-          "priority": 65,
-          "color": "",
-          "isEncrypted": false,
-          "isEnabled": true,
-          "isParent": false,
-          "parentSensitivityLabelId": "ef85f0be-9819-46dd-b114-3d99fc96b702"
-        },
-        {
-          "sensitivityLabelId": "7bb18415-09cf-41fc-afb8-316027661da0",
-          "name": "defa4170-0d19-0005-0000-bc88714345d2",
-          "displayName": "Personal",
-          "tooltip": "Non-business data, for personal use only.",
-          "priority": 68,
-          "color": "",
-          "isEncrypted": false,
-          "isEnabled": true,
-          "isParent": false,
-          "parentSensitivityLabelId": ""
-        }
-      ]
-    }
-  ],
-    "value": [
+  "value": [
         {
           "Name": "[dbo].[BuildVersion]",
           "DisplayName": "BuildVersion"

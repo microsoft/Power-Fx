@@ -5,17 +5,36 @@ using System;
 
 namespace Microsoft.PowerFx.Intellisense.SignatureHelp
 {
+    /// <summary>
+    /// Represents the signature of something callable, such as a function, including its label, documentation, and parameters.
+    /// </summary>
     public class SignatureInformation : IEquatable<SignatureInformation>
     {
+        /// <summary>
+        /// Gets or sets the label of this signature. Will be shown in the UI.
+        /// </summary>
         public string Label { get; set; }
 
+        /// <summary>
+        /// Gets or sets the human-readable documentation comment of this signature. Will be shown in the UI but can be omitted.
+        /// </summary>
         public string Documentation { get; set; }
 
+        /// <summary>
+        /// Gets or sets the parameters of this signature.
+        /// </summary>
         public ParameterInformation[] Parameters { get; set; }
 
-        // If non-null, then show an disclaimer after the description. 
+        /// <summary>
+        /// If non-null, provides a disclaimer to show after the description.
+        /// </summary>
         public Func<MarkdownString> GetDisclaimerMarkdown { get; set; }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="SignatureInformation"/> is equal to the current <see cref="SignatureInformation"/>.
+        /// </summary>
+        /// <param name="other">The <see cref="SignatureInformation"/> to compare with the current object.</param>
+        /// <returns><c>true</c> if the specified object is equal to the current object; otherwise, <c>false</c>.</returns>
         public bool Equals(SignatureInformation other)
         {
             if (other == null)
@@ -42,11 +61,20 @@ namespace Microsoft.PowerFx.Intellisense.SignatureHelp
             return true;
         }
 
+        /// <summary>
+        /// Determines whether the specified object is equal to the current object.
+        /// </summary>
+        /// <param name="obj">The object to compare with the current object.</param>
+        /// <returns><c>true</c> if the specified object is equal to the current object; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             return obj is SignatureInformation other && Equals(other);
         }
 
+        /// <summary>
+        /// Serves as the default hash function.
+        /// </summary>
+        /// <returns>A hash code for the current object.</returns>
         public override int GetHashCode()
         {
             return (Label, Documentation).GetHashCode();

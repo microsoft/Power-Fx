@@ -240,23 +240,29 @@ namespace Microsoft.PowerFx.Core.IR
     /// </summary>
     public class DependencyInfo
     {
-#pragma warning disable CS1570 // XML comment has badly formed XML
         /// <summary>
         /// A dictionary of field logical names on related records, indexed by the related entity logical name.
         /// </summary>
-        /// <example>
+        /// <example><![CDATA[
         /// On account, the formula "Name & 'Primary Contact'.'Full Name'" would return
         ///    "contact" => { "fullname" }
         /// The formula "Name & 'Primary Contact'.'Full Name' & Sum(Contacts, 'Number Of Childeren')" would return
         ///    "contact" => { "fullname", "numberofchildren" }.
-        /// </example>
+        /// ]]></example>
         public Dictionary<string, HashSet<string>> Dependencies { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DependencyInfo"/> class.
+        /// </summary>
         public DependencyInfo()
         {
             Dependencies = new Dictionary<string, HashSet<string>>();
         }
 
+        /// <summary>
+        /// Returns a string representation of the dependency information.
+        /// </summary>
+        /// <returns>A string describing the dependencies.</returns>
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();

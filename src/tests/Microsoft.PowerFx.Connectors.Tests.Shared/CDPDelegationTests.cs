@@ -15,8 +15,17 @@ using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
-    public class CDPDelegationTests
+    public sealed class CDPDelegationTests : IAsyncLifetime, IDisposable
     {
+        private LoggingTestServer _server;
+        private HttpClient _httpClient;
+        private ConsoleLogger _logger;
+        private PowerPlatformConnectorClient _client;
+        private CdpTableValue _sqlValue;
+        private bool _disposed;
+        private const string ConnectionId = "c1a4e9f52ec94d55bb82f319b3e33a6a";
+        private readonly string _basePath = $"/apim/sql/{ConnectionId}";
+        private const string Jwt = "eyJ0eXAiOiJKV1QiL...";
         private readonly ITestOutputHelper _output;
 
         public CDPDelegationTests(ITestOutputHelper output)
@@ -24,82 +33,113 @@ namespace Microsoft.PowerFx.Connectors.Tests
             _output = output;
         }
 
-        [Fact]
-        public async Task CDPOdataExecutionTest()
+        public async Task InitializeAsync()
         {
-            using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
+            // Common setup
+            _server = new LoggingTestServer(null, _output);
+            _httpClient = new HttpClient(_server);
+            _logger = new ConsoleLogger(_output);
+
             var config = new PowerFxConfig(Features.PowerFxV1);
             var engine = new RecalcEngine(config);
 
-            ConsoleLogger logger = new ConsoleLogger(_output);
-            using var httpClient = new HttpClient(testConnector);
-            string connectionId = "c1a4e9f52ec94d55bb82f319b3e33a6a";
-            string jwt = "eyJ0eXAiOiJKV1QiL...";
-            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+            _client = new PowerPlatformConnectorClient(
+                endpoint: "firstrelease-003.azure-apihub.net",
+                environmentId: "49970107-0806-e5a7-be5e-7c60e2750f01",
+                connectionId: ConnectionId,
+                getAuthToken: () => Jwt,
+                httpInvoker: _httpClient)
+            { SessionId = Guid.NewGuid().ToString() };
 
-            testConnector.SetResponseFromFile(@"Responses\SQL GetDatasetsMetadata.json");
-            DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+            // Prepare table value
+            _server.SetResponseFromFile(@"Responses\SQL GetDatasetsMetadata.json");
+            await CdpDataSource.GetDatasetsMetadataAsync(_client, _basePath, CancellationToken.None, _logger);
 
-            Assert.NotNull(dm);
-            Assert.Null(dm.Blob);
+            _server.SetResponseFromFiles(
+                @"Responses\SQL GetDatasetsMetadata.json",
+                @"Responses\SQL GetTables.json");
+            var cds = new CdpDataSource(
+                "pfxdev-sql.database.windows.net,connectortest",
+                ConnectorSettings.NewCDPConnectorSettings(maxRows: 101));
 
-            Assert.Equal("{server},{database}", dm.DatasetFormat);
-            Assert.NotNull(dm.Tabular);
-            Assert.Equal("dataset", dm.Tabular.DisplayName);
-            Assert.Equal("mru", dm.Tabular.Source);
-            Assert.Equal("Table", dm.Tabular.TableDisplayName);
-            Assert.Equal("Tables", dm.Tabular.TablePluralName);
-            Assert.Equal("single", dm.Tabular.UrlEncoding);
-            Assert.NotNull(dm.Parameters);
-            Assert.Equal(2, dm.Parameters.Count);
+            var tables = await cds.GetTablesAsync(
+                _client, _basePath, CancellationToken.None, _logger);
 
-            Assert.Equal("Server name.", dm.Parameters.First().Description);
-            Assert.Equal("server", dm.Parameters.First().Name);
-            Assert.True(dm.Parameters.First().Required);
-            Assert.Equal("string", dm.Parameters.First().Type);
-            Assert.Equal("double", dm.Parameters.First().UrlEncoding);
-            Assert.Null(dm.Parameters.First().XMsDynamicValues);
-            Assert.Equal("Server name", dm.Parameters.First().XMsSummary);
+            var custTable = tables.First(t => t.DisplayName == "Customers");
+            _server.SetResponseFromFiles(
+                @"Responses\SQL Server Load Customers DB.json",
+                @"Responses\SQL GetRelationships SampleDB.json");
 
-            Assert.Equal("Database name.", dm.Parameters.Skip(1).First().Description);
-            Assert.Equal("database", dm.Parameters.Skip(1).First().Name);
-            Assert.True(dm.Parameters.Skip(1).First().Required);
-            Assert.Equal("string", dm.Parameters.Skip(1).First().Type);
-            Assert.Equal("double", dm.Parameters.Skip(1).First().UrlEncoding);
-            Assert.NotNull(dm.Parameters.Skip(1).First().XMsDynamicValues);
-            Assert.Equal("/v2/databases?server={server}", dm.Parameters.Skip(1).First().XMsDynamicValues.Path);
-            Assert.Equal("value", dm.Parameters.Skip(1).First().XMsDynamicValues.ValueCollection);
-            Assert.Equal("Name", dm.Parameters.Skip(1).First().XMsDynamicValues.ValuePath);
-            Assert.Equal("DisplayName", dm.Parameters.Skip(1).First().XMsDynamicValues.ValueTitle);
-            Assert.Equal("Database name", dm.Parameters.Skip(1).First().XMsSummary);
-
-            CdpDataSource cds = new CdpDataSource("pfxdev-sql.database.windows.net,connectortest", ConnectorSettings.NewCDPConnectorSettings(maxRows: 101));
-
-            testConnector.SetResponseFromFiles(@"Responses\SQL GetDatasetsMetadata.json", @"Responses\SQL GetTables.json");
-            IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
-
-            Assert.NotNull(tables);
-
-            CdpTable connectorTable = tables.First(t => t.DisplayName == "Customers");
-
-            Assert.False(connectorTable.IsInitialized);
-            Assert.Equal("Customers", connectorTable.DisplayName);
-
-            testConnector.SetResponseFromFiles(@"Responses\SQL Server Load Customers DB.json", @"Responses\SQL GetRelationships SampleDB.json");
-            await connectorTable.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
-            Assert.True(connectorTable.IsInitialized);
-
-            CdpTableValue sqlTable = connectorTable.GetTableValue();
-
-            // Execute OData.
-            var responseFile = @"Responses\BlankTopLevelAggregation.json";
-            var oData = "$apply=aggregate%28Bonus%20with%20sum%20as%20result%29";
-            var delegationParam = new MockDelegationParameters(DelegationParameterFeatures.ApplyTopLevelAggregation, FormulaType.Decimal, oData);
-            testConnector.SetResponseFromFile(responseFile);
-            var result = await sqlTable.ExecuteQueryAsync(null, delegationParam, CancellationToken.None);
-            Assert.IsAssignableFrom<DecimalType>(result.Type);
-            Assert.IsAssignableFrom<BlankValue>(result);
+            await custTable.InitAsync(
+                _client, _basePath, CancellationToken.None, _logger);
+            _sqlValue = custTable.GetTableValue();
         }
+
+        async Task IAsyncLifetime.DisposeAsync()
+        {
+            Dispose();
+            await Task.CompletedTask;
+        }
+
+        // IDisposable implementation
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                _sqlValue = null;
+                _server?.Dispose();
+                _httpClient?.Dispose();
+                _client?.Dispose();
+            }
+
+            _disposed = true;
+        }
+     
+        [Theory]
+        [InlineData(@"Responses\BlankTopLevelAggregation.json", DelegationParameterFeatures.ApplyTopLevelAggregation, "$apply=aggregate(Bonus with sum as result)", true, null)]
+        [InlineData(@"Responses\SQL Server Get First Customers.json", DelegationParameterFeatures.Count, "$count=true", false, 2)]
+        [InlineData(@"Responses\EmptyTopLevelAggregation.json", DelegationParameterFeatures.ApplyTopLevelAggregation, "$apply=aggregate(Bonus with sum as result)", true, null)]
+        public async Task CDPOdataExecutionTest(
+                string responseFile,
+                DelegationParameterFeatures features,
+                string odata,
+                bool expectBlank,
+                int? expectCount)
+            {
+                _server.SetResponseFromFile(responseFile);
+                var parameters = new MockDelegationParameters(
+                    features,
+                    FormulaType.Decimal,
+                    odata,
+                    features == DelegationParameterFeatures.Count);
+
+                var result = await _sqlValue.ExecuteQueryAsync(
+                    services: null,
+                    parameters: parameters,
+                    cancel: CancellationToken.None);
+
+                Assert.IsAssignableFrom<DecimalType>(result.Type);
+                if (expectBlank)
+                {
+                    Assert.IsAssignableFrom<BlankValue>(result);
+                }
+                else
+                {
+                    var val = Assert.IsAssignableFrom<DecimalValue>(result);
+                    Assert.Equal(expectCount.Value, val.Value);
+                }
+            }
 
         private class MockDelegationParameters : DelegationParameters
         {
@@ -150,7 +190,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             public override bool ReturnTotalCount()
             {
-                return false;
+                return _returnTotalCount;
             }
         }
     }

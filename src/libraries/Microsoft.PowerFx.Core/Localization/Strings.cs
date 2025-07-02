@@ -654,6 +654,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrBadType_ExpectedTypesCSV = new ErrorResourceKey("ErrBadType_ExpectedTypesCSV");
         public static ErrorResourceKey ErrBadType_ExpectedType_ProvidedType = new ErrorResourceKey("ErrBadType_ExpectedType_ProvidedType");
         public static ErrorResourceKey ErrBadType_VoidExpression = new ErrorResourceKey("ErrBadType_VoidExpression");
+        public static ErrorResourceKey ErrBadType_NonBehavioralVoidExpression = new ErrorResourceKey("ErrBadType_NonBehavioralVoidExpression");
         public static ErrorResourceKey ErrBadSchema_ExpectedType = new ErrorResourceKey("ErrBadSchema_ExpectedType");
         public static ErrorResourceKey ErrBadSchema_AdditionalField = new ErrorResourceKey("ErrBadSchema_AdditionalField");
         public static ErrorResourceKey ErrInvalidArgs_Func = new ErrorResourceKey("ErrInvalidArgs_Func");

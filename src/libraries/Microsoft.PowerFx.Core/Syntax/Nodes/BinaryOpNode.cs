@@ -11,24 +11,25 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
-    /// Binary operation parse node. Example:
-    /// 
-    /// <code>Left BinaryOp Right</code>
+    /// Binary operation parse node.
     /// </summary>
+    /// <example>
+    /// <code>Left BinaryOp Right</code>
+    /// </example>
     public sealed class BinaryOpNode : TexlNode
     {
         /// <summary>
-        /// Left operand of the binary operation.
+        /// Gets the left operand of the binary operation.
         /// </summary>
         public TexlNode Left { get; }
 
         /// <summary>
-        /// Right operand of the binary operation.
+        /// Gets the right operand of the binary operation.
         /// </summary>
         public TexlNode Right { get; }
 
         /// <summary>
-        /// The binary operator.
+        /// Gets the binary operator.
         /// </summary>
         public BinaryOp Op { get; }
 

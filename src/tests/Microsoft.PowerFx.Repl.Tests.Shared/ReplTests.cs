@@ -701,11 +701,11 @@ true
         {
             _repl.HandleLine("Help()");
             var log0h = _output.Get(OutputKind.Error);
-            Assert.True(log0h.Length == 0);
+            Assert.Contains("Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.", log0h);
 
             _repl.HandleLine("Notify( \"hello\" )");
             var log0n = _output.Get(OutputKind.Error);
-            Assert.True(log0n.Length == 0);
+            Assert.Contains("Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.", log0n);
 
             _repl.HandleLine("Set( collection1, [0] )");
             var log1 = _output.Get(OutputKind.Error);
