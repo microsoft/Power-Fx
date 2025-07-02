@@ -833,9 +833,7 @@ namespace Microsoft.PowerFx.Core.Functions
         public bool RequiresPagedDataForParam(CallNode callNode, int paramIndex, TexlBinding binding)
         {
             Contracts.AssertValue(callNode);
-
-            // ConcatenateFunction is a special case where we may not have any args on call node.
-            Contracts.Assert(this is ConcatenateFunction || callNode.Args.Count > 0);
+            Contracts.Assert(callNode.Args.Count > 0);
             Contracts.Assert(paramIndex >= 0 && paramIndex < callNode.Args.Children.Count());
             Contracts.AssertValue(binding);
 
