@@ -1449,23 +1449,25 @@ namespace Microsoft.PowerFx.Connectors
 
             ConnectorFunction functionToBeCalled = EnsureConnectorFunction(dynamicApi, GlobalContext.FunctionList).ConnectorFunction;
 
-            foreach (ConnectorParameter connectorParameter in functionToBeCalled.RequiredParameters)
-            {
-                string requiredParameterName = connectorParameter.Name;
+            var parameters = functionToBeCalled.RequiredParameters.Union(functionToBeCalled.OptionalParameters);
 
-                // TODO: properly implement the ability to reference child properties instead of simplistic check "GetLastPart(kvp.Key) == requiredParameterName"
+            foreach (ConnectorParameter connectorParameter in parameters)
+            {
+                string parameterName = connectorParameter.Name;
+
+                // TODO: properly implement the ability to reference child properties instead of simplistic check "GetLastPart(kvp.Key) == parameterName"
                 // doc: https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions
                 // e.g. make this example working:
                 // "destinationInputParam1/property1": {
                 //    "parameterReference": "sourceInputParam1/property1"
                 // }
-                if (dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is StaticConnectorExtensionValue && GetLastPart(kvp.Key) == requiredParameterName).Value is StaticConnectorExtensionValue sValue)
+                if (dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is StaticConnectorExtensionValue && GetLastPart(kvp.Key) == parameterName).Value is StaticConnectorExtensionValue sValue)
                 {
                     arguments.Add(sValue.Value);
                     continue;
                 }
 
-                KeyValuePair<string, IConnectorExtensionValue> dValue = dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is DynamicConnectorExtensionValue dv && GetLastPart(kvp.Key) == requiredParameterName);
+                KeyValuePair<string, IConnectorExtensionValue> dValue = dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is DynamicConnectorExtensionValue dv && GetLastPart(kvp.Key) == parameterName);
                 string[] referenceList = ((DynamicConnectorExtensionValue)dValue.Value).Reference.Split('/');
 
                 var parameterToUse = knownParameters.FirstOrDefault(nv => nv.Name == referenceList.First())?.Value;

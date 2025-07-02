@@ -321,6 +321,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestSwagger1.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\ZenDesk.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\shared_sendmail.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\UIPath.yaml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Mask.png">
