@@ -10,10 +10,11 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
-    /// List expression parse node. Example:
-    /// 
-    /// <code>[Arg1, Arg2, ...]</code>
+    /// List expression parse node.
     /// </summary>
+    /// <example>
+    /// <code>[Arg1, Arg2, ...]</code>
+    /// </example>
     public sealed class ListNode : VariadicBase
     {
         internal readonly Token[] Delimiters;

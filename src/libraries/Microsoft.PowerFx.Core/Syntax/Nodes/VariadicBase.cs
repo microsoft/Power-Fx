@@ -83,8 +83,18 @@ namespace Microsoft.PowerFx.Syntax
             return newToks;
         }
 
+        /// <summary>
+        /// Gets the number of child elements in the collection.
+        /// </summary>
         public int Count => Children.Count;
 
+        /// <summary>
+        /// Invokes the specified <see cref="TexlVisitor"/> on each child node in the collection.
+        /// </summary>
+        /// <remarks>This method iterates through all child nodes in the <c>Children</c> collection and
+        /// calls the <c>Accept</c> method on each child, passing the provided <paramref name="visitor"/>.</remarks>
+        /// <param name="visitor">The <see cref="TexlVisitor"/> instance to apply to each child node. This parameter cannot be <see
+        /// langword="null"/>.</param>
         public void AcceptChildren(TexlVisitor visitor)
         {
             Contracts.AssertValue(visitor);

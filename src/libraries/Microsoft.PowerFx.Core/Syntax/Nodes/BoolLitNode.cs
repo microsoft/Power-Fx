@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         /// <summary>
-        /// The boolean value of the literal.
+        /// Gets the boolean value of the literal.
         /// </summary>
         public bool Value => Token.Kind == TokKind.True;
 

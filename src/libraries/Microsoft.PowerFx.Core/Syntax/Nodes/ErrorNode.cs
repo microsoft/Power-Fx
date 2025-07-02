@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Syntax
     public sealed class ErrorNode : TexlNode
     {
         /// <summary>
-        /// The error message of the node.
+        /// Gets the error message of the node.
         /// </summary>
         public string Message { get; }
 

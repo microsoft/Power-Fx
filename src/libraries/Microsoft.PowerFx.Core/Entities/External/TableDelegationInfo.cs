@@ -10,32 +10,52 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Entities
 {
-    // Supports delegation information for CDP connectors
+    /// <summary>
+    /// Supports delegation information for CDP connectors.
+    /// </summary>
     public abstract class TableDelegationInfo
     {
-        // Defines unsortable columns or columns only supporting ascending ordering
-        // If set to null, the table is not sortable
+        /// <summary>
+        /// Defines unsortable columns or columns only supporting ascending ordering. If set to null, the table is not sortable.
+        /// </summary>
         public SortRestrictions SortRestriction { get; init; }
 
-        // Defines columns that cannot be sorted and required properties
+        /// <summary>
+        /// Defines columns that cannot be sorted and required properties.
+        /// </summary>
         public FilterRestrictions FilterRestriction { get; init; }
 
-        // Used to indicate whether this table has selectable columns
+        /// <summary>
+        /// Used to indicate whether this table has selectable columns.
+        /// </summary>
         public SelectionRestrictions SelectionRestriction { get; init; }
 
+        /// <summary>
+        /// Gets the summarize capabilities for the table.
+        /// </summary>
         [Obsolete("preview")]
         public SummarizeCapabilities SummarizeCapabilities { get; init; }
 
+        /// <summary>
+        /// Gets the count capabilities for the table.
+        /// </summary>
         [Obsolete("preview")]
         public CountCapabilities CountCapabilities { get; init; }
 
+        /// <summary>
+        /// Gets the top level aggregation capabilities for the table.
+        /// </summary>
         [Obsolete("preview")]
         public TopLevelAggregationCapabilities TopLevelAggregationCapabilities { get; init; }
 
-        // Defines ungroupable columns
+        /// <summary>
+        /// Defines ungroupable columns.
+        /// </summary>
         public GroupRestrictions GroupRestriction { get; init; }
 
-        // Filter functions supported by all columns of the table        
+        /// <summary>
+        /// Filter functions supported by all columns of the table.
+        /// </summary>
         public IEnumerable<DelegationOperator> FilterSupportedFunctions { get; init; }
 
         // Defines paging capabilities
@@ -47,34 +67,54 @@ namespace Microsoft.PowerFx.Core.Entities
         // Supports per record permission
         internal bool SupportsRecordPermission { get; init; }
 
-        [Obsolete("preview")]
+        /// <summary>
+        /// Gets a value indicating whether the table supports join function.
+        /// </summary>
+        /// [Obsolete("preview")]
         public bool SupportsJoinFunction { get; init; }
 
-        // Logical name of table
+        /// <summary>
+        /// Gets the logical name of the table.
+        /// </summary>
         public string TableName { get; init; }
 
-        // Read-Only table
+        /// <summary>
+        /// Gets a value indicating whether the table is read-only.
+        /// </summary>
         public bool IsReadOnly { get; init; }
 
-        // Defines when the table is sortable
+        /// <summary>
+        /// Gets a value indicating whether the table is sortable.
+        /// </summary>
         public bool IsSortable => SortRestriction != null;
 
-        // Defines when columns can be selected
+        /// <summary>
+        /// Gets a value indicating whether columns can be selected.
+        /// </summary>
         public bool IsSelectable => SelectionRestriction != null && SelectionRestriction.IsSelectable;
 
-        // Dataset name
+        /// <summary>
+        /// Gets the dataset name.
+        /// </summary>
         public string DatasetName { get; init; }
 
-        // Supports primary key names (multiple when composed key)
-        // This array is ordered
+        /// <summary>
+        /// Gets the primary key names. This array is ordered and supports multiple keys when composed key is used.
+        /// </summary>
         public IEnumerable<string> PrimaryKeyNames { get; init; }
 
         // Defines columns with relationships
         // Key = field logical name, Value = foreign table logical name
         internal Dictionary<string, string> ColumnsWithRelationships { get; init; }
 
+        /// <summary>
+        /// Gets a value indicating whether the table is delegable.
+        /// </summary>
         public virtual bool IsDelegable => IsSortable || (FilterRestriction != null) || (FilterSupportedFunctions != null);
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TableDelegationInfo"/> class.
+        /// </summary>
         public TableDelegationInfo()
         {
             PagingCapabilities = new PagingCapabilities()
@@ -86,6 +126,11 @@ namespace Microsoft.PowerFx.Core.Entities
             ColumnsWithRelationships = new Dictionary<string, string>();
         }
 
+        /// <summary>
+        /// Gets the column capability for the specified field name.
+        /// </summary>
+        /// <param name="fieldName">The logical name of the field.</param>
+        /// <returns>The column capabilities definition for the specified field.</returns>
         public abstract ColumnCapabilitiesDefinition GetColumnCapability(string fieldName);
     }
 
@@ -107,18 +152,28 @@ namespace Microsoft.PowerFx.Core.Entities
         }
     }
 
+    /// <summary>
+    /// Represents the capabilities of a column.
+    /// </summary>
     public sealed class ColumnCapabilities : ColumnCapabilitiesBase
     {
+        /// <summary>
+        /// Gets the child column capabilities as a read-only dictionary, or null if none exist.
+        /// </summary>
         public IReadOnlyDictionary<string, ColumnCapabilitiesBase> Properties => _childColumnsCapabilities.Any() ? _childColumnsCapabilities : null;
 
         private Dictionary<string, ColumnCapabilitiesBase> _childColumnsCapabilities;
 
         private ColumnCapabilitiesDefinition _capabilities;
 
+        /// <summary>
+        /// Gets the column capabilities definition.
+        /// </summary>
         public ColumnCapabilitiesDefinition Definition => _capabilities;
 
-        // Those are default CDS filter supported functions 
-        // From // PowerApps-Client\src\Language\PowerFx.Dataverse.Parser\Importers\DataDescription\CdsCapabilities.cs
+        /// <summary>
+        /// The default CDS filter supported functions.
+        /// </summary>
         public static readonly IEnumerable<DelegationOperator> DefaultFilterFunctionSupport = new DelegationOperator[]
         {
             DelegationOperator.And,
@@ -146,6 +201,9 @@ namespace Microsoft.PowerFx.Core.Entities
             DelegationOperator.Top
         };
 
+        /// <summary>
+        /// Gets the default column capabilities.
+        /// </summary>
         public static ColumnCapabilities DefaultColumnCapabilities => new ColumnCapabilities()
         {
             _capabilities = new ColumnCapabilitiesDefinition()
@@ -161,6 +219,11 @@ namespace Microsoft.PowerFx.Core.Entities
         {
         }
 
+        /// <summary>
+        /// Adds a child column capability.
+        /// </summary>
+        /// <param name="name">The name of the child column.</param>
+        /// <param name="capability">The capability to add.</param>
         public void AddColumnCapability(string name, ColumnCapabilitiesBase capability)
         {
             Contracts.AssertNonEmpty(name);
@@ -169,6 +232,10 @@ namespace Microsoft.PowerFx.Core.Entities
             _childColumnsCapabilities.Add(name, capability);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ColumnCapabilities"/> class with the specified capability definition.
+        /// </summary>
+        /// <param name="capability">The column capabilities definition.</param>
         public ColumnCapabilities(ColumnCapabilitiesDefinition capability)
         {
             Contracts.AssertValueOrNull(capability);
@@ -178,8 +245,14 @@ namespace Microsoft.PowerFx.Core.Entities
         }
     }
 
+    /// <summary>
+    /// Defines the capabilities for a column.
+    /// </summary>
     public sealed class ColumnCapabilitiesDefinition
     {
+        /// <summary>
+        /// Gets the filter functions supported by the column.
+        /// </summary>
         public IEnumerable<DelegationOperator> FilterFunctions
         {
             get => _filterFunctions ?? ColumnCapabilities.DefaultFilterFunctionSupport;
@@ -195,6 +268,9 @@ namespace Microsoft.PowerFx.Core.Entities
 
         private IEnumerable<DelegationOperator> _filterFunctions;
                 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ColumnCapabilitiesDefinition"/> class.
+        /// </summary>
         public ColumnCapabilitiesDefinition()
         {
         }
@@ -219,6 +295,9 @@ namespace Microsoft.PowerFx.Core.Entities
         }
     }
 
+    /// <summary>
+    /// Represents the base class for column capabilities.
+    /// </summary>
     public abstract class ColumnCapabilitiesBase
     {
     }
@@ -246,8 +325,7 @@ namespace Microsoft.PowerFx.Core.Entities
             IsOnlyServerPagable = isOnlyServerPagable;
 
             // List of supported server-driven paging capabilities, null for CDS
-            // ex: top, skiptoken
-            // used in https://msazure.visualstudio.com/OneAgile/_git/PowerApps-Client?path=/src/AppMagic/js/AppMagic.Services/ConnectedData/CdpConnector.ts&_a=contents&version=GBmaster
+            // ex: top, skiptoken       
             ServerPagingOptions = serverPagingOptions;
         }
     }
@@ -259,23 +337,37 @@ namespace Microsoft.PowerFx.Core.Entities
         SkipToken
     }
 
+    /// <summary>
+    /// Defines the restrictions for grouping columns.
+    /// </summary>
     public sealed class GroupRestrictions
     {
-        // Defines properties can cannot be grouped
+        /// <summary>
+        /// Gets the list of properties that cannot be grouped.
+        /// </summary>
         public IList<string> UngroupableProperties { get; init; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GroupRestrictions"/> class.
+        /// </summary>
         public GroupRestrictions()
         {
         }
     }
 
+    /// <summary>
+    /// Defines the restrictions for selecting columns.
+    /// </summary>
     public sealed class SelectionRestrictions
     {
-        // Indicates whether this table has selectable columns ($select)
-        // Columns with an Attachment will be excluded
-        // Used in https://msazure.visualstudio.com/OneAgile/_git/PowerApps-Client?path=/src/Cloud/DocumentServer.Core/Document/Document/InfoTypes/CdsDataSourceInfo.cs&_a=contents&version=GBmaster
+        /// <summary>
+        /// Gets a value indicating whether this table has selectable columns ($select). Columns with an Attachment will be excluded.
+        /// </summary>
         public bool IsSelectable { get; init; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SelectionRestrictions"/> class.
+        /// </summary>
         public SelectionRestrictions()
         {
         }
@@ -292,31 +384,73 @@ namespace Microsoft.PowerFx.Core.Entities
         /// <summary>
         /// If the table property supports summarize, return true.
         /// </summary>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <param name="method">The summarize method.</param>
+        /// <returns>True if the property supports summarize; otherwise, false.</returns>
         public virtual bool IsSummarizableProperty(string propertyName, SummarizeMethod method)
         {
             return false;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SummarizeCapabilities"/> class.
+        /// </summary>
         public SummarizeCapabilities()
         {
         }
     }
 
+    /// <summary>
+    /// Specifies the available summarize methods for table aggregation operations.
+    /// </summary>
     [Obsolete("preview")]
     public enum SummarizeMethod
     {
+        /// <summary>
+        /// No summarize method is applied.
+        /// </summary>
         None,
+
+        /// <summary>
+        /// Sums the values of the specified column.
+        /// </summary>
         Sum,
+
+        /// <summary>
+        /// Calculates the average of the values in the specified column.
+        /// </summary>
         Average,
+
+        /// <summary>
+        /// Finds the minimum value in the specified column.
+        /// </summary>
         Min,
+
+        /// <summary>
+        /// Finds the maximum value in the specified column.
+        /// </summary>
         Max,
+
+        /// <summary>
+        /// Counts the number of non-null values in the specified column.
+        /// </summary>
         Count,
+
+        /// <summary>
+        /// Counts the number of rows in the table.
+        /// </summary>
         CountRows
     }
 
+    /// <summary>
+    /// Defines the count capabilities for a table.
+    /// </summary>
     [Obsolete("preview")]
     public class CountCapabilities
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CountCapabilities"/> class.
+        /// </summary>
         public CountCapabilities()
         {
         }
@@ -325,7 +459,7 @@ namespace Microsoft.PowerFx.Core.Entities
         /// If the table is countable, return true. 
         /// Relevant expression: CountRows(Table).
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if the table is countable; otherwise, false.</returns>
         public virtual bool IsCountableTable()
         {
             return false;
@@ -335,7 +469,7 @@ namespace Microsoft.PowerFx.Core.Entities
         /// If the table is countable after filter, return true.
         /// Relevant expression: CountRows(Filter(Table, Condition)); / CountIf(Table, Condition).
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if the table is countable after filter; otherwise, false.</returns>
         public virtual bool IsCountableAfterFilter()
         {
             return false;
@@ -345,7 +479,7 @@ namespace Microsoft.PowerFx.Core.Entities
         /// If the table is countable after join, return true.
         /// Relevant expression: CountRows(Join(Table1, Table2, ...)).
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if the table is countable after join; otherwise, false.</returns>
         public virtual bool IsCountableAfterJoin()
         {
             return false;
@@ -355,7 +489,7 @@ namespace Microsoft.PowerFx.Core.Entities
         /// If the table is countable after summarize, return true.
         /// Relevant expression: CountRows(Summarize(Table, ...)).
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if the table is countable after summarize; otherwise, false.</returns>
         public virtual bool IsCountableAfterSummarize()
         {
             return false;
@@ -374,43 +508,68 @@ namespace Microsoft.PowerFx.Core.Entities
         /// <summary>
         /// If the table supports top level aggregation for a column, return true.
         /// </summary>
+        /// <param name="method">The summarize method.</param>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <returns>True if top level aggregation is supported; otherwise, false.</returns>
         public virtual bool IsTopLevelAggregationSupported(SummarizeMethod method, string propertyName)
         {
             return false;
         }
     }
 
+    /// <summary>
+    /// Defines the restrictions for filtering columns.
+    /// </summary>
     public sealed class FilterRestrictions
     {
-        // List of required properties
+        /// <summary>
+        /// Gets the list of required properties.
+        /// </summary>
         public IList<string> RequiredProperties { get; init; }
 
-        // List of non filterable properties (like images)
+        /// <summary>
+        /// Gets the list of non-filterable properties (like images).
+        /// </summary>
         public IList<string> NonFilterableProperties { get; init; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FilterRestrictions"/> class.
+        /// </summary>
         public FilterRestrictions()
         {
         }
     }
 
+    /// <summary>
+    /// Defines the restrictions for sorting columns.
+    /// </summary>
     public sealed class SortRestrictions
     {
-        // Columns only supported ASC ordering
+        /// <summary>
+        /// Gets the list of columns that only support ascending ordering.
+        /// </summary>
         public IList<string> AscendingOnlyProperties { get; init; }
 
-        // Columns that don't support ordering
+        /// <summary>
+        /// Gets the list of columns that do not support ordering.
+        /// </summary>
         public IList<string> UnsortableProperties { get; init; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SortRestrictions"/> class.
+        /// </summary>
         public SortRestrictions()
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SortRestrictions"/> class with the specified unsortable and ascending-only properties.
+        /// </summary>
+        /// <param name="unsortableProperties">The list of unsortable properties.</param>
+        /// <param name="ascendingOnlyProperties">The list of properties that only support ascending ordering.</param>
         public SortRestrictions(IList<string> unsortableProperties, IList<string> ascendingOnlyProperties)
         {
-            // List of properties which support ascending order only
             AscendingOnlyProperties = ascendingOnlyProperties;
-
-            // List of unsortable properties
             UnsortableProperties = unsortableProperties;
         }
     }

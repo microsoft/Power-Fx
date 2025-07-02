@@ -9,10 +9,11 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
-    /// First name parse node. Example:
-    /// 
-    /// <code>Ident</code>
+    /// First name parse node.
     /// </summary>
+    /// <example>
+    /// <code>Ident</code>
+    /// </example>
     public sealed class FirstNameNode : NameNode
     {
         /// <summary>

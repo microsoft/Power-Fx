@@ -19,6 +19,9 @@ namespace Microsoft.PowerFx.Core.Utils
     /// </summary>
     public interface ICheckable
     {
+        /// <summary>
+        /// Gets a value indicating whether the current state is valid.
+        /// </summary>
         bool IsValid { get; }
     }
 

@@ -25,8 +25,8 @@ namespace Microsoft.PowerFx.Intellisense
         /// <summary>
         /// Create an instance over existing markdown. This doesn't validate and the markdown string must be valid.
         /// </summary>
-        /// <param name="markdown"></param>
-        /// <returns></returns>
+        /// <param name="markdown">The markdown string to wrap.</param>
+        /// <returns>A <see cref="MarkdownString"/> instance containing the provided markdown.</returns>
         public static MarkdownString FromMarkdown(string markdown)
         {
             return new MarkdownString
@@ -50,8 +50,8 @@ namespace Microsoft.PowerFx.Intellisense
         /// <summary>
         /// Create an instance over plain text. This will escape the plaintext if needed. 
         /// </summary>
-        /// <param name="plainText"></param>
-        /// <returns></returns>
+        /// <param name="plainText">The plain text to convert to markdown, escaping as needed.</param>
+        /// <returns>A <see cref="MarkdownString"/> instance containing the escaped plain text.</returns>
         public static MarkdownString FromString(string plainText)
         {
             StringBuilder sb = new StringBuilder();
@@ -72,24 +72,24 @@ namespace Microsoft.PowerFx.Intellisense
         }
 
         /// <summary>
-        /// Get the raw markdown string. 
+        /// Gets the raw markdown string. 
         /// </summary>
         public string Markdown { get; init; }
 
         /// <summary>
         /// Concatenate two markdown strings. 
         /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
+        /// <param name="left">The first <see cref="MarkdownString"/> to concatenate.</param>
+        /// <param name="right">The second <see cref="MarkdownString"/> to concatenate.</param>
+        /// <returns>A new <see cref="MarkdownString"/> representing the concatenation of <paramref name="left"/> and <paramref name="right"/>.</returns>
         public static MarkdownString operator +(MarkdownString left, MarkdownString right) => Add(left, right);
 
         /// <summary>
         /// Concatenate two markdown strings. 
         /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
+        /// <param name="left">The first <see cref="MarkdownString"/> to concatenate.</param>
+        /// <param name="right">The second <see cref="MarkdownString"/> to concatenate.</param>
+        /// <returns>A new <see cref="MarkdownString"/> representing the concatenation of <paramref name="left"/> and <paramref name="right"/>.</returns>
         public static MarkdownString Add(MarkdownString left, MarkdownString right)
         {
             return new MarkdownString

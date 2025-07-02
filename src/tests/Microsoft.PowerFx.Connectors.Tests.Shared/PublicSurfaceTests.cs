@@ -64,6 +64,7 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.SupportsConnectorErrors",
               "Microsoft.PowerFx.Connectors.Visibility",
               "Microsoft.PowerFx.Connectors.CDPSensitivityLabelInfo",
+              "Microsoft.PowerFx.Connectors.CDPMetadataItem",
               "Microsoft.PowerFx.Connectors.ICDPAggregateMetadata"
             };
 
