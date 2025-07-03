@@ -34,7 +34,13 @@ namespace Microsoft.PowerFx.Syntax
             foreach (var child in children)
             {
                 Contracts.AssertValue(child);
-                child.Parent = this;
+
+                // This may already be the parent node in case of Concatenate, so trying to set it again will fail the set assertion.
+                if (child.Parent == null)
+                {
+                    child.Parent = this;
+                }
+
                 if (maxDepth < child.Depth)
                 {
                     maxDepth = child.Depth;
