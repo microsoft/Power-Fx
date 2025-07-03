@@ -49,6 +49,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\LoggingTestServer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\EmptyTopLevelAggregation.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\BlankTopLevelAggregation.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server Get First Customers_Aßþ.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server Load Customers_Aßþ.json" />
