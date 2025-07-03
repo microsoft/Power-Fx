@@ -656,6 +656,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrBadType_VoidExpression = new ErrorResourceKey("ErrBadType_VoidExpression");
         public static ErrorResourceKey ErrBadType_NonBehavioralVoidExpression = new ErrorResourceKey("ErrBadType_NonBehavioralVoidExpression");
         public static ErrorResourceKey ErrBadSchema_ExpectedType = new ErrorResourceKey("ErrBadSchema_ExpectedType");
+        public static ErrorResourceKey ErrBadSchema_AdditionalField = new ErrorResourceKey("ErrBadSchema_AdditionalField");
         public static ErrorResourceKey ErrInvalidArgs_Func = new ErrorResourceKey("ErrInvalidArgs_Func");
         public static ErrorResourceKey ErrNeedTable_Func = new ErrorResourceKey("ErrNeedTable_Func");
         public static ErrorResourceKey ErrNeedTableCol_Func = new ErrorResourceKey("ErrNeedTableCol_Func");
@@ -841,6 +842,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUDF_DuplicateParameter = new ErrorResourceKey("ErrUDF_DuplicateParameter");
         public static ErrorResourceKey ErrUDF_UnknownType = new ErrorResourceKey("ErrUDF_UnknownType");
         public static ErrorResourceKey ErrUDF_ReturnTypeDoesNotMatch = new ErrorResourceKey("ErrUDF_ReturnTypeDoesNotMatch");
+        public static ErrorResourceKey ErrUDF_ReturnTypeSchemaIncompatible = new ErrorResourceKey("ErrUDF_ReturnTypeSchemaIncompatible");
+        public static ErrorResourceKey ErrUDF_ReturnTypeSchemaAdditionalFields = new ErrorResourceKey("ErrUDF_ReturnTypeSchemaAdditionalFields");
         public static ErrorResourceKey ErrUDF_TooManyParameters = new ErrorResourceKey("ErrUDF_TooManyParameters");
         public static ErrorResourceKey ErrUDF_MissingReturnType = new ErrorResourceKey("ErrUDF_MissingReturnType");
         public static ErrorResourceKey ErrUDF_MissingParamType = new ErrorResourceKey("ErrUDF_MissingParamType");
