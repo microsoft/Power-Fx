@@ -110,12 +110,12 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(NumberLiteralNode node, EvalVisitorContext context)
         {
-            return new NumberValue(node.IRContext, node.LiteralValue);
+            return new NumberValue(node.IRContext, node.LiteralValue, node.UnitInfo);
         }
 
         public override async ValueTask<FormulaValue> Visit(DecimalLiteralNode node, EvalVisitorContext context)
         {
-            return new DecimalValue(node.IRContext, node.LiteralValue);
+            return new DecimalValue(node.IRContext, node.LiteralValue, node.UnitInfo);
         }
 
         public override async ValueTask<FormulaValue> Visit(BooleanLiteralNode node, EvalVisitorContext context)

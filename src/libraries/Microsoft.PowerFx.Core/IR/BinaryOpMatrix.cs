@@ -27,8 +27,8 @@ namespace Microsoft.PowerFx.Core.IR
                 BinaryOp.And => BinaryOpKind.And,
                 BinaryOp.Or => BinaryOpKind.Or,
                 BinaryOp.Add => GetAddOp(node, binding, leftType, rightType),
-                BinaryOp.Mul => binding.GetType(node) == DType.Decimal ? BinaryOpKind.MulDecimals : BinaryOpKind.MulNumbers,
-                BinaryOp.Div => binding.GetType(node) == DType.Decimal ? BinaryOpKind.DivDecimals : BinaryOpKind.DivNumbers,
+                BinaryOp.Mul => binding.GetType(node).Kind == DKind.Decimal ? BinaryOpKind.MulDecimals : BinaryOpKind.MulNumbers,
+                BinaryOp.Div => binding.GetType(node).Kind == DKind.Decimal ? BinaryOpKind.DivDecimals : BinaryOpKind.DivNumbers,
                 BinaryOp.Equal or
                 BinaryOp.NotEqual or
                 BinaryOp.Less or

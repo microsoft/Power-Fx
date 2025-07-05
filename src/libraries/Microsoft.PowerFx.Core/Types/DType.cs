@@ -171,6 +171,8 @@ namespace Microsoft.PowerFx.Core.Types
         /// </summary>
         internal IExternalOptionSet OptionSetInfo { get; }
 
+        internal UnitInfo UnitInfo { get; }
+
         #endregion
 
         #region Fields for Dataverse Support 
@@ -238,8 +240,29 @@ namespace Microsoft.PowerFx.Core.Types
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
+            UnitInfo = null;
             NamedValueKind = null;
             IsSealed = isSealed;
+            AssertValid();
+        }
+
+        internal DType(DKind kind, UnitInfo unitInfo)
+        {
+            Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
+
+            Kind = kind;
+            TypeTree = default;
+            EnumSuperkind = default;
+            ValueTree = default;
+            ExpandInfo = null;
+            PolymorphicInfo = null;
+            Metadata = null;
+            AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
+            OptionSetInfo = null;
+            ViewInfo = null;
+            UnitInfo = unitInfo;
+            NamedValueKind = null;
+            IsSealed = false;
             AssertValid();
         }
 
@@ -274,6 +297,7 @@ namespace Microsoft.PowerFx.Core.Types
                 new HashSet<IExternalTabularDataSource>(AssociatedDataSources),
                 OptionSetInfo,
                 ViewInfo,
+                UnitInfo,
                 NamedValueKind,
                 DisplayNameProvider,
                 LazyTypeProvider,
@@ -297,6 +321,7 @@ namespace Microsoft.PowerFx.Core.Types
                 new HashSet<IExternalTabularDataSource>(AssociatedDataSources),
                 OptionSetInfo,
                 ViewInfo,
+                UnitInfo,
                 NamedValueKind,
                 DisplayNameProvider,
                 LazyTypeProvider,
@@ -320,6 +345,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
+            UnitInfo = null;
             NamedValueKind = null;
             _isFile = isFile;
             _isLargeImage = isLargeImage;
@@ -341,6 +367,7 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
+            UnitInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
             AssertValid();
@@ -361,6 +388,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
+            UnitInfo = null;
             NamedValueKind = null;
             AssertValid();
         }
@@ -381,6 +409,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssociatedDataSources = associatedDataSources ?? new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
+            UnitInfo = null;
             IsSealed = isSealed;
             AssertValid();
         }
@@ -401,6 +430,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssociatedDataSources = associatedDataSources ?? new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
+            UnitInfo = null;
             NamedValueKind = null;
             AssertValid();
         }
@@ -422,6 +452,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
+            UnitInfo = null;
             NamedValueKind = null;
             AssertValid();
         }
@@ -444,6 +475,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
+            UnitInfo = null;
             NamedValueKind = null;
             AssertValid();
         }
@@ -465,6 +497,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = info;
             ViewInfo = null;
+            UnitInfo = null;
             NamedValueKind = null;
             DisplayNameProvider = info.DisplayNameProvider;
             AssertValid();
@@ -486,6 +519,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = info;
             ViewInfo = null;
+            UnitInfo = null;
             NamedValueKind = null;
             DisplayNameProvider = info.DisplayNameProvider;
             AssertValid();
@@ -529,6 +563,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = info;
+            UnitInfo = null;
             NamedValueKind = null;
             DisplayNameProvider = info.DisplayNameProvider;
             AssertValid();
@@ -549,6 +584,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
+            UnitInfo = null;
             NamedValueKind = namedValueKind;
             AssertValid();
         }
@@ -569,6 +605,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssociatedDataSources = associatedDataSources ?? new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
+            UnitInfo = null;
             NamedValueKind = null;
             DisplayNameProvider = displayNameProvider;
 
@@ -681,6 +718,8 @@ namespace Microsoft.PowerFx.Core.Types
         public bool IsDateTimeGroup => Kind == DKind.Date || Kind == DKind.DateTime || Kind == DKind.Time;
 
         public bool IsNumeric => Kind == DKind.Number || Kind == DKind.Decimal;
+
+        public bool HasUnits => IsNumeric && UnitInfo != null;
 
         public bool HasPolymorphicInfo => PolymorphicInfo != null;
 
@@ -3169,6 +3208,7 @@ namespace Microsoft.PowerFx.Core.Types
             HashSet<IExternalTabularDataSource> associatedDataSources,
             IExternalOptionSet optionSetInfo,
             IExternalViewInfo viewInfo,
+            UnitInfo unitInfo,
             string namedValueKind,
             DisplayNameProvider displayNameProvider,
             LazyTypeProvider lazyTypeProvider,
@@ -3186,6 +3226,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssociatedDataSources = associatedDataSources;
             OptionSetInfo = optionSetInfo;
             ViewInfo = viewInfo;
+            UnitInfo = unitInfo;
             NamedValueKind = namedValueKind;
             DisplayNameProvider = displayNameProvider;
             LazyTypeProvider = lazyTypeProvider;

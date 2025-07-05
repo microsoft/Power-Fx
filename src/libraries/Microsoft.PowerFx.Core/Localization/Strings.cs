@@ -649,6 +649,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrBadType = new ErrorResourceKey("ErrBadType");
         public static ErrorResourceKey ErrBadType_Type = new ErrorResourceKey("ErrBadType_Type");
         public static ErrorResourceKey ErrBadOperatorTypes = new ErrorResourceKey("ErrBadOperatorTypes");
+        public static ErrorResourceKey ErrDimensionMismatch = new ErrorResourceKey("ErrDimensionMismatch");
         public static ErrorResourceKey ErrGuidStrictComparison = new ErrorResourceKey("ErrGuidStrictComparison");
         public static ErrorResourceKey ErrBadType_ExpectedType = new ErrorResourceKey("ErrBadType_ExpectedType");
         public static ErrorResourceKey ErrBadType_ExpectedTypesCSV = new ErrorResourceKey("ErrBadType_ExpectedTypesCSV");

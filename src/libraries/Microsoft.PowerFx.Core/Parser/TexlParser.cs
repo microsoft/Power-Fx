@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Syntax.SourceInformation;
@@ -43,6 +44,8 @@ namespace Microsoft.PowerFx.Core.Parser
             // Apart from PA, should always be included.
             PFxV1 = 1 << 7,
         }
+
+        private readonly Units _units = new Units();
 
         private bool _hasSemicolon = false;
 
@@ -1068,6 +1071,24 @@ namespace Microsoft.PowerFx.Core.Parser
                             break;
 
                         case TokKind.Ident:
+                            var unit = _units.LookUpUnit(_curs.TokCur.ToString());
+
+                            if (unit != null && node is DecLitNode dec)
+                            {
+                                dec.AddUnit(unit);
+                            }
+                            else if (unit != null && node is NumLitNode num)
+                            {
+                                num.AddUnit(unit);
+                            }
+                            else
+                            {
+                                goto case TokKind.NumLit;
+                            }
+
+                            tok = _curs.TokMove();
+                            break;
+
                         case TokKind.NumLit:
                         case TokKind.DecLit:
                         case TokKind.StrLit:

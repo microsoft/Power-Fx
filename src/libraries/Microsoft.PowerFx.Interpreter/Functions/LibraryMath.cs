@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 
@@ -588,7 +589,7 @@ namespace Microsoft.PowerFx.Functions
             var n1 = args[0];
             var result = Math.Sqrt(n1.Value);
 
-            return new NumberValue(irContext, result);
+            return new NumberValue(irContext, result, UnitInfo.Sqrt(args[0].UnitInfo));
         }
 
         // Sum(1,2,3)     

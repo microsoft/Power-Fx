@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax.SourceInformation;
 
@@ -18,6 +19,7 @@ namespace Microsoft.PowerFx.Syntax
         // If Value is non-null, then the token represents its value.
         // Otherwise, the value is in NumValue.
         internal readonly double NumValue;
+        internal UnitInfo UnitInfo;
 
         /// <summary>
         /// The numeric value of the node.
@@ -30,7 +32,7 @@ namespace Microsoft.PowerFx.Syntax
             NumValue = double.NaN;
         }
 
-        internal NumLitNode(ref int idNext, Token tok, SourceList sourceList, double value)
+        internal NumLitNode(ref int idNext, Token tok, SourceList sourceList, double value, Unit unit = null)
             : base(ref idNext, tok, sourceList)
         {
             Contracts.Assert(tok.Kind != TokKind.NumLit);
@@ -45,6 +47,11 @@ namespace Microsoft.PowerFx.Syntax
             }
 
             return new NumLitNode(ref idNext, Value.Clone(ts).As<NumLitToken>());
+        }
+
+        internal void AddUnit(Unit unit, int power = 1)
+        {
+            UnitInfo = UnitInfo.AddUnit(UnitInfo, unit, power);
         }
 
         // This may be null, in which case, NumValue should be used.

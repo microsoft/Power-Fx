@@ -1961,6 +1961,10 @@
     <value>This operation isn't valid on these types: {0}, {1}.</value>
     <comment>Error message when the user attempts to use an operator (e.g. + or -) on two values that don't make sense together. {0} and {1} will be canonical type representations like "Number" or "Boolean".</comment>
   </data>
+  <data name="ErrDimensionMismatch" xml:space="preserve">
+    <value>Inavlid operation: Values are from two different dimensions: {0}, {1}.</value>
+    <comment>Error message when different dimensions are mixed.</comment>
+  </data>
   <data name="ErrGuidStrictComparison" xml:space="preserve">
     <value>GUID values can only be compared to other GUID values.</value>
     <comment>Error message when the user attempts to a GUID value is equal to something that isn't a GUID.</comment>

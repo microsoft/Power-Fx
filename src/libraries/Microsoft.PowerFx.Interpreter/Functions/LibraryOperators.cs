@@ -2,8 +2,10 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Data.Common;
 using System.Linq;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
@@ -518,8 +520,10 @@ namespace Microsoft.PowerFx.Functions
 
         private static NumberValue NumericAdd(IRContext irContext, NumberValue[] args)
         {
-            var result = args[0].Value + args[1].Value;
-            return new NumberValue(irContext, result);
+            decimal conversionFactor = UnitInfo.Addition(args[0].UnitInfo, args[1].UnitInfo);
+            var result = args[0].Value + (args[1].Value * (double)conversionFactor);
+
+            return new NumberValue(irContext, result, args[0].UnitInfo);
         }
 
         private static NumberValue NumericMul(IRContext irContext, NumberValue[] args)
@@ -567,33 +571,40 @@ namespace Microsoft.PowerFx.Functions
         private static FormulaValue DecimalAdd(IRContext irContext, DecimalValue[] args)
         {
             decimal result;
+            decimal arg0 = args[0].Value;
+            decimal arg1 = args[1].Value;
+            decimal conversionFactor = UnitInfo.Addition(args[0].UnitInfo, args[1].UnitInfo);
 
             try
             {
-                result = args[0].Value + args[1].Value;
+                result = arg0 + (arg1 * conversionFactor);
             }
             catch (OverflowException)
             {
                 return CommonErrors.OverflowError(irContext);
             }
 
-            return new DecimalValue(irContext, result);
+            return new DecimalValue(irContext, result, args[0].UnitInfo);
         }
 
         private static FormulaValue DecimalMul(IRContext irContext, DecimalValue[] args)
         {
             decimal result;
+            decimal arg0 = args[0].Value;
+            decimal arg1 = args[1].Value;
+
+            var (conversionFactor, newUnitInfo) = UnitInfo.Multiply(args[0].UnitInfo, args[1].UnitInfo, reciprocal: false);
 
             try
             {
-                result = args[0].Value * args[1].Value;
+                result = arg0 * (arg1 * conversionFactor);
             }
             catch (OverflowException)
             {
                 return CommonErrors.OverflowError(irContext);
             }
 
-            return new DecimalValue(irContext, result);
+            return new DecimalValue(irContext, result, newUnitInfo);
         }
 
         private static FormulaValue DecimalDiv(IRContext irContext, DecimalValue[] args)
@@ -602,6 +613,8 @@ namespace Microsoft.PowerFx.Functions
             var divisor = args[1].Value;
             decimal result;
 
+            var (conversionFactor, newUnitInfo) = UnitInfo.Multiply(args[0].UnitInfo, args[1].UnitInfo, reciprocal: true);
+
             if (divisor == 0m)
             {
                 return CommonErrors.DivByZeroError(irContext);
@@ -609,37 +622,41 @@ namespace Microsoft.PowerFx.Functions
 
             try
             {
-                result = dividend / divisor;
+                result = dividend / (divisor * conversionFactor);
             }
             catch (OverflowException)
             {
                 return CommonErrors.OverflowError(irContext);
             }
 
-            return new DecimalValue(irContext, result);
+            return new DecimalValue(irContext, result, newUnitInfo);
         }
 
         private static BooleanValue DecimalGt(IRContext irContext, DecimalValue[] args)
         {
-            var result = args[0].Value > args[1].Value;
+            var conversionFactor = UnitInfo.Addition(args[0].UnitInfo, args[1].UnitInfo);
+            var result = args[0].Value > (args[1].Value * conversionFactor);
             return new BooleanValue(irContext, result);
         }
 
         private static BooleanValue DecimalGeq(IRContext irContext, DecimalValue[] args)
         {
-            var result = args[0].Value >= args[1].Value;
+            var conversionFactor = UnitInfo.Addition(args[0].UnitInfo, args[1].UnitInfo);
+            var result = args[0].Value >= (args[1].Value * conversionFactor);
             return new BooleanValue(irContext, result);
         }
 
         private static BooleanValue DecimalLt(IRContext irContext, DecimalValue[] args)
         {
-            var result = args[0].Value < args[1].Value;
+            var conversionFactor = UnitInfo.Addition(args[0].UnitInfo, args[1].UnitInfo);
+            var result = args[0].Value < (args[1].Value * conversionFactor);
             return new BooleanValue(irContext, result);
         }
 
         private static BooleanValue DecimalLeq(IRContext irContext, DecimalValue[] args)
         {
-            var result = args[0].Value <= args[1].Value;
+            var conversionFactor = UnitInfo.Addition(args[0].UnitInfo, args[1].UnitInfo);
+            var result = args[0].Value <= (args[1].Value * conversionFactor);
             return new BooleanValue(irContext, result);
         }
 

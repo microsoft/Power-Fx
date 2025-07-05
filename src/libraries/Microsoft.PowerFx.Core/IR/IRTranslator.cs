@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Core.IR
 
                 // I think node.NumValue might be dead code, this could be cleaned up
                 var value = node.Value?.Value ?? node.NumValue;
-                return MaybeInjectCoercion(node, new NumberLiteralNode(context.GetIRContext(node), value), context);
+                return MaybeInjectCoercion(node, new NumberLiteralNode(context.GetIRContext(node), value, node.UnitInfo), context);
             }
 
             public override IntermediateNode Visit(DecLitNode node, IRTranslatorContext context)
@@ -112,7 +112,7 @@ namespace Microsoft.PowerFx.Core.IR
 
                 // I think node.DecValue might be dead code, this could be cleaned up (copied comment from NumLitNode overload)
                 var value = node.Value?.Value ?? node.DecValue;
-                return MaybeInjectCoercion(node, new DecimalLiteralNode(context.GetIRContext(node), value), context);
+                return MaybeInjectCoercion(node, new DecimalLiteralNode(context.GetIRContext(node), value, node.UnitInfo), context);
             }
 
             public override IntermediateNode Visit(TexlRecordNode node, IRTranslatorContext context)
@@ -523,7 +523,7 @@ namespace Microsoft.PowerFx.Core.IR
 
                 // need a new context since when arg is Blank IRContext.ResultType is not a Number but a Blank.
                 var convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Decimal);
-                var zeroLitNode = new DecimalLiteralNode(convertedIRContext, 0m);
+                var zeroLitNode = new DecimalLiteralNode(convertedIRContext, 0m, null);
                 var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroLitNode);
                 return convertedNode;
             }
@@ -545,12 +545,12 @@ namespace Microsoft.PowerFx.Core.IR
                 if (returnType == FormulaType.Number)
                 {
                     convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Number);
-                    zeroLitNode = new NumberLiteralNode(convertedIRContext, 0d);
+                    zeroLitNode = new NumberLiteralNode(convertedIRContext, 0d, returnType._type.UnitInfo);
                 }
                 else if (returnType == FormulaType.Decimal)
                 {
                     convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Decimal);
-                    zeroLitNode = new DecimalLiteralNode(convertedIRContext, 0m);
+                    zeroLitNode = new DecimalLiteralNode(convertedIRContext, 0m, returnType._type.UnitInfo);
                 }
                 else
                 {

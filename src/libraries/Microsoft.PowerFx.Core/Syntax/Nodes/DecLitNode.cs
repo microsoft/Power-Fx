@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax.SourceInformation;
 
@@ -18,6 +19,7 @@ namespace Microsoft.PowerFx.Syntax
         // If Value is non-null, then the token represents its value.
         // Otherwise, the value is in DecValue.
         internal readonly decimal DecValue;
+        internal UnitInfo UnitInfo;
 
         /// <summary>
         /// The numeric value of the node.
@@ -45,6 +47,11 @@ namespace Microsoft.PowerFx.Syntax
             }
 
             return new DecLitNode(ref idNext, Value.Clone(ts).As<DecLitToken>());
+        }
+
+        internal void AddUnit(Unit unit, int power = 1)
+        {
+            UnitInfo = UnitInfo.AddUnit(UnitInfo, unit, power);
         }
 
         // This may be null, in which case, DecValue should be used.

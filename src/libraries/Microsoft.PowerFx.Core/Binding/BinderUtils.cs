@@ -642,6 +642,23 @@ namespace Microsoft.PowerFx.Core.Binding
                 return new BinderCheckTypeResult() { Node = node, NodeType = DType.Deferred, Coercions = resLeft.Coercions.Concat(resRight.Coercions).ToList() };
             }
 
+            if (leftType.UnitInfo != null || rightType.UnitInfo != null)
+            {
+                if (node.Op == BinaryOp.Add &&
+                   !UnitInfo.SameDimensions(leftType.UnitInfo, rightType.UnitInfo))
+                {
+                    errorContainer.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        node,
+                        TexlStrings.ErrDimensionMismatch,
+                        leftType.UnitInfo == null ? "no dimension" : leftType.UnitInfo.ToString(),
+                        rightType.UnitInfo == null ? "no dimension" : rightType.UnitInfo.ToString());
+                    return new BinderCheckTypeResult() { Node = node, NodeType = DType.Error };
+                }
+
+                returnType = new DType(returnType.Kind, UnitInfo.BinaryOpUnits(node, leftType.UnitInfo, rightType.UnitInfo));
+            }
+
             return new BinderCheckTypeResult() { Node = node, NodeType = returnType, Coercions = resLeft.Coercions.Concat(resRight.Coercions).ToList() };
         }
 
@@ -789,7 +806,6 @@ namespace Microsoft.PowerFx.Core.Binding
                             var leftResTime = CheckTypeCore(errorContainer, node.Left, features, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.UntypedObject);
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.Time, Coercions = leftResTime.Coercions };
                         default:
-                            // Regular Addition
                             return CheckDecimalBinaryOp(errorContainer, node, features, leftType, rightType, numberIsFloat);
                     }
             }
@@ -1369,9 +1385,9 @@ namespace Microsoft.PowerFx.Core.Binding
                         case DKind.DateTimeNoTimeZone:
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.DateTimeNoTimeZone };
                         case DKind.Decimal:
-                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.Decimal };
+                            return new BinderCheckTypeResult() { Node = node, NodeType = childType };
                         case DKind.Number:
-                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number };
+                            return new BinderCheckTypeResult() { Node = node, NodeType = childType };
                         default:
                             var resultType = numberIsFloat ? DType.Number : DType.Decimal;
                             var resDefault = CheckTypeCore(errorContainer, node.Child, features, childType, resultType, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
@@ -1382,9 +1398,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     switch (childType.Kind)
                     {
                         case DKind.Decimal:
-                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.Decimal };
+                            return new BinderCheckTypeResult() { Node = node, NodeType = childType };
                         case DKind.Number:
-                            return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number };
+                            return new BinderCheckTypeResult() { Node = node, NodeType = childType };
                         default:
                             var resultType = numberIsFloat ? DType.Number : DType.Decimal;
                             var resPercent = CheckTypeCore(errorContainer, node.Child, features, childType, resultType, /* coerced: */ DType.Date, DType.DateTime, DType.DateTimeNoTimeZone, DType.Time, DType.String, DType.Boolean, DType.UntypedObject);

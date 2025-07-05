@@ -6,6 +6,7 @@ using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -13,11 +14,13 @@ namespace Microsoft.PowerFx.Types
     {
         // List of types that allowed to convert to DecimalValue
         internal static readonly IReadOnlyList<FormulaType> AllowedListConvertToDecimal = new FormulaType[] { FormulaType.String, FormulaType.Number, FormulaType.Decimal, FormulaType.DateTime, FormulaType.Date, FormulaType.Boolean };
+        internal UnitInfo UnitInfo;
 
-        internal DecimalValue(IRContext irContext, decimal value)
+        internal DecimalValue(IRContext irContext, decimal value, UnitInfo unitInfo = null)
             : base(irContext, value)
         {
             Contract.Assert(IRContext.ResultType == FormulaType.Decimal);
+            UnitInfo = unitInfo;
         }
 
         public override void Visit(IValueVisitor visitor)
@@ -43,6 +46,11 @@ namespace Microsoft.PowerFx.Types
 
             decimal normalized = Normalize();
             sb.Append(normalized.ToString(CultureInfo.InvariantCulture));
+            if (UnitInfo != null)
+            {
+                sb.Append(" ");
+                sb.Append(UnitInfo.ToUnitsString(_value != 1));
+            }
 
             if (!settings.UseCompactRepresentation)
             {

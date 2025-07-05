@@ -583,7 +583,7 @@ namespace Microsoft.PowerFx.Functions
         private static DecimalValue DecimalNegate(IRContext irContext, DecimalValue[] args)
         {
             var result = -args[0].Value;
-            return new DecimalValue(irContext, result);
+            return new DecimalValue(irContext, result, args[0].UnitInfo);
         }
 
         private static TimeValue TimeNegate(IRContext irContext, TimeValue[] args)
