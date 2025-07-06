@@ -907,14 +907,14 @@ namespace Microsoft.PowerFx.Functions
         {
             double x = arg.Value;
             double val = Math.Abs(x);
-            return new NumberValue(irContext, val);
+            return new NumberValue(irContext, val, arg.UnitInfo);
         }
 
         public static FormulaValue AbsDecimal(IRContext irContext, DecimalValue arg)
         {
             decimal x = arg.Value;
             decimal val = Math.Abs(x);
-            return new DecimalValue(irContext, val);
+            return new DecimalValue(irContext, val, arg.UnitInfo);
         }
 
         public static FormulaValue Round(IRContext irContext, FormulaValue[] args)
@@ -960,11 +960,11 @@ namespace Microsoft.PowerFx.Functions
             switch (rt)
             {
                 case RoundType.Default:
-                    return new NumberValue(irContext, s * Math.Floor((n + (1 / (2 * m)) + eps) * m) / m);
+                    return new NumberValue(irContext, s * Math.Floor((n + (1 / (2 * m)) + eps) * m) / m, num.UnitInfo);
                 case RoundType.Down:
-                    return new NumberValue(irContext, s * Math.Floor(n * m) / m);
+                    return new NumberValue(irContext, s * Math.Floor(n * m) / m, num.UnitInfo);
                 case RoundType.Up:
-                    return new NumberValue(irContext, s * Math.Ceiling(n * m) / m);
+                    return new NumberValue(irContext, s * Math.Ceiling(n * m) / m, num.UnitInfo);
             }
 
             return CommonErrors.UnreachableCodeError(irContext);
@@ -1000,7 +1000,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (digits < -28)
             {
-                return new DecimalValue(irContext, 0m);
+                return new DecimalValue(irContext, 0m, dec.UnitInfo);
             }
             else if (digits > 28)
             {
@@ -1014,13 +1014,13 @@ namespace Microsoft.PowerFx.Functions
                     case RoundType.Default:
                         if (digits >= 0)
                         {
-                            return new DecimalValue(irContext, decimal.Round(signedNumber, digits, MidpointRounding.AwayFromZero));
+                            return new DecimalValue(irContext, decimal.Round(signedNumber, digits, MidpointRounding.AwayFromZero), dec.UnitInfo);
                         }
                         else
                         {
                             // safe to divide n and multiply by the same amount, won't overflow unless the result would have overflowed
                             var scale = DecPow10[-digits];
-                            return new DecimalValue(irContext, decimal.Round(signedNumber / scale, 0, MidpointRounding.AwayFromZero) * scale);
+                            return new DecimalValue(irContext, decimal.Round(signedNumber / scale, 0, MidpointRounding.AwayFromZero) * scale, dec.UnitInfo);
                         }
 
                     case RoundType.Down:
@@ -1028,37 +1028,37 @@ namespace Microsoft.PowerFx.Functions
                         {
                             // this could be covered by the below dg < 0 case, but this is an important scenario to optimize
                             // Trunc with no second argument comes here
-                            return new DecimalValue(irContext, sign * decimal.Floor(unsignedNumber));
+                            return new DecimalValue(irContext, sign * decimal.Floor(unsignedNumber), dec.UnitInfo);
                         }
                         else if (digits < 0)
                         {
                             // safe to divide n and multiply by the same amount, won't overflow unless the result would have overflowed
                             var scale = DecPow10[-digits];
-                            return new DecimalValue(irContext, sign * decimal.Floor(unsignedNumber / scale) * scale);
+                            return new DecimalValue(irContext, sign * decimal.Floor(unsignedNumber / scale) * scale, dec.UnitInfo);
                         }
                         else
                         {
                             // uses the system Round to avoid overflow and then correct if the result was rounded up
                             var unsignedRound = decimal.Round(unsignedNumber, digits, MidpointRounding.AwayFromZero);
-                            return new DecimalValue(irContext, sign * (unsignedRound > unsignedNumber ? unsignedRound - DecNegPow10[digits] : unsignedRound));
+                            return new DecimalValue(irContext, sign * (unsignedRound > unsignedNumber ? unsignedRound - DecNegPow10[digits] : unsignedRound), dec.UnitInfo);
                         }
 
                     case RoundType.Up:
                         if (digits == 0)
                         {
                             // this could be covered by the below dg < 0 case, but this is an important scenario to optimize
-                            return new DecimalValue(irContext, sign * decimal.Ceiling(unsignedNumber));
+                            return new DecimalValue(irContext, sign * decimal.Ceiling(unsignedNumber), dec.UnitInfo);
                         }
                         else if (digits < 0)
                         {
                             var scale = DecPow10[-digits];
-                            return new DecimalValue(irContext, sign * decimal.Ceiling(unsignedNumber / scale) * scale);
+                            return new DecimalValue(irContext, sign * decimal.Ceiling(unsignedNumber / scale) * scale, dec.UnitInfo);
                         }
                         else
                         {
                             // uses the system Round to avoid overflow and then correct if the result was rounded down
                             var unsignedRound = decimal.Round(unsignedNumber, digits, MidpointRounding.AwayFromZero);
-                            return new DecimalValue(irContext, sign * (unsignedRound < unsignedNumber ? unsignedRound + DecNegPow10[digits] : unsignedRound));
+                            return new DecimalValue(irContext, sign * (unsignedRound < unsignedNumber ? unsignedRound + DecNegPow10[digits] : unsignedRound), dec.UnitInfo);
                         }
                 }
             }
@@ -1137,13 +1137,13 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue IntFloat(IRContext irContext, NumberValue arg)
         {
             var val = Math.Floor(arg.Value);
-            return new NumberValue(irContext, val);
+            return new NumberValue(irContext, val, arg.UnitInfo);
         }
 
         public static FormulaValue IntDecimal(IRContext irContext, DecimalValue arg)
         {
             var val = decimal.Floor(arg.Value);
-            return new DecimalValue(irContext, val);
+            return new DecimalValue(irContext, val, arg.UnitInfo);
         }
 
         public static FormulaValue Ln(IRContext irContext, NumberValue[] args)

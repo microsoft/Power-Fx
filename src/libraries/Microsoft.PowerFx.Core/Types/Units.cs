@@ -13,6 +13,13 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Types
 {
+    internal enum UnitFamily
+    {
+        Base,
+        ImperialLength,
+        ImperialWeight,
+    }
+
     internal class Units
     {
         private readonly Dictionary<string, Dimension> _dimensions = new Dictionary<string, Dimension>();
@@ -41,7 +48,7 @@ namespace Microsoft.PowerFx.Core.Types
             return dimension;
         }
 
-        public Unit AddUnit(string singular, string plural, string abbreviation, Dimension dimension, decimal multBase)
+        public Unit AddUnit(string singular, string plural, string abbreviation, Dimension dimension, decimal baseMult, UnitFamily family = UnitFamily.Base, decimal familyMult = 0)
         {
             if (_units.ContainsKey(singular))
             {
@@ -53,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Types
                 throw new ArgumentNullException(nameof(dimension), "Dimension cannot be null.");
             }
 
-            var unit = new Unit(singular, plural, abbreviation, dimension, multBase);
+            var unit = new Unit(singular, plural, abbreviation, dimension, baseMult, family, familyMult);
             
             if (singular != string.Empty)
             {
@@ -82,15 +89,17 @@ namespace Microsoft.PowerFx.Core.Types
             AddUnit("kilometer", "kilometers", "km", length, 1000m);
             AddUnit("centimeter", "centimeters", "cm", length, 0.01m);
             AddUnit("millimeter", "millimeters", "mm", length, 0.001m);
-            AddUnit("inch", "inches", string.Empty, length, 0.025399986m);
-            AddUnit("foot", "feet", "ft", length, 0.30479999m);
-            AddUnit("yard", "yards", "yd", length, 0.91440276m);
-            AddUnit("mile", "miles", string.Empty, length, 1609.3445m);
+            AddUnit("inch", "inches", string.Empty, length, 0.025399986m, UnitFamily.ImperialLength, 1);
+            AddUnit("foot", "feet", "ft", length, 0.30479999m, UnitFamily.ImperialLength, 12);
+            AddUnit("yard", "yards", "yd", length, 0.91440276m, UnitFamily.ImperialLength, 12 * 3);
+            AddUnit("mile", "miles", string.Empty, length, 1609.3445m, UnitFamily.ImperialLength, 5280);
 
             var mass = AddDimension("mass");
             AddUnit("kilogram", "kilograms", "kg", mass, 1);
             AddUnit("gram", "grams", "gm", mass, 0.001m);
             AddUnit("milligram", "milligrams", "mg", mass, 0.00001m);
+            AddUnit("pound", "pounds", "lb", mass, 0.45359237m, UnitFamily.ImperialWeight, 1);
+            AddUnit("ounce", "ounces", "oz", mass, 0.02834952m, UnitFamily.ImperialWeight, 16);
 
             var time = AddDimension("time");
             AddUnit("second", "seconds", "sec", time, 1);
@@ -137,16 +146,19 @@ namespace Microsoft.PowerFx.Core.Types
         public string Plural;
         public string Abbreviation;
         public Dimension _dimension;
-        public decimal _multBase;
-        public decimal _addBase;
+        public decimal _baseMult;
+        public UnitFamily _family;
+        public decimal _familyMult;
 
-        public Unit(string singular, string plural, string abbreviation, Dimension dimension, decimal multBase)
+        public Unit(string singular, string plural, string abbreviation, Dimension dimension, decimal baseMult, UnitFamily family, decimal familyMult)
         {
             Singular = singular;
             Plural = plural;
             Abbreviation = abbreviation;
             _dimension = dimension;
-            _multBase = multBase;
+            _baseMult = baseMult;
+            _family = family;
+            _familyMult = familyMult;
         }
     }
 
@@ -223,20 +235,34 @@ namespace Microsoft.PowerFx.Core.Types
                 {
                     if (aUnit != bUnit)
                     {
+                        decimal aMult;
+                        decimal bMult;
+
+                        if (bUnit._family == aUnit._family && bUnit._family != UnitFamily.Base)
+                        {
+                            aMult = aUnit._familyMult;
+                            bMult = bUnit._familyMult;
+                        }
+                        else
+                        {
+                            aMult = aUnit._baseMult;
+                            bMult = bUnit._baseMult;
+                        }
+
                         if (bPower < 0)
                         {
                             for (int i = 0; i < -bPower; i++)
                             {
-                                factor /= bUnit._multBase;
-                                factor *= aUnit._multBase;
+                                    factor /= bMult;
+                                    factor *= aMult;
                             }
                         }
                         else if (bPower > 0)
                         {
                             for (int i = 0; i < bPower; i++)
                             {
-                                factor *= bUnit._multBase;
-                                factor /= aUnit._multBase;
+                                factor *= bMult;
+                                factor /= aMult;
                             }
                         }
                     }
@@ -319,29 +345,43 @@ namespace Microsoft.PowerFx.Core.Types
 
             List<(Unit unit, int power)> newUnits = new List<(Unit, int)>(a._units);
 
-            foreach (var (unit, power) in b._units)
+            foreach (var (bUnit, bPower) in b._units)
             {
-                var existing = newUnits.FirstOrDefault(u => u.unit._dimension == unit._dimension);
-                if (existing.unit == null)
+                var (aUnit, aPower) = newUnits.FirstOrDefault(u => u.unit._dimension == bUnit._dimension);
+                if (aUnit == null)
                 {
                     throw new Exception("dimension not found");
                 }
                 else
-                { 
-                    if (power < 0)
+                {
+                    decimal aMult;
+                    decimal bMult;
+
+                    if (bUnit._family == aUnit._family && bUnit._family != UnitFamily.Base)
                     {
-                        for (int i = 0; i < -power; i++)
+                        aMult = aUnit._familyMult;
+                        bMult = bUnit._familyMult;
+                    }
+                    else
+                    {
+                        aMult = aUnit._baseMult;
+                        bMult = bUnit._baseMult;
+                    }
+
+                    if (bPower < 0)
+                    {
+                        for (int i = 0; i < -bPower; i++)
                         {
-                            factor /= unit._multBase;
-                            factor *= existing.unit._multBase;
+                            factor /= bMult;
+                            factor *= aMult;
                         }
                     }
-                    else if (power > 0)
+                    else if (bPower > 0)
                     {
-                        for (int i = 0; i < power; i++)
+                        for (int i = 0; i < bPower; i++)
                         {
-                            factor *= unit._multBase;
-                            factor /= existing.unit._multBase;
+                            factor *= bMult;
+                            factor /= aMult;
                         }
                     }
                 }

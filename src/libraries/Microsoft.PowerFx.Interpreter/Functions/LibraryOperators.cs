@@ -528,8 +528,10 @@ namespace Microsoft.PowerFx.Functions
 
         private static NumberValue NumericMul(IRContext irContext, NumberValue[] args)
         {
-            var result = args[0].Value * args[1].Value;
-            return new NumberValue(irContext, result);
+            var (conversionFactor, newUnitInfo) = UnitInfo.Multiply(args[0].UnitInfo, args[1].UnitInfo, reciprocal: false);
+
+            var result = args[0].Value * (args[1].Value * (double)conversionFactor);
+            return new NumberValue(irContext, result, newUnitInfo);
         }
 
         private static FormulaValue NumericDiv(IRContext irContext, NumberValue[] args)
