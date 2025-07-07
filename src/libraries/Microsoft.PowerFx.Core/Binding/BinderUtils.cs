@@ -1509,6 +1509,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     var resIn = CheckInArgTypesCore(errorContainer, leftNode, rightNode, leftType, rightType, features);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resIn.Coercions };
 
+                case BinaryOp.Units:
+                    return new BinderCheckTypeResult() { Node = node, NodeType = new DType(leftType.Kind, ((UnitsLitNode)rightNode).UnitInfo) };
+
                 default:
                     Contracts.Assert(false);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Error };

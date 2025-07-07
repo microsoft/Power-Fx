@@ -124,6 +124,8 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public override void Visit(DecLitNode node) => VisitLeaf(node);
 
+        public override void Visit(UnitsLitNode node) => VisitLeaf(node);
+
         public override void Visit(FirstNameNode node) => VisitLeaf(node);
 
         public override void Visit(ParentNode node) => VisitLeaf(node);

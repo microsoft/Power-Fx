@@ -49,6 +49,11 @@ namespace Microsoft.PowerFx.Core.IR
             return Ret(node);
         }
 
+        public override TResult Visit(UnitsLiteralNode node, TContext context)
+        {
+            return Ret(node);
+        }
+
         public override TResult Visit(BooleanLiteralNode node, TContext context)
         {
             return Ret(node);

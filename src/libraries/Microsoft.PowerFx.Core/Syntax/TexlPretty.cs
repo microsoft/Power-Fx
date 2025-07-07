@@ -82,6 +82,14 @@ namespace Microsoft.PowerFx.Syntax
             return LazyList<string>.Of(nlt != null ? nlt.ToString() : node.DecValue.ToString("G29", CultureInfo.CurrentCulture));
         }
 
+        public override LazyList<string> Visit(UnitsLitNode node, Precedence parentPrecedence)
+        {
+            Contracts.AssertValue(node);
+
+            // $$$ can't use current culture
+            return LazyList<string>.Of(node.UnitInfo.ToString());
+        }
+
         public override LazyList<string> Visit(FirstNameNode node, Precedence parentPrecedence)
         {
             Contracts.AssertValue(node);
@@ -225,6 +233,8 @@ namespace Microsoft.PowerFx.Syntax
                     return PrettyBinary(SpacedOper(TexlLexer.PunctuatorGreater), parentPrecedence, Precedence.Compare, node.Left, node.Right);
                 case BinaryOp.GreaterEqual:
                     return PrettyBinary(SpacedOper(TexlLexer.PunctuatorGreaterOrEqual), parentPrecedence, Precedence.Compare, node.Left, node.Right);
+                case BinaryOp.Units:
+                    return PrettyBinary(" ", parentPrecedence, Precedence.Mul, node.Left, node.Right);
 
                 default:
                     Contracts.Assert(false);
@@ -630,6 +640,13 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         public override LazyList<string> Visit(DecLitNode node, Context context)
+        {
+            Contracts.AssertValue(node);
+
+            return Single(node);
+        }
+
+        public override LazyList<string> Visit(UnitsLitNode node, Context context)
         {
             Contracts.AssertValue(node);
 

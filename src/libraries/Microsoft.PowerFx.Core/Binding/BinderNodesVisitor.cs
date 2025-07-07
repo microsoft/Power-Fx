@@ -35,6 +35,10 @@ namespace Microsoft.PowerFx.Core.Binding
 
         private readonly List<DecLitNode> _decimalLiterals;
 
+        public IEnumerable<UnitsLitNode> Units => _units;
+
+        private readonly List<UnitsLitNode> _units;
+
         public IEnumerable<StrLitNode> StringLiterals => _stringLiterals;
 
         private readonly HashSet<NodeKind> _keywords;
@@ -59,6 +63,7 @@ namespace Microsoft.PowerFx.Core.Binding
             _stringLiterals = new List<StrLitNode>();
             _keywords = new HashSet<NodeKind>();
             _unaryOperators = new List<UnaryOpNode>();
+            _units = new List<UnitsLitNode>();
         }
 
         public override void PostVisit(BinaryOpNode node)
@@ -122,6 +127,12 @@ namespace Microsoft.PowerFx.Core.Binding
         {
             Contracts.AssertValue(node);
             _keywords.Add(node.Kind);
+        }
+
+        public override void Visit(UnitsLitNode node)
+        {
+            Contracts.AssertValue(node);
+            _units.Add(node);
         }
 
         public static BinderNodesVisitor Run(TexlNode node)

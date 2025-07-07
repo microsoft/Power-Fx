@@ -45,8 +45,6 @@ namespace Microsoft.PowerFx.Core.Parser
             PFxV1 = 1 << 7,
         }
 
-        private readonly Units _units = new Units();
-
         private bool _hasSemicolon = false;
 
         // This is used in NamedFormula mode to record startindex of named formula identifier token.
@@ -881,6 +879,11 @@ namespace Microsoft.PowerFx.Core.Parser
                     node = ParseOperand();
                 }
 
+#if false
+                Unit lastUnit = null;
+                bool lastReciprocal = false;
+#endif
+
                 // Process operators and right operands as long as the precedence bound is satisfied.
                 for (; ;)
                 {
@@ -890,6 +893,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     TexlNode right;
                     Identifier identifier;
                     ITexlSource rightTrivia;
+
                     switch (_curs.TidCur)
                     {
                         case TokKind.PercentSign:
@@ -934,6 +938,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         case TokKind.Caret:
                             Contracts.Assert(precMin <= Precedence.Power);
+
                             node = ParseBinary(node, leftTrivia, BinaryOp.Power, Precedence.PrefixUnary);
                             break;
 
@@ -1071,23 +1076,21 @@ namespace Microsoft.PowerFx.Core.Parser
                             break;
 
                         case TokKind.Ident:
-                            var unit = _units.LookUpUnit(_curs.TokCur.ToString());
+                            if (node is DecLitNode || node is NumLitNode)
+                            {
+                                tok = _curs.TokCur;
+                                var unitsNode = ParseUnits(node, leftTrivia);
 
-                            if (unit != null && node is DecLitNode dec)
-                            {
-                                dec.AddUnit(unit);
-                            }
-                            else if (unit != null && node is NumLitNode num)
-                            {
-                                num.AddUnit(unit);
-                            }
-                            else
-                            {
-                                goto case TokKind.NumLit;
+                                if (unitsNode != null)
+                                {
+                                    rightTrivia = ParseTrivia();
+                                    node = MakeBinary(BinaryOp.Units, node, leftTrivia, tok, rightTrivia, unitsNode);
+                                    break;
+                                }
                             }
 
-                            tok = _curs.TokMove();
-                            break;
+                            // wasn't units, fall through
+                            goto case TokKind.NumLit;
 
                         case TokKind.NumLit:
                         case TokKind.DecLit:
@@ -1252,6 +1255,119 @@ namespace Microsoft.PowerFx.Core.Parser
                     new IdentifierSource(rhsIdentifier)),
                 left,
                 rhsIdentifier);
+        }
+
+        private TexlNode ParseUnits(TexlNode node, ITexlSource leftTrivia)
+        {
+            Contracts.AssertValue(node);
+
+            List<(Unit unit, int power)> units = new List<(Unit unit, int power)>();    
+
+            bool nextIdent = true;
+            int reciprocal = 1;
+            bool parens = false;
+            int lastGoodTokenIndex = _curs.ItokCur;
+
+            for (; ;)
+            {
+                leftTrivia = ParseTrivia();
+
+                switch (_curs.TidCur)
+                {
+                    case TokKind.Ident:
+                        if (nextIdent)
+                        {
+                            var unit = UnitsService.LookUpUnit(_curs.TokCur.ToString());
+                            if (unit != null)
+                            {
+                                units.Add((unit, reciprocal));
+                                nextIdent = false;
+                                lastGoodTokenIndex = _curs.ItokCur;
+                                break;
+                            }
+                        }
+
+                        goto default;
+
+                    case TokKind.Mul:
+                        if (!nextIdent && (reciprocal == 1 || (reciprocal == -1 && parens)))
+                        {
+                            nextIdent = true;
+                            break;
+                        }
+
+                        goto default;
+
+                    case TokKind.Div:
+                        if (!nextIdent)
+                        {
+                            nextIdent = true;
+                            reciprocal = -1;
+                            break;
+                        }
+
+                        goto default;
+
+                    case TokKind.ParenOpen:
+                        if (reciprocal == -1 && !parens)
+                        {
+                            parens = true;
+                            break;
+                        }
+
+                        goto default;
+
+                    case TokKind.ParenClose:
+                        if (parens)
+                        {
+                            lastGoodTokenIndex = _curs.ItokCur;
+                        }
+
+                        goto default;
+
+                    case TokKind.Caret:
+                        if (!nextIdent)
+                        {
+                            var sign = 1;
+
+                            _curs.TokMove();
+                            ParseTrivia();
+
+                            if (_curs.TidCur == TokKind.Sub)
+                            {
+                                sign = -1;
+                                _curs.TokMove();
+                                ParseTrivia();
+                            }
+
+                            if (_curs.TidCur == TokKind.DecLit || _curs.TidCur == TokKind.NumLit)
+                            {
+                                int power = _curs.TidCur == TokKind.DecLit ? (int)((DecLitToken)_curs.TokCur).Value : (int)((NumLitToken)_curs.TokCur).Value;
+                                units[units.Count - 1] = (units.Last().unit, power * reciprocal * sign);
+                                lastGoodTokenIndex = _curs.ItokCur;
+                                break;
+                            }
+                        }
+
+                        goto default;
+
+                    default:
+                        _curs.MoveTo(lastGoodTokenIndex);
+
+                        if (units.Count != 0)
+                        {
+                            var unitsNode = new UnitsLitNode(ref _idNext, _curs.TokCur, new SourceList(new NodeSource(node), new TokenSource(_curs.TokCur), new SpreadSource(leftTrivia)), new UnitInfo(units));
+                            _curs.TokMove();
+                            return unitsNode;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                }
+
+                _curs.TokMove();
+            }
         }
 
         private TexlNode ParseOperand()

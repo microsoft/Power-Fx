@@ -108,6 +108,11 @@ namespace Microsoft.PowerFx
             return new StringValue(node.IRContext, node.LiteralValue);
         }
 
+        public override async ValueTask<FormulaValue> Visit(UnitsLiteralNode node, EvalVisitorContext context)
+        {
+            return new StringValue(node.IRContext, node.UnitInfo.ToString());
+        }
+
         public override async ValueTask<FormulaValue> Visit(NumberLiteralNode node, EvalVisitorContext context)
         {
             return new NumberValue(node.IRContext, node.LiteralValue, node.UnitInfo);

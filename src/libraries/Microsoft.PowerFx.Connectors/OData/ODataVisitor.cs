@@ -7,6 +7,7 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
@@ -30,6 +31,11 @@ namespace Microsoft.PowerFx.Connectors
         public override string Visit(DecimalLiteralNode node, ODataVisitorContext runContext)
         {
             return SerializeDecimalValue(node.LiteralValue);
+        }
+
+        public override string Visit(UnitsLiteralNode node, ODataVisitorContext runContext)
+        {
+            return SerializeUnitsValue(node.UnitInfo);
         }
 
         public override string Visit(BooleanLiteralNode node, ODataVisitorContext runContext)
@@ -174,6 +180,8 @@ namespace Microsoft.PowerFx.Connectors
         private static string SerializeNumberValue(double value) => value.ToString(CultureInfo.InvariantCulture);
 
         private static string SerializeDecimalValue(decimal value) => value.ToString(CultureInfo.InvariantCulture);
+
+        private static string SerializeUnitsValue(UnitInfo value) => value.ToString();
 
         private static string SerializeStringValue(string value) => '\'' + value.Replace("'", "''") + '\'';
 

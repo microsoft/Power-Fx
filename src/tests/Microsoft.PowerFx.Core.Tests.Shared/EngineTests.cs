@@ -124,6 +124,11 @@ namespace Microsoft.PowerFx.Core.Tests
                 throw new NotImplementedException();
             }
 
+            public override void Visit(UnitsLitNode node)
+            {
+                throw new NotImplementedException();
+            }
+
             public override void Visit(FirstNameNode node)
             {
                 throw new NotImplementedException();

@@ -74,6 +74,13 @@ namespace Microsoft.PowerFx.Core.Logging
             return LazyList<string>.Of("#$decimal$#");
         }
 
+        public override LazyList<string> Visit(UnitsLitNode node, Precedence parentPrecedence)
+        {
+            Contracts.AssertValue(node);
+
+            return LazyList<string>.Of("#$units$#");
+        }
+
         public override LazyList<string> Visit(FirstNameNode node, Precedence parentPrecedence)
         {
             Contracts.AssertValue(node);

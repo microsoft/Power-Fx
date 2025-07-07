@@ -47,6 +47,12 @@ namespace Microsoft.PowerFx.Core.IR
             return null;
         }
 
+        public override RetVal Visit(UnitsLiteralNode node, Context context)
+        {
+            _sb.Append(node.UnitInfo);
+            return null;
+        }
+
         public override RetVal Visit(NumberLiteralNode node, Context context)
         {
             _sb.Append(node.LiteralValue);

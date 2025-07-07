@@ -1,0 +1,50 @@
+
+>> 10 meters * 10 meters
+100 meters^2
+
+>> 1 meter + 10 meters
+11 meters
+
+>> 1 meter + 10 centimeters
+1.1 meters
+
+>> 1 meter + 1 kg
+Errors: Error 8-9: Inavlid operation: Values are from two different dimensions: meters(length), kilograms(mass).
+
+>> 1 meter + 1 second
+Errors: Error 8-9: Inavlid operation: Values are from two different dimensions: meters(length), seconds(time).
+
+>> 1 meter * 1 kg
+1 meter*kilogram
+
+>> 1 meter / 1 kg
+1 meter/kilogram
+
+>> 1 inch + 2 foot
+25 inches
+
+// time to fall 500 meters, with g at a round 10 (instead of 9.8) for a round output
+
+>> Sqrt( 2 * 500 meters / 10 meters/second^2 )
+10 seconds
+
+>> Sqrt( 2 * 0.5 kilometers / 10 meters/second^2 )
+10 seconds
+
+>> Sqrt( 2 * 50000 centimeters / 10 meters/second^2 )
+10 seconds
+
+>> Sqrt( 2 * 500000 millimeters / 10 meters/second^2 )
+10 seconds
+
+>> Sqrt( 2 * 500000 millimeters / 1000 centimeters/second^2 )
+10 seconds
+
+>> Sqrt( 2 * 500000 millimeters / 10000 millimeters/second^2 )
+10 seconds
+
+>> Sqrt( 2 * 0.5 kilometers / 10000 millimeters/second^2 )
+10 seconds
+
+>> Sqrt( 2 * 50000 centimeters / 10000 millimeters/second^2 )
+10 seconds

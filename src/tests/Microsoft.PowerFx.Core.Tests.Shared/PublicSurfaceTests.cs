@@ -101,6 +101,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Syntax.VariadicBase",
                 "Microsoft.PowerFx.Syntax.VariadicOpNode",
                 "Microsoft.PowerFx.Syntax.TypeLiteralNode",
+                "Microsoft.PowerFx.Syntax.UnitsLitNode",
                               
                 // Visitors
                 "Microsoft.PowerFx.Syntax.IdentityTexlVisitor",

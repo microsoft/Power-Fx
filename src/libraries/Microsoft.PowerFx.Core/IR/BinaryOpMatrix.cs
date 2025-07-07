@@ -35,6 +35,7 @@ namespace Microsoft.PowerFx.Core.IR
                 BinaryOp.Greater or
                 BinaryOp.LessEqual or
                 BinaryOp.GreaterEqual => GetBooleanBinaryOp(node, binding, leftType, rightType),
+                BinaryOp.Units => BinaryOpKind.Units,
                 BinaryOp.Error => BinaryOpKind.Invalid,
                 _ => throw new NotSupportedException(),
             };

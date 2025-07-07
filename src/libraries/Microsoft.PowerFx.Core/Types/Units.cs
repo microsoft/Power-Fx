@@ -4,11 +4,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Numerics;
 using System.Text;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Types
@@ -20,15 +26,21 @@ namespace Microsoft.PowerFx.Core.Types
         ImperialWeight,
     }
 
-    internal class Units
+    internal sealed class UnitsService
     {
-        private readonly Dictionary<string, Dimension> _dimensions = new Dictionary<string, Dimension>();
-        private readonly Dictionary<string, Unit> _units = new Dictionary<string, Unit>();
-        public static readonly Dimension DimensionUnknown = new Dimension("unknown");
+        internal static IReadOnlyDictionary<string, Dimension> Dimensions { get; }
 
-        public Unit LookUpUnit(string name)
+        internal static IReadOnlyDictionary<string, Unit> Units { get; }
+
+        static UnitsService()
         {
-            if (_units.TryGetValue(name, out var unit))
+            Dimensions = InitDimensions().ToImmutableDictionary();
+            Units = InitUnits().ToImmutableDictionary();
+        }
+
+        public static Unit LookUpUnit(string name)
+        {
+            if (Units.TryGetValue(name, out var unit))
             {
                 return unit;
             }
@@ -36,55 +48,68 @@ namespace Microsoft.PowerFx.Core.Types
             return null;
         }
 
-        public Dimension AddDimension(string name)
+        private static Dictionary<string, Dimension> InitDimensions()
         {
-            if (_dimensions.ContainsKey(name))
+            var dimensions = new Dictionary<string, Dimension>();
+
+            void AddDimension(string name)
             {
-                throw new ArgumentException($"Dimension '{name}' already exists.");
+                if (dimensions.ContainsKey(name))
+                {
+                    throw new ArgumentException($"Dimension '{name}' already exists.");
+                }
+
+                var dimension = new Dimension(name);
+                dimensions[name] = dimension;
             }
 
-            var dimension = new Dimension(name);
-            _dimensions[name] = dimension;
-            return dimension;
-        }
-
-        public Unit AddUnit(string singular, string plural, string abbreviation, Dimension dimension, decimal baseMult, UnitFamily family = UnitFamily.Base, decimal familyMult = 0)
-        {
-            if (_units.ContainsKey(singular))
-            {
-                throw new ArgumentException($"Unit '{singular}' already exists.");
-            }
-
-            if (dimension == null)
-            {
-                throw new ArgumentNullException(nameof(dimension), "Dimension cannot be null.");
-            }
-
-            var unit = new Unit(singular, plural, abbreviation, dimension, baseMult, family, familyMult);
-            
-            if (singular != string.Empty)
-            {
-                _units[singular] = unit;
-            }
-
-            if (plural != string.Empty)
-            {
-                _units[plural] = unit;
-            }
-
-            if (abbreviation != string.Empty)
-            {
-                _units[abbreviation] = unit;
-            }
-
-            return unit;
-        }
-
-        internal Units()
-        {
+            // Add predefined dimensions
             AddDimension("currency");
+            AddDimension("length");
+            AddDimension("mass");
+            AddDimension("time");
+            AddDimension("power");
+            AddDimension("angle");
+            AddDimension("quantity");
 
-            var length = AddDimension("length");
+            return dimensions;
+        }
+
+        private static Dictionary<string, Unit> InitUnits()
+        {
+            var units = new Dictionary<string, Unit>();
+
+            void AddUnit(string singular, string plural, string abbreviation, Dimension dimension, decimal baseMult, UnitFamily family = UnitFamily.Base, decimal familyMult = 0)
+            {
+                if (units.ContainsKey(singular))
+                {
+                    throw new ArgumentException($"Unit '{singular}' already exists.");
+                }
+
+                if (dimension == null)
+                {
+                    throw new ArgumentNullException(nameof(dimension), "Dimension cannot be null.");
+                }
+
+                var unit = new Unit(singular, plural, abbreviation, dimension, baseMult, family, familyMult);
+
+                if (singular != string.Empty)
+                {
+                    units[singular] = unit;
+                }
+
+                if (plural != string.Empty)
+                {
+                    units[plural] = unit;
+                }
+
+                if (abbreviation != string.Empty)
+                {
+                    units[abbreviation] = unit;
+                }
+            }
+
+            var length = Dimensions["length"];
             AddUnit("meter", "meters", "m", length, 1);
             AddUnit("kilometer", "kilometers", "km", length, 1000m);
             AddUnit("centimeter", "centimeters", "cm", length, 0.01m);
@@ -94,14 +119,22 @@ namespace Microsoft.PowerFx.Core.Types
             AddUnit("yard", "yards", "yd", length, 0.91440276m, UnitFamily.ImperialLength, 12 * 3);
             AddUnit("mile", "miles", string.Empty, length, 1609.3445m, UnitFamily.ImperialLength, 5280);
 
-            var mass = AddDimension("mass");
+            // c in meters/second
+
+            // force
+
+            // torque
+
+            // energy
+
+            var mass = Dimensions["mass"];
             AddUnit("kilogram", "kilograms", "kg", mass, 1);
             AddUnit("gram", "grams", "gm", mass, 0.001m);
             AddUnit("milligram", "milligrams", "mg", mass, 0.00001m);
             AddUnit("pound", "pounds", "lb", mass, 0.45359237m, UnitFamily.ImperialWeight, 1);
             AddUnit("ounce", "ounces", "oz", mass, 0.02834952m, UnitFamily.ImperialWeight, 16);
 
-            var time = AddDimension("time");
+            var time = Dimensions["time"];
             AddUnit("second", "seconds", "sec", time, 1);
             AddUnit("millisecond", "milliseconds", "ms", time, 0.001m);
             AddUnit("minute", "minutes", "min", time, 60);
@@ -109,34 +142,40 @@ namespace Microsoft.PowerFx.Core.Types
             AddUnit("day", "days", string.Empty, time, 60 * 60 * 24);
             AddUnit("week", "weeks", string.Empty, time, 60 * 60 * 24 * 7);
 
+            // cycles
+
+            var power = Dimensions["power"];
+            AddUnit("watt", "watts", string.Empty, power, 1);
+
+            // horsepower, many kinds https://en.wikipedia.org/wiki/Horsepower
+
 #if false
             // Temperature units are not supported in the current version of Power Fx. The different zero points make it too complex for a simple unit conversion.
-            var temperature = AddDimension("temperature");
+            var temperature = _dimensions["temperature"];
             AddUnit("celsius", string.Empty, "°C", temperature, 1);
             AddUnit("fahrenheit", string.Empty, "°F", temperature, 0.5555555555555556m, -32);
             AddUnit("kelvin", string.Empty, "°K", temperature, 1);
 #endif
 
-            var angle = AddDimension("angle");
+            var angle = Dimensions["angle"];
             AddUnit("radian", "radians", "rad", angle, 1);
             AddUnit("degree", "degrees", "°", angle, 0.01745329252m);
             AddUnit("gradian", "gradians", "grad", angle, 0.01570796m);
 
-            var quantity = AddDimension("quantity");
+            var quantity = Dimensions["quantity"];
             AddUnit("unit", "units", string.Empty, quantity, 1);
+
+            return units;
         }
     }
 
     internal class Dimension
     {
         public string Name;
-        public int Number;
-        private static int _nextNumber = 0;
 
         public Dimension(string name)
         {
             Name = name;
-            Number = _nextNumber++;
         }
     }
 
@@ -166,6 +205,13 @@ namespace Microsoft.PowerFx.Core.Types
     {
         private readonly List<(Unit unit, int power)> _units;
 
+        public bool NoUnits => _units.Count == 0;
+
+        public UnitInfo()
+        {
+            _units = new List<(Unit, int)>();
+        }
+
         public UnitInfo(Unit unit, int power)
         {
             _units = new List<(Unit, int)> { (unit, power) };
@@ -173,21 +219,67 @@ namespace Microsoft.PowerFx.Core.Types
 
         public UnitInfo(List<(Unit, int)> units)
         {
-            _units = units;
+            _units = new List<(Unit, int)>();
+            var dimensions = new List<Dimension>();
 
-            _units.Sort((a, b) => a.unit._dimension.Number - b.unit._dimension.Number);
+            // normalize units list
+            foreach (var (unit, power) in units)
+            {
+                int index;
+                if ((index = _units.FindIndex(u => u.unit == unit)) != -1)
+                {
+                    _units[index] = (_units[index].unit, _units[index].power + power);
+                }
+                else
+                {
+                    if (dimensions.Contains(unit._dimension))
+                    {
+                        throw new Exception("more than one kind of unit for dimension");
+                    }
+                    else
+                    {
+                        dimensions.Add(unit._dimension);
+                    }
+
+                    _units.Add((unit, power));
+                }
+            }
+
+            for (int i = _units.Count - 1; i >= 0; i--)
+            {
+                if (_units[i].power == 0)
+                {
+                    _units.RemoveAt(i);
+                }
+            }
+
+            _units.Sort((a, b) => string.Compare(a.unit._dimension.Name, b.unit._dimension.Name, StringComparison.Ordinal));
         }
 
-        public static UnitInfo AddUnit(UnitInfo unitInfo, Unit unit, int power = 1)
+        public UnitInfo AddUnit(Unit unit, int power)
         {
-            if (unitInfo == null)
+            List<(Unit, int)> newUnits = new List<(Unit, int)>();
+            bool found = false;
+
+            foreach (var (oldUnit, oldPower) in _units)
             {
-                return new UnitInfo(unit, power);
+                if (oldUnit != unit)
+                {
+                    newUnits.Add((oldUnit, oldPower));
+                }
+                else
+                {
+                    newUnits.Add((oldUnit, oldPower + power));
+                    found = true;
+                }
             }
-            else
+
+            if (!found)
             {
-                return new UnitInfo(new List<(Unit, int)>(unitInfo._units) { (unit, power) });
+                newUnits.Add((unit, power));
             }
+
+            return new UnitInfo(newUnits);
         }
 
         public static (decimal, UnitInfo) Multiply(UnitInfo a, UnitInfo b, bool reciprocal)
@@ -220,16 +312,10 @@ namespace Microsoft.PowerFx.Core.Types
                 }       
             }
 
-            foreach (var bPair in b._units)
+            foreach (var (bUnit, bPower) in b._units)
             {
-                var (bUnit, bPower) = bPair;
-
-                if (reciprocal)
-                {
-                    bPower = -bPower;
-                }
-
                 var (aUnit, aPower) = a._units.FirstOrDefault(u => u.unit._dimension == bUnit._dimension);
+                var bPowerRecip = reciprocal ? -bPower : bPower;
 
                 if (aUnit != null)
                 {
@@ -249,32 +335,21 @@ namespace Microsoft.PowerFx.Core.Types
                             bMult = bUnit._baseMult;
                         }
 
-                        if (bPower < 0)
+                        for (int i = 0; i < bPower; i++)
                         {
-                            for (int i = 0; i < -bPower; i++)
-                            {
-                                    factor /= bMult;
-                                    factor *= aMult;
-                            }
-                        }
-                        else if (bPower > 0)
-                        {
-                            for (int i = 0; i < bPower; i++)
-                            {
-                                factor *= bMult;
-                                factor /= aMult;
-                            }
+                            factor *= bMult;
+                            factor /= aMult;
                         }
                     }
 
-                    if (aPower != -bPower)
+                    if (aPower != -bPowerRecip)
                     {
-                        newUnits.Add((aUnit, aPower + bPower));
+                        newUnits.Add((aUnit, aPower + bPowerRecip));
                     }
                 }
                 else
                 {
-                    newUnits.Add((bUnit, bPower));
+                    newUnits.Add((bUnit, bPowerRecip));
                 }
             }
 
@@ -288,7 +363,9 @@ namespace Microsoft.PowerFx.Core.Types
                 }
             }
 
-            return (factor, newUnits.Count == 0 ? null : new UnitInfo(newUnits));
+            var newUnitInfo = new UnitInfo(newUnits);
+
+            return (factor, newUnits.Count == 0 || newUnitInfo.NoUnits ? null : newUnitInfo);
         }
 
         public static UnitInfo BinaryOpUnits(BinaryOpNode node, UnitInfo leftType, UnitInfo rightType)
@@ -390,18 +467,6 @@ namespace Microsoft.PowerFx.Core.Types
             return factor;
         }
 
-        public UnitInfo Power(int power)
-        {
-            List<(Unit unit, int power)> newUnits = new List<(Unit, int)>(_units);
-
-            for (int i = 0; i < newUnits.Count; i++)
-            {
-                newUnits[i] = (newUnits[i].unit, newUnits[i].power * power);
-            }
-
-            return new UnitInfo(newUnits);
-        }
-
         public static bool SameDimensions(UnitInfo a, UnitInfo b)
         {
             if (a == null && b == null)
@@ -462,7 +527,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             if (dens != string.Empty)
             {
-                dens = " / " + dens;
+                dens = " / " + (dens.Contains("*") ? $"({dens})" : dens);
             }
 
             return $"{nums}{dens}";
@@ -470,10 +535,10 @@ namespace Microsoft.PowerFx.Core.Types
 
         public string ToUnitsString(bool plural)
         {
-            var nums = string.Join(" * ", _units.Where(unit => unit.power > 0)
+            var nums = string.Join("*", _units.Where(unit => unit.power > 0)
                                                 .OrderBy(unit => unit.power)
                                                 .Select(unit => $"{(plural ? unit.unit.Plural : unit.unit.Singular)}{(unit.power > 1 ? $"^{unit.power}" : string.Empty)}"));
-            var dens = string.Join(" * ", _units.Where(unit => unit.power < 0)
+            var dens = string.Join("*", _units.Where(unit => unit.power < 0)
                                                 .OrderBy(unit => -unit.power)
                                                 .Select(unit => $"{unit.unit.Singular}{(unit.power < -1 ? $"^{-unit.power}" : string.Empty)}"));
 
@@ -484,7 +549,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             if (dens != string.Empty)
             {
-                dens = "/" + dens;
+                dens = "/" + (dens.Contains("*") ? $"({dens})" : dens);
             }
 
             return $"{nums}{dens}";
@@ -506,7 +571,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             if (dens != string.Empty)
             {
-                dens = "/" + dens;
+                dens = "/" + (dens.Contains("*") ? $"({dens})" : dens);
             }
 
             return $"{nums}{dens}";

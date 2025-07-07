@@ -45,6 +45,11 @@ namespace Microsoft.PowerFx.Syntax
             return Default;
         }
 
+        public override TResult Visit(UnitsLitNode node, TContext context)
+        {
+            return Default;
+        }
+
         public override TResult Visit(FirstNameNode node, TContext context)
         {
             return Default;

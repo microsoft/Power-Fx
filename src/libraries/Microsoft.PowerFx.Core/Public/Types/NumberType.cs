@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Text;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Types
@@ -10,6 +11,11 @@ namespace Microsoft.PowerFx.Types
     {
         internal NumberType()
             : base(DType.Number)
+        {
+        }
+
+        internal NumberType(UnitInfo unitInfo)
+            : base(DType.CreateNumberType(unitInfo))
         {
         }
 

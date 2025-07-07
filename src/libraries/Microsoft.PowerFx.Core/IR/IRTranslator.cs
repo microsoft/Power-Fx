@@ -95,6 +95,14 @@ namespace Microsoft.PowerFx.Core.IR
                 return new TextLiteralNode(IRContext.NotInSource(FormulaType.String), context.Binding.GetType(node).ToString());
             }
 
+            public override IntermediateNode Visit(UnitsLitNode node, IRTranslatorContext context)
+            {
+                Contracts.AssertValue(node);
+                Contracts.AssertValue(context);
+
+                return new UnitsLiteralNode(context.GetIRContext(node), node.UnitInfo);
+            }
+
             public override IntermediateNode Visit(NumLitNode node, IRTranslatorContext context)
             {
                 Contracts.AssertValue(node);
@@ -102,7 +110,7 @@ namespace Microsoft.PowerFx.Core.IR
 
                 // I think node.NumValue might be dead code, this could be cleaned up
                 var value = node.Value?.Value ?? node.NumValue;
-                return MaybeInjectCoercion(node, new NumberLiteralNode(context.GetIRContext(node), value, node.UnitInfo), context);
+                return MaybeInjectCoercion(node, new NumberLiteralNode(context.GetIRContext(node), value), context);
             }
 
             public override IntermediateNode Visit(DecLitNode node, IRTranslatorContext context)
@@ -112,7 +120,7 @@ namespace Microsoft.PowerFx.Core.IR
 
                 // I think node.DecValue might be dead code, this could be cleaned up (copied comment from NumLitNode overload)
                 var value = node.Value?.Value ?? node.DecValue;
-                return MaybeInjectCoercion(node, new DecimalLiteralNode(context.GetIRContext(node), value, node.UnitInfo), context);
+                return MaybeInjectCoercion(node, new DecimalLiteralNode(context.GetIRContext(node), value), context);
             }
 
             public override IntermediateNode Visit(TexlRecordNode node, IRTranslatorContext context)
@@ -230,6 +238,21 @@ namespace Microsoft.PowerFx.Core.IR
                     case BinaryOpKind.Or:
                     case BinaryOpKind.And:
                         binaryOpResult = new CallNode(context.GetIRContext(node), node.Op == BinaryOp.And ? BuiltinFunctionsCore.And : BuiltinFunctionsCore.Or, left, new LazyEvalNode(context.GetIRContext(node), right));
+                        break;
+                    case BinaryOpKind.Units:
+                        if (node.Left is DecLitNode dec && node.Right is UnitsLitNode decUnits)
+                        {
+                            binaryOpResult = new DecimalLiteralNode(context.GetIRContext(node), dec.Value.Value, decUnits.UnitInfo);
+                        }
+                        else if (node.Left is NumLitNode num && node.Right is UnitsLitNode numUnits)
+                        {
+                            binaryOpResult = new NumberLiteralNode(context.GetIRContext(node), num.Value.Value, numUnits.UnitInfo);
+                        }
+                        else
+                        {
+                            throw new NotSupportedException("Units operator is only supported for numeric literals.");
+                        }
+
                         break;
 
                     // Reversed Args:

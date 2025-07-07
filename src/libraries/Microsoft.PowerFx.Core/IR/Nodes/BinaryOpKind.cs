@@ -121,5 +121,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         LeqNull,
         GtNull,
         GeqNull,
+
+        Units,
     }
 }

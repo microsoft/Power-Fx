@@ -146,8 +146,12 @@ namespace Microsoft.PowerFx.Types
                     return new KnownRecordType(type);
                 case DKind.Table:
                     return new TableType(type);
-                case DKind.Number: return Number;
-                case DKind.Decimal: return Decimal;
+                case DKind.Number:
+                    return type.UnitInfo != null ? new NumberType(type.UnitInfo) : Number;
+
+                case DKind.Decimal: 
+                    return type.UnitInfo != null ? new DecimalType(type.UnitInfo) : Decimal;
+
                 case DKind.String: return String;
                 case DKind.Boolean: return Boolean;
                 case DKind.Currency: return Number; // TODO: validate

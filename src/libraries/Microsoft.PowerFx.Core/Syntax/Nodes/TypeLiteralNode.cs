@@ -177,6 +177,11 @@ namespace Microsoft.PowerFx.Syntax
                 _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));
             }
 
+            public override void Visit(UnitsLitNode node)
+            {
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));
+            }
+
             public override void Visit(ParentNode node)
             {
                 _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString()));

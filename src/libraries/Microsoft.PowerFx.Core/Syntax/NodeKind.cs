@@ -159,6 +159,14 @@ namespace Microsoft.PowerFx.Syntax
         /// <remarks>This class is commonly used in scenarios where type information needs to be
         /// explicitly represented or manipulated. It can be useful in reflection-based operations or dynamic type
         /// handling.</remarks>
-        TypeLiteral
+        TypeLiteral,
+
+        /// <summary>
+        /// Represents a literal type in the system, typically used to define or reference a specific type at runtime.
+        /// </summary>
+        /// <remarks>This class is commonly used in scenarios where type information needs to be
+        /// explicitly represented or manipulated. It can be useful in reflection-based operations or dynamic type
+        /// handling.</remarks>
+        Units
     }
 }

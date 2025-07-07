@@ -2661,7 +2661,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 _txb.SetConstant(node, true);
                 _txb.SetSelfContainedConstant(node, true);
-                _txb.SetType(node, new DType(DKind.Number, node.UnitInfo));
+                _txb.SetType(node, new DType(DKind.Number));
             }
 
             public override void Visit(DecLitNode node)
@@ -2671,7 +2671,17 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 _txb.SetConstant(node, true);
                 _txb.SetSelfContainedConstant(node, true);
-                _txb.SetType(node, new DType(DKind.Decimal, node.UnitInfo));
+                _txb.SetType(node, new DType(DKind.Decimal));
+            }
+
+            public override void Visit(UnitsLitNode node)  
+            {
+                AssertValid();
+                Contracts.AssertValue(node);
+
+                _txb.SetConstant(node, true);
+                _txb.SetSelfContainedConstant(node, true);
+                _txb.SetType(node, new DType(DKind.Unknown));
             }
 
             public DName GetLogicalNodeNameAndUpdateDisplayNames(DType type, Identifier ident, bool isThisItem = false)

@@ -30,6 +30,11 @@ namespace Microsoft.PowerFx.Core.IR
             return null;
         }
 
+        public override RetVal Visit(UnitsLiteralNode node, DependencyContext context)
+        {
+            return null;
+        }
+
         public override RetVal Visit(NumberLiteralNode node, DependencyContext context)
         {
             return null;

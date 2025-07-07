@@ -84,6 +84,11 @@ namespace Microsoft.PowerFx.Syntax
         Exactin,
 
         /// <summary>
+        /// Numerical units.
+        /// </summary>
+        Units,
+
+        /// <summary>
         /// Binary operator parsing error.
         /// </summary>
         Error

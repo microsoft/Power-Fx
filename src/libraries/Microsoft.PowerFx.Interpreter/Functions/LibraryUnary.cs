@@ -631,7 +631,7 @@ namespace Microsoft.PowerFx.Functions
         {
             try
             {
-                return new DecimalValue(irContext, (decimal)value.Value);
+                return new DecimalValue(irContext, (decimal)value.Value, value.UnitInfo);
             }
             catch (OverflowException)
             {
@@ -662,7 +662,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static NumberValue DecimalToNumber(IRContext irContext, DecimalValue value)
         {
-            return new NumberValue(irContext, (double)value.Value);
+            return new NumberValue(irContext, (double)value.Value, value.UnitInfo);
         }
 
         public static FormulaValue DecimalToText(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DecimalValue[] args)

@@ -13,6 +13,11 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
+        internal DecimalType(UnitInfo unitInfo)
+            : base(DType.CreateDecimalType(unitInfo))
+        {
+        }
+
         public override void Visit(ITypeVisitor vistor)
         {
             vistor.Visit(this);

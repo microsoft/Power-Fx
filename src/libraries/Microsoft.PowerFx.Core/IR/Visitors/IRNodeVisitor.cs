@@ -9,6 +9,8 @@ namespace Microsoft.PowerFx.Core.IR
     {
         public abstract TResult Visit(TextLiteralNode node, TContext context);
 
+        public abstract TResult Visit(UnitsLiteralNode node, TContext context);
+
         public abstract TResult Visit(NumberLiteralNode node, TContext context);
 
         public abstract TResult Visit(DecimalLiteralNode node, TContext context);

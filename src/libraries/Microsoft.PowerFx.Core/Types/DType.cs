@@ -1015,6 +1015,16 @@ namespace Microsoft.PowerFx.Core.Types
             return new DType(DKind.ViewValue, info);
         }
 
+        public static DType CreateDecimalType(UnitInfo unitInfo)
+        {
+            return new DType(DKind.Decimal, unitInfo);
+        }
+
+        public static DType CreateNumberType(UnitInfo unitInfo)
+        {
+            return new DType(DKind.Number, unitInfo);
+        }
+
         private static KeyValuePair<string, DType> TypedNameToKVP(TypedName typedName)
         {
             Contracts.Assert(typedName.IsValid);

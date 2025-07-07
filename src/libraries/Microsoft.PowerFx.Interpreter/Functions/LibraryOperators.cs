@@ -536,6 +536,8 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue NumericDiv(IRContext irContext, NumberValue[] args)
         {
+            var (conversionFactor, newUnitInfo) = UnitInfo.Multiply(args[0].UnitInfo, args[1].UnitInfo, reciprocal: true);
+
             var dividend = args[0].Value;
             var divisor = args[1].Value;
             if (divisor == 0)
@@ -543,7 +545,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.DivByZeroError(irContext);
             }
 
-            return new NumberValue(irContext, dividend / divisor);
+            return new NumberValue(irContext, dividend / (divisor * (double)conversionFactor), newUnitInfo);
         }
 
         private static BooleanValue NumericGt(IRContext irContext, NumberValue[] args)

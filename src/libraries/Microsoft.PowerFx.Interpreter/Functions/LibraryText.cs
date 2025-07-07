@@ -211,10 +211,10 @@ namespace Microsoft.PowerFx.Functions
             switch (value)
             {
                 case NumberValue n:
-                    result = n;
+                    result = new NumberValue(irContext, n.Value, n.UnitInfo);
                     break;
                 case DecimalValue w:
-                    result = DecimalToNumber(irContext, w);
+                    result = new NumberValue(irContext, (double)w.Value, w.UnitInfo);
                     break;
                 case BooleanValue b:
                     result = BooleanToNumber(irContext, b);
@@ -295,7 +295,7 @@ namespace Microsoft.PowerFx.Functions
 
                     break;
                 case DecimalValue w:
-                    result = w;
+                    result = new DecimalValue(irContext, w.Value, null);
                     break;
                 case BooleanValue b:
                     result = BooleanToDecimal(irContext, b);
