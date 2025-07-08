@@ -310,5 +310,12 @@ namespace Microsoft.PowerFx.Syntax
         /// <code>:=</code>
         /// </summary>
         ColonEqual,
+
+        /// <summary>
+        /// Units symbol, such as $ or °. For literal numbres, pre must occur before the number, post after.
+        /// <code>:=</code>
+        /// </summary>
+        UnitPreSymbol,
+        UnitPostSymbol,
     }
 }

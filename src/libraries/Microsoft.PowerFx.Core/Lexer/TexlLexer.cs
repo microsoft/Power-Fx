@@ -1158,6 +1158,16 @@ namespace Microsoft.PowerFx.Syntax
                         return LexSpace();
                     }
 
+                    if (UnitsService.IsPreSymbol(ch.ToString()))
+                    {
+                        return LexUnitsPreSymbol(ch);
+                    }
+
+                    if (UnitsService.IsPostSymbol(ch.ToString()))
+                    {
+                        return LexUnitsPostSymbol(ch);
+                    }
+
                     return LexOther();
                 }
                 else if (CurrentMode == LexerMode.StringInterpolation)
@@ -1189,6 +1199,18 @@ namespace Microsoft.PowerFx.Syntax
                         return LexTextFirstInterpolatedStringBody();
                     }
                 }
+            }
+
+            private Token LexUnitsPreSymbol(char ch)
+            {
+                NextChar();
+                return new UnitsPreSymbolToken(ch.ToString(), GetTextSpan());
+            }
+
+            private Token LexUnitsPostSymbol(char ch)
+            {
+                NextChar();
+                return new UnitsPostSymbolToken(ch.ToString(), GetTextSpan());
             }
 
             private Token LexOther()

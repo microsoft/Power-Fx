@@ -74,6 +74,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Syntax.UnaryOp",
                 "Microsoft.PowerFx.Syntax.VariadicOp",
                 "Microsoft.PowerFx.Syntax.ITextFirstFlag",
+                "Microsoft.PowerFx.Syntax.UnitsPreSymbolToken",
+                "Microsoft.PowerFx.Syntax.UnitsPostSymbolToken",
 
                 // Parse nodes
                 "Microsoft.PowerFx.Syntax.AsNode",

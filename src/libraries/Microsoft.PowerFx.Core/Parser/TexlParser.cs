@@ -1402,6 +1402,17 @@ namespace Microsoft.PowerFx.Core.Parser
                 case TokKind.Bang:
                     return ParseUnary(UnaryOp.Not);
 
+                // Pre unit symbol
+                case TokKind.UnitPreSymbol:
+                    var node = ParseUnitPreSymbol();
+
+                    if (node != null)
+                    {
+                        return node;
+                    }
+
+                    goto default;
+
                 // Literals
                 case TokKind.NumLit:
                     return new NumLitNode(ref _idNext, _curs.TokMove().As<NumLitToken>());
@@ -1488,6 +1499,35 @@ namespace Microsoft.PowerFx.Core.Parser
             var split = _curs.Split();
             ParseTrivia(split);
             return split.TidCur;
+        }
+
+        private TexlNode ParseUnitPreSymbol()
+        {
+            var startIndex = _curs.ItokCur;
+
+            var tok = _curs.TokMove();
+            var rightTrivia = ParseTrivia();
+            TexlNode numNode = null;
+
+            if (_curs.TidCur == TokKind.NumLit)
+            {
+                numNode = new NumLitNode(ref _idNext, _curs.TokMove().As<NumLitToken>());
+            }
+            else if (_curs.TidCur == TokKind.DecLit)
+            {
+                numNode = new DecLitNode(ref _idNext, _curs.TokMove().As<DecLitToken>());
+            }
+            else
+            {
+                _curs.MoveTo(startIndex);
+                return null;
+            }
+
+            var unit = UnitsService.LookUpPreSymbol(tok.As<UnitsPreSymbolToken>().Symbol);
+
+            var unitsNode = new UnitsLitNode(ref _idNext, _curs.TokCur, new SourceList(new TokenSource(tok), new TokenSource(_curs.TokCur)), new UnitInfo(unit, 1));
+
+            return MakeBinary(BinaryOp.Units, numNode, rightTrivia, tok, rightTrivia, unitsNode);
         }
 
         private TexlNode ParseUnary(UnaryOp op)

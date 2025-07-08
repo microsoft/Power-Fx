@@ -48,3 +48,14 @@ Errors: Error 8-9: Inavlid operation: Values are from two different dimensions: 
 
 >> Sqrt( 2 * 50000 centimeters / 10000 millimeters/second^2 )
 10 seconds
+
+// currency
+
+>> $ 1 + 4
+Errors: Error 4-5: Inavlid operation: Values are from two different dimensions: USD(currency), no dimension.
+
+>> $1 / 2
+0.5 USD
+
+>> 1 USD * 9
+9 USD

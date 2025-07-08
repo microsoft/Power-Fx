@@ -11,6 +11,7 @@ using System.Net;
 using System.Numerics;
 using System.Text;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.VisualBasic;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
@@ -32,10 +33,14 @@ namespace Microsoft.PowerFx.Core.Types
 
         internal static IReadOnlyDictionary<string, Unit> Units { get; }
 
+        internal static IReadOnlyDictionary<string, Unit> PreSymbols { get; }
+
+        internal static IReadOnlyDictionary<string, Unit> PostSymbols { get; }
+
         static UnitsService()
         {
             Dimensions = InitDimensions().ToImmutableDictionary();
-            Units = InitUnits().ToImmutableDictionary();
+            (Units, PreSymbols, PostSymbols) = InitUnits();
         }
 
         public static Unit LookUpUnit(string name)
@@ -46,6 +51,45 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             return null;
+        }
+
+        public static bool IsPreSymbol(string name)
+        {
+            return PreSymbols.TryGetValue(name, out _);
+        }
+
+        public static bool IsPostSymbol(string name)
+        {
+            return PostSymbols.TryGetValue(name, out _);
+        }
+
+        public static bool IsSymbol(string name)
+        {
+            return PreSymbols.TryGetValue(name, out _) || PostSymbols.TryGetValue(name, out _);
+        }
+
+        public static Unit LookUpPreSymbol(string name)
+        {
+            if (PreSymbols.TryGetValue(name, out var unit))
+            {
+                return unit;
+            }
+            else
+            {
+                throw new Exception("symbol not found");
+            }
+        }
+
+        public static Unit LookUpPostSymbol(string name)
+        {
+            if (PostSymbols.TryGetValue(name, out var unit))
+            {
+                return unit;
+            }
+            else
+            {
+                throw new Exception("symbol not found");
+            }
         }
 
         private static Dictionary<string, Dimension> InitDimensions()
@@ -75,11 +119,13 @@ namespace Microsoft.PowerFx.Core.Types
             return dimensions;
         }
 
-        private static Dictionary<string, Unit> InitUnits()
+        private static (Dictionary<string, Unit>, Dictionary<string, Unit>, Dictionary<string, Unit>) InitUnits()
         {
             var units = new Dictionary<string, Unit>();
+            var preSymbols = new Dictionary<string, Unit>();
+            var postSymbols = new Dictionary<string, Unit>();
 
-            void AddUnit(string singular, string plural, string abbreviation, Dimension dimension, decimal baseMult, UnitFamily family = UnitFamily.Base, decimal familyMult = 0)
+            void AddUnit(string singular, string plural, string abbreviation, string preSymbol, string postSymbol, Dimension dimension, decimal baseMult, UnitFamily family = UnitFamily.Base, decimal familyMult = 0)
             {
                 if (units.ContainsKey(singular))
                 {
@@ -91,7 +137,7 @@ namespace Microsoft.PowerFx.Core.Types
                     throw new ArgumentNullException(nameof(dimension), "Dimension cannot be null.");
                 }
 
-                var unit = new Unit(singular, plural, abbreviation, dimension, baseMult, family, familyMult);
+                var unit = new Unit(singular, plural, abbreviation, preSymbol, postSymbol, dimension, baseMult, family, familyMult);
 
                 if (singular != string.Empty)
                 {
@@ -107,17 +153,33 @@ namespace Microsoft.PowerFx.Core.Types
                 {
                     units[abbreviation] = unit;
                 }
+
+                if (preSymbol != string.Empty)
+                {
+                    preSymbols[preSymbol] = unit;
+                }
+
+                if (preSymbol != string.Empty)
+                {
+                    postSymbols[postSymbol] = unit;
+                }
             }
 
+            var currency = Dimensions["currency"];
+            AddUnit("USD", "USD", string.Empty, "$", string.Empty, currency, 1);
+            AddUnit("EUR", "EUR", string.Empty, "€", "€", currency, 1.17m);
+            AddUnit("GBP", "GBP", string.Empty, "£", "£", currency, 1.36m);
+            AddUnit("JPY", "JPY", string.Empty, "¥", string.Empty, currency, 0.0068m);
+
             var length = Dimensions["length"];
-            AddUnit("meter", "meters", "m", length, 1);
-            AddUnit("kilometer", "kilometers", "km", length, 1000m);
-            AddUnit("centimeter", "centimeters", "cm", length, 0.01m);
-            AddUnit("millimeter", "millimeters", "mm", length, 0.001m);
-            AddUnit("inch", "inches", string.Empty, length, 0.025399986m, UnitFamily.ImperialLength, 1);
-            AddUnit("foot", "feet", "ft", length, 0.30479999m, UnitFamily.ImperialLength, 12);
-            AddUnit("yard", "yards", "yd", length, 0.91440276m, UnitFamily.ImperialLength, 12 * 3);
-            AddUnit("mile", "miles", string.Empty, length, 1609.3445m, UnitFamily.ImperialLength, 5280);
+            AddUnit("meter", "meters", "m", string.Empty, string.Empty, length, 1);
+            AddUnit("kilometer", "kilometers", "km", string.Empty, string.Empty, length, 1000m);
+            AddUnit("centimeter", "centimeters", "cm", string.Empty, string.Empty, length, 0.01m);
+            AddUnit("millimeter", "millimeters", "mm", string.Empty, string.Empty, length, 0.001m);
+            AddUnit("inch", "inches", string.Empty, string.Empty, string.Empty, length, 0.025399986m, UnitFamily.ImperialLength, 1);
+            AddUnit("foot", "feet", "ft", string.Empty, string.Empty, length, 0.30479999m, UnitFamily.ImperialLength, 12);
+            AddUnit("yard", "yards", "yd", string.Empty, string.Empty, length, 0.91440276m, UnitFamily.ImperialLength, 12 * 3);
+            AddUnit("mile", "miles", string.Empty, string.Empty, string.Empty, length, 1609.3445m, UnitFamily.ImperialLength, 5280);
 
             // c in meters/second
 
@@ -128,24 +190,24 @@ namespace Microsoft.PowerFx.Core.Types
             // energy
 
             var mass = Dimensions["mass"];
-            AddUnit("kilogram", "kilograms", "kg", mass, 1);
-            AddUnit("gram", "grams", "gm", mass, 0.001m);
-            AddUnit("milligram", "milligrams", "mg", mass, 0.00001m);
-            AddUnit("pound", "pounds", "lb", mass, 0.45359237m, UnitFamily.ImperialWeight, 1);
-            AddUnit("ounce", "ounces", "oz", mass, 0.02834952m, UnitFamily.ImperialWeight, 16);
+            AddUnit("kilogram", "kilograms", "kg", string.Empty, string.Empty, mass, 1);
+            AddUnit("gram", "grams", "gm", string.Empty, string.Empty, mass, 0.001m);
+            AddUnit("milligram", "milligrams", "mg", string.Empty, string.Empty, mass, 0.00001m);
+            AddUnit("pound", "pounds", "lb", string.Empty, string.Empty, mass, 0.45359237m, UnitFamily.ImperialWeight, 1);
+            AddUnit("ounce", "ounces", "oz", string.Empty, string.Empty, mass, 0.02834952m, UnitFamily.ImperialWeight, 16);
 
             var time = Dimensions["time"];
-            AddUnit("second", "seconds", "sec", time, 1);
-            AddUnit("millisecond", "milliseconds", "ms", time, 0.001m);
-            AddUnit("minute", "minutes", "min", time, 60);
-            AddUnit("hour", "hours", "hr", time, 60 * 60);
-            AddUnit("day", "days", string.Empty, time, 60 * 60 * 24);
-            AddUnit("week", "weeks", string.Empty, time, 60 * 60 * 24 * 7);
+            AddUnit("second", "seconds", "sec", string.Empty, string.Empty, time, 1);
+            AddUnit("millisecond", "milliseconds", "ms", string.Empty, string.Empty, time, 0.001m);
+            AddUnit("minute", "minutes", "min", string.Empty, string.Empty, time, 60);
+            AddUnit("hour", "hours", "hr", string.Empty, string.Empty, time, 60 * 60);
+            AddUnit("day", "days", string.Empty, string.Empty, string.Empty, time, 60 * 60 * 24);
+            AddUnit("week", "weeks", string.Empty, string.Empty, string.Empty, time, 60 * 60 * 24 * 7);
 
             // cycles
 
             var power = Dimensions["power"];
-            AddUnit("watt", "watts", string.Empty, power, 1);
+            AddUnit("watt", "watts", string.Empty, string.Empty, string.Empty, power, 1);
 
             // horsepower, many kinds https://en.wikipedia.org/wiki/Horsepower
 
@@ -158,14 +220,14 @@ namespace Microsoft.PowerFx.Core.Types
 #endif
 
             var angle = Dimensions["angle"];
-            AddUnit("radian", "radians", "rad", angle, 1);
-            AddUnit("degree", "degrees", "°", angle, 0.01745329252m);
-            AddUnit("gradian", "gradians", "grad", angle, 0.01570796m);
+            AddUnit("radian", "radians", "rad", string.Empty, string.Empty, angle, 1);
+            AddUnit("degree", "degrees", "deg", string.Empty, "°", angle, 0.01745329252m);
+            AddUnit("gradian", "gradians", "grad", string.Empty, string.Empty, angle, 0.01570796m);
 
             var quantity = Dimensions["quantity"];
-            AddUnit("unit", "units", string.Empty, quantity, 1);
+            AddUnit("unit", "units", string.Empty, string.Empty, string.Empty, quantity, 1);
 
-            return units;
+            return (units, preSymbols, postSymbols);
         }
     }
 
@@ -184,16 +246,20 @@ namespace Microsoft.PowerFx.Core.Types
         public string Singular;
         public string Plural;
         public string Abbreviation;
+        public string PreSymbol;
+        public string PostSymbol;
         public Dimension _dimension;
         public decimal _baseMult;
         public UnitFamily _family;
         public decimal _familyMult;
 
-        public Unit(string singular, string plural, string abbreviation, Dimension dimension, decimal baseMult, UnitFamily family, decimal familyMult)
+        public Unit(string singular, string plural, string abbreviation, string preSymbol, string postSymbol, Dimension dimension, decimal baseMult, UnitFamily family, decimal familyMult)
         {
             Singular = singular;
             Plural = plural;
             Abbreviation = abbreviation;
+            PreSymbol = preSymbol;
+            PostSymbol = postSymbol;
             _dimension = dimension;
             _baseMult = baseMult;
             _family = family;
