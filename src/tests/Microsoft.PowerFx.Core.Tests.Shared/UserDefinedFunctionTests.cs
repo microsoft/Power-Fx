@@ -691,6 +691,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData("F():Void = 5;")]
         [InlineData("F():Void = Set(x,5);")]
+        [InlineData("F(x: Text):Void = x;")]
         public void TestNonBehaviorUDFReturnsVoid(string expression)
         {
             var parserOptions = new ParserOptions();
@@ -699,7 +700,6 @@ namespace Microsoft.PowerFx.Core.Tests
                                             .SetBindingInfo(_primitiveTypes);
             var errors = checkResult.ApplyErrors();
             Assert.Contains(errors, e => e.MessageKey.Contains("ErrUDF_NonImperativeVoidType"));
-
         }
     }
 }
