@@ -68,7 +68,8 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
                 }
 
                 var ty = cNode.Accept(this, context);
-                if (ty == DType.Invalid)
+
+                if (ty == DType.Invalid || ty.IsVoid)
                 {
                     return DType.Invalid;
                 }
@@ -92,7 +93,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             var childNode = node.ChildNodes.First();
             var ty = childNode.Accept(this, context);
 
-            if (ty == DType.Invalid)
+            if (ty == DType.Invalid || ty.IsVoid)
             {
                 return DType.Invalid;
             }
