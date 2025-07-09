@@ -346,7 +346,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
 
                 var parametersOk = CheckParameters(udf.Args, errors, nameResolver, out var parameterTypes);
-                var returnTypeOk = CheckReturnType(udf.ReturnType, errors, nameResolver, out var returnType);
+                var returnTypeOk = CheckReturnType(udf.ReturnType, errors, nameResolver, udf.IsImperative, out var returnType);
                 if (!parametersOk || !returnTypeOk)
                 {
                     continue;
@@ -411,7 +411,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return isParamCheckSuccessful;
         }
 
-        private static bool CheckReturnType(IdentToken returnTypeToken, List<TexlError> errors, INameResolver nameResolver, out DType returnType)
+        private static bool CheckReturnType(IdentToken returnTypeToken, List<TexlError> errors, INameResolver nameResolver, bool isImperative, out DType returnType)
         {
             if (!nameResolver.LookupType(returnTypeToken.Name, out var returnTypeFormulaType))
             {
@@ -419,7 +419,14 @@ namespace Microsoft.PowerFx.Core.Functions
                 returnType = DType.Invalid;
                 return false;
             }
-            
+
+            if (!isImperative && returnTypeFormulaType._type.IsVoid)
+            {
+                errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_NonImperativeVoidType));
+                returnType = DType.Invalid;
+                return false;
+            }
+
             if (IsRestrictedType(returnTypeFormulaType, UserDefinitions.RestrictedTypes))
             {
                 errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_InvalidReturnType, returnTypeToken.Name));

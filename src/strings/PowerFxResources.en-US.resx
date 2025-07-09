@@ -4233,6 +4233,10 @@
     <value>Function name {0} is restricted.</value>
     <comment>This error message shows up when user tries to define a function with a restricted name.</comment>
   </data>
+  <data name="ErrUDF_NonImperativeVoidType" xml:space="preserve">
+    <value>Void return type is only supported with behavior user-defined functions.</value>
+    <comment>This error message shows up when user tries to use Void return type in non-behavior user-defined function.</comment>
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parameter {0} is a duplicate.</value>
     <comment>This error message shows up when user-defined function has a duplicate parameter</comment>
