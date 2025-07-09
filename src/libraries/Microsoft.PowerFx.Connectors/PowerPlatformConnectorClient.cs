@@ -194,6 +194,7 @@ namespace Microsoft.PowerFx.Connectors
             req.Headers.Add("x-ms-client-environment-id", "/providers/Microsoft.PowerApps/environments/" + EnvironmentId);
             req.Headers.Add("x-ms-user-agent", UserAgent);
             req.Headers.Add("x-ms-request-url", url);
+            req.Headers.Add("x-ms-enable-selects", "true");
 
             // might be needed for tabular connectors
             //req.Headers.Add("X-Ms-Protocol-Semantics", "cdp");
