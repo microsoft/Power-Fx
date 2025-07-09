@@ -850,6 +850,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUDF_InvalidReturnType = new ErrorResourceKey("ErrUDF_InvalidReturnType");
         public static ErrorResourceKey ErrUDF_InvalidParamType = new ErrorResourceKey("ErrUDF_InvalidParamType");
         public static ErrorResourceKey WrnUDF_ShadowingBuiltInFunction = new ErrorResourceKey("WrnUDF_ShadowingBuiltInFunction");
+        public static ErrorResourceKey ErrUDF_NonImperativeVoidType = new ErrorResourceKey("ErrUDF_NonImperativeVoidType");
 
         public static ErrorResourceKey ErrTypeFunction_InvalidTypeExpression = new ErrorResourceKey("ErrTypeFunction_InvalidTypeExpression");
         public static ErrorResourceKey ErrTypeFunction_UnsupportedUsage = new ErrorResourceKey("ErrTypeFunction_UnsupportedUsage");
