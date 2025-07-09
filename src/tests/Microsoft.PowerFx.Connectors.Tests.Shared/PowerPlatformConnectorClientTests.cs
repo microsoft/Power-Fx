@@ -112,6 +112,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     case "x-ms-request-url":
                         Assert.Equal($"/{TestConnectionId}/test/someUri", header.Value.First());
                         break;
+                    case "x-ms-enable-selects":
+                        Assert.Equal("true", header.Value.First());
+                        break;
                     default:
                         Assert.True(request.Headers.Contains(header.Key), $"Missing {header.Key} header");
                         var reqHeaderValues = request.Headers.First(h => h.Key == header.Key).Value;
@@ -122,7 +125,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 }
             }
 
-            Assert.Equal(request.Headers.Count() + 9, transformedRequest.Headers.Count());
+            Assert.Equal(request.Headers.Count() + 10, transformedRequest.Headers.Count());
         }
     }
 
