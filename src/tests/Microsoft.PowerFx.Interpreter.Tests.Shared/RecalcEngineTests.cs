@@ -833,6 +833,70 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void PageableUDFTest()
+        {
+            var symbolTable = new DelegatableSymbolTable();
+            var schema = DType.CreateTable(
+                new TypedName(DType.Guid, new DName("ID")),
+                new TypedName(DType.Number, new DName("Value")));
+            symbolTable.AddEntity(new TestDelegableDataSource(
+                "MyDataSource",
+                schema,
+                new TestDelegationMetadata(
+                        new DelegationCapability(DelegationCapability.Filter | DelegationCapability.Count),
+                        schema,
+                        new FilterOpMetadata(
+                            schema,
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new DelegationCapability(DelegationCapability.GreaterThan),
+                            null)),
+                true));
+            symbolTable.AddType(new DName("MyDataSourceTableType"), FormulaType.Build(schema));
+            var config = new PowerFxConfig()
+            {
+                SymbolTable = symbolTable
+            };
+
+            var recalcEngine = new RecalcEngine(config);
+
+            recalcEngine.AddUserDefinedFunction("A():MyDataSourceTableType = Filter(MyDataSource, Value > 10);C():MyDataSourceTableType = A(); CheckCountRowsOfUDF():Number = CountRows(C()); CheckCountRowsOfDS():Number = CountRows(MyDataSource);", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
+            var result = recalcEngine.Check("A()");
+            Assert.True(result.IsSuccess);
+            var callNode = result.Binding.Top.AsCall();
+            Assert.NotNull(callNode);
+            var callInfo = result.Binding.GetInfo(callNode);
+            Assert.True(callInfo.Function.IsAsyncInvocation(callNode, result.Binding));
+            Assert.True(callInfo.Function.IsServerDelegatable(callNode, result.Binding));
+
+            result = recalcEngine.Check("CheckCountRowsOfUDF()");
+            Assert.True(result.IsSuccess);
+            callNode = result.Binding.Top.AsCall();
+            Assert.NotNull(callNode);
+            callInfo = result.Binding.GetInfo(callNode);
+            Assert.True(callInfo.Function.IsAsyncInvocation(callNode, result.Binding));
+            Assert.True(callInfo.Function.IsServerDelegatable(callNode, result.Binding));
+            Assert.False(callInfo.Function.SupportsPaging(callNode, result.Binding));
+
+            result = recalcEngine.Check("C()");
+            Assert.True(result.IsSuccess);
+            callNode = result.Binding.Top.AsCall();
+            Assert.NotNull(callNode);
+            callInfo = result.Binding.GetInfo(callNode);
+            Assert.True(callInfo.Function.IsAsyncInvocation(callNode, result.Binding));
+            Assert.True(callInfo.Function.IsServerDelegatable(callNode, result.Binding));
+
+            result = recalcEngine.Check("CheckCountRowsOfDS()");
+            Assert.True(result.IsSuccess);
+            callNode = result.Binding.Top.AsCall();
+            Assert.NotNull(callNode);
+            callInfo = result.Binding.GetInfo(callNode);
+            Assert.True(callInfo.Function.IsAsyncInvocation(callNode, result.Binding));
+            Assert.True(callInfo.Function.IsServerDelegatable(callNode, result.Binding));
+            Assert.False(callInfo.Function.SupportsPaging(callNode, result.Binding));
+        }
+
+        [Fact]
         public void TestInheritanceOfDelegationWarningsInUDFs()
         {
             var symbolTable = new DelegatableSymbolTable();

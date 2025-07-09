@@ -64,6 +64,14 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
+        public override bool SupportsPaging(CallNode callNode, TexlBinding binding)
+        {
+            Contracts.AssertValue(callNode);
+            Contracts.AssertValue(binding);
+
+            return _binding.IsPageable(_binding.Top);
+        }
+
         public override bool SupportsParamCoercion => true;
 
         public override bool HasPreciseErrors => true;
