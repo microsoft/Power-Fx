@@ -22,7 +22,6 @@ namespace Microsoft.PowerFx.Types
 
         // JSON value input of type object may contain fields with values that not present in the target schema.
         // This attribute controls if the result such conversion should be valid or an error.
-        // This is false (i.e we dont allow additional field in input) when used for functions like AsType_UO, IsType_UO and TypedParseJSON
         public bool AllowUnknownRecordFields { get; init; } = true;
 
         public TimeZoneInfo ResultTimeZone { get; init; } = TimeZoneInfo.Utc;
