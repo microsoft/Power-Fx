@@ -82,6 +82,9 @@ false
 >> ParseJSON("{""Name"": ""SpongeBob"", ""Age"": 1}", Type({Name: Text, Age: Number, Aquatic: Boolean})).Name
 "SpongeBob"
 
+>> ParseJSON("{""a"": 5, ""b"":true}", Type({a: Number}))
+{a:5}
+
 // Deeply nested record with table
 >> ParseJSON("{""a"": {""b"" : { ""c"" : [1, 2, 3, 4]}}}", Type({a: {b: {c: [Number]}}}))
 {a:{b:{c:Table({Value:1},{Value:2},{Value:3},{Value:4})}}}
@@ -120,9 +123,6 @@ Error({Kind:ErrorKind.InvalidJSON})
 
 >> ParseJSON("true", Void)
 Errors: Error 18-22: Unsupported type 'Void' in type argument.
-
->> ParseJSON("{""a"": 5, ""b"":true}", Type({a: Number}))
-Error({Kind:ErrorKind.InvalidArgument})
 
 >> ParseJSON("{""a"": 5}", Type({a: Number}), "Hello")
 Errors: Error 0-51: Invalid number of arguments: received 3, expected 2.

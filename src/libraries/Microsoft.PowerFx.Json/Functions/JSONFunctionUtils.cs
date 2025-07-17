@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Utils
             var uo = untypedObjectValue.Impl;
             var jsElement = ((JsonUntypedObject)uo)._element;
 
-            var settings = new FormulaValueJsonSerializerSettings { AllowUnknownRecordFields = false, ResultTimeZone = timeZoneInfo };
+            var settings = new FormulaValueJsonSerializerSettings { AllowUnknownRecordFields = true, ResultTimeZone = timeZoneInfo };
 
             return FormulaValueJSON.FromJson(jsElement, settings, FormulaType.Build(dtype));
         }
@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
 
             var json = ((StringValue)input).Value;
-            var settings = new FormulaValueJsonSerializerSettings { AllowUnknownRecordFields = false, ResultTimeZone = timeZoneInfo };
+            var settings = new FormulaValueJsonSerializerSettings { AllowUnknownRecordFields = true, ResultTimeZone = timeZoneInfo };
 
             return FormulaValueJSON.FromJson(json, settings, FormulaType.Build(dtype));
         }

@@ -63,7 +63,7 @@ true
 
 // record with additional field
 >> IsType(ParseJSON("{""a"": 5, ""b"":true}"), Type({a: Number}))
-false
+true
 
 // record with incorrect field type
 >> IsType(ParseJSON("{""a"": 5}"), Type({a: Text}))
