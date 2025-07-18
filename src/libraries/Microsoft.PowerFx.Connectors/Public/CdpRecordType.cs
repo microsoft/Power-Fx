@@ -102,6 +102,11 @@ namespace Microsoft.PowerFx.Connectors
 
             try
             {
+                if (TableResolver == null)
+                {
+                    throw new InvalidOperationException("TableResolver is not set.");
+                }
+
                 ConnectorType connectorType = TableResolver.ResolveTableAsync(tableName, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
 
                 type = connectorType.FormulaType;
@@ -109,7 +114,7 @@ namespace Microsoft.PowerFx.Connectors
             }
             catch (Exception ex)
             {
-                TableResolver?.Logger.LogException(ex, $"Cannot resolve external table {tableName}");
+                TableResolver?.Logger?.LogException(ex, $"Cannot resolve external table {tableName}");
                 throw;
             }
         }
