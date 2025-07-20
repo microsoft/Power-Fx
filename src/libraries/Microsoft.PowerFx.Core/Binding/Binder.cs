@@ -3046,14 +3046,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                 }
 
-                if (_txb.BindingConfig.MarkAsAsyncOnLazilyLoadedControlRef && 
-                    lookupType.IsControl && 
-                    lookupInfo.Data is IExternalControl control &&
-                    !control.IsAppGlobalControl)
-                {
-                    _txb.FlagPathAsAsync(_txb.Top);
-                }
-
                 // Update _usesGlobals, _usesResources, etc.
                 UpdateBindKindUseFlags(lookupInfo.Kind);
 
