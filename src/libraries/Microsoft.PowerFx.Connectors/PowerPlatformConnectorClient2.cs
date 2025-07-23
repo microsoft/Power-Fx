@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -16,26 +17,63 @@ namespace Microsoft.PowerFx.Connectors
     /// <summary>
     /// Client for invoking operations of Power Platform connectors.
     /// </summary>
-    public class PowerPlatformConnectorClient2 : IPowerPlatformConnectorClient2
+    public class PowerPlatformConnectorClient2 : DelegatingHandler
     {
         private readonly string _baseUrlStr;
-        private readonly HttpMessageInvoker _httpMessageInvoker;
         private readonly PowerPlatformConnectorClient2BearerTokenProvider _tokenProvider;
         private readonly string _environmentId;
+
+        public string ConnectionId { get; }
+
+        public string UserAgent { get; }
+
+        public string EnvironmentId => _environmentId;
+
+        /// <summary>
+        /// Delegate for providing a bearer token for authentication.
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Token without "Bearer" scheme as the prefix.</returns>
+        public delegate Task<string> PowerPlatformConnectorClient2BearerTokenProvider(
+            CancellationToken cancellationToken);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PowerPlatformConnectorClient2"/> class.
         /// </summary>
         /// <param name="document">Document used for extracting the base URL.</param>
-        /// <param name="httpMessageInvoker">HTTP message invoker.</param>
+        /// <param name="httpMessageHandler">HTTP message invoker.</param>
         /// <param name="tokenProvider">Bearer token provider.</param>
         /// <param name="environmentId">Environment ID.</param>
+        /// <param name="connectionId">Connection ID.</param>
+        /// <param name="userAgent">User agent.</param>
         public PowerPlatformConnectorClient2(
             OpenApiDocument document,
-            HttpMessageInvoker httpMessageInvoker,
+            string environmentId,
+            string connectionId,
             PowerPlatformConnectorClient2BearerTokenProvider tokenProvider,
-            string environmentId)
-            : this(GetBaseUrlFromOpenApiDocument(document), httpMessageInvoker, tokenProvider, environmentId)
+            string userAgent,
+            HttpMessageHandler httpMessageHandler)
+            : this(GetBaseUrlFromOpenApiDocument(document), environmentId, connectionId, tokenProvider, userAgent, httpMessageHandler)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PowerPlatformConnectorClient2"/> class using a string base URL.
+        /// </summary>
+        /// <param name="baseUrl">Base URL for requests (as string).</param>
+        /// <param name="environmentId">Environment ID.</param>
+        /// <param name="connectionId">Connection ID.</param>
+        /// <param name="userAgent">User agent.</param>
+        /// <param name="tokenProvider">Bearer token provider.</param>
+        /// <param name="httpMessageHandler">HTTP message handler.</param>
+        public PowerPlatformConnectorClient2(
+            string baseUrl,
+            string environmentId,
+            string connectionId,
+            PowerPlatformConnectorClient2BearerTokenProvider tokenProvider,
+            string userAgent,
+            HttpMessageHandler httpMessageHandler)
+            : this(NormalizeUrl(baseUrl), environmentId, connectionId, tokenProvider, userAgent, httpMessageHandler)
         {
         }
 
@@ -43,137 +81,126 @@ namespace Microsoft.PowerFx.Connectors
         /// Initializes a new instance of the <see cref="PowerPlatformConnectorClient2"/> class.
         /// </summary>
         /// <param name="baseUrl">Base URL for requests.</param>
-        /// <param name="httpMessageInvoker">HTTP message invoker.</param>
+        /// <param name="httpMessageHandler">HTTP message invoker.</param>
         /// <param name="tokenProvider">Bearer token provider.</param>
         /// <param name="environmentId">Environment ID.</param>
+        /// <param name="connectionId">Connection ID.</param>
+        /// <param name="userAgent">User agent.</param>
         public PowerPlatformConnectorClient2(
             Uri baseUrl,
-            HttpMessageInvoker httpMessageInvoker,
+            string environmentId,
+            string connectionId,
             PowerPlatformConnectorClient2BearerTokenProvider tokenProvider,
-            string environmentId)
+            string userAgent,
+            HttpMessageHandler httpMessageHandler)
+            : base(httpMessageHandler)
         {
             this._baseUrlStr = GetBaseUrlStr(baseUrl ?? throw new ArgumentNullException(nameof(baseUrl)));
-            this._httpMessageInvoker = httpMessageInvoker ?? throw new ArgumentNullException(nameof(httpMessageInvoker));
             this._tokenProvider = tokenProvider ?? throw new ArgumentNullException(nameof(tokenProvider));
             this._environmentId = environmentId ?? throw new ArgumentNullException(nameof(environmentId));
+            this.ConnectionId = connectionId ?? throw new ArgumentNullException(nameof(connectionId));
+            this.UserAgent = string.IsNullOrWhiteSpace(userAgent) ? $"PowerFx/{Engine.AssemblyVersion}" : $"{userAgent} PowerFx/{Engine.AssemblyVersion}";
+
+            if (!baseUrl.IsAbsoluteUri)
+            {
+                throw new PowerFxConnectorException("Cannot accept relative URI");
+            }
+            else if (baseUrl.Scheme == Uri.UriSchemeHttp)
+            {
+                throw new PowerFxConnectorException("Cannot accept unsecure endpoint");
+            }
 
             static string GetBaseUrlStr(Uri uri)
             {
                 var str = uri.GetLeftPart(UriPartial.Path);
-
-                // Note (shgogna): Ensure the base URL does NOT end with "/".
-                // This will allow us to concatenate the operation path to the base URL
-                // without worrying about the "/".
                 str = str.TrimEnd('/');
                 return str;
             }
         }
 
-        // <inheritdoc />
-        public Task<HttpResponseMessage> SendAsync(
-            HttpMethod method,
-            string operationPathAndQuery,
-            IEnumerable<KeyValuePair<string, IEnumerable<string>>> headers,
-            HttpContent content,
-            PowerPlatformConnectorClient2DiagnosticOptions diagnosticOptions,
-            CancellationToken cancellationToken)
+        private static Uri NormalizeUrl(string baseUrl)
         {
-            if (operationPathAndQuery is null)
+            if (string.IsNullOrWhiteSpace(baseUrl))
             {
-                throw new ArgumentNullException(nameof(operationPathAndQuery));
+                throw new ArgumentNullException(nameof(baseUrl));
             }
 
-            var uri = this.CombineBaseUrlWithOperationPathAndQuery(operationPathAndQuery);
-
-            if (!uri.AbsoluteUri.StartsWith(this._baseUrlStr, StringComparison.Ordinal))
+            // Add scheme if missing
+            if (!baseUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) &&
+                !baseUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
             {
-                throw new ArgumentException("Path traversal detected during combination of base URL path and operation path.", nameof(operationPathAndQuery));
+                baseUrl = "https://" + baseUrl;
             }
 
-            return this.InternalSendAsync(
-                method,
-                uri,
-                headers,
-                content,
-                diagnosticOptions,
-                cancellationToken);
+            return new Uri(baseUrl, UriKind.Absolute);
         }
 
-        private async Task<HttpResponseMessage> InternalSendAsync(
-            HttpMethod method,
-            Uri uri,
-            IEnumerable<KeyValuePair<string, IEnumerable<string>>> headers,
-            HttpContent content,
-            PowerPlatformConnectorClient2DiagnosticOptions diagnosticOptions,
-            CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var authToken = await this._tokenProvider(cancellationToken).ConfigureAwait(false);
-
-            using (var req = new HttpRequestMessage(method, uri))
+            if (request == null)
             {
-                req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
-
-                this.AddDiagnosticHeaders(diagnosticOptions, req);
-
-                foreach (var header in headers)
-                {
-                    req.Headers.Add(header.Key, header.Value);
-                }
-
-                req.Content = content;
-                return await this._httpMessageInvoker.SendAsync(req, cancellationToken).ConfigureAwait(false);
+                throw new ArgumentNullException(nameof(request));
             }
+
+            if (request.RequestUri == null)
+            {
+                throw new ArgumentNullException(nameof(request.RequestUri));
+            }
+
+            var finalUri = BuildFinalUri(request.RequestUri);
+
+            request.RequestUri = finalUri;
+
+            var token = await this._tokenProvider(cancellationToken)
+                                 .ConfigureAwait(false);
+
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            this.AddDiagnosticHeaders(request);
+
+            //Prevent path-traversal
+            if (!new Uri(_baseUrlStr).IsBaseOf(finalUri))
+            {
+                throw new ArgumentException(
+                    $"Path traversal detected: {request.RequestUri}",
+                    nameof(request.RequestUri));
+            }
+
+            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
-        private Uri CombineBaseUrlWithOperationPathAndQuery(string operationPathAndQuery)
+        private Uri BuildFinalUri(Uri original)
         {
-            if (operationPathAndQuery.StartsWith("/", StringComparison.Ordinal))
+            if (original.IsAbsoluteUri)
             {
-                return new Uri(this._baseUrlStr + operationPathAndQuery);
+                throw new ArgumentException("The URI must be relative.", nameof(original));
             }
-            else
-            {
-                return new Uri(this._baseUrlStr + "/" + operationPathAndQuery);
-            }
+
+            var path = original.OriginalString.Replace("{connectionId}", ConnectionId);
+
+            // Combine with base
+            var baseUri = new Uri(_baseUrlStr, UriKind.Absolute);
+            return new Uri(baseUri, path);
         }
 
-        private void AddDiagnosticHeaders(
-            PowerPlatformConnectorClient2DiagnosticOptions diagnosticOptions,
-            HttpRequestMessage req)
+        private void AddDiagnosticHeaders(HttpRequestMessage req)
         {
-            var userAgent = string.IsNullOrWhiteSpace(diagnosticOptions?.UserAgent)
-                ? $"PowerFx/{PowerPlatformConnectorClient.Version}"
-                : $"{diagnosticOptions.UserAgent} PowerFx/{PowerPlatformConnectorClient.Version}";
-
-            var clientRequestId = string.IsNullOrWhiteSpace(diagnosticOptions?.ClientRequestId)
-                ? Guid.NewGuid().ToString()
-                : diagnosticOptions.ClientRequestId;
-
-            // CorrelationID can be the same as ClientRequestID
-            var correlationId = string.IsNullOrWhiteSpace(diagnosticOptions?.CorrelationId)
-                ? clientRequestId
-                : diagnosticOptions.CorrelationId;
-
-            req.Headers.Add("User-Agent", userAgent);
-            req.Headers.Add("x-ms-user-agent", userAgent);
-            req.Headers.Add("x-ms-client-environment-id", $"/providers/Microsoft.PowerApps/environments/{this._environmentId}");
-            req.Headers.Add("x-ms-client-request-id", clientRequestId);
-            req.Headers.Add("x-ms-correlation-id", correlationId);
-
-            if (!string.IsNullOrWhiteSpace(diagnosticOptions?.ClientSessionId))
-            {
-                req.Headers.Add("x-ms-client-session-id", diagnosticOptions.ClientSessionId);
+            if (req is null) 
+            { 
+                throw new ArgumentNullException(nameof(req)); 
             }
 
-            if (!string.IsNullOrWhiteSpace(diagnosticOptions?.ClientTenantId))
-            {
-                req.Headers.Add("x-ms-client-tenant-id", diagnosticOptions.ClientTenantId);
-            }
+            var headers = req.Headers;
 
-            if (!string.IsNullOrWhiteSpace(diagnosticOptions?.ClientObjectId))
-            {
-                req.Headers.Add("x-ms-client-object-id", diagnosticOptions.ClientObjectId);
-            }
+            headers.AddIfMissing("User-Agent", UserAgent);
+            headers.AddIfMissing("x-ms-user-agent", UserAgent);
+
+            var envValue = $"/providers/Microsoft.PowerApps/environments/{_environmentId}";
+            headers.AddIfMissing("x-ms-client-environment-id", envValue);
+
+            var clientRequestId = Guid.NewGuid().ToString();
+            headers.AddIfMissing("x-ms-client-request-id", clientRequestId);
+            headers.AddIfMissing("x-ms-correlation-id", clientRequestId);
         }
 
         private static Uri GetBaseUrlFromOpenApiDocument(OpenApiDocument document)

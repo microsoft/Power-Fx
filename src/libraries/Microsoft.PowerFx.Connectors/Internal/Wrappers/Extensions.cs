@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
@@ -26,6 +27,14 @@ namespace Microsoft.PowerFx.Connectors
                 JsonValueKind.Undefined => throw new NotImplementedException(),
                 _ => throw new NotImplementedException()
             };
+        }
+
+        public static void AddIfMissing(this HttpHeaders headers, string name, string value)
+        {
+            if (!headers.Contains(name))
+            {
+                headers.Add(name, value);
+            }
         }
     }
 }

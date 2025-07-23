@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)FileTabularConnector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IntellisenseTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InternalTesting.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LiveConnectorTesting.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LivePublicSwaggerTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LoggerTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MergeRecordTests.cs" />
@@ -326,5 +327,6 @@
     <Content Include="$(MSBuildThisFileDirectory)Mask.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Swagger\testSwagger.json" />
   </ItemGroup>
 </Project>

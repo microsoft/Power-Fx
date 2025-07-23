@@ -14,6 +14,7 @@ namespace Microsoft.PowerFx.Connectors
     /// Http handler to invoke Power Platform connectors. 
     /// This accepts HttpRequestMessages described the swagger, transforms the request, and forwards them to Connector endpoints.
     /// </summary>
+    //[Obsolete($"Use {nameof(PowerPlatformConnectorClient2)} instead. This class will be removed in a future release.")]
     public class PowerPlatformConnectorClient : HttpClient
     {
         /// <summary>
