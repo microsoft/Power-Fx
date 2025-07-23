@@ -2599,6 +2599,10 @@
     <value>Afegeix el nombre d'unitats especificat a una data.</value>
     
   </data>
+  <data name="AboutWorkday_date" xml:space="preserve">
+    <value>Afegir el nombre de dies laborables abans o després d’una data.</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Calcula la diferència entre dues dates.</value>
     
