@@ -21,7 +21,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
-#pragma warning disable CS0618 // Type or member is obsolete for PowerPlatformConnectorClient
+#pragma warning disable CS0618 // Type or member is obsolete https://github.com/microsoft/Power-Fx/issues/2940
     public class PowerPlatformTabularTests
     {
         private readonly ITestOutputHelper _output;

@@ -34,7 +34,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiParserTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PowerAppsForMakersTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PowerPlatformBlobTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PowerPlatformConnectorClientLatestTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PowerPlatformConnectorClient2Tests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PowerPlatformConnectorClientTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PowerPlatformConnectorTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PowerPlatformTabularTests.cs" />

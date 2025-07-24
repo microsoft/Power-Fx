@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -165,6 +166,55 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var response = await httpClient.SendAsync(request, CancellationToken.None);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task PowerPlatformConnectorClient2Logging()
+        {
+            // dummy handler returns Accepted status
+            using var dummyHandler = new DummyHandler
+            {
+                OnSend = _ => new HttpResponseMessage(HttpStatusCode.Accepted)
+            };
+
+            using var loggingHandler = new LoggingHandler(dummyHandler);
+
+            using var client = new PowerPlatformConnectorClient2(
+                new Uri("https://test.com"),
+                "env",
+                "conn",
+                DummyTokenProvider,
+                "ua",
+                loggingHandler);
+            using var invoker = new HttpMessageInvoker(client);
+            using var request = new HttpRequestMessage(HttpMethod.Get, "/api/test");
+
+            var response = await invoker.SendAsync(request, CancellationToken.None);
+
+            Assert.Equal(HttpStatusCode.Accepted, response.StatusCode);
+            Assert.Collection(
+                loggingHandler.Logs, 
+                log => Assert.Contains("Request: GET https://test.com/api/test", log),
+                log => Assert.Contains("Response: Accepted", log));
+        }
+
+        // Demonstrates how to chain a logging handler with the PowerPlatformConnectorClient2
+        private class LoggingHandler : DelegatingHandler
+        {
+            public IList<string> Logs { get; } = new List<string>();
+
+            public LoggingHandler(HttpMessageHandler innerHandler) 
+                : base(innerHandler) 
+            { 
+            }
+
+            protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+            {
+                Logs.Add($"Request: {request.Method} {request.RequestUri}");
+                var response = await base.SendAsync(request, cancellationToken);
+                Logs.Add($"Response: {response.StatusCode}");
+                return response;
+            }
         }
     }
 }

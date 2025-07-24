@@ -14,7 +14,6 @@ using Microsoft.OpenApi.Readers;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Tests.LanguageServiceProtocol;
 using Microsoft.PowerFx.Types;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit;
 using Xunit.Abstractions;
 
