@@ -11,16 +11,18 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
+using static Microsoft.PowerFx.Connectors.ConnectorSettings;
+using static Microsoft.PowerFx.Connectors.ConnectorType;
 
 namespace Microsoft.PowerFx.Connectors
 {
     /// <summary>
-    /// Client for invoking operations of Power Platform connectors.
+    /// Delegation handler for invoking operations of Power Platform connectors.
     /// </summary>
-    public class PowerPlatformConnectorClient2 : DelegatingHandler
+    internal class PowerPlatformConnectorClient2 : DelegatingHandler
     {
         private readonly string _baseUrlStr;
-        private readonly PowerPlatformConnectorClient2BearerTokenProvider _tokenProvider;
+        private readonly AuthTokenProvider _tokenProvider;
         private readonly string _environmentId;
 
         public Uri BaseUrlStr => new Uri(_baseUrlStr);
@@ -30,14 +32,6 @@ namespace Microsoft.PowerFx.Connectors
         public string UserAgent { get; }
 
         public string EnvironmentId => _environmentId;
-
-        /// <summary>
-        /// Delegate for providing a bearer token for authentication.
-        /// </summary>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>Token without "Bearer" scheme as the prefix.</returns>
-        public delegate Task<string> PowerPlatformConnectorClient2BearerTokenProvider(
-            CancellationToken cancellationToken);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PowerPlatformConnectorClient2"/> class.
@@ -52,7 +46,7 @@ namespace Microsoft.PowerFx.Connectors
             OpenApiDocument document,
             string environmentId,
             string connectionId,
-            PowerPlatformConnectorClient2BearerTokenProvider tokenProvider,
+            AuthTokenProvider tokenProvider,
             string userAgent,
             HttpMessageHandler httpMessageHandler)
             : this(GetBaseUrlFromOpenApiDocument(document), environmentId, connectionId, tokenProvider, userAgent, httpMessageHandler)
@@ -72,7 +66,7 @@ namespace Microsoft.PowerFx.Connectors
             string baseUrl,
             string environmentId,
             string connectionId,
-            PowerPlatformConnectorClient2BearerTokenProvider tokenProvider,
+            AuthTokenProvider tokenProvider,
             string userAgent,
             HttpMessageHandler httpMessageHandler)
             : this(NormalizeUrl(baseUrl), environmentId, connectionId, tokenProvider, userAgent, httpMessageHandler)
@@ -92,7 +86,7 @@ namespace Microsoft.PowerFx.Connectors
             Uri baseUrl,
             string environmentId,
             string connectionId,
-            PowerPlatformConnectorClient2BearerTokenProvider tokenProvider,
+            AuthTokenProvider tokenProvider,
             string userAgent,
             HttpMessageHandler httpMessageHandler)
             : base(httpMessageHandler)

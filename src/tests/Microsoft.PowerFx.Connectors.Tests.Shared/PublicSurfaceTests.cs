@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.CDPSensitivityLabelInfo",
               "Microsoft.PowerFx.Connectors.CDPMetadataItem",
               "Microsoft.PowerFx.Connectors.ICDPAggregateMetadata",
-              "Microsoft.PowerFx.Connectors.PowerPlatformConnectorClient2"
+              "Microsoft.PowerFx.Connectors.PowerPlatformConnectorHelper"
             };
 
             var sb = new StringBuilder();

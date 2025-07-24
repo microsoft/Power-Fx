@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Contains("Swagger document doesn't contain an endpoint", ex.Message);
 
             using var dummyHandler = new HttpClientHandler();
-            var exception = Assert.Throws<PowerFxConnectorException>(() => new PowerPlatformConnectorClient2(doc, "environmentId", "connectionId", DummyTokenProvider, null, dummyHandler));
+            var exception = Assert.Throws<PowerFxConnectorException>(() => PowerPlatformConnectorHelper.FromDocument(doc, "environmentId", "connectionId", DummyTokenProvider, null, dummyHandler));
             Assert.Contains("Swagger document doesn't contain an endpoint", exception.Message);
         }
 
