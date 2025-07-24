@@ -75,7 +75,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Evaluating expressions with swagger compatibilty shouldn't be done as this might interfere with parameter ordering
             // This has no consequence for these particular connector calls
+#pragma warning disable CS0618 // Type or member is obsolete https://github.com/microsoft/Power-Fx/issues/2940
             (LoggingTestServer testConnector, OpenApiDocument apiDoc, PowerFxConfig config, HttpClient httpClient, PowerPlatformConnectorClient client, ConnectorSettings connectorSettings, RuntimeConfig runtimeConfig) = GetElements(true, true);
+#pragma warning restore CS0618 // Type or member is obsolete
             IReadOnlyList<ConnectorFunction> funcs = config.AddActionConnector(connectorSettings, apiDoc, new ConsoleLogger(_output));
             RecalcEngine engine = new RecalcEngine(config);
 

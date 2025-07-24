@@ -11,6 +11,7 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
+#pragma warning disable CS0618 // Type or member is obsolete https://github.com/microsoft/Power-Fx/issues/2940
     public class PowerPlatformConnectorClientTests : PowerFxTest
     {
         private const string TestEndpoint = "localhost:1234";

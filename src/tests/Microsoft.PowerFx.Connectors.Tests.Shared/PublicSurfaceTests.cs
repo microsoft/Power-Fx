@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Connector.Tests
         [Fact]
         public void PublicSurfaceTest_Connectors()
         {
-            var asm = typeof(PowerPlatformConnectorClient).Assembly;
+            var asm = typeof(PowerPlatformConnectorClient2).Assembly;
 
             // The goal for public namespaces is to make the SDK easy for the consumer.
             // Namespace principles for public classes:            //
@@ -65,7 +65,8 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.Visibility",
               "Microsoft.PowerFx.Connectors.CDPSensitivityLabelInfo",
               "Microsoft.PowerFx.Connectors.CDPMetadataItem",
-              "Microsoft.PowerFx.Connectors.ICDPAggregateMetadata"
+              "Microsoft.PowerFx.Connectors.ICDPAggregateMetadata",
+              "Microsoft.PowerFx.Connectors.PowerPlatformConnectorHelper"
             };
 
             var sb = new StringBuilder();
