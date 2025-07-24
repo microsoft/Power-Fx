@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Connectors
             OpenApiDocument document,
             string environmentId,
             string connectionId,
-            AuthTokenProvider tokenProvider,
+            BearerAuthTokenProvider tokenProvider,
             string userAgent,
             HttpMessageHandler httpMessageHandler)
         {
@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Connectors
             string baseUrl,
             string environmentId,
             string connectionId,
-            AuthTokenProvider tokenProvider,
+            BearerAuthTokenProvider tokenProvider,
             string userAgent,
             HttpMessageHandler httpMessageHandler = null)
         {
@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Connectors
             System.Uri baseUrl,
             string environmentId,
             string connectionId,
-            AuthTokenProvider tokenProvider,
+            BearerAuthTokenProvider tokenProvider,
             string userAgent,
             HttpMessageHandler httpMessageHandler)
         {

@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Connectors
         /// </summary>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Token without "Bearer" scheme as the prefix.</returns>
-        public delegate Task<string> AuthTokenProvider(
+        public delegate Task<string> BearerAuthTokenProvider(
             CancellationToken cancellationToken);
 
         /// <summary>

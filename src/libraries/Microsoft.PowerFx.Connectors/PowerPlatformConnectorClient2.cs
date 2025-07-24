@@ -21,11 +21,10 @@ namespace Microsoft.PowerFx.Connectors
     /// </summary>
     internal class PowerPlatformConnectorClient2 : DelegatingHandler
     {
-        private readonly string _baseUrlStr;
-        private readonly AuthTokenProvider _tokenProvider;
+        private readonly BearerAuthTokenProvider _tokenProvider;
         private readonly string _environmentId;
 
-        public Uri BaseUrlStr => new Uri(_baseUrlStr);
+        private readonly Uri _baseUri;
 
         public string ConnectionId { get; }
 
@@ -46,7 +45,7 @@ namespace Microsoft.PowerFx.Connectors
             OpenApiDocument document,
             string environmentId,
             string connectionId,
-            AuthTokenProvider tokenProvider,
+            BearerAuthTokenProvider tokenProvider,
             string userAgent,
             HttpMessageHandler httpMessageHandler)
             : this(GetBaseUrlFromOpenApiDocument(document), environmentId, connectionId, tokenProvider, userAgent, httpMessageHandler)
@@ -66,7 +65,7 @@ namespace Microsoft.PowerFx.Connectors
             string baseUrl,
             string environmentId,
             string connectionId,
-            AuthTokenProvider tokenProvider,
+            BearerAuthTokenProvider tokenProvider,
             string userAgent,
             HttpMessageHandler httpMessageHandler)
             : this(NormalizeUrl(baseUrl), environmentId, connectionId, tokenProvider, userAgent, httpMessageHandler)
@@ -86,7 +85,7 @@ namespace Microsoft.PowerFx.Connectors
             Uri baseUrl,
             string environmentId,
             string connectionId,
-            AuthTokenProvider tokenProvider,
+            BearerAuthTokenProvider tokenProvider,
             string userAgent,
             HttpMessageHandler httpMessageHandler)
             : base(httpMessageHandler)
@@ -110,13 +109,13 @@ namespace Microsoft.PowerFx.Connectors
                 throw new PowerFxConnectorException("Cannot accept unsecure endpoint");
             }
 
-            this._baseUrlStr = GetBaseUrlStr(baseUrl ?? throw new ArgumentNullException(nameof(baseUrl)));
+            this._baseUri = GetBaseUri(baseUrl ?? throw new ArgumentNullException(nameof(baseUrl)));
 
-            static string GetBaseUrlStr(Uri uri)
+            static Uri GetBaseUri(Uri uri)
             {
                 var str = uri.GetLeftPart(UriPartial.Path);
                 str = str.TrimEnd('/');
-                return str;
+                return new Uri(str, UriKind.Absolute);
             }
         }
 
@@ -161,7 +160,7 @@ namespace Microsoft.PowerFx.Connectors
             this.AddDiagnosticHeaders(request);
 
             //Prevent path-traversal
-            if (!new Uri(_baseUrlStr).IsBaseOf(finalUri))
+            if (!_baseUri.IsBaseOf(finalUri))
             {
                 throw new ArgumentException(
                     $"Path traversal detected: {request.RequestUri}",
@@ -173,12 +172,10 @@ namespace Microsoft.PowerFx.Connectors
 
         private Uri BuildFinalUri(Uri original)
         {
-            var baseUri = new Uri(_baseUrlStr, UriKind.Absolute);
-
             // Absolute? keep it if it's under base
             if (original.IsAbsoluteUri)
             {
-                if (!baseUri.IsBaseOf(original))
+                if (!_baseUri.IsBaseOf(original))
                 {
                     throw new ArgumentException("The URI must be relative or under the base.", nameof(original));
                 }
@@ -189,7 +186,7 @@ namespace Microsoft.PowerFx.Connectors
 
             // Relative path case (current behavior)
             var path = original.OriginalString.Replace("{connectionId}", ConnectionId);
-            return new Uri(baseUri, path);
+            return new Uri(_baseUri, path);
         }
 
         private void AddDiagnosticHeaders(HttpRequestMessage req)
