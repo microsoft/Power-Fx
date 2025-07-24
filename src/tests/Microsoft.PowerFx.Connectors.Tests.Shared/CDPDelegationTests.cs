@@ -15,6 +15,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
+#pragma warning disable CS0618 // Type or member is obsolete for PowerPlatformConnectorClient
     public sealed class CDPDelegationTests : IAsyncLifetime, IDisposable
     {
         private LoggingTestServer _server;

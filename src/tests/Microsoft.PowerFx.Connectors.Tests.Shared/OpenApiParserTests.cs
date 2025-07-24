@@ -19,6 +19,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
+#pragma warning disable CS0618 // Type or member is obsolete for PowerPlatformConnectorClient
     public class OpenApiParserTests
     {
         private readonly ITestOutputHelper _output;

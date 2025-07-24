@@ -23,6 +23,8 @@ namespace Microsoft.PowerFx.Connectors
         private readonly PowerPlatformConnectorClient2BearerTokenProvider _tokenProvider;
         private readonly string _environmentId;
 
+        public Uri BaseUrlStr => new Uri(_baseUrlStr);
+
         public string ConnectionId { get; }
 
         public string UserAgent { get; }
@@ -95,7 +97,11 @@ namespace Microsoft.PowerFx.Connectors
             HttpMessageHandler httpMessageHandler)
             : base(httpMessageHandler)
         {
-            this._baseUrlStr = GetBaseUrlStr(baseUrl ?? throw new ArgumentNullException(nameof(baseUrl)));
+            if (baseUrl == null)
+            {
+                throw new ArgumentNullException(nameof(baseUrl));
+            }
+
             this._tokenProvider = tokenProvider ?? throw new ArgumentNullException(nameof(tokenProvider));
             this._environmentId = environmentId ?? throw new ArgumentNullException(nameof(environmentId));
             this.ConnectionId = connectionId ?? throw new ArgumentNullException(nameof(connectionId));
@@ -109,6 +115,8 @@ namespace Microsoft.PowerFx.Connectors
             {
                 throw new PowerFxConnectorException("Cannot accept unsecure endpoint");
             }
+
+            this._baseUrlStr = GetBaseUrlStr(baseUrl ?? throw new ArgumentNullException(nameof(baseUrl)));
 
             static string GetBaseUrlStr(Uri uri)
             {
@@ -171,15 +179,22 @@ namespace Microsoft.PowerFx.Connectors
 
         private Uri BuildFinalUri(Uri original)
         {
+            var baseUri = new Uri(_baseUrlStr, UriKind.Absolute);
+
+            // Absolute? keep it if it's under base
             if (original.IsAbsoluteUri)
             {
-                throw new ArgumentException("The URI must be relative.", nameof(original));
+                if (!baseUri.IsBaseOf(original))
+                {
+                    throw new ArgumentException("The URI must be relative or under the base.", nameof(original));
+                }
+
+                var replaced = original.OriginalString.Replace("{connectionId}", ConnectionId);
+                return new Uri(replaced, UriKind.Absolute);
             }
 
+            // Relative path case (current behavior)
             var path = original.OriginalString.Replace("{connectionId}", ConnectionId);
-
-            // Combine with base
-            var baseUri = new Uri(_baseUrlStr, UriKind.Absolute);
             return new Uri(baseUri, path);
         }
 

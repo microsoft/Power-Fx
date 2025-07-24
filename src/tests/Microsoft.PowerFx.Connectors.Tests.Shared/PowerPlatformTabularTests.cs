@@ -21,6 +21,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
+#pragma warning disable CS0618 // Type or member is obsolete for PowerPlatformConnectorClient
     public class PowerPlatformTabularTests
     {
         private readonly ITestOutputHelper _output;
@@ -291,9 +292,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
             await connectorTable.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
             Assert.True(connectorTable.IsInitialized);
 
-#pragma warning disable CS0618 // Type or member is obsolete
+//#pragma warning disable CS0618 // Type or member is obsolete
             Assert.True(connectorTable.DelegationInfo.CountCapabilities.IsCountableTable());
-#pragma warning restore CS0618 // Type or member is obsolete
+
+//#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         [Fact]
@@ -485,9 +487,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Single(ads);
 
             DataSourceInfo dsi = Assert.IsType<DataSourceInfo>(ads.First());
-#pragma warning disable CS0618 // Type or member is obsolete
+
+//#pragma warning disable CS0618 // Type or member is obsolete
             Assert.True(dsi.DelegationInfo.SupportsJoinFunction);
-#pragma warning restore CS0618 // Type or member is obsolete
+
+//#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         [Fact]
@@ -888,9 +892,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         private static IEnumerable<string> GetPrimaryKeyNames(RecordType rt)
         {
-#pragma warning disable CS0618 // Type or member is obsolete
+//#pragma warning disable CS0618 // Type or member is obsolete
             rt.TryGetPrimaryKeyFieldName(out IEnumerable<string> primaryKeyNames);
-#pragma warning restore CS0618 // Type or member is obsolete
+
+//#pragma warning restore CS0618 // Type or member is obsolete
             return primaryKeyNames;
         }
 

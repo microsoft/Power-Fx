@@ -32,20 +32,21 @@ namespace Microsoft.PowerFx.Connectors.Tests.Shared
         [Fact]
         public async Task TestLiveConnectorAsync()
         {
+#if false
+            // This file content needs to be the reponse of ListAPI from Connectors, I.e. "swagger" should be in path: root -> properties -> swagger.
+            // e.g. endpoint /connectivity/connectors/shared_msnweather?%24filter=environment+eq+%272e60e1f8-dcfd-e26e-ad11-76bce40da16b%27&api-version=1
             var swaggerFileName = "C:\\Jas\\Power-FX\\src\\tests\\Microsoft.PowerFx.Connectors.Tests.Shared\\Swagger\\testSwagger.json";
             var nameSpace = "TestNamespace";
             var envId = "2e60e1f8-dcfd-e26e-ad11-76bce40da16b";
             var connectionId = "6b29d48fa9ea4208908d290f95d3f3cc";
             var userAgent = "UserAgent";
             var bToken = "";
+
             var engine = new RecalcEngine();
             OpenApiDocument doc = LoadOpenApiFromFile(swaggerFileName);
             var connectorSettings = new ConnectorSettings(nameSpace);
 
-            // var client = new PowerPlatformConnectorClient(doc, envId, connectionId, () => bToken, new HttpClient());
-
-            using var client = new PowerPlatformConnectorClient2(doc, envId, connectionId, userAgent, async (cancellationToken) => bToken, new HttpClientHandler());
-
+            using var client = new PowerPlatformConnectorClient2(doc, envId, connectionId, async (cancellationToken) => bToken, userAgent, new HttpClientHandler());
             using var invoker = new HttpMessageInvoker(client);
 
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext(nameSpace, invoker, console: _output));
@@ -57,13 +58,14 @@ namespace Microsoft.PowerFx.Connectors.Tests.Shared
             var result = await check.GetEvaluator().EvalAsync(cancellationToken: CancellationToken.None, runtimeConfig);
 
             Assert.IsAssignableFrom<FormulaValue>(result);
-            Assert.IsNotAssignableFrom<ErrorValue>(result);
+            Assert.IsNotAssignableFrom<ErrorValue>(result);      
+#endif
         }
 
         /// <summary>
         /// Reads a JSON file, grabs properties.swagger, and turns it into an OpenApiDocument.
         /// </summary>
-        public static OpenApiDocument LoadOpenApiFromFile(string filePath)
+        private static OpenApiDocument LoadOpenApiFromFile(string filePath)
         {
             using var fs = File.OpenRead(filePath);
             using var doc = JsonDocument.Parse(fs);

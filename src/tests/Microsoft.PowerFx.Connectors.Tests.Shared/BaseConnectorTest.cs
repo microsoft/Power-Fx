@@ -22,6 +22,7 @@ using static Microsoft.PowerFx.Tests.PowerPlatformConnectorTests;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
+#pragma warning disable CS0618 // Type or member is obsolete for PowerPlatformConnectorClient
     public abstract class BaseConnectorTest : PowerFxTest, IDisposable
     {
         internal ITestOutputHelper _output;

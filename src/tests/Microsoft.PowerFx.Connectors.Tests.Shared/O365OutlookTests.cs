@@ -780,6 +780,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         // This function has 2 "id" parameters, one required and one optional
         // We verify that the optional parameter is properly renamed "id_1"
+#pragma warning disable CS0618 // Type or member is obsolete for PowerPlatformConnectorClient
         [Fact]
         public void Office365Outlook_ContactPatchItemV2Parameters()
         {

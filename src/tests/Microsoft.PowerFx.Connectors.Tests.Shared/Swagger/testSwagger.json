@@ -897,7 +897,7 @@
         "url": "https://docs.microsoft.com/connectors/msnweather"
       }
     },
-    "wadlUrl": "https://pafeblobtip2by.blob.core.windows.net/apiwadls-6152dede-daf1-4d18-ba01-bda9e7a14db2/shared%3A2Dmsnweather?skoid=9f592767-c177-4354-8a08-a815a2b01341&sktid=975f013f-7f24-47e8-a7d3-abc4752bf346&skt=2025-07-22T22%3A00%3A00Z&ske=2025-07-29T22%3A00%3A00Z&sks=b&skv=2025-01-05&sv=2025-01-05&spr=https&st=2025-07-22T22%3A37%3A28Z&se=2025-07-23T10%3A38%3A28Z&sr=c&sp=rl&scid=30a1bd97-d73a-404f-8c5c-69968ebec401&sig=UjdpwjIJISq2hBbvDIoV4C9I42oxkgFSxRcQh%2F60YRY%3D",
+    "wadlUrl": "https://pafeblobtip2by.blob.core.windows.net/apiwadls-6152dede-daf1-4d18-ba01-bda9e7a14db2/shared%3A2Dmsnweather?skoid=9f592767-c177-4354-8a08-a815a2b01341&sktid=975f013f-7f24-47e8-a7d3-abc4752bf346&skt=2025-07-23T19%3A00%3A00Z&ske=2025-07-30T19%3A00%3A00Z&sks=b&skv=2025-01-05&sv=2025-01-05&spr=https&st=2025-07-23T19%3A39%3A54Z&se=2025-07-24T07%3A40%3A54Z&sr=c&sp=rl&scid=680ee6ff-7e9a-40b5-8ad7-d5ed5ba2d90d&sig=iCKtsQkBS59kIwIevY5rs8GAedc1TADJcx0Eo6f%2FUKs%3D",
     "runtimeUrls": [
       "https://2e60e1f8-dcfd-e26e-ad11-76bce40da16b.09.common.tip2.azure-apihub.net/apim/msnweather"
     ],

@@ -29,6 +29,7 @@ using TestExtensions = Microsoft.PowerFx.Core.Tests.Extensions;
 
 namespace Microsoft.PowerFx.Tests
 {
+#pragma warning disable CS0618 // Type or member is obsolete for PowerPlatformConnectorClient
     // Simulate calling PowerPlatform connectors.
     public class PowerPlatformConnectorTests : PowerFxTest
     {
