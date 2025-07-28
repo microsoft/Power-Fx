@@ -63,4 +63,4 @@ Errors: Error 12-19: The type of this argument 'a' does not match the expected t
 Errors: Error 14-19: The type of this argument 'a' does not match the expected type 'Text'. Found type 'Decimal'.|Error 0-5: The function 'Patch' has some invalid arguments.
 
 >> Patch({a:Table({a:1,b:1}),b:Blank()},{b:1})
-Errors: Error 37-42: The type of this argument 'b' does not match the expected type 'ObjNull'. Found type 'Decimal'.|Error 0-5: The function 'Patch' has some invalid arguments.
+Errors: Error 37-42: The type of this argument 'b' does not match the expected type 'Blank'. Found type 'Decimal'.|Error 0-5: The function 'Patch' has some invalid arguments.

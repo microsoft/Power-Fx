@@ -111,7 +111,7 @@ Errors: Error 26-30: Unsupported type 'Void' in type argument.
 Errors: Error 0-59: Invalid number of arguments: received 3, expected 2.
 
 >> IsType(ParseJSON("true"), None)
-Errors: Error 26-30: Unsupported type 'ObjNull' in type argument.
+Errors: Error 26-30: Unsupported type 'Blank' in type argument.
 
 >> IsType(ParseJSON("{}"), Type({a: Text, b: [Color]}))
 Errors: Error 28-29: Unsupported type 'Color' in type argument.
