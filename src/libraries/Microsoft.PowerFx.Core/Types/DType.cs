@@ -1052,6 +1052,11 @@ namespace Microsoft.PowerFx.Core.Types
                 return "Dynamic";
             }
 
+            if (Kind == DKind.ObjNull)
+            {
+                return "Blank";
+            }
+
             if (IsLazyType)
             {
                 Contracts.AssertValue(LazyTypeProvider);
