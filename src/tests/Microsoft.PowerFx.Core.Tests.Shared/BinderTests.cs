@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Numerics;
 using System.Reflection.Metadata;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
@@ -162,6 +164,91 @@ namespace Microsoft.PowerFx.Core.Tests
             var binding = checkResult.Binding;
 
             Assert.True(binding.ErrorContainer.HasErrorsInTree(binding.Top));
+        }
+
+        /// <summary>
+        /// Tests that variable volatility propagates to the children of As nodes.
+        /// </summary>
+        [Fact]
+        public void TestVolatileVariablesWithForAllAsKeyword()
+        {
+            var config = new PowerFxConfig();
+            config.SymbolTable.AddVariable(
+                "volatileVariable",
+                new KnownRecordType(TestUtils.DT("![DummyField:*[Value:n]]")),
+                mutable: true);
+            config.SymbolTable.AddVariable(
+                "gblTable",
+                new TableType(TestUtils.DT("*[Value:n]")),
+                mutable: true);
+
+            config.AddFunction(new FakeSetFunction());
+
+            var engine = new Engine(config);
+            var parserOptions = new ParserOptions { AllowsSideEffects = true };
+
+            const string expression = @"With(
+                {dummyWith: gblTable},
+                Set(
+                    volatileVariable,
+                    {DummyField: dummyWith}
+                );
+                ForAll(
+                    volatileVariable.DummyField| As currentRecord,
+                    currentRecord.Value + 1
+                )
+            )";
+ 
+            var indices = Regex.Matches(expression, Regex.Escape("|"))
+                .Select(m => m.Index)
+                .ToArray();
+
+            string result = Regex.Replace(expression, Regex.Escape("|"), string.Empty);
+            var checkResult = engine.Check(result, parserOptions);
+            Assert.True(checkResult.IsSuccess);
+
+            var binding = checkResult.Binding;
+
+            // Navigate to the ForAll node
+            foreach (var index in indices)
+            {
+                var node = FindNodeVisitor.Run(checkResult.Binding.Top, index);
+                Assert.True(binding.IsUnliftable(node));
+            }
+        }
+
+        private class FakeSetFunction : BuiltinFunction
+        {
+            public FakeSetFunction()
+                : base(
+                    "Set",
+                    _ => "Mocks the set function",
+                    FunctionCategories.Behavior,
+                    DType.Boolean,
+                    0,
+                    2,
+                    2)
+            {
+            }
+
+            public override bool IsSelfContained => false;
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures() =>
+                Enumerable.Empty<TexlStrings.StringGetter[]>();
+
+            public override IEnumerable<Identifier> GetIdentifierOfModifiedValue(
+                TexlNode[] args,
+                out TexlNode identifierNode)
+            {
+                if (args.FirstOrDefault() is FirstNameNode { Ident: var ident } firstNameNode)
+                {
+                    identifierNode = firstNameNode;
+                    return new List<Identifier> { ident };
+                }
+
+                identifierNode = null;
+                return null;
+            }
         }
     }
 }
