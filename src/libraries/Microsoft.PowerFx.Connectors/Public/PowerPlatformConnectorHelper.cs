@@ -1,7 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using static Microsoft.PowerFx.Connectors.ConnectorSettings;
 
@@ -15,61 +18,70 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// Builds a client from an <see cref="OpenApiDocument"/>.
         /// </summary>
-        public static DelegatingHandler FromDocument(
+        /// <returns>A tuple containing the <see cref="DelegatingHandler"/> and the base <see cref="Uri"/>, this Uri must be set as a BaseAddress in HttpClient.</returns>
+        public static (DelegatingHandler, Uri) FromDocument(
             OpenApiDocument document,
             string environmentId,
             string connectionId,
             BearerAuthTokenProvider tokenProvider,
-            string userAgent,
-            HttpMessageHandler httpMessageHandler)
+            HttpMessageHandler httpMessageHandler,
+            string userAgent = null)
         {
-            return new PowerPlatformConnectorClient2(
+            var handler = new PowerPlatformConnectorClient2(
                 document,
                 environmentId,
                 connectionId,
                 tokenProvider,
-                userAgent,
-                httpMessageHandler);
+                httpMessageHandler,
+                userAgent);
+
+            return (handler, handler.BaseUri);
         }
 
         /// <summary>
         /// Builds a client from a base URL provided as a string.
         /// </summary>
-        public static DelegatingHandler FromBaseUrl(
+        /// <returns>A tuple containing the <see cref="DelegatingHandler"/> and the base <see cref="Uri"/>, this Uri must be set as a BaseAddress in HttpClient.</returns>
+        public static (DelegatingHandler, Uri) FromBaseUrl(
             string baseUrl,
             string environmentId,
             string connectionId,
             BearerAuthTokenProvider tokenProvider,
-            string userAgent,
-            HttpMessageHandler httpMessageHandler)
+            HttpMessageHandler httpMessageHandler,
+            string userAgent = null)
         {
-            return new PowerPlatformConnectorClient2(
+            var handler = new PowerPlatformConnectorClient2(
                 baseUrl,
                 environmentId,
                 connectionId,
                 tokenProvider,
-                userAgent,
-                httpMessageHandler);
+                httpMessageHandler,
+                userAgent);
+
+            return (handler, handler.BaseUri);
         }
 
         /// <summary>
         /// Builds a client from a base URL provided as a <see cref="System.Uri"/>.
         /// </summary>
-        public static DelegatingHandler FromUri(
+        /// <returns>A tuple containing the <see cref="DelegatingHandler"/> and the base <see cref="Uri"/>, this Uri must be set as a BaseAddress in HttpClient.</returns>
+        public static (DelegatingHandler, Uri) FromUri(
             System.Uri baseUrl,
             string environmentId,
             string connectionId,
             BearerAuthTokenProvider tokenProvider,
-            string userAgent,
-            HttpMessageHandler httpMessageHandler)
+            HttpMessageHandler httpMessageHandler,
+            string userAgent = null)
         {
-            return new PowerPlatformConnectorClient2(
+            var handler = new PowerPlatformConnectorClient2(
                 baseUrl,
                 environmentId,
                 connectionId,
                 tokenProvider,
-                userAgent,
-                httpMessageHandler);
+                httpMessageHandler,
+                userAgent);
+
+            return (handler, handler.BaseUri);
         }
     }
 }

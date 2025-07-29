@@ -26,6 +26,8 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly Uri _baseUri;
 
+        internal Uri BaseUri => _baseUri;
+
         public string ConnectionId { get; }
 
         public string UserAgent { get; }
@@ -46,9 +48,9 @@ namespace Microsoft.PowerFx.Connectors
             string environmentId,
             string connectionId,
             BearerAuthTokenProvider tokenProvider,
-            string userAgent,
-            HttpMessageHandler httpMessageHandler)
-            : this(GetBaseUrlFromOpenApiDocument(document), environmentId, connectionId, tokenProvider, userAgent, httpMessageHandler)
+            HttpMessageHandler httpMessageHandler,
+            string userAgent)
+            : this(GetBaseUrlFromOpenApiDocument(document), environmentId, connectionId, tokenProvider, httpMessageHandler, userAgent)
         {
         }
 
@@ -66,9 +68,9 @@ namespace Microsoft.PowerFx.Connectors
             string environmentId,
             string connectionId,
             BearerAuthTokenProvider tokenProvider,
-            string userAgent,
-            HttpMessageHandler httpMessageHandler)
-            : this(NormalizeUrl(baseUrl), environmentId, connectionId, tokenProvider, userAgent, httpMessageHandler)
+            HttpMessageHandler httpMessageHandler,
+            string userAgent)
+            : this(NormalizeUrl(baseUrl), environmentId, connectionId, tokenProvider, httpMessageHandler, userAgent)
         {
         }
 
@@ -86,8 +88,8 @@ namespace Microsoft.PowerFx.Connectors
             string environmentId,
             string connectionId,
             BearerAuthTokenProvider tokenProvider,
-            string userAgent,
-            HttpMessageHandler httpMessageHandler)
+            HttpMessageHandler httpMessageHandler,
+            string userAgent = null)
             : base(httpMessageHandler)
         {
             if (baseUrl == null)
@@ -114,7 +116,6 @@ namespace Microsoft.PowerFx.Connectors
             static Uri GetBaseUri(Uri uri)
             {
                 var str = uri.GetLeftPart(UriPartial.Path);
-                str = str.TrimEnd('/');
                 return new Uri(str, UriKind.Absolute);
             }
         }

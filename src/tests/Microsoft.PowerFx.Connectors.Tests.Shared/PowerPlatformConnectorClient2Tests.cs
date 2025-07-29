@@ -36,18 +36,18 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void Constructor_ThrowsOnNullArguments()
         {
             using var handler = new DummyHandler();
-            Assert.Throws<ArgumentNullException>(() => PowerPlatformConnectorHelper.FromUri((Uri)null, "env", "conn", DummyTokenProvider, "ua", handler));
-            Assert.Throws<ArgumentNullException>(() => PowerPlatformConnectorHelper.FromUri(new Uri("https://test"), null, "conn", DummyTokenProvider, "ua", handler));
-            Assert.Throws<ArgumentNullException>(() => PowerPlatformConnectorHelper.FromUri(new Uri("https://test"), "env", null, DummyTokenProvider, "ua", handler));
-            Assert.Throws<ArgumentNullException>(() => PowerPlatformConnectorHelper.FromUri(new Uri("https://test"), "env", "conn", null, "ua", handler));
+            Assert.Throws<ArgumentNullException>(() => PowerPlatformConnectorHelper.FromUri((Uri)null, "env", "conn", DummyTokenProvider, handler));
+            Assert.Throws<ArgumentNullException>(() => PowerPlatformConnectorHelper.FromUri(new Uri("https://test"), null, "conn", DummyTokenProvider, handler));
+            Assert.Throws<ArgumentNullException>(() => PowerPlatformConnectorHelper.FromUri(new Uri("https://test"), "env", null, DummyTokenProvider, handler));
+            Assert.Throws<ArgumentNullException>(() => PowerPlatformConnectorHelper.FromUri(new Uri("https://test"), "env", "conn", null, handler));
         }
 
         [Fact]
         public void Constructor_ThrowsOnRelativeOrHttpUri()
         {
             using var handler = new DummyHandler();
-            Assert.Throws<PowerFxConnectorException>(() => PowerPlatformConnectorHelper.FromUri(new Uri("/relative", UriKind.Relative), "env", "conn", DummyTokenProvider, "ua", handler));
-            Assert.Throws<PowerFxConnectorException>(() => PowerPlatformConnectorHelper.FromUri(new Uri("http://test"), "env", "conn", DummyTokenProvider, "ua", handler));
+            Assert.Throws<PowerFxConnectorException>(() => PowerPlatformConnectorHelper.FromUri(new Uri("/relative", UriKind.Relative), "env", "conn", DummyTokenProvider, handler));
+            Assert.Throws<PowerFxConnectorException>(() => PowerPlatformConnectorHelper.FromUri(new Uri("http://test"), "env", "conn", DummyTokenProvider, handler));
         }
 
         [Fact]
@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             using var handler = new DummyHandler();
             using var loggingHandler = new LoggingHandler(handler);
-            using var client = PowerPlatformConnectorHelper.FromBaseUrl("test.com", "env", "conn", DummyTokenProvider, "ua", loggingHandler);
+            var (client, baseUri) = PowerPlatformConnectorHelper.FromBaseUrl("test.com", "env", "conn", DummyTokenProvider, loggingHandler);
             using var httpInvoker = new HttpMessageInvoker(client);
             using var dummyRequest = new HttpRequestMessage(HttpMethod.Get, "/api/test");
             _ = await httpInvoker.SendAsync(dummyRequest, CancellationToken.None);
@@ -82,7 +82,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 }
             };
 
-            using var client = PowerPlatformConnectorHelper.FromBaseUrl("https://test.com", "env", "conn", DummyTokenProvider, "ua", handler);
+            var (client, baseUri) = PowerPlatformConnectorHelper.FromBaseUrl("https://test.com", "env", "conn", DummyTokenProvider, handler);
             using var request = new HttpRequestMessage(HttpMethod.Get, "/api/test");
             using var httpInvoker = new HttpMessageInvoker(client);
             var response = await httpInvoker.SendAsync(request, CancellationToken.None);
@@ -93,10 +93,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public async Task SendAsync_ThrowsOnPathTraversal()
         {
             using var handler = new DummyHandler();
-            using var client = PowerPlatformConnectorHelper.FromBaseUrl("https://test.com", "env", "conn", DummyTokenProvider, "ua", handler);
+            var (client, baseUri) = PowerPlatformConnectorHelper.FromBaseUrl("https://test.com/path1/", "env", "conn", DummyTokenProvider, handler);
             using var request = new HttpRequestMessage(HttpMethod.Get, "/../malicious");
-            using var httpClient = new HttpClient(client);
-            await Assert.ThrowsAsync<InvalidOperationException>(() => httpClient.SendAsync(request, CancellationToken.None));
+            using var httpClient = new HttpClient(client) { BaseAddress = baseUri };
+            await Assert.ThrowsAsync<ArgumentException>(() => httpClient.SendAsync(request, CancellationToken.None));
         }
 
         [Fact]
@@ -118,12 +118,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 }
             };
 
-            using var client = PowerPlatformConnectorHelper.FromBaseUrl(
+            var (client, baseUri) = PowerPlatformConnectorHelper.FromBaseUrl(
                 "https://test.com",
                 "env",
                 "conn",
                 DummyTokenProvider,
-                "ua",
                 handler);
 
             var uriWithEverything = new Uri("/api/test/path?x=1&y=2#section", UriKind.Relative);
@@ -155,19 +154,18 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 }
             };
 
-            using var client = PowerPlatformConnectorHelper.FromBaseUrl(
+            var (client, baseUri) = PowerPlatformConnectorHelper.FromBaseUrl(
                 "https://example.com",
                 "env",
                 "conn",
                 DummyTokenProvider,
-                "ua",
                 handler);
 
             var uri = new Uri("/api/test/get?param1=value1&param2=value2#top", UriKind.Relative);
 
             using var request = new HttpRequestMessage(HttpMethod.Get, uri);
 
-            using var httpClient = new HttpClient(client) { BaseAddress = new Uri("https://example.com") };
+            using var httpClient = new HttpClient(client) { BaseAddress = baseUri };
             var response = await httpClient.SendAsync(request, CancellationToken.None);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -184,12 +182,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             using var loggingHandler = new LoggingHandler(dummyHandler);
 
-            using var client = PowerPlatformConnectorHelper.FromUri(
+            var (client, baseUri) = PowerPlatformConnectorHelper.FromUri(
                 new Uri("https://test.com"),
                 "env",
                 "conn",
                 DummyTokenProvider,
-                "ua",
                 loggingHandler);
             using var invoker = new HttpMessageInvoker(client);
             using var request = new HttpRequestMessage(HttpMethod.Get, "/api/test");

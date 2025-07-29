@@ -909,15 +909,17 @@ namespace Microsoft.PowerFx.Connectors.Tests
             ConsoleLogger logger = new ConsoleLogger(_output);
             string connectionId = "3b997639fd9c4d808ecf723eb4b55c64";
             string jwt = "eyJ0eXAiOiJKV...";
-            var ppccHandler = PowerPlatformConnectorHelper.FromBaseUrl(
+            var (client, baseUri) = PowerPlatformConnectorHelper.FromBaseUrl(
                 "tip1-shared.azure-apim.net",
                 "e48a52f5-3dfe-e2f6-bc0b-155d32baa44c",
                 connectionId,
                 async (CancellationToken ct) => jwt,
-                null,
                 testConnector);
 
-            using var httpClient = new HttpClient(ppccHandler) { BaseAddress = new Uri("https://tip1-shared.azure-apim.net/") };
+            using var httpClient = new HttpClient(client)
+            {
+                BaseAddress = baseUri
+            };
 
             testConnector.SetResponseFromFile(@"Responses\SF GetDatasetsMetadata.json");
             DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(httpClient, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
