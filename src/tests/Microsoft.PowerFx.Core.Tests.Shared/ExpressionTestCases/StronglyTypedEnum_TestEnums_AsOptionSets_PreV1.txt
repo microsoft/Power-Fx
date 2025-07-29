@@ -31,7 +31,7 @@
 // Misc
 //   15. Since there is no longer an Accepts relationship between enums and their backing kinds, more likely to get Void results
 //   16. Everything coerces to string
-//   17. Everything equals compares to Blank() (ObjNull), can order compare with numbers and CanCompareNumerics set
+//   17. Everything equals compares to Blank() (Blank), can order compare with numbers and CanCompareNumerics set
 
 //============================================================================================================
 //
@@ -611,7 +611,7 @@ false
 
 //===========================================================================================================
 //
-// 17. Everything equals compares to Blank() (ObjNull), can order compare with numbers and CanCompareNumerics set
+// 17. Everything equals compares to Blank() (Blank), can order compare with numbers and CanCompareNumerics set
 //
 
 >> TestYesNo.Yes = Blank()

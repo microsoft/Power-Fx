@@ -29,7 +29,7 @@
 // Misc
 //   15. Since there is no longer an Accepts relationship between enums and their backing kinds, more likely to get Void results
 //   16. Everything coerces to string
-//   17. Everything equals compares to Blank() (ObjNull), can order compare with numbers and CanCompareNumerics set
+//   17. Everything equals compares to Blank() (Blank), can order compare with numbers and CanCompareNumerics set
 // 
 // Examples (examples for Boolean backed enums and other configurations are in StronglyTypedEnums_TestEnums)
 //   18. StartOfWeek - Standard number backed enum
@@ -783,17 +783,17 @@ Match.CalculatedOptionSetValue
 
 //===========================================================================================================
 //
-// 17. Everything equals compares to Blank() (ObjNull), can order compare with numbers and CanCompareNumerics set
+// 17. Everything equals compares to Blank() (Blank), can order compare with numbers and CanCompareNumerics set
 //
 
 >> StartOfWeek.Monday < Blank()
-Errors: Error 19-20: Incompatible types for comparison. These types can't be compared: Enum (StartOfWeek), ObjNull.
+Errors: Error 19-20: Incompatible types for comparison. These types can't be compared: Enum (StartOfWeek), Blank.
 
 >> StartOfWeek.Monday = Blank()
 false
 
 >> Blank() >= StartOfWeek.Monday
-Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (StartOfWeek).
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: Blank, Enum (StartOfWeek).
 
 >> Blank() <> StartOfWeek.Monday
 true
@@ -813,25 +813,25 @@ false
 true
 
 >> Match.Letter < Blank()
-Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: Enum (Match), ObjNull.
+Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: Enum (Match), Blank.
 
 >> Match.Letter = Blank()
 false
 
 >> Blank() >= Match.Letter
-Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (Match).
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: Blank, Enum (Match).
 
 >> Blank() <> Match.Letter
 true
 
 >> Color.Gray < Blank()
-Errors: Error 11-12: Incompatible types for comparison. These types can't be compared: Enum (Color), ObjNull.
+Errors: Error 11-12: Incompatible types for comparison. These types can't be compared: Enum (Color), Blank.
 
 >> Color.Gray = Blank()
 false
 
 >> Blank() >= Color.Gray
-Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (Color).
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: Blank, Enum (Color).
 
 >> Blank() <> Color.Gray
 true

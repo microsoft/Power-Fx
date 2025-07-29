@@ -28,7 +28,7 @@
 // Misc
 //   15. Since there is no longer an Accepts relationship between enums and their backing kinds, more likely to get Void results
 //   16. Everything coerces to string
-//   17. Everything equals compares to Blank() (ObjNull), can order compare with numbers and CanCompareNumerics set
+//   17. Everything equals compares to Blank() (Blank), can order compare with numbers and CanCompareNumerics set
 //
 // Examples
 //   18. TestYesNo - Standard DV Boolean backed option set, with CoerceToBackingKind and CoerceFromBackingKind
@@ -577,7 +577,7 @@ false
 
 //===========================================================================================================
 //
-// 17. Everything equals compares to Blank() (ObjNull), can order compare with numbers and CanCompareNumerics set
+// 17. Everything equals compares to Blank() (Blank), can order compare with numbers and CanCompareNumerics set
 //
 
 >> TestYesNo.Yes = Blank()
@@ -605,28 +605,28 @@ true
 true
 
 >> TestYesNo.No >= Blank()
-Errors: Error 13-15: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), ObjNull.
+Errors: Error 13-15: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), Blank.
 
 >> TestYesNo.No < Blank()
-Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), ObjNull.
+Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), Blank.
 
 >> Blank() < TestYesNo.Yes
-Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestYesNo).
+Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: Blank, Enum (TestYesNo).
 
 >> Blank() <= TestYesNo.Yes
-Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestYesNo).
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: Blank, Enum (TestYesNo).
 
 >> TestNumberCompareNumeric.V2 < Blank()
-Errors: Error 28-29: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), ObjNull.
+Errors: Error 28-29: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), Blank.
 
 >> TestNumberCompareNumeric.V2 <= Blank()
-Errors: Error 28-30: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), ObjNull.
+Errors: Error 28-30: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), Blank.
 
 >> TestNumberCompareNumeric.V2 >= Blank()
-Errors: Error 28-30: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), ObjNull.
+Errors: Error 28-30: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), Blank.
 
 >> TestNumberCompareNumeric.V2 > Blank()
-Errors: Error 28-29: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), ObjNull.
+Errors: Error 28-29: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), Blank.
 
 >> TestNumberCompareNumeric.V2 = Blank()
 false
@@ -635,16 +635,16 @@ false
 true
 
 >> Blank() < TestNumberCompareNumeric.V2
-Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestNumberCompareNumeric).
+Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: Blank, Enum (TestNumberCompareNumeric).
 
 >> Blank() <= TestNumberCompareNumeric.V2
-Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestNumberCompareNumeric).
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: Blank, Enum (TestNumberCompareNumeric).
 
 >> Blank() >= TestNumberCompareNumeric.V2
-Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestNumberCompareNumeric).
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: Blank, Enum (TestNumberCompareNumeric).
 
 >> Blank() > TestNumberCompareNumeric.V2
-Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestNumberCompareNumeric).
+Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: Blank, Enum (TestNumberCompareNumeric).
 
 >> Blank() = TestNumberCompareNumeric.V2
 false
@@ -653,7 +653,7 @@ false
 true
 
 >> TestNumberCoerceTo.V > Blank()
-Errors: Error 21-22: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCoerceTo), ObjNull.
+Errors: Error 21-22: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCoerceTo), Blank.
 
 >> TestNumberCoerceTo.V = Blank()
 false

@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // check if the given type argument is not supported
             if (!DType.IsSupportedType(argTypes[1], SupportedJSONTypes, out var unsupportedType))
             {
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrUnsupportedTypeInTypeArgument, unsupportedType.Kind);
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrUnsupportedTypeInTypeArgument, unsupportedType.GetKindString());
             }
         }
     }
