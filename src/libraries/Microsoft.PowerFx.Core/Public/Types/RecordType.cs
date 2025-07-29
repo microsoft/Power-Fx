@@ -188,5 +188,10 @@ namespace Microsoft.PowerFx.Types
 
             sb.Append("}");
         }
+
+        public void SetFieldsOptional()
+        {
+            _type.AreFieldsOptional = true;
+        }
     }
 }
