@@ -2310,7 +2310,7 @@ namespace Microsoft.PowerFx.Tests
             {
                 recalcEngine.Eval(evalExpression, options: parserOptions);
             });
-            Assert.True(ex.Message.Contains(expectedError));
+            Assert.Contains(expectedError, ex.Message);
         }
 
         #region Test
