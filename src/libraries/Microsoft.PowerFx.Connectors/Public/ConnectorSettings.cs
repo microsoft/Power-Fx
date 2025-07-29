@@ -2,6 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Microsoft.PowerFx.Connectors
 {
@@ -11,6 +13,14 @@ namespace Microsoft.PowerFx.Connectors
     [ThreadSafeImmutable]
     public class ConnectorSettings
     {
+        /// <summary>
+        /// Delegate for providing a bearer token for authentication.
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Token without "Bearer" scheme as the prefix.</returns>
+        public delegate Task<string> BearerAuthTokenProvider(
+            CancellationToken cancellationToken);
+
         /// <summary>
         /// Default number of rows to return for connector, per page. I.E. $top=1000.
         /// </summary>

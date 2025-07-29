@@ -14,6 +14,7 @@ namespace Microsoft.PowerFx.Connectors
     /// Http handler to invoke Power Platform connectors. 
     /// This accepts HttpRequestMessages described the swagger, transforms the request, and forwards them to Connector endpoints.
     /// </summary>
+    [Obsolete($"Use {nameof(PowerPlatformConnectorClient2)} instead. This class will be removed in a future release.")]
     public class PowerPlatformConnectorClient : HttpClient
     {
         /// <summary>
@@ -194,6 +195,7 @@ namespace Microsoft.PowerFx.Connectors
             req.Headers.Add("x-ms-client-environment-id", "/providers/Microsoft.PowerApps/environments/" + EnvironmentId);
             req.Headers.Add("x-ms-user-agent", UserAgent);
             req.Headers.Add("x-ms-request-url", url);
+            req.Headers.Add("x-ms-enable-selects", "true");
 
             // might be needed for tabular connectors
             //req.Headers.Add("X-Ms-Protocol-Semantics", "cdp");

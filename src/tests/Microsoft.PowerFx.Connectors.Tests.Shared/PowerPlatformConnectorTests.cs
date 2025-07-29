@@ -29,6 +29,7 @@ using TestExtensions = Microsoft.PowerFx.Core.Tests.Extensions;
 
 namespace Microsoft.PowerFx.Tests
 {
+#pragma warning disable CS0618 // Type or member is obsolete https://github.com/microsoft/Power-Fx/issues/2940
     // Simulate calling PowerPlatform connectors.
     public class PowerPlatformConnectorTests : PowerFxTest
     {
@@ -289,6 +290,7 @@ namespace Microsoft.PowerFx.Tests
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/839eace6-59ab-4243-97ec-a5b8fcc104e4
  x-ms-client-session-id: MySessionId
+ x-ms-enable-selects: true
  x-ms-request-method: GET
  x-ms-request-url: /apim/msnweather/shared-msnweather-8d08e763-937a-45bf-a2ea-c5ed-ecc70ca4/current/Redmond?units=Imperial
  x-ms-user-agent: PowerFx/{version}
@@ -338,6 +340,7 @@ namespace Microsoft.PowerFx.Tests
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/49970107-0806-e5a7-be5e-7c60e2750f01
  x-ms-client-session-id: MySessionId
+ x-ms-enable-selects: true
  x-ms-request-method: GET
  x-ms-request-url: /apim/msnweather/480a676ab6e64b168cfa41506014e45d/current/Orl%C3%A9ans?units=C
  x-ms-user-agent: PowerFx/{version}
@@ -521,6 +524,7 @@ namespace Microsoft.PowerFx.Tests
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/0a1a8d62-0453-e710-b774-446dc6634a89
  x-ms-client-session-id: ccccbff3-9d2c-44b2-bee6-cf24aab10b7e
+ x-ms-enable-selects: true
  x-ms-request-method: POST
  x-ms-request-url: /apim/azureblob/1f18a56da7574c1f8b66a1ea42c23805/datasets/default/files?folderPath=container&name=01.txt&queryParametersSingleEncoded=True
  x-ms-user-agent: PowerFx/{version}
@@ -599,6 +603,7 @@ namespace Microsoft.PowerFx.Tests
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/0a1a8d62-0453-e710-b774-446dc6634a89
  x-ms-client-session-id: ccccbff3-9d2c-44b2-bee6-cf24aab10b7e
+ x-ms-enable-selects: true
  x-ms-request-method: POST
  x-ms-request-url: /apim/azureblob/6d228109794849049ce8116e5d4ffaf8/v2/datasets/pfxdevstgaccount1/files?folderPath=container&name=001.jpg&queryParametersSingleEncoded=True
  x-ms-user-agent: PowerFx/{version}
@@ -1075,6 +1080,7 @@ namespace Microsoft.PowerFx.Tests
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
  x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
+ x-ms-enable-selects: true
  x-ms-request-method: GET
  x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/v2/Mail?folderPath=Inbox&importance=Any&fetchOnlyWithAttachment=False&fetchOnlyUnread=True&fetchOnlyFlagged=False&includeAttachments=False&top=10
  x-ms-user-agent: PowerFx/{version}
@@ -1131,6 +1137,7 @@ namespace Microsoft.PowerFx.Tests
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
  x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
+ x-ms-enable-selects: true
  x-ms-request-method: POST
  x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/datasets/calendars/v4/tables/Calendar/items
  x-ms-user-agent: PowerFx/{version}
@@ -1178,6 +1185,7 @@ namespace Microsoft.PowerFx.Tests
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
  x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
+ x-ms-enable-selects: true
  x-ms-request-method: GET
  x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/codeless/beta/me/messages/AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwCDi7i2pr6zRbiq9q8hHM-iAAAFMQAZAABDuyuwiYTvQLeL0nv55lGwAAVHeZkhAAA%3D/$value
  x-ms-user-agent: PowerFx/{version}
@@ -1223,6 +1231,7 @@ namespace Microsoft.PowerFx.Tests
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
  x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
+ x-ms-enable-selects: true
  x-ms-request-method: POST
  x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/codeless/beta/me/findMeetingTimes
  x-ms-user-agent: PowerFx/{version}
@@ -1270,6 +1279,7 @@ namespace Microsoft.PowerFx.Tests
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
  x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
+ x-ms-enable-selects: true
  x-ms-request-method: PATCH
  x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/codeless/v1.0/me/messages/AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwBBHsoKDHXPEaP6AIBfULPVAAAABp8rAABDuyuwiYTvQLeL0nv55lGwAAVHeWXcAAA%3D/flag
  x-ms-user-agent: PowerFx/{version}
@@ -1317,6 +1327,7 @@ namespace Microsoft.PowerFx.Tests
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
  x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
+ x-ms-enable-selects: true
  x-ms-request-method: POST
  x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/codeless/v1.0/me/getMailTips
  x-ms-user-agent: PowerFx/{version}
@@ -1367,6 +1378,7 @@ namespace Microsoft.PowerFx.Tests
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
  x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
+ x-ms-enable-selects: true
  x-ms-request-method: GET
  x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/codeless/beta/me/findRoomLists
  x-ms-user-agent: PowerFx/{version}
@@ -1452,6 +1464,7 @@ namespace Microsoft.PowerFx.Tests
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/839eace6-59ab-4243-97ec-a5b8fcc104e4
  x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
+ x-ms-enable-selects: true
  x-ms-request-method: GET
  x-ms-request-url: /apim/office365/c112a9268f2a419bb0ced71f5e48ece9/codeless/beta/me/findRooms
  x-ms-user-agent: PowerFx/{version}
@@ -1500,6 +1513,7 @@ namespace Microsoft.PowerFx.Tests
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
  x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
+ x-ms-enable-selects: true
  x-ms-request-method: GET
  x-ms-request-url: /apim/bingmaps/9ab2342eaecc4800a5c327290abf4a1f/V3/REST/V1/Routes/Driving?wp.0=47%2C396846%2C%20-0%2C499967&wp.1=47%2C395142%2C%20-0%2C480142&avoid_highways=False&avoid_tolls=False&avoid_ferry=False&avoid_minimizeHighways=False&avoid_minimizeTolls=False&avoid_borderCrossing=False
  x-ms-user-agent: PowerFx/{version}
@@ -1549,6 +1563,7 @@ namespace Microsoft.PowerFx.Tests
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
  x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
+ x-ms-enable-selects: true
  x-ms-request-method: GET
  x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/v2/datasets/pfxdev-sql.database.windows.net,connectortest/procedures
  x-ms-user-agent: PowerFx/{version}
@@ -1619,6 +1634,7 @@ namespace Microsoft.PowerFx.Tests
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/4d4a8e81-17a4-4a92-9bfe-8d12e607fb7f
  x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
+ x-ms-enable-selects: true
  x-ms-request-method: POST
  x-ms-request-url: /apim/sql/53f515b50c3e4925803ec1f0945e799f/v2/datasets/pfxdev-sql.database.windows.net,SampleDB/query/sql
  x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
@@ -1706,6 +1722,7 @@ namespace Microsoft.PowerFx.Tests
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
  x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
+ x-ms-enable-selects: true
  x-ms-request-method: POST
  x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/v2/datasets/pfxdev-sql.database.windows.net,connectortest/procedures/sp_1
  x-ms-user-agent: PowerFx/{version}
@@ -1760,6 +1777,7 @@ namespace Microsoft.PowerFx.Tests
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
  x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
+ x-ms-enable-selects: true
  x-ms-request-method: POST
  x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/v2/datasets/pfxdev-sql.database.windows.net,connectortest/procedures/sp_1
  x-ms-user-agent: MyProduct/v1.2 PowerFx/{version}
@@ -1912,6 +1930,7 @@ namespace Microsoft.PowerFx.Tests
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/2f0cc19d-893e-e765-b15d-2906e3231c09
  x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
+ x-ms-enable-selects: true
  x-ms-request-method: GET
  x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/datasets
  x-ms-user-agent: PowerFx/{version}
@@ -1922,6 +1941,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/2f0cc19d-893e-e765-b15d-2906e3231c09
  x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
+ x-ms-enable-selects: true
  x-ms-request-method: GET
  x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/$metadata.json/datasets
  x-ms-user-agent: PowerFx/{version}
@@ -1932,6 +1952,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/2f0cc19d-893e-e765-b15d-2906e3231c09
  x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
+ x-ms-enable-selects: true
  x-ms-request-method: GET
  x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/datasets/https%253A%252F%252Fauroraprojopsintegration01.sharepoint.com%252Fsites%252FSite17/alltables
  x-ms-user-agent: PowerFx/{version}
@@ -1942,6 +1963,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/2f0cc19d-893e-e765-b15d-2906e3231c09
  x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
+ x-ms-enable-selects: true
  x-ms-request-method: GET
  x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/datasets/https%253A%252F%252Fauroraprojopsintegration01.sharepoint.com%252Fsites%252FSite17/tables/3756de7d-cb20-4014-bab8-6ea7e5264b97/views
  x-ms-user-agent: PowerFx/{version}
@@ -1952,6 +1974,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/2f0cc19d-893e-e765-b15d-2906e3231c09
  x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
+ x-ms-enable-selects: true
  x-ms-request-method: GET
  x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/datasets/https%253A%252F%252Fauroraprojopsintegration01.sharepoint.com%252Fsites%252FSite17/tables/3756de7d-cb20-4014-bab8-6ea7e5264b97/items?$top=4
  x-ms-user-agent: PowerFx/{version}
@@ -2172,6 +2195,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b29c41cf-173b-e469-830b-4f00163d296b
  x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-enable-selects: true
  x-ms-request-method: POST
  x-ms-request-url: /apim/commondataserviceforapps/82728ddb6bfa461ea3e50e17da8ab164/v1.0/$metadata.json/GetActionListEnum/GetBoundActionsWithOrganization
  x-ms-user-agent: PowerFx/{version}
@@ -2414,6 +2438,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
  x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
+ x-ms-enable-selects: true
  x-ms-request-method: POST
  x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/v2/datasets/pfxdev-sql.database.windows.net,connectortest/procedures/sp_1
  x-ms-user-agent: PowerFx/{version}
@@ -2506,6 +2531,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/49970107-0806-e5a7-be5e-7c60e2750f01
  x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-enable-selects: true
  x-ms-request-method: PATCH
  x-ms-request-url: /apim/excelonlinebusiness/e24a1ac719284479a4817a0c5bb6ef58/drives/b%21IbvdIRe4LEGypNQpzV_eHMlG3PtubVREtOzk7doKeFvkIs8VRqloT4mtkIOb6aTB/files/013DZ3QDGY2Y23HOQN5BC2HUMJWD7G4UPL/tables/%7BE5A21CC6-3B17-48DE-84D7-0326A06B38F4%7D/items/035fd7a2-34d6-4a6f-a885-a646b1398012?source=me&idColumn=__PowerAppsId__
  x-ms-user-agent: PowerFx/{version}
@@ -2519,6 +2545,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/49970107-0806-e5a7-be5e-7c60e2750f01
  x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-enable-selects: true
  x-ms-request-method: PATCH
  x-ms-request-url: /apim/excelonlinebusiness/e24a1ac719284479a4817a0c5bb6ef58/drives/b%21IbvdIRe4LEGypNQpzV_eHMlG3PtubVREtOzk7doKeFvkIs8VRqloT4mtkIOb6aTB/files/013DZ3QDGY2Y23HOQN5BC2HUMJWD7G4UPL/tables/%7BE5A21CC6-3B17-48DE-84D7-0326A06B38F4%7D/items/035fd7a2-34d6-4a6f-a885-a646b1398012?source=me&idColumn=__PowerAppsId__
  x-ms-user-agent: PowerFx/{version}

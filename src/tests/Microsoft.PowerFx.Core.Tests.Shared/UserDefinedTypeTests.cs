@@ -31,6 +31,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // Type alias
         [InlineData("DTNZ := Type(DateTimeTZInd)", "Z", true)]
+        [InlineData("MyVoid := Type(Void)", "-", true)]
 
         // Nested record types
         [InlineData("Nested := Type({a: {b: DateTime, c: {d: GUID, e: Hyperlink}}, x: Time})", "![a:![b:d, c:![d:g, e:h]], x:T]", true)]
@@ -124,6 +125,9 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Currency := Type({x: Text}); Record := Type([DateTime]); D := Type(None);", 2, "ErrNamedType_InvalidTypeName")]
         [InlineData("A = 5;C :=; B := Type(Number);", 1, "ErrNamedType_MissingTypeExpression")]
         [InlineData("C := 5; D := [1,2,3];", 2, "ErrNamedType_MissingTypeExpression")]
+        [InlineData("T := Type([{a: {b: Void}}]);", 1, "ErrNamedType_InvalidTypeDeclaration")]
+        [InlineData("T := Type([Void]);", 1, "ErrNamedType_InvalidTypeDeclaration")]
+        [InlineData("T := Type({a: Void});", 1, "ErrNamedType_InvalidTypeDeclaration")]
         public void TestUDTErrors(string typeDefinition, int expectedErrorCount, string expectedMessageKey)
         {
             var checkResult = new DefinitionsCheckResult()

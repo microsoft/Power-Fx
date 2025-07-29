@@ -19,6 +19,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
+#pragma warning disable CS0618 // Type or member is obsolete https://github.com/microsoft/Power-Fx/issues/2940
     public class OpenApiParserTests
     {
         private readonly ITestOutputHelper _output;
@@ -500,6 +501,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/aaa373836ffd4915bf6eefd63d164adc
  x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-enable-selects: true
  x-ms-request-method: POST
  x-ms-request-url: /apim/cognitiveservicestextanalytics/16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b/language/:analyze-conversations?api-version=2022-05-01
  x-ms-user-agent: PowerFx/{version}
@@ -1178,6 +1180,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/ddadf2c7-ebdd-ec01-a5d1-502dc07f04b4
  x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-enable-selects: true
  x-ms-request-method: GET
  x-ms-request-url: /apim/sql/4bf9a87fc9054b6db3a4d07a1c1f5a5b/v2/datasets/pfxdev-sql.database.windows.net,connectortest/procedures
  x-ms-user-agent: PowerFx/{version}
@@ -1188,6 +1191,7 @@ POST https://tip1002-002.azure-apihub.net/invoke
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/ddadf2c7-ebdd-ec01-a5d1-502dc07f04b4
  x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-enable-selects: true
  x-ms-request-method: GET
  x-ms-request-url: /apim/sql/4bf9a87fc9054b6db3a4d07a1c1f5a5b/v2/$metadata.json/datasets/pfxdev-sql.database.windows.net,connectortest/procedures/sp_1
  x-ms-user-agent: PowerFx/{version}
@@ -1198,6 +1202,7 @@ POST https://tip1002-002.azure-apihub.net/invoke
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/ddadf2c7-ebdd-ec01-a5d1-502dc07f04b4
  x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-enable-selects: true
  x-ms-request-method: GET
  x-ms-request-url: /apim/sql/4bf9a87fc9054b6db3a4d07a1c1f5a5b/v2/$metadata.json/datasets/pfxdev-sql.database.windows.net,connectortest/procedures/sp_1
  x-ms-user-agent: PowerFx/{version}
@@ -1262,6 +1267,7 @@ POST https://tip1002-002.azure-apihub.net/invoke
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/Default-9f6be790-4a16-4dd6-9850-44a0d2649aef
  x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-enable-selects: true
  x-ms-request-method: POST
  x-ms-request-url: /apim/commondataserviceforapps/461a30624723445c9ba87313d8bbefa3/v1.0/$metadata.json/GetEntityListEnum/GetEntitiesWithOrganization
  x-ms-user-agent: PowerFx/{version}
@@ -1273,6 +1279,7 @@ POST https://tip1-shared.azure-apim.net/invoke
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/Default-9f6be790-4a16-4dd6-9850-44a0d2649aef
  x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-enable-selects: true
  x-ms-request-method: GET
  x-ms-request-url: /apim/commondataserviceforapps/461a30624723445c9ba87313d8bbefa3/v1.0/$metadata.json/entities/accounts/postitem
  x-ms-user-agent: PowerFx/{version}
@@ -1281,7 +1288,7 @@ POST https://tip1-shared.azure-apim.net/invoke
             // Normalize CRLF ==> LF
             expected = expected.Replace("\r", string.Empty);
             input = input.Replace("\r", string.Empty);
-            Assert.Equal(expected, input);
+            Assert.Equal<object>(expected, input);
         }
 
         [Theory]
@@ -1339,6 +1346,7 @@ POST https://tip1-shared.azure-apim.net/invoke
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/7592282b-e371-e3f6-8e04-e8f23e64227c
  x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-enable-selects: true
  x-ms-request-method: POST
  x-ms-request-url: /apim/cardsforpowerapps/shared-cardsforpower-eafc4fa0-c560-4eba-a5b2-3e1ebc63193a/cards/cards/card/instances
  x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
