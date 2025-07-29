@@ -7,6 +7,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Entities
 {
@@ -47,6 +48,9 @@ namespace Microsoft.PowerFx.Core.Entities
         /// </summary>
         [Obsolete("preview")]
         public TopLevelAggregationCapabilities TopLevelAggregationCapabilities { get; init; }
+
+        [Obsolete("preview")]
+        public ColumnAliasingCapabilities ColumnAliasingCapabilities { get; init; }
 
         /// <summary>
         /// Defines ungroupable columns.
@@ -496,6 +500,22 @@ namespace Microsoft.PowerFx.Core.Entities
         /// </summary>
         /// <returns>True if the table is countable after summarize; otherwise, false.</returns>
         public virtual bool IsCountableAfterSummarize()
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Represents the capabilities related to column aliasing in a table. e.g. ForAll(Table, {ColumnAlias : ColumnName}).
+    /// </summary>
+    [Obsolete("preview")]
+    public class ColumnAliasingCapabilities
+    {
+        /// <summary>
+        /// If the table supports column aliasing, return true.
+        /// </summary>
+        /// <returns>True if column aliasing is supported by the table source; otherwise, false. If false, <see cref="RecordValue.TryGetFieldAsync(FormulaType, string, System.Threading.CancellationToken)"/> should return true for Actual Column names.</returns>
+        public virtual bool IsColumnAliasingSupported()
         {
             return false;
         }
