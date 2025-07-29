@@ -3354,8 +3354,9 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 foreach (var typedName in GetNames(DPath.Root))
                 {
-                    if (!typeDest.TryGetType(typedName.Name, out _))
+                    if (!typeDest.TryGetType(typedName.Name, out var diffType))
                     {
+                        schemaDifference = new KeyValuePair<string, DType>(typedName.Name, diffType);
                         return false;
                     }
                 }

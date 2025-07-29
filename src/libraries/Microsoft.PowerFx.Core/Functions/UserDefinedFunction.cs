@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.App.Controls;
@@ -106,10 +107,10 @@ namespace Microsoft.PowerFx.Core.Functions
             for (int i = 0; i < argTypes.Length; i++)
             {
                 if ((argTypes[i].IsTableNonObjNull || argTypes[i].IsRecordNonObjNull) &&
-                    !ParamTypes[i].Accepts(argTypes[i], out var schemaDiff, out _, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules, restrictiveAggregateTypes: true) &&
-                    !argTypes[i].CoercesTo(ParamTypes[i], aggregateCoercion: true, isTopLevelCoercion: false, features: context.Features, restrictiveAggregateTypes: true))
+                    !ParamTypes[i].Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules, restrictiveAggregateTypes: true) &&
+                    !argTypes[i].CoercesTo(ParamTypes[i], out _, out _, out var schemaDiff, out var diffType,  aggregateCoercion: true, isTopLevelCoercion: false, features: context.Features, restrictiveAggregateTypes: true))
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBadSchema_AdditionalField, ParamTypes[i].GetKindString(), schemaDiff.Key);
+                    AddAggregateTypeErrors(errors, args[i], ReturnType, schemaDiff, diffType);
 
                     return false;
                 }
