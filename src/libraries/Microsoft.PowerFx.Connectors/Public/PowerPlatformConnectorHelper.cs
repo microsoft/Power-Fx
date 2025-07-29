@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Connectors
             string connectionId,
             BearerAuthTokenProvider tokenProvider,
             string userAgent,
-            HttpMessageHandler httpMessageHandler = null)
+            HttpMessageHandler httpMessageHandler)
         {
             return new PowerPlatformConnectorClient2(
                 baseUrl,

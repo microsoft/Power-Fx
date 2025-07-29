@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Tests
     // Simulate a test server (Connector, ASP.Net site, etc).
     // This logs all received SendAsync() calls to _log for easy verification.
     // Test can call SetResponse() to set what each SendAsync() should return.
-    internal class LoggingTestServer : HttpMessageHandler
+    internal class LoggingTestServer : DelegatingHandler
     {
         // Log HTTP calls.
         public StringBuilder _log = new ();
