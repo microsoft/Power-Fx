@@ -907,10 +907,20 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var engine = new RecalcEngine(config);
 
             ConsoleLogger logger = new ConsoleLogger(_output);
-            using var httpClient = new HttpClient(testConnector);
             string connectionId = "3b997639fd9c4d808ecf723eb4b55c64";
             string jwt = "eyJ0eXAiOiJKV...";
-            using var client = new PowerPlatformConnectorClient("tip1-shared.azure-apim.net", "e48a52f5-3dfe-e2f6-bc0b-155d32baa44c", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+            var (handler, baseUri) = PowerPlatformConnectorHelper.FromBaseUrl(
+                "tip1-shared.azure-apim.net",
+                "e48a52f5-3dfe-e2f6-bc0b-155d32baa44c",
+                connectionId,
+                async (CancellationToken ct) => jwt,
+                testConnector,
+                sessionId: "8e67ebdc-d402-455a-b33a-304820832383");
+
+            using var client = new HttpClient(handler)
+            {
+                BaseAddress = baseUri
+            };
 
             testConnector.SetResponseFromFile(@"Responses\SF GetDatasetsMetadata.json");
             DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
