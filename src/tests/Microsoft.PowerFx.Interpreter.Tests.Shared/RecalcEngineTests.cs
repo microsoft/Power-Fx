@@ -2291,6 +2291,29 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Theory]
+        [InlineData(
+            "Point := Type({x:Number, y: Number});Dist(p : Point) : Number = Sqrt(p.x * p.x + p.y * p.y);",
+            "Dist({x:5, y:5, name:\"Hello\"})",
+            "Invalid argument type. Input Record value, contains an unexpected additional field 'name'.")]
+        [InlineData(
+            "T := Type([{x:Number}]);F(t : T) : Number = First(t).x;",
+            "F([{x:Float(5), y: 6}])",
+            "Invalid argument type. Input Table value, contains an unexpected additional field 'y'.")]
+        public void UDFAggregateInputErrorMessage(string userDefinitions, string evalExpression, string expectedError)
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions();
+            recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture);
+            var ex = Assert.Throws<AggregateException>(() =>
+            {
+                recalcEngine.Eval(evalExpression, options: parserOptions);
+            });
+            Assert.Single(ex.InnerExceptions);
+            Assert.Contains(expectedError, ex.InnerExceptions.First().Message);
+        }
+
         #region Test
 
         private readonly StringBuilder _updates = new StringBuilder();
