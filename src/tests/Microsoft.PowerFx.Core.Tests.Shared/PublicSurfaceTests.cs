@@ -207,6 +207,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Entities.SummarizeMethod",
                 "Microsoft.PowerFx.Core.Entities.TableDelegationInfo",
                 "Microsoft.PowerFx.Core.Entities.TopLevelAggregationCapabilities",
+                "Microsoft.PowerFx.Core.Entities.ColumnAliasingCapabilities",
                 "Microsoft.PowerFx.Core.Functions.Delegation.DelegationOperator",
                 "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
                 "Microsoft.PowerFx.Core.RenameDriver",
