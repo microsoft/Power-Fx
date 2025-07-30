@@ -23,6 +23,7 @@ namespace Microsoft.PowerFx.Connectors
     {
         private readonly BearerAuthTokenProvider _tokenProvider;
         private readonly string _environmentId;
+        private readonly string _sessionId;
 
         private readonly Uri _baseUri;
 
@@ -43,14 +44,16 @@ namespace Microsoft.PowerFx.Connectors
         /// <param name="environmentId">Environment ID.</param>
         /// <param name="connectionId">Connection ID.</param>
         /// <param name="userAgent">User agent.</param>
+        /// <param name="sessionId"></param>
         public PowerPlatformConnectorClient2(
             OpenApiDocument document,
             string environmentId,
             string connectionId,
             BearerAuthTokenProvider tokenProvider,
             HttpMessageHandler httpMessageHandler,
-            string userAgent)
-            : this(GetBaseUrlFromOpenApiDocument(document), environmentId, connectionId, tokenProvider, httpMessageHandler, userAgent)
+            string userAgent,
+            string sessionId)
+            : this(GetBaseUrlFromOpenApiDocument(document), environmentId, connectionId, tokenProvider, httpMessageHandler, userAgent, sessionId)
         {
         }
 
@@ -61,6 +64,7 @@ namespace Microsoft.PowerFx.Connectors
         /// <param name="environmentId">Environment ID.</param>
         /// <param name="connectionId">Connection ID.</param>
         /// <param name="userAgent">User agent.</param>
+        /// <param name="sessionId"></param>
         /// <param name="tokenProvider">Bearer token provider.</param>
         /// <param name="httpMessageHandler">HTTP message handler.</param>
         public PowerPlatformConnectorClient2(
@@ -69,8 +73,9 @@ namespace Microsoft.PowerFx.Connectors
             string connectionId,
             BearerAuthTokenProvider tokenProvider,
             HttpMessageHandler httpMessageHandler,
-            string userAgent)
-            : this(NormalizeUrl(baseUrl), environmentId, connectionId, tokenProvider, httpMessageHandler, userAgent)
+            string userAgent,
+            string sessionId)
+            : this(NormalizeUrl(baseUrl), environmentId, connectionId, tokenProvider, httpMessageHandler, userAgent, sessionId)
         {
         }
 
@@ -83,13 +88,15 @@ namespace Microsoft.PowerFx.Connectors
         /// <param name="environmentId">Environment ID.</param>
         /// <param name="connectionId">Connection ID.</param>
         /// <param name="userAgent">User agent.</param>
+        /// <param name="sessionId"></param>
         public PowerPlatformConnectorClient2(
             Uri baseUrl,
             string environmentId,
             string connectionId,
             BearerAuthTokenProvider tokenProvider,
             HttpMessageHandler httpMessageHandler,
-            string userAgent = null)
+            string userAgent = null,
+            string sessionId = null)
             : base(httpMessageHandler)
         {
             if (baseUrl == null)
@@ -101,6 +108,7 @@ namespace Microsoft.PowerFx.Connectors
             this._environmentId = environmentId ?? throw new ArgumentNullException(nameof(environmentId));
             this.ConnectionId = connectionId ?? throw new ArgumentNullException(nameof(connectionId));
             this.UserAgent = string.IsNullOrWhiteSpace(userAgent) ? $"PowerFx/{Engine.AssemblyVersion}" : $"{userAgent} PowerFx/{Engine.AssemblyVersion}";
+            this._sessionId = sessionId ?? Guid.NewGuid().ToString(); // "f4d37a97-f1c7-4c8c-80a6-f300c651568d"
 
             if (!baseUrl.IsAbsoluteUri)
             {
@@ -206,6 +214,8 @@ namespace Microsoft.PowerFx.Connectors
             headers.AddIfMissing("x-ms-client-environment-id", envValue);
 
             var clientRequestId = Guid.NewGuid().ToString();
+
+            headers.AddIfMissing("x-ms-client-session-id", _sessionId);
             headers.AddIfMissing("x-ms-client-request-id", clientRequestId);
             headers.AddIfMissing("x-ms-correlation-id", clientRequestId);
         }

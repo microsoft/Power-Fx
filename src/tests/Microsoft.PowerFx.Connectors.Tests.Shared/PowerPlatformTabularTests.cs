@@ -909,20 +909,21 @@ namespace Microsoft.PowerFx.Connectors.Tests
             ConsoleLogger logger = new ConsoleLogger(_output);
             string connectionId = "3b997639fd9c4d808ecf723eb4b55c64";
             string jwt = "eyJ0eXAiOiJKV...";
-            var (client, baseUri) = PowerPlatformConnectorHelper.FromBaseUrl(
+            var (handler, baseUri) = PowerPlatformConnectorHelper.FromBaseUrl(
                 "tip1-shared.azure-apim.net",
                 "e48a52f5-3dfe-e2f6-bc0b-155d32baa44c",
                 connectionId,
                 async (CancellationToken ct) => jwt,
-                testConnector);
+                testConnector,
+                sessionId: "8e67ebdc-d402-455a-b33a-304820832383");
 
-            using var httpClient = new HttpClient(client)
+            using var client = new HttpClient(handler)
             {
                 BaseAddress = baseUri
             };
 
             testConnector.SetResponseFromFile(@"Responses\SF GetDatasetsMetadata.json");
-            DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(httpClient, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
+            DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
 
             Assert.NotNull(dm);
             Assert.Null(dm.Blob);
@@ -940,7 +941,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // only one network call as we already read metadata
             testConnector.SetResponseFromFiles(@"Responses\SF GetDatasetsMetadata.json", @"Responses\SF GetTables.json");
-            IEnumerable<CdpTable> tables = await cds.GetTablesAsync(httpClient, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
+            IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
 
             Assert.NotNull(tables);
             Assert.Equal(569, tables.Count());
@@ -950,7 +951,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.False(connectorTable.IsInitialized);
 
             testConnector.SetResponseFromFile(@"Responses\SF GetSchema.json");
-            await connectorTable.InitAsync(httpClient, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
+            await connectorTable.InitAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
             Assert.True(connectorTable.IsInitialized);
 
             CdpTableValue sfTable = connectorTable.GetTableValue();

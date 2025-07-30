@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Connectors
             return getElement(uri);
         }
 
-        public static Uri GetFirstServerUri(this OpenApiDocument openApiDocument, SupportsConnectorErrors errors)
+        internal static Uri GetFirstServerUri(this OpenApiDocument openApiDocument, SupportsConnectorErrors errors)
         {
             if (openApiDocument?.Servers == null)
             {

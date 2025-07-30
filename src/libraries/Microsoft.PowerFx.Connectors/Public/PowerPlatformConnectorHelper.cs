@@ -25,7 +25,8 @@ namespace Microsoft.PowerFx.Connectors
             string connectionId,
             BearerAuthTokenProvider tokenProvider,
             HttpMessageHandler httpMessageHandler,
-            string userAgent = null)
+            string userAgent = null,
+            string sessionId = null)
         {
             var handler = new PowerPlatformConnectorClient2(
                 document,
@@ -33,7 +34,8 @@ namespace Microsoft.PowerFx.Connectors
                 connectionId,
                 tokenProvider,
                 httpMessageHandler,
-                userAgent);
+                userAgent,
+                sessionId);
 
             return (handler, handler.BaseUri);
         }
@@ -48,7 +50,8 @@ namespace Microsoft.PowerFx.Connectors
             string connectionId,
             BearerAuthTokenProvider tokenProvider,
             HttpMessageHandler httpMessageHandler,
-            string userAgent = null)
+            string userAgent = null,
+            string sessionId = null)
         {
             var handler = new PowerPlatformConnectorClient2(
                 baseUrl,
@@ -56,7 +59,8 @@ namespace Microsoft.PowerFx.Connectors
                 connectionId,
                 tokenProvider,
                 httpMessageHandler,
-                userAgent);
+                userAgent,
+                sessionId);
 
             return (handler, handler.BaseUri);
         }
