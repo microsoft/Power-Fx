@@ -64,10 +64,24 @@ namespace Microsoft.PowerFx.Types
 
         public abstract string GetOdataFilter();
 
-        // 0 columns means return all columns.
+        /// <summary>
+        /// Retrieves a collection of column names that needs to be retrieved from the Source, these are same column logical name of source. Empty collection means all columns are requested.
+        /// </summary>
+        /// <returns>An <see cref="IReadOnlyCollection{T}"/> of strings containing the names of the columns. Returns an empty
+        /// collection if no columns are specified.</returns>
         public virtual IReadOnlyCollection<string> GetColumns()
         {
             return new string[0];
+        }
+
+        /// <summary>
+        /// Returns the list of (column name, alias) where alias is the name to use in the result, column name is the logical name in the source.
+        /// </summary>
+        /// <returns></returns>
+        public virtual IReadOnlyCollection<(string, string)> GetColumnsWithAlias()
+        {
+            // Default implementation returns no columns with alias.
+            return new (string, string)[0];
         }
 
         /// <summary>
