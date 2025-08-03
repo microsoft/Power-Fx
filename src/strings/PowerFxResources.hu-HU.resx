@@ -2599,6 +2599,10 @@
     <value>Hozzáadja a megadott számú egységet egy dátumhoz.</value>
     
   </data>
+  <data name="AboutWorkday_date" xml:space="preserve">
+    <value>Adja meg a munkanapok számát egy dátum előtt vagy után.</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Kiszámítja a különbséget két dátum között.</value>
     
