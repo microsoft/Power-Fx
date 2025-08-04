@@ -3396,6 +3396,14 @@ namespace Microsoft.PowerFx.Core.Binding
                 return true;
             }
 
+            public override bool PreVisit(AsNode node)
+            {
+                Contracts.AssertValue(node);
+
+                _txb.AddVolatileVariables(node.Left, _txb.GetVolatileVariables(node));
+                return true;
+            }
+
             public override void PostVisit(DottedNameNode node)
             {
                 AssertValid();
