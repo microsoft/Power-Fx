@@ -1102,6 +1102,34 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(type11.GetType(DPath.Root.Append(new DName("A"))) == DType.Error);
         }
 
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void RecordAndTableFieldOrder(bool useRecord)
+        {
+            var type = useRecord ? DType.EmptyRecord : DType.EmptyTable;
+
+            var fieldNames = new[] { "C", "ß", "ç", "A", "b", "á", "é", "ss", "word", "wórd" };
+            var expectedFieldOrder = new List<string>(fieldNames);
+            expectedFieldOrder.Sort(StringComparer.Ordinal);
+
+            foreach (var fieldName in fieldNames)
+            {
+                type = type.Add(new DName(fieldName), DType.String);
+            }
+
+            var expectedTypeStr =
+                (useRecord ? "!" : "*") +
+                "[" +
+                string.Join(", ", expectedFieldOrder.Select(f => f + ":s")) +
+                "]";
+
+            Assert.Equal(expectedTypeStr, type.ToString());
+
+            var actualFieldNames = type.GetNames(DPath.Root).Select(tn => tn.Name.Value).ToArray();
+            Assert.Equal(expectedFieldOrder, actualFieldNames);
+        }
+
         [Fact]
         public void EnumDTypeTests()
         {
@@ -3127,6 +3155,53 @@ namespace Microsoft.PowerFx.Tests
         public void TestDTypeContainsUO(string typeAsString, bool containsUO)
         {
             Assert.Equal(containsUO, TestUtils.DT(typeAsString).ContainsKindNested(DPath.Root, DKind.UntypedObject));
+        }
+
+        [Theory]
+        [InlineData("n", "n", true)]
+        [InlineData("*[]", "*[]", true)]
+        [InlineData("![]", "![]", true)]
+
+        // Does not allow more fields
+        [InlineData("*[a:n]", "*[a:n, b:n]", false)]
+        [InlineData("![a:n]", "![a:n, b:n]", false)]
+
+        // Allows less fields
+        [InlineData("*[a:n]", "*[]", true)]
+        [InlineData("![a:n]", "![]", true)]
+
+        // Deeply nested aggregates
+        [InlineData("*[a:n, b:![c: ![d: n, e: b]]]", "*[a:n, b:![c: ![d: n]]]", true)]
+        [InlineData("*[a:n, b:![c: ![d: n, e: b]]]", "*[a:n, b:![c: ![d: n, e:b, f:s]]]", false)]
+        public void TestRestrictiveAggregateTypesFlag(string type1, string type2, bool expectedResult)
+        {
+            var dtype1 = MakeFieldsOptional(TestUtils.DT(type1));
+            var dtype2 = MakeFieldsOptional(TestUtils.DT(type2));
+
+            var v1compatible = new[] { true, false };
+
+            foreach (var v1 in v1compatible)
+            {
+                bool acceptResult = dtype1.Accepts(dtype2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: v1, restrictiveAggregateTypes: true);
+                bool coerceResult = dtype2.CoercesTo(dtype1, aggregateCoercion: true, isTopLevelCoercion: false, features: v1 ? PFxV1Enabled : Features.None, restrictiveAggregateTypes: true);
+                Assert.Equal(expectedResult, acceptResult);
+                Assert.Equal(expectedResult, coerceResult);
+            }
+        }
+
+        private DType MakeFieldsOptional(DType type)
+        {
+            if (type.IsAggregate)
+            {
+                var newFields = type.TypeTree.Select(f => new TypedName(MakeFieldsOptional(f.Value), new DName(f.Key)));
+                var newType = type.IsRecord ? DType.CreateRecord(newFields) : DType.CreateTable(newFields);
+                newType.AreFieldsOptional = true;
+                return newType;
+            }
+            else
+            {
+                return type;
+            }
         }
     }
 }

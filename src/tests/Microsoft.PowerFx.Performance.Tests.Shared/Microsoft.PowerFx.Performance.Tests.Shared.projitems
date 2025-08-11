@@ -9,6 +9,11 @@
     <Import_RootNamespace>Microsoft.PowerFx.Performance.Tests.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AssemblyProperties2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BasicPerformance.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Program.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PvaPerformance.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Reference.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UnitTests.cs" />
   </ItemGroup>
 </Project>

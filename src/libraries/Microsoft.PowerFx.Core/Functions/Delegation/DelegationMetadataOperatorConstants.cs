@@ -51,5 +51,151 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         public const string Top = "top";
         public const string AsType = "astype";
         public const string ArrayLookup = "arraylookup";
+        public const string Distinct = "distinct";
+        public const string JoinInner = "joininner";
+        public const string JoinLeft = "joinleft";
+        public const string JoinRight = "joinright";
+        public const string JoinFull = "joinfull";
+    }
+
+    /// <summary>
+    /// Enum representing supported delegation operators for metadata parsing.
+    /// </summary>
+    public enum DelegationOperator
+    {
+        /// <summary>Equal (eq)</summary>
+        Eq,
+
+        /// <summary>Not equal (ne)</summary>
+        Ne,
+
+        /// <summary>Less than (lt)</summary>
+        Lt,
+
+        /// <summary>Less than or equal (le)</summary>
+        Le,
+
+        /// <summary>Greater than (gt)</summary>
+        Gt,
+
+        /// <summary>Greater than or equal (ge)</summary>
+        Ge,
+
+        /// <summary>Logical AND (and)</summary>
+        And,
+
+        /// <summary>Logical OR (or)</summary>
+        Or,
+
+        /// <summary>String contains (contains)</summary>
+        Contains,
+
+        /// <summary>String index of (indexof)</summary>
+        Indexof,
+
+        /// <summary>String substring of (substringof)</summary>
+        Substringof,
+
+        /// <summary>Logical NOT (not)</summary>
+        Not,
+
+        /// <summary>Year extraction (year)</summary>
+        Year,
+
+        /// <summary>Month extraction (month)</summary>
+        Month,
+
+        /// <summary>Day extraction (day)</summary>
+        Day,
+
+        /// <summary>Hour extraction (hour)</summary>
+        Hour,
+
+        /// <summary>Minute extraction (minute)</summary>
+        Minute,
+
+        /// <summary>Second extraction (second)</summary>
+        Second,
+
+        /// <summary>Convert to lower case (tolower)</summary>
+        Tolower,
+
+        /// <summary>Convert to upper case (toupper)</summary>
+        Toupper,
+
+        /// <summary>Trim whitespace (trim)</summary>
+        Trim,
+
+        /// <summary>Null value (null)</summary>
+        Null,
+
+        /// <summary>Date extraction (date)</summary>
+        Date,
+
+        /// <summary>String length (length)</summary>
+        Length,
+
+        /// <summary>Sum aggregation (sum)</summary>
+        Sum,
+
+        /// <summary>Minimum aggregation (min)</summary>
+        Min,
+
+        /// <summary>Maximum aggregation (max)</summary>
+        Max,
+
+        /// <summary>Average aggregation (average)</summary>
+        Average,
+
+        /// <summary>Count aggregation (count)</summary>
+        Count,
+
+        /// <summary>Addition (add)</summary>
+        Add,
+
+        /// <summary>Subtraction (sub)</summary>
+        Sub,
+
+        /// <summary>String starts with (startswith)</summary>
+        Startswith,
+
+        /// <summary>Multiplication (mul)</summary>
+        Mul,
+
+        /// <summary>Division (div)</summary>
+        Div,
+
+        /// <summary>String ends with (endswith)</summary>
+        Endswith,
+
+        /// <summary>Count distinct aggregation (countdistinct)</summary>
+        Countdistinct,
+
+        /// <summary>CDS in (cdsin)</summary>
+        Cdsin,
+
+        /// <summary>Top N (top)</summary>
+        Top,
+
+        /// <summary>As type (astype)</summary>
+        Astype,
+
+        /// <summary>Array lookup (arraylookup)</summary>
+        Arraylookup,
+
+        /// <summary>Distinct aggregation (distinct)</summary>
+        Distinct,
+
+        /// <summary>Inner join (joininner)</summary>
+        JoinInner,
+
+        /// <summary>Left join (joinleft)</summary>
+        JoinLeft,
+
+        /// <summary>Right join (joinright)</summary>
+        JoinRight,
+
+        /// <summary>Full join (joinfull)</summary>
+        JoinFull
     }
 }

@@ -18,6 +18,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
+#pragma warning disable CS0618 // Type or member is obsolete https://github.com/microsoft/Power-Fx/issues/2940
     public class IntellisenseTests
     {
         private readonly ITestOutputHelper _output;
@@ -105,6 +106,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
  x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
+ x-ms-enable-selects: true
  x-ms-request-method: GET
  x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/{queryPart}
  x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
@@ -172,6 +174,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
  x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
+ x-ms-enable-selects: true
  x-ms-request-method: GET
  x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/v2/$metadata.json/datasets/default,default/procedures/sp_{responseIndex}
  x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
@@ -303,6 +306,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
  scheme: https
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
  x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
+ x-ms-enable-selects: true
  x-ms-request-method: GET
  x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/v2/$metadata.json/datasets/default,default/procedures/sp_{responseIndex}
  x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}

@@ -40,13 +40,13 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.FormulaWithParameters",
                 "Microsoft.PowerFx.FunctionInfo",
                 "Microsoft.PowerFx.FunctionInfoSignature",
+                "Microsoft.PowerFx.HttpExpressionError",
                 "Microsoft.PowerFx.ParameterInfoSignature",
                 "Microsoft.PowerFx.NameCollisionException",
                 "Microsoft.PowerFx.OptionSet",
                 "Microsoft.PowerFx.ParseResult",
                 "Microsoft.PowerFx.ParserOptions",
                 "Microsoft.PowerFx.IPostCheckErrorHandler",
-
                 "Microsoft.PowerFx.EngineDocumentation",
 
                 // Config & Symbols
@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.SymbolProperties",
                 "Microsoft.PowerFx.SymbolEntry",
                 "Microsoft.PowerFx.DeferredSymbolPlaceholder",
-
+                
                 // Lexer                
                 "Microsoft.PowerFx.Syntax.BinaryOp",
                 "Microsoft.PowerFx.Syntax.CommentToken",
@@ -67,6 +67,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Syntax.IdentToken",
                 "Microsoft.PowerFx.Syntax.NumLitToken",
                 "Microsoft.PowerFx.Syntax.Span",
+                "Microsoft.PowerFx.Syntax.FileLocation",
                 "Microsoft.PowerFx.Syntax.StrLitToken",
                 "Microsoft.PowerFx.Syntax.Token",
                 "Microsoft.PowerFx.Syntax.TokKind",
@@ -128,11 +129,11 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.DecimalValue",
                 "Microsoft.PowerFx.Types.DeferredType",
                 "Microsoft.PowerFx.Types.DelegationParameters",
-                "Microsoft.PowerFx.Types.DelegationParameterFeatures",                
+                "Microsoft.PowerFx.Types.DelegationParameterFeatures",
                 "Microsoft.PowerFx.Types.DValue`1",
                 "Microsoft.PowerFx.Types.ErrorValue",
                 "Microsoft.PowerFx.Types.ExternalType",
-                "Microsoft.PowerFx.Types.ExternalTypeKind",                                
+                "Microsoft.PowerFx.Types.ExternalTypeKind",
                 "Microsoft.PowerFx.Types.FormulaType",
                 "Microsoft.PowerFx.Types.FormulaValue",
                 "Microsoft.PowerFx.Types.GuidType",
@@ -141,7 +142,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.IDelegatableTableValue",
                 "Microsoft.PowerFx.Types.ITypeVisitor",
                 "Microsoft.PowerFx.Types.IUntypedObject",
-                "Microsoft.PowerFx.Types.IValueVisitor",              
+                "Microsoft.PowerFx.Types.UntypedObjectBase",
+                "Microsoft.PowerFx.Types.IValueVisitor",
                 "Microsoft.PowerFx.Types.NamedFormulaType",
                 "Microsoft.PowerFx.Types.NamedValue",
                 "Microsoft.PowerFx.Types.NumberType",
@@ -192,15 +194,31 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.BasicUserInfo",
                 "Microsoft.PowerFx.Core.DisplayNameProvider",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
-                "Microsoft.PowerFx.Core.Entities.IRefreshable",                               
+                "Microsoft.PowerFx.Core.Entities.ColumnCapabilities",
+                "Microsoft.PowerFx.Core.Entities.ColumnCapabilitiesBase",
+                "Microsoft.PowerFx.Core.Entities.ColumnCapabilitiesDefinition",
+                "Microsoft.PowerFx.Core.Entities.FilterRestrictions",
+                "Microsoft.PowerFx.Core.Entities.GroupRestrictions",
+                "Microsoft.PowerFx.Core.Entities.IRefreshable",                
+                "Microsoft.PowerFx.Core.Entities.SelectionRestrictions",
+                "Microsoft.PowerFx.Core.Entities.SortRestrictions",
+                "Microsoft.PowerFx.Core.Entities.CountCapabilities",
+                "Microsoft.PowerFx.Core.Entities.SummarizeCapabilities",
+                "Microsoft.PowerFx.Core.Entities.SummarizeMethod",
+                "Microsoft.PowerFx.Core.Entities.TableDelegationInfo",
+                "Microsoft.PowerFx.Core.Entities.TopLevelAggregationCapabilities",
+                "Microsoft.PowerFx.Core.Entities.ColumnAliasingCapabilities",
+                "Microsoft.PowerFx.Core.Functions.Delegation.DelegationOperator",
                 "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
                 "Microsoft.PowerFx.Core.RenameDriver",
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
                 "Microsoft.PowerFx.Core.Utils.ICheckable",
-                "Microsoft.PowerFx.UserInfo",
                 "Microsoft.PowerFx.Logging.ITracer",
-                "Microsoft.PowerFx.Logging.TraceSeverity"
+                "Microsoft.PowerFx.Logging.TraceSeverity",
+                "Microsoft.PowerFx.PowerFxFileInfo",
+                "Microsoft.PowerFx.UserInfo",
+                "Microsoft.PowerFx.Core.IR.DependencyInfo",
             };
 
             var sb = new StringBuilder();
@@ -321,12 +339,14 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(errors.Length == 0, $"TexlNode errors: {errors}");
         }
 
+#if !NET7_0_OR_GREATER
         [Fact]
         public static void TestImmutability()
         {
             var asm = typeof(Microsoft.PowerFx.Syntax.TexlNode).Assembly;
             ImmutabilityTests.CheckImmutability(asm);
         }
+#endif
 
         /// <summary>
         ///     Checks whether <see cref="t1" /> is public, and equal to or subclass of to <see cref="t2" />.

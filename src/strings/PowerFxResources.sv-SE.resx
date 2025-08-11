@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Ett procentvärde (eller kolumn med procentvärden) som färgen (eller kolumnen med färgvärden) ska tonas med. Ett negativt procentvärde skapar en mörkare nyans. Ett positivt procentvärde skapar en ljusare nyans.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returnerar en post med information om en fil.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>Filblob att hämta information om.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>fil</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Returnerar det absoluta värdet för ett tal, ett tal utan dess tecken.</value>
     
@@ -1796,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Returnerar sant om det angivna typlösa värdet är av den givna typen.</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>typ</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>Det typlösa värdet som ska kontrolleras om det kan typkonverteras som en angiven typ.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>Den typ som vi vill kontrollera untypedValue för.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Använder det angivna värdet som den givna typen.</value>
     
@@ -1813,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>Entitetstabellen som representerar den typ vi vill att värdet ska användas som.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Kontrollerar och använder det typlösa värdet som den givna typen.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>typ</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>Det typlösa värdet som ska typkonverteras som en ny typ.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>Den typ som vi vill att värdet ska användas som.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Kör den formel som angavs som andra parameter med hjälp av det omfång som tillhandahölls av den första.</value>
@@ -1868,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>{0} är en okänd funktion eller funktion som inte stöds.</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>”{0}” identifieras som funktionen typhjälp och kan endast användas i funktionen Type.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -1982,10 +2033,6 @@
     <value>Det första argumentet för {0} ska vara en post.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Med det här alternativet som ett uppräkningsvärde eller i funktionen Choices så måste entiteten {0} läggas till som en datakälla. Lägg till med Visa-menyn och välj sedan Datakällor.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Det angivna egenskapen är inte tillgänglig i den här kontexten.</value>
     
@@ -2026,10 +2073,6 @@
     <value>Argumentet representerar inte ett giltigt datum- eller tidsvärde.</value>
     
   </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Den här datakällan är ogiltig. Åtgärda felet i panelen "Datakällor" genom att klicka på "Innehåll -&gt; Datakällor" eller "Visa -&gt; Alternativ"</value>
-    
-  </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>En datakällsidentifierare förväntades begränsa den infogade posten.</value>
     
@@ -2068,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Kolumnnamnskonflikt för {0}.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Det går inte att lägga till kolumner i en systempost eller tabell med systemposter. Använd ShowColumns om du vill extrahera de specifika kolumner som du behöver först.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Det går inte att byta namn på kolumner för en systempost eller tabell med systemposter. Använd ShowColumns om du vill extrahera de specifika kolumner som du behöver först.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -2670,6 +2721,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>En JSON-sträng att bearbeta.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>Konverterar en JSON-sträng till ett typbestämt objekt.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>sträng</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>En JSON-string som ska konverteras till ett typbestämt objekt.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>typ</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>En infogad typdefinition eller en globalt definierad namngiven typ.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Returnerar posten i en tabell vid ett visst index.</value>
     
@@ -2687,6 +2756,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Index för den post som ska hämtas.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2707,6 +2788,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Streckkodstyp</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2823,6 +2936,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Värdet att testa.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Konverterar ett datum och tid i textformat till ett tal som representerar datumet i Power Apps datum/tid-kod.</value>
@@ -3098,32 +3215,33 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Lägger till poster i en datakälla.</value>
+    <value>Lägger till ett eller flera objekt till den angivna samlingen. Objekten kan vara från en annan tabell eller samling (till exempel Collect(collection, source_collection)) eller en eller flera poster Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>datakälla</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>post</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>samling</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>objekt</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>En ny eller befintlig samling att öka.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Raderar alla poster från en samling. Och lägger sedan till en annan uppsättning poster i samma samling.</value>
+    <value>Rensar samlingen först och lägger till ett eller flera objekt till den angivna samlingen. Objekten kan vara från en annan tabell eller samling (till exempel ClearCollect(collection, source_collection)) eller en eller flera poster ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>datakälla</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>En ny eller befintlig samling att öka.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>datakälla</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>post</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>En post eller tabell att samla in. En post kommer att läggas till i samlingen. En tabell får sina rader tillagda till samlingen.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Tillämpar uppdateringarna på den angivna raden och ändrar raden i den angivna datakällan. Returnerar den uppdaterade raden.</value>
@@ -3259,6 +3377,10 @@
     <value>Artikel: formelreferens för Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Oväntat tecken "{0}" på position "{1}" i formeln.</value>
     
@@ -3271,6 +3393,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3288,6 +3414,10 @@
     <value>Artikel: formelreferens för Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Oväntat tecken. Formeln innehåller {0} där {1} förväntades.</value>
     
@@ -3301,6 +3431,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3318,6 +3452,10 @@
     <value>Artikel: formelreferens för Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Namnet är inte giltigt. Den här identifieraren kan inte identifieras.</value>
     
@@ -3331,6 +3469,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3348,6 +3490,10 @@
     <value>Artikel: Formelreferens för PowerApps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>Överordnad referens är ogiltig. Du kan inte referera till en överordnad kontroll i den här kontexten.</value>
     
@@ -3361,6 +3507,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Artikel: Lägg till och konfigurera en kontroll för en arbetsyteapp i Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3400,6 +3550,10 @@
     <value>Modul: Använda grundläggande formler</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Ett tal förväntades. Vi förväntar oss ett tal vid den här punkten i formeln.</value>
     
@@ -3413,6 +3567,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3430,6 +3588,10 @@
     <value>Artikel: formelreferens för Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Ett kolon förväntades. Vi förväntar oss ett kolon (:) vid den här punkten i formeln.</value>
     
@@ -3445,6 +3607,10 @@
     <value>Artikel: Visa text, datum och tider i Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Beteendefunktion i en icke-beteende-egenskap. Du kan inte använda den här egenskapen för att ändra värden i appen.</value>
     
@@ -3458,6 +3624,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Artikel: Förstå beteendeformler för arbetsyteappar i Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Beteendefunktion i icke-beteende användardefinierad funktion (UDF, User-Defined Function). Skriv den användardefinierade funktionens text inom klammerparenteser ({...}) för att deklarera en beteende-UDF.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Beteendefunktioner ändra det aktuella sessiontillståndet. 'Clear', 'Collect', 'Patch' och 'Refresh' av vanliga beteendefunktioner.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Redigera det användardefinierade funktionsuttrycket så att det ligger mellan klammerparenteser ({...}).</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3497,6 +3679,10 @@
     <value>Artikel: formelreferens för Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Text eller tal förväntades. Vi förväntar oss text eller tal vid den här punkten i formeln.</value>
     
@@ -3512,6 +3698,10 @@
     <value>Artikel: formelreferens för Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Avslutande klammerparantes förväntades. Vi förväntar oss en avslutande klammerparantes (}) vid denna punkt i formeln.</value>
     
@@ -3523,12 +3713,23 @@
     <value>Redigera din formel så att den innehåller en klammerparantes.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Avslutande tecken för identifierare förväntades. Vi förväntar oss ett avslutande tecken (') vid denna punkt i formeln.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Ett avslutande enkelt citattecken anger slutet på en identifierare (till exempel 'Förnamn').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Redigera din formel så att den innehåller ett avslutade enkelt citattecken.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Identifieraren har inte någon giltig text.</value>
+    <value>Identifieraren är tom eller innehåller ett ogiltigt tecken, till exempel ett tabbtecken eller tecken för ny rad.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Se till att du har text för din identifierare. Felet uppstår när identifieraren är tom eller bara innehåller blanksteg.</value>
+    <value>Se till att du har giltig text för din identifierare. Felet uppstår när identifieraren är tom, bara innehåller blanksteg eller innehåller ett tabbtecken eller tecken för ny rad.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3554,8 +3755,16 @@
     <value>Modul: Använda grundläggande formler</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Modul: Skapa grundläggande formler med tabeller och poster</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3570,6 +3779,10 @@
     <value>Artikel: formelreferens för Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Inkompatibel typ. Kolumnen {0} i datakällan som du uppdaterar förväntar sig en {1}-typ och du använder en {2}-typ.</value>
     
@@ -3582,8 +3795,16 @@
     <value>Modul: Använda grundläggande formler</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Modul: Skapa grundläggande formler med tabeller och poster</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3596,6 +3817,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3614,8 +3839,16 @@
     <value>Modul: Använda grundläggande formler</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Modul: Skapa grundläggande formler med tabeller och poster</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3633,8 +3866,16 @@
     <value>Modul: Använda grundläggande formler</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Modul: Skapa grundläggande formler med tabeller och poster</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3650,6 +3891,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3675,8 +3920,16 @@
     <value>Artikel: Förstå delegering i en arbetsyteapp</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Blogg: Dataradsbegränsningar för delegering</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3702,8 +3955,16 @@
     <value>Artikel: Förstå delegering i en arbetsyteapp</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Blogg: Dataradsbegränsningar för delegering</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3733,8 +3994,16 @@
     <value>Artikel: Förstå delegering i en arbetsyteapp</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Blogg: Dataradsbegränsningar för delegering</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3766,8 +4035,70 @@
     <value>Artikel: Förstå delegering i en arbetsyteapp</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Blogg: Dataradsbegränsningar för delegering</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Delegeringsvarning. Den namngivna formeln {0} kan inte delegeras, så användningen i den här formeln kanske inte fungerar i stora datauppsättningar. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Datakällan kanske inte kan bearbeta formeln och kan då returnera en ofullständig datauppsättning. Ditt program kanske inte kan returnera korrekta resultat eller uppvisa korrekt beteende om datauppsättningen är ofullständig.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Försök med att förenkla definitionen av den namngivna formeln.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Artikel: Förstå delegering i en arbetsyteapp</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blogg: Dataradsbegränsningar för delegering</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Delegeringsvarning. Den användardefinierade funktionen {0} kan inte delegeras, så användningen i den här formeln kanske inte fungerar i stora datauppsättningar. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Datakällan kanske inte kan bearbeta formeln och kan då returnera en ofullständig datauppsättning. Ditt program kanske inte kan returnera korrekta resultat eller uppvisa korrekt beteende om datauppsättningen är ofullständig.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Försök med att förenkla definitionen av den användardefinierade funktionen.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Artikel: Förstå delegering i en arbetsyteapp</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blogg: Dataradsbegränsningar för delegering</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3794,8 +4125,16 @@
     <value>Artikel: Förstå delegering i en arbetsyteapp</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Blogg: Dataradsbegränsningar för delegering</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3824,6 +4163,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Referens: ConfirmExit för arbetsyteappar</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3858,12 +4201,24 @@
     <value>Den namngivna formeln måste vara ett uttryck.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>En namngiven typdeklaration måste vara ett giltigt typuttryck.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>En användardefinierad funktion måste ha en brödtext.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Funktionen {0} är redan definierad.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Varning! En användardefinierad funktion {0} kommer att överskugga den befintliga inbyggda funktionen {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Funktionsnamnet {0} är begränsat.</value>
     
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
@@ -3875,7 +4230,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Den angivna funktionens returtyp överensstämmer inte med funktionstextens returtyp.</value>
+    <value>Den angivna funktionens returtyp "{0}" överensstämmer inte med funktionstextens returtyp "{1}".</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Funktionen {0} har för många parametrar. Användardefinierade funktioner stöder upp till {1} parametrar.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +4261,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Det första argumentet för {0} ska vara ett giltigt variabelnamn och kan inte vara i konflikt med något befintligt namn på en kontroll, skärm, samling eller datakälla. Hittade typen {1}</value>
+    <value>"{1}" kan inte ändras med "{0}" eller står i konflikt med namnet på en befintlig omfattningsvariabel, datakälla eller annat objekt.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4063,6 +4422,10 @@
     <value>Det går inte att delegera {0}: innehåller en beteendefunktion {1}.</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows kan returnera ett cachelagrat värde. Använd CountIf(DataSource, true) för att få det senaste värdet.</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Fastställer om den angivna texten har en matchning för det angivna textformatet.</value>
     
@@ -4156,24 +4519,232 @@
     <value>Ogiltigt reguljärt uttryck.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Infogade alternativ måste finnas i början av det reguljära uttrycket, {0} hittades senare.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Infogade alternativ är begränsade till en kombination av bokstäverna [imnsx], kan inte inaktivera alternativ och kan inte användas i ett underuttryck, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Oktala \0-teckenkoder stöds inte, använd hexadecimal \x eller Unicode \u i stället, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Literala klammerparenteser måste undantas med ett omvänt snedstreck, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Literala hakparenteser måste undantas med ett omvänt snedstreck även i teckenklasser, till exempel \[ eller \], vilket hittades i slutet av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Teckenklass utan avslutande hakparentes.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Specialgruppen stöds inte, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Undantagstecken tillåts inte inom teckenklassen, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Negativt undantagstecken tillåts inte inom negerad teckenklass, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Undantagstecken tillåts inte utanför en teckenklass, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Ogiltigt Unicode-kategorinamn, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Upprepat infogat alternativ, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Ej stängd infogad kommentar.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Ej stängd infogad kommentar, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Infogat alternativ är inkompatibelt med MatchOptions.NumberedSubMatches, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Possessiva kvantifierare stöds inte, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Exakta kvantifierare kan inte användas med modifierare av kvantifierare, till exempel ? för lat, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Ogiltig undantagskod, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Undermatchningen {0} har inte definierats eller är en framåtreferens som inte stöds.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Undermatchningar stöds inte i bakåtreferenser, vilket finns i början av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Bakåtreferenser kan inte kapslas, vilket finns i början av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Obegränsade kvantifierare stöds inte i bakåtreferenser, vilket finns i slutet av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Kvantifierare stöds inte för bakåtreferenser eller framåtreferenser, vilket finns i slutet av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Bakåtreferensen {0} till undermatchning som kanske inte inträffar på grund av växling eller nollkvantifierare.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Självrefererande delmatchningar stöds inte, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Ej stängda grupper, för få avslutande parenteser.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Ej öppnade grupper, för få inledande parenteser.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Namngiven undermatchning har definierats mer än en gång, men finns i början av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Undermatchningsnamnet måste vara en kombination av ordtecken och får inte börja med en siffra, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Infogade alternativ måste finnas i början av det reguljära uttrycket, {0} hittades senare.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Tecknet förekommer mer än en gång i teckenklassen, upprepning av {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Teckenklasser med hakparenteser får inte vara tomma, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Balanserande delmatchningar stöds inte, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Det går inte att använda namngivna avbildningar med enkelt citattecken, använd syntaxen (?&lt;...&gt;) i stället, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Villkorlig växling stöds inte, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Namngivna avbildningar kan inte användas med MatchOptions.NumberedSubMatches aktiverat, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Använd namngivna avbildningar med ”(?&lt;name&gt;...)” och ”\k&lt;name&gt;” eller aktivera MatchOptions.NumberedSubMatches, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Literalt bindestreck i ett teckenklassintervall måste undantas med omvänt snedstreck, undanta med ”\-”, vilket finns i {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Literalt tecken måste undantas med ett omvänt snedstreck när det används i en teckenklass, vilket hittades i slutet av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Kvantifierare för en grupp som innehåller en annan kvantifierare eller tom växling som kan resultera i ett tvetydigt resultat, vilket finns i slutet av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Bakåtreferensen överskred maxgränsen på 250 tecken, vilket finns i slutet av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Kvantifierarintervallets låga tal är större än det höga talet, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: För många kapslade grupper, vilket finns i början av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Namnet på undermatchningen är för långt, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Talet är för stort, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Tecknen i ett teckenklassintervall är omvända, vilket finns i slutet av {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Teckenklass i ett teckenklassintervall, eller undanta ett literalt bindestreck med ett omvänt snedstreck, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Slutar med ett omvänt snedstreck.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Kvantifierare utan något att kvantifiera, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: MatchOptions.DotAll och MatchOptions.FreeSpacing är bara tillgängliga med Power Fx V1, {0} hittades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck: Bakåtreferensen {0} till undermatchning som finns i bakåtreferens eller framåtreferens.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Reguljära uttryck måste vara konstanta värden.</value>
+    <value>Reguljärt uttryck måste vara ett konstant värde.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions måste vara ett konstant värde.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Det värde som skickas till funktionen "{0}" kan inte ändras.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Fånga in namnet {0} döljer den fördefinierade egenskapen som returnerar den fullständiga matchningen av det reguljära uttrycket. Överväg att byta namn på det om du vill använda den namngivna egenskapen för att extrahera den fullständiga matchningen i den angivna texten.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Avbildningsnamnet {0} döljer en fördefinierad egenskap som returnerar matchningsinformation. Överväg att byta namn på det om du vill komma åt matchningsinformationen.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Fånga in namnet {0} döljer den fördefinierade egenskapen som returnerar gruppmatchningarna i det reguljära uttrycket. Överväg att byta namn på det om du vill använda den namngivna egenskapen för att extrahera alla underordnade matchningar i den angivna texten.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Fånga in namnet {0} döljer den fördefinierade egenskapen som returnerar platsen för matchningen av det reguljära uttrycket. Överväg att byta namn på det om du vill använda den namngivna egenskapen för att extrahera positionen för den fullständiga matchningen i den angivna texten.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Avbildningsnamnen i uppsättningen {0} döljer fördefinierade egenskaper som returnerar matchningsinformation. Överväg att byta namn på dem om du vill komma åt matchningsinformationen.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4209,16 +4780,20 @@
     <value>Om du anger en variabel med ett datakällavärde online (tabell eller post) kan det orsaka flera begäranden till servern. Detta kommer snart att blockeras.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Typuttrycket är ogiltigt. {0} kan inte användas i ett typuttryck.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definitionen av typen {0} är ogiltig.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Användningen stöds inte: Funktionen Type kan bara användas i typargument och typdeklarationer.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Deklarationen av typen {0} är ogiltig.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definitionen av typen {0} är ogiltig och kan innehålla cykler.</value>
+    <value>Deklarationen av typen {0} är ogiltig och kan innehålla cykler.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4419,6 +4994,16 @@
     <value>Okänd Partial-operator.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Den datakälla som data ska läggas till i.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>En post eller tabell att samla in. En post kommer att läggas till i datakällan. En tabell får sina rader tillagda till datasamlingen.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>objekt</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Delegeringsvarning. Resultatet av det här argumentet "{0}" kan kortas av för stora datauppsättningar innan det skickas till funktionen "{1}".</value>
     
@@ -4459,10 +5044,98 @@
     <value>Samlingen som ska rensas.</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>Källan som ska rensas.</value>
+  </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Hämtar data som omfattar flera tabeller med relationer.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>källa1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>källa2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>namngivare</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Den vänstra tabellen eller samlingen.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Den högra tabellen eller samlingen.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Kopplingsvillkor mellan de två tabellerna eller samlingarna.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Kopplingstypen mellan de två tabellerna eller samlingarna.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Argumenten för att byta namn på en befintlig kolumn i någon av källorna.</value>
+    
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Den angivna datakällan kan inte användas med den här funktionen.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Ogiltigt argument {0}. Förväntat giltigt typnamn eller infogat typuttryck.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Typen {0} stöds inte i typargumentet.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Maximalt djup uppnått vid genomgång av JSON-nyttolast.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Maximal längd uppnådd i JSON-funktion.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Den experimentella funktionen ”Användardefinierade typer” är inte aktiverad.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Felaktig syntax: "=" kan inte användas för att deklarera användardefinierade typer. Använd ":=" i stället.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>Det går inte att lägga till/byta namn på {0} på grund av en konflikt med en annan kolumn med samma namn.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Förväntat oformaterad uppräkningsvärde för JoinType. Det går inte att använda olika uppräkningsvärden eller att skicka värdet det via en annan funktion, det vill säga Join(..., If(true, JoinType.Inner) JoinType.Full).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argument som börjar vid den 5:e positionen är tänkta att byta namn på kolumner och förväntas vara ”As”-nodargument, det vill säga LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Du måste deklarera minst en {0}-kolumn om du vill få fram kopplingsresultatet.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Värdet {0} är ogiltigt i den här kontexten. Det måste vara en referens till antingen omfattningsnamnet {1} eller {2}.</value>
     
   </data>
 </root>

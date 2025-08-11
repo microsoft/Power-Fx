@@ -3,7 +3,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace Microsoft.PowerFx.Connectors.Tabular
+namespace Microsoft.PowerFx.Connectors
 {
     [JsonConverter(typeof(AbstractTypeConverter<ColumnCapabilitiesBase>))]
     internal abstract class ColumnCapabilitiesBase

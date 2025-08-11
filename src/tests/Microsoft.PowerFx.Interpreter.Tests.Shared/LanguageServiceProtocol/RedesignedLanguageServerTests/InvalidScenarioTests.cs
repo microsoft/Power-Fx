@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
         public async Task HandleAsync(LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
         {
-            await Task.Delay(200, cancellationToken).ConfigureAwait(false);
+            await Task.Delay(200, cancellationToken);
             throw new Exception("Test Exception");
         }
     }
@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
         [Fact]
         public async Task TestTopParseError()
         {
-            var rawResponse = await TestServer.OnDataReceivedAsync("parse error").ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync("parse error");
             AssertErrorPayload(rawResponse, null, LanguageServerProtocol.JsonRpcHelper.ErrorCode.ParseError);
         }
 
@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                     Text = "123"
                 }
             });
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload);
 
             // Assert
             var error = AssertErrorPayload(rawResponse, null, LanguageServerProtocol.JsonRpcHelper.ErrorCode.InternalError);
@@ -66,13 +66,13 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
         public async Task TestLanguageServerCommunication()
         {
             // bad payload
-            var response1 = await TestServer.OnDataReceivedAsync(JsonSerializer.Serialize(new { })).ConfigureAwait(false);
+            var response1 = await TestServer.OnDataReceivedAsync(JsonSerializer.Serialize(new { }));
 
             // bad jsonrpc payload
             var response2 = await TestServer.OnDataReceivedAsync(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0"
-            })).ConfigureAwait(false);
+            }));
 
             // bad notification payload
             var response3 = await TestServer.OnDataReceivedAsync(JsonSerializer.Serialize(new
@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 jsonrpc = "2.0",
                 method = "unknown",
                 @params = "unkown"
-            })).ConfigureAwait(false);
+            }));
 
             // bad request payload
             var response4 = await TestServer.OnDataReceivedAsync(JsonSerializer.Serialize(new
@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 id = "abc",
                 method = "unknown",
                 @params = "unkown"
-            })).ConfigureAwait(false);
+            }));
 
             // verify we have 4 json rpc responeses
             AssertErrorPayload(response1, null, LanguageServerProtocol.JsonRpcHelper.ErrorCode.InvalidRequest);
@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                     Text = "123"
                 }
             });
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload);
 
             // Assert
             AssertErrorPayload(rawResponse, null, LanguageServerProtocol.JsonRpcHelper.ErrorCode.MethodNotFound);

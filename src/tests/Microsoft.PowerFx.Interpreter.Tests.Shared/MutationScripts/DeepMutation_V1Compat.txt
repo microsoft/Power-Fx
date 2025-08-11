@@ -410,3 +410,74 @@ Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value
 
 >> dbd // after dbd
 {d:Table({Value:1},{Value:2},{Value:3},{Value:11})}
+
+// REALLY DEEP MUTATIONS
+
+>> Set( deep, [[[[1,2,3],[4,5,6]]]] )
+Table({Value:Table({Value:Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})})})
+
+>> Set( deep_copy1, deep )
+Table({Value:Table({Value:Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})})})
+
+>> Patch( First(First(First(deep).Value).Value).Value, {Value:2}, {Value:99} )
+{Value:99}
+
+>> deep // after first update
+Table({Value:Table({Value:Table({Value:Table({Value:1},{Value:99},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})})})
+
+>> deep_copy1
+Table({Value:Table({Value:Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})})})
+
+>> Set( deep_copy2, deep )
+Table({Value:Table({Value:Table({Value:Table({Value:1},{Value:99},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})})})
+
+>> Patch( Last(Last(Last(deep).Value).Value).Value, {Value:6}, {Value:98} )
+{Value:98}
+
+>> deep // after last update
+Table({Value:Table({Value:Table({Value:Table({Value:1},{Value:99},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:98})})})})
+
+>> deep_copy1 // unchanged
+Table({Value:Table({Value:Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})})})
+
+>> deep_copy2
+Table({Value:Table({Value:Table({Value:Table({Value:1},{Value:99},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})})})
+
+>> Set( deep_copy3, deep )
+Table({Value:Table({Value:Table({Value:Table({Value:1},{Value:99},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:98})})})})
+
+>> Patch( Index(Index(Index(deep,1).Value,1).Value,2).Value, {Value:4}, {Value:97} )
+{Value:97}
+
+>> deep // after index update
+Table({Value:Table({Value:Table({Value:Table({Value:1},{Value:99},{Value:3})},{Value:Table({Value:97},{Value:5},{Value:98})})})})
+
+>> deep_copy1 // still unchanged
+Table({Value:Table({Value:Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})})})
+
+>> deep_copy2 // unchanged
+Table({Value:Table({Value:Table({Value:Table({Value:1},{Value:99},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})})})
+
+>> deep_copy3
+Table({Value:Table({Value:Table({Value:Table({Value:1},{Value:99},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:98})})})})
+
+>> Patch( Last(Index(First(deep_copy1).Value,1).Value).Value, {Value:5}, {Value:96} )
+{Value:96}
+
+>> deep_copy1 // local mod
+Table({Value:Table({Value:Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value:96},{Value:6})})})})
+
+>> Patch( Last(First(Index(deep_copy2,1).Value).Value).Value, {Value:4}, {Value:95} )
+{Value:95}
+
+>> deep_copy2 // local mod
+Table({Value:Table({Value:Table({Value:Table({Value:1},{Value:99},{Value:3})},{Value:Table({Value:95},{Value:5},{Value:6})})})})
+
+>> Patch( Index(First(First(deep_copy3).Value).Value,1).Value, {Value:1}, {Value:94} )
+{Value:94}
+
+>> deep_copy3 // local mod
+Table({Value:Table({Value:Table({Value:Table({Value:94},{Value:99},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:98})})})})
+
+>> deep // unchanged after copy mutations
+Table({Value:Table({Value:Table({Value:Table({Value:1},{Value:99},{Value:3})},{Value:Table({Value:97},{Value:5},{Value:98})})})})

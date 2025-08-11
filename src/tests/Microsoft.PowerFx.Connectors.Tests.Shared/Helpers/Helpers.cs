@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Tests
                 var assembly = typeof(BasicRestTests).Assembly;
                 var stream = assembly.GetManifestResourceStream(fullName);
 
-                Assert.NotNull(stream);
+                Assert.True(stream != null, $"Cannot find resource {name} in assembly {assemblyNamespace}");
                 return stream;
             }
 

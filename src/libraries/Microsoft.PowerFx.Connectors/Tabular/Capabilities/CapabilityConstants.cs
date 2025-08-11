@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.PowerFx.Connectors.Tabular.Capabilities
+namespace Microsoft.PowerFx.Connectors
 {
     // Those constants are also defined in Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata.CapabilitiesConstants
     // but some of them are invalid
@@ -18,6 +18,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular.Capabilities
         public const string FilterRequiredProperties = "requiredProperties";
         public const string FilterRestrictions = "filterRestrictions";
         public const string GroupRestriction = "groupRestriction";
+        public const string IsChoiceValue = "Value";
         public const string IsDelegable = "isDelegable";
         public const string IsOnlyServerPagable = "isOnlyServerPagable";
         public const string IsPageable = "isPageable";
@@ -28,6 +29,8 @@ namespace Microsoft.PowerFx.Connectors.Tabular.Capabilities
         public const string Selectable = "selectable";
         public const string SelectionRestriction = "selectRestrictions";
         public const string SelectRestriction = "selectRestrictions";
+        public const string CountRestrictions = "countRestrictions";
+        public const string Countable = "countable";
         public const string ServerPagingOptions = "serverPagingOptions";
         public const string Sortable = "sortable";
         public const string SortRestrictions = "sortRestrictions";
@@ -35,7 +38,8 @@ namespace Microsoft.PowerFx.Connectors.Tabular.Capabilities
         public const string SPIsChoice = "IsChoice";
         public const string SPQueryName = "OdataQueryName";
         public const string SupportsRecordPermission = "supportsRecordPermission";
+        public const string SupportsJoin = "supportsJoin";
         public const string UngroupableProperties = "ungroupableProperties";
-        public const string UnsortableProperties = "unsortableProperties";
+        public const string UnsortableProperties = "unsortableProperties"; 
     }
 }

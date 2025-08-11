@@ -3,8 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Parser;
 
@@ -20,16 +20,61 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal TimeZoneInfo TimeZoneInfo { get; set; }
 
+        internal CultureInfo CultureInfo { get; set; }
+
         /// <summary>
         /// By default, we run expressions with a memory governor to enforce a limited amount of memory. 
         /// When true, disable memory checks and allow expression to use as much memory as it needs. 
         /// </summary>
         internal bool DisableMemoryChecks { get; set; }
 
-        private static bool TryGetFeaturesProperty(string featureName, out PropertyInfo propertyInfo)
+        private bool TryUpdateFeatures(string featureName, bool featureValue)
         {
-            propertyInfo = typeof(Features).GetProperty(featureName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            return propertyInfo?.CanWrite == true;
+            switch (featureName)
+            {
+                // When we move to C# 12 we can use nameof(Features.AsTypeLegacyCheck):
+                case "AsTypeLegacyCheck":
+                    this.Features = new Features(this.Features) { AsTypeLegacyCheck = featureValue };
+                    return true;
+                case "ConsistentOneColumnTableResult":
+                    this.Features = new Features(this.Features) { ConsistentOneColumnTableResult = featureValue };
+                    return true;
+                case "DisableRowScopeDisambiguationSyntax":
+                    this.Features = new Features(this.Features) { DisableRowScopeDisambiguationSyntax = featureValue };
+                    return true;
+                case "FirstLastNRequiresSecondArguments":
+                    this.Features = new Features(this.Features) { FirstLastNRequiresSecondArguments = featureValue };
+                    return true;
+                case "IsLookUpReductionDelegationEnabled":
+                    this.Features = new Features(this.Features) { IsLookUpReductionDelegationEnabled = featureValue };
+                    return true;
+                case "IsUserDefinedTypesEnabled":
+                    this.Features = new Features(this.Features) { IsUserDefinedTypesEnabled = featureValue };
+                    return true;
+                case "JsonFunctionAcceptsLazyTypes":
+                    this.Features = new Features(this.Features) { JsonFunctionAcceptsLazyTypes = featureValue };
+                    return true;
+                case "PowerFxV1CompatibilityRules":
+                    this.Features = new Features(this.Features) { PowerFxV1CompatibilityRules = featureValue };
+                    return true;
+                case "PrimaryOutputPropertyCoercionDeprecated":
+                    this.Features = new Features(this.Features) { PrimaryOutputPropertyCoercionDeprecated = featureValue };
+                    return true;
+                case "RestrictedIsEmptyArguments":
+                    this.Features = new Features(this.Features) { RestrictedIsEmptyArguments = featureValue };
+                    return true;
+                case "StronglyTypedBuiltinEnums":
+                    this.Features = new Features(this.Features) { StronglyTypedBuiltinEnums = featureValue };
+                    return true;
+                case "SupportColumnNamesAsIdentifiers":
+                    this.Features = new Features(this.Features) { SupportColumnNamesAsIdentifiers = featureValue };
+                    return true;
+                case "TableSyntaxDoesntWrapRecords":
+                    this.Features = new Features(this.Features) { TableSyntaxDoesntWrapRecords = featureValue };
+                    return true;
+            }
+
+            return false;
         }
 
         internal static InternalSetup Parse(string setupHandlerName, bool numberIsFloat = false)
@@ -51,7 +96,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 return iSetup;
             }
 
-            var parts = setupHandlerName.Split(",").Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).ToList();
+            var parts = setupHandlerName.Split(',').Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).ToList();
 
             foreach (var part in parts.ToArray())
             {
@@ -65,6 +110,11 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 if (string.Equals(part, "DisableMemChecks", StringComparison.OrdinalIgnoreCase))
                 {
+                    if (isDisable)
+                    {
+                        throw new ArgumentException("Invalid DisableMemChecks setup!");
+                    }
+
                     iSetup.DisableMemoryChecks = true;
                     parts.Remove(part);
                 }
@@ -81,21 +131,17 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     parts.Remove(part);
                 }
-                else if (TryGetFeaturesProperty(partName, out var prop))
+                else if (iSetup.TryUpdateFeatures(partName, !isDisable))
                 {
-                    if (isDisable)
-                    {
-                        prop.SetValue(iSetup.Features, false);
-                    }
-                    else
-                    {
-                        prop.SetValue(iSetup.Features, true);
-                    }
-
                     parts.Remove(part);
                 }
                 else if (part.StartsWith("TimeZoneInfo", StringComparison.OrdinalIgnoreCase))
                 {
+                    if (isDisable)
+                    {
+                        throw new ArgumentException("Invalid TimeZoneInfo setup!");
+                    }
+
                     var m = new Regex(@"TimeZoneInfo\(""(?<tz>[^)]+)""\)", RegexOptions.IgnoreCase).Match(part);
 
                     if (m.Success)
@@ -109,6 +155,28 @@ namespace Microsoft.PowerFx.Core.Tests
                     else
                     {
                         throw new ArgumentException("Invalid TimeZoneInfo setup!");
+                    }
+                }
+                else if (part.StartsWith("CultureInfo", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (isDisable)
+                    {
+                        throw new ArgumentException("Invalid CultureInfo setup!");
+                    }
+
+                    var m = new Regex(@"CultureInfo\(""(?<culture>[^)]+)""\)", RegexOptions.IgnoreCase).Match(part);
+
+                    if (m.Success)
+                    {
+                        var culture = m.Groups["culture"].Value;
+
+                        // This call will throw if the Language tag in invalid
+                        iSetup.CultureInfo = new CultureInfo(culture);
+                        parts.Remove(part);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Invalid CultureInfo setup!");
                     }
                 }
             }           

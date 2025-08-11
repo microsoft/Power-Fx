@@ -8,10 +8,11 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
-    /// String literal parse node. Example:
-    /// 
-    /// <code>"Hello world"</code>
+    /// String literal parse node.
     /// </summary>
+    /// <example>
+    /// <code>"Hello world"</code>
+    /// </example>
     public sealed class StrLitNode : TexlNode
     {
         /// <summary>

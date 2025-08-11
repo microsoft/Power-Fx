@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Utils;
@@ -22,6 +23,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         public virtual bool SupportsFx2NL { get; } = false;
 
+        public virtual bool SkipDefaultPreHandleForNl2Fx { get; } = false;
+
         public virtual Task<CustomNL2FxResult> NL2FxAsync(NL2FxParameters request, CancellationToken cancel)
         {
             throw new NotImplementedException();
@@ -32,7 +35,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         {
             throw new NotImplementedException();
         }
-        
+
         public virtual async Task<CustomFx2NLResult> Fx2NLAsync(CheckResult check, Fx2NLParameters hints, CancellationToken cancel)
         {
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -65,6 +68,12 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         // Engine can provide ambient details for NL, such as config and feature flags.
         public Engine Engine { get; set; }
+
+        /// <summary>
+        /// Set the locale that expect the output expression to be.
+        /// For example: "vi-VN" or "fr-FR".
+        /// </summary>
+        public CultureInfo ExpressionLocale { get; set; }
     }
 
     /// <summary>
@@ -77,6 +86,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         ///  Optional. Additional AppContext about where this expresion is used. 
         /// </summary>
         public UsageHints UsageHints { get; set; }
+
+        /// <summary>
+        /// Optional. Range of the expression. 
+        /// </summary>
+        public ScalarRange Range { get; set; }
 
         // we may add additional app context...
     }

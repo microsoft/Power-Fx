@@ -12,7 +12,7 @@ using Conditional = System.Diagnostics.ConditionalAttribute;
 namespace Microsoft.PowerFx.Core.Utils
 {
     /// <summary>
-    /// A list of simple names (<see cref="DName" />), starting at "root" (<see cref="Root" />).
+    /// Represents a list of simple names (<see cref="DName" />), starting at the root (<see cref="Root" />).
     /// </summary>
     [ThreadSafeImmutable]
     public struct DPath : IEquatable<DPath>, ICheckable
@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Core.Utils
         private readonly Node _node;
 
         /// <summary>
-        /// The "root" path.
+        /// Gets the root path.
         /// </summary>
         public static DPath Root { get; } = default;
 
@@ -119,20 +119,20 @@ namespace Microsoft.PowerFx.Core.Utils
         internal bool IsRoot => _node == null;
 
         /// <summary>
-        /// Whether this path is valid.
+        /// Gets a value indicating whether this path is valid.
         /// </summary>
         public bool IsValid => _node == null || _node.IsValid;
 
         /// <summary>
-        /// The length (number of simple names) of the path.
+        /// Gets the length (number of simple names) of the path.
         /// </summary>
         public int Length => _node == null ? 0 : _node.Length;
 
         /// <summary>
-        /// A name at some index.
+        /// Gets the name at the specified index in the path.
         /// </summary>
-        /// <param name="index">Index of the name in the path.</param>
-        /// <returns></returns>
+        /// <param name="index">The zero-based index of the name in the path.</param>
+        /// <returns>The <see cref="DName"/> at the specified index.</returns>
         public DName this[int index]
         {
             get
@@ -155,8 +155,8 @@ namespace Microsoft.PowerFx.Core.Utils
         /// <summary>
         /// Creates a new path by appending a new simple name.
         /// </summary>
-        /// <param name="name">The simple name to append.</param>
-        /// <returns></returns>
+        /// <param name="name">The simple name to append to the path.</param>
+        /// <returns>A new <see cref="DPath"/> with the appended name.</returns>
         public readonly DPath Append(DName name)
         {
             Contracts.CheckValid<DName>(name, nameof(name));
@@ -167,8 +167,8 @@ namespace Microsoft.PowerFx.Core.Utils
         /// <summary>
         /// Creates a new path by appending another path to this one.
         /// </summary>
-        /// <param name="path">The path to append.</param>
-        /// <returns></returns>
+        /// <param name="path">The path to append to the current path.</param>
+        /// <returns>A new <see cref="DPath"/> representing the combined path.</returns>
         public DPath Append(DPath path)
         {
             AssertValid();
@@ -213,8 +213,9 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         /// <summary>
-        /// Converts this path to a dotted syntax (e.g., Name1.Name2...)
+        /// Converts this path to a dotted syntax (e.g., Name1.Name2...).
         /// </summary>
+        /// <returns>A string representing the path in dotted syntax.</returns>
         public string ToDottedSyntax()
         {
             if (IsRoot)
@@ -244,9 +245,9 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         /// <summary>
-        /// A sequence of name segments.
+        /// Returns a sequence of name segments in this path.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An <see cref="IEnumerable{DName}"/> containing the name segments.</returns>
         public IEnumerable<DName> Segments()
         {
             var segments = new Stack<DName>();
@@ -259,11 +260,11 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         /// <summary>
-        /// Check whether two paths are equal.
+        /// Determines whether two paths are equal.
         /// </summary>
-        /// <param name="path1"></param>
-        /// <param name="path2"></param>
-        /// <returns></returns>
+        /// <param name="path1">The first <see cref="DPath"/> to compare.</param>
+        /// <param name="path2">The second <see cref="DPath"/> to compare.</param>
+        /// <returns><c>true</c> if the paths are equal; otherwise, <c>false</c>.</returns>
         public static bool operator ==(DPath path1, DPath path2)
         {
             var node1 = path1._node;
@@ -298,14 +299,17 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         /// <summary>
-        /// Check whether two paths are not equal.
+        /// Determines whether two paths are not equal.
         /// </summary>
-        /// <param name="path1"></param>
-        /// <param name="path2"></param>
-        /// <returns></returns>
+        /// <param name="path1">The first <see cref="DPath"/> to compare.</param>
+        /// <param name="path2">The second <see cref="DPath"/> to compare.</param>
+        /// <returns><c>true</c> if the paths are not equal; otherwise, <c>false</c>.</returns>
         public static bool operator !=(DPath path1, DPath path2) => !(path1 == path2);
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Returns the hash code for this path.
+        /// </summary>
+        /// <returns>An integer hash code for the path.</returns>
         public override int GetHashCode()
         {
             if (_node == null)
@@ -317,16 +321,20 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         /// <summary>
-        /// Whether this path is equal to another path.
+        /// Determines whether this path is equal to another path.
         /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
+        /// <param name="other">The <see cref="DPath"/> to compare with this instance.</param>
+        /// <returns><c>true</c> if the paths are equal; otherwise, <c>false</c>.</returns>
         public bool Equals(DPath other)
         {
             return this == other;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Determines whether this instance is equal to a specified object.
+        /// </summary>
+        /// <param name="obj">The object to compare with this instance.</param>
+        /// <returns><c>true</c> if the object is a <see cref="DPath"/> and is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             Contracts.AssertValueOrNull(obj);

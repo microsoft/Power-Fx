@@ -1,0 +1,129 @@
+// Primitives
+>> IsType(ParseJSON("987654321"), Number)
+true
+
+>> AsType(ParseJSON("12345678901234.567890123456"), Decimal)
+12345678901234.567890123456
+
+>> IsType(ParseJSON("98765.4321"), Decimal)
+true
+
+>> IsType(ParseJSON("-1.3"), Decimal)
+true
+
+>> IsType(ParseJSON("2e3"), Decimal)
+true
+
+>> IsType(ParseJSON("987654321"), Text)
+false
+
+>> IsType(ParseJSON("987654321"), Date)
+false
+
+>> If(IsType(ParseJSON("""1900-12-31T23:59:59.999Z"""), DateTime), "ValidDate")
+"ValidDate"
+
+>> If(IsType(ParseJSON("""1900-12-31T23:59:59.999Z"""), Text), "ValidText")
+"ValidText"
+
+>> IsType(ParseJSON("""IstypeFunction"""), Type(Text))
+true
+
+>> IsType(ParseJSON("""1984-01-01"""), Date)
+true
+
+>> IsType(ParseJSON("""1900-12-31"""), DateTime)
+true
+
+>> IsType(ParseJSON("""1900-12-31T23:59:59.999"""), Date)
+true
+
+>> IsType(ParseJSON("""11:59:59.999"""), Time)
+true
+
+>> IsType(ParseJSON("""00:00:00"""), Time)
+true
+
+>> IsType(ParseJSON("""1900-12-31T00:00:00.000Z"""), DateTimeTZInd)
+true
+
+>> IsType(ParseJSON("""true"""), Boolean)
+false
+
+>> IsType(ParseJSON("true"), Boolean)
+true
+
+// record
+>> IsType(ParseJSON("{""foo"": true, ""bar"": 1.1}"), Type({foo: Boolean, bar: Number}))
+true
+
+// record missing field
+>> IsType(ParseJSON("{""Name"": ""SpongeBob"", ""Age"": 1}"), Type({Name: Text, Age: Number, Aquatic: Boolean}))
+true
+
+// record with additional field
+>> IsType(ParseJSON("{""a"": 5, ""b"":true}"), Type({a: Number}))
+true
+
+// record with incorrect field type
+>> IsType(ParseJSON("{""a"": 5}"), Type({a: Text}))
+false
+
+// Deeply nested record with table
+>> IsType(ParseJSON("{""a"": {""b"" : { ""c"" : [1, 2, 3, 4]}}}"), Type({a: {b: {c: [Number]}}}))
+true
+
+// Table
+>> IsType(ParseJSON("[{""a"": ""Hello"", ""b"": ""2012-01-02""}, {""a"": ""Hi"", ""b"": ""2012-01-03""}]"), Type([{a: Text, b: Date}]))
+true
+
+>> IsType(ParseJSON("[{""a"": ""Hello"", ""b"": ""2012-01-02""}]"), Type([{a: Text, b: Text}]))
+true
+
+>> IsType(ParseJSON("[{""a"": ""Hello"", ""b"": ""2012-01-02""}]"), Type([{a: Text, b: Number}]))
+false
+
+>> IsType(ParseJSON("[{""a"": [{""z"": true}, {""z"": false}]}, {""a"": [{""z"": false}, {""z"": true}]}]"), Type([{a: [{z: Boolean}]}]))
+true
+
+>> IsType(ParseJSON("""1900-12-31T24:59:59.1002Z"""), DateTime)
+false
+
+>> IsType(ParseJSON("""24:59:59.12345678"""), Time)
+false
+
+>> IsType(ParseJSON("1"), 1)
+Errors: Error 23-24: Invalid argument '1'. Expected valid type name or inline type expression.
+
+>> IsType(ParseJSON("5"), Type(5))
+Errors: Error 28-29: Type expression is invalid. '5' cannot be used in a type expression.|Error 27-28: Type expression is invalid. 'Type(5)' cannot be used in a type expression.
+
+>> IsType(ParseJSON("true"), UnKnown)
+Errors: Error 26-33: Name isn't valid. 'UnKnown' isn't recognized.|Error 0-34: Invalid argument 'UnKnown'. Expected valid type name or inline type expression.
+
+>> IsType(ParseJSON("fasle"), Boolean)
+Error({Kind:ErrorKind.InvalidJSON})
+
+>> IsType(ParseJSON("true"), Void)
+Errors: Error 26-30: Unsupported type 'Void' in type argument.
+
+>> IsType(ParseJSON("{""a"": 5}"), Type({a: Number}), "Hello")
+Errors: Error 0-59: Invalid number of arguments: received 3, expected 2.
+
+>> IsType(ParseJSON("true"), None)
+Errors: Error 26-30: Unsupported type 'Blank' in type argument.
+
+>> IsType(ParseJSON("{}"), Type({a: Text, b: [Color]}))
+Errors: Error 28-29: Unsupported type 'Color' in type argument.
+
+>> IsType(If(1/0 > 1, ParseJSON("42")), Number)
+Error({Kind:ErrorKind.Div0})
+
+>> IsType(ParseJSON(Blank()), Number)
+Blank()
+
+>> IsType(ParseJSON("42"), Blank())
+Errors: Error 24-31: Invalid argument 'Blank()'. Expected valid type name or inline type expression.
+
+>> IsType(ParseJSON("42"), 1/0)
+Errors: Error 25-26: Invalid argument '1 / 0'. Expected valid type name or inline type expression.

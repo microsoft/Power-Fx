@@ -12,10 +12,10 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -47,8 +47,8 @@ namespace Microsoft.PowerFx.Functions
         private static readonly Regex _secondsDetokenizeRegex = new Regex("[\u0008][\u0008]+", RegExFlags);
         private static readonly Regex _milisecondsDetokenizeRegex = new Regex("[\u000e]+", RegExFlags);
         private static readonly Regex _tdTagRegex = new Regex("<\\s*(td)[\\s\\S]*?\\/{0,1}>", RegExFlags_IgnoreCase);
-        private static readonly Regex _lineBreakTagRegex = new Regex("<\\s*(br|li)[\\s\\S]*?\\/{0,1}>", RegExFlags_IgnoreCase);
-        private static readonly Regex _doubleLineBreakTagRegex = new Regex("<\\s*(div|p|tr)[\\s\\S]*?\\/{0,1}>", RegExFlags_IgnoreCase);
+        private static readonly Regex _lineBreakTagRegex = new Regex("<\\s*(br|li)((\\s+[\\s\\S]*?)|(\\s*\\/\\s*))?>", RegExFlags_IgnoreCase);
+        private static readonly Regex _doubleLineBreakTagRegex = new Regex("<\\s*(div|p|tr)((\\s+[\\s\\S]*?)|(\\s*\\/\\s*))?>", RegExFlags_IgnoreCase);
         private static readonly Regex _commentTagRegex = new Regex("<!--[\\s\\S]*?--\\s*>", RegExFlags_IgnoreCase);
         private static readonly Regex _headerTagRegex = new Regex("<\\s*(header)[\\s\\S]*?>[\\s\\S]*?<\\s*\\/\\s*(header)\\s*>", RegExFlags_IgnoreCase);
         private static readonly Regex _scriptTagRegex = new Regex("<\\s*(script)[\\s\\S]*?>[\\s\\S]*?<\\s*\\/\\s*(script)\\s*>", RegExFlags_IgnoreCase);
@@ -382,7 +382,7 @@ namespace Microsoft.PowerFx.Functions
                 if (!TextFormatUtils.AllowedListToUseFormatString.Contains(args[0].Type._type))
                 {
                     var customErrorMessage = StringResources.Get(TexlStrings.ErrNotSupportedFormat_Func, formatInfo.CultureInfo.Name);
-                    return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
+                    return new ErrorValue(irContext, new ExpressionError() { Message = string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"), Kind = ErrorKind.InvalidArgument });
                 }
 
                 if (args[1] is StringValue fs)
@@ -404,13 +404,13 @@ namespace Microsoft.PowerFx.Functions
             if (formatString != null && formatString.Length > formatSize)
             {
                 var customErrorMessage = StringResources.Get(TexlStrings.ErrTextFormatTooLarge, culture.Name);
-                return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, formatSize));
+                return new ErrorValue(irContext, new ExpressionError() { Message = string.Format(CultureInfo.InvariantCulture, customErrorMessage, formatSize), Kind = ErrorKind.InvalidArgument });
             }
 
             if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, culture, defaultLanguage, out textFormatArgs))
             {
                 var customErrorMessage = StringResources.Get(TexlStrings.ErrIncorrectFormat_Func, culture.Name);
-                return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
+                return new ErrorValue(irContext, new ExpressionError() { Message = string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"), Kind = ErrorKind.InvalidArgument });
             }
 
             if (args.Length > 1 && args[1] is OptionSetValue ops)
@@ -421,7 +421,7 @@ namespace Microsoft.PowerFx.Functions
 
             bool isText = TryText(formatInfo.With(culture), irContext, args[0], textFormatArgs, cancellationToken, out StringValue result);
 
-            return isText ? result : CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
+            return isText ? result : new ErrorValue(irContext, new ExpressionError() { Message = StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name), Kind = ErrorKind.InvalidArgument });
         }
 
         public static bool TryText(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, TextFormatArgs textFormatArgs, CancellationToken cancellationToken, out StringValue result)
@@ -573,14 +573,23 @@ namespace Microsoft.PowerFx.Functions
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            CultureInfo internalCulture = (CultureInfo)culture.Clone();
+
+            // th-TH
+            if (internalCulture.LCID == 1054) 
+            {
+                // Don't use ThaiBuddistCelendar                
+                internalCulture.DateTimeFormat.Calendar = new GregorianCalendar() { TwoDigitYearMax = 2049 };                
+            }
+
             // Check if DateTimeFormatEnumValue is DateTime format enum type.
-            var info = DateTimeFormatInfo.GetInstance(culture);
+            var info = DateTimeFormatInfo.GetInstance(internalCulture);
             result = null;
             string formatStr;
             switch (textFormatArgs.FormatArg)
             {
                 case "UTC":
-                    result = new StringValue(irContext, ConvertToUTC(dateTime, timeZoneInfo).ToString("yyyy-MM-ddTHH:mm:ss.fffZ", culture));
+                    result = new StringValue(irContext, ConvertToUTC(dateTime, timeZoneInfo).ToString("yyyy-MM-ddTHH:mm:ss.fffZ", internalCulture));
                     return result != null;
                 case "ShortDateTime":
                     // TODO: This might be wrong for some cultures
@@ -607,6 +616,30 @@ namespace Microsoft.PowerFx.Functions
                     break;
                 case "LongDate":
                     formatStr = info.LongDatePattern;
+
+                    // ja-JP, zh-CN
+                    if (internalCulture.LCID == 1041 || internalCulture.LCID == 2052) 
+                    {
+                        // .Net Core 3.1 uses "yyyy'年'M'月'd'日'" (missing dddd)
+                        // .Net 7.0 uses "yyyy年M月d日dddd" (missing space)
+                        formatStr = "yyyy年M月d日 dddd";
+                    }
+
+                    // th-TH
+                    else if (internalCulture.LCID == 1054)
+                    {
+                        // .Net Core 3.1 uses "d MMMM yyyy"
+                        // .Net 7.0 uses "ddddที่ d MMMM g yyyy"
+                        formatStr = "d MMMM yyyy";
+                    }
+
+                    // eu-ES
+                    else if (internalCulture.LCID == 1069) 
+                    {
+                        // .Net Core 3.1 and .Net 7 use "yyyy('e')'ko' MMMM'ren' d('a'), dddd" (with extra 'ren' and 'a')
+                        formatStr = "yyyy('e')'ko' MMMM d, dddd";
+                    }
+
                     break;
                 case "LongTime":
                     formatStr = info.LongTimePattern;
@@ -618,7 +651,7 @@ namespace Microsoft.PowerFx.Functions
                     return false;
             }
 
-            result = new StringValue(irContext, dateTime.ToString(formatStr, culture));
+            result = new StringValue(irContext, dateTime.ToString(formatStr, info));
             return result != null;
         }
 
@@ -944,14 +977,14 @@ namespace Microsoft.PowerFx.Functions
 
             if (args[1] is not NumberValue count)
             {
-                return CommonErrors.GenericInvalidArgument(irContext);
+                return CommonErrors.InvalidArgumentError(irContext, RuntimeStringResources.ErrInvalidArgument);
             }
 
             var source = (StringValue)args[0];
 
             if (count.Value < 0)
             {
-                return CommonErrors.GenericInvalidArgument(irContext);
+                return CommonErrors.InvalidArgumentError(irContext, RuntimeStringResources.ErrInvalidArgument);
             }
 
             if ((count.Value % 1) != 0)
@@ -1196,7 +1229,7 @@ namespace Microsoft.PowerFx.Functions
             }
             catch
             {
-                return CommonErrors.GenericInvalidArgument(irContext);
+                return CommonErrors.InvalidArgumentError(irContext, RuntimeStringResources.ErrInvalidArgument);
             }
         }
 
@@ -1256,9 +1289,10 @@ namespace Microsoft.PowerFx.Functions
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
-                    Message = $"Input value {number} falls outside the allowable range",
+                    ResourceKey = RuntimeStringResources.ErrInputOutsideRange,
                     Span = irContext.SourceContext,
-                    Kind = ErrorKind.InvalidArgument
+                    Kind = ErrorKind.InvalidArgument,
+                    MessageArgs = new object[] { number }
                 });
             }
 
@@ -1266,9 +1300,10 @@ namespace Microsoft.PowerFx.Functions
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
-                    Message = $"Input value {number} is an invalid input",
+                    ResourceKey = RuntimeStringResources.ErrInvalidNumberInput,
                     Span = irContext.SourceContext,
-                    Kind = ErrorKind.NotApplicable
+                    Kind = ErrorKind.NotApplicable,
+                    MessageArgs = new object[] { number }
                 });
             }
 

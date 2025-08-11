@@ -11,6 +11,7 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
+#pragma warning disable CS0618 // Type or member is obsolete https://github.com/microsoft/Power-Fx/issues/2940
     public class PowerPlatformConnectorClientTests : PowerFxTest
     {
         private const string TestEndpoint = "localhost:1234";
@@ -33,7 +34,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(TestEndpoint, client.Endpoint);
             Assert.Equal(TestEnvironmentId, client.EnvironmentId);
             Assert.Equal(TestConnectionId, client.ConnectionId);
-            Assert.Equal(TestAuthToken, await client.GetAuthToken().ConfigureAwait(false));
+            Assert.Equal(TestAuthToken, await client.GetAuthToken());
         }
 
         [Theory]
@@ -57,9 +58,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             if (!string.IsNullOrEmpty(extraHeaders))
             {
-                foreach (var kvp in extraHeaders.Split(";"))
+                foreach (var kvp in extraHeaders.Split(';'))
                 {
-                    var hv = kvp.Split(":");
+                    var hv = kvp.Split(':');
                     request.Headers.Add(hv.First(), hv.Skip(1));
                 }
             }
@@ -69,7 +70,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 request.Content = new StringContent(content);
             }
 
-            var transformedRequest = await client.Transform(request).ConfigureAwait(false);
+            var transformedRequest = await client.Transform(request);
 
             Assert.NotNull(transformedRequest);
             Assert.Equal(new Uri("https://" + TestEndpoint + "/invoke"), transformedRequest.RequestUri);
@@ -112,6 +113,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     case "x-ms-request-url":
                         Assert.Equal($"/{TestConnectionId}/test/someUri", header.Value.First());
                         break;
+                    case "x-ms-enable-selects":
+                        Assert.Equal("true", header.Value.First());
+                        break;
                     default:
                         Assert.True(request.Headers.Contains(header.Key), $"Missing {header.Key} header");
                         var reqHeaderValues = request.Headers.First(h => h.Key == header.Key).Value;
@@ -122,7 +126,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 }
             }
 
-            Assert.Equal(request.Headers.Count() + 9, transformedRequest.Headers.Count());
+            Assert.Equal(request.Headers.Count() + 10, transformedRequest.Headers.Count());
         }
     }
 
@@ -133,7 +137,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
         {
             Request = request;
-            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            return await base.SendAsync(request, cancellationToken);
         }
     }
 }

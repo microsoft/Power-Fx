@@ -1,15 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions;
-using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Abstractions;
 using static Microsoft.PowerFx.Interpreter.Tests.ExpressionEvaluationTests;
@@ -39,22 +38,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // Canvas currently does not support decimal, but since this interpreter does, we can run tests with decimal here.
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,NumberIsFloat,DecimalSupport")]
         [InterpreterTheory]
-        public void Canvas_Float(ExpressionTestCase testCase)
+        public void Canvas_Float(ExpressionTestCase t)
         {
             // current default features in Canvas abc
             var features = new Features()
             {
                 TableSyntaxDoesntWrapRecords = true,
-                ConsistentOneColumnTableResult = true
+                ConsistentOneColumnTableResult = true,
+                IsUserDefinedTypesEnabled = true,
             };
 
-            RunExpressionTestCase(testCase, features, numberIsFloat: true, Console);
+            RunExpressionTestCase(t, features, numberIsFloat: true, Console);
         }
 
         // Canvas currently does not support decimal, but since this interpreter does, we can run tests with decimal here.
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,PowerFxV1CompatibilityRules,NumberIsFloat,DecimalSupport")]
         [InterpreterTheory]
-        public void Canvas_Float_PFxV1(ExpressionTestCase testCase)
+        public void Canvas_Float_PFxV1(ExpressionTestCase t)
         {
             // current default features in Canvas abc
             var features = new Features()
@@ -62,24 +62,25 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 TableSyntaxDoesntWrapRecords = true,
                 ConsistentOneColumnTableResult = true,
                 PowerFxV1CompatibilityRules = true,
+                IsUserDefinedTypesEnabled = true,
             };
 
-            RunExpressionTestCase(testCase, features, numberIsFloat: true, Console);
+            RunExpressionTestCase(t, features, numberIsFloat: true, Console);
         }
 
         [InterpreterTheory]
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,disable:NumberIsFloat,DecimalSupport")]
-        public void V1_Decimal(ExpressionTestCase testCase)
+        public void V1_Decimal(ExpressionTestCase t)
         {
-            RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: false, Console);
+            RunExpressionTestCase(t, Features.PowerFxV1, numberIsFloat: false, Console);
         }
 
         // Although we are using numbers as floats by default, since this interpreter supports decimal, we can run tests with decimal here.        
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,NumberIsFloat,DecimalSupport")]
         [InterpreterTheory]
-        public void V1_Float(ExpressionTestCase testCase)
+        public void V1_Float(ExpressionTestCase t)
         {
-            RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: true, Console);
+            RunExpressionTestCase(t, Features.PowerFxV1, numberIsFloat: true, Console);
         }
 
 #if false
@@ -93,23 +94,59 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 #endif
 
+#if MATCHCOMPARE
+        /* to enable, place this in Solution Items/Directiory.Build.Props:
+          <PropertyGroup>
+              <DefineConstants>$(DefineConstants);MATCHCOMPARE</DefineConstants>
+          </PropertyGroup>
+        */
+
+#if false // may not want to run this, even if MATCHCOMPARE is enabled
+
+        // Runs only tests that have asked for RegEx setup. This test run will compare the regular expression results between
+        // .NET (used in the C# interpreter), NodeJS with JavaScript (used in Canvas), and PCRE2 (used in Excel).
+        // This is not run all the time.  It requires Node to be installed and PCRE2 built as a shared library DLL and on the path.
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,disable:NumberIsFloat,DecimalSupport", "RegEx")]
+        [InterpreterTheory]
+        public void RegExCompare(ExpressionTestCase t)
+        {
+            ExpressionEvaluationTests.RegExCompareDotNet = true;
+            ExpressionEvaluationTests.RegExCompareNode = true;
+            ExpressionEvaluationTests.RegExComparePCRE2 = true;
+
+            RunExpressionTestCase(t, Features.PowerFxV1, numberIsFloat: false, Console);
+        }
+#endif
+#endif
+
+        private static string _currentNetVersion = null;
+        private static readonly object _cnvLock = new object();
+
         private void RunExpressionTestCase(ExpressionTestCase testCase, Features features, bool numberIsFloat, ITestOutputHelper output)
         {
             // This is running against embedded resources, so if you're updating the .txt files,
             // make sure they build is actually copying them over.
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
+            var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
+
+            // If #DISABLE.NET directive is used, skip the test if the current .NET version is in the list.
+            if (!string.IsNullOrEmpty(testCase.DisableDotNet) && ShouldSkipDotNetVersion(testCase, prefix))
+            {
+                Skip.If(true, prefix + $"Net {_currentNetVersion} is excluded");
+                return;
+            }
+
             var runner = new InterpreterRunner() { NumberIsFloat = numberIsFloat, Features = features, Log = (msg) => output.WriteLine(msg) };
             var (result, msg) = runner.RunTestCase(testCase);
 
-            var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
             switch (result)
             {
                 case TestResult.Pass:
                     break;
 
                 case TestResult.Fail:
-                    Assert.True(false, prefix + msg);
+                    Assert.Fail(prefix + msg);
                     break;
 
                 case TestResult.Skip:
@@ -118,12 +155,39 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+        private static bool ShouldSkipDotNetVersion(ExpressionTestCase testCase, string prefix)
+        {
+            lock (_cnvLock)
+            {
+                if (string.IsNullOrEmpty(_currentNetVersion))
+                {
+                    // Find [assembly: AssemblyTrait(...)] attribute in the test assembly to get the current .NET version.
+                    foreach (CustomAttributeData cad in CustomAttributeData.GetCustomAttributes(typeof(FileExpressionEvaluationTests).Assembly))
+                    {
+                        if (cad.AttributeType == typeof(AssemblyTraitAttribute))
+                        {
+                            _currentNetVersion = cad.ConstructorArguments[1].Value.ToString();
+                            break;
+                        }
+                    }
+                }
+
+                if (testCase.DisableDotNet.Split(",").Any(excludedVersion => excludedVersion == _currentNetVersion))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
 #if false
-        // Helper to run a single .txt 
+        // Helper to run a single .txt
         [Fact]
         public void RunOne()
         {
-            var path = @"D:\repos\osp1\src\tests\Microsoft.PowerFx.Core.Tests\ExpressionTestCases\StronglyTypedEnum_TestEnums_PreV1.txt";
+            var path = @"C:\od\regex\match9\one.txt";
+
             var line = 0;
 
             var runner = new InterpreterRunner();
@@ -131,22 +195,40 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             testRunner.AddFile(new Dictionary<string, bool>(), path);
 
-            // We can filter to just cases we want, set line above 
+            var overridePath = Regex.Replace(path, @"\.txt$", "_overrides.txt");
+            if (File.Exists(overridePath))
+            {
+                testRunner.AddFile(new Dictionary<string, bool>(), overridePath);
+            }
+
+            // We can filter to just cases we want, set line above
             if (line > 0)
             {
                 testRunner.Tests.RemoveAll(x => x.SourceLine != line);
             }
-
+            
             var result = testRunner.RunTests();
             if (result.Fail > 0)
             {
-                Assert.True(false, result.Output);
+                Assert.Fail(result.Output);
             }
             else
             {
                 Console.WriteLine(result.Output);
             }
         }
+
+#if MATCHCOMPARE
+        // Helper to run a single .txt with regular expression comparison between .NET, Node, and PCRE2
+        [Fact]
+        public void RunOneMatchCompare()
+        {
+            ExpressionEvaluationTests.RegExCompareDotNet = true;
+            ExpressionEvaluationTests.RegExCompareNode = true;
+            ExpressionEvaluationTests.RegExComparePCRE2 = true;
+            RunOne();
+        }
+#endif
 #endif
 
         // Run cases in MutationScripts
@@ -183,6 +265,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var config = new PowerFxConfig(features) { SymbolTable = UserInfoTestSetup.GetUserInfoSymbolTable() };
             config.SymbolTable.EnableMutationFunctions();
+#pragma warning disable CS0618 // Type or member is obsolete
+            config.EnableJoinFunction();
+#pragma warning restore CS0618 // Type or member is obsolete
             var engine = new RecalcEngine(config);
 
             var rc = new RuntimeConfig();
@@ -191,18 +276,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var runner = new ReplRunner(engine);
             runner._repl.EnableUserObject();
             runner._repl.UserInfo = UserInfoTestSetup.UserInfo.UserInfo;
-            
+
             // runner._repl.InnerServices = rc.ServiceProvider;
 
             var testRunner = new TestRunner(runner);
 
             testRunner.AddFile(TestRunner.ParseSetupString(setup), path);
 
+            if (testRunner.Tests.Count > 0 && testRunner.Tests[0].SetupHandlerName.Contains("MutationFunctionsTestSetup"))
+            {
+                ExpressionEvaluationTests.MutationFunctionsTestSetup(engine, false);
+            }
+
             var result = testRunner.RunTests();
 
             if (result.Fail > 0)
             {
-                Assert.True(false, result.Output);
+                Assert.Fail(result.Output);
             }
             else
             {
@@ -221,13 +311,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Verify this runs without throwing an exception.
             var list = attr.GetData(method);
+            int disableDotNet = 0;
 
             // And doesn't report back any test failures. 
             foreach (var batch in list)
             {
                 var item = (ExpressionTestCase)batch[0];
-                Assert.Null(item.FailMessage);
+                Assert.True(item.FailMessage == null, item.FailMessage);
+
+                if (!string.IsNullOrEmpty(item.DisableDotNet))
+                {
+                    disableDotNet++;
+                }
             }
+
+            Console.WriteLine($"Found {list.Count()} tests, {disableDotNet} with DisabledDotNet set.");
         }
 
         // Scan the "Not Yet Ready" directory to ensure the tests all parse.

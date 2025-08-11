@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -307,6 +308,168 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void OptionSetTests()
+        {
+            var os1 = new OptionSet("os1", DisplayNameProvider.New(new Dictionary<DName, DName>() { { new DName("ln1"), new DName("dn1") } }));
+            var os2 = new OptionSet("os2", DisplayNameProvider.New(new Dictionary<DName, DName>() { { new DName("ln2"), new DName("dn2") }, { new DName("ln3"), new DName("dn3") } }));
+            
+            var st1 = new SymbolTable();
+            st1.AddOptionSet(os1);
+
+            Assert.Single(st1.OptionSets);
+
+            var st2 = new SymbolTable();
+            st2.AddOptionSet(os2);
+
+            var st3 = SymbolTable.Compose(st1, st2);
+
+            Assert.Equal(2, st3.OptionSets.Count());            
+        }
+
+        [Fact]
+        public void AddVariableAndOptionSetWithConflicts()
+        {
+            var st1 = new SymbolTable();            
+            st1.AddVariable("var1", FormulaType.String, displayName: "displayName1");
+            var os1 = new OptionSet("os1", DisplayNameProvider.New(new Dictionary<DName, DName>() { { new DName("ln1"), new DName("dn1") } }));
+            var os2 = new OptionSet("os2", DisplayNameProvider.New(new Dictionary<DName, DName>() { { new DName("xx2"), new DName("yy2") } }));
+            st1.AddOptionSet(os1);
+            st1.AddOptionSet(os2);
+
+            // The variable we just added should be there
+            bool b = st1.TryGetVariable(new DName("var1"), out NameLookupInfo info, out DName displayName);
+
+            Assert.True(b);
+            NameSymbol nameSymbol = Assert.IsType<NameSymbol>(info.Data);
+            Assert.Equal("var1", nameSymbol.Name);
+            Assert.Equal("displayName1", displayName.Value);
+            Assert.Equal("s", info.Type.ToString());
+
+            // The optionset we just added should be there
+            b = st1.TryGetVariable(new DName("os1"), out info, out displayName);
+
+            Assert.True(b);
+            OptionSet optionSet = Assert.IsType<OptionSet>(info.Data);
+            Assert.Equal("os1", optionSet.EntityName.Value);
+            Assert.Equal("os1", displayName.Value);
+            Assert.Equal("L{ln1:l}", info.Type.ToString());
+
+            // The second optionset we just added should be there
+            b = st1.TryGetVariable(new DName("os2"), out info, out displayName);
+
+            Assert.True(b);
+            optionSet = Assert.IsType<OptionSet>(info.Data);
+            Assert.Equal("os2", optionSet.EntityName.Value);
+            Assert.Equal("os2", displayName.Value);
+            Assert.Equal("L{xx2:l}", info.Type.ToString());
+
+            // Can't add the same variable twice
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => st1.AddVariable("var1", FormulaType.String, displayName: "displayName1"));
+            Assert.Equal("var1 is already defined", exception.Message);
+
+            // Can't add the same optionset twice
+            NameCollisionException exception2 = Assert.Throws<NameCollisionException>(() => st1.AddOptionSet(os1));
+            Assert.Equal("Name os1 has a collision with another display or logical name", exception2.Message);
+
+            // New symbol table with SAME variable name but different type & display name
+            var st2 = new SymbolTable();
+            st2.AddVariable("var1", FormulaType.Boolean, displayName: "displayName2");
+            var os3 = new OptionSet("os2", DisplayNameProvider.New(new Dictionary<DName, DName>() { { new DName("zz2"), new DName("tt2") } }));
+            st2.AddOptionSet(os3);
+
+            // The var1 we just added in st2 should be there
+            b = st2.TryGetVariable(new DName("var1"), out info, out displayName);
+
+            Assert.True(b);
+            nameSymbol = Assert.IsType<NameSymbol>(info.Data);
+            Assert.Equal("var1", nameSymbol.Name);
+            Assert.Equal("displayName2", displayName.Value);
+            Assert.Equal("b", info.Type.ToString());
+
+            // The optionset we just added should be there
+            b = st2.TryGetVariable(new DName("os2"), out info, out displayName);
+
+            Assert.True(b);
+            optionSet = Assert.IsType<OptionSet>(info.Data);
+            Assert.Equal("os2", optionSet.EntityName.Value);
+            Assert.Equal("os2", displayName.Value);
+            Assert.Equal("L{zz2:l}", info.Type.ToString());
+
+            // Compose symbol tables in st1, st2 order
+            // even if there are variable name conflicts, Compose will just work fine
+            ReadOnlySymbolTable rost1 = SymbolTable.Compose(new[] { st1, st2 });
+
+            // Here we'll get var1 from st1 and first always win
+            b = rost1.TryGetVariable(new DName("var1"), out info, out displayName);
+
+            Assert.True(b);
+            nameSymbol = Assert.IsType<NameSymbol>(info.Data);
+            Assert.Equal("var1", nameSymbol.Name);
+            Assert.Equal("displayName1", displayName.Value);
+            Assert.Equal("s", info.Type.ToString());
+
+            // os1 is only defined once, so we'll get it as excepted
+            b = rost1.TryGetVariable(new DName("os1"), out info, out displayName);
+
+            Assert.True(b);
+            optionSet = Assert.IsType<OptionSet>(info.Data);
+            Assert.Equal("os1", optionSet.EntityName.Value);
+            Assert.Equal("os1", displayName.Value);
+            Assert.Equal("L{ln1:l}", info.Type.ToString());
+
+            // The optionset os2 is defined twice but we'll get the version from st1 (first one wins)
+            b = rost1.TryGetVariable(new DName("os2"), out info, out displayName);
+
+            Assert.True(b);
+            optionSet = Assert.IsType<OptionSet>(info.Data);
+            Assert.Equal("os2", optionSet.EntityName.Value);
+            Assert.Equal("os2", displayName.Value);
+            Assert.Equal("L{xx2:l}", info.Type.ToString());
+
+            // There should only be 2 'visible' optionset (os1 and os2)
+            Assert.Equal(2, rost1.OptionSets.Count());
+
+            // Check types of OptionSets and confirm os2 is from st1
+            Assert.Equal("os1:ln1_dn1, os2:xx2_yy2", string.Join(", ", rost1.OptionSets.Select(kvp => $"{kvp.Key}:{string.Join(",", kvp.Value.FormulaType._type.DisplayNameProvider.LogicalToDisplayPairs.Select(p => $"{p.Key}_{p.Value}"))}")));
+
+            // Now we compose in the other order: st2 first
+            ReadOnlySymbolTable rost2 = SymbolTable.Compose(new[] { st2, st1 });
+
+            // This time, we'll get var1 from st2 and we can see the difference on display name and type
+            b = rost2.TryGetVariable(new DName("var1"), out info, out displayName);
+
+            Assert.True(b);
+            nameSymbol = Assert.IsType<NameSymbol>(info.Data);
+            Assert.Equal("var1", nameSymbol.Name);
+            Assert.Equal("displayName2", displayName.Value);
+            Assert.Equal("b", info.Type.ToString());
+
+            // No change here as there is only one option set os1
+            b = rost2.TryGetVariable(new DName("os1"), out info, out displayName);
+
+            Assert.True(b);
+            optionSet = Assert.IsType<OptionSet>(info.Data);
+            Assert.Equal("os1", optionSet.EntityName.Value);
+            Assert.Equal("os1", displayName.Value);
+            Assert.Equal("L{ln1:l}", info.Type.ToString());
+
+            // The optionset os2 is defined twice but we'll get the version from st2 (first one wins)
+            b = rost2.TryGetVariable(new DName("os2"), out info, out displayName);
+
+            Assert.True(b);
+            optionSet = Assert.IsType<OptionSet>(info.Data);
+            Assert.Equal("os2", optionSet.EntityName.Value);
+            Assert.Equal("os2", displayName.Value);
+            Assert.Equal("L{zz2:l}", info.Type.ToString());
+
+            // There should only be 2 'visible' optionset (os1 and os2)
+            Assert.Equal(2, rost2.OptionSets.Count());
+
+            // Check types of OptionSets and confirm os2 is from st2
+            Assert.Equal("os2:zz2_tt2, os1:ln1_dn1", string.Join(", ", rost2.OptionSets.Select(kvp => $"{kvp.Key}:{string.Join(",", kvp.Value.FormulaType._type.DisplayNameProvider.LogicalToDisplayPairs.Select(p => $"{p.Key}_{p.Value}"))}")));
+        }
+
+        [Fact]
         public void VoidIsNotAllowed()
         {
             var symbol = new SymbolTable();
@@ -324,12 +487,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
             PowerFxConfig config = new PowerFxConfig();
 
-            bool fOk = config.SymbolTable.TryGetSymbolType("os1", out var type);
+            bool fOk = config.ComposedConfigSymbols.TryGetSymbolType("os1", out var type);
             Assert.False(fOk);
 
             config.AddOptionSet(os);
 
-            fOk = config.SymbolTable.TryGetSymbolType("os1", out type);
+            fOk = config.ComposedConfigSymbols.TryGetSymbolType("os1", out type);
             Assert.True(fOk);
 
             AssertOptionSetType(type, os);
@@ -385,6 +548,84 @@ namespace Microsoft.PowerFx.Core.Tests
                         Assert.True(engine.Check("Sum(1)", symbolTable: composed).IsSuccess);
                     });
             }
+        }
+
+        [Fact]
+        public void Cache1()
+        {
+            var table1 = new SymbolTable { DebugName = "Table1" };
+            var table2 = new SymbolTable { DebugName = "Table2" };
+
+            ComposedSymbolTableCache cache = new ComposedSymbolTableCache();
+            var c1 = cache.GetComposedCached(table1, table2);
+
+            // Same args, cache returns identical instance
+            {
+                var c1b = cache.GetComposedCached(table1, table2);
+
+                Assert.True(object.ReferenceEquals(c1, c1b));
+            }
+
+            // Mutating an existing table is ok - ComposedSymbolTable will catch that
+            {
+                table1.AddFunction(new BlankFunction());
+                var c1c = cache.GetComposedCached(table1, table2);
+                Assert.True(object.ReferenceEquals(c1, c1c));
+
+                bool hasFunc = c1c.Functions.AnyWithName("Blank");
+                Assert.True(hasFunc);
+            }
+
+            // But using different table instances will invalidate
+            {
+                var table1b = new SymbolTable { DebugName = "Table1b" };
+                Assert.False(object.ReferenceEquals(table1, table1b)); // different instances!!!
+
+                var c2 = cache.GetComposedCached(table1b, table2);
+                Assert.False(object.ReferenceEquals(c1, c2));
+
+                var hasFunc = c2.Functions.AnyWithName("Blank");
+                Assert.False(hasFunc);
+            }
+        }
+
+        // We can't change the lenght to GetComposedCached()
+        [Fact]
+        public void CacheLengthChange()
+        {
+            var table1 = new SymbolTable { DebugName = "Table1" };
+            var table2 = new SymbolTable { DebugName = "Table2" };
+
+            ComposedSymbolTableCache cache = new ComposedSymbolTableCache();
+            var c1 = cache.GetComposedCached(table1);
+
+            // Can't change 
+            Assert.Throws<InvalidOperationException>(() => cache.GetComposedCached(table1, table2));
+        }
+
+        // Since it's ok to pass nulls to ComposedReadOnlySymbolTable,
+        // It's ok to pass nulls to GetComposedCached. 
+        [Fact]
+        public void CacheNullOk()
+        {
+            var table1 = new SymbolTable { DebugName = "Table1" };
+            table1.AddConstant("c1", FormulaValue.New("constant"));
+            ReadOnlySymbolTable nullTable = null;
+            
+            ComposedSymbolTableCache cache = new ComposedSymbolTableCache();
+            var c1 = cache.GetComposedCached(table1, nullTable);
+
+            var ok = c1.TryGetSymbolType("c1", out var type);
+            Assert.True(ok);
+            Assert.Equal(FormulaType.String, type);
+
+            // Shorter args 
+            ComposedSymbolTableCache cache1arg = new ComposedSymbolTableCache();
+            cache1arg.GetComposedCached(nullTable);
+
+            // Shorter args 
+            ComposedSymbolTableCache cache0args = new ComposedSymbolTableCache();
+            cache0args.GetComposedCached();
         }
 
         // Type is wrong: https://github.com/microsoft/Power-Fx/issues/2342

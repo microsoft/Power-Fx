@@ -18,7 +18,14 @@ namespace Microsoft.PowerFx.Core.Tests
         public void BlobTest_ConstructorNullResourceManager()
         {
             ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new BlobValue(null));
+#if !NET462
             Assert.Equal("Value cannot be null. (Parameter 'content')", ex.Message);
+#else
+#pragma warning disable SA1116 // Split parameters should start on line after open parenthesis
+            Assert.Equal(@"Value cannot be null.
+Parameter name: content", ex.Message);
+#pragma warning restore SA1116 // Split parameters should start on line after open parenthesis
+#endif
         }
 
         [Fact]
@@ -38,83 +45,90 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
-        public void BlobTest_NullValue()
+        public async Task BlobTest_NullValue()
         {
             BlobContent beb = new StringBlob(null);
             BlobValue blob = new BlobValue(beb);
 
-            Assert.NotNull(blob);
-            Assert.Equal(string.Empty, blob.GetAsStringAsync(null, CancellationToken.None).Result);
-            Assert.Equal(string.Empty, blob.GetAsBase64Async(CancellationToken.None).Result);
-            Assert.Empty(blob.GetAsByteArrayAsync(CancellationToken.None).Result);
+            Assert.NotNull(blob);            
+            Assert.Equal(string.Empty, await blob.GetAsStringAsync(null, CancellationToken.None));
+            Assert.Equal(string.Empty, await blob.GetAsBase64Async(CancellationToken.None));
+            Assert.Empty(await blob.GetAsByteArrayAsync(CancellationToken.None));
             Assert.Same(blob.Content, beb);
         }
 
         [Fact]
-        public void BlobTest_EmptyValue()
+        public async Task BlobTest_EmptyValue()
         {
             BlobContent beb = new StringBlob(string.Empty);
             BlobValue blob = new BlobValue(beb);
 
             Assert.NotNull(blob);
-            Assert.Equal(string.Empty, blob.Content.GetAsStringAsync(null, CancellationToken.None).Result);
-            Assert.Equal(string.Empty, blob.Content.GetAsBase64Async(CancellationToken.None).Result);
-            Assert.Empty(blob.GetAsByteArrayAsync(CancellationToken.None).Result);
+            Assert.Equal(string.Empty, await blob.Content.GetAsStringAsync(null, CancellationToken.None));
+            Assert.Equal(string.Empty, await blob.Content.GetAsBase64Async(CancellationToken.None));
+            Assert.Empty(await blob.GetAsByteArrayAsync(CancellationToken.None));
             Assert.Same(blob.Content, beb);
         }
 
         [Fact]
-        public void BlobTest_SomeValue()
+        public async Task BlobTest_SomeValue()
         {            
             BlobValue blob = FormulaValue.NewBlob("Hello World!", false);
 
             Assert.NotNull(blob);
-            Assert.Equal("Hello World!", blob.Content.GetAsStringAsync(null, CancellationToken.None).Result);
-            Assert.Equal("SGVsbG8gV29ybGQh", blob.Content.GetAsBase64Async(CancellationToken.None).Result);
-            Assert.Equal(new byte[] { 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33 }, blob.GetAsByteArrayAsync(CancellationToken.None).Result);            
+            Assert.Equal("Hello World!", await blob.Content.GetAsStringAsync(null, CancellationToken.None));
+            Assert.Equal("SGVsbG8gV29ybGQh", await blob.Content.GetAsBase64Async(CancellationToken.None));
+            Assert.Equal(new byte[] { 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33 }, await blob.GetAsByteArrayAsync(CancellationToken.None));            
         }
 
         [Fact]
-        public void BlobTest_SomeUTF32Value()
+        public async Task BlobTest_SomeUTF32Value()
         {
             BlobValue blob = FormulaValue.NewBlob("Hello World!", false, Encoding.UTF32);
 
             Assert.NotNull(blob);            
-            Assert.Equal("SAAAAGUAAABsAAAAbAAAAG8AAAAgAAAAVwAAAG8AAAByAAAAbAAAAGQAAAAhAAAA", blob.Content.GetAsBase64Async(CancellationToken.None).Result);
-            Assert.Equal(new byte[] { 72, 0, 0, 0, 101, 0, 0, 0, 108, 0, 0, 0, 108, 0, 0, 0, 111, 0, 0, 0, 32, 0, 0, 0, 87, 0, 0, 0, 111, 0, 0, 0, 114, 0, 0, 0, 108, 0, 0, 0, 100, 0, 0, 0, 33, 0, 0, 0 }, blob.GetAsByteArrayAsync(CancellationToken.None).Result);
+            Assert.Equal("SAAAAGUAAABsAAAAbAAAAG8AAAAgAAAAVwAAAG8AAAByAAAAbAAAAGQAAAAhAAAA", await blob.Content.GetAsBase64Async(CancellationToken.None));
+            Assert.Equal(new byte[] { 72, 0, 0, 0, 101, 0, 0, 0, 108, 0, 0, 0, 108, 0, 0, 0, 111, 0, 0, 0, 32, 0, 0, 0, 87, 0, 0, 0, 111, 0, 0, 0, 114, 0, 0, 0, 108, 0, 0, 0, 100, 0, 0, 0, 33, 0, 0, 0 }, await blob.GetAsByteArrayAsync(CancellationToken.None));
         }
 
         [Fact]
-        public void BlobTest_SomeBase64Value()
+        public async Task BlobTest_SomeBase64Value()
         {            
             BlobValue blob = FormulaValue.NewBlob("SGVsbG8gV29ybGQh", true);
 
             Assert.NotNull(blob);
-            Assert.Equal("Hello World!", blob.Content.GetAsStringAsync(null, CancellationToken.None).Result);
-            Assert.Equal("SGVsbG8gV29ybGQh", blob.Content.GetAsBase64Async(CancellationToken.None).Result);
-            Assert.Equal(new byte[] { 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33 }, blob.GetAsByteArrayAsync(CancellationToken.None).Result);            
+            Assert.Equal("Hello World!", await blob.Content.GetAsStringAsync(null, CancellationToken.None));
+            Assert.Equal("SGVsbG8gV29ybGQh", await blob.Content.GetAsBase64Async(CancellationToken.None));
+            Assert.Equal(new byte[] { 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33 }, await blob.GetAsByteArrayAsync(CancellationToken.None));            
         }
 
         [Fact]
-        public void BlobTest_SomeByteArrayValue()
+        public async Task BlobTest_SomeByteArrayValue()
         {            
             BlobValue blob = FormulaValue.NewBlob(new byte[] { 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33 });
 
             Assert.NotNull(blob);
-            Assert.Equal("Hello World!", blob.Content.GetAsStringAsync(null, CancellationToken.None).Result);
-            Assert.Equal("SGVsbG8gV29ybGQh", blob.Content.GetAsBase64Async(CancellationToken.None).Result);
-            Assert.Equal(new byte[] { 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33 }, blob.GetAsByteArrayAsync(CancellationToken.None).Result);            
+            Assert.Equal("Hello World!", await blob.Content.GetAsStringAsync(null, CancellationToken.None));
+            Assert.Equal("SGVsbG8gV29ybGQh", await blob.Content.GetAsBase64Async(CancellationToken.None));
+            Assert.Equal(new byte[] { 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33 }, await blob.GetAsByteArrayAsync(CancellationToken.None));            
         }   
 
         [Fact]
         public void BlobTest_InvalidBase64()
         {
             ArgumentException ex = Assert.Throws<ArgumentException>(() => new Base64Blob("This_is_not_a_base64_string!"));
+#if !NET462
             Assert.Equal("Invalid base64 string (Parameter 'base64Str')", ex.Message);
+#else
+#pragma warning disable SA1116 // Split parameters should start on line after open parenthesis
+            Assert.Equal(@"Invalid base64 string
+Parameter name: base64Str", ex.Message);
+#pragma warning restore SA1116 // Split parameters should start on line after open parenthesis
+#endif
         }
 
         [Fact]
-        public void BlobTest_MultipleObjects()
+        public async Task BlobTest_MultipleObjects()
         {
             BlobValue[] blobs = Enumerable.Range(0, 10).Select(i =>
             {
@@ -126,20 +140,20 @@ namespace Microsoft.PowerFx.Core.Tests
             foreach (BlobValue blob in blobs)
             {
                 Assert.NotNull(blob);
-                Assert.Equal($"Blob {i++}", blob.GetAsStringAsync(null, CancellationToken.None).Result);                
+                Assert.Equal($"Blob {i++}", await blob.GetAsStringAsync(null, CancellationToken.None));                
             }          
         }
 
         [Fact]
-        public void BlobTest_SomeCustomValue()
+        public async Task BlobTest_SomeCustomValue()
         {
             string internalContent = "Test Value";
             BlobValue blob = FormulaValue.NewBlob(new CustomBlobContent(internalContent));
 
             Assert.NotNull(blob);
-            Assert.Equal(string.Empty, blob.Content.GetAsStringAsync(null, CancellationToken.None).Result);
-            Assert.Equal(string.Empty, blob.Content.GetAsBase64Async(CancellationToken.None).Result);
-            Assert.Equal(new byte[0], blob.GetAsByteArrayAsync(CancellationToken.None).Result);
+            Assert.Equal(string.Empty, await blob.Content.GetAsStringAsync(null, CancellationToken.None));
+            Assert.Equal(string.Empty, await blob.Content.GetAsBase64Async(CancellationToken.None));
+            Assert.Equal(new byte[0], await blob.GetAsByteArrayAsync(CancellationToken.None));
             var customContent = Assert.IsType<CustomBlobContent>(blob.Content);
             Assert.Equal(internalContent, customContent.InternalContent);
         }

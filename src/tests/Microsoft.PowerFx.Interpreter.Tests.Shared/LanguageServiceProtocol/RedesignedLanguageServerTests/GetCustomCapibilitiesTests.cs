@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 testNLHandler = null;
             }
 
-            HandlerFactory.SetHandler(CustomProtocolNames.GetCapabilities, new GetCustomCapabilitiesLanguageServerOperationHandler(new BackwardsCompatibleNLHandlerFactory(testNLHandler)));
+            HandlerFactory.SetHandler(CustomProtocolNames.GetCapabilities, new GetCustomCapabilitiesLanguageServerOperationHandler(new TestNlHandlerFactory(testNLHandler)));
             var payload = GetRequestPayload(
             new CustomGetCapabilitiesParams()
             {
@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             }, CustomProtocolNames.GetCapabilities);
 
             // Act
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
 
             // Assert: result has expected concat with symbols. 
             var response = AssertAndGetResponsePayload<CustomGetCapabilitiesResult>(rawResponse, payload.id);

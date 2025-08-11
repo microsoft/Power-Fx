@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Процент (или колона с процентни стойности) на избледняване, който ще се приложи за цвета (или колоната със стойности на цвят). Даден отрицателен процент създава по-тъмен оттенък. Даден положителен процент създава по-светъл тъмен оттенък.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Връща запис с информация за файл.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>BLOB за файлове, за който да получите информация.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>файлове</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Връща абсолютната стойност на число, число без знака му.</value>
     
@@ -1796,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Връща true, ако предоставената нетипизирана стойност е от дадения тип.</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>тип</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>Нетипизираната стойност за проверка дали може да бъде преобразувана като посочения тип.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>Типът, който искаме да проверява се untypedValue.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Използва предоставената стойност като зададен тип.</value>
     
@@ -1813,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>Таблицата с обекти, която указва типа, като който бихме искали да се използва стойността.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Проверява и използва предоставената нетипизирана стойност като дадения тип.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>тип</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>Нетипизираната стойност за преобразуване като нов тип.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>Типът като който искаме да се използва стойността.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Изпълнява формулата, предоставена като втори параметър, като използва обхвата, предоставен от първия.</value>
@@ -1868,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>„{0}“ е неизвестна или неподдържана функция.</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>„{0}“ е разпознато като помощна функция за тип и може да се използва само в рамките на функцията Type.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -1982,10 +2033,6 @@
     <value>Първият аргумент на „{0}“ трябва да бъде запис.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Използването на този набор от опции като стойност за номериране или във функцията Choices изисква обектът „{0}“ да се добави като източник на данни. За да добавите, използвайте менюто „Изглед“ и след това изберете „Източници на данни“.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Указаното свойство не е достъпно в този контекст.</value>
     
@@ -2026,10 +2073,6 @@
     <value>Аргументът не представлява валидна стойност за дата или час.</value>
     
   </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Този източник на данни е невалиден. Коригирайте грешката в прозореца „Източници на данни“, като щракнете върху „Съдържание -&gt; Източници на данни“ или „Преглед -&gt; Опции“</value>
-    
-  </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>Очаква се идентификаторът на източника на данни да ограничи вградения запис.</value>
     
@@ -2068,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Име на колона в конфликт за „{0}“.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Не могат да се добавят колони към системен запис или таблица със системни записи. Първо използвайте ShowColumns за извличане на конкретните колони, от които се нуждаете.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Не могат да се преименуват колони от системен запис или таблица със системни записи. Първо използвайте ShowColumns за извличане на конкретните колони, от които се нуждаете.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -2670,6 +2721,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>JSON низ за обработка.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>Преобразува низ JSON в типизиран обект.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>низ</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>Низ JSON за преобразуване в типизиран обект.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>тип</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>Определение на вграден тип или глобално дефиниран именуван тип.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Връща записа в таблица при даден индекс.</value>
     
@@ -2687,6 +2756,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Индексът за записа, който трябва да бъде извлечен.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2707,6 +2788,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Тип баркод</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2823,6 +2936,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Стойността за тестване.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Преобразува дадена дата и час под формата на текст като число, представляващо датата в кода за дата и час в Power Apps.</value>
@@ -3098,32 +3215,33 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Добавя записи към източник на данни.</value>
+    <value>Добавя един или повече елемента към указаната колекция. Елементите може да са от различна таблица или колекция (например Collect(collection, source_collection)) или един или повече записа Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>източник_на_данни</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>запис</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>колекция</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>елемент</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Нова или съществуваща колекция за увеличаване.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Изтрива всички записи от колекция, след което добавя друг набор от записи към същата колекция.</value>
+    <value>Първо изчиства колекцията и добавя един или повече елемента към указаната колекция. Елементите може да са от друга таблица или колекция (например ClearCollect(collection, source_collection)) или един или повече записа ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>източник_на_данни</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Нова или съществуваща колекция за увеличаване.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>източник_на_данни</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>запис</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Запис или таблица за събиране. Към колекцията ще се добави запис. Редовете на дадена таблица ще се добавят към колекцията.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Прилага актуализациите към указания ред и променя реда в указания източник на данни. Връща актуализирания ред.</value>
@@ -3259,6 +3377,10 @@
     <value>Статия: Справочна информация за формулите за Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Неочакван знак „{0}“ на позиция {1} във формулата.</value>
     
@@ -3271,6 +3393,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Статия: Справочна информация за формулите за Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3288,6 +3414,10 @@
     <value>Статия: Справочна информация за формулите за Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Неочаквани знаци. Формулата съдържа „{0}“, когато се очаква „{1}“.</value>
     
@@ -3301,6 +3431,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Статия: Справочна информация за формулите за Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3318,6 +3452,10 @@
     <value>Статия: Справочна информация за формулите за Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Името не е валидно. Този идентификатор не е разпознат.</value>
     
@@ -3331,6 +3469,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Статия: Справочна информация за формулите за Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3348,6 +3490,10 @@
     <value>Статия: Препратка към формула за PowerApps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>„Родителската“ препратка не е валидна. Не може да се препрати родителска контрола в този контекст.</value>
     
@@ -3361,6 +3507,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Статия: Добавяне и конфигуриране на контрола на приложение за платно в Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3400,6 +3550,10 @@
     <value>Модул: Използване на основни формули</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Очаква се число. Очакваме число на този етап във формулата.</value>
     
@@ -3413,6 +3567,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Статия: Справочна информация за формулите за Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3430,6 +3588,10 @@
     <value>Статия: Справочна информация за формулите за Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Очаква се двоеточие. Очакваме двоеточие (:) на този етап във формулата.</value>
     
@@ -3445,6 +3607,10 @@
     <value>Статия: Показване на текст, дати и часове в Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Функция за поведение в свойство, което не е за поведение. Не можете да използвате това свойство за промяна на стойности на друго място в приложението.</value>
     
@@ -3458,6 +3624,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Статия: Разбиране на формулите за поведение за приложения за платно в Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Функция за поведение в дефинирана от потребителя функция (UDF), несвързана с поведение. Моля, поставете тялото на дефинираната от потребителя функция във фигурни скоби ({...}), за да декларирате функция за поведение.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Функциите за поведение променят текущото състояние на сесията. Често срещани такива функции са Clear, Collect, Patch и Refresh.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Редактирайте израза на дефинираната от потребителя функция, така че да е във фигурни скоби ({...}).</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3497,6 +3679,10 @@
     <value>Статия: Справочна информация за формулите за Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Очаква се текст или число. Очакваме текст или число на този етап във формулата.</value>
     
@@ -3512,6 +3698,10 @@
     <value>Статия: Справочна информация за формулите за Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Очаква се затваряща скоба. Очакваме затваряща скоба (}) на този етап във формулата.</value>
     
@@ -3523,12 +3713,23 @@
     <value>Редактирайте формулата си така, че да включва скоба.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Очаква се затварящ символ за идентификатора. Очакваме затваряща кавичка (') на този етап във формулата.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Затварящата единична кавичка указва края на идентификатора (например 'Собствено име').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Редактирайте формулата си така, че да включва затваряща единична кавичка.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Идентификаторът няма валиден текст.</value>
+    <value>Идентификаторът е празен или съдържа невалиден знак, като например табулация или нов ред.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Уверете се, че имате текст за вашия идентификатор. Тази грешка възниква, когато идентификаторът се състои изцяло от празни места или интервали.</value>
+    <value>Уверете се, че имате валиден текст в своя идентификатор. Тази грешка възниква, когато идентификаторът е празен, състои се само от интервали или съдържа табулация или нов ред.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3554,8 +3755,16 @@
     <value>Модул: Използване на основни формули</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Модул: Авторски основни формули с таблици и записи</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3570,6 +3779,10 @@
     <value>Статия: Справочна информация за формулите за Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Несъвместим тип. Колоната „{0}“ в източника на данни, който актуализирате, очаква тип „{1}“, а вие използвате тип „{2}“.</value>
     
@@ -3582,8 +3795,16 @@
     <value>Модул: Използване на основни формули</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Модул: Авторски основни формули с таблици и записи</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3596,6 +3817,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Статия: Справочна информация за формулите за Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3614,8 +3839,16 @@
     <value>Модул: Използване на основни формули</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Модул: Авторски основни формули с таблици и записи</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3633,8 +3866,16 @@
     <value>Модул: Използване на основни формули</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Модул: Авторски основни формули с таблици и записи</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3650,6 +3891,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Статия: Справочна информация за формулите за Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3675,8 +3920,16 @@
     <value>Статия: Разбиране на делегирането в приложение за платно</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Блог: Ограничения за редовете с данни за делегиране</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3702,8 +3955,16 @@
     <value>Статия: Разбиране на делегирането в приложение за платно</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Блог: Ограничения за редовете с данни за делегиране</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3733,8 +3994,16 @@
     <value>Статия: Разбиране на делегирането в приложение за платно</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Блог: Ограничения за редовете с данни за делегиране</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3766,8 +4035,70 @@
     <value>Статия: Разбиране на делегирането в приложение за платно</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Блог: Ограничения за редовете с данни за делегиране</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Предупреждение за делегиране. Наименуваната формула {0} не може да бъде делегирана, така че използването ѝ в тази формула може да не работи правилно при големи набори от данни. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Възможно е източникът на данни да не е в състояние да обработи формулата и да върне непълен набор от данни. Вашето приложение може да не върне правилни резултати или поведението му може да е неправилно, ако наборът от данни е непълен.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Опитайте да опростите дефиницията на наименуваната формула.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Статия: Разбиране на делегирането в приложение за платно</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Блог: Ограничения за редовете с данни за делегиране</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Предупреждение за делегиране. Дефинираната от потребителя функция {0} не може да бъде делегирана, така че използването ѝ в тази формула може да не работи правилно при големи набори от данни. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Възможно е източникът на данни да не е в състояние да обработи формулата и да върне непълен набор от данни. Вашето приложение може да не върне правилни резултати или поведението му може да е неправилно, ако наборът от данни е непълен.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Опитайте да опростите дефиницията на дефинираната от потребителя функция.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Статия: Разбиране на делегирането в приложение за платно</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Блог: Ограничения за редовете с данни за делегиране</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3794,8 +4125,16 @@
     <value>Статия: Разбиране на делегирането в приложение за платно</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Блог: Ограничения за редовете с данни за делегиране</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3824,6 +4163,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Препратка: ConfirmExit за приложения за платно</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3858,6 +4201,10 @@
     <value>Наименуваната формула трябва да бъде израз.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Декларацията на наименувания тип трябва да бъде валиден израз за тип.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Дефинираната от потребителя функция трябва да има тяло.</value>
     
@@ -3866,8 +4213,16 @@
     <value>Функцията {0} вече е дефинирана.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Предупреждение: Дефинираната от потребителя функция {0} ще замени съществуващата вградена функция {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Името на функцията {0} е ограничено.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
-    <value>Параметърът {0} се дублира.</value>
+    <value>Параметърът {0} е дубликат.</value>
     
   </data>
   <data name="ErrUDF_UnknownType" xml:space="preserve">
@@ -3875,7 +4230,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Посоченият тип на върната стойност на функцията не съответства на типа на върнатата стойност в тялото ѝ.</value>
+    <value>Посоченият тип на върната стойност на функцията „{0}“ не съответства на типа на върнатата стойност в основния ѝ текст „{1}“.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Функцията {0} има твърде много параметри. Дефинираните от потребителите функции поддържат най-много {1} параметъра.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +4261,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Първият аргумент на „{0}“ трябва да е валидно име на променлива и не може да е в конфликт с име на съществуваща контрола, екран, колекция или източник на данни. Открит е тип „{1}“</value>
+    <value>„{1}“ не може да се промени с „{0}“ или конфликти с името на съществуваща променлива за обхват, източник на данни или друг обект.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4063,6 +4422,10 @@
     <value>Не може да се делегира {0}: съдържа функция за поведение „{1}“.</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows може да върне кеширана стойност. Използвайте CountIf(DataSource, true), за да получите актуалната стойност за броя.</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Определя дали посоченият текст съдържа съответствие с посочения формат.</value>
     
@@ -4156,24 +4519,232 @@
     <value>Невалиден регулярен израз.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Опциите в шаблона трябва да се намират в началото на регулярния израз, намерено е „{0}“ по-късно.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Опциите в шаблона са ограничени до комбинация от буквите [imnsx], не могат да се дезактивират и не могат да се използват за подизраз; намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Не се поддържат осмични кодове на знаците (\0), вместо това използвайте шестнадесетичен код \x или Unicode \u; намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Невалиден обичаен израз: Директно използваните фигурни скоби трябва да бъдат екранирани с обратно наклонена черта, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Директно използваните квадратни скоби трябва да бъдат екранирани с обратно наклонена черта дори в класове от знаци, \[ или \]; намерено в края на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Незатворена квадратна скоба за клас от знаци.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Неподдържана специална група, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Знакът за екраниране не е разрешен в класа от знаци, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Знакът за отрицателно екраниране не е разрешен в класа от отрицателни знаци, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Знакът за екраниране не е разрешен извън клас от знаци, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Невалидно име на категорията в Unicode, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Повтаряща се опция в шаблона, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Незатворен коментар в шаблона.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Незатворен коментар в шаблона, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Опцията в шаблона е несъвместима с MatchOptions.NumberedSubMatches, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Не се поддържат квантори за принадлежност, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Кванторите за точност не могат да се използват с модификатори на кванторите, като например ? за отлагане; намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Невалиден код за екраниране, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Подсъвпадението „{0}“ не е дефинирано или е неподдържана препратка напред.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: В проверките назад не се поддържат подсъвпадения; намерено е в началото на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Проверките назад не могат да се влагат, намерено е в началото на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: С проверките назад не се поддържат неограничени квантори, намерено е в края на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: С проверките назад и напред не се поддържат квантори, намерено е в края на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Препратка назад „{0}“ към подсъвпадение, което може да не се случи поради логическо „или“ или нулев квантор.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Не се поддържат подсъвпадения, които препращат към самите себе си; намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Незатворени групи, твърде малко затварящи скоби.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Неотворени групи, твърде малко отварящи скоби.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Наименувано подсъвпадение е дефинирано повече от веднъж, намерено е в началото на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Името на подсъвпадението трябва да е комбинация от знаци за думи и да не започва с цифра, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Опциите в шаблона трябва да се намират в началото на регулярния израз, намерено е „{0}“ по-късно.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Знакът се появява повече от веднъж в класа от знаци, намерен е повторен „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Класовете от знаци в квадратни скоби не могат да бъдат празни, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Не се поддържат подсъвпадения за изравняване; намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Използването на наименувани улавяния с апострофи не се поддържа, вместо това използвайте синтаксиса (?&lt;... &gt;); намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Не се поддържа условно логическо „или“, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Наименуваните улавяния не могат да се използват с активирано MatchOptions.NumberedSubMatches, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Използвайте наименувани улавяния с „(?&lt;name&gt;...)“ и „\k&lt;name&gt;“ или активирайте MatchOptions.NumberedSubMatches, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Директно използваното тире в клас от знаци трябва да бъде екранирано с обратно наклонена черта; намерено е в „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Директно използваният знак трябва да бъде екраниран с обратно наклонена черта, когато се ползва в клас от знаци; намерено в края на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Квантор за група, съдържаща друг квантор, или празно логическо „или“, което може да доведе до нееднозначен резултат; намерено е в края на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Проверката назад надхвърля лимита от 250 знака; намерено е в края на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Минималната стойност в квантора за диапазон е по-голяма от максималната, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Твърде много вложени групи, намерено в началото на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Името на подсъвпадението е твърде дълго, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Числото е твърде голямо, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Знаците в диапазон за клас от знаци са обърнати; намерено е в края на „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Клас от знаци в диапазон за клас от знаци или екраниране на директно използвано тире с обратно наклонена черта; намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Завършва с неекранирана обратно наклонена черта.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Квантор, който не определя нищо, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: MatchOptions.DotAll и MatchOptions.FreeSpacing са налице само с Power Fx V1, намерено е „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз: Препратка назад „{0}“ към подсъвпадение, което е вътре в проверка напред или проверка назад.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Регулярните изрази трябва да бъдат константни стойности.</value>
+    <value>Регулярният израз трябва да бъде константна стойност.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions трябва да бъде константна стойност.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Стойността, предадена на функцията „{0}“, не може да бъде променена.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Името на записа „{0}“ крие предварително зададеното свойство, което връща пълното съвпадение на регулярния израз. Обмислете дали да не го преименувате, ако искате да използвате именуваното свойство, за да извлечете пълното съответствие в посочения текст.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Името на улавянето „{0}“ крие предварително зададено свойство, което връща информация за съвпадение. Помислете дали да не го преименувате, ако искате да имате достъп до информацията за съвпадението.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Името на записа „{0}“ крие предварително зададеното свойство, което връща груповите съвпадения в регулярния израз. Обмислете дали да не го преименувате, ако искате да използвате именуваното свойство, за да извлечете всички подсъвпадения в посочения текст.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Името на записа „{0}“ крие предварително зададеното свойство, което връща местоположението на съвпадението в регулярния израз. Обмислете дали да не го преименувате, ако искате да използвате именуваното свойство, за да извлечете позицията на пълното съвпадение в посочения текст.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Имената на улавянията в набора „{0}“ крият предварително зададени свойства, които връщат информация за съвпадение. Помислете дали да не ги преименувате, ако искате да имате достъп до информацията за съвпадението.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4209,16 +4780,20 @@
     <value>Задаването на променлива със стойност от онлайн източник на данни (таблица или запис) може да предизвика множество заявки към сървъра. Скоро той ще бъде блокиран.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Изразът за тип е невалиден. „{0}“ не може да се използва в израз за тип.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Дефиницията на тип {0} е невалидна.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Неподдържана употреба: функцията Type може да се използва само в аргументи и декларации за тип.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Декларацията на тип {0} е невалидна.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Дефиницията на тип {0} е невалидна и може да съдържа цикли.</value>
+    <value>Декларацията на тип {0} е невалидна и може да съдържа цикли.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4419,6 +4994,16 @@
     <value>Неизвестен оператор Partial.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Източникът на данни за добавяне на данни.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Запис или таблица за събиране. Към базата данни ще се добави запис. Редовете на дадена таблица ще се добавят към базата данни.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>елемент</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Предупреждение за делегиране. Резултатът от този аргумент „{0}“ може да бъде отрязан за големи набори от данни, преди да бъде предаден на функцията {1}.</value>
     
@@ -4459,10 +5044,98 @@
     <value>Колекцията за изчистване.</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>Източникът, който да се изчисти.</value>
+  </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Извлича данни от множество таблици с релации.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>източник1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>източник2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>знаменател</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Лявата таблица или колекция.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Дясната таблица или колекция.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Критерии за съединение на двете таблици или колекции.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Типът съединение на двете таблици или колекции.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Аргументите за преименуване на съществуваща колона в един от източниците.</value>
+    
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Указаният източник на данни не може да се използва с тази функция.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Невалиден аргумент „{0}“. Очаква се валидно име на тип или вграден израз за тип.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Неподдържан тип „{0}“ в аргумента за тип.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>При изследването на полезния обем в JSON бе достигната максималната дълбочина.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Във функцията в JSON бе достигната максималната дължина.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Експерименталната функция за дефинирани от потребителя типове не е активирана.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Неправилен синтаксис: „=“ не може да се използва за деклариране на дефинирани от потребителя типове. Вместо това използвайте „:=“.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>„{0}“ не може да се добави/преименува поради конфликт с друга колона със същото име.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Очаква се обикновена стойност на изброяване JoinType. Не се поддържат различни изброявания или предаването на стойността през друга функция, т.е. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Аргументите, започващи от 5-та позиция, са предназначени за преименуване на колони и се очаква да бъдат аргументи на възел As, т.е. LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Поне една колона „{0}“ трябва да бъде декларирана, за да състави резултата от съединението.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Стойността „{0}“ е невалидна в този контекст. Трябва да бъде препратка към името на обхвата „{1}“ или „{2}“.</value>
     
   </data>
 </root>

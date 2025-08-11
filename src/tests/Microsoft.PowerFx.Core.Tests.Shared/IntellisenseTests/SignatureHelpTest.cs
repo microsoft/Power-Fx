@@ -24,13 +24,22 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// instead include the subpath bin/(Debug|Release).AnyCPU, depending on whether the assembly was
         /// built in debug or release mode.
         /// </summary>
-        private static readonly string _baseDirectory = Path.Join(Directory.GetCurrentDirectory(), "IntellisenseTests", "TestSignatures");
 
-        private static readonly string _signatureHelpDirectory = RegenerateSignatureHelp ?
-            _baseDirectory
-                .Replace(Path.Join("bin", "Debug", "netcoreapp3.1"), string.Empty)
-                .Replace(Path.Join("bin", "Release", "netcoreapp3.1"), string.Empty) :
-            _baseDirectory;
+        private static readonly string _baseDirectory = PathJoin(Directory.GetCurrentDirectory(), "IntellisenseTests", "TestSignatures");
+
+        private static readonly string _signatureHelpDirectory = RegenerateSignatureHelp
+            ? _baseDirectory
+                .Replace(PathJoin("bin", "Debug", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Release", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "DebugAll", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "ReleaseAll", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Debug462", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Release462", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Debug80", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Release80", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Debug80", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Release80", FrameworkVersion()), string.Empty)
+            : _baseDirectory;
 
         /// <summary>
         /// Reads the current signature help test, located in the TestSignatures directory, deserializes and
@@ -43,7 +52,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         internal void CheckSignatureHelpTest(SignatureHelp signatureHelp, int helpId)
         {
             var directory = _signatureHelpDirectory;
-            var signatureHelpPath = Path.Join(_signatureHelpDirectory, helpId + ".json");
+            var signatureHelpPath = PathJoin(_signatureHelpDirectory, helpId + ".json");
 
             if (File.Exists(signatureHelpPath))
             {
@@ -52,18 +61,18 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
                 if (RegenerateSignatureHelp)
                 {
-                    #pragma warning disable CS0162 // Unreachable code due to a local switch to regenerate baseline files
+#pragma warning disable CS0162 // Unreachable code due to a local switch to regenerate baseline files
                     if (!JToken.DeepEquals(actualSignatureHelp, expectedSignatureHelp))
                     {
                         WriteSignatureHelp(signatureHelpPath, signatureHelp);
                     }
-                    #pragma warning restore CS0162
+#pragma warning restore CS0162
                 }
                 else
                 {
-                    #pragma warning disable CS0162 // Unreachable code due to a local switch to regenerate baseline files
+#pragma warning disable CS0162 // Unreachable code due to a local switch to regenerate baseline files
                     Assert.True(JToken.DeepEquals(actualSignatureHelp, expectedSignatureHelp));
-                    #pragma warning restore CS0162
+#pragma warning restore CS0162
                 }
             }
             else

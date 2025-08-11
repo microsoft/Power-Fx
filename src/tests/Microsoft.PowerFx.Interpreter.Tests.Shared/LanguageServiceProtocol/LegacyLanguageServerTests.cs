@@ -6,24 +6,18 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
-using Microsoft.PowerFx.Interpreter.Tests.Helpers;
 using Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Handlers;
@@ -1177,7 +1171,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             response = JsonSerializer.Deserialize<JsonRpcPublishTokensNotification>(_sendToClientData[1], _jsonSerializerOptions);
             Assert.Equal("$/publishTokens", response.Method);
             Assert.Equal(documentUri, response.Params.Uri);
-            Assert.Equal(0, Enumerable.Count(response.Params.Tokens.Where(it => it.Value != TokenResultType.Function)));
+            Assert.Empty(response.Params.Tokens.Where(it => it.Value != TokenResultType.Function));
             Assert.Equal(TokenResultType.Function, response.Params.Tokens["Abs"]);
             Assert.Equal(TokenResultType.Function, response.Params.Tokens["Clock.AmPm"]);
             Assert.Equal(TokenResultType.Function, response.Params.Tokens["CountRows"]);
@@ -1972,7 +1966,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     (expr) => new CheckResult(engine)
                         .SetText(expr, new ParserOptions { Culture = parseLocale })
                         .SetBindingInfo()
-                        .SetDefaultErrorCulture(errorLocale)));
+                        .SetDefaultErrorCulture(errorLocale))); // Used to localize both error messages and intellisense suggestions.
 
             _testServer = new TestLanguageServer(_output, _sendToClientData.Add, _scopeFactory);
             List<Exception> exList = new List<Exception>();
@@ -2002,6 +1996,14 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             // If it's a different error message, then we may have a bug in the parser locale. 
             Assert.Contains("El nombre no es válido. No se reconoce \"foo\".", diags.First().Message);
             Assert.Empty(exList);
+
+            // Suggestions should provide localized descriptions, based on parser option locale.
+            var suggestions = _scopeFactory.GetOrCreateInstance("powerfx://app").Suggest("Value(", "Value(".Length);
+            var overload = suggestions.FunctionOverloads.First();
+
+            // Checking if intellisense will suggest in the correct locale.
+            Assert.Equal("Convierte un \"texto\" que representa un número en un valor numérico.", overload.Definition);
+            Assert.Equal("Valor de texto que se va a convertir en un valor numérico.", overload.FunctionParameterDescription);
         }
 
         // Test showing how LSP can fully customize check result. 
@@ -2497,7 +2499,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             var run = check.GetEvaluator();
 
-            var result = await run.EvalAsync(CancellationToken.None).ConfigureAwait(false);
+            var result = await run.EvalAsync(CancellationToken.None);
 
             Assert.Null(result.ToObject());
         }

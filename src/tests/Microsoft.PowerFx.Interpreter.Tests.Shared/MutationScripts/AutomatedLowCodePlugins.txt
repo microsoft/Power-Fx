@@ -1,0 +1,181 @@
+#SETUP: PowerFxV1CompatibilityRules,DecimalSupport,MutationFunctionsTestSetup
+
+>> NewRecord
+{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> OldRecord
+{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> NewRecord_SetEnabled_SetMutateEnabled
+{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+// Can compare fields, can't compare records
+
+>> NewRecord.Field1 = OldRecord.Field1
+false
+
+>> NewRecord.Field4 = Not( OldRecord.Field4 )
+true
+
+>> NewRecord = OldRecord; NewRecord // can't compare records, "; NewRecord" avoid the REPL from thinking it is named formula
+Errors: Error 10-11: Incompatible types for comparison. These types can't be compared: Record, Record.
+
+// NewRecord can be mutated but not set
+
+>> Set( NR, NewRecord )
+{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( NewRecord.Field1, 20 ); NewRecord
+{Field1:20,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( NewRecord.Field2, "venus"); NewRecord
+{Field1:20,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> NR // hasn't been modified from  on write
+{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( NewRecord, OldRecord )
+Errors: Error 5-14: 'NewRecord' can't be modified with 'Set' or conflicts with the name of an existing scope variable, data source, or other object.
+
+// OldRecord can't be mutated or set
+
+>> Set( OldRecord.Field1, 30 ); NewRecord
+Errors: Error 14-21: The value passed to the 'Set' function cannot be changed.
+
+>> Set( OldRecord.Field2, "mars"); NewRecord
+Errors: Error 14-21: The value passed to the 'Set' function cannot be changed.
+
+>> Set( OldRecord, NewRecord )
+Errors: Error 5-14: 'OldRecord' can't be modified with 'Set' or conflicts with the name of an existing scope variable, data source, or other object.
+
+// Copies of NewRecord and OldRecord can't be mutated (today, we may relax this limitation in the future)
+
+>> Set( x, NewRecord )
+{Field1:20,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( x.Field1, 40 )
+Errors: Error 6-13: The value passed to the 'Set' function cannot be changed.
+
+>> Set( y, OldRecord )
+{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> Set( y.Field1, 50 )
+Errors: Error 6-13: The value passed to the 'Set' function cannot be changed.
+
+// Data source, can't use Set to mutate, Patch needs to be used
+
+>> DataSource
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Patch( DataSource, First(DataSource), {Field2: "saturn"} )
+{Field1:1,Field2:"saturn",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( DataSource, Table(First(DataSource)) )
+Errors: Error 5-15: 'DataSource' can't be modified with 'Set' or conflicts with the name of an existing scope variable, data source, or other object.
+
+>> Set( DataSource.Field2, [{Name:"saturn"}] )
+Errors: Error 15-22: Deprecated use of '.'. Please use the 'ShowColumns' function instead.
+
+>> Set( First(DataSource).Field2, "saturn" )
+Errors: Error 22-29: The value passed to the 'Set' function cannot be changed.
+
+// USE IN SCOPE VARIABLES
+
+// Scope variables cannot be Set
+
+>> With( NewRecord, Field1 )
+20
+
+>> With( NewRecord, Set( Field1, 2 ) )
+Errors: Error 22-28: 'Field1' can't be modified with 'Set' or conflicts with the name of an existing scope variable, data source, or other object.
+
+>> With( NewRecord, Set( Field1, Field1 ) )
+Errors: Error 22-28: 'Field1' can't be modified with 'Set' or conflicts with the name of an existing scope variable, data source, or other object.
+
+>> With( NewRecord, Set( NewRecord.Field1, 22 ) ); NewRecord
+{Field1:22,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> ForAll( [NewRecord, NewRecord], Field1 )
+Table({Value:22},{Value:22})
+
+>> ForAll( [NewRecord, NewRecord], Set( Field1, 2 ) )
+Errors: Error 37-43: 'Field1' can't be modified with 'Set' or conflicts with the name of an existing scope variable, data source, or other object.
+  
+>> ForAll( [NewRecord, NewRecord], Set( Field1, Field1 ) )
+Errors: Error 37-43: 'Field1' can't be modified with 'Set' or conflicts with the name of an existing scope variable, data source, or other object.
+
+>> ForAll( [NewRecord, NewRecord], Set( ThisRecord.Field1, 3 ) )
+Errors: Error 47-54: The value passed to the 'Set' function cannot be changed.
+
+>> ForAll( [NewRecord, NewRecord], Set( NewRecord.Field1, 23 ) ); NewRecord
+{Field1:23,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+// The following three tests are effecitvely the same, with different levels of explicitness
+// In all three cases, we are reading the scope variable Field1 that was copied at the point With started and using that value throughout
+// The double additions don't matter since the source is always the same.
+>> With( NewRecord, Set( NewRecord.Field1, Field1+1); Set( NewRecord.Field1, Field1+1) ); NewRecord.Field1
+24
+
+>> With( NewRecord, Set( NewRecord.Field1, ThisRecord.Field1+1); Set( NewRecord.Field1, ThisRecord.Field1+1) ); NewRecord.Field1
+25
+
+>> With( NewRecord As ThisRecord, Set( NewRecord.Field1, ThisRecord.Field1+1); Set( NewRecord.Field1, ThisRecord.Field1+1) ); NewRecord.Field1
+26
+
+// In the future, we may allow variables to set mutate, which would use copy on write
+
+>> NewRecord // before NewRecord_SetEnabled_SetMutateEnabled changes
+{Field1:26,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( NewRecord_SetEnabled_SetMutateEnabled, NewRecord )
+{Field1:26,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( NewRecord_SetEnabled_SetMutateEnabled.Field2, "saturn" )
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> Set( NewRecord_SetEnabled_SetMutateEnabled.Field3, DateTime(2024,3,1,0,0,0,0) )
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> Set( NewRecord_SetEnabled_SetMutateEnabled.Field4, Blank() )
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> NewRecord_SetEnabled_SetMutateEnabled // after mutations
+{Field1:26,Field2:"saturn",Field3:DateTime(2024,3,1,0,0,0,0),Field4:Blank()}
+
+>> NewRecord // unchanged (copy on write prevented it from being updated)
+{Field1:26,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( z, NewRecord ) 
+{Field1:26,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( z, Patch( NewRecord, { Field2: "neptune", Field3: DateTime(2024,4,1,0,0,0,0), Field4: false } ) )
+{Field1:26,Field2:"neptune",Field3:DateTime(2024,4,1,0,0,0,0),Field4:false}
+
+>> NewRecord // unchanged after z copy (not a mutation, not a copy on write)
+{Field1:26,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+// Check data type compatibility, should be the same as any other variable
+
+>> Set( NewRecord.Field1, Decimal(51) ); NewRecord
+{Field1:51,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( NewRecord.Field1, Float(53) ); NewRecord
+{Field1:53,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( NewRecord.Field1, true ); NewRecord
+Errors: Error 23-27: Invalid argument type (Boolean). Expecting a Decimal value instead.
+
+>> Set( NewRecord.Field1, "53" ); NewRecord
+Errors: Error 23-27: Invalid argument type (Text). Expecting a Decimal value instead.
+
+>> Set( n, Decimal(100) )
+100
+
+>> Set( n, Float(101) )
+101
+
+>> Set( n, true )
+Errors: Error 8-12: Invalid argument type (Boolean). Expecting a Decimal value instead.
+
+>> Set( n, "102" )
+Errors: Error 8-13: Invalid argument type (Text). Expecting a Decimal value instead.

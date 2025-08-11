@@ -1,10 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Any;
-using Microsoft.PowerFx.Connectors.Tabular.Capabilities;
+using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Functions.Delegation;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 
 // DO NOT INCLUDE Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata ASSEMBLY
@@ -17,7 +21,7 @@ using Microsoft.PowerFx.Core.Utils;
 // src/Language/PowerFx.Dataverse.Parser/Importers/DataDescription/ServiceCapabilities.cs
 // </summary>
 
-namespace Microsoft.PowerFx.Connectors.Tabular
+namespace Microsoft.PowerFx.Connectors
 {
     internal sealed class ServiceCapabilities : IColumnsCapabilities
     {
@@ -46,24 +50,26 @@ namespace Microsoft.PowerFx.Connectors.Tabular
         public readonly SelectionRestriction SelectionRestriction;
 
         [JsonInclude]
+        [JsonPropertyName(CapabilityConstants.CountRestrictions)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public readonly CountRestriction CountRestriction;
+
+        [JsonInclude]
         [JsonPropertyName(CapabilityConstants.GroupRestriction)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public readonly GroupRestriction GroupRestriction;
 
         [JsonInclude]
-        [JsonPropertyName(CapabilityConstants.FilterFunctions)]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public readonly string[] FilterFunctions;
-
-        [JsonInclude]
         [JsonPropertyName(CapabilityConstants.FilterFunctionSupport)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public readonly string[] FilterSupportedFunctions;
+        public readonly IEnumerable<string> FilterSupportedFunctions;
+
+        public IEnumerable<DelegationOperator> FilterSupportedFunctionsEnum => GetDelegationOperatorEnumList(FilterSupportedFunctions);
 
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.ServerPagingOptions)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string[] ServerPagingOptions => PagingCapabilities.ServerPagingOptions;
+        public IEnumerable<string> ServerPagingOptions => PagingCapabilities.ServerPagingOptions;
 
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.IsOnlyServerPagable)]
@@ -94,10 +100,15 @@ namespace Microsoft.PowerFx.Connectors.Tabular
         [JsonPropertyName(CapabilityConstants.SupportsRecordPermission)]
         public readonly bool SupportsRecordPermission;
 
+        [JsonInclude]
+        [JsonPropertyName(CapabilityConstants.SupportsJoin)]
+        public readonly bool SupportsJoinFunction;
+
         public const int CurrentODataVersion = 4;
 
-        public ServiceCapabilities(SortRestriction sortRestriction, FilterRestriction filterRestriction, SelectionRestriction selectionRestriction, GroupRestriction groupRestriction, string[] filterFunctions, string[] filterSupportedFunctions,
-                                   PagingCapabilities pagingCapabilities, bool recordPermissionCapabilities, int oDataVersion = CurrentODataVersion, bool supportsDataverseOffline = false)
+        public ServiceCapabilities(SortRestriction sortRestriction, FilterRestriction filterRestriction, SelectionRestriction selectionRestriction, GroupRestriction groupRestriction, CountRestriction countRestriction, IEnumerable<string> filterFunctions,
+                                   IEnumerable<string> filterSupportedFunctions, PagingCapabilities pagingCapabilities, bool recordPermissionCapabilities, int oDataVersion = CurrentODataVersion, bool supportsDataverseOffline = false,
+                                   bool supportsJoinFunction = false)
         {
             Contracts.AssertValueOrNull(sortRestriction);
             Contracts.AssertValueOrNull(filterRestriction);
@@ -108,12 +119,12 @@ namespace Microsoft.PowerFx.Connectors.Tabular
             Contracts.AssertValue(pagingCapabilities);
 
             SortRestriction = sortRestriction;
-            FilterRestriction = filterRestriction;
-            FilterFunctions = filterFunctions;
+            FilterRestriction = filterRestriction;            
             PagingCapabilities = pagingCapabilities;
             SelectionRestriction = selectionRestriction;
+            CountRestriction = countRestriction;
             GroupRestriction = groupRestriction;
-            IsDelegable = (SortRestriction != null) || (FilterRestriction != null) || (FilterFunctions != null);
+            IsDelegable = (SortRestriction != null) || (FilterRestriction != null) || (FilterSupportedFunctions != null);
             IsPagable = PagingCapabilities.IsOnlyServerPagable || IsDelegable;
             SupportsDataverseOffline = supportsDataverseOffline;
             FilterSupportedFunctions = filterSupportedFunctions;
@@ -121,6 +132,178 @@ namespace Microsoft.PowerFx.Connectors.Tabular
             _columnsCapabilities = null;
             ODataVersion = oDataVersion;
             SupportsRecordPermission = recordPermissionCapabilities;
+            SupportsJoinFunction = supportsJoinFunction;
+        }
+
+        public static TableDelegationInfo ToDelegationInfo(ServiceCapabilities serviceCapabilities, string tableName, bool isReadOnly, ConnectorType connectorType, string datasetName)
+        {
+            // sortRestriction == null means sortable = false
+            SortRestrictions sortRestriction = serviceCapabilities?.SortRestriction != null
+                ? new SortRestrictions()
+                {
+                    AscendingOnlyProperties = serviceCapabilities.SortRestriction.AscendingOnlyProperties,
+                    UnsortableProperties = serviceCapabilities.SortRestriction.UnsortableProperties
+                }
+                : null;
+
+            FilterRestrictions filterRestriction = new FilterRestrictions()
+            {
+                RequiredProperties = serviceCapabilities?.FilterRestriction?.RequiredProperties,
+                NonFilterableProperties = serviceCapabilities?.FilterRestriction?.NonFilterableProperties
+            };
+
+            // selectionRestriction == null means selectable = false
+            SelectionRestrictions selectionRestriction = serviceCapabilities?.SelectionRestriction != null
+                ? new SelectionRestrictions()
+                {
+                    IsSelectable = serviceCapabilities.SelectionRestriction.IsSelectable
+                }
+                : null;
+
+            GroupRestrictions groupRestriction = new GroupRestrictions()
+            {
+                UngroupableProperties = serviceCapabilities?.GroupRestriction?.UngroupableProperties
+            };
+
+            Core.Entities.PagingCapabilities pagingCapabilities = new Core.Entities.PagingCapabilities()
+            {
+                IsOnlyServerPagable = serviceCapabilities?.PagingCapabilities?.IsOnlyServerPagable ?? false,
+                ServerPagingOptions = serviceCapabilities?.PagingCapabilities?.ServerPagingOptions?.Select(str => Enum.TryParse(str, true, out ServerPagingOptions spo) ? spo : Core.Entities.ServerPagingOptions.Unknown).ToArray()
+            };
+
+            Dictionary<string, Core.Entities.ColumnCapabilitiesBase> columnCapabilities = serviceCapabilities?._columnsCapabilities?.ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value switch
+                {
+                    ColumnCapabilities cc => new Core.Entities.ColumnCapabilities(new Core.Entities.ColumnCapabilitiesDefinition()
+                    {
+                        FilterFunctions = GetDelegationOperatorEnumList(cc.Capabilities.FilterFunctions),
+                        QueryAlias = cc.Capabilities.QueryAlias,
+                        IsChoice = cc.Capabilities.IsChoice
+                    }) as Core.Entities.ColumnCapabilitiesBase,
+                    ComplexColumnCapabilities ccc => new Core.Entities.ComplexColumnCapabilities() as Core.Entities.ColumnCapabilitiesBase,
+                    _ => throw new NotImplementedException()
+                }) ?? new Dictionary<string, Core.Entities.ColumnCapabilitiesBase>();
+
+            Dictionary<string, string> columnWithRelationships = connectorType.Fields.Where(f => f.ExternalTables?.Any() == true).Select(f => (f.Name, f.ExternalTables.First())).ToDictionary(tpl => tpl.Name, tpl => tpl.Item2);
+            string[] primaryKeyNames = connectorType.Fields.Where(f => f.KeyType == ConnectorKeyType.Primary).OrderBy(f => f.KeyOrder).Select(f => f.Name).ToArray();
+
+            return new CdpDelegationInfo()
+            {
+                TableName = tableName,
+                IsReadOnly = isReadOnly,
+                DatasetName = datasetName,
+                SortRestriction = sortRestriction,
+                FilterRestriction = filterRestriction,
+                SelectionRestriction = selectionRestriction,
+                GroupRestriction = groupRestriction,
+                FilterSupportedFunctions = serviceCapabilities?.FilterSupportedFunctionsEnum,
+                PagingCapabilities = pagingCapabilities,
+                SupportsRecordPermission = serviceCapabilities?.SupportsRecordPermission ?? false,
+                ColumnsCapabilities = columnCapabilities,
+                ColumnsWithRelationships = columnWithRelationships,
+                PrimaryKeyNames = primaryKeyNames,
+#pragma warning disable CS0618 // Type or member is obsolete
+                SupportsJoinFunction = serviceCapabilities?.SupportsJoinFunction ?? false,
+#pragma warning disable CS0612 // Type or member is obsolete
+                CountCapabilities = new CDPCountCapabilities(serviceCapabilities?.CountRestriction?.IsCountable ?? false),
+                TopLevelAggregationCapabilities = new CDPToplLevelAggregationCapabilities(columnCapabilities)
+#pragma warning restore CS0612 // Type or member is obsolete
+#pragma warning restore CS0618 // Type or member is obsolete
+            };
+        }
+
+        [Obsolete]
+        private class CDPToplLevelAggregationCapabilities : TopLevelAggregationCapabilities
+        {
+            private readonly IReadOnlyDictionary<string, Core.Entities.ColumnCapabilitiesBase> _columnCapabilities;
+
+            public CDPToplLevelAggregationCapabilities(IReadOnlyDictionary<string, Core.Entities.ColumnCapabilitiesBase> columnCapabilities)
+            {
+                _columnCapabilities = columnCapabilities;
+            }
+
+            public override bool IsTopLevelAggregationSupported(SummarizeMethod method, string propertyName)
+            {
+                if (TryConvertSummarizeMethodToDelegationOperator(method, out var delegationOperator) && 
+                    _columnCapabilities != null &&
+                    _columnCapabilities.TryGetValue(propertyName, out var columnCapability))
+                {
+                    if (columnCapability is Core.Entities.ColumnCapabilities cc)
+                    {
+                        return cc.Definition.FilterFunctions.Contains(delegationOperator);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                return false;
+            }
+
+            private bool TryConvertSummarizeMethodToDelegationOperator(SummarizeMethod method, out DelegationOperator delegationOperator)
+            {
+                switch (method)
+                {
+                    case SummarizeMethod.Sum:
+                        delegationOperator = DelegationOperator.Sum;
+                        return true;
+                    case SummarizeMethod.Average: 
+                        delegationOperator = DelegationOperator.Average;
+                        return true;
+                    case SummarizeMethod.Max:
+                        delegationOperator = DelegationOperator.Max;
+                        return true;
+                    case SummarizeMethod.Min:
+                        delegationOperator = DelegationOperator.Min;
+                        return true;
+                    default:
+                        delegationOperator = default;
+                        return false;
+                }
+            }
+        }
+
+        [Obsolete]
+        private class CDPCountCapabilities : CountCapabilities
+        {
+            private readonly bool _isCountable;
+
+            public CDPCountCapabilities(bool isCountable)
+            {
+                _isCountable = isCountable;
+            }
+
+            public override bool IsCountableAfterFilter()
+            {
+                return IsCountableTable();
+            }
+
+            public override bool IsCountableTable()
+            {
+                return _isCountable;
+            }
+        }
+
+        private static IEnumerable<DelegationOperator> GetDelegationOperatorEnumList(IEnumerable<string> filterFunctionList)
+        {
+            if (filterFunctionList == null)
+            {
+                return null;
+            }
+
+            List<DelegationOperator> list = new List<DelegationOperator>();
+
+            foreach (string str in filterFunctionList)
+            {
+                if (Enum.TryParse(str, true, out DelegationOperator op))
+                {
+                    list.Add(op);
+                }
+            }
+
+            return list;
         }
 
         public void AddColumnCapability(string name, ColumnCapabilitiesBase capability)
@@ -128,25 +311,23 @@ namespace Microsoft.PowerFx.Connectors.Tabular
             Contracts.AssertNonEmpty(name);
             Contracts.AssertValue(capability);
 
-            if (_columnsCapabilities == null)
-            {
-                _columnsCapabilities = new Dictionary<string, ColumnCapabilitiesBase>();
-            }
-
+            _columnsCapabilities ??= new Dictionary<string, ColumnCapabilitiesBase>();
             _columnsCapabilities.Add(name, capability);
         }
 
         // From PowerApps-Client repo, src\AppMagic\dll\AuthoringCore\Importers\DataDescription\ServiceCapabilitiesParser.cs
-        public static ServiceCapabilities ParseTableCapabilities(OpenApiObject capabilitiesMetaData)
+        public static ServiceCapabilities ParseTableCapabilities(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
             FilterRestriction filterRestriction = ParseFilterRestriction(capabilitiesMetaData);
             SortRestriction sortRestriction = ParseSortRestriction(capabilitiesMetaData);
+            CountRestriction countRestriction = ParseCountRestriction(capabilitiesMetaData);
             SelectionRestriction selectionRestriction = ParseSelectionRestriction(capabilitiesMetaData);
             GroupRestriction groupRestriction = ParseGroupRestriction(capabilitiesMetaData);
             string[] filterFunctions = ParseFilterFunctions(capabilitiesMetaData);
             string[] filterSupportedFunctions = ParseFilterSupportedFunctions(capabilitiesMetaData);
             PagingCapabilities pagingCapabilities = ParsePagingCapabilities(capabilitiesMetaData);
             bool recordPermissionCapabilities = ParseRecordPermissionCapabilities(capabilitiesMetaData);
+            bool supportsJoinFunction = ParseSupportsJoinCapabilities(capabilitiesMetaData);
             int oDataVersion = capabilitiesMetaData.GetInt(CapabilityConstants.ODataversionOption, defaultValue: CurrentODataVersion);
 
             if (oDataVersion > CurrentODataVersion || oDataVersion < 3)
@@ -154,59 +335,74 @@ namespace Microsoft.PowerFx.Connectors.Tabular
                 throw new PowerFxConnectorException("Table capabilities specifies an unsupported oDataVersion");
             }
 
-            return new ServiceCapabilities(sortRestriction, filterRestriction, selectionRestriction, groupRestriction, filterFunctions, filterSupportedFunctions, pagingCapabilities, recordPermissionCapabilities, oDataVersion);
+            return new ServiceCapabilities(sortRestriction, filterRestriction, selectionRestriction, groupRestriction, countRestriction, filterFunctions, filterSupportedFunctions, pagingCapabilities, recordPermissionCapabilities, oDataVersion, supportsJoinFunction: supportsJoinFunction);
         }
 
-        private static FilterRestriction ParseFilterRestriction(OpenApiObject capabilitiesMetaData)
+        private static FilterRestriction ParseFilterRestriction(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
-            OpenApiObject filterRestritionMetaData = capabilitiesMetaData.GetObject(CapabilityConstants.FilterRestrictions);
+            IDictionary<string, IOpenApiAny> filterRestritionMetaData = capabilitiesMetaData.GetObject(CapabilityConstants.FilterRestrictions);
             return filterRestritionMetaData?.GetBool(CapabilityConstants.Filterable) == true
-                        ? new FilterRestriction(filterRestritionMetaData.GetList(CapabilityConstants.FilterRequiredProperties), filterRestritionMetaData.GetList(CapabilityConstants.NonFilterableProperties))
-                        : null;
+                    ? new FilterRestriction(filterRestritionMetaData.GetList(CapabilityConstants.FilterRequiredProperties), filterRestritionMetaData.GetList(CapabilityConstants.NonFilterableProperties))
+                    : null;
         }
 
-        private static SortRestriction ParseSortRestriction(OpenApiObject capabilitiesMetaData)
+        private static SortRestriction ParseSortRestriction(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
-            OpenApiObject sortRestrictionMetaData = capabilitiesMetaData.GetObject(CapabilityConstants.SortRestrictions);
+            IDictionary<string, IOpenApiAny> sortRestrictionMetaData = capabilitiesMetaData.GetObject(CapabilityConstants.SortRestrictions);
+
+            // When "sortable" = false (or not defined), SortRestriction is null
             return sortRestrictionMetaData?.GetBool(CapabilityConstants.Sortable) == true
-                        ? new SortRestriction(sortRestrictionMetaData.GetList(CapabilityConstants.UnsortableProperties), sortRestrictionMetaData.GetList(CapabilityConstants.AscendingOnlyProperties))
-                        : null;
+                    ? new SortRestriction(sortRestrictionMetaData.GetList(CapabilityConstants.UnsortableProperties), sortRestrictionMetaData.GetList(CapabilityConstants.AscendingOnlyProperties))
+                    : null;
         }
 
-        private static SelectionRestriction ParseSelectionRestriction(OpenApiObject capabilitiesMetaData)
+        private static CountRestriction ParseCountRestriction(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
-            OpenApiObject selectRestrictionsMetadata = capabilitiesMetaData.GetObject(CapabilityConstants.SelectionRestriction);
+            IDictionary<string, IOpenApiAny> countRestrictionMetaData = capabilitiesMetaData.GetObject(CapabilityConstants.CountRestrictions);
+            return countRestrictionMetaData == null
+                    ? null
+                    : new CountRestriction(countRestrictionMetaData.GetBool(CapabilityConstants.Countable, "countable property is mandatory and not found."));
+        }
+
+        private static SelectionRestriction ParseSelectionRestriction(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
+        {
+            IDictionary<string, IOpenApiAny> selectRestrictionsMetadata = capabilitiesMetaData.GetObject(CapabilityConstants.SelectionRestriction);
             return selectRestrictionsMetadata == null
-                        ? null
-                        : new SelectionRestriction(selectRestrictionsMetadata.GetBool(CapabilityConstants.Selectable, "selectable property is mandatory and not found."));
+                    ? null
+                    : new SelectionRestriction(selectRestrictionsMetadata.GetBool(CapabilityConstants.Selectable, "selectable property is mandatory and not found."));
         }
 
-        private static GroupRestriction ParseGroupRestriction(OpenApiObject capabilitiesMetaData)
+        private static GroupRestriction ParseGroupRestriction(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
-            OpenApiObject groupRestrictionMetaData = capabilitiesMetaData.GetObject(CapabilityConstants.GroupRestriction);
+            IDictionary<string, IOpenApiAny> groupRestrictionMetaData = capabilitiesMetaData.GetObject(CapabilityConstants.GroupRestriction);
             return groupRestrictionMetaData == null
-                        ? null
-                        : new GroupRestriction(groupRestrictionMetaData.GetList(CapabilityConstants.UngroupableProperties));
+                    ? null
+                    : new GroupRestriction(groupRestrictionMetaData.GetList(CapabilityConstants.UngroupableProperties));
         }
 
-        internal static string[] ParseFilterFunctions(OpenApiObject capabilitiesMetaData)
+        internal static string[] ParseFilterFunctions(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
             return capabilitiesMetaData.GetArray(CapabilityConstants.FilterFunctions);
         }
 
-        private static string[] ParseFilterSupportedFunctions(OpenApiObject capabilitiesMetaData)
+        private static string[] ParseFilterSupportedFunctions(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
             return capabilitiesMetaData.GetArray(CapabilityConstants.FilterFunctionSupport);
         }
 
-        private static PagingCapabilities ParsePagingCapabilities(OpenApiObject capabilitiesMetaData)
+        private static PagingCapabilities ParsePagingCapabilities(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
             return new PagingCapabilities(capabilitiesMetaData.GetBool(CapabilityConstants.IsOnlyServerPagable), capabilitiesMetaData.GetArray(CapabilityConstants.ServerPagingOptions));
         }
 
-        private static bool ParseRecordPermissionCapabilities(OpenApiObject capabilitiesMetaData)
+        private static bool ParseRecordPermissionCapabilities(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
             return capabilitiesMetaData.GetBool(CapabilityConstants.SupportsRecordPermission);
+        }
+
+        private static bool ParseSupportsJoinCapabilities(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
+        {
+            return capabilitiesMetaData.GetBool(CapabilityConstants.SupportsJoin);
         }
     }
 }

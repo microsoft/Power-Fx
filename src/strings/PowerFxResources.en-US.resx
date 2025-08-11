@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>A percentage (or column of percentage values) by which the color (or column of color values) will be faded. A negative percentage produces a darker shade. A positive percentage produces a lighter shade.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    <comment>Description of 'FileInfo' function.</comment>
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    <comment>function_parameter - First argument to the FileInfo function.</comment>
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Returns the absolute value of a number, a number without its sign.</value>
     <comment>Description of 'Abs' function.</comment>
@@ -1796,13 +1807,31 @@
     <value>typeTable</value>
     <comment>function_parameter - Second argument of the IsType function - The Entity table representing the type that we wish to compare the value to. For example, if the author has a CDS data source named Account, that table could be passed here (eg IsType(myVal, Account)).</comment>
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Returns true if the provided untyped value is of the given type.</value>
+    <comment>Description of the 'IsType' function.</comment>
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    <comment>function_parameter - First argument of the IsTypeUO function - The untyped value to be inspected.</comment>
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>type</value>
+    <comment>function_parameter - Second argument of the IsTypeUO function - Type value - either a inline type expression or a type name.</comment>
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>The untyped value to check if it can be casted as specified type.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>The type that we wish to check the untypedValue.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Uses the provided value as the given type.</value>
     <comment>Description of the 'AsType' function.</comment>
   </data>
   <data name="AsTypeArg1" xml:space="preserve">
     <value>value</value>
-    <comment>function_parameter - First argument of the IsType function - The polymorphic value to be used as the new type.</comment>
+    <comment>function_parameter - First argument of the AsType function - The polymorphic value to be used as the new type.</comment>
   </data>
   <data name="AsTypeArg2" xml:space="preserve">
     <value>typeTable</value>
@@ -1813,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>The entity table representing the type we wish the value to be used as.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Checks and uses the provided Untyped value as the given type.</value>
+    <comment>Description of the 'AsType' function.</comment>
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    <comment>function_parameter - First argument of the AsType function - untyped value to be used as the new type.</comment>
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>type</value>
+    <comment>function_parameter - Second argument of the AsType function - The type that we wish the value to be used as.</comment>
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>The untyped value to cast as a new type.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>The type that we wish the value to be used as.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Executes the formula provided as second parameter using the scope provided by the first.</value>
@@ -1869,6 +1916,10 @@
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>'{0}' is an unknown or unsupported function.</value>
     <comment>Error Message.</comment>
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' is recognized as type helper function and it can only be used within the Type function.</value>
+    <comment>{Locked=Type} Error message shown when a type helper is used outside of Type function. Example of valid usage: "Type(RecordOf(Accounts))"</comment>
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>'{0}' is an unknown or unsupported function in namespace '{1}'.</value>
@@ -1930,9 +1981,17 @@
     <value>A void expression cannot be used in this context.</value>
     <comment>Error message shown to the user when they try to use a void expression in a function argument that requires a value.</comment>
   </data>
+  <data name="ErrBadType_NonBehavioralVoidExpression" xml:space="preserve">
+    <value>Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.</value>
+    <comment>Error message shown when a void expression is used as a function argument in a non-behavioral context.</comment>
+  </data>
   <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
     <value>Invalid argument type. Expecting a {0} value, but of a different schema.</value>
     <comment>Error Message.</comment>
+  </data>
+  <data name="ErrBadSchema_AdditionalField" xml:space="preserve">
+    <value>Invalid argument type. Input {0} value, contains an unexpected additional field '{1}'.</value>
+    <comment>Error message shown when UDF is called with aggregate type with additional field. The argument {0} will be replaced with the aggregate type kind and {1} will be replaced with the additional field. For example, "Invalid argument type. Input Record value, contains an unexpected additional field 'Foo'."</comment>
   </data>
   <data name="ErrBadType_ExpectedTypesCSV" xml:space="preserve">
     <value>Invalid argument type. Expecting one of the following: {0}.</value>
@@ -1982,10 +2041,6 @@
     <value>The first argument of '{0}' should be a record.</value>
     <comment>Error Message.</comment>
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Using this option set as an enumeration value or in the Choices function requires that the '{0}' entity be added as a Data Source. To add, use the View menu and then select Data sources.</value>
-    <comment>Error Message. {Locked=Choices} Indicates a given entity must be imported as a first class entity. This is a result of usage of an option set that is exposed via a relationship in a CDS 2 entity.</comment>
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>The specified property is not accessible in this context.</value>
     <comment>Error Message.</comment>
@@ -2026,10 +2081,6 @@
     <value>The argument does not represent a valid date or time value.</value>
     <comment>Error Message returned by the Text function when the number to date format exceeds the max days to add.</comment>
   </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>This Data source is invalid. Please fix the error in "Data sources" pane by clicking "Content -&gt; Data sources" or "View -&gt; Options"</value>
-    <comment>Error Message.</comment>
-  </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>Expected a data source identifier to restrict the inline record.</value>
     <comment>Error Message.</comment>
@@ -2068,6 +2119,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Column name conflict for '{0}'.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Can't rename columns of a system record or table of system records. Use ShowColumns to extract the specific columns you need first.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -2670,6 +2729,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>A JSON string to process.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>Converts a JSON string into a typed object.</value>
+    <comment>Description of 'ParseJSON' function overload that converts a string input to typed object.</comment>
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>string</value>
+    <comment>function_parameter - First argument of the ParseJSON function - String type.</comment>
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>A JSON string to convert into typed object.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>type</value>
+    <comment>function_parameter - Second argument of the typed ParseJSON function overload - Inlined type definition or NamedType.</comment>
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>An inlined type definiton or a globally defined named type.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Returns the record in a table at a given index.</value>
     <comment>Description of 'Index' function.</comment>
@@ -3146,32 +3223,33 @@
     <comment>Display text representing the Contrast value of TeamsTheme enum (TeamsTheme_Contrast_Name). The possible values for this enumeration are: Default, Dark, Contrast.</comment>
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adds records to a data source.</value>
-    <comment>Description of 'Clear' function.</comment>
+    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <comment>{Locked=Collect(collection, source_collection)} {Locked=Collect(collection, {key1: val1, key2: val2, ...}, ...)} Description of 'Collect' function.</comment>
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
     <comment>function_parameter - First parameter for the Collect function. The data source that you want to add data to. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>record</value>
-    <comment>function_parameter - Second parameter for the Collect function. The record to be added.</comment>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>collection</value>
+    <comment>function_parameter - First parameter for the Collect function - the name of the collection that will be created / appended to.</comment>
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>item</value>
+    <comment>function_parameter - Second parameter for the Collect function - the item which will be added to the collection.</comment>
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>A new or existing collection to augment.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Deletes all the records from a collection. And then adds a different set of records to the same collection.</value>
-    <comment>Description of 'Clear' function.</comment>
+    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <comment>{Locked=ClearCollect(collection, source_collection)} {Locked=ClearCollect(collection, {key1: val1, key2: val2, ...}, ...)} Description of 'ClearCollect' function.</comment>
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
-    <comment>function_parameter - First parameter for the Clear function. The data source that you want to clear from all elements. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>A new or existing collection to augment.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
-    <comment>function_parameter - First parameter for the ClearCollect function. The data source that contains the records that you want to modify or will contain the records that you want to create. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>record</value>
-    <comment>function_parameter - Second parameter for the ClearCollect function. The record to be added.</comment>
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Applies the updates to the specified row and changes the row in the specified datasource. Returns the updated row.</value>
@@ -3560,6 +3638,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     <comment>{Locked}</comment>
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Behavior function in a non-behavior user-defined function (UDF). Please wrap the user-defined function body with curly braces ({...}) to declare a behavior UDF.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Behavior functions change the current session state. 'Clear', 'Collect', 'Patch', and 'Refresh' are common behavior functions.</value>
+    <comment>{Locked=Clear}{Locked=Collect}{Locked=Patch}{Locked=Refresh}</comment>
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Edit the user-defined function expression so that it is inside curly braces ({...}).</value>
+    <comment>1 How to fix the error. </comment>
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Test function in a non-test property. You can't use this property to invoke test-only functions.</value>
     <comment>Error Message. The term 'Test' is an adjective ('Test function' = 'function for testing').</comment>
@@ -3631,12 +3721,23 @@
     <value>Edit your formula so that it includes a bracket.</value>
     <comment>1 How to fix the error. </comment>
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Expected closing of identifier. We expect a closing (') at this point in the formula.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>A closing single quote indicates the end of an identifier (for example, 'First Name').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Edit your formula so that it includes a closing single quote.</value>
+    <comment>1 How to fix the error. </comment>
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>The identifier has no valid text.</value>
+    <value>The identifier is empty or contains an invalid character, such as a tab or newline.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Ensure you have text for your identifier. This error occurs when the identifier is all blanks or spaces.</value>
+    <value>Ensure you have valid text in your your identifier. This error occurs when the identifier is blank, only has spaces, or contains a tab or newline.</value>
     <comment>1 How to fix the error. </comment>
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3954,6 +4055,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     <comment>{Locked}</comment>
   </data>
+    <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Delegation warning. The named formula {0} is not delegable so its usage in this formula might not work correctly on large data sets. </value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>The data source might not be able to process the formula and might return an incomplete data set. Your application might not return correct results or behave correctly if the data set is incomplete.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Try simplifying the definition for the named formula.</value>
+    <comment>1 How to fix the error. </comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Article: Understand delegation in a canvas app</value>
+    <comment>Article on delegation</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    <comment>{Locked}</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Data row limits for delegation</value>
+    <comment>Blog: Data row limits for delegation</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    <comment>{Locked}</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Delegation warning. The user-defined function {0} is not delegable so its usage in this formula might not work correctly on large data sets. </value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>The data source might not be able to process the formula and might return an incomplete data set. Your application might not return correct results or behave correctly if the data set is incomplete.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Try simplifying the definition for the user-defined function.</value>
+    <comment>1 How to fix the error. </comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Article: Understand delegation in a canvas app</value>
+    <comment>Article on delegation</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    <comment>{Locked}</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Data row limits for delegation</value>
+    <comment>Blog: Data row limits for delegation</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    <comment>{Locked}</comment>
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Delegation warning. The highlighted part of this formula might not work correctly on large data sets. The "{0}" operation is not supported by this connector.</value>
     <comment>Error Message.</comment>
@@ -4054,37 +4209,65 @@
     <value>Named formula must be an expression.</value>
     <comment>This error message shows up when Named formula is not an expression. For example, a = ;</comment>
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>A named type declaration must be a valid type expression.</value>
+    <comment>
+      This error message shows up when a named type declaration is not valid a type expression. A valid type expression is of syntax "Type(Expression)". 
+      Some examples for valid named type declarations - "Point := Type({x: Number, y: Number});" , "T1 := Type(Number);" , "T2 := Type([Boolean]);".
+      Some examples for invalid named type declarations - "T1 := 5;" , "T2 := ;" , "T3 := [1, 2, 3];".
+    </comment>
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
-    <value>User defined function must have a body.</value>
-    <comment>This error message shows up when user defined function does not have a body</comment>
+    <value>User-defined function must have a body.</value>
+    <comment>This error message shows up when user-defined function does not have a body</comment>
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Function {0} is already defined.</value>
     <comment>This error message shows up when user tries to define a function that already exists</comment>
   </data>
-    <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Warning: User-defined function {0} will shadow the existing built-in function {0}.</value>
+    <comment>This error message shows up when user tries to define a function that shares the same unrestricted name as a built-in function. The argument {0} will be replaced with a function name: e.g.: User-defined function Count will shadow the existing built-in function Count.</comment>
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Function name {0} is restricted.</value>
     <comment>This error message shows up when user tries to define a function with a restricted name.</comment>
   </data>
+  <data name="ErrUDF_NonImperativeVoidType" xml:space="preserve">
+    <value>Void return type is only supported with behavior user-defined functions.</value>
+    <comment>This error message shows up when user tries to use Void return type in non-behavior user-defined function.</comment>
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parameter {0} is a duplicate.</value>
-    <comment>This error message shows up when user defined function has a duplicate parameter</comment>
+    <comment>This error message shows up when user-defined function has a duplicate parameter</comment>
   </data>
   <data name="ErrUDF_UnknownType" xml:space="preserve">
     <value>Unknown type {0}.</value>
     <comment>This error message shows up when an invalid type is used</comment>
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>The stated function return type does not match the return type of the function body.</value>
-    <comment>This error message shows up when expected return type does not match with actual return type</comment>
+    <value>The stated function return type '{0}' does not match the return type of the function body '{1}'.</value>
+    <comment>This error message shows up when expected return type does not match with actual return type. The arguments '{0}' and '{1}' will be replaced with data types. For example, "The stated function return type 'Number' does not match the return type of the function body 'Table'"</comment>
+  </data>
+  <data name="ErrUDF_ReturnTypeSchemaIncompatible" xml:space="preserve">
+    <value>Incompatible function body. The '{0}' column in the function return type expects a '{1}' type and you’re returning a '{2}' type in function body.</value>
+    <comment>This error message shows up when expected return type schema is incompatible with actual return type. The argument '{0}' will be replaced with column name with incompatible type, '{1}' and '{2}' are replaced with expected and actual type. For example, "Incompatible function body. The 'A' column in the function return type expects a 'Text' type and you’re returning a 'GUID' type in function body."</comment>
+  </data>
+  <data name="ErrUDF_ReturnTypeSchemaAdditionalFields" xml:space="preserve">
+    <value>Invalid function body. Returned {0} value, contains an unexpected additional field '{1}'.</value>
+    <comment>This error message shows up when function body returning an aggregated type contains more fields than expected. The argument {0} will be replaced with the aggregate type kind and {1} will be replaced with the additional field. For example, "Invalid function body. Returned Record value, contains an unexpected additional field 'Foo'.".</comment>
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Function {0} has too many parameters. User-defined functions support up to {1} parameters.</value>
+    <comment>This error message shows up when a user tries to define a function with too many parameters. {0} - the name of the user-defined function, {1} - the max number of parameters allowed.</comment>
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
     <value>Missing function return type, for example the ":Number" in "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
-    <comment>This error message shows up when return type is not provided for user defined function, the term FindMonth is a function name, and if translated it should remain a single word {Locked=Number} {Locked=Text} {Locked=Month} {Locked=DateParse}</comment>
+    <comment>This error message shows up when return type is not provided for user-defined function, the term FindMonth is a function name, and if translated it should remain a single word {Locked=Number} {Locked=Text} {Locked=Month} {Locked=DateParse}</comment>
   </data>
   <data name="ErrUDF_MissingParamType" xml:space="preserve">
     <value>Missing function argument type, for example the ":Text" in "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
-    <comment>This error message shows up when argument type is not provided for the parameters in user defined function, the term FindMonth is a function name, and if translated it should remain a single word {Locked=Number} {Locked=Text} {Locked=Month} {Locked=DateParse}</comment>
+    <comment>This error message shows up when argument type is not provided for the parameters in user-defined function, the term FindMonth is a function name, and if translated it should remain a single word {Locked=Number} {Locked=Text} {Locked=Month} {Locked=DateParse}</comment>
   </data>
   <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
     <value>The stated function return type {0} is invalid.</value>
@@ -4102,7 +4285,7 @@
     <comment>{0} - Entity that is about to be created/renamed, {1} - Name of the entity, {2} - Type of entity that is already using the name.</comment>
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>The first argument of '{0}' should be a valid variable name, and cannot conflict with any existing control, screen, collection, or data source names. Found type '{1}'</value>
+    <value>'{1}' can't be modified with '{0}' or conflicts with the name of an existing scope variable, data source, or other object.</value>
     <comment>Error Message</comment>
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4263,6 +4446,10 @@
     <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     <comment>Warning message.</comment>
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows may return a cached value. Use CountIf(DataSource, true) to get the latest count.</value>
+    <comment>{Locked=CountRows}. Warning message when an expression with the CountRows function is used with a data source that caches its size.</comment>
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Determines if the supplied text has a match of the supplied text format.</value>
     <comment>Description of 'IsMatch' function.</comment>
@@ -4356,25 +4543,241 @@
     <value>Invalid regular expression.</value>
     <comment>Error message indicating that the regular expression entered by the user is invalid.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression, found "{0}".</value>
+    <comment>Error message indicating that the regular expression entered by the user is invalid, including context.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Inline options must appear at the beginning of the regular expression, found "{0}" later.</value>
+    <comment>Error message indicating that the regular expression has inline options not at the front.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Inline options are limited to a combination of the letters [imnsx], cannot disable options, and cannot be used on a subexpression, found "{0}".</value>
+    <comment>{Locked=[imnsx]}Error message indicating that the regular expression has bad inline options.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Octal \0 character codes are not supported, use hexadecimal \x or Unicode \u instead, found "{0}".</value>
+    <comment>Error message indicating that the regular expression has octal characters.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{0}".</value>
+    <comment>Error message indicating that the regular expression has literal curly braces.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "{0}".</value>
+    <comment>Error message indicating that the regular expression has literal square braces.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Unclosed character class square bracket.</value>
+    <comment>Error message indicating that the regular expression has an unterminated square bracket. Only used for PreV1 errors, .net does not return the location of the square bracket.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Unsupported special group, found "{0}".</value>
+    <comment>Error message indicating that the regular expression that starts with a paren.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Escape character not permitted within character class, found at the end of "{0}".</value>
+    <comment>Error message indicating that the regular expression has an escape character within a character class.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Negative escape character not permitted within negated character class, found at the end of "{0}".</value>
+    <comment>Error message indicating that the regular expression has an escape character within a negated character class.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Escape character not permitted outside a character class, found "{0}".</value>
+    <comment>Error message indicating that the regular expression has an escape character outside a character class.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Invalid Unicode category name, found "{0}".</value>
+    <comment>Error message indicating that the regular expression has an invalid Unicode caategory name.</comment>
+  </data>  
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Repeated inline option, found "{0}".</value>
+    <comment>Error message indicating that the regular expression includes more than one of the same option.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Unclosed inline comment.</value>
+    <comment>Error message indicating that the regular expression includes an unclosed inline comment. Used for PreV1 where .NET does not return good information</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Unclosed inline comment, found "{0}".</value>
+    <comment>Error message indicating that the regular expression includes an unclosed inline comment, with context.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Inline option is incompatible with MatchOptions.NumberedSubMatches, found "{0}".</value>
+    <comment>{Locked=MatchOptions.NumberedSubMatches} Error message indicating that the regular expression includes an inline option that is incompatible with numbered sub matches.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Possessive quantifiers are not supported, found "{0}".</value>
+    <comment>Error message indicating that the regular expression does not support possessive quantifiers.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Exact quantifiers cannot be used with quantifier modifiers such as ? for lazy, found "{0}".</value>
+    <comment>{Locked=?}Error message indicating that the regular expression does not support modifiers for exact quantifiers.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Invalid escape code, found "{0}".</value>
+    <comment>Error message indicating that the regular expression has an invalid alphanumeric escape code.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Sub match "{0}" not defined or is an unsupported forward reference.</value>
+    <comment>Error message indicating that the regular expression sub match is not defined.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Sub matches are not supported in look behinds, found at the beginning of "{0}".</value>
+    <comment>Error message indicating sub matches are not supported in look arounds.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Look behinds cannot be nested, found at the beginning of "{0}".</value>
+    <comment>Error message indicating look behind and look ahead cannot be nested.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Unlimited quantifiers are not supported in look behinds, found at the end of "{0}".</value>
+    <comment>Error message indicating quantifiers are not supported in look behinds.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "{0}".</value>
+    <comment>Error message indicating quantifiers are not supported on look behinds or look aheads.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Back reference "{0}" to sub match that may not happen due to alternation or zero quantifier.</value>
+    <comment>Error message indicating back reference to illegal sub match.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Self-referencing sub matches are not supported, found "{0}".</value>
+    <comment>Error message indicating that the regular expression has self-referencing sub matches.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Unclosed groups, too few closing parenthesis.</value>
+    <comment>Error message indicating that the regular expression has unclosed capture groups.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Unopened groups, too few opening parenthesis.</value>
+    <comment>Error message indicating that the regular expression has unclosed capture groups.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Named sub match defined more than once, found at the beginning of "{0}".</value>
+    <comment>Error message indicating that the regular expression is trying to define the same capture group more than once.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Sub match name must be a combination of word characters and not begin with a number, found "{0}".</value>
+    <comment>Error message indicating that the regular expression is trying to define the same capture group more than once.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Inline options must appear at the beginning of the regular expression, found "{0}" later.</value>
+    <comment>Error message indicating that the regular expression has inline options not at the front.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Character repeated in character class, found at the end of "{0}".</value>
+    <comment>Error message indicating that the regular expression has repeated characters in a character class definition.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Square bracket character classes cannot be empty, found "{0}".</value>
+    <comment>Error message indicating that the regular expression character class is empty.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Balancing sub matches are not supported, found "{0}".</value>
+    <comment>Error message indicating that the regular expression has balancing capture groups.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Using single quoted named captures is not supported, use (?&lt;...&gt;) syntax instead, found "{0}".</value>
+    <comment>{Locked=(?&lt;...&gt;)} Error message indicating that the regular expression has single quoted named capture.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Conditional alternation is not supported, found "{0}".</value>
+    <comment>Error message indicating that the regular expression has conditionals.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Named captures cannot be used with MatchOptions.NumberedSubMatches enabled, found "{0}".</value>
+    <comment>{Locked=MatchOptions.NumberedSubMatches}Error message indicating that the regular expression is mixing named and numbered captures.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Use named captures with "(?&lt;name&gt;...)" and "\k&lt;name&gt;" or enable MatchOptions.NumberedSubMatches, found "{0}".</value>
+    <comment>{Locked=(?&lt;name&gt;...)}{Locked=\k&lt;name&gt;} Error message indicating that the regular expression is not enabled for numbered captures.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found at the end of "{0}".</value>
+    <comment>{Locked=\-}Error message indicating that the regular expression has a hyphen in a character class.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "{0}".</value>
+    <comment>Error message indicating that the regular expression has an unescaped character within a character class.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "{0}".</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "{0}".</value>
+    <comment>Error Message.</comment>
+  </data>  
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Quantifier range low number is greater than high number, found "{0}".</value>
+    <comment>Error message.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Too many nested groups, found at the beginning of "{0}".</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Name of submatch is too long, found "{0}".</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Number is too large, found "{0}".</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: The characters in a character class range are reversed, found at the end of "{0}".</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Character class in a character class range, or escape a literal hyphen with a backslash, found at the end of "{0}".</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Ends with an unescaped backslash.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Quantifier without something to quantify, found "{0}".</value>
+    <comment>Error Message.</comment>
+  </data>  
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: MatchOptions.DotAll and MatchOptions.FreeSpacing are only available with Power Fx V1, found "{0}".</value>
+    <comment>{Locked=Power Fx V1}{Locked=MatchOptions.DotAll}{Locked=MatchOptions.FreeSpacing}Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Back reference "{0}" to sub match that is inside a lookbehind or lookahead.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExSurrogatePairInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Unicode characters in surrogate pairs (character U+10000 and above) are not supported in character classes, found "{0}".</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMalformedSurrogatePair_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Malformed Unicode surrogate pair (character U+10000 and above), found at the end of "{0}".</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Regular expressions must be constant values.</value>
+    <value>Regular expression must be a constant value.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions must be a constant value.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>The value passed to the '{0}' function cannot be changed.</value>
     <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>The capture name '{0}' is hiding the predefined property that returns the full match of the regular expression. Consider renaming it if you want to use that named property to extract the full match in the specified text.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>The capture name '{0}' is hiding a predefined property that returns match information. Consider renaming it if you want to access the match information.</value>
     <comment>Information message indicating that the maker used a group name that will hide the property 'FullMatch' in the function result.</comment>
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>The capture name '{0}' is hiding the predefined property that returns the group matches in the regular expression. Consider renaming it if you want to use that named property to extract all the sub-matches in the specified text.</value>
-    <comment>Information message indicating that the maker used a group name that will hide the property 'SubMatches' in the function result.</comment>
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>The capture name '{0}' is hiding the predefined property that returns the location of the match of the regular expression. Consider renaming it if you want to use that named property to extract the position of the full match in the specified text.</value>
-    <comment>Information message indicating that the maker used a group name that will hide the property 'StartMatch' in the function result.</comment>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>The capture names in the set '{0}' are hiding predefined properties that return match information. Consider renaming them if you want to access the match information.</value>
+    <comment>Information message indicating that the maker used a group name that will hide the property 'FullMatch' in the function result.</comment>
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Removes all formatting and returns a plain text value.</value>
@@ -4409,17 +4812,21 @@
     <value>Set a variable with an online datasource value (table or record) can cause multiple requests to the server. Soon this will be blocked.</value>
     <comment>Warning for makers that a certain capability should be avoided.</comment>
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
-    <comment>Error message when validation of type literal fails.</comment>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Type expression is invalid. '{0}' cannot be used in a type expression.</value>
+    <comment>Error message when validation of type expression fails.</comment>
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definition of type {0} is invalid.</value>
-    <comment>Error message when type binding is invalid.</comment>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Unsupported usage: Type function can only be used in type arguments and type declarations.</value>
+    <comment>{Locked=Type}Error message shown when Type function is used in an unsupported expression.</comment>
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Declaration of type {0} is invalid.</value>
+    <comment>Error message when type declaration is invalid.</comment>
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definition of type {0} is invalid and may contain cycles.</value>
-    <comment>Error message when type binding may have cycles.</comment>
+    <value>Declaration of type {0} is invalid and may contain cycles.</value>
+    <comment>Error message when type declaration may contain cycles.</comment>
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
     <value>Restricted type name {0} cannot be used.</value>
@@ -4623,6 +5030,16 @@
       A partial operator is the 2nd part of a statement `[Partial Op]` and can be one of "And", "Or", "Table" or "Record".
       It's used to determine how to combine multiple expressions with the same name and operator.</comment>
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>The datasource to add data to.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>item</value>
+    <comment>function_parameter - Second parameter for the Collect function. The item to be added.</comment>
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Delegation warning. The result of this argument '{0}' may be truncated for large data sets before being passed to the '{1}' function.</value>
     <comment>Error message when an argument to non-delegable function has possible delegation and resulting rows may be truncated</comment>
@@ -4665,8 +5082,99 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>The source to clear.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Retrieves data that spans across multiple tables with relationships.</value>
+    <comment>Description of 'Join' function.</comment>
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>source1</value>
+    <comment>function_parameter - First argument to the Join function - the data source (table / collection) to operate as the left source.</comment>
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>source2</value>
+    <comment>function_parameter - Second argument to the Join function - the data source (table / collection) to operate as the right source.</comment>
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>denominator</value>
+    <comment>function_parameter - Third argument to the Join function - defines the records matching criteria.</comment>
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    <comment>function_parameter - Fourth argument to the Join function - the join type between the two tables.</comment>
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    <comment>function_parameter - Fifth and on argument to the Join function - the join type between the two tables.</comment>
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>The left table or collection.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>The right table or collection.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Join criteria between the two tables or collections.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>The join type between the two tables or collections.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>The arguments to rename an existing column in one of the sources.</value>
+    <comment>Description for this parameter</comment>
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>The specified data source cannot be used with this function.</value>
     <comment>Error Message.</comment>
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Invalid argument '{0}'. Expected valid type name or inline type expression.</value>
+    <comment>Error Message shown to user when a value other name or inline type expression is passed into AsType, IsType and ParseJSON functions.</comment>
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Unsupported type '{0}' in type argument.</value>
+    <comment>Error Message shown to user when a unsupported type is passed in type argument of AsType, IsType and ParseJSON functions.</comment>
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Maximum depth reached while traversing JSON payload.</value>
+    <comment>Error message returned by the JSON function when a document that is too deeply nested is passed to it. The term JSON in the error refers to the data format described in www.json.org.</comment>
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Maximum length reached in JSON function.</value>
+    <comment>Error message returned by the {Locked=JSON} function when the result generated by this function would be too long.</comment>
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>The 'User-defined types' experimental feature is not enabled.</value>
+    <comment>Error message returned when user uses User-defined types with the User-defined types feature flag turned off.</comment>
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Incorrect syntax: '=' cannot be used to declare user-defined types. Use ':=' instead.</value>
+    <comment>
+      Error message returned when user uses '=' syntax to define User-defined type.
+      Some examples for valid named type declarations - "Point := Type({x: Number, y: Number});" , "T1 := Type(Number);" , "T2 := Type([Boolean]);".
+    </comment>
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>'{0}' can not be added/renamed due to colission with another column with same name.</value>
+    <comment>Error message returned when user tries to join two data sources with duplicated columns between them.</comment>
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Expected plain 'JoinType' enum value. Different enums or passing it throught another function is not supported i.e. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    <comment>Error message returned when user tries to give anything different than a plain 'JoinType' enum value as argument.</comment>
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Arguments starting from the 5th position are meant to rename columns and are expected to be 'As' node arguments i.e LeftRecord.Name As NewName.</value>
+    <comment>{Locked='As'}{Locked='LeftRecord.Name As NewName'}</comment>
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>At least one '{0}' column must be declared to compose the join result.</value>
+    <comment>{Locked='RightRecord'}</comment>
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>The '{0}' value is invalid in this context. It should be a reference to either '{1}' or '{2}' scope name.</value>
+    <comment>{Locked='RightRecord'}</comment>
   </data>
 </root>

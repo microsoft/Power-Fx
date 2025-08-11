@@ -2,9 +2,12 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -98,6 +101,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 fArgsValid = base.CheckType(context, args[0], argTypes[0], isRecord ? DType.EmptyRecord : ParamTypes[0], errors, ref nodeToCoercedTypeMap);
             }
 
+            // DType.IsSealed is not propogated here as the result of ShowColumns can be added to (since specifc columns have been chosen), but not DropColumns
             var supportColumnNamesAsIdentifiers = context.Features.SupportColumnNamesAsIdentifiers;
             var colsToKeep =
                 _isShowColumns
@@ -192,6 +196,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return index > 0 ? ParamIdentifierStatus.AlwaysIdentifier : ParamIdentifierStatus.NeverIdentifier;
+        }
+
+        public override bool ComposeDependencyInfo(IR.Nodes.CallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
+        {
+            node.FunctionSupportColumnNamesAsIdentifiersDependencyUtil(visitor);
+
+            return true;
         }
     }
 }

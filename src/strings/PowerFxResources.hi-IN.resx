@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>ऐसा प्रतिशत (या प्रतिशत मानों का स्तंभ) जिससे रंग (या रंग मानों का स्तंभ) फ़ेड हो जाएगा. एक नकारात्मक प्रतिशत से गहरी छाया उत्पन्न होती है. एक सकारात्मक प्रतिशत से हल्की छाया उत्पन्न होती है.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>किसी फ़ाइल के बारे में जानकारी सहित रिकॉर्ड लौटाता है.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>वह फ़ाइल ब्लॉब जिसके बारे में जानकारी प्राप्त करनी है.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>फ़ाइल</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>किसी संख्या का निरपेक्ष मान लौटाता है, चिह्न रहित एक संख्या.</value>
     
@@ -1796,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>"यदि प्रदान किया गया अनटाइप्ड मान दिए गए प्रकार का है, तो सही लौटाता है."</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>प्रकार</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>अनटाइप्ड मान यह जाँचने के लिए कि क्या इसे निर्दिष्ट प्रकार के रूप में डाला जा सकता है.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>वह प्रकार जिसे हम untypedValue जाँचना चाहते हैं.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>प्रदत्त मान को दिए गए प्रकार के तौर पर उपयोग करता है.</value>
     
@@ -1813,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>निकाय तालिका ऐसे प्रकार का प्रतिनिधित्व कर रही है, जिसे हमारे अनुसार मान के तौर पर उपयोग किया जाना चाहिए.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>दिए गए अनटाइप्ड मान को दिए गए प्रकार के रूप में जांचता है और उपयोग करता है.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>प्रकार</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>नये प्रकार के रूप में कास्ट किया जाने वाला अनटाइप्ड मान.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>वह प्रकार जिस रूप में हम मान का उपयोग करना चाहते हैं.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>पहले पैरामीटर द्वारा प्रदान किए गए स्कोप का उपयोग करके, दूसरे पैरामीटर के रूप में प्रदान किए गए सूत्र को निष्पादित करता है.</value>
@@ -1868,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>{0}' एक अज्ञात या असमर्थित फ़ंक्शन है.</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' को टाइप हेल्पर फ़ंक्शन के रूप में पहचाना जाता है और इसका उपयोग केवल Type फ़ंक्शन के भीतर ही किया जा सकता है.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -1982,10 +2033,6 @@
     <value>'{0}' का पहला तर्क एक रेकॉर्ड होना चाहिए.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>इस विकल्प का उपयोग करके सेट के रूप में एक प्रगणना मान या Choices फ़ंक्शन के लिए ऐसे '{0}' निकाय की आवश्यकता होती है, जिसे डेटा स्रोत के रूप में जोड़ा गया हो. इसे जोड़ने के लिए, दृश्य मेनू का उपयोग करें और फिर डेटा स्रोत का चयन करें.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>निर्दिष्ट गुण इस प्रसंग में पहुँच-योग्य नहीं है.</value>
     
@@ -2026,10 +2073,6 @@
     <value>तर्क मान्य दिनांक या समय मान का प्रतिनिधित्व नहीं करता है.</value>
     
   </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>यह डेटा स्रोत अमान्य है. कृपया "सामग्री -&gt; डेटा स्रोत" या "देखें -&gt; विकल्प" क्लिक करके "डेटा स्रोत" फलक की त्रुटि सुधारें</value>
-    
-  </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>इनलाइन रिकॉर्ड प्रतिबंधित करने के लिए एक डेटा स्रोत पहचानकर्ता अपेक्षित था.</value>
     
@@ -2068,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>{0}' के लिए स्तंभ नाम का विरोध.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>सिस्टम रिकॉर्ड या सिस्टम रिकॉर्ड की तालिका में कॉलम नहीं जोड़े जा सकते. सबसे पहले जिन विशिष्ट कॉलम की आपको आवश्यकता है उन्हें निकालने के लिए ShowColumns का उपयोग करें।</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>सिस्टम रिकॉर्ड के कॉलम या सिस्टम रिकॉर्ड की तालिका का नाम नहीं बदला जा सकता. सबसे पहले जिन विशिष्ट कॉलम की आपको आवश्यकता है उन्हें निकालने के लिए ShowColumns का उपयोग करें।</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -2670,6 +2721,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>प्रोसेस की जाने वाली एक JSON स्ट्रिंग.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>एक JSON स्ट्रिंग को टाइप किए गए ऑब्जेक्ट में रूपांतरित करता है.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>स्ट्रिंग</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>टाइप की गई वस्तु में रूपांतरित करने के लिए एक JSON स्ट्रिंग.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>प्रकार</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>एक इनलाइन प्रकार परिभाषा या एक वैश्विक रूप से परिभाषित नामित प्रकार.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>तालिका में किसी दिए गए इंडेक्स पर रिकॉर्ड लौटाता है.</value>
     
@@ -2687,6 +2756,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>रिकॉर्ड का इंडेक्स जिसे पुनर्प्राप्त किया जाना है.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2707,6 +2788,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>बारकोड प्रकार</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2823,6 +2936,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>परीक्षण किया जाने वाला मान.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>पाठ के रूप में दिनांक और समय को एक संख्या के रूप में रूपांतरित करता है, जो Power Apps दिनांक-समय कोड में दिनांक को दर्शाता है.</value>
@@ -3098,32 +3215,33 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>डेटा स्रोत में रिकार्ड्स जोड़ता है.</value>
+    <value>निर्दिष्ट संग्रह में एक या अधिक आइटम जोड़ता है. आइटम किसी भिन्न तालिका या संग्रह (जैसे Collect(collection, source_collection)) से हो सकते हैं, या एक या अधिक रिकॉर्ड Collect(collection, {key1: val1, key2: val2, ...}, ...) से हो सकते हैं.</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>डेटा_सोर्स</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>रिकॉर्ड</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>संग्रह</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>आइटम</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>एक नया या मौजूदा संग्रह बढ़ाना.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>एक संग्रह से सभी रिकॉर्ड हटा देता है. और फिर उसी संग्रह में रिकॉर्ड्स के अलग सेट जोड़ता है.</value>
+    <value>पहले संग्रह को साफ़ करता है और निर्दिष्ट संग्रह में एक या अधिक आइटम जोड़ता है. आइटम किसी भिन्न तालिका या संग्रह से हो सकते हैं (जैसे ClearCollect(collection, source_collection)) या एक या अधिक रिकॉर्ड ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>डेटा_सोर्स</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>एक नया या मौजूदा संग्रह बढ़ाना.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>डेटा_सोर्स</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>रिकॉर्ड</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>संग्रहित करने के लिए एक रिकॉर्ड या तालिका. संग्रह में एक रिकॉर्ड जोड़ा जाएगा. एक तालिका की पंक्तियाँ संग्रह में जोड़ी जाएँगी.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>अद्यतनों को निर्दिष्ट पंक्ति पर लागू करता है और निर्दिष्ट डेटास्रोत की पंक्ति को बदलता है. अद्यतित पंक्ति लौटाता है.</value>
@@ -3259,6 +3377,10 @@
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>सूत्र में स्थिति '{1}' पर अप्रत्याशित चरित्र '{0}'.</value>
     
@@ -3271,6 +3393,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3288,6 +3414,10 @@
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>अनपेक्षित वर्ण. सूत्र में '{0}' शामिल है, जबकि '{1}' अपेक्षित है.</value>
     
@@ -3301,6 +3431,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3318,6 +3452,10 @@
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>नाम मान्य नहीं है. इस पहचानकर्ता को पहचाना नहीं गया है.</value>
     
@@ -3331,6 +3469,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3348,6 +3490,10 @@
     <value>आलेख: PowerApps के लिए सूत्र संदर्भ</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>'Parent' का संदर्भ मान्य नहीं है. आप इस प्रसंग में किसी पैरेंट नियंत्रण का संदर्भ नहीं दे सकते.</value>
     
@@ -3361,6 +3507,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>आलेख: Power Apps में किसी कैनवास-ऐप नियंत्रण को जोड़ें और कॉन्फ़िगर करें</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3400,6 +3550,10 @@
     <value>मॉड्यूल: बुनियादी सूत्रों का उपयोग करें</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>संख्या अपेक्षित है. हम सूत्र में इस बिंदु पर संख्या की अपेक्षा रखते हैं.</value>
     
@@ -3413,6 +3567,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3430,6 +3588,10 @@
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>अर्धविराम अपेक्षित है. हम सूत्र में इस बिंदु पर एक अर्धविराम (:) की अपेक्षा रखते हैं.</value>
     
@@ -3445,6 +3607,10 @@
     <value>आलेख: Power Apps में पाठ, दिनांक और समय दिखाएँ</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>गैर-व्यवहार गुण में व्यवहार फ़ंक्शन. आप ऐप में कहीं और मान परिवर्तित करने के लिए इस गुण का उपयोग नहीं कर सकते.</value>
     
@@ -3458,6 +3624,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>आलेख: Power Apps में कैनवास ऐप के लिए व्यवहार सूत्रों को समझें</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>गैर-व्यवहार उपयोगकर्ता द्वारा परिभाषित फ़ंक्शन (UDF) में व्यवहार फ़ंक्शन. कृपया व्यवहार UDF घोषित करने के लिए उपयोगकर्ता-परिभाषित फ़ंक्शन बॉडी को घुमावदार कोष्ठकों ({...}) के साथ रैप करें.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>व्यवहार फ़ंक्शन, वर्तमान सत्र स्थिति को परिवर्तित करते हैं. 'Clear', 'Collect', 'Patch' और 'Refresh' सामान्य व्यवहार फ़ंक्शन हैं.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>उपयोगकर्ता द्वारा परिभाषित फ़ंक्शन व्यंजक को संपादित करें ताकि वह घुमावदार कोष्ठकों ({...}) के अंदर हो.</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3497,6 +3679,10 @@
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>पाठ या संख्या अपेक्षित है. हम सूत्र में इस बिंदु पर किसी पाठ या संख्या की अपेक्षा रखते हैं.</value>
     
@@ -3512,6 +3698,10 @@
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>बंद करने वाला कोष्ठक अपेक्षित है. सूत्र में इस जगह हम बंद करने वाले कोष्ठक (}) की अपेक्षा करते हैं.</value>
     
@@ -3523,12 +3713,23 @@
     <value>अपने सूत्र को संपादित करें ताकि इसमें कोष्ठक शामिल किया जा सके.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>पहचानकर्ता का अपेक्षित समापन. हम सूत्र में इस बिंदु पर समापन (') की अपेक्षा करते हैं.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>समापन एकल कोट चिह्न किसी पहचानकर्ता (उदाहरण के लिए, 'प्रथम नाम') के अंत को इंगित करता है.</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>अपने सूत्र को संपादित करें ताकि इसमें समापन एकल कोट शामिल हो.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>पहचानकर्ता के पास कोई मान्य पाठ नहीं है.</value>
+    <value>पहचानकर्ता रिक्त है या उसमें कोई अमान्य वर्ण, जैसे टैब या नई पंक्ति, है.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>सुनिश्चित करें कि आपके पास अपने पहचानकर्ता के लिए पाठ है. यह त्रुटि तब होती है, जब पहचानकर्ता पूरी तरह रिक्त हो या उसमें रिक्त स्थान हो.</value>
+    <value>सुनिश्चित करें कि आपके पहचानकर्ता में वैध टेक्स्ट है. यह त्रुटि तब होती है जब पहचानकर्ता रिक्त होता है, उसमें केवल रिक्त स्थान होते हैं, या उसमें कोई टैब या नई लाइन होती है.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3554,8 +3755,16 @@
     <value>मॉड्यूल: बुनियादी सूत्रों का उपयोग करें</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>मॉड्यूल: तालिकाओं और रिकॉर्ड्स के साथ लेखक के बुनियादी सूत्र</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3570,6 +3779,10 @@
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>असंगत प्रकार. डेटा स्रोत में आप जिस '{0}' स्तंभ को अद्यतित कर रहे हैं, उसके लिए '{1}' प्रकार चाहिए लेकिन आप '{2}' प्रकार का उपयोग कर रहे हैं.</value>
     
@@ -3582,8 +3795,16 @@
     <value>मॉड्यूल: बुनियादी सूत्रों का उपयोग करें</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>मॉड्यूल: तालिकाओं और रिकॉर्ड्स के साथ लेखक के बुनियादी सूत्र</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3596,6 +3817,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3614,8 +3839,16 @@
     <value>मॉड्यूल: बुनियादी सूत्रों का उपयोग करें</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>मॉड्यूल: तालिकाओं और रिकॉर्ड्स के साथ लेखक के बुनियादी सूत्र</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3633,8 +3866,16 @@
     <value>मॉड्यूल: बुनियादी सूत्रों का उपयोग करें</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>मॉड्यूल: तालिकाओं और रिकॉर्ड्स के साथ लेखक के बुनियादी सूत्र</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3650,6 +3891,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3675,8 +3920,16 @@
     <value>आलेख: कैनवास ऐप में प्रत्यायोजन को समझें</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>ब्लॉग: प्रत्यायोजन के लिए डेटा पंक्ति की सीमा</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3702,8 +3955,16 @@
     <value>आलेख: कैनवास ऐप में प्रत्यायोजन को समझें</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>ब्लॉग: प्रत्यायोजन के लिए डेटा पंक्ति की सीमा</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3733,8 +3994,16 @@
     <value>आलेख: कैनवास ऐप में प्रत्यायोजन को समझें</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>ब्लॉग: प्रत्यायोजन के लिए डेटा पंक्ति की सीमा</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3766,8 +4035,70 @@
     <value>आलेख: कैनवास ऐप में प्रत्यायोजन को समझें</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>ब्लॉग: प्रत्यायोजन के लिए डेटा पंक्ति की सीमा</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>प्रत्यायोजन चेतावनी. नामित सूत्र {0} प्रत्यायोजन योग्य नहीं है, इसलिए इस सूत्र में इसका उपयोग बड़े डेटा सेट पर सही ढंग से काम नहीं कर सकता है. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>हो सकता है कि डेटा स्रोत, सूत्र को संसाधित न कर पाए और कोई अपूर्ण डेटा सेट वापस लौटाए. हो सकता है कि डेटा सेट अपूर्ण होने पर आपका एप्लिकेशन सही परिणाम न लौटा पाए या सही व्यवहार न करे.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>नामित सूत्र की परिभाषा को सरल बनाने का प्रयास करें.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>आलेख: कैनवास ऐप में प्रत्यायोजन को समझें</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>ब्लॉग: प्रत्यायोजन के लिए डेटा पंक्ति की सीमा</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>प्रत्यायोजन चेतावनी. उपयोगकर्ता-परिभाषित सूत्र {0} प्रत्यायोजन योग्य नहीं है, इसलिए इस सूत्र में इसका उपयोग बड़े डेटा सेट पर सही ढंग से काम नहीं कर सकता है. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>हो सकता है कि डेटा स्रोत, सूत्र को संसाधित न कर पाए और कोई अपूर्ण डेटा सेट वापस लौटाए. हो सकता है कि डेटा सेट अपूर्ण होने पर आपका एप्लिकेशन सही परिणाम न लौटा पाए या सही व्यवहार न करे.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>उपयोगकर्ता-परिभाषित फ़ंक्शन की परिभाषा को सरल बनाने का प्रयास करें.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>आलेख: कैनवास ऐप में प्रत्यायोजन को समझें</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>ब्लॉग: प्रत्यायोजन के लिए डेटा पंक्ति की सीमा</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3794,8 +4125,16 @@
     <value>आलेख: कैनवास ऐप में प्रत्यायोजन को समझें</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>ब्लॉग: प्रत्यायोजन के लिए डेटा पंक्ति की सीमा</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3824,6 +4163,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>संदर्भ: कैनवास ऐप्स के लिए ConfirmExit</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3858,12 +4201,24 @@
     <value>नामित सूत्र एक व्यंजक होना चाहिए.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>नामित प्रकार घोषणा एक वैध प्रकार अभिव्यक्ति होनी चाहिए.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
-    <value>उपयोगकर्ता परिभाषित फ़ंक्शन में एक निकाय होना चाहिए.</value>
+    <value>उपयोगकर्ता-परिभाषित फ़ंक्शन में एक बॉडी होनी चाहिए.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>फ़ंक्शन {0} पहले से ही परिभाषित है.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>चेतावनी: उपयोगकर्ता-परिभाषित फ़ंक्शन {0} मौजूदा बिल्ट-इन फ़ंक्शन {0} को शैडो करेगा.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>फ़ंक्शन नाम {0} प्रतिबंधित है.</value>
     
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
@@ -3875,11 +4230,15 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>कथित फ़ंक्शन, रिटर्न प्रकार फ़ंक्शन बॉडी के रिटर्न प्रकार से मेल नहीं खाता है.</value>
+    <value>कथित फ़ंक्शन, रिटर्न प्रकार '{0}' फ़ंक्शन बॉडी '{1}' के रिटर्न प्रकार से मेल नहीं खाता है.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>फ़ंक्शन {0} में बहुत अधिक पैरामीटर हैं. उपयोगकर्ता द्वारा परिभाषित फ़ंक्शन {1} पैरामीटर तक का समर्थन करते हैं.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
-    <value>अनुपस्थित फ़ंक्शन रिटर्न प्रकार, उदाहरण के लिए ":Number" in "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    <value>अनुपस्थित फ़ंक्शन रिटर्न प्रकार, उदाहरण के लिए "FindMonth( d:Text ):Number = Month( DateParse( d ));" में ":Number"</value>
     
   </data>
   <data name="ErrUDF_MissingParamType" xml:space="preserve">
@@ -3902,7 +4261,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>'{0}' का पहला तर्क कोई मान्य चर नाम होना चाहिए और इसका किसी मौजूदा नियंत्रण, स्क्रीन, संग्रहण या डेटा स्रोत नामों से विरोध नहीं हो सकता. प्रकार '{1}' ढ़ूंढ़ा गया</value>
+    <value>'{1}' को '{0}' के साथ संशोधित नहीं किया जा सकता है या यह किसी मौजूदा कार्यक्षेत्र वैरिएबल, डेटा स्रोत या अन्य ऑब्जेक्ट के नाम के साथ टकराव नहीं करता है.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4063,6 +4422,10 @@
     <value>{0} को प्रतिनिधि नहीं कर सकते हैं: एक व्यवहार फ़ंक्‍शन '{1}' शामिल है.</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows कैश्ड मान लौटा सकती है. नवीनतम गणना प्राप्त करने के लिए CountIf(DataSource, true) का उपयोग करें.</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>निर्धारित करता है कि प्रदत्त पाठ, प्रदत्त पाठ स्वरूप से मेल खाता है.</value>
     
@@ -4156,24 +4519,232 @@
     <value>नियमित व्यंजक अमान्य है.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित व्यंजक, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: इनलाइन विकल्प नियमित अभिव्यक्ति के आरंभ में दिखाई देने चाहिए, बाद में "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: इनलाइन विकल्प [imnsx] अक्षरों के संयोजन तक सीमित हैं, विकल्पों को अक्षम नहीं कर सकते हैं, और उप-अभिव्यक्ति पर उपयोग नहीं किए जा सकते हैं, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: ऑक्टल \0 वर्ण कोड समर्थित नहीं हैं, इसके बजाय हेक्साडेसिमल \x या यूनिकोड \u का उपयोग करें, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: लिटरल घुंघराले ब्रेसिज़ को बैकस्लैश के साथ एस्केप किया जाना चाहिए, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: अक्षर वर्गों में भी लिटरल वर्गाकार ब्रेसेज़ को बैकस्लैश के साथ एस्केप किया जाना चाहिए, उदाहरण के लिए \[ या \], जो "{0}" के अंत में पाया जाता है.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित व्यंजक: खुला कैरेक्टर वर्ग वर्गाकार कोष्ठक.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: असमर्थित विशेष समूह, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: कैरेक्टर क्लास के अंदर एस्केप कैरेक्टर की अनुमति नहीं है, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: नकारात्मक एस्केप वर्ण को नकारात्मक वर्ण वर्ग के अंतर्गत अनुमति नहीं है, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: कैरेक्टर क्लास के बाहर एस्केप कैरेक्टर की अनुमति नहीं है, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: अमान्य यूनिकोड श्रेणी नाम, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: दोहराया गया इनलाइन विकल्प, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: बंद नहीं की गई इनलाइन टिप्पणी.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: बंद नहीं की गई इनलाइन टिप्पणी, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: इनलाइन विकल्प MatchOptions.NumberedSubMatches के साथ असंगत है, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: अधिकारपूर्ण परिमाणक समर्थित नहीं हैं, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: सटीक क्वांटिफायर का उपयोग क्वांटिफायर संशोधक के साथ नहीं किया जा सकता है जैसे कि आलसी के लिए ?, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: अमान्य एस्केप कोड, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: उप मिलान "{0}" परिभाषित नहीं है या एक असमर्थित अग्रेषित संदर्भ है।</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: "{0}" के आरंभ में पाए जाने वाले लुक बिहाइंड में उप मिलान समर्थित नहीं हैं।</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: पीछे देखें नेस्ट नहीं किया जा सकता, "{0}" के आरंभ में पाया जाता है।</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: "{0}" के अंत में पाए जाने वाले लुक बिहाइंड में असीमित क्वांटिफायर समर्थित नहीं हैं।</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: क्वांटिफायर पीछे की ओर देखने और आगे की ओर देखने पर समर्थित नहीं हैं, जो "{0}" के अंत में पाए जाते हैं.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: बैक रेफरेंस "{0}" उप मिलान के लिए जो कि प्रत्यावर्तन या शून्य परिमाणक के कारण नहीं हो सकता है.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: स्व-संदर्भित उप मिलान समर्थित नहीं हैं, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: बंद नहीं किए गए समूह, बहुत कम समापन कोष्ठक.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: बंद समूह, बहुत कम प्रारंभिक कोष्ठक.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: नामित उप मिलान एक से अधिक बार परिभाषित किया गया, "{0}" के आरंभ में पाया गया.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: उप मिलान नाम शब्द वर्णों का संयोजन होना चाहिए तथा किसी संख्या से शुरू नहीं होना चाहिए, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: इनलाइन विकल्प नियमित अभिव्यक्ति के आरंभ में दिखाई देने चाहिए, बाद में "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: कैरेक्टर वर्ग में वर्ण एक से अधिक बार प्रकट होता है, "{0}" दोहराया गया.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: वर्गाकार कोष्ठक वर्ण वर्ग रिक्त नहीं हो सकते, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: बैलेंसिंग उप मिलान समर्थित नहीं हैं, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: एकल उद्धृत नामित कैप्चर का उपयोग समर्थित नहीं है, इसके बजाय (?&lt;...&gt;) सिंटैक्स का उपयोग करें, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: सशर्त प्रत्यावर्तन समर्थित नहीं है "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: नामित कैप्चर का उपयोग MatchOptions.NumberedSubMatches सक्षम होने पर नहीं किया जा सकता, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: "(?&lt;name&gt;...)" और "\k&lt;name&gt;" के साथ नामित कैप्चर का उपयोग करें या MatchOptions.NumberedSubMatches सक्षम करें, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: कैरेक्टर वर्ग में लिटरल हाइफ़न को बैकस्लैश से एस्केप किया जाना चाहिए, "\-" से एस्केप किया जाना चाहिए, जो "{0}" में पाया जाता है.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: किसी कैरेक्टर क्लास में प्रयोग किए जाने पर लिटरल कैरेक्टर को बैकस्लैश के साथ एस्केप करना आवश्यक है, जो "{0}" के अंत में पाया जाता है।</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: किसी समूह पर परिमाणक जिसमें कोई अन्य परिमाणक या रिक्त प्रत्यावर्तन हो, जिसके परिणामस्वरूप अस्पष्ट परिणाम हो सकता है, जो "{0}" के अंत में पाया जाता है.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: "{0}" के अंत में दी गई 250 की अधिकतम संभव कैरेक्टर सीमा के पीछे देखें.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: परिमाणक श्रेणी निम्न संख्या उच्च संख्या से अधिक है, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: "{0}" के आरंभ में बहुत अधिक नेस्टेड समूह पाए गए।</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: उप-मिलान का नाम बहुत लंबा है, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: संख्या बहुत बड़ी है, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: कैरेक्टर वर्ग श्रेणी में कैरेक्टर उलटे होते हैं, जो "{0}" के अंत में पाए जाते हैं.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: वर्ण वर्ग श्रेणी में वर्ण वर्ग, या बैकस्लैश के साथ लिटरल हाइफ़न से बचें, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: एक अनएस्केप बैकस्लैश के साथ समाप्त होता है.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: परिमाणक बिना परिमाणित करने योग्य कुछ, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित व्यंजक: MatchOptions.DotAll और MatchOptions.FreeSpacing केवल Power Fx V1 के साथ उपलब्ध हैं, "{0}" मिला.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>अमान्य नियमित उक्ति: बैक रेफरेंस "{0}" उप मिलान के लिए जो लुकबिहाइंड या लुकअहेड के अंदर है.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>नियमित व्यंजकों का मान अचर होना चाहिए.</value>
+    <value>नियमित उक्ति एक अचर मान होना चाहिए.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions का मान अचर होना चाहिए.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>{0}' फ़ंक्शन को पारित मान बदला नहीं जा सकता.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>कैप्चर नाम '{0}' उस पूर्वनिर्धारित गुण को छुपा रहा है जो नियमित व्यंजक का पूर्ण मिलान लौटाता है. यदि आप निर्दिष्ट पाठ के पूर्ण मिलान को निकालने के लिए उस नाम वाले गुण का उपयोग करना चाहते हैं, तो इसका नाम बदल कर देखें.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>कैप्चर नाम '{0}' एक पूर्वनिर्धारित प्रॉपर्टी को छुपा रहा है जो मिलान जानकारी लौटाता है. यदि आप मैच की जानकारी प्राप्त करना चाहते हैं तो इसका नाम बदलने पर विचार करें।</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>कैप्चर नाम '{0}' उस पूर्वनिर्धारित वह गुण को छुपा रहा है जो नियमित व्यंजक के समूह मेल लौटाता है. यदि आप निर्दिष्ट पाठ के सभी उप-मेलों को निकालने के लिए उस नाम वाले गुण का उपयोग करना चाहते हैं, तो इसका नाम बदलने पर विचार करें.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>कैप्चर नाम '{0}' उस पूर्वनिर्धारित गुण को छुपा रहा है जो नियमित व्यंजक के पूर्ण मिलान का स्थान लौटाता है. यदि आप निर्दिष्ट पाठ के पूर्ण मिलान का स्थान निकालने के लिए उस नाम वाले गुण का उपयोग करना चाहते हैं, तो इसका नाम बदल कर देखें.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>सेट '{0}' में कैप्चर नाम पूर्वनिर्धारित गुणों को छिपा रहे हैं जो मिलान जानकारी लौटाते हैं. यदि आप मैच की जानकारी प्राप्त करना चाहते हैं तो उनका नाम बदलने पर विचार करें।</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4209,16 +4780,20 @@
     <value>ऑनलाइन डेटास्रोत मान (तालिका या रिकॉर्ड) के साथ एक वैरिएबल सेट करने से सर्वर पर कई अनुरोध हो सकते हैं. जल्द ही इसे ब्लॉक कर दिया जाएगा.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>प्रकार अभिव्यक्ति अमान्य है. '{0}' का उपयोग प्रकार अभिव्यक्ति में नहीं किया जा सकता.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>प्रकार {0} की परिभाषा अमान्य है.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>असमर्थित उपयोग: Type फ़ंक्शन का उपयोग केवल प्रकार तर्कों और प्रकार घोषणाओं में किया जा सकता है.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>प्रकार {0} की घोषणा अमान्य है.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>प्रकार {0} की परिभाषा अमान्य है और इसमें चक्र शामिल हो सकते हैं.</value>
+    <value>प्रकार {0} की घोषणा अमान्य है और इसमें चक्र शामिल हो सकते हैं.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4419,6 +4994,16 @@
     <value>अज्ञात Partial संचाकल.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>इसमें डेटा जोड़ने के लिए डेटा स्रोत.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>एकत्र करने के लिए रिकॉर्ड या तालिका. डेटा स्रोत में एक रिकॉर्ड जोड़ा जाएगा. किसी तालिका में उसकी पंक्तियाँ डेटास्रोत से जुड़ी होंगी.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>आइटम</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>प्रत्यायोजन चेतावनी. इस तर्क '{0}' के परिणाम को '{1}' फ़ंक्शन में पास करने से पहले बड़े डेटा सेट के लिए छोटा किया जा सकता है.</value>
     
@@ -4459,10 +5044,98 @@
     <value>संग्रह साफ़ करने के लिए.</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>स्पष्ट करने के लिए स्रोत.</value>
+  </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>संबंधों के साथ एकाधिक तालिकाओं में फैले डेटा को पुनर्प्राप्त करता है.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>स्रोत1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>स्रोत2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>विभाजक</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>बायीं ओर की तालिका या संग्रह.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>दाएं ओर की तालिका या संग्रह.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>दो तालिकाओं या संग्रहों के बीच मानदंड जोड़ें.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>दो तालिकाओं या संग्रहों के बीच जुड़ने का प्रकार.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>किसी एक स्रोत में विद्यमान कॉलम का नाम बदलने के लिए तर्क.</value>
+    
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>निर्दिष्ट डेटा स्रोत का उपयोग इस फ़ंक्शन के साथ नहीं किया जा सकता.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>अमान्य तर्क '{0}'. अपेक्षित वैध प्रकार नाम या इनलाइन प्रकार व्यंजक.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>टाइप तर्क में असमर्थित प्रकार '{0}'.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>JSON पेलोड को ट्रैवर्स करते समय अधिकतम गहराई तक पहुँच गया.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>JSON फ़ंक्शन में अधिकतम लंबाई पहुँच गई.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>'उपयोगकर्ता द्वारा परिभाषित प्रकार' प्रयोगात्मक विशेषता सक्षम नहीं है.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>गलत सिंटैक्स: '=' का उपयोगकर्ता द्वारा परिभाषित प्रकार को घोषित करने के लिए नहीं किया जा सकता. इसके बजाय ':=' का उपयोग करें.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>'{0}' को समान नाम वाले किसी अन्य कॉलम से टकराव के कारण जोड़ा/हटाया नहीं जा सकता.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>अपेक्षित सादा 'JoinType' enum मान. विभिन्न enums या इसे किसी अन्य फ़ंक्शन के माध्यम से पास करना समर्थित नहीं है यानी Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>5वें स्थान से शुरू होने वाले तर्क स्तंभों का नाम बदलने के लिए हैं और उनसे 'As' नोड तर्क होने की अपेक्षा की जाती है, अर्थात LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>संयुक्त परिणाम बनाने के लिए कम से कम एक '{0}' कॉलम घोषित किया जाना चाहिए.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>इस संदर्भ में '{0}' मान अमान्य है. यह या तो '{1}' या '{2}' कार्यक्षेत्र नाम का संदर्भ होना चाहिए.</value>
     
   </data>
 </root>

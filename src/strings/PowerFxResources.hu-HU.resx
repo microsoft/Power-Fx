@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Egy százalék (vagy a százalékok egy oszlopa), amellyel el kell halványítani a színt (vagy a színértékek oszlopát). Negatív százalék megadása sötétebb árnyalatot eredményez. Pozitív százalék megadása világosabb százalékot eredményez.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Egy fájlra vonatkozó adatokat tartalmazó rekordot ad vissza.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>A fájlblob, amelyről információt kell lekérni.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>fájl</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Egy szám abszolút értékét (előjel nélküli értékét) adja vissza.</value>
     
@@ -1796,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Igaz értéket ad vissza, ha a megadott típus nélküli érték a megadott típusú.</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>típus</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>Az a típus nélküli érték, amelyet ellenőrizni kell, hogy konvertálandó-e megadott típusként.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>Az a típus, amelyként az untypedValue értéket kívánjuk ellenőrizni.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>A megadott érték a megadott típusként való használata.</value>
     
@@ -1813,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>Az azt a típust reprezentáló entitástábla, amelyként használni kívánja az értéket.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>A megadott típus nélküli érték a megadott típusként ellenőrzi és használja.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>típus</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>Új típusúként konvertálandó típus nélküli érték.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>Az a típus, amelyként használni kívánjuk az értéket.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>A második paraméterként megadott képlet végrehajtása az első által biztosított hatókör használatával.</value>
@@ -1868,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>A(z) "{0}" egy ismeretlen vagy nem támogatott függvény.</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>A(z) „{0}” típussegítő függvényként ismerhető fel, és csak a Type függvényen belül használható.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -1982,10 +2033,6 @@
     <value>A(z) {0} első argumentumának rekordnak kell lennie.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>E beállításhalmaz enumerálási értékként vagy a Choices függvényben való használatához a(z) {0} entitást hozzá kell adni adatforrásként. Ehhez válassza a Nézet menü Adatforrások parancsát.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>A megadott tulajdonság nem érhető el ebben a környezetben.</value>
     
@@ -2026,10 +2073,6 @@
     <value>Az argumentum nem érvényes dátum- vagy időpontértéket jelent.</value>
     
   </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Az adatforrás érvénytelen. Javítsa ki a hibát az „Adatforrások” panelen. Ehhez kattintson a „Tartalom -&gt; Adatforrások” vagy a „Nézet -&gt; Beállítások” parancsra</value>
-    
-  </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>A rendszer egy adatforrás-azonosítót várt a beágyazott rekord korlátozása céljából.</value>
     
@@ -2068,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Ütköző oszlopnevek a következő esetében: {0}.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Rendszerrekordokhoz vagy rendszerrekordok táblájához nem lehet hozzáadni oszlopokat. Először a ShowColumns segítségével nyerje ki azokat az oszlopokat, amelyekre szüksége van.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>A rendszerrekordok vagy a rendszerrekordok táblájának oszlopait nem lehet átnevezni. Először a ShowColumns segítségével nyerje ki azokat az oszlopokat, amelyekre szüksége van.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -2670,6 +2721,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>A feldolgozandó JSON-sztring.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>Begépelt objektummá alakít egy JSON-sztringet.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>sztring</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>Egy JSON-sztring, amelyet át kell alakítani begépelt objektummá.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>típus</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>Egy beágyazott típusdefiníció vagy egy globálisan meghatározott, elnevezett típus.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Visszaadja a tábla adott indexhez tartozó rekordját.</value>
     
@@ -2687,6 +2756,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>A lekérni kívánt rekord indexe.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2707,6 +2788,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Vonalkód típusa</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2823,6 +2936,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>A vizsgálandó érték.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Átalakítja a szöveges formátumú dátumot és időpontot azzá a számmá, amely a dátumot jelöli a Power Apps dátum- és időpontkódjában.</value>
@@ -3098,32 +3215,33 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Rekordokat ad hozzá egy adatforráshoz.</value>
+    <value>Felvesz egy vagy több elemet a gyűjtemény argumentumban megadott gyűjteménybe. Az elemek származhatnak más táblából vagy gyűjteményből (például Collect(collection, source_collection)), vagy egy vagy több gyűjteményből Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>adat_forrás</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>rekord</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>gyűjtemény</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>elem</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Kiterjesztendő új vagy meglévő gyűjtemény.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Törli az összes rekordot egy gyűjteményből. Ezután különböző rekordhalmazokat ad hozzá ugyanahhoz a gyűjteményhez.</value>
+    <value>Először kiüríti a gyűjteményt, és felvesz egy vagy több elemet a gyűjtemény argumentumban megadott gyűjteménybe. Az elemek származhatnak más táblából vagy gyűjteményből (például ClearCollect(collection, source_collection)), vagy egy vagy több rekordból ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>adat_forrás</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Kiterjesztendő új vagy meglévő gyűjtemény.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>adat_forrás</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>rekord</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>A gyűjteménybe felveendő rekord vagy tábla. A megadott rekordot hozzáfűzi a függvény a gyűjteményhez. Tábla megadása esetén a tábla sorait fűzi hozzá a függvény a gyűjteményhez.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Alkalmazza a frissítéseket megadott sorra, és módosítja a sort a megadott adatforrásban. A frissített sort adja vissza.</value>
@@ -3259,6 +3377,10 @@
     <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Váratlan karakter („{0}”) a(z) „{1}” pozícióban a képletben.</value>
     
@@ -3271,6 +3393,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3288,6 +3414,10 @@
     <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Váratlan karakterek. A képlet {0} karaktert tartalmaz, ahol a rendszer {1} karaktert várt.</value>
     
@@ -3301,6 +3431,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3318,6 +3452,10 @@
     <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>A név érvénytelen. Az azonosító nem ismerhető fel.</value>
     
@@ -3331,6 +3469,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3348,6 +3490,10 @@
     <value>Cikk: A PowerApps képletreferenciája</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>A Parent hivatkozás érvénytelen. Ebben a környezetben nem lehet szülővezérlőre hivatkozni.</value>
     
@@ -3361,6 +3507,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Cikk: Vászonalkalmazás-vezérlő hozzáadása és konfigurálása a Power Appsben</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3400,6 +3550,10 @@
     <value>Modul: Alapszintű képletek használata</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>A rendszer számot várt a képlet ezen pontján.</value>
     
@@ -3413,6 +3567,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3430,6 +3588,10 @@
     <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>A rendszer kettőspontot (:) várt a képlet ezen pontján.</value>
     
@@ -3445,6 +3607,10 @@
     <value>Cikk: Szöveg, dátumok és időpontok megjelenítése a Power Appsben</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Viselkedési függvény szerepel egy nem viselkedési tulajdonságban. Ezzel a tulajdonsággal nem módosíthatók a tulajdonságok az alkalmazás más részeiben.</value>
     
@@ -3458,6 +3624,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Cikk: A Power Apps-beli vászonalapú alkalmazások viselkedési képleteinek ismertetése</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Viselkedési függvény egy nem viselkedési, felhasználó által meghatározott függvényben (UDF). Az UDF-viselkedés deklarálása érdekében tegye kapcsos zárójel ({...}) közé a felhasználó által meghatározott függvénytörzset.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>A viselkedési függvények módosítják az aktuális munkamenet állapotát. A „Clear”, „Collect”, „Patch” és „Refresh” gyakori viselkedési függvények.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Szerkessze a felhasználó által meghatározott függvénykifejezést, hogy az kapcsos zárójelben legyen ({...}).</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3497,6 +3679,10 @@
     <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>A rendszer szöveget vagy számot várt a képlet ezen pontján.</value>
     
@@ -3512,6 +3698,10 @@
     <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>A rendszer záró zárójelet várt a képlet ezen pontján.</value>
     
@@ -3523,12 +3713,23 @@
     <value>Módosítsa a képletet úgy, hogy az zárójelet tartalmazzon.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Az azonosító várt zárása. A rendszer (') záró idézőjelet vár a képlet ezen pontján.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>A szimpla idézőjel egy azonosító végét jelöli (például 'Utónév').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Módosítsa a képletet úgy, hogy szimpla idézőjelet tartalmazzon.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Az azonosító nem tartalmaz érvényes szöveget.</value>
+    <value>Az azonosító üres vagy érvénytelen karaktert tartalmaz, például tabulátort vagy új sor.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Győződjön meg arról, hogy az azonosító szöveget tartalmaz. Ez a hiba akkor fordul elő, ha az azonosító csak üres vagy szóközkarakterekből áll.</value>
+    <value>Győződjön meg arról, hogy az azonosító érvényes szöveget tartalmaz. Ez a hiba akkor fordul elő, ha az azonosító üres, csak szóközöket, tabulátort vagy egy új sort tartalmaz.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3554,8 +3755,16 @@
     <value>Modul: Alapszintű képletek használata</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Modul: Alapszintű képletek készítése táblák és rekordok használatával</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3570,6 +3779,10 @@
     <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Inkompatibilis típus. A frissíteni kívánt adatforrás {0} oszlopa a(z) {1} típust várja, a megadott típus pedig a következő: {2}.</value>
     
@@ -3582,8 +3795,16 @@
     <value>Modul: Alapszintű képletek használata</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Modul: Alapszintű képletek készítése táblák és rekordok használatával</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3596,6 +3817,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3614,8 +3839,16 @@
     <value>Modul: Alapszintű képletek használata</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Modul: Alapszintű képletek készítése táblák és rekordok használatával</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3633,8 +3866,16 @@
     <value>Modul: Alapszintű képletek használata</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Modul: Alapszintű képletek készítése táblák és rekordok használatával</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3650,6 +3891,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3675,8 +3920,16 @@
     <value>Cikk: A vászonalapú alkalmazásban való delegálás ismertetése</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Blog: Adatsor-korlátozások delegálás esetén</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3702,8 +3955,16 @@
     <value>Cikk: A vászonalapú alkalmazásban való delegálás ismertetése</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Blog: Adatsor-korlátozások delegálás esetén</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3733,8 +3994,16 @@
     <value>Cikk: A vászonalapú alkalmazásban való delegálás ismertetése</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Blog: Adatsor-korlátozások delegálás esetén</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3766,8 +4035,70 @@
     <value>Cikk: A vászonalapú alkalmazásban való delegálás ismertetése</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Blog: Adatsor-korlátozások delegálás esetén</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Delegálással kapcsolatos figyelmeztetés. A megnevezett {0} receptúra nem delegálható, így előfordulhat, hogy ezen a receptúrán való használata nem működik megfelelően nagy adathalmazokon. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Előfordulhat, hogy az adatforrás nem tudja feldolgozni a képletet, és hiányos adathalmazt ad vissza. Ha az adathalmaz hiányos, előfordulhat, hogy az alkalmazás helytelen eredményeket ad vissza, vagy nem a várt módon működik.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Próbálja meg leegyszerűsíteni a megnevezett receptúra definícióját.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Cikk: A vászonalapú alkalmazásban való delegálás ismertetése</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Adatsor-korlátozások delegálás esetén</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Delegálással kapcsolatos figyelmeztetés. A felhasználó által meghatározott {0} funkció nem delegálható, így előfordulhat, hogy ezen a receptúrán való használata nem működik megfelelően nagy adathalmazokon. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Előfordulhat, hogy az adatforrás nem tudja feldolgozni a képletet, és hiányos adathalmazt ad vissza. Ha az adathalmaz hiányos, előfordulhat, hogy az alkalmazás helytelen eredményeket ad vissza, vagy nem a várt módon működik.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Próbálja meg leegyszerűsíteni a felhasználó által meghatározott funkció definícióját.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Cikk: A vászonalapú alkalmazásban való delegálás ismertetése</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Adatsor-korlátozások delegálás esetén</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3794,8 +4125,16 @@
     <value>Cikk: A vászonalapú alkalmazásban való delegálás ismertetése</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Blog: Adatsor-korlátozások delegálás esetén</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3824,6 +4163,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Referencia: ConfirmExit vászonalapú alkalmazásokhoz</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3858,12 +4201,24 @@
     <value>A megnevezett képletnek kifejezésnek kell lennie.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>A megnevezett típusnyilatkozatnak érvényes típuskifejezésnek kell lennie.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>A felhasználó által definiált függvénynek rendelkeznie kell egy törzzsel.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>A(z) {0} funkció már meg van határozva.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Figyelem: A felhasználó által definiált {0} függvény el fogja takarni a meglévő beépített {0} függvényt.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>A(z) {0} függvénynév korlátozva van.</value>
     
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
@@ -3875,7 +4230,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>A funkció visszaadott típusa nem egyezik meg a függvénytest visszaküldési típusával.</value>
+    <value>A függvény visszaadott „{0}” típusa nem egyezik meg a(z) „{1}” függvénytörzs visszaküldési típusával.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>A(z) {0} függvény túl sok paraméterrel rendelkezik. A felhasználó által definiált függvények legfeljebb {1} paramétert támogatnak.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +4261,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>A(z) {0} első argumentumának egy érvényes változónévnek kell lennie, amely semmilyen meglévő vezérlő, képernyő, gyűjtemény vagy adatforrás nevével nem ütközhet. A talált típus: {1}</value>
+    <value>„{1}” nem módosítható a következővel: „{0}”, vagy ütközik egy meglévő hatókörű változó, adatforrás vagy más objektum nevével.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4063,6 +4422,10 @@
     <value>A(z) {0} nem delegálható: '{1}' viselkedési függvényt tartalmaz.</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>A CountRows gyorsítótárazott értéket adhat vissza. A legújabb mennyiség beolvasása érdekében használja a CountIf(DataSource, true) függvényt.</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Azt határozza meg, hogy a megadott szöveg megfelel-e a megadott szövegformátumnak.</value>
     
@@ -4156,24 +4519,232 @@
     <value>Érvénytelen reguláris kifejezés.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A beágyazott beállításoknak a reguláris kifejezés elején kell megjelenniük, később „{0}” található.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A beágyazott beállítások az [imnsx] betűk kombinációjára korlátozódnak, a beállítások nem tilthatók le, és nem használhatók alkifejezésben, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: az oktális \0 karakterkódok nem támogatottak, helyettük használjon hexadecimális \x vagy Unicode \u kódokat, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A literális kapcsos zárójeleket fordított perjellel feloldani, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A literális szögletes zárójeleket fordított perjellel kell feloldani, még a karakterosztályokban is, például \[ vagy \], a(z) „{0}” végén található.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Lezáratlan karakterosztály szögletes zárójele.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Nem támogatott speciális csoport, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Az escape-karakter nem engedélyezett a karakterosztályon belül, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A negatív escape-karakter nem engedélyezett a negált karakterosztályon belül, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Az escape-karakter nem engedélyezett a karakterosztályon kívül, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Érvénytelen Unicode-kategórianév, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Ismétlődő beágyazott beállítás, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Be nem zárt beágyazott megjegyzés.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Be nem zárt beágyazott megjegyzés, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A sorközi beállítás nem kompatibilis a MatchOptions.NumberedSubMatches lehetőséggel, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A birtokló mennyiségjelzők nem támogatottak, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A pontos mennyiségjelzők nem használhatók a mennyiségjelző-módosítókkal, mint például „?” karakter a lustára, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Érvénytelen feloldókód, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: „{0}” alegyezés nincs meghatározva, vagy nem támogatott átirányítási hivatkozás.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Az alegyezések nem támogatottak a visszaolvasásokban, a(z) „{0}” végén található.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A visszaolvasásokat nem lehet beágyazni, a(z) „{0}” elején található.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A korlátlan minősítők nem támogatottak a visszaolvasásban, a(z) „{0}” végén találhatók.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A minősítők nem támogatottak a vissza- vagy a előreolvasás esetén, a(z) „{0}” végén találhatók.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: „{0}” visszamutató hivatkozás olyan alegyezésre, amely váltakozás vagy nulla mennyiségjelző miatt nem fordulhat elő.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Az önhivatkozó alegyezések nem támogatottak, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Lezáratlan csoportok, túl kevés záró zárójel.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A meg nem nyitott csoportok, túl kevés nyitó zárójel.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Az egynél többször meghatározott megnevezett alegyezés a(z) „{0}” elején található.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Az alegyezés nevének szókarakterek kombinációjából kell állnia, és nem kezdődhet számmal, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A beágyazott beállításoknak a reguláris kifejezés elején kell megjelenniük, később „{0}” található.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A karakter többször is előfordul a karakterosztályban, a(z) „{0}” elemben található ismétlődve.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A szögletes zárójel karakterosztályai nem lehetnek üresek, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A kiegyenlítő alegyezések nem támogatottak, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Az szimpla idézőjellel ellátott elnevezett rögzítések használata nem támogatott, használja inkább a (?&lt;...&gt;) szintaxist, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A feltételes váltakozás nem támogatott, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Az elnevezett rögzítések nem használhatók, ha engedélyezve van a MatchOptions.NumberedSubMatches, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Használjon elnevezett rögzítéseket a „(?&lt;name&gt;...)” és „\k&lt;name&gt;” lehetőséggel, vagy engedélyezze a MatchOptions.NumberedSubMatches elemet, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A karakterosztályban lévő literális kötőjelet fel kell oldani egy fordított perjellel, feloldás a „\-” kombinációval, itt található: „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A literális karaktert fordított perjellel kell lefoglalni, ha karakterosztályban használják, amely a(z) „{0}” végén található.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Olyan csoport mennyiségjelzője, amely egy másik mennyiségjelzőt vagy üres váltakozást tartalmaz, ami kétértelmű eredményhez vezethet, a(z) „{0}” végén található.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A visszaolvasás túllépte a 250-es maximális karakterkorlátot, amely a(z) „{0}” végén található.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A mennyiségjelző tartományának alacsony száma nagyobb, mint a nagy szám, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Túl sok beágyazott csoport található a(z) „{0}” elején.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Az alegyezés neve túl hosszú, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A szám túl nagy, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A karakterosztály-tartomány karakterei meg lettek fordítva, a(z) „{0}” végén találhatók.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Karakterosztály egy karakterosztály-tartományban, vagy egy fordított perjellel oldjon fel egy literális kötőjelet, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Nem feloldott perjellel végződik.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: Mennyiségjelző számszerűsítés nélkül, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: A MatchOptions.DotAll és a MatchOptions.FreeSpacing csak Power Fx V1 esetén érhető el, „{0}” találat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés: „{0}” visszamutató hivatkozás olyan alegyezésre, amely egy vissza- vagy előreolvasási ponton belül van.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>A reguláris kifejezéseknek konstans értékeknek kell lenniük.</value>
+    <value>A reguláris kifejezésnek konstans értéknek kell lennie.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>A MatchOptions elemnek állandó értéknek kell lennie.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>A függvénynek átadott '{0}' érték nem módosítható.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>A(z) {0} rögzítésnév elrejti az előre definiált tulajdonságot, amely a reguláris kifejezéssel való teljes egyezést adja vissza. Fontolja meg annak átnevezését, ha ki szeretné nyerni a megadott szövegben található teljes egyezést az elnevezett tulajdonsággal.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>A(z) „{0}” rögzítési név előre meghatározott tulajdonságot rejt, amely egyezéssel kapcsolatos információkat ad vissza. Érdemes lenne átnevezni, ha hozzá szeretne férni az egyezési információkhoz.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>A(z) {0} rögzítésnév elrejti az előre definiált tulajdonságot, amely a reguláris kifejezésben található csoporttalálatokat adja vissza. Fontolja meg annak átnevezését, ha ki szeretné nyerni a megadott szövegben található résztalálatokat az elnevezett tulajdonsággal.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>A(z) {0} rögzítésnév elrejti az előre definiált tulajdonságot, amely a reguláris kifejezéssel való egyezés helyét adja vissza. Fontolja meg annak átnevezését, ha ki szeretné nyerni a megadott szövegben található teljes egyezés helyét az elnevezett tulajdonsággal.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>A(z) „{0}” készletben lévő rögzítési nevek előre meghatározott tulajdonságokat rejtenek, amelyek egyezéssel kapcsolatos információkat adnak vissza. Érdemes lenne átnevezni őket, ha hozzá szeretne férni az egyezési információkhoz.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4209,16 +4780,20 @@
     <value>Ha egy online adatforrásértékkel (tábla vagy rekord) rendelkező változót akar beállítani, az több kérést hozhat létre a kiszolgálón. Ez hamarosan tiltott lesz.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>A literális deklaráció típusa érvénytelen. A(z) '{0}' kifejezés nem használható típusmeghatározásban.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>A típus kifejezése érvénytelen. A(z) „{0}” nem használható típuskifejezésben.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>A beírt {0} típusmeghatározás érvénytelen.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Nem támogatott használat: a Type függvény csak típusargumentumokban és típusmeghatározásokban használható.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>A beírt {0} típusnyilatkozat érvénytelen.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>A beírt {0} típusmeghatározás érvénytelen, és ciklusokat tartalmazhat.</value>
+    <value>A beírt {0} típusnyilatkozat érvénytelen, és ciklusokat tartalmazhat.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4419,6 +4994,16 @@
     <value>Ismeretlen Partial operátor.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Az az adatforrás, amelyhez adatokat kell hozzáadni.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A gyűjteménybe felveendő rekord vagy tábla. A megadott rekordot hozzáfűzi a függvény az adatforráshoz. Tábla megadása esetén a tábla sorait fűzi hozzá a függvény az adatforráshoz.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>elem</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Delegálási figyelmeztetés. Lehet, hogy ezen '{0}' argumentum eredményét a rendszer csonkolja nagy adathalmazokért, mielőtt átadja a(z) '{1}' függvénynek.</value>
     
@@ -4461,8 +5046,96 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>A törölni kívánt forrás.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Olyan adatokat kér le, amelyek kapcsolatokkal rendelkeznek és több táblán átívelnek.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>forrás1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>forrás2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>nevező</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>A bal tábla vagy gyűjtemény.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>A jobb tábla vagy gyűjtemény.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Két tábla vagy gyűjtemény csatlakozási feltételei.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Két tábla vagy gyűjtemény közti csatlakozási típus.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Azok az argumentumok, amelyekkel átnevezheti az egyik forrásban lévő oszlopot.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>A megadott adatforrás nem használható ezzel a függvénnyel.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Érvénytelen „{0}” argumentum. A várt érvényes típus neve vagy beágyazott típusú kifejezés.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Nem támogatott „{0}” típus a típusargumentumban.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Elérte a maximális mélységet a JSON hasznos adat végigjárása során.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Elérte a JSON függvény maximális hosszát.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Nincs engedélyezve a „Felhasználói típus” kísérleti funkció.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Helytelen szintaxis: az „=” nem használható a felhasználói típusok meghatározásához. Használja inkább a „:=” lehetőséget.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>A(z) „{0}” nem adható hozzá/nevezhető át, mert ütközik egy azonos nevű oszloppal.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Várt egyszerű „JoinType” felsorolási érték. Eltérő felsorolások vagy egy másik függvényen keresztüli átadás nem támogatott, azaz Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Az 5. pozíciótól kezdődő argumentumok az oszlopok átnevezésére használandók, és várhatóan „As” csomópontargumentumok, azaz LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Legalább egy „{0}” oszlopot deklarálni kell a csatlakozási eredmény beviteléhez.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>A(z) „{0}” érték érvénytelen ebben a kontextusban. A(z) „{1}” vagy „{2}” hatókör nevére kell hivatkoznia.</value>
     
   </data>
 </root>

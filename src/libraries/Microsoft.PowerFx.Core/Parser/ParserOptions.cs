@@ -48,11 +48,6 @@ namespace Microsoft.PowerFx
         public int MaxExpressionLength { get; set; }
 
         /// <summary>
-        /// Flag for parse type literals.
-        /// </summary>
-        internal bool AllowParseAsTypeLiteral { get; set; }
-
-        /// <summary>
         /// Allow parsing of attributes on user definitions
         /// This is an early prototype, and so is internal.
         /// </summary>

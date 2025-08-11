@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Texl
 {
@@ -16,13 +17,21 @@ namespace Microsoft.PowerFx.Core.Texl
         // This is the list of Power Apps functions that aren't supported/implemeted in Power Fx
         // Binder will recognize these functions names and return a "recognized but not yet supported function" message 
         // instead of the classic "unknown or unsupported function".
+
+        // This list also contains functions that are added to the interpreter at runtime and dont have their definitions
+        // included into the BuiltinFunctionsLibrary library. Examples: Set, Join.
         internal static readonly IReadOnlyCollection<string> OtherKnownFunctions = new HashSet<string>()
         {
-            "Assert", "Back", "Choices", "ClearData", "Concurrent", "Confirm", "Copy", "DataSourceInfo", "Defaults", "Disable", "Distinct", "Download", "EditForm", "Enable", "Errors", "Exit", "GUID",
-            "GroupBy", "HashTags", "IsMatch", "IsType", "JSON", "Launch", "LoadData", "Match", "MatchAll", "Navigate", "NewForm", "Notify", "PDF", "Param", "Pending", "Print", "ReadNFC",
+            "Assert", "Back", "Choices", "ClearData", "Concurrent", "Confirm", "Copy", "DataSourceInfo", "Defaults", "Disable", "Distinct", "Download", "EditForm", "Enable", "Errors", "Exit",
+            "GroupBy", "HashTags", "IsMatch", "IsType", "Join", "JSON", "Launch", "LoadData", "Match", "MatchAll", "Navigate", "NewForm", "Notify", "PDF", "Param", "Pending", "Print", "ReadNFC",
             "RecordInfo", "Relate", "RemoveAll", "RemoveIf", "RequestHide", "Reset", "ResetForm", "Revert", "SaveData", "ScanBarcode", "Select", "SetFocus",
             "SetProperty", "ShowColumns", "State", "SubmitForm", "TraceValue", "Ungroup", "Unrelate", "Update", "UpdateContext", "UpdateIf", "User", "Validate", "ValidateRecord", "ViewForm",
             "Collect", "Clear", "Patch", "Remove", "ClearCollect", "Set"
+        };
+
+        internal static readonly IReadOnlyCollection<string> TypeHelperFunctions = new HashSet<string>()
+        {
+            LanguageConstants.RecordOfInvariantName,
         };
 
         // Functions in this list are shared and may show up in other hosts by default.
@@ -41,6 +50,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Asin = _library.Add(new AsinFunction());
         public static readonly TexlFunction AsinT = _library.Add(new AsinTableFunction());
         public static readonly TexlFunction AsType = _library.Add(new AsTypeFunction());
+        public static readonly TexlFunction AsType_UO = _library.Add(new AsTypeFunction_UO());
         public static readonly TexlFunction Atan = _library.Add(new AtanFunction());
         public static readonly TexlFunction Atan2 = _library.Add(new Atan2Function());
         public static readonly TexlFunction AtanT = _library.Add(new AtanTableFunction());
@@ -128,10 +138,12 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction IsBlankOrError = _library.Add(new IsBlankOrErrorFunction());
         public static readonly TexlFunction IsBlankOrErrorOptionSetValue = _library.Add(new IsBlankOrErrorOptionSetValueFunction());
         public static readonly TexlFunction IsEmpty = _library.Add(new IsEmptyFunction());
+        public static readonly TexlFunction IsEmpty_UO = _library.Add(new IsEmptyFunction_UO());
         public static readonly TexlFunction IsError = _library.Add(new IsErrorFunction());
         public static readonly TexlFunction IsNumeric = _library.Add(new IsNumericFunction());
         public static readonly TexlFunction ISOWeekNum = _library.Add(new ISOWeekNumFunction());
         public static readonly TexlFunction IsToday = _library.Add(new IsTodayFunction());
+        public static readonly TexlFunction IsType_UO = _library.Add(new IsTypeFunction_UO());
         public static readonly TexlFunction Language = _library.Add(new LanguageFunction());
         public static readonly TexlFunction Last = _library.Add(new FirstLastFunction(isFirst: false));
         public static readonly TexlFunction Last_UO = _library.Add(new FirstLastFunction_UO(isFirst: false));
@@ -230,6 +242,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction TrimT = _library.Add(new TrimTFunction());
         public static readonly TexlFunction Trunc = _library.Add(new TruncFunction());
         public static readonly TexlFunction TruncT = _library.Add(new TruncTableFunction());
+        public static readonly TexlFunction TypedParseJSON = _library.Add(new TypedParseJSONFunction());
         public static readonly TexlFunction UniChar = _library.Add(new UniCharFunction());
         public static readonly TexlFunction UniCharT = _library.Add(new UniCharTFunction());
         public static readonly TexlFunction Upper = _library.Add(new LowerUpperFunction(isLower: false));
@@ -273,7 +286,10 @@ namespace Microsoft.PowerFx.Core.Texl
 
         public static bool IsKnownPublicFunction(string functionName)
         {
-            if (_library.AnyWithName(functionName) || OtherKnownFunctions.Contains(functionName) || _featureGateFunctions.AnyWithName(functionName))
+            if (_library.AnyWithName(functionName) || 
+                OtherKnownFunctions.Contains(functionName) || 
+                _featureGateFunctions.AnyWithName(functionName) ||
+                TypeHelperFunctions.Contains(functionName))
             {
                 return true;
             }

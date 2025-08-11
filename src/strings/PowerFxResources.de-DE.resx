@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Ein Prozentsatz (oder eine Spalte mit Prozentsätzen), der das Maß der Ausbleichung der Farbe (oder einer Spalte mit Farbwerten) angibt. Negative Prozentsätze führen zu dunkleren Farbtönen, positive zu helleren.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Gibt einen Datensatz mit Informationen zu einer Datei zurück.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>Der Datei-BLOB zum Abrufen von Informationen.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>Datei</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Gibt den Absolutwert einer Zahl zurück, eine Zahl ohne Vorzeichen.</value>
     
@@ -1773,7 +1784,7 @@
     
   </data>
   <data name="ColumnArg2" xml:space="preserve">
-    <value>spaltenname</value>
+    <value>Spaltenname</value>
     
   </data>
   <data name="AboutColumn_record" xml:space="preserve">
@@ -1796,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Gibt TRUE zurück, wenn der angegebene nicht typisierte Wert dem angegebenen Typ entspricht.</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>Typ</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>Der nicht typisierte Wert, für den überprüft werden soll, ob er in einen angegebenen Typ umgewandelt werden kann.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>Der Typ, auf den untypedValue überprüft werden soll.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Verwendet den angegebenen Wert als vorgegebenen Typ.</value>
     
@@ -1813,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>Die Entitätstabelle, die den Typ darstellt, als der der Wert verwendet werden soll.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Prüft und verwendet den angegebenen nicht typisierten Wert als vorgegebenen Typ.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>Typ</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>Der nicht typisierte Wert, der in einen neuen Typ umgewandelt werden soll.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>Der Typ, als der der Wert verwendet werden soll.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Wendet die über den zweiten Parameter angegebene Formel unter Verwendung des im ersten Parameter angegebenen Bereichs an.</value>
@@ -1868,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>„{0}“ ist eine unbekannte oder nicht unterstützte Funktion.</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>„{0}“ wird als Hilfsfunktion erkannt und kann nur innerhalb der Type-Funktion verwendet werden.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -1982,10 +2033,6 @@
     <value>Das erste Argument von „{0}“ sollte ein Datensatz sein.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Zur Verwendung dieses Optionssatzes als Enumerationswert oder in der Choices-Funktion muss die Entität "{0}" als Datenquelle hinzugefügt werden. Verwenden Sie zum Hinzufügen das Menü "Ansicht", und wählen Sie dann "Datenquellen" aus.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Auf die angegebene Eigenschaft kann in diesem Kontext nicht zugegriffen werden.</value>
     
@@ -2026,10 +2073,6 @@
     <value>Das Argument stellt keinen gültigen Datums- oder Uhrzeitwert dar.</value>
     
   </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Diese Datenquelle ist ungültig. Beheben Sie den Fehler im Abschnitt „Datenquellen“, indem Sie auf „Inhalt &gt; Datenquellen“ oder „Ansicht &gt; Optionen“ klicken.</value>
-    
-  </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>Es wurde ein Datenquellenbezeichner zur Einschränkung des Inlinedatensatzes erwartet.</value>
     
@@ -2068,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Spaltennamenkonflikt für „{0}“.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Systemdatensätzen oder Tabellen mit Systemdatensätzen können keine Spalten hinzugefügt werden. Verwenden Sie zuerst ShowColumns, um die benötigten Spalten zu extrahieren.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Spalten von Systemdatensätzen oder von Tabellen mit Systemdatensätzen können nicht umbenannt werden. Verwenden Sie zuerst ShowColumns, um die benötigten Spalten zu extrahieren.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -2670,6 +2721,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Eine zu verarbeitende JSON-Zeichenfolge.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>Konvertiert eine JSON-Zeichenfolge in ein typisiertes Objekt.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>Zeichenfolge</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>Eine JSON-Zeichenfolge, die in ein typisiertes Objekt konvertiert werden soll.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>Typ</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>Eine eingebettete Typdefinition oder ein global definierter benannter Typ.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Gibt den Datensatz in einer Tabelle zu einem bestimmten Index zurück.</value>
     
@@ -2687,6 +2756,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Der Index des Datensatzes, der abgerufen werden soll.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2707,6 +2788,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Barcodetyp</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2823,6 +2936,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Der zu prüfende Wert.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Konvertiert ein Datum und eine Uhrzeit in Textform in eine Zahl, die im Power Apps-Code für Datum und Uhrzeit das Datum darstellt.</value>
@@ -3098,32 +3215,33 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Fügt Datensätze zu einer Datenquelle hinzu.</value>
+    <value>Fügt der angegebenen Sammlung ein oder mehrere Element(e) hinzu. Die Elemente können aus einer anderen Tabelle oder Sammlung (z. B. Collect(collection, source_collection)) oder aus Datensätzen (Collect(collection, {key1: val1, key2: val2, ...}, ...)) stammen.</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>Datenquelle</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>Datensatz</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>Sammlung</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>Element</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Eine neue oder vorhandene, zu vergrößernde Sammlung.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Löscht alle Datensätze aus einer Sammlung, und fügt dann einen anderen Datensatz zu derselben Sammlung hinzu.</value>
+    <value>Löscht zuerst die Sammlung und fügt der angegebenen Sammlung ein oder mehrere Element(e) hinzu. Die Elemente können aus einer anderen Tabelle oder Sammlung (z. B. ClearCollect(collection, source_collection)) oder aus Datensätzen (ClearCollect(collection, {key1: val1, key2: val2, ...}, ...)) stammen.</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>Datenquelle</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Eine neue oder vorhandene, zu vergrößernde Sammlung.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>Datenquelle</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>Datensatz</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Ein zu erfassender Datensatz oder eine zu erfassende Tabelle. Ein Datensatz wird an die Sammlung angefügt. Bei einer Tabelle werden die Zeilen an die Sammlung angefügt.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Wendet die Updates auf die angegebene Zeile an und ändert die Zeile in der angegebenen Datenquelle. Gibt die aktualisierte Zeile zurück.</value>
@@ -3259,6 +3377,10 @@
     <value>Artikel: Formelreferenz für Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Unerwartetes Zeichen „{0}“ an der Stelle „{1}“ in der Formel.</value>
     
@@ -3271,6 +3393,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikel: Formelreferenz für Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3288,6 +3414,10 @@
     <value>Artikel: Formelreferenz für Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Unerwartete Zeichen. Die Formel enthält „{0}“, es wird aber „{1}“ erwartet.</value>
     
@@ -3301,6 +3431,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Artikel: Formelreferenz für Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3318,6 +3452,10 @@
     <value>Artikel: Formelreferenz für Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Der Name ist ungültig. Dieser Bezeichner wird nicht erkannt.</value>
     
@@ -3331,6 +3469,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artikel: Formelreferenz für Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3348,6 +3490,10 @@
     <value>Artikel: Formelreferenz für PowerApps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>Der Verweis auf „Parent“ ist ungültig. Sie können in diesem Kontext nicht auf ein übergeordnetes Steuerelement verweisen.</value>
     
@@ -3361,6 +3507,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Artikel: Hinzufügen und Konfigurieren eines Canvas-App-Steuerelements in Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3400,6 +3550,10 @@
     <value>Modul: Verwenden grundlegender Formeln</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Zahl erwartet. An dieser Stelle in der Formel wird eine Zahl erwartet.</value>
     
@@ -3413,6 +3567,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Artikel: Formelreferenz für Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3430,6 +3588,10 @@
     <value>Artikel: Formelreferenz für Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Doppelpunkt erwartet. An dieser Stelle in der Formel wird ein Doppelpunkt (:) erwartet.</value>
     
@@ -3445,6 +3607,10 @@
     <value>Artikel: Anzeigen von Text, Datums- und Zeitangaben in Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Verhaltensfunktion in einer nicht verhaltensbezogenen Eigenschaft. Diese Eigenschaft kann nicht zum Ändern von Werten an anderer Stelle in der App verwendet werden.</value>
     
@@ -3458,6 +3624,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Artikel: Verstehen von Verhaltensformeln für Canvas-Apps in Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Verhaltensfunktion in einer nicht verhaltensbasierten benutzerdefinierten Funktion (User-Defined Function, UDF). Schließen Sie den benutzerdefinierten Funktionskörper in geschweiften Klammern ({...}) ein, um eine verhaltensbasierte UDF zu deklarieren.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Verhaltensfunktionen ändern den aktuellen Sitzungsstatus. „Clear“, „Collect“, „Patch“ und „Refresh“ sind allgemeine Verhaltensfunktionen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Bearbeiten Sie den benutzerdefinierten Funktionsausdruck, indem Sie ihn in geschweiften Klammern einschließen ({...}).</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3497,6 +3679,10 @@
     <value>Artikel: Formelreferenz für Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Text oder Zahl erwartet. An dieser Stelle in der Formel wird Text oder eine Zahl erwartet.</value>
     
@@ -3512,6 +3698,10 @@
     <value>Artikel: Formelreferenz für Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Schließende Klammer erwartet. An dieser Stelle in der Formel wird eine schließende geschweifte Klammer (}) erwartet.</value>
     
@@ -3523,12 +3713,23 @@
     <value>Bearbeiten Sie Ihre Formel so, dass sie eine Klammer enthält.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Es wird erwartet, dass der Bezeichner geschlossen wird. An diesem Punkt in der Formel wird ein schließendes (') erwartet.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Ein schließendes einfaches Anführungszeichen gibt das Ende eines Bezeichners an (z. B. 'Vorname').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Bearbeiten Sie Ihre Formel so, dass sie ein schließendes einfaches Anführungszeichen enthält.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Der Bezeichner enthält keinen gültigen Text.</value>
+    <value>Der Bezeichner ist leer oder enthält ein ungültiges Zeichen, z. B. einen Tabulator oder Zeilenumbruch.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Stellen Sie sicher, dass für Ihren Bezeichner Text vorliegt. Dieser Fehler tritt auf, wenn der Bezeichner nur Leerzeichen enthält.</value>
+    <value>Überprüfen Sie, ob der Text im Bezeichner gültig ist. Dieser Fehler tritt auf, wenn der Bezeichner leer ist, lediglich Leerzeichen enthält oder einen Tabulator oder Zeilenumbruch enthält.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3554,8 +3755,16 @@
     <value>Modul: Verwenden grundlegender Formeln</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Modul: Erstellen grundlegender Formeln mit Tabellen und Datensätzen</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3570,6 +3779,10 @@
     <value>Artikel: Formelreferenz für Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Nicht kompatibler Typ. Die Spalte „{0}“ in der zu aktualisierenden Datenquelle erwartet einen Typ „{1}“, aber Sie verwenden einen Typ „{2}“.</value>
     
@@ -3582,8 +3795,16 @@
     <value>Modul: Verwenden grundlegender Formeln</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Modul: Erstellen grundlegender Formeln mit Tabellen und Datensätzen</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3596,6 +3817,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Artikel: Formelreferenz für Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3614,8 +3839,16 @@
     <value>Modul: Verwenden grundlegender Formeln</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Modul: Erstellen grundlegender Formeln mit Tabellen und Datensätzen</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3633,8 +3866,16 @@
     <value>Modul: Verwenden grundlegender Formeln</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Modul: Erstellen grundlegender Formeln mit Tabellen und Datensätzen</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3650,6 +3891,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Artikel: Formelreferenz für Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3675,8 +3920,16 @@
     <value>Artikel: Verstehen der Delegierung in einer Canvas-App</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Blog: Datenzeilengrenzwerte für die Delegierung</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3702,8 +3955,16 @@
     <value>Artikel: Verstehen der Delegierung in einer Canvas-App</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Blog: Datenzeilengrenzwerte für die Delegierung</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3733,8 +3994,16 @@
     <value>Artikel: Verstehen der Delegierung in einer Canvas-App</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Blog: Datenzeilengrenzwerte für die Delegierung</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3766,8 +4035,70 @@
     <value>Artikel: Verstehen der Delegierung in einer Canvas-App</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Blog: Datenzeilengrenzwerte für die Delegierung</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Delegierungswarnung. Die benannte Formel {0} kann nicht delegiert werden. Daher funktioniert ihre Verwendung in dieser Formel in großen Datasets möglicherweise nicht ordnungsgemäß. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Die Datenquelle kann die Formel möglicherweise nicht verarbeiten und könnte ein unvollständiges Dataset zurückgeben. Ihre Anwendung liefert eventuell keine korrekten Ergebnisse oder verhält sich nicht ordnungsgemäß, wenn das Dataset unvollständig ist.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Vereinfachen Sie die Definition für die benannte Formel.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Artikel: Verstehen der Delegierung in einer Canvas-App</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Datenzeilengrenzwerte für die Delegierung</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Delegierungswarnung. Die benutzerdefinierte Funktion {0} kann nicht delegiert werden. Daher funktioniert ihre Verwendung in dieser Formel in großen Datasets möglicherweise nicht ordnungsgemäß. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Die Datenquelle kann die Formel möglicherweise nicht verarbeiten und könnte ein unvollständiges Dataset zurückgeben. Ihre Anwendung liefert eventuell keine korrekten Ergebnisse oder verhält sich nicht ordnungsgemäß, wenn das Dataset unvollständig ist.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Vereinfachen Sie die Definition für die benutzerdefinierte Funktion.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Artikel: Verstehen der Delegierung in einer Canvas-App</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Datenzeilengrenzwerte für die Delegierung</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3794,8 +4125,16 @@
     <value>Artikel: Verstehen der Delegierung in einer Canvas-App</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Blog: Datenzeilengrenzwerte für die Delegierung</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3824,6 +4163,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Referenz: ConfirmExit für Canvas-Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3858,12 +4201,24 @@
     <value>Die benannte Formel muss ein Ausdruck sein.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Eine benannte Typdeklaration muss ein gültiger Typausdruck sein.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Die benutzerdefinierte Funktion muss einen Textkörper aufweisen.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Funktion {0} ist bereits definiert.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Warnung: Die vom Benutzer definierte Funktion {0} spiegelt die vorhandene integrierte Funktion {0} wider.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Der Funktionsname {0} ist eingeschränkt.</value>
     
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
@@ -3875,7 +4230,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Der Rückgabetyp der angegebenen Funktion passt nicht zum Rückgabetyp des Funktionstextkörpers.</value>
+    <value>Der Rückgabetyp „{0}“ der angegebenen Funktion passt nicht zum Rückgabetyp des Funktionstextkörpers „{1}“.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Die Funktion {0} verfügt über zu viele Parameter. Vom Benutzer definierte Funktionen unterstützen bis zu {1} Parameter.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +4261,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Das erste Argument von "{0}" muss ein gültiger Variablenname sein, der nicht in Konflikt mit vorhandenen Steuerelement-, Bildschirm-, Sammlungs- oder Datenquellennamen stehen darf. Gefundener Typ: "{1}"</value>
+    <value>„{1}“ kann nicht mit „{0}“ geändert werden bzw. steht im Konflikt mit dem Namen einer vorhandenen Bereichsvariable, Datenquelle oder einem anderen Objekt.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4063,6 +4422,10 @@
     <value>{0} kann nicht delegiert werden: Enthält eine Verhaltensfunktion „{1}“.</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows gibt möglicherweise einen zwischengespeicherten Wert zurück. Verwenden Sie CountIf(DataSource, true), um die aktuelle Anzahl zu erhalten.</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Ermittelt, ob der angegebene Text dem angegebenen Textformat entspricht.</value>
     
@@ -4156,24 +4519,232 @@
     <value>Ungültiger regulärer Ausdruck.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Inlineoptionen müssen zu Beginn des regulären Ausdrucks erscheinen, „{0}“ später gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Inlineoptionen sind auf Kombinationen der Buchstaben [imnsx] begrenzt, dürfen keine Optionen deaktivieren und dürfen nicht mit einem Unterausdruck verwendet werden, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Oktale \0-Zeichencodes werden nicht unterstützt. Verwenden Sie stattdessen \x (hexadezimal) oder \u (Unicode), „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Geschweifte Literal-Klammern müssen mit einem umgekehrten Schrägstrich als Escapezeichen gekennzeichnet werden, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Quadratische Literal-Klammern müssen auch in Zeichenklassen mit einem umgekehrten Schrägstrich als Escapezeichen gekennzeichnet werden, z. B. \[ oder \], am Ende von „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: nicht geschlossene Zeichenklasse, quadratische Klammer.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Nicht unterstützte spezielle Gruppe, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Escapezeichen sind innerhalb der Zeichenklasse nicht zulässig, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Negative Escapezeichen sind innerhalb der Negativzeichenklasse nicht zulässig, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Escapezeichen sind außerhalb einer Zeichenklasse nicht zulässig, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Ungültiger Unicode-Kategoriename, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: wiederholte Inlineoption, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: nicht geschlossener Inlinekommentar.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: nicht geschlossener Inlinekommentar, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Inlineoption ist nicht mit MatchOptions.NumberedSubMatches kompatibel, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Possessive Quantifizierer werden nicht unterstützt, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Exakte Quantifizierer dürfen nicht mit Quantifizierungsmodifizierern wie ? für „Lazy“ verwendet werden, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Ungültiger Escapecode, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Die untergeordnete Übereinstimmung „{0}“ ist nicht definiert oder eine nicht unterstützte Forward-Referenz.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Untergeordnete Übereinstimmungen werden in Lookbehinds nicht unterstützt, am Anfang von „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Lookbehinds dürfen nicht verschachtelt sein, am Anfang von „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Unbegrenzte Quantifizierer werden in Lookbehinds nicht unterstützt, am Ende von „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Quantifizierer werden in Lookbehinds oder Lookaheads nicht unterstützt, am Ende von „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Referenzieren Sie „{0}“ zurück zur untergeordneten Übereinstimmung, die aufgrund einer Alternierung oder eines Null-Quantifizierers möglicherweise nicht eintritt.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Selbstreferenzierende untergeordnete Übereinstimmungen werden nicht unterstützt, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: nicht geschlossene Gruppen, zu wenig schließende Klammern.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: nicht geöffnete Gruppen, zu wenig öffnende Klammern.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Die benannte untergeordnete Übereinstimmung wurde mehr als einmal definiert, am Anfang von „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Der Name der untergeordneten Übereinstimmung muss eine Kombination aus Wortzeichen sein und darf nicht mit einer Zahl beginnen, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Inlineoptionen müssen zu Beginn des regulären Ausdrucks erscheinen, „{0}“ später gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Zeichen ist mehr als einmal in der Zeichenklasse enthalten, „{0}“ wiederholt gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Zeichenklassen in quadratischen Klammern dürfen nicht leer sein, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Der Ausgleich von untergeordneten Übereinstimmungen wird nicht unterstützt, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Die Verwendung von benannten Erfassungen in einfachen Anführungszeichen wird nicht unterstützt. Verwenden Sie stattdessen die Syntax (?&lt;...&gt;), „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Bedingtes Alternieren wird nicht unterstützt, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Benannte Erfassungen dürfen nicht verwendet werden, wenn MatchOptions.NumberedSubMatches aktiviert sind, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Verwenden Sie benannte Erfassungen mit „(?&lt;name&gt;...)“ und „\k&lt;name&gt;“, oder aktivieren Sie MatchOptions.NumberedSubMatches, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Literal-Bindestrich in einer Zeichenklasse muss mit einem umgekehrten Schrägstrich „\-“, als Escapezeichen gekennzeichnet werden, in „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Literalzeichen muss bei Verwendung in einer Zeichenklasse mit einem umgekehrten Schrägstrich als Escapezeichen gekennzeichnet werden, am Ende von „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Quantifizierer für eine Gruppe enthält einen weiteren Quantifizierer oder eine leere Alternierung, was zu einem mehrdeutigen Ergebnis führen könnte, am Ende von „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Lookbehind hat die maximal zulässige Zeichenzahl von 250 überschritten, am Ende von „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Die untere Zahl des Quantifiziererbereichs ist größer als die obere Zahl, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Zu viele verschachtelte Gruppen, am Anfang von „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Name der untergeordneten Übereinstimmung ist zu lang, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Die Zahl ist zu groß, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Die Zeichen in einem Zeichenklassenbereich sind umgekehrt, am Ende von „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Zeichenklasse in einem Zeichenklassenbereich, oder kennzeichnen Sie einen Literal-Bindestrich mit einem umgekehrten Schrägstrich, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Endet mit einem umgekehrten Schrägstrich ohne Escapezeichen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Quantifizierer, jedoch nichts zu quantifizieren, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: MatchOptions.DotAll und MatchOptions.FreeSpacing sind nur für Power Fx V1 verfügbar, „{0}“ gefunden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck: Referenzieren Sie „{0}“ zurück zur untergeordneten Übereinstimmung innerhalb eines Lookbehind oder Lookahead.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Reguläre Ausdrücke müssen konstante Werte sein.</value>
+    <value>Regulärer Ausdruck muss ein konstanter Wert sein.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions muss ein konstanter Wert sein.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Der Wert, der an die Funktion „{0}“ übergeben wurde, kann nicht geändert werden.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Durch den Aufzeichnungsnamen "{0}" wird die vordefinierte Eigenschaft ausgeblendet, die die vollständige Übereinstimmung des regulären Ausdrucks zurückgibt. Sie sollten ihn umbenennen, wenn Sie diese benannte Eigenschaft zum Extrahieren der vollständigen Übereinstimmung im angegebenen Text verwenden möchten.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Der Erfassungsname „{0}“ verbirgt eine vordefinierte Eigenschaft, die Übereinstimmungsinformationen zurückgibt. Benennen Sie diesen um, wenn Sie auf die Übereinstimmungsinformationen zugreifen möchten.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Durch den Aufzeichnungsnamen "{0}" wird die vordefinierte Eigenschaft ausgeblendet, die die Gruppenübereinstimmungen des regulären Ausdrucks zurückgibt. Sie sollten ihn umbenennen, wenn Sie diese benannte Eigenschaft zum Extrahieren aller untergeordneten Übereinstimmungen im angegebenen Text verwenden möchten.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Durch den Aufzeichnungsnamen "{0}" wird die vordefinierte Eigenschaft ausgeblendet, die die Position der Übereinstimmung des regulären Ausdrucks zurückgibt. Sie sollten ihn umbenennen, wenn Sie diese benannte Eigenschaft zum Extrahieren der Position der vollständigen Übereinstimmung im angegebenen Text verwenden möchten.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Die Erfassungsnamen im Satz „{0}“ verbergen vordefinierte Eigenschaften, die Übereinstimmungsinformationen zurückgeben. Benennen Sie diese um, wenn Sie auf die Übereinstimmungsinformationen zugreifen möchten.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4209,16 +4780,20 @@
     <value>Das Festlegen einer Variablen mit einem Onlinedatenquellenwert (Tabelle oder Datensatz) kann mehrere Anfragen an den Server verursachen. Dies wird demnächst blockiert.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Die Literaltyperklärung ist ungültig. Der Ausdruck „{0}“ kann nicht in einer Typdefinition verwendet werden.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Typausdruck ist ungültig. „{0}“ kann nicht in einer Typdefinition verwendet werden.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Die Definition des Typs {0} ist ungültig.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Nicht unterstützte Verwendung: Die Type-Funktion kann nur in Typargumenten und Typdeklarationen verwendet werden.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Deklaration des Typs {0} ist ungültig.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Die Definition des Typs {0} ist ungültig und kann Zyklen enthalten.</value>
+    <value>Deklaration des Typs {0} ist ungültig und enthält möglicherweise Zyklen.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4419,6 +4994,16 @@
     <value>Unbekannter Partial-Operator</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Die Datenquelle, der Daten hinzugefügt werden.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Ein zu erfassender Datensatz oder eine zu erfassende Tabelle. Ein Datensatz wird an die Datenquelle angefügt. Bei einer Tabelle werden die Zeilen an die Datenquelle angefügt.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>Element</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Delegierungswarnung. Das Ergebnis dieses Arguments „{0}“ kann für große Datensätze abgeschnitten werden, bevor es an die Funktion „{1}“ übergeben wird.</value>
     
@@ -4461,8 +5046,96 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Die zu löschende Quelle.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Ruft Daten ab, die sich über mehrere Tabellen mit Beziehungen erstrecken.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>Quelle1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>Quelle2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>Nenner</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Die linke Tabelle oder Sammlung.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Die rechte Tabelle oder Sammlung.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Die Join-Kriterien zwischen den beiden Tabellen oder Sammlungen.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Der Join-Typ der beiden Tabellen oder Sammlungen.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Die Argumente für die Umbenennung einer vorhandenen Spalte in einer der Quellen.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Die angegebene Datenquelle kann nicht mit dieser Funktion verwendet werden.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Ungültiges Argument „{0}“. Es wurde ein gültiger Typname oder Inline-Typausdruck erwartet.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Nicht unterstützter Typ „{0}“ im Typargument.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Die maximale Tiefe, die beim Durchlaufen der JSON-Payload erreicht wird.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Die maximale Länge in der JSON-Funktion wurde erreicht.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Das experimentelle Feature „Benutzerdefinierte Typen“ ist nicht aktiviert.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Falsche Syntax: „=“ darf nicht zum Deklarieren benutzerdefinierter Typen verwendet werden. Verwenden Sie stattdessen „:=“.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>„{0}“ kann nicht hinzugefügt/umbenannt werden, da es mit einer anderen Spalte mit demselben Namen kollidiert.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Erwartet wird ein einfacher „JoinType“-Enum-Wert. Andere Enums oder die Übergabe durch eine andere Funktion werden nicht unterstützt, z. B. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argumente ab der 5. Position dienen der Umbenennung von Spalten und sind erwartungsgemäß „As“-Knotenargumente, d. h. LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Mindestens eine „{0}“-Spalte muss ausgewiesen sein, um das um das zusammengeführte Ergebnis erstellen zu können.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Der Wert „{0}“ ist in diesem Kontext ungültig. Er sollte ein Verweis auf den Bereichsnamen „{1}“ oder „{2}“ sein.</value>
     
   </data>
 </root>

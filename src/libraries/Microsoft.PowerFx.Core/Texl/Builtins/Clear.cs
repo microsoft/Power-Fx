@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public override bool MutatesArg0 => true;
+        public override bool MutatesArg(int argIndex, TexlNode arg) => argIndex == 0;
 
         public ClearFunction()
             : base("Clear", TexlStrings.AboutClear, FunctionCategories.Behavior, DType.Unknown, 0, 1, 1, DType.EmptyTable)

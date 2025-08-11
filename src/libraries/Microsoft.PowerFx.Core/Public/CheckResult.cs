@@ -5,12 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using Microsoft.CodeAnalysis;
-using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging;
 using Microsoft.PowerFx.Core.Public;
@@ -21,7 +20,6 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.CheckResult;
 
 namespace Microsoft.PowerFx
 {
@@ -141,7 +139,7 @@ namespace Microsoft.PowerFx
             return this;
         }
 
-        // Set the default culture for localizing error messages. 
+        // Set the default culture for localizing error messages and intellisense suggestions. 
         public CheckResult SetDefaultErrorCulture(CultureInfo culture)
         {
             VerifyEngine();
@@ -411,7 +409,7 @@ namespace Microsoft.PowerFx
 
             var expression = parseResult.Text;
             var culture = parseResult.Options.Culture;
-            var formula = new Formula(expression, culture);
+            var formula = new Formula(expression, culture, intellisenseLocale: _defaultErrorCulture);
             formula.ApplyParse(parseResult);
 
             return formula;
@@ -486,6 +484,23 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Compute the dependencies. Called after binding. 
         /// </summary>
+        [Obsolete("Preview")]
+        public DependencyInfo ApplyDependencyInfoScan()
+        {
+            var ir = ApplyIR(); //throws on errors
+
+            var ctx = new DependencyVisitor.DependencyContext();
+            var visitor = new DependencyVisitor();
+
+            // Using the original node without transformations. This simplifies the dependency analysis for PFx.DV side.
+            ir.TopOriginalNode.Accept(visitor, ctx);
+
+            return visitor.Info;
+        }
+
+        /// <summary>
+        /// Compute the dependencies. Called after binding. 
+        /// </summary>
         public void ApplyDependencyAnalysis()
         {
             var binding = this.Binding; // will throw if binding wasn't run
@@ -542,6 +557,8 @@ namespace Microsoft.PowerFx
                 this.ThrowOnErrors();
                 (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(binding);
 
+                var originalIRNode = irnode;
+
                 var list = _engine.IRTransformList;
                 if (list != null)
                 {
@@ -558,6 +575,7 @@ namespace Microsoft.PowerFx
                 _irresult = new IRResult
                 {
                     TopNode = irnode,
+                    TopOriginalNode = originalIRNode,
                     RuleScopeSymbol = ruleScopeSymbol
                 };
             }
@@ -594,7 +612,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="node"></param>
         /// <returns>Null if the node is not bound.</returns>
-        public FunctionInfo GetFunctionInfo(CallNode node)
+        public FunctionInfo GetFunctionInfo(Syntax.CallNode node)
         {
             if (node == null)
             {
@@ -672,6 +690,17 @@ namespace Microsoft.PowerFx
             return _expressionAnonymous;
         }
 
+        /// <summary>
+        /// Get anonymous form of expression with all PII removed. Suitable for logging to.
+        /// </summary>
+        /// <param name="nameProvider">Sanitizer class to replace string values in the logging result.</param>
+        /// <returns></returns>
+        internal string ApplyGetLogging(ISanitizedNameProvider nameProvider)
+        {
+            var parse = ApplyParse();
+            return StructuralPrint.Print(parse.Root, _binding, nameProvider);
+        }
+
         public CheckContextSummary ApplyGetContextSummary()
         {
             this.ApplyBinding();
@@ -699,12 +728,38 @@ namespace Microsoft.PowerFx
             var summary = new CheckContextSummary
             {
                 AllowsSideEffects = allowSideEffects,
-                IsPreV1Semantics = isV1,
+                IsPreV1Semantics = !isV1,
                 ExpectedReturnType = this._expectedReturnTypes,
                 SuggestedSymbols = symbolEntries
             };
 
             return summary;
+        }
+
+        public IEnumerable<string> GetFunctionNames()
+        {
+            return GetFunctionNames(false);
+        }
+
+        /// <summary>
+        /// Get all function names used in the expression.
+        /// </summary>
+        /// <param name="anonymizeUnknownPublicFunctions">If true, anonymize the name of unknown public functions.</param>
+        /// <returns></returns>
+        public IEnumerable<string> GetFunctionNames(bool anonymizeUnknownPublicFunctions)
+        {
+            return GetFunctionNames(anonymizeUnknownPublicFunctions, null);
+        }
+
+        /// <summary>
+        /// Get all function names used in the expression.
+        /// </summary>
+        /// <param name="anonymizeUnknownPublicFunctions">If true, anonymize the name of unknown public functions.</param>
+        /// <param name="customKnownFunctions">List containing custom functions names that will not be anonymized.</param>
+        /// <returns></returns>
+        public IEnumerable<string> GetFunctionNames(bool anonymizeUnknownPublicFunctions, ICollection<string> customKnownFunctions)
+        {
+            return ListFunctionVisitor.Run(ApplyParse(), anonymizeUnknownPublicFunctions, customKnownFunctions);
         }
     }
 

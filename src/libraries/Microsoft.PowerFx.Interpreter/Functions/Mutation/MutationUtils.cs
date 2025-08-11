@@ -15,25 +15,6 @@ namespace Microsoft.PowerFx.Interpreter
 {
     internal class MutationUtils
     {
-        public static void CheckForReadOnlyFields(DType dataSourceType, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
-        {
-            if (dataSourceType.AssociatedDataSources.Any())
-            {
-                var tableDsInfo = dataSourceType.AssociatedDataSources.Single();
-
-                if (tableDsInfo is IExternalCdsDataSource cdsTableInfo)
-                {
-                    for (int i = 0; i < argTypes.Length; i++)
-                    {
-                        if (!cdsTableInfo.IsArgTypeValidForMutation(argTypes[i], out var invalidFieldNames))
-                        {
-                            errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrRecordContainsInvalidFields_Arg, string.Join(", ", invalidFieldNames));
-                        }
-                    }
-                }
-            }
-        }
-
         /// <summary>
         /// Merges all records into a single record. Collisions are resolved by last-one-wins.
         /// </summary>

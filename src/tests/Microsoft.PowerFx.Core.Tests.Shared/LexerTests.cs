@@ -467,7 +467,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // The lexer should fall back to the invariant separator.
             var lexer = TexlLexer.GetLocalizedInstance(null);
-            Assert.Equal(lexer.LocalizedPunctuatorDecimalSeparator, TexlLexer.PunctuatorDecimalSeparatorInvariant);
+            Assert.Equal(TexlLexer.PunctuatorDecimalSeparatorInvariant, lexer.LocalizedPunctuatorDecimalSeparator);
 
             var tokens = lexer.LexSource("123456.78", TexlLexer.Flags.NumberIsFloat);
             Assert.NotNull(tokens);

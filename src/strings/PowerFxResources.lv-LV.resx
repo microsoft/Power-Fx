@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Procentuālā attiecība (vai procentuālo vērtību kolonna), cik ļoti krāsa (vai krāsu vērtību kolonna) tiks izgaismota. Negatīva procentuālā attiecība rada tumšāku ēnu. Pozitīva procentuālā attiecība rada gaišāku ēnu.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Atgriež ierakstu ar informāciju par failu.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>Faila BLOB, par kuru iegūt informāciju.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>fails</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Atgriež skaitļa absolūto vērtību, skaitli bez tā zīmes.</value>
     
@@ -1796,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Atgriež vērtību true (patiess), ja norādītajai netipizētajai vērtībai ir attiecīgais tips.</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>tips</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>Netipizētā vērtība, kas jāpārbauda, vai to var pārvērst par norādīto tipu.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>Tā tipa vērtība, kura ir jāizmanto, lai pārbaudītu untypedValue.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Izmanto sniegto vērtību kā norādīto tipu.</value>
     
@@ -1813,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>Entītiju tabula, kurā ir norādīts, kāda tipa vērtība ir jāizmanto.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Pārbauda un izmanto sniegto netipizēto vērtību kā norādīto tipu.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>tips</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>Netipizētā vērtība, kas tiek pārvērsta par jaunu tipu.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>Tā tipa vērtība, kura ir jāizmanto.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Izpilda formulu, kas norādīta kā otrais parametrs, izmantojot pirmajā parametrā norādīto tvērumu.</value>
@@ -1868,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>Funkcija “{0}” ir nezināma vai netiek atbalstīta.</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>Līdzeklis {0} ir atpazīts kā tipa palīga funkcija, un to var lietot tikai funkcijā Type.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -1982,10 +2033,6 @@
     <value>{0} pirmajam argumentam ir jābūt ierakstam.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Lai šo opciju kopu izmantotu kā uzskaitījuma vērtību vai funkcijā Choices, entītijai “{0}” ir jābūt pievienotai kā Datu avots. Lai pievienotu, izmantojiet izvēlni Skats un pēc tam atlasiet Datu avoti.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Norādītais rekvizīts šajā kontekstā nav pieejams.</value>
     
@@ -2026,10 +2073,6 @@
     <value>Arguments nenorāda derīgu datuma vai laika vērtību.</value>
     
   </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Šis datu avots nav derīgs. Lūdzu, novērsiet kļūdu rūtī "Datu avoti", noklikšķinot uz "Saturs -&gt; Datu avoti" vai "Skatīt -&gt; Opcijas"</value>
-    
-  </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>Jānorāda datu avota identifikators, kas ierobežo iekļauto ierakstu.</value>
     
@@ -2068,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Kolonnas nosaukuma konflikts šim: {0}.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Nevar pievienot kolonnas sistēmas ierakstam vai sistēmas ierakstu tabulai. Izmantojiet ShowColumns, lai vispirms izvilktu noteiktas nepieciešamās kolonnas.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Nevar pārdēvēt sistēmas ieraksta vai sistēmas ierakstu tabulas kolonnas. Izmantojiet ShowColumns , lai vispirms izvilktu noteiktas nepieciešamās kolonnas.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -2670,6 +2721,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Apstrādājamā JSON virkne.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>Pārvērš JSON virkni par tipizētu objektu.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>virkne</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>JSON virkne, kas jāpārvērš par tipizētu objektu.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>tips</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>Iekļauta tipa definīcija vai globāli definēts nosauktais tips.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Atgriež tabulas ierakstu ar noteiktu indeksu.</value>
     
@@ -2687,6 +2756,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Izgūstamā ieraksta rādītājs.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2707,6 +2788,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Svītrkoda tips</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2823,6 +2936,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Testējamā vērtība.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Pārvērš datumu un laiku teksta formā par skaitli, kas atspoguļo datumu Power Apps datuma-laika kodā.</value>
@@ -3098,32 +3215,33 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Pievieno ierakstus datu avotam.</value>
+    <value>Pievieno vienu vairākus vienumus norādītajai kolekcijai. Vienumi var būt no citas tabulas vai kolekcijas (piemēram, Collect(collection, source_collection)) vai viena vai vairākiem ierakstiem Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>datu_avots</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>ieraksts</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>kolekcija</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>vienums</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Jauna vai esoša kolekcija, ko papildināt.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Dzēš visus ierakstus no kolekcijas. Un pēc tam tai pašai kolekcijai pievieno citu ierakstu kopu.</value>
+    <value>Vispirms notīra kolekciju un pievieno vienu vairākus vienumus norādītajai kolekcijai. Vienumi var būt no citas tabulas vai kolekcijas (piemēram, ClearCollect(collection, source_collection)) vai viena vai vairākiem ierakstiem ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>datu_avots</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Jauna vai esoša kolekcija, ko papildināt.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>datu_avots</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>ieraksts</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Apkopojamais ieraksts vai tabula. Ieraksts tiks pievienots kolekcijai. Tabulas rindas tiks pievienotas kolekcijai.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Lieto atjauninājumus norādītajā rindā un maina rindu norādītajā datu avotā. Atgriež atjaunināto rindu.</value>
@@ -3259,6 +3377,10 @@
     <value>Raksts: Formula reference for Power Apps (Formulas atsauce pakalpojumam Power Apps)</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Formulā ir neparedzēta rakstzīme “{0}” pozīcijā “{1}”.</value>
     
@@ -3271,6 +3393,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Raksts: Formula reference for Power Apps (Formulas atsauce pakalpojumam Power Apps)</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3288,6 +3414,10 @@
     <value>Raksts: Formula reference for Power Apps (Formulas atsauce pakalpojumam Power Apps)</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Neparedzētas rakstzīmes. Formulā ir rakstzīme “{0}” tur, kur jābūt rakstzīmei “{1}”.</value>
     
@@ -3301,6 +3431,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Raksts: Formula reference for Power Apps (Formulas atsauce pakalpojumam Power Apps)</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3318,6 +3452,10 @@
     <value>Raksts: Formula reference for Power Apps (Formulas atsauce pakalpojumam Power Apps)</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Nosaukums nav derīgs. Šis identifikators netika atpazīts.</value>
     
@@ -3331,6 +3469,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Raksts: Formula reference for Power Apps (Formulas atsauce pakalpojumam Power Apps)</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3348,6 +3490,10 @@
     <value>Raksts: Formula reference for PowerApps (Uzziņas par PowerApps formulām)</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>Atsauce uz vecākobjektu nav derīga. Šajā kontekstā nevar atsaukties uz vecākobjekta vadīklu.</value>
     
@@ -3361,6 +3507,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Raksts: Add and configure a canvas-app control in Power Apps (Pamatnes programmas vadīklas pievienošana un konfigurēšana pakalpojumā Power Apps)</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3400,6 +3550,10 @@
     <value>Modulis par vienkāršu formulu lietošanu</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Ir paredzēts skaitlis. Šajā formulas posmā tiek gaidīts skaitlis.</value>
     
@@ -3413,6 +3567,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Raksts: Formula reference for Power Apps (Formulas atsauce pakalpojumam Power Apps)</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3430,6 +3588,10 @@
     <value>Raksts: Formula reference for Power Apps (Formulas atsauce pakalpojumam Power Apps)</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Ir paredzēts kols. Šajā formulas posmā tiek gaidīts kols (:).</value>
     
@@ -3445,6 +3607,10 @@
     <value>Raksts: Show text, dates, and times in Power Apps (Teksta, datumu un laika vērtību rādīšana pakalpojumā Power Apps)</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Izturēšanās funkcija rekvizītā, kas nav izturēšanās rekvizīts. Šo rekvizītu nevar izmantot, lai mainītu vērtības citviet programmā.</value>
     
@@ -3458,6 +3624,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Raksts: Understand behavior formulas for canvas apps in Power Apps (Power Apps formulu darbība pamatnes programmās)</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Uzvedības funkcija lietotāja definētā funkcijā (UDF), kas nav uzvedības funkcija. Lūdzu, iekļaujiet lietotāja definēto funkcijas pamattekstu ar figūriekavām ({...}), lai deklarētu uzvedības lietotāja definēto funkciju.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Uzvedības funkcijas maina pašreizējās sesijas statusu. Bieži lietotas uzvedības funkcijas ir "Clear", "Collect", "Patch" un "Refresh".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Rediģējiet lietotāja definēto funkcijas izteiksmi tā, lai tā atrastos figūriekavās ({...}).</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3497,6 +3679,10 @@
     <value>Raksts: Formula reference for Power Apps (Formulas atsauce pakalpojumam Power Apps)</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Ir paredzēts teksts vai skaitlis. Šajā formulas posmā tiek gaidīts teksts vai skaitlis.</value>
     
@@ -3512,6 +3698,10 @@
     <value>Raksts: Formula reference for Power Apps (Formulas atsauce pakalpojumam Power Apps)</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Ir paredzēta aizverošā figūriekava. Šajā formulas posmā tiek gaidīta aizverošā figūriekava (}).</value>
     
@@ -3523,12 +3713,23 @@
     <value>Rediģējiet formulu tā, lai tā ietvertu figūriekavu.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Sagaidāmais identifikatora noslēgums. Šajā formulas vietā mēs sagaidām noslēgumu (').</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Beigu vienpēdiņa apzīmē identifikatora beigas (piemēram, 'Vārds').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Rediģējiet formulu tā, lai tā ietvertu beigu vienpēdiņu.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Identifikatorā nav derīga teksta.</value>
+    <value>Identifikators ir tukšs vai satur nederīgu rakstzīmi, piemēram, tabulēšanas rakstzīmi vai jaunu rindu.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Identifikatoram jābūt tekstam. Šī kļūda rodas, ja identifikators pilnībā sastāv no tukšumiem vai atstarpēm.</value>
+    <value>Identifikatoram jāsatur derīgs teksts. Šī kļūda rodas, ja identifikators ir tukšs, sastāv tikai no atstarpēm vai satur tabulēšanas rakstzīmi vai jaunu rindu.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3554,8 +3755,16 @@
     <value>Modulis par vienkāršu formulu lietošanu</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Modulis par vienkāršu formulu veidošanu, izmantojot tabulas un ierakstus</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3570,6 +3779,10 @@
     <value>Raksts: Formula reference for Power Apps (Formulas atsauce pakalpojumam Power Apps)</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Nesaderīgs tips. Kolonnas {0} tipam datu avotā, ko atjaunināt, jābūt {1}, bet jūs lietojat tipu {2}.</value>
     
@@ -3582,8 +3795,16 @@
     <value>Modulis par vienkāršu formulu lietošanu</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Modulis par vienkāršu formulu veidošanu, izmantojot tabulas un ierakstus</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3596,6 +3817,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Raksts: Formula reference for Power Apps (Formulas atsauce pakalpojumam Power Apps)</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3614,8 +3839,16 @@
     <value>Modulis par vienkāršu formulu lietošanu</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Modulis par vienkāršu formulu veidošanu, izmantojot tabulas un ierakstus</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3633,8 +3866,16 @@
     <value>Modulis par vienkāršu formulu lietošanu</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Modulis par vienkāršu formulu veidošanu, izmantojot tabulas un ierakstus</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3650,6 +3891,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Raksts: Formula reference for Power Apps (Formulas atsauce pakalpojumam Power Apps)</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3675,8 +3920,16 @@
     <value>Raksts: Understand delegation in a canvas app (Izpratne par deleģēšanu pamatnes programmās)</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Emuāra ieraksts: Data row limits for delegation (Datu rindu ierobežojumi delegācijai)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3702,8 +3955,16 @@
     <value>Raksts: Understand delegation in a canvas app (Izpratne par deleģēšanu pamatnes programmās)</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Emuāra ieraksts: Data row limits for delegation (Datu rindu ierobežojumi delegācijai)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3733,8 +3994,16 @@
     <value>Raksts: Understand delegation in a canvas app (Izpratne par deleģēšanu pamatnes programmās)</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Emuāra ieraksts: Data row limits for delegation (Datu rindu ierobežojumi delegācijai)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3766,8 +4035,70 @@
     <value>Raksts: Understand delegation in a canvas app (Izpratne par deleģēšanu pamatnes programmās)</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Emuāra ieraksts: Data row limits for delegation (Datu rindu ierobežojumi delegācijai)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Deleģēšanas brīdinājums. Nosauktā formula {0} nav deleģējama, tāpēc tās lietošana šajā formulā var nedarboties pareizi lielās datu kopās. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Datu avots var nespēt apstrādāt formulu un var atgriezt nepilnīgu datu kopu. Ja datu kopa ir nepilnīga, programma var atgriezt nepareizus rezultātus vai darboties nepareizi.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Mēģiniet vienkāršot nosauktās formulas definīciju.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Raksts: Understand delegation in a canvas app (Izpratne par deleģēšanu pamatnes programmās)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Emuāra ieraksts: Data row limits for delegation (Datu rindu ierobežojumi delegācijai)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Deleģēšanas brīdinājums. Lietotāja definētā funkcija {0} nav deleģējama, tāpēc tās lietošana šajā formulā var nedarboties pareizi lielās datu kopās. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Datu avots var nespēt apstrādāt formulu un var atgriezt nepilnīgu datu kopu. Ja datu kopa ir nepilnīga, programma var atgriezt nepareizus rezultātus vai darboties nepareizi.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Mēģiniet vienkāršot lietotāja definētās funkcijas definīciju.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Raksts: Understand delegation in a canvas app (Izpratne par deleģēšanu pamatnes programmās)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Emuāra ieraksts: Data row limits for delegation (Datu rindu ierobežojumi delegācijai)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3794,8 +4125,16 @@
     <value>Raksts: Understand delegation in a canvas app (Izpratne par deleģēšanu pamatnes programmās)</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Emuāra ieraksts: Data row limits for delegation (Datu rindu ierobežojumi delegācijai)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3824,6 +4163,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Atsauce: ConfirmExit pamatnes programmām</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3858,12 +4201,24 @@
     <value>Nosauktajai formulai ir jābūt izteiksmei.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Nosauktai tipa deklarācijai ir jābūt derīgai tipa izteiksmei.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
-    <value>Lietotāja definētajai funkcijai ir jābūt pamattekstam.</value>
+    <value>Lietotāja definētai funkcijai ir jābūt pamattekstam.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Funkcija {0} jau ir definēta.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Brīdinājums. Lietotāja definētā funkcija {0} aizstās esošo iebūvēto funkciju {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Funkcijas nosaukums {0} ir aizliegts.</value>
     
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
@@ -3875,7 +4230,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Norādītais funkcijas atgriešanas tips neatbilst funkcijas pamatteksta atgriešanas tipam.</value>
+    <value>Norādītais funkcijas atgriešanas tips “{0}” neatbilst funkcijas pamatteksta atgriešanas tipam “{1}”.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Funkcijai {0} ir pārāk daudz parametru. Lietotāju definētas funkcijas atbalsta līdz {1} parametriem.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +4261,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Funkcijas {0} pirmajam argumentam jābūt derīgam mainīgā nosaukumam, kas nedrīkst konfliktēt ne ar vienu esošu vadīklas, ekrāna, kolekcijas vai datu avota nosaukumu. Atrastais tips: {1}.</value>
+    <value>“{1}” nevar modificēt ar “{0}” vai konfliktē ar esoša tvēruma mainīgā, datu avota vai cita objekta nosaukumu.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4063,6 +4422,10 @@
     <value>Nevar deleģēt {0}: satur uzvedības funkciju '{1}'.</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows var atgriezt kešatmiņā saglabāto vērtību. Izmantojiet CountIf(DataSource, true), lai iegūtu jaunāko skaitu.</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Nosaka, vai norādītais teksts atbilst norādītajam teksta formātam.</value>
     
@@ -4156,24 +4519,232 @@
     <value>Nederīga regulārā izteiksme.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: iekļautajām opcijām ir jābūt redzamām regulārās izteiksmes sākumā, vēlāk atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: iekļautās opcijas ir ierobežotas ar burtu kombināciju [imnsx], nevar atspējot opcijas un tās nevar izmantot apakšizteiksmē, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: oktālā \0 rakstzīmju kodi netiek atbalstīti, tā vietā izmantojiet heksadecimālo skaitli \x vai unikodu \u, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: literāļu figūriekavas ir jānovērš ar atpakaļvērsto slīpsvītru, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: literāļu kvadrātiekavas ir jānovērš ar atpakaļvērsto slīpsvītru pat rakstzīmju klasēs, piemēram, \[ vai \], kas atrodamas "{0}" beigās.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Nederīga parastā izteiksme: neaizvērta rakstzīmju klases kvadrātiekava.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: neatbalstīta īpašā grupa, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: atsoļa rakstzīme nav atļauta rakstzīmju klasē, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: negatīva atsoļa rakstzīme nav atļauta noliegtā rakstzīmju klasē, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: atsoļa rakstzīme nav atļauta ārpus rakstzīmju klases, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Nederīga parastā izteiksme: nederīgs unikoda kategorijas nosaukums, atrasts “{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: atkārtota iekļautā opcija, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: neaizvērts iekļautais komentārs.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: neaizvērts iekļautais komentārs, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: iekļautā opcija nav saderīga ar MatchOptions.NumberedSubMatches, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: netiek atbalstīti piederības kvantifikatori, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: precīzus kvantifikatorus nevar izmantot ar kvantifikatoru modifikatoriem, piemēram ? atlikšanai, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Nederīga parastā izteiksme: nederīgs atsoļa kods, atrasts “{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: apakšatbilstība "{0}" nav definēta vai ir neatbalstīta pārsūtīšanas atsauce.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: apakšatbilstības netiek atbalstītas skatos atpakaļ, kas atrasti "{0}" sākumā.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: skatus atpakaļ nevar ligzdot, atrasts "{0}" sākumā.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: neierobežoti kvantifikatori netiek atbalstīti skatos atpakaļ, atrasts "{0}" beigās.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: kvantifikatori netiek atbalstīti skatos atpakaļ vai skatos uz priekšu, atrasts "{0}" beigās.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: atpakaļatsauce "{0}" uz apakšatbilstību, kas var nenotikt maiņas vai nulles kvantifikatora dēļ.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: netiek atbalstītas apakšatbilstības, kas satur atsauces uz sevi, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: neaizvērtas grupas, pārāk maz aizverošo iekavu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: neatvērtas grupas, pārāk maz atverošo iekavu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: nosauktā apakšatbilstība definēta vairāk nekā vienu reizi, atrasts "{0}" sākumā.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: apakšatbilstības nosaukumam ir jābūt vārdu rakstzīmju kombinācijai, nevis jāsākas ar skaitli, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: iekļautajām opcijām ir jābūt redzamām regulārās izteiksmes sākumā, vēlāk atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: rakstzīme rakstzīmju klasē parādās vairāk nekā vienu reizi, atrasta atkārtota ""{0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: kvadrātiekavu rakstzīmju klases nevar būt tukšas, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: netiek atbalstītas balansēšanas apakšatbilstības, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: vienpēdiņu nosaukumu tveršanas izmantošana netiek atbalstīta, tā vietā izmantojiet (?&lt;... &gt;) sintaksi, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: nosacījuma maiņa netiek atbalstīta, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: tvērumus ar nosaukumu nevar izmantot ar iespējotu MatchOptions.NumberedSubMatches, atrasta "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: izmantojiet tvērumus ar nosaukumu ar "(?&lt;name&gt;...)" un "\k&lt;name&gt;" vai iespējojiet MatchOptions.NumberedSubMatches, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: literāļa pārnesumzīme rakstzīmju klasē jāizlaiž ar atpakaļvērsto slīpsvītru, izlaišana ar "\-", atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: literāļa rakstzīme ir jānovērš ar atpakaļvērsto slīpsvītru, kad tā tiek izmantota rakstzīmju klasē, atrasts "{0}" beigās.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: grupas kvantifikators, kurā ir cits kvantifikators vai tukša maiņa, kas var radīt neviennozīmīgu rezultātu, atrasts "{0}" beigās.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: skats atpakaļ pārsniedza maksimālo iespējamo rakstzīmju skaita ierobežojumu (250), kas atrasts "{0}" beigās.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: kvantifikatora diapazona mazākais skaitlis ir lielāks nekā lielākais skaitlis, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: pārāk daudz ligzdotu grupu, kas atrastas "{0}" sākumā.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: apakšatbilstības nosaukums ir pārāk garš, atrasts "{0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: skaitlis ir pārāk liels, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: rakstzīmju klases diapazona rakstzīmes ir apgrieztas, atrasts "{0}" beigās.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: rakstzīmju klase rakstzīmju klases diapazonā vai literāļa pārnesumzīmes izlaišana ar atpakaļvērsto slīpsvītru, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: beidzas ar neizbēgtu atpakaļvērsto slīpsvītru.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme: kvantifikators bez kaut kā, ko kvantificēt, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Nederīga parastā izteiksme: MatchOptions.DotAll un MatchOptions.FreeSpacing ir pieejamas tikai ar Power Fx V1, atrasts "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Nederīga parastā izteiksme: atpakaļatsauce "{0}" uz apakšatbilstību, kas atrodas skatā atpakaļ vai skatā uz priekšu.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Regulārajām izteiksmēm jābūt konstantām vērtībām.</value>
+    <value>Regulārajai izteiksmei jābūt konstantai vērtībai.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions ir jābūt konstantai vērtībai.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Funkcijai “{0}” nodoto vērtību nevar mainīt.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Tvēruma nosaukumā “{0}” ir iekļauts sākotnēji definēts rekvizīts, kas atgriež pilnu atbilstību parastajai izteiksmei. Lai šo rekvizītu izmantotu pilnīgai norādītā teksta atbilstības izvilkšanai, ieteicams pārdēvēt tvērumu.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Tvēruma nosaukums "{0}" slēpj iepriekš definētu rekvizītu, kas atgriež atbilstības informāciju. Apsveriet iespēju to pārdēvēt, ja vēlaties piekļūt atbilstības informācijai.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Tvēruma nosaukumā “{0}” ir iekļauts sākotnēji definēts rekvizīts, kas atgriež grupu atbilstību parastajai izteiksmei. Lai šo rekvizītu izmantotu visu norādītā teksta pakārtoto atbilstību izvilkšanai, ieteicams pārdēvēt tvērumu.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Tvēruma nosaukumā “{0}” ir iekļauts sākotnēji definēts rekvizīts, kas atgriež atbilstības atrašanās vietu parastajā izteiksmē. Lai šo rekvizītu izmantotu pilnīgas norādītā teksta atbilstības atrašanās vietas izvilkšanai, ieteicams pārdēvēt tvērumu.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Tvērumu nosaukumi kopā "{0}" slēpj iepriekš definētos rekvizītus, kas atgriež atbilstības informāciju. Apsveriet iespēju tos pārdēvēt, ja vēlaties piekļūt atbilstības informācijai.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4209,16 +4780,20 @@
     <value>Iestatīt mainīgo ar tiešsaistes datu avota vērtību (tabula vai ieraksts) var izraisīt vairākus pieprasījumus serverim. Drīz tas tiks bloķēts.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Tipa izteiksme ir nederīga. Tipa izteiksmē nevar izmantot “{0}”.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tipa {0} definīcija nav derīga.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Neatbalstīts lietojums: funkciju Type var izmantot tikai tipa argumentos un tipa deklarācijās.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Tipa {0} deklarācija nav derīga.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Tipa {0} definīcija nav derīga un var saturēt ciklus.</value>
+    <value>Tipa {0} deklarācija nav derīga un var saturēt ciklus.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4419,6 +4994,16 @@
     <value>Nezināms operators Partial.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Datu avots, kuram pievienot datus.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Apkopojamais ieraksts vai tabula. Ieraksts tiks pievienots datu avotam. Tabulas rindas tiks pievienotas datu avotam.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>vienums</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Deleģēšanas brīdinājums. Šī argumenta '{0}' rezultāts var tikt saīsināts lielām datu kopām, pirms tas tiek nodots funkcijai '{1}'.</value>
     
@@ -4459,10 +5044,98 @@
     <value>Notīrāmā kolekcija.</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>Notīrāmais avots.</value>
+  </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Izgūst datus, kas aptver vairākas tabulas ar relācijām.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>avots1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>avots2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>saucējs</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Kreisā tabula vai kolekcija.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Labā tabula vai kolekcija.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Apvienojiet kritērijus starp divām tabulām vai kolekcijām.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Savienojuma tips starp divām tabulām vai kolekcijām.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Argumenti esošas kolonnas pārdēvēšanai kādā no avotiem.</value>
+    
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Norādīto datu avotu nevar izmantot ar šo funkciju.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Nederīgs arguments “{0}”. Tiek gaidīts derīgs tipa nosaukums vai iekļautā tipa izteiksme.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Tipa argumentā neatbalstīts tips {0}.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Maksimālais dziļums, kas sasniegts, pārvietojot JSON vērtumu.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Sasniegts JSON funkcijas maksimālais garums.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Eksperimentālais līdzeklis “Lietotāja definēti tipi” nav iespējots.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Nepareiza sintakse: '=' nevar lietot, lai deklarētu lietotāja definētus tipus. Tā vietā izmantojiet ':='.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>"{0}" nevar pievienot/pārdēvēt, jo pastāv konflikts ar citu kolonnu ar tādu pašu nosaukumu.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Paredzētā vienkāršā uzskaitījuma vērtība "JoinType". Dažādi uzskaitījumi vai tās nodošana caur citu funkciju netiek atbalstīta, t.i., Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argumenti, kas sākas no 5. pozīcijas, ir paredzēti kolonnu pārdēvēšanai, un tiem ir jābūt "As" mezgla argumentiem, t.i., LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Lai sastādītu apvienošanas rezultātu, ir jādeklarē vismaz viena "{0}" kolonna.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Vērtība "{0}" šajā kontekstā nav derīga. Tai jābūt atsaucei uz "{1}" vai "{2}" tvēruma nosaukumu.</value>
     
   </data>
 </root>

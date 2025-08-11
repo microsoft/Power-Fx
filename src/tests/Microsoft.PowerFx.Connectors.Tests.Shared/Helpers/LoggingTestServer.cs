@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Tests
     // Simulate a test server (Connector, ASP.Net site, etc).
     // This logs all received SendAsync() calls to _log for easy verification.
     // Test can call SetResponse() to set what each SendAsync() should return.
-    internal class LoggingTestServer : HttpMessageHandler
+    internal class LoggingTestServer : DelegatingHandler
     {
         // Log HTTP calls.
         public StringBuilder _log = new ();
@@ -60,15 +60,18 @@ namespace Microsoft.PowerFx.Tests
 
         public void SetResponseSet(string filename)
         {
-            Responses = (Helpers.ReadStream(filename) as string).Split("~|~").ToArray();
-            Statuses = Enumerable.Repeat(HttpStatusCode.OK, Responses.Length).ToArray();
-            CurrentResponse = 0;
-            ResponseSetMode = true;
+            if (!Live)
+            {
+                Responses = (Helpers.ReadStream(filename) as string).Split(new string[] { "~|~" }, StringSplitOptions.None).ToArray();
+                Statuses = Enumerable.Repeat(HttpStatusCode.OK, Responses.Length).ToArray();
+                CurrentResponse = 0;
+                ResponseSetMode = true;
+            }
         }
 
         public void SetResponseFromFiles(params string[] files)
         {
-            if (files != null && files.Any())
+            if (files != null && files.Any() && !Live)
             {
                 Responses = files.Select(file => Helpers.ReadStream(file)).ToArray();
                 Statuses = Enumerable.Repeat(HttpStatusCode.OK, files.Length).ToArray();
@@ -79,7 +82,7 @@ namespace Microsoft.PowerFx.Tests
 
         public void SetResponseFromFiles(params (string file, HttpStatusCode status)[] filesWithStatus)
         {
-            if (filesWithStatus != null && filesWithStatus.Any())
+            if (filesWithStatus != null && filesWithStatus.Any() && !Live)
             {
                 Responses = filesWithStatus.Select(fileWithStatus => GetFileText(fileWithStatus.file)).ToArray();
                 Statuses = filesWithStatus.Select(fileWithStatus => fileWithStatus.status).ToArray();
@@ -90,34 +93,40 @@ namespace Microsoft.PowerFx.Tests
 
         public void SetResponseFromFile(string filename, HttpStatusCode status = HttpStatusCode.OK)
         {
-            var text = GetFileText(filename);
-            SetResponse(text, status);
-            ResponseSetMode = false;
+            if (!Live)
+            {
+                var text = GetFileText(filename);
+                SetResponse(text, status);
+                ResponseSetMode = false;
+            }
         }
 
-        private static object GetFileText(string filename)
+        internal static object GetFileText(string filename)
         {
             return !string.IsNullOrEmpty(filename) ? Helpers.ReadStream(filename) : string.Empty;
         }
 
-        public void SetResponse(object data, HttpStatusCode status = HttpStatusCode.OK)
+        public void SetResponse(object data, HttpStatusCode status = HttpStatusCode.OK, string contentType = null)
         {
-            Assert.Null(_nextResponse);
-            _nextResponse = GetResponseMessage(data, status);
+            if (!Live)
+            {
+                Assert.Null(_nextResponse);
+                _nextResponse = GetResponseMessage(data, status, contentType);
+            }
         }
 
         // We only support string & byte[] types (images)
-        public HttpResponseMessage GetResponseMessage(object data, HttpStatusCode status)
+        public HttpResponseMessage GetResponseMessage(object data, HttpStatusCode status, string contentType = null)
         {
-            if (data is string str)
+            if (!Live && data is string str)
             {
                 return new HttpResponseMessage(status)
                 {
-                    Content = new StringContent(str, Encoding.UTF8, OpenApiExtensions.ContentType_ApplicationJson)
+                    Content = new StringContent(str, Encoding.UTF8, contentType ?? OpenApiExtensions.ContentType_ApplicationJson)
                 };
             }
 
-            if (data is byte[] byteArray)
+            if (!Live && data is byte[] byteArray)
             {
                 return new HttpResponseMessage(status)
                 {
@@ -125,7 +134,7 @@ namespace Microsoft.PowerFx.Tests
                 };
             }
 
-            throw new NotImplementedException("Unsupported data type");
+            throw new NotImplementedException($"Unsupported data type or Live is {Live}");
         }
 
         protected override void Dispose(bool disposing)
@@ -161,7 +170,8 @@ namespace Microsoft.PowerFx.Tests
                     }
                 }
 
-                var content = await httpContent.ReadAsStringAsync().ConfigureAwait(false);
+                var content = await httpContent.ReadAsStringAsync(cancellationToken);
+
                 if (!string.IsNullOrEmpty(content))
                 {
                     _log.AppendLine($" [body] {content}");
@@ -174,10 +184,11 @@ namespace Microsoft.PowerFx.Tests
                 using HttpRequestMessage clone = new HttpRequestMessage(request.Method, request.RequestUri);
 
                 // Copy the request's content (via a MemoryStream) into the cloned object
-                var ms = new MemoryStream();
+                using var ms = new MemoryStream();
                 if (request.Content != null)
                 {
-                    await request.Content.CopyToAsync(ms).ConfigureAwait(false);
+                    await request.Content.CopyToAsync(ms, cancellationToken);
+
                     ms.Position = 0;
                     clone.Content = new StreamContent(ms);
 
@@ -190,17 +201,19 @@ namespace Microsoft.PowerFx.Tests
 
                 clone.Version = request.Version;
 
+#pragma warning disable CS0618 // Type or member is obsolete (HttpRequestMessage.Properties)
                 foreach (KeyValuePair<string, object> prop in request.Properties)
                 {
                     clone.Properties.Add(prop);
                 }
+#pragma warning restore CS0618 // Type or member is obsolete
 
                 foreach (KeyValuePair<string, IEnumerable<string>> header in request.Headers)
                 {
                     clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
                 }
 
-                return await LiveClient.SendAsync(clone, cancellationToken).ConfigureAwait(false);
+                return await LiveClient.SendAsync(clone, cancellationToken);
             }
 
             var response = ResponseSetMode ? GetResponseMessage(Responses[CurrentResponse], Statuses[CurrentResponse++]) : _nextResponse;

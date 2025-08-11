@@ -14,6 +14,7 @@ namespace Microsoft.PowerFx.Connectors
     /// Http handler to invoke Power Platform connectors. 
     /// This accepts HttpRequestMessages described the swagger, transforms the request, and forwards them to Connector endpoints.
     /// </summary>
+    [Obsolete($"Use {nameof(PowerPlatformConnectorClient2)} instead. This class will be removed in a future release.")]
     public class PowerPlatformConnectorClient : HttpClient
     {
         /// <summary>
@@ -187,13 +188,14 @@ namespace Microsoft.PowerFx.Connectors
             var req = new HttpRequestMessage(HttpMethod.Post, $"https://{Endpoint}/invoke");
             req.Headers.Add("authority", Endpoint);
             req.Headers.Add("scheme", "https");
-            req.Headers.Add("path", "/invoke");
+            req.Headers.Add("path", "/invoke");            
             req.Headers.Add("x-ms-client-session-id", SessionId);
             req.Headers.Add("x-ms-request-method", method.ToString().ToUpperInvariant());
-            req.Headers.Add("authorization", "Bearer " + authToken);
+            req.Headers.Add("Authorization", "Bearer " + authToken);
             req.Headers.Add("x-ms-client-environment-id", "/providers/Microsoft.PowerApps/environments/" + EnvironmentId);
             req.Headers.Add("x-ms-user-agent", UserAgent);
             req.Headers.Add("x-ms-request-url", url);
+            req.Headers.Add("x-ms-enable-selects", "true");
 
             // might be needed for tabular connectors
             //req.Headers.Add("X-Ms-Protocol-Semantics", "cdp");

@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var runtimeConfig = new RuntimeConfig();
                 runtimeConfig.AddService<User>(new User() { Name = "test", Age = 21.0 });
 
-                var res = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
+                var res = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
             
                 Assert.Equal(expected, res.ToObject());
             }
@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var runtimeConfig = new RuntimeConfig();
             runtimeConfig.AddService<User>(new User() { Name = "test", Age = 21 });
 
-            var res = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
+            var res = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
             Assert.IsType<ErrorValue>(res);
             Assert.NotNull(((ErrorValue)res).Errors.Where((error) => error.Kind.Equals(ErrorKind.InvalidArgument)));
         }
@@ -204,7 +204,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var runtimeConfig = new RuntimeConfig();
 
-            var res = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
+            var res = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
             Assert.IsType<ErrorValue>(res);
             Assert.NotNull(((ErrorValue)res).Errors.Where((error) => error.Kind.Equals(ErrorKind.Custom)));
         }

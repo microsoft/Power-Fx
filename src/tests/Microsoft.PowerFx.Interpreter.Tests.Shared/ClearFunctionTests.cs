@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -34,7 +35,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             foreach (var arg in faultyArs)
             {
-                var result = await function.InvokeAsync(FormulaType.Void, new FormulaValue[] { arg }, CancellationToken.None).ConfigureAwait(false);
+                var result = await function.InvokeAsync(FunctionInvokeInfo.New(FormulaType.Void, arg), CancellationToken.None);
 
                 if (arg is ErrorValue)
                 {
@@ -66,7 +67,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             foreach (var arg in faultyArs)
             {
-                var result = await function.InvokeAsync(FormulaType.Boolean, new FormulaValue[] { arg }, CancellationToken.None).ConfigureAwait(false);
+                var result = await function.InvokeAsync(FunctionInvokeInfo.New(FormulaType.Boolean, arg), CancellationToken.None);
 
                 if (arg is ErrorValue)
                 {

@@ -2,8 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Diagnostics;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -15,7 +13,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public FormulaValue DefaultValue { get; }
 
-        internal OpenApiSchema Schema { get; }
+        internal ISwaggerSchema Schema { get; }
 
         internal ConnectorExtensions ConnectorExtensions { get; }
 
@@ -30,16 +28,23 @@ namespace Microsoft.PowerFx.Connectors
         public string Summary => ConnectorExtensions.Summary;
 
         public bool SupportsDynamicIntellisense => ConnectorType.SupportsDynamicIntellisense;
-        
-        internal ConnectorSchema(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, ConnectorCompatibility compatibility)
+
+        public bool? NotificationUrl => ConnectorType.NotificationUrl;
+
+        public AiSensitivity AiSensitivity => ConnectorType.AiSensitivity;
+
+        public string PropertyEntityType => ConnectorType.PropertyEntityType;
+
+        internal ConnectorSchema(ISwaggerParameter openApiParameter, ISwaggerExtensions bodyExtensions, bool useHiddenTypes, ConnectorSettings settings)
         {
             Schema = openApiParameter.Schema;
             UseHiddenTypes = useHiddenTypes;
-            ConnectorType = AggregateErrorsAndWarnings(openApiParameter.GetConnectorType(compatibility));
+            ConnectorType = AggregateErrorsAndWarnings(openApiParameter.GetConnectorType(settings));
             DefaultValue = openApiParameter.Schema.TryGetDefaultValue(FormulaType, out FormulaValue defaultValue, this) && defaultValue is not BlankValue ? defaultValue : null;
             ConnectorExtensions = new ConnectorExtensions(openApiParameter, bodyExtensions);
         }
 
+        // Intellisense only
         internal ConnectorSchema(ConnectorSchema connectorSchema, ConnectorType connectorType)
         {
             Schema = connectorSchema.Schema;

@@ -13,10 +13,12 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Exceptions;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Functions.Library;
 
@@ -55,7 +57,7 @@ namespace Microsoft.PowerFx
 
             TimeZoneInfo = GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local;
             Governor = GetService<Governor>() ?? new Governor();
-            CultureInfo = GetService<CultureInfo>();
+            CultureInfo = GetService<CultureInfo>() ?? throw new ArgumentNullException("Missing CultureInfo");
         }
 
         /// <summary>
@@ -167,6 +169,57 @@ namespace Microsoft.PowerFx
 
             var newValue = await arg1.Accept(this, context).ConfigureAwait(false);
 
+            if (arg0.IRContext.IsMutation)
+            {
+                if (arg0 is RecordFieldAccessNode rfan)
+                {
+                    var arg0value = await rfan.From.Accept(this, context).ConfigureAwait(false);
+
+                    if (arg0value is RecordValue rv)
+                    {
+                        rv.ShallowCopyFieldInPlace(rfan.Field);
+                        rv.UpdateField(rfan.Field, newValue);
+                        return node.IRContext.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(true) : FormulaValue.NewVoid();
+                    }
+                    else
+                    {
+                        return CommonErrors.UnreachableCodeError(node.IRContext);
+                    }
+                }
+                else if (arg0 is BinaryOpNode bon && bon.Op == BinaryOpKind.DynamicGetField)
+                {
+                    var arg0value = await bon.Left.Accept(this, context).ConfigureAwait(false);
+                    var arg1value = await bon.Right.Accept(this, context).ConfigureAwait(false);
+
+                    if (arg0value is UntypedObjectValue uov && uov.Impl is UntypedObjectBase impl)
+                    {
+                        return impl.SetUntypedObject(node.IRContext, (StringValue)arg1value, newValue);
+                    }
+                    else if (arg0value is ErrorValue || arg0value is BlankValue)
+                    {
+                        return arg0value;
+                    }
+                }
+                else if (arg0 is CallNode callNode && callNode.Function == BuiltinFunctionsCore.Index_UO)
+                {
+                    var child0Value = await callNode.Args[0].Accept(this, context).ConfigureAwait(false);
+                    var child1Value = await callNode.Args[1].Accept(this, context).ConfigureAwait(false);
+
+                    if (child0Value is UntypedObjectValue uov && uov.Impl is UntypedObjectBase impl)
+                    {
+                        return impl.SetUntypedObject(node.IRContext, (NumberValue)child1Value, newValue);
+                    }
+                    else if (child0Value is ErrorValue || child0Value is BlankValue)
+                    {
+                        return child0Value;
+                    }
+                }
+                else
+                {
+                    return CommonErrors.UnreachableCodeError(node.IRContext);
+                }
+            }
+
             // Binder has already ensured this is a first name node as well as mutable symbol. 
             if (arg0 is ResolvedObjectNode obj)
             {
@@ -213,6 +266,100 @@ namespace Microsoft.PowerFx
             return result;
         }
 
+        // Given a TexlFunction, get the implementation to invoke. 
+        private IFunctionInvoker GetInvoker(TexlFunction func)
+        {
+            if (func is IFunctionInvoker invoker)
+            {
+                return invoker;
+            }
+
+            if (func is UserDefinedFunction userDefinedFunc)
+            {
+                return new UserDefinedFunctionAdapter(userDefinedFunc);
+            }
+
+            if (FunctionImplementations.TryGetValue(func, out AsyncFunctionPtr ptr))
+            {
+                return new AsyncFunctionPtrAdapter(ptr);
+            }
+
+            return null;
+        }
+
+        // Adapter for AsyncFunctionPtr to common invoker interface.
+        private class AsyncFunctionPtrAdapter : IFunctionInvoker
+        {
+            private readonly AsyncFunctionPtr _ptr;
+
+            public AsyncFunctionPtrAdapter(AsyncFunctionPtr ptr)
+            {
+                _ptr = ptr;
+            }
+
+            public async Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
+            {
+                var args = invokeInfo.Args.ToArray();
+                var context = invokeInfo.Context;
+                var evalVisitor = invokeInfo.Runner;
+                var irContext = invokeInfo.IRContext;
+
+                var result = await _ptr(evalVisitor, context, irContext, args).ConfigureAwait(false);
+
+                return result;
+            }
+        }
+
+        // Adapter for UDF to common invoker. 
+        // This still ensures that *invoking* a UDF has the same semantics as invoking other function calls. 
+        private class UserDefinedFunctionAdapter : IFunctionInvoker
+        {
+            private readonly UserDefinedFunction _udf;
+
+            public UserDefinedFunctionAdapter(UserDefinedFunction udf)
+            {
+                _udf = udf;
+            }
+
+            public async Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
+            {
+                var args = invokeInfo.Args.ToArray();
+                var context = invokeInfo.Context;
+                var evalVisitor = invokeInfo.Runner;
+
+                var udfStack = evalVisitor._udfStack;
+
+                UDFStackFrame frame = new UDFStackFrame(_udf, args);
+                UDFStackFrame framePop = null;
+                FormulaValue result = null;
+
+                try
+                {
+                    // Push this so that we have access to args. 
+                    udfStack.Push(frame);
+
+                    // https://github.com/microsoft/Power-Fx/issues/2822
+                    // This repeats IRTranslator each time. Do once and save. 
+                    (var irnode, _) = _udf.GetIRTranslator();
+
+                    evalVisitor.CheckCancel();
+
+                    result = await irnode.Accept(evalVisitor, context).ConfigureAwait(false);
+                }
+                finally
+                {
+                    framePop = udfStack.Pop();
+                }
+
+                if (frame != framePop)
+                {
+                    throw new Exception("Something went wrong. UDF stack values didn't match.");
+                }
+
+                return result;
+            }
+        }
+
         public override async ValueTask<FormulaValue> Visit(CallNode node, EvalVisitorContext context)
         {
             CheckCancel();
@@ -248,6 +395,7 @@ namespace Microsoft.PowerFx
                 }
                 else
                 {
+                    // This is where Lambdas are created. They close over key values to invoke.
                     args[i] = new LambdaFormulaValue(node.IRContext, child, this, context);
                 }
             }
@@ -255,87 +403,81 @@ namespace Microsoft.PowerFx
             var childContext = context.SymbolContext.WithScope(node.Scope);
 
             FormulaValue result;
+
+            // Remove this: https://github.com/microsoft/Power-Fx/issues/2821
             IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction> extraFunctions = _services.GetService<IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction>>();
 
-            if (func is IAsyncTexlFunction asyncFunc || extraFunctions?.TryGetValue(func, out asyncFunc) == true)
+            try
             {
-                result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
-            }
-#pragma warning disable CS0618 // Type or member is obsolete
-            else if (func is IAsyncTexlFunction2 asyncFunc2)
-#pragma warning restore CS0618 // Type or member is obsolete
-            {
-                result = await asyncFunc2.InvokeAsync(this.GetFormattingInfo(), args, _cancellationToken).ConfigureAwait(false);
-            }
-            else if (func is IAsyncTexlFunction3 asyncFunc3)
-            {
-                result = await asyncFunc3.InvokeAsync(node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
-            }
-            else if (func is IAsyncTexlFunction4 asyncFunc4)
-            {                
-                result = await asyncFunc4.InvokeAsync(TimeZoneInfo, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
-            }
-            else if (func is IAsyncTexlFunction5 asyncFunc5)
-            {                
-                result = await asyncFunc5.InvokeAsync(_services, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
-            }
-            else if (func is IAsyncConnectorTexlFunction asyncConnectorTexlFunction)
-            {                
-                return await asyncConnectorTexlFunction.InvokeAsync(args, _services, _cancellationToken).ConfigureAwait(false);
-            }
-            else if (func is CustomTexlFunction customTexlFunc)
-            {
-                // If custom function throws an exception, don't catch it - let it propagate up to the host.
-                result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken).ConfigureAwait(false);
-            }
-            else if (func is UserDefinedFunction userDefinedFunc)
-            {
-                UDFStackFrame frame = new UDFStackFrame(userDefinedFunc, args);
-                UDFStackFrame framePop = null;
+                IFunctionInvoker invoker = GetInvoker(func);
 
-                try
+                // Standard invoke path. Make everything go through here. 
+                // Eventually collapse all cases to this. 
+                if (invoker != null)
                 {
-                    _udfStack.Push(frame);
-
-                    (var irnode, _) = userDefinedFunc.GetIRTranslator();
-
-                    this.CheckCancel();
-
-                    result = await irnode.Accept(this, context).ConfigureAwait(false);
-                }
-                finally
-                {
-                    framePop = _udfStack.Pop();
-                }
-
-                if (frame != framePop)
-                {
-                    throw new Exception("Something went wrong. UDF stack values didn't match.");
-                }
-            }
-            else
-            {
-                if (FunctionImplementations.TryGetValue(func, out AsyncFunctionPtr ptr))
-                {
-                    try
+                    var invokeInfo = new FunctionInvokeInfo
                     {
-                        result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args).ConfigureAwait(false);
-                    }
-                    catch (CustomFunctionErrorException ex)
+                        Args = args,
+                        FunctionServices = _services,
+                        Runner = this,
+                        Context = context.IncrementStackDepthCounter(childContext),
+                        IRContext = node.IRContext,
+                    };
+
+                    result = await invoker.InvokeAsync(invokeInfo, _cancellationToken).ConfigureAwait(false);
+                }
+                else if (func is IAsyncTexlFunction asyncFunc)
+                {
+                    result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
+                }
+                else if (extraFunctions?.TryGetValue(func, out asyncFunc) == true)
+                {
+                    result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
+                }
+                else if (func is IAsyncTexlFunction4 asyncFunc4)
+                {
+                    // https://github.com/microsoft/Power-Fx/issues/2818
+                    // This is used for Json() functions.  IsType, AsType
+                    result = await asyncFunc4.InvokeAsync(TimeZoneInfo, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
+                }
+                else if (func is IAsyncTexlFunction5 asyncFunc5)
+                {
+                    // https://github.com/microsoft/Power-Fx/issues/2818
+                    // This is used for Json() functions.
+                    BasicServiceProvider services2 = new BasicServiceProvider(_services);
+
+                    // Invocation should not get its own provider.  
+                    if (services2.GetService(typeof(TimeZoneInfo)) == null)
                     {
-                        var irContext = node.IRContext;
-                        result = new ErrorValue(irContext, new ExpressionError() { Message = ex.Message, Span = irContext.SourceContext, Kind = ex.ErrorKind });
+                        services2.AddService(TimeZoneInfo);
                     }
 
+                    if (services2.GetService(typeof(Canceller)) == null)
+                    {
+                        services2.AddService(new Canceller(CheckCancel));
+                    }
+
+                    result = await asyncFunc5.InvokeAsync(services2, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
+                }
+                else
+                {
+                    result = CommonErrors.NotYetImplementedFunctionError(node.IRContext, func.Name);
+                }
+
+                // https://github.com/microsoft/Power-Fx/issues/2820
+                // We should remove this check that limits to just Adapter1, so we apply this check to all impls. 
+                if (invoker is AsyncFunctionPtrAdapter) 
+                {
                     if (!(result.IRContext.ResultType._type == node.IRContext.ResultType._type || result is ErrorValue || result.IRContext.ResultType is BlankType))
                     {
                         throw CommonExceptions.RuntimeMisMatch;
                     }
                 }
-                else
-                {
-                    result = CommonErrors.NotYetImplementedError(node.IRContext, $"Missing func: {func.Name}");
-                }
+            }
+            catch (CustomFunctionErrorException ex)
+            {
+                var irContext = node.IRContext;
+                result = new ErrorValue(irContext, new ExpressionError() { Message = ex.Message, Span = irContext.SourceContext, Kind = ex.ErrorKind });
             }
 
             CheckCancel();
@@ -507,6 +649,11 @@ namespace Microsoft.PowerFx
             {
                 if (cov.Impl.Type is ExternalType et && (et.Kind == ExternalTypeKind.Object || et.Kind == ExternalTypeKind.ArrayAndObject))
                 {
+                    if (cov.Impl is UntypedObjectBase untypedObjectBase)
+                    {
+                        return untypedObjectBase.GetProperty(sv.Value, node.IRContext.ResultType);
+                    }
+
                     if (cov.Impl.TryGetProperty(sv.Value, out var res))
                     {
                         if (res.Type == FormulaType.Blank)
@@ -529,7 +676,7 @@ namespace Microsoft.PowerFx
                 {
                     return new ErrorValue(node.IRContext, new ExpressionError()
                     {
-                        Message = "Accessing a field is not valid on this value",
+                        ResourceKey = RuntimeStringResources.ErrAccessingFieldNotValidValue,
                         Span = node.IRContext.SourceContext,
                         Kind = ErrorKind.InvalidArgument
                     });
@@ -559,7 +706,7 @@ namespace Microsoft.PowerFx
                 return await unaryOp(this, context, node.IRContext, args).ConfigureAwait(false);
             }
 
-            return CommonErrors.NotYetImplementedError(node.IRContext, $"Unary op {node.Op}");
+            return CommonErrors.NotYetImplementedUnaryOperatorError(node.IRContext, node.Op.ToString());
         }
 
         public override async ValueTask<FormulaValue> Visit(AggregateCoercionNode node, EvalVisitorContext context)
@@ -686,9 +833,7 @@ namespace Microsoft.PowerFx
 
             if (node.IRContext.IsMutation)
             {
-                // Records that are not mutable should have been stopped by the compiler before we get here.
-                // But if we get here and the cast fails, the implementation of the record was not prepared for the mutation.
-                ((IMutationCopyField)record).ShallowCopyFieldInPlace(node.Field.Value);
+                record.ShallowCopyFieldInPlace(node.Field.Value);
             }
 
             var val = await record.GetFieldAsync(node.IRContext.ResultType, node.Field.Value, _cancellationToken).ConfigureAwait(false);
@@ -698,7 +843,12 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(SingleColumnTableAccessNode node, EvalVisitorContext context)
         {
-            return CommonErrors.NotYetImplementedError(node.IRContext, "Single column table access");
+            return new ErrorValue(node.IRContext, new ExpressionError()
+            {
+                ResourceKey = RuntimeStringResources.ErrSingleColumnTableAccessNodeNotYetImplemented,
+                Span = node.IRContext.SourceContext,
+                Kind = ErrorKind.NotSupported
+            });
         }
 
         public override async ValueTask<FormulaValue> Visit(ErrorNode node, EvalVisitorContext context)
@@ -760,7 +910,7 @@ namespace Microsoft.PowerFx
                     }
                     catch (CustomFunctionErrorException ex)
                     {
-                        hostObj = CommonErrors.CustomError(node.IRContext, ex.Message);
+                        hostObj = CommonErrors.RuntimeExceptionError(node.IRContext, ex.Message);
                     }
 
                     return hostObj;

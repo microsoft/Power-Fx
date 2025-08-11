@@ -21,6 +21,7 @@ using Microsoft.PowerFx.Core.Functions.DLP;
 using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
 using Microsoft.PowerFx.Core.Functions.Publish;
 using Microsoft.PowerFx.Core.Functions.TransportSchemas;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
@@ -31,6 +32,7 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Core.IR.DependencyVisitor;
 using static Microsoft.PowerFx.Core.IR.IRTranslator;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
@@ -126,8 +128,16 @@ namespace Microsoft.PowerFx.Core.Functions
         /// </summary>
         public virtual bool HasPreciseErrors => false;
 
-        // Returns true if the function will mutate the value of argument 0, as is the case with Patch, Collect, Remove, etc.
-        public virtual bool MutatesArg0 => false;
+        /// <summary>
+        /// Returns true if the function will mutate the argument, as is the case of Patch, Collect, Remove, etc.
+        /// Set can also mutate, but needs to make a decision based on the argument's node.
+        /// For example, Set(x,{a:1}) is not a mutate and has a single FirstName node for the first argument, 
+        /// while Set(x.a,1) is a mutate and has a more complex node for the first argument.
+        /// This function covers both CanMutate and CanSetMutate scenarios which is checked in CheckTypes/CheckSemantics.
+        /// </summary>
+        /// <param name="argIndex">Index of the argument.</param>
+        /// <param name="arg">Argument at that index.</param>
+        public virtual bool MutatesArg(int argIndex, TexlNode arg) => false;
 
         public virtual RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.None;
 
@@ -159,6 +169,14 @@ namespace Microsoft.PowerFx.Core.Functions
         ///  Return true if the function uses an input's column names to inform Intellisense's suggestions. Also, consider overriding <see cref="TryGetTypeForArgSuggestionAt(int, out DType)"/>.
         /// </summary>
         public virtual bool CanSuggestInputColumns => false;
+
+        /// <summary>
+        /// Identifies which args (1-based) to use to compose the scope type for subsequent lambdas.
+        /// Example:
+        ///     Filter(t1, ...) => ScopeArgs is 1.
+        ///     Join(t1, t2, ...) => ScopeArgs is 2.
+        /// </summary>
+        public virtual int ScopeArgs => 1;
 
         /// <summary>
         /// If this returns false, the Intellisense will use Arg[0] type to suggest the type of the argument.
@@ -193,6 +211,9 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if UDFs cannot override this function name.
         public virtual bool IsRestrictedUDFName => false;
 
+        // Return true if this function is not allowed inside a user defined function.
+        public virtual bool IsRestrictedInsideUdfBody => false;
+
         // Return true if this function affects scope variable ("app scope variable or component scope variable").
         public virtual bool AffectsScopeVariable => false;
 
@@ -223,6 +244,9 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>Indicates whether table and record param types require all columns to be specified in the input argument.</summary>
         public virtual bool RequireAllParamColumns => false;
 
+        // Indicates the base type of the function. The base type can differ if the function extends multiple base classes i.e. Join function.
+        public virtual Type DeclarationType => this.GetType();
+
         /// <summary>
         /// Indicates whether the function will propagate the mutability of its first argument.
         /// For example, if x is a mutable reference (i.e., a variable), then First(x) will still
@@ -239,6 +263,23 @@ namespace Microsoft.PowerFx.Core.Functions
         protected void ValidateArgumentIsMutable(TexlBinding binding, TexlNode arg, IErrorContainer errors)
         {
             if (binding.Features.PowerFxV1CompatibilityRules && !binding.IsMutable(arg))
+            {
+                errors.EnsureError(
+                    arg,
+                    new ErrorResourceKey("ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue"),
+                    this.Name);
+            }
+        }
+
+        /// <summary>
+        /// Adds an error to the container if the given argument is immutable.
+        /// </summary>
+        /// <param name="binding"></param>
+        /// <param name="arg"></param>
+        /// <param name="errors"></param>
+        protected void ValidateArgumentIsSetMutable(TexlBinding binding, TexlNode arg, IErrorContainer errors)
+        {
+            if (binding.Features.PowerFxV1CompatibilityRules && !binding.IsSetMutable(arg))
             {
                 errors.EnsureError(
                     arg,
@@ -359,6 +400,10 @@ namespace Microsoft.PowerFx.Core.Functions
         public string QualifiedName => Namespace.IsRoot ? Name : Namespace.ToDottedSyntax() + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(Name);
 
         public bool IsDeprecatedOrInternalFunction => this is IHasUnsupportedFunctions sdf && (sdf.IsDeprecated || sdf.IsInternal);
+
+        // This property is true for a function if and only if there is an argIndex such that func.ArgIsType(argIndex) == true
+        // Eg: for example TypedParseJSON.ArgIsType(1) == true and hence TypedParseJSON.HasTypeArg is true
+        public virtual bool HasTypeArgs => false;
 
         public TexlFunction(
             DPath theNamespace,
@@ -486,6 +531,12 @@ namespace Microsoft.PowerFx.Core.Functions
             return SupportsParamCoercion && (argIndex <= MinArity || argIndex <= MaxArity);
         }
 
+        public virtual bool ArgIsType(int argIndex)
+        {
+            Contracts.Assert(!HasTypeArgs);
+            return false;
+        }
+
         private bool CheckTypesCore(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
@@ -503,8 +554,8 @@ namespace Microsoft.PowerFx.Core.Functions
             // Type check the args
             for (var i = 0; i < count; i++)
             {
-                // Identifiers don't have a type
-                if (ParameterCanBeIdentifier(args[i], i, context.Features))
+                // Identifiers don't have a type and type arguments need not be type checked
+                if (ParameterCanBeIdentifier(args[i], i, context.Features) || ArgIsType(i))
                 {
                     continue;
                 }
@@ -539,7 +590,7 @@ namespace Microsoft.PowerFx.Core.Functions
             for (var i = count; i < args.Length; i++)
             {
                 // Identifiers don't have a type
-                if (ParameterCanBeIdentifier(args[i], i, context.Features))
+                if (ParameterCanBeIdentifier(args[i], i, context.Features) || ArgIsType(i))
                 {
                     continue;
                 }
@@ -850,13 +901,11 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // Fetch the description associated with the specified parameter name (which must be the INVARIANT name)
         // If the param has no description, this will return false.
-        public virtual bool TryGetParamDescription(string paramName, out string paramDescription)
+        public virtual bool TryGetParamDescription(string paramName, out string paramDescription, string locale = null)
         {
             Contracts.AssertNonEmpty(paramName);
 
-            // Fetch it from the string resources by default. Subclasses can override this
-            // and use their own dictionaries, etc.
-            return StringResources.TryGet("About" + LocaleInvariantName + "_" + paramName, out paramDescription);
+            return StringResources.TryGet("About" + LocaleInvariantName + "_" + paramName, out paramDescription, locale);
         }
 
         // Exhaustive list of parameter names, in no guaranteed order.
@@ -1619,7 +1668,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return _cachedFunctionInfo = new TransportSchemas.FunctionInfo()
             {
                 Label = Name,
-                Detail = Description,
+                Detail = GetDescription(locale),
                 Signatures = GetSignatures().Select(signature => new FunctionSignature()
                 {
                     // $$$ can't use current culture
@@ -1690,6 +1739,26 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             return ArgPreprocessor.None;
+        }
+
+        /// <summary>
+        /// Visit all function nodes to compose dependency info.
+        /// </summary>
+        /// <param name="node">IR CallNode.</param>
+        /// <param name="visitor">Dependency visitor.</param>
+        /// <param name="context">Dependency context.</param>
+        /// <returns></returns>
+        public virtual bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyContext context)
+        {
+            foreach (var arg in node.Args)
+            {
+                arg.Accept(visitor, context);
+            }
+
+            // The return value is used by DepedencyScanFunctionTests test case.
+            // Returning false to indicate that the function runs a basic dependency scan.
+            // Other functions can override this method to return true if they have a custom dependency scan.
+            return false;
         }
     }
 }

@@ -9,7 +9,17 @@
     <Import_RootNamespace>Microsoft.PowerFx.TexlFunctionExporter.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AssemblyProperties.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConnectorStat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FunctionStat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IYamlFunction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SwaggerFileIdentification.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SwaggerLocatorSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TexlYamlComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)YamlComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)YamlExporter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)YamlReaderWriter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)YamlTexlFunction.cs" />
     <Content Include="$(MSBuildThisFileDirectory)icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

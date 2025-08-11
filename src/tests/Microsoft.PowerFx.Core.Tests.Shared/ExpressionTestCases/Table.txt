@@ -81,7 +81,7 @@ Table({Value:42},{Value:Error({Kind:ErrorKind.InvalidArgument})})
 >> Table(["everything"], [42])
 Table({Value:"everything"},{Value:"42"})
 
-// Error function has type ObjNull, which can is both a record and a table; we treat it as a record
+// Error function has type Blank, which can is both a record and a table; we treat it as a record
 >> Table([{a:1}], Error({Kind:ErrorKind.Div0, Message:"Please don't divide by zero"}), {a:3}, [{a:4}])
 Table({a:1},Error({Kind:ErrorKind.Div0}),{a:3},{a:4})
 

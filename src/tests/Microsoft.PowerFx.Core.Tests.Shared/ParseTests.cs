@@ -151,6 +151,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("\"Newline  \n characters   \r   galore  \u00085\"")]
         [InlineData("\"And \u2028    some   \u2029   more!\"")]
         [InlineData("\"Other supported ones:  \t\b\v\f\0\'     \"")]
+        [InlineData("\"Some unicode characters: 🍰 ❤ 💩 🤞🏽\"")]
         public void TexlParseStringLiteralsWithEscapableCharacters(string script)
         {
             TestRoundtrip(script);
@@ -333,6 +334,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("'A                                           _'")]
         [InlineData("'A                                           A'")]
         [InlineData("'A                                           123'")]
+        [InlineData("'🍰'")]
+        [InlineData("'🙋🏽 😂 😞 🤞🏽'")]
 
         // Identifiers with bangs (e.g. qualified entity names)
         [InlineData("A!B")]
@@ -360,6 +363,26 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("=", 0, 1)]
+        [InlineData("💩", 0, 2)] // It's a surrogate character pair, spans 2 characters
+        [InlineData("a💩", 1, 3)] // Second character is a surrogate pair, spans 2 characters
+        public void TestParseIdentifiersThatNeedEscaping(string identifier, int expectedErrorSpanMin, int expectedErrorSpanMax)
+        {
+            var expression = $"Set({identifier}, 1)";
+            expectedErrorSpanMax += "Set(".Length;
+            expectedErrorSpanMin += "Set(".Length;
+            var result = TexlParser.ParseScript(expression, flags: TexlParser.Flags.None);
+            var node = result.Root;
+
+            Assert.NotNull(node);
+            Assert.True(result.HasError, result.ParseErrorText);
+            var firstError = result.Errors.First();
+
+            Assert.Equal(expectedErrorSpanMin, firstError.Span.Min);
+            Assert.Equal(expectedErrorSpanMax, firstError.Span.Lim);
+        }
+
+        [Theory]
         [InlineData("A.B.C")]
         [InlineData("A.'Some Column'.C")]
         [InlineData("'Some Table'.'Some Column'")]
@@ -372,11 +395,6 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
 
-        // Identifiers can't be all-blank.
-        [InlineData("' '")]
-        [InlineData("'     '")]
-        [InlineData("'                                          '")]
-
         // Can't mix dot and bang within the same identifier.
         [InlineData("A!B.C")]
         [InlineData("A.B!C")]
@@ -384,7 +402,6 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("A!B!C!D!E!F!G.H")]
 
         // Missing delimiters
-        [InlineData("'foo")]
         [InlineData("foo'")]
 
         // Disambiguated identifiers and scope fields
@@ -409,6 +426,45 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             // Identifiers can't be all-blank.
             TestParseErrors(script);
+        }
+
+        [Theory]
+
+        // Missing delimiters
+        [InlineData("'foo")]
+
+        public void TexlParseIdentifiersNegative_MissingClose(string script)
+        {
+            // Identifiers can't be all-blank.
+            TestParseErrors(script, 1, StringResources.Get(TexlStrings.ErrClosingIdentifierExpected));
+        }
+
+        [Theory]
+
+        // Identifiers can't be all-blank.
+        [InlineData("''")]
+        [InlineData("' '")]
+        [InlineData("'     '")]
+        [InlineData("'                                          '")]
+        [InlineData("' \t '")]
+        [InlineData("' \n '")]
+        [InlineData("' \r '")]
+
+        // Tabs and newlines in an identifier or DName
+        // Should match CharacterUtils.IsTabulation() and CharacterUtils.IsLineTerm() used in DName.MakeValid
+        [InlineData("'a \t b'")] // \u0009
+        [InlineData("'a \u000b b'")] // vertical tab
+        [InlineData("'a \n b'")]
+        [InlineData("'a \r b'")]
+        [InlineData("'a \u0085 b'")]
+        [InlineData("'a \u2028 b'")]
+        [InlineData("'a \u2029 b'")]
+        [InlineData("'a \u000c b'")] // form feed
+
+        public void TexlParseIdentifiersNegative_EmptyTabsNewlines(string script)
+        {
+            // Identifiers can't be all-blank.
+            TestParseErrors(script, 1, StringResources.Get(TexlStrings.ErrEmptyInvalidIdentifier));
         }
 
         [Theory]
@@ -470,6 +526,18 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TexlParseFunctionCalls(string script)
         {
             TestRoundtrip(script);
+        }
+
+        [Theory]
+        [InlineData("Type(Decimal)", "Type(Decimal)")]
+        [InlineData("Type([Number])", "Type([ Number ])")]
+        [InlineData("Type(RecordOf(Accounts))", "Type(RecordOf(Accounts))")]
+        [InlineData("Type([{Age: Number}])", "Type([ { Age:Number } ])")]
+        [InlineData("IsType(ParseJSON(\"42\"),Type(Decimal))", "IsType(ParseJSON(\"42\"), Type(Decimal))")]
+        [InlineData("IsType(ParseJSON(\"{}\"),Type(RecordOf(Accounts)))", "IsType(ParseJSON(\"{}\"), Type(RecordOf(Accounts)))")]
+        public void TexlParseTypeLiteral(string script, string expected)
+        {
+            TestRoundtrip(script, expected, features: Features.PowerFxV1);
         }
 
         [Theory]
@@ -781,9 +849,9 @@ namespace Microsoft.PowerFx.Core.Tests
             TestRoundtrip(script, expected, flags: TexlParser.Flags.EnableExpressionChaining);
         }
 
-        internal void TestRoundtrip(string script, string expected = null, NodeKind expectedNodeKind = NodeKind.Error, Action<TexlNode> customTest = null, TexlParser.Flags flags = TexlParser.Flags.None)
+        internal void TestRoundtrip(string script, string expected = null, NodeKind expectedNodeKind = NodeKind.Error, Action<TexlNode> customTest = null, TexlParser.Flags flags = TexlParser.Flags.None, Features features = null)
         {
-            var result = TexlParser.ParseScript(script, flags: flags);
+            var result = TexlParser.ParseScript(script, flags: flags, features: features ?? Features.None);
             var node = result.Root;            
                         
             Assert.NotNull(node);
@@ -958,6 +1026,51 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(udfCount, parseResult.UDFs.Count());
             Assert.Equal(validUdfCount, parseResult.UDFs.Where(udf => udf.IsParseValid).Count());
             Assert.Equal(expectErrors, parseResult.HasErrors);
+        }
+
+        [Theory]
+        [InlineData("SomeFunc(): SomeType = {x:5, y: 5};", false, false)]
+        [InlineData("F1(): Void = { F2({x:5, y: 5}); };", false, true)]
+        [InlineData("SomeFunc(): SomeType = { /*comment1*/  x /*comment2*/ :  5};", false, false)]
+        [InlineData("SomeFunc(): SomeType = { /*comment1  x :  5};", true, true)]
+        [InlineData("SomeFunc(): SomeType = { //comment1  x :  5};", true, true)]
+        [InlineData("SomeFunc(): SomeType = {};", false, false)]
+        [InlineData("SomeFunc(): SomeType = { /*somecomment*/ };", false, false)]
+        [InlineData("SomeFunc(): SomeType = { /*somecomment*/ ", true, true)]
+        [InlineData("SomeFunc(): SomeType = { /*somecomm }", true, true)]
+        public void TestUDFReturnsRecord(string script, bool expectErrors, bool isImperative)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = true
+            };
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            Assert.Equal(expectErrors, parseResult.HasErrors);
+            Assert.Equal(isImperative, parseResult.UDFs.First().IsImperative);
+        }
+
+        [Theory]
+        [InlineData("A = Type(Number);", 0)]
+        [InlineData("A = \"hello\";B = Type([Boolean]); C = 5;", 2)]
+        public void TestTypeLiteralInNamedFormula(string script, int namedFormulaCount)
+        {
+            var parserOptions = new ParserOptions();
+            var parseResult = UserDefinitions.Parse(script, parserOptions, Features.PowerFxV1);
+            Assert.True(parseResult.HasErrors);
+            Assert.Equal(namedFormulaCount, parseResult.NamedFormulas.Count());
+            Assert.Contains(parseResult.Errors, e => e.MessageKey.Contains("ErrUserDefinedTypeIncorrectSyntax"));
+        }
+
+        [Theory]
+        [InlineData("SomeFunc(:")]
+        [InlineData("F(a: Boolean,:):Number = 1; G(): Number = 1;")]
+        public void TestUDFParseArgDoesNotThrowException(string script)
+        {
+            var parserOptions = new ParserOptions();
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            Assert.True(parseResult.HasErrors);
         }
     }
 }

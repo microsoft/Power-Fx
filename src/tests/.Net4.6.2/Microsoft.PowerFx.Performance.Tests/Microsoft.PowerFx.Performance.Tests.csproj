@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <OutputType>Exe</OutputType>
+    <Configurations>Debug;Release;Debug462;Debug70;DebugAll;Release462;Release70;ReleaseAll</Configurations>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <StartupObject>Microsoft.PowerFx.Performance.Tests.Program</StartupObject>    
+    <AssemblyName>Microsoft.PowerFx.Performance.Tests</AssemblyName>
+    <SignAssembly>False</SignAssembly>
+    <DelaySign>False</DelaySign>
+  </PropertyGroup>
+
+  <ItemGroup>    
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
+    <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.13.2" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />    
+
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="xunit" Version="2.8.0" />
+    <PackageReference Include="xunit.extensibility.core" Version="2.8.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Xunit.SkippableFact" Version="1.4.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\..\stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
+    <ProjectReference Include="..\..\..\libraries\Microsoft.PowerFx.Interpreter\Microsoft.PowerFx.Interpreter.csproj" />
+    <ProjectReference Include="..\Microsoft.PowerFx.Shims.Net462\Microsoft.PowerFx.Shims.Net462.csproj" />
+    <ProjectReference Include="..\Microsoft.PowerFx.Shims\Microsoft.PowerFx.Shims.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\..\Microsoft.PowerFx.Performance.Tests.Shared\Microsoft.PowerFx.Performance.Tests.Shared.projitems" Label="Shared" />
+  <Import Project="..\..\UsePowerFxShims\UsePowerFxShims.projitems" Label="Shared" />
+  <Import Project="..\..\UseNet462\UseNet462.projitems" Label="Shared" />
+</Project>

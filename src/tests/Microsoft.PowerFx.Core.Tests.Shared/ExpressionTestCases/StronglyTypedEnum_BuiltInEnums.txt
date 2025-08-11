@@ -29,7 +29,7 @@
 // Misc
 //   15. Since there is no longer an Accepts relationship between enums and their backing kinds, more likely to get Void results
 //   16. Everything coerces to string
-//   17. Everything equals compares to Blank() (ObjNull), can order compare with numbers and CanCompareNumerics set
+//   17. Everything equals compares to Blank() (Blank), can order compare with numbers and CanCompareNumerics set
 // 
 // Examples (examples for Boolean backed enums and other configurations are in StronglyTypedEnums_TestEnums)
 //   18. StartOfWeek - Standard number backed enum
@@ -49,7 +49,7 @@
 Table({Value:1},{Value:2},{Value:3})
 
 >> Match( "info@contoso.com", Match.Email )
-{FullMatch:"info@contoso.com",StartMatch:1,SubMatches:Table()}
+{FullMatch:"info@contoso.com",StartMatch:1}
 
 >> JSON( [1,2,3], JSONFormat.FlattenValueTables )
 "[1,2,3]"
@@ -295,46 +295,46 @@ Errors: Error 19-21: Unable to compare values of type Enum (StartOfWeek).
 //
 
 >> StartOfWeek.Tuesday + 3
-Errors: Error 11-19: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 11-19: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> StartOfWeek.Tuesday + StartOfWeek.Thursday
-Errors: Error 11-19: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 33-42: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 11-19: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.|Error 33-42: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> StartOfWeek.Tuesday * 2
-Errors: Error 11-19: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 11-19: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> StartOfWeek.Tuesday * StartOfWeek.Thursday
-Errors: Error 11-19: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 33-42: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 11-19: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.|Error 33-42: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> StartOfWeek.Friday + 2
-Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> StartOfWeek.Tuesday + StartOfWeek.Wednesday
-Errors: Error 11-19: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 33-43: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 11-19: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.|Error 33-43: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> StartOfWeek.Friday - 2
-Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> StartOfWeek.Friday - StartOfWeek.Thursday
-Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> StartOfWeek.Friday * 2
-Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> StartOfWeek.Friday / 2
-Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> StartOfWeek.Friday / StartOfWeek.Thursday
-Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> StartOfWeek.Friday ^ 2
-Errors: Error 11-18: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> StartOfWeek.Friday ^ StartOfWeek.Thursday
-Errors: Error 11-18: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> StartOfWeek.Friday%
-Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Date, DateTime, DateTimeNoTimeZone, Time, Text, Boolean, UntypedObject.
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Date, DateTime, DateTimeNoTimeZone, Time, Text, Boolean, Dynamic.
 
 //===========================================================================================================
 //
@@ -418,22 +418,28 @@ Errors: Error 0-7: The function 'Boolean' has some invalid arguments.
 // Match (and friends) allows coercion from the backing kind for the regular expression
 
 >> Match( "a3d4", Match.Digit )
-{FullMatch:"3",StartMatch:2,SubMatches:Table()}
+{FullMatch:"3",StartMatch:2}
 
 >> Match( "a3d4", "\d")
-{FullMatch:"3",StartMatch:2,SubMatches:Table()}
+{FullMatch:"3",StartMatch:2}
 
->> IsMatch( "a3d4", Match.Digit )
+>> IsMatch( "a3d4", Match.Digit, MatchOptions.Complete )
 false
 
->> IsMatch( "a3d4", "\d")
+>> IsMatch( "a3d4", Match.Digit, MatchOptions.Contains )
+true
+
+>> IsMatch( "a3d4", "\d", MatchOptions.Complete )
 false
+
+>> IsMatch( "a3d4", "\d", MatchOptions.Contains )
+true
 
 >> MatchAll( "a3d4", Match.Digit )
-Table({FullMatch:"3",StartMatch:2,SubMatches:Table()},{FullMatch:"4",StartMatch:4,SubMatches:Table()})
+Table({FullMatch:"3",StartMatch:2},{FullMatch:"4",StartMatch:4})
 
 >> MatchAll( "a3d4", "\d")
-Table({FullMatch:"3",StartMatch:2,SubMatches:Table()},{FullMatch:"4",StartMatch:4,SubMatches:Table()})
+Table({FullMatch:"3",StartMatch:2},{FullMatch:"4",StartMatch:4})
 
 >> Match.Digit = "\d"
 true
@@ -531,7 +537,7 @@ Errors: Error 34-35: Invalid argument type (Text). Expecting a Enum (JSONFormat)
 
 // Since the Match supports CanCoerceBackingKind, any concatenation combination is supported
 >> Match( "334", Match.Digit & Match.Digit & JSONFormat.IndentFour )
-{FullMatch:"334",StartMatch:1,SubMatches:Table()}
+{FullMatch:"334",StartMatch:1}
 
 // Concatenation can be allowed between members of the option set and still retain strong typing with IExternalOptionSet.CanConcatenateStronglyTyped
 
@@ -553,16 +559,16 @@ Errors: Error 15-18: Invalid argument type (Text). Expecting a Enum (JSONFormat)
 // Concatenation can be allowed with text strings and still retain strong typing with IExternalOptionSet.CanCoerceBackingKind
 
 >> Match( "33this is ok", Concatenate( Match.Digit, Match.Digit, "this is ok" ) )
-{FullMatch:"33this is ok",StartMatch:1,SubMatches:Table()}
+{FullMatch:"33this is ok",StartMatch:1}
 
 >> Match( "33this is ok", Match.Digit & Match.Digit & "this is ok" )
-{FullMatch:"33this is ok",StartMatch:1,SubMatches:Table()}
+{FullMatch:"33this is ok",StartMatch:1}
 
 >> Match( "33this is ok", "\d\dthis is ok" )
-{FullMatch:"33this is ok",StartMatch:1,SubMatches:Table()}
+{FullMatch:"33this is ok",StartMatch:1}
 
 >> Match( "33this is ok", "\d" & "\d" & "this is ok" )
-{FullMatch:"33this is ok",StartMatch:1,SubMatches:Table()}
+{FullMatch:"33this is ok",StartMatch:1}
 
 // Strongly typed concatenated results can be compared
 
@@ -617,16 +623,16 @@ true
 //
 
 >> Match( "a34d", Match.Digit & "\d" )
-{FullMatch:"34",StartMatch:2,SubMatches:Table()}
+{FullMatch:"34",StartMatch:2}
 
 >> Match( "a34d", "\d" & Match.Digit )
-{FullMatch:"34",StartMatch:2,SubMatches:Table()}
+{FullMatch:"34",StartMatch:2}
 
 >> Match( "a34d", Concatenate( Match.Digit, "\d" ) )
-{FullMatch:"34",StartMatch:2,SubMatches:Table()}
+{FullMatch:"34",StartMatch:2}
 
 >> Match( "a34d", Concatenate( "\d", Match.Digit ) )
-{FullMatch:"34",StartMatch:2,SubMatches:Table()}
+{FullMatch:"34",StartMatch:2}
 
 >> Text(Match.Digit) & Text(SortOrder.Ascending)
 "\dascending"
@@ -672,16 +678,16 @@ Match.CalculatedOptionSetValue
 //
 
 >> If(true, TimeUnit.Seconds, "A")
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-31: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 >> If(true, TimeUnit.Minutes, TimeUnit.Seconds)
 TimeUnit.Minutes
 
 >> If(true, 1, StartOfWeek.Tuesday)
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-32: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 >> If(true, StartOfWeek.Tuesday, 1)
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-32: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 //===========================================================================================================
 //
@@ -777,17 +783,17 @@ Match.CalculatedOptionSetValue
 
 //===========================================================================================================
 //
-// 17. Everything equals compares to Blank() (ObjNull), can order compare with numbers and CanCompareNumerics set
+// 17. Everything equals compares to Blank() (Blank), can order compare with numbers and CanCompareNumerics set
 //
 
 >> StartOfWeek.Monday < Blank()
-Errors: Error 19-20: Incompatible types for comparison. These types can't be compared: Enum (StartOfWeek), ObjNull.
+Errors: Error 19-20: Incompatible types for comparison. These types can't be compared: Enum (StartOfWeek), Blank.
 
 >> StartOfWeek.Monday = Blank()
 false
 
 >> Blank() >= StartOfWeek.Monday
-Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (StartOfWeek).
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: Blank, Enum (StartOfWeek).
 
 >> Blank() <> StartOfWeek.Monday
 true
@@ -807,25 +813,25 @@ false
 true
 
 >> Match.Letter < Blank()
-Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: Enum (Match), ObjNull.
+Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: Enum (Match), Blank.
 
 >> Match.Letter = Blank()
 false
 
 >> Blank() >= Match.Letter
-Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (Match).
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: Blank, Enum (Match).
 
 >> Blank() <> Match.Letter
 true
 
 >> Color.Gray < Blank()
-Errors: Error 11-12: Incompatible types for comparison. These types can't be compared: Enum (Color), ObjNull.
+Errors: Error 11-12: Incompatible types for comparison. These types can't be compared: Enum (Color), Blank.
 
 >> Color.Gray = Blank()
 false
 
 >> Blank() >= Color.Gray
-Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (Color).
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: Blank, Enum (Color).
 
 >> Blank() <> Color.Gray
 true
@@ -904,7 +910,7 @@ Errors: Error 19-20: Incompatible types for comparison. These types can't be com
 Errors: Error 19-20: Incompatible types for comparison. These types can't be compared: Enum (StartOfWeek), Decimal.
 
 >> If( false, StartOfWeek.Monday, 3 )
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-34: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 // Can't be used as a number (CanCoerceToBackingKind = false)
 
@@ -915,13 +921,13 @@ Errors: Error 0-4: The function 'Sqrt' has some invalid arguments.|Error 17-24: 
 Errors: Error 0-3: The function 'Mod' has some invalid arguments.|Error 16-23: Invalid argument type (Enum (StartOfWeek)). Expecting a Decimal value instead.
 
 >> StartOfWeek.Sunday + 3
-Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> StartOfWeek.Sunday + StartOfWeek.Monday
-Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 32-39: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.|Error 32-39: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> If( false, 3, StartOfWeek.Sunday )  // first type rule
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-34: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 // Can't compare numerically (CanCompareNumeric = false)
 
@@ -1010,7 +1016,7 @@ Errors: Error 28-36: Invalid argument type (Text). Expecting a Enum (TimeUnit) v
 Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: Enum (TimeUnit), Text.
 
 >> If( false, TimeUnit.Years, 3 )  // first type rule
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-30: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 // Can't be used as a number (CanCoerceToBackingKind = false)
 
@@ -1021,13 +1027,13 @@ Errors: Error 0-4: The function 'Sqrt' has some invalid arguments.|Error 14-20: 
 Errors: Error 0-3: The function 'Mod' has some invalid arguments.|Error 13-19: Invalid argument type (Enum (TimeUnit)). Expecting a Decimal value instead.
 
 >> TimeUnit.Years + 3
-Errors: Error 8-14: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 8-14: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> TimeUnit.Years + TimeUnit.Months
-Errors: Error 8-14: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 25-32: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 8-14: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.|Error 25-32: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> If( false, 3, TimeUnit.Years )  // first type rule
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-30: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 // Can't compare numerically (CanCompareNumeric = false)
 
@@ -1125,7 +1131,7 @@ Errors: Error 0-9: The function 'ColorFade' has some invalid arguments.|Error 20
 RGBA(140,140,89,1)
 
 >> If( false, Color.Red, RGBA(120,120,12,1) )  // first type rule
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-42: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 // Can be used as a color (CanCoerceToBackingKind = true)
 
@@ -1139,10 +1145,10 @@ Errors: Error 0-4: The function 'Sqrt' has some invalid arguments.|Error 11-15: 
 Errors: Error 0-3: The function 'Mod' has some invalid arguments.|Error 10-14: Invalid argument type (Enum (Color)). Expecting a Decimal value instead.
 
 >> Color.Red + 3
-Errors: Error 5-9: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 5-9: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> Color.Red + Color.Red
-Errors: Error 5-9: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 17-21: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 5-9: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.|Error 17-21: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> If( false, RGBA(120,120,12,1), Color.Red )  // first type rule
 RGBA(255,0,0,1)
@@ -1221,7 +1227,7 @@ Errors: Error 18-20: Incompatible types for comparison. These types can't be com
 // No ErrorKind functions are strongly typed at this time
 
 >> If( false, ErrorKind.Div0, 3 )  // first type rule
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 0-30: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
 
 // Can be used as a number (CanCoerceToBackingKind = true)
 
@@ -1376,7 +1382,7 @@ Errors: Error 0-4: The function 'Sqrt' has some invalid arguments.|Error 20-29: 
 Errors: Error 0-3: The function 'Mod' has some invalid arguments.|Error 19-28: Invalid argument type (Enum (DateTimeFormat)). Expecting a Decimal value instead.
 
 >> DateTimeFormat.LongDate + 3
-Errors: Error 14-23: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 14-23: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> DateTimeFormat.LongDate & "hi"
 "'longdate'hi"
@@ -1485,7 +1491,7 @@ Errors: Error 0-4: The function 'Sqrt' has some invalid arguments.|Error 11-26: 
 Errors: Error 0-3: The function 'Mod' has some invalid arguments.|Error 10-25: Invalid argument type (Enum (Match)). Expecting a Decimal value instead.
 
 >> Match.MultipleDigits + 3
-Errors: Error 5-20: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 5-20: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> If( false, "help", Match.MultipleDigits )  // first type rule
 "\d+"
@@ -1514,4 +1520,3 @@ false
 
 >> IsMatch( "28", 28 )
 Errors: Error 15-17: Invalid argument type (Decimal). Expecting a Enum (Match) value instead.
-

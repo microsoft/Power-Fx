@@ -40,7 +40,8 @@ namespace Microsoft.PowerFx
                 var data = new NameSymbol(TexlBinding.ThisRecordDefaultName, new SymbolProperties
                 {
                      CanMutate = false,
-                     CanSet = false
+                     CanSet = false,
+                     CanSetMutate = false
                 })
                 {
                     Owner = this,
@@ -70,7 +71,8 @@ namespace Microsoft.PowerFx
             var data = new NameSymbol(TexlBinding.ThisRecordDefaultName, new SymbolProperties
             {
                 CanMutate = false,
-                CanSet = false
+                CanSet = false,
+                CanSetMutate = false
             })
             {
                 Owner = this,
@@ -224,7 +226,8 @@ namespace Microsoft.PowerFx
                     data = new NameSymbol(logicalName, new SymbolProperties
                     {
                         CanSet = _mutable,
-                        CanMutate = false
+                        CanMutate = false,
+                        CanSetMutate = false
                     })
                     {
                         Owner = this,

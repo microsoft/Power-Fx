@@ -3,16 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Functions;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -23,9 +13,31 @@ namespace Microsoft.PowerFx.Types
     public abstract class DelegationParameters
     {
         /// <summary>
+        /// When using OData with top level aggregation the field name to use to store the result. e.g. result of Sum(Employees, Salary).
+        /// </summary>
+        public const string ODataAggregationResultFieldName = "result";
+
+        /// <summary>
+        /// When using OData with $count=True, the result is returned in below field.
+        /// </summary>
+        public const string ODataCountFieldName = "@odata.count";
+
+        /// <summary>
+        /// When returning Records, OData puts them in this field.
+        /// </summary>
+        internal const string ODataResultFieldName = "value";
+
+        // internal const string ODataCountFieldName = "count";
+
+        /// <summary>
         /// Which features does this use - so we can determine if we support it. 
         /// </summary>
         public abstract DelegationParameterFeatures Features { get; }
+
+        /// <summary>
+        /// Expected type query needs to return.
+        /// </summary>
+        public abstract FormulaType ExpectedReturnType { get; }
 
         /// <summary>
         /// Throw if the parameters use features outside the feature list. 
@@ -44,17 +56,53 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
+        /// <summary>
+        /// Returns the list of (column name, ascending/descending) where ascending=true.
+        /// </summary>
+        /// <returns></returns>
+        public abstract IReadOnlyCollection<(string, bool)> GetOrderBy();
+
         public abstract string GetOdataFilter();
 
-        // 0 columns means return all columns.
+        /// <summary>
+        /// Retrieves a collection of column names that needs to be retrieved from the Source, these are same column logical name of source. Empty collection means all columns are requested.
+        /// </summary>
+        /// <returns>An <see cref="IReadOnlyCollection{T}"/> of strings containing the names of the columns. Returns an empty
+        /// collection if no columns are specified.</returns>
         public virtual IReadOnlyCollection<string> GetColumns()
         {
             return new string[0];
         }
 
-        public int? Top { get; set; }
+        /// <summary>
+        /// Returns the list of (column name, alias) where alias is the name to use in the result, column name is the logical name in the source.
+        /// </summary>
+        /// <returns></returns>
+        public virtual IReadOnlyCollection<(string, string)> GetColumnsWithAlias()
+        {
+            // Default implementation returns no columns with alias.
+            return new (string, string)[0];
+        }
 
-        // Other odata fetchers?         
+        /// <summary>
+        /// Get OData $apply parameter string.
+        /// </summary>
+        /// <returns></returns>
+        public abstract string GetODataApply();
+
+        /// <summary>
+        /// Get OData $count flag.
+        /// </summary>
+        /// <returns></returns>
+        public abstract bool ReturnTotalCount();
+
+        /// <summary>
+        /// Returns OData query string which has all parameter like $filter, $apply, etc.
+        /// </summary>
+        /// <returns></returns>
+        public abstract string GetODataQueryString();
+
+        public int? Top { get; set; }
     }
 
     /// <summary>
@@ -64,9 +112,57 @@ namespace Microsoft.PowerFx.Types
     [Flags]
     public enum DelegationParameterFeatures
     {
+        // $filter
         Filter = 1 << 0,
+
+        // $top
         Top = 1 << 1,
+
+        // $select
         Columns = 1 << 2,
+
+        // $orderBy
         Sort = 1 << 3,
+
+        // $apply = join(table As name)
+        ApplyJoin = 1 << 4,
+
+        // $apply = groupby((field1, ..), field with sum as TotalSum)
+        ApplyGroupBy = 1 << 5,
+
+        // $count
+        Count = 1 << 6,
+
+        // $apply = aggregate(field1 with sum as TotalSum)
+        ApplyTopLevelAggregation = 1 << 7,
+
+        /*
+          To be implemented later when needed
+         
+        // $compute
+        Compute = 1 << 5,
+
+        // $expand
+        Expand = 1 << 7,
+
+        // $format
+        Format = 1 << 8,
+
+        // $index
+        Index = 1 << 9,
+
+        // $levels
+        Levels = 1 << 10,
+
+        // $schemaversion
+        SchemaVersion = 1 << 11,
+
+        // $search
+        Search = 1 << 12,
+
+        // $skip
+        Skip = 1 << 13
+
+        */
     }
 }

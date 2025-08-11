@@ -140,6 +140,8 @@ Table({Value:0})
 >> Sin( Pi() )
 1.2246467991473532E-16
 
+// .Net 4.6.2 returns Table({Value:1.22460635382238E-16})
+#DISABLE.NET: 462
 >> Sin( [Pi()] )
 Table({Value:1.2246467991473532E-16})
 
@@ -149,15 +151,23 @@ Error({Kind:ErrorKind.Div0})
 >> Cot( [0] )
 Table({Value:Error({Kind:ErrorKind.Div0})})
 
+// .Net 4.6.2 returns -8.16588936419192E+15
+#DISABLE.NET: 462
 >> Cot( 3.14159265358979323846264338327950288419716939937510 )
 -8165619676597685
 
+// .Net 4.6.2 returns Table({Value:-8.16588936419192E+15})
+#DISABLE.NET: 462
 >> Cot( [3.14159265358979323846264338327950288419716939937510] )
 Table({Value:-8165619676597685})
 
+// .Net 4.6.2 returns -8.16588936419192E+15
+#DISABLE.NET: 462
 >> Cot( Pi() )
 -8165619676597685
 
+// .Net 4.6.2 returns Table({Value:-8.16588936419192E+15})
+#DISABLE.NET: 462
 >> Cot( [Pi()] )
 Table({Value:-8165619676597685})
 
@@ -170,12 +180,16 @@ Table({Value:0})
 >> Tan( Pi() )
 -1.2246467991473532E-16
 
+// .Net 4.6.2 returns Table({Value:-1.22460635382238E-16})
+#DISABLE.NET: 462
 >> Tan( [Pi()] )
 Table({Value:-1.2246467991473532E-16})
 
 >> Acos( 0 )
 1.5707963267948966
 
+// .Net 4.6.2 returns Table({Value:1.5707963267949})
+#DISABLE.NET: 462
 >> Acos( [0] )
 Table({Value:1.5707963267948966})
 
@@ -188,12 +202,16 @@ Table({Value:0})
 >> Acot( 0 )
 1.5707963267948966
 
+// .Net 4.6.2 returns Table({Value:1.5707963267949})
+#DISABLE.NET: 462
 >> Acot( [0] )
 Table({Value:1.5707963267948966})
 
 >> Acot( 1 )
 0.7853981633974483
 
+// .Net 4.6.2 returns Table({Value:0.785398163397448})
+#DISABLE.NET: 462
 >> Acot( [1] )
 Table({Value:0.7853981633974483})
 
@@ -206,6 +224,8 @@ Table({Value:0})
 >> Asin( 1 )
 1.5707963267948966
 
+// .Net 4.6.2 returns Table({Value:1.5707963267949})
+#DISABLE.NET: 462
 >> Asin( [1] )
 Table({Value:1.5707963267948966})
 
@@ -218,6 +238,8 @@ Table({Value:0})
 >> Atan( 1 )
 0.7853981633974483
 
+// .Net 4.6.2 returns Table({Value:0.785398163397448})
+#DISABLE.NET: 462
 >> Atan( [1] )
 Table({Value:0.7853981633974483})
 

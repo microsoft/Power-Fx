@@ -3,23 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Net.Http;
-using System.Numerics;
-using System.Text.RegularExpressions;
-using System.Threading;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Tests;
-using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -46,29 +32,49 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var kindStrings = new Dictionary<DKind, string>() { { DKind.Number, "%n[" }, { DKind.Color, "%c[" }, { DKind.String, "%s[" } };
 
-            foreach (var enumSymbol in EnumStoreBuilder.DefaultEnumSymbols)
+            void Test(string enumString, EnumSymbol enumSymbol)
             {
-                var enumString = EnumStoreBuilder.DefaultEnums[enumSymbol.Key];
                 Assert.NotNull(enumString);
-                Assert.True(kindStrings.ContainsKey(enumSymbol.Value.BackingKind));
-                Assert.StartsWith(kindStrings[enumSymbol.Value.BackingKind], enumString);
+                Assert.True(kindStrings.ContainsKey(enumSymbol.BackingKind));
+                Assert.StartsWith(kindStrings[enumSymbol.BackingKind], enumString);
 
                 Assert.True(DType.TryParse(enumString, out var dtype));
-                Assert.True(enumSymbol.Value.BackingKind == dtype.EnumSuperkind);
+                Assert.True(enumSymbol.BackingKind == dtype.EnumSuperkind);
 
-                foreach (var enumSymbolOption in enumSymbol.Value.OptionNames)
+                foreach (var enumSymbolOption in enumSymbol.OptionNames)
                 {
                     Assert.True(dtype.TryGetEnumValue(new DName(enumSymbolOption), out var enumValue), $"Enum doesn't contain {enumSymbolOption.Value}");
-                    Assert.True(enumSymbol.Value.EnumType.TryGetEnumValue(new DName(enumSymbolOption), out var enumSymbolValue), $"EnumSymbol doesn't contain {enumSymbolOption.Value}");
-                    Assert.True((enumValue is double && enumSymbolValue is double && (enumSymbol.Value.BackingKind == DKind.Color || enumSymbol.Value.BackingKind == DKind.Number)) ||
-                                (enumValue is string && enumSymbolValue is string && enumSymbol.Value.BackingKind == DKind.String));
+                    Assert.True(enumSymbol.EnumType.TryGetEnumValue(new DName(enumSymbolOption), out var enumSymbolValue), $"EnumSymbol doesn't contain {enumSymbolOption.Value}");
+
+                    // quotes are escaped in enumSpecs
+                    if (enumSymbolValue is string stringValue)
+                    {
+                        enumSymbolValue = stringValue.Replace(@"""", @"""""");
+                    }
+
+                    Assert.True((enumValue is double && enumSymbolValue is double && (enumSymbol.BackingKind == DKind.Color || enumSymbol.BackingKind == DKind.Number)) ||
+                                (enumValue is string && enumSymbolValue is string && enumSymbol.BackingKind == DKind.String));
                     Assert.Equal(enumValue, enumSymbolValue);
                 }
 
                 foreach (var enumPair in dtype.ValueTree.GetPairs())
                 {
-                    Assert.Contains(new DName(enumPair.Key), enumSymbol.Value.OptionNames);
+                    Assert.Contains(new DName(enumPair.Key), enumSymbol.OptionNames);
                 }
+            }
+
+            foreach (var enumSymbol in EnumStoreBuilder.DefaultEnumSymbols)
+            {
+                var enumString = EnumStoreBuilder.DefaultEnums[enumSymbol.Key];
+
+                // Match is a special case, see EnumStoreBuilder.cs for more details
+                if (enumSymbol.Key == "Match")
+                {
+                    Test(EnumStoreBuilder.DefaultEnums_MatchEnumV1, enumSymbol.Value); // tests V1
+                    enumString = EnumStoreBuilder.DefaultEnums_MatchEnumV1; // sets up for test of pre-V1
+                }
+
+                Test(enumString, enumSymbol.Value);
             }
         }
     }

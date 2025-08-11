@@ -53,9 +53,8 @@ namespace Microsoft.PowerFx.Intellisense
 
             if (_culture == null)
             {
-#pragma warning disable CA1310 // Specify StringComparison for correctness
-                return x.Text.CompareTo(y.Text);
-#pragma warning restore CA1310 // Specify StringComparison for correctness
+                // Invariant culture implements different sort orders between .Net versions
+                return string.Compare(x.Text, y.Text, StringComparison.OrdinalIgnoreCase);             
             }
             
             return _culture.CompareInfo.GetStringComparer(CompareOptions.IgnoreCase).Compare(x.Text, y.Text);            

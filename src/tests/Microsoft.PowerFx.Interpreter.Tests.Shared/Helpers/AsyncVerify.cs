@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Tests
             var task = BeginAsyncCallWorker(idx);
             var timer = Task.Delay(TimeSpan.FromSeconds(10));
 
-            if (await Task.WhenAny(task, timer).ConfigureAwait(false) == task)
+            if (await Task.WhenAny(task, timer) == task)
             {
                 return; // Success
             }
@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Tests
                 Debugger.Break();
             }
 
-            await task.ConfigureAwait(false);
+            await task;
         }
 
         private Task BeginAsyncCallWorker(int idx)
@@ -83,6 +83,11 @@ namespace Microsoft.PowerFx.Tests
                 rtConfig.AddService(setup.TimeZoneInfo);
             }
 
+            if (setup.CultureInfo != null)
+            {
+                rtConfig.AddService(setup.CultureInfo);
+            }
+
             var task = engine.EvalAsync(expr, CancellationToken.None, options: setup.Flags.ToParserOptions(new CultureInfo("en-US")), runtimeConfig: rtConfig);
 
             var i = 0;
@@ -99,7 +104,7 @@ namespace Microsoft.PowerFx.Tests
                 await Task.Yield();
             }
 
-            var result = await task.ConfigureAwait(false);
+            var result = await task;
             return result;
         }
     }

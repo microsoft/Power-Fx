@@ -25,6 +25,10 @@ namespace Microsoft.PowerFx.Syntax
         // The language settings used for parsing this script.
         // May be null if the script is to be parsed in the current locale.
         public readonly CultureInfo Loc;
+
+        // The language settings used to display intellisense suggestions and definitions.
+        public readonly CultureInfo IntellisenseLocale;
+
         private List<TexlError> _errors;
 
         // This may be null if the script hasn't yet been parsed.
@@ -32,7 +36,10 @@ namespace Microsoft.PowerFx.Syntax
 
         internal List<CommentToken> Comments { get; private set; }
 
-        public Formula(string script, TexlNode tree, CultureInfo loc = null)
+        // This is needed for determining if behavior function intellisense suggestions are appropriate.
+        public readonly bool IsImperativeUdf;
+
+        public Formula(string script, TexlNode tree, CultureInfo loc = null, bool isImperativeUdf = false, CultureInfo intellisenseLocale = null)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
@@ -40,11 +47,13 @@ namespace Microsoft.PowerFx.Syntax
             Script = script;
             ParseTree = tree;
             Loc = loc;
+            IsImperativeUdf = isImperativeUdf;
+            IntellisenseLocale = intellisenseLocale ?? CultureInfo.InvariantCulture;
             AssertValid();
         }
 
-        public Formula(string script, CultureInfo loc = null)
-            : this(script, null, loc)
+        public Formula(string script, CultureInfo loc = null, bool isImperativeUdf = false, CultureInfo intellisenseLocale = null)
+            : this(script, null, loc, isImperativeUdf, intellisenseLocale)
         {
         }
 
@@ -61,13 +70,13 @@ namespace Microsoft.PowerFx.Syntax
         // True if the formula has already been parsed.
         public bool IsParsed => ParseTree != null;
 
-        public bool EnsureParsed(TexlParser.Flags flags)
+        public bool EnsureParsed(TexlParser.Flags flags, Features features = null)
         {
             AssertValid();
 
             if (ParseTree == null)
             {
-                var result = TexlParser.ParseScript(Script, loc: Loc, flags: flags);
+                var result = TexlParser.ParseScript(Script, features ?? Features.None, culture: Loc, flags: flags);
                 ApplyParse(result);
             }
 

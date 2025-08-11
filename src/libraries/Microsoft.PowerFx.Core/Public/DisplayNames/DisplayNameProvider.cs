@@ -11,11 +11,26 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core
 {
+    /// <summary>
+    /// Provides an abstract base for mapping between logical and display names.
+    /// </summary>
     [ThreadSafeImmutable]
     public abstract class DisplayNameProvider
     {
+        /// <summary>
+        /// Attempts to get the logical name corresponding to the specified display name.
+        /// </summary>
+        /// <param name="displayName">The display name to look up.</param>
+        /// <param name="logicalName">The logical name that corresponds to the display name, if found.</param>
+        /// <returns>True if the logical name was found; otherwise, false.</returns>
         public abstract bool TryGetLogicalName(DName displayName, out DName logicalName);
 
+        /// <summary>
+        /// Attempts to get the display name corresponding to the specified logical name.
+        /// </summary>
+        /// <param name="logicalName">The logical name to look up.</param>
+        /// <param name="displayName">The display name that corresponds to the logical name, if found.</param>
+        /// <returns>True if the display name was found; otherwise, false.</returns>
         public abstract bool TryGetDisplayName(DName logicalName, out DName displayName);
 
         /// <summary>
@@ -32,18 +47,19 @@ namespace Microsoft.PowerFx.Core
         }
 
         /// <summary>
-        /// In KeyValue Pair, First is Logical Name, Second is Display Name
-        /// KeyValuePair&lt;Dname, Dname&gt;&gt; represents  KeyValuePair&lt;LogicalName, DisplayName&gt;&gt;.
+        /// Gets the collection of logical to display name pairs.
+        /// In KeyValue Pair, First is Logical Name, Second is Display Name.
+        /// KeyValuePair&lt;DName, DName&gt; represents KeyValuePair&lt;LogicalName, DisplayName&gt;.
         /// </summary>
         public abstract IEnumerable<KeyValuePair<DName, DName>> LogicalToDisplayPairs { get; }
 
         /// <summary>
-        /// Lookup when it is either logical or display name. 
+        /// Looks up a name that may be either a logical or display name and returns both forms if found.
         /// </summary>
-        /// <param name="logicalOrDisplay"></param>
-        /// <param name="logicalName"></param>
-        /// <param name="displayName"></param>
-        /// <returns></returns>
+        /// <param name="logicalOrDisplay">The name to look up, which may be either a logical or display name.</param>
+        /// <param name="logicalName">The logical name if found; otherwise, the default value.</param>
+        /// <param name="displayName">The display name if found; otherwise, the default value.</param>
+        /// <returns>True if the name was found as either a logical or display name; otherwise, false.</returns>
         public bool TryGetLogicalOrDisplayName(DName logicalOrDisplay, out DName logicalName, out DName displayName)
         {
             if (this.TryGetDisplayName(logicalOrDisplay, out displayName))
@@ -61,8 +77,10 @@ namespace Microsoft.PowerFx.Core
         }
 
         /// <summary>
-        /// Create a new display name provider with the given logical to display pairs.
+        /// Creates a new display name provider with the given logical to display name pairs.
         /// </summary>
+        /// <param name="logicalToDisplayPairs">The collection of logical to display name pairs to use for the provider.</param>
+        /// <returns>A new instance of <see cref="DisplayNameProvider"/> initialized with the specified pairs.</returns>
         public static DisplayNameProvider New(IEnumerable<KeyValuePair<DName, DName>> logicalToDisplayPairs)
         {
             if (logicalToDisplayPairs == null) 

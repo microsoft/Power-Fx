@@ -30,7 +30,12 @@ namespace Microsoft.PowerFx.Core.IR
 {
     internal class IRResult
     {
+        // IR top node after transformations.
         public IntermediateNode TopNode;
+
+        // Original IR node, without transformations.
+        public IntermediateNode TopOriginalNode;
+
         public ScopeSymbol RuleScopeSymbol;
     }
 
@@ -80,6 +85,14 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(context);
 
                 return MaybeInjectCoercion(node, new TextLiteralNode(context.GetIRContext(node), node.Value), context);
+            }
+
+            public override IntermediateNode Visit(TypeLiteralNode node, IRTranslatorContext context)
+            {
+                Contracts.AssertValue(node);
+                Contracts.AssertValue(context);
+
+                return new TextLiteralNode(IRContext.NotInSource(FormulaType.String), context.Binding.GetType(node).ToString());
             }
 
             public override IntermediateNode Visit(NumLitNode node, IRTranslatorContext context)
@@ -352,7 +365,7 @@ namespace Microsoft.PowerFx.Core.IR
                 for (var i = 0; i < carg; ++i)
                 {
                     var arg = node.Args.Children[i];
-                    var argContext = i == 0 && func.MutatesArg0 ? new IRTranslatorContext(context, isMutation: true) : context;
+                    var argContext = func.MutatesArg(i, arg) ? new IRTranslatorContext(context, isMutation: true) : context;
 
                     var supportColumnNamesAsIdentifiers = _features.SupportColumnNamesAsIdentifiers;
                     if (supportColumnNamesAsIdentifiers && func.ParameterCanBeIdentifier(arg, i, context.Binding.Features))
@@ -674,6 +687,11 @@ namespace Microsoft.PowerFx.Core.IR
                             break;
                         }
 
+                    case BindKind.NamedType:
+                        {
+                            return new TextLiteralNode(IRContext.NotInSource(FormulaType.String), context.Binding.GetType(node).ToString());
+                        }
+
                     default:
                         Contracts.Assert(false, "Unsupported Bindkind");
                         throw new NotImplementedException();
@@ -785,8 +803,7 @@ namespace Microsoft.PowerFx.Core.IR
                     Contracts.Assert(typeLhs.IsUntypedObject);
 
                     var right = new TextLiteralNode(IRContext.NotInSource(FormulaType.String), nameRhs);
-
-                    return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DynamicGetField, left, right);
+                    result = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DynamicGetField, left, right);
                 }
                 else
                 {
@@ -872,7 +889,7 @@ namespace Microsoft.PowerFx.Core.IR
 
             public override IntermediateNode Visit(SelfNode node, IRTranslatorContext context)
             {
-                Contracts.Assert(false, "Parent Keyword not supported in PowerFx");
+                Contracts.Assert(false, "Self Keyword not supported in PowerFx");
                 throw new NotSupportedException();
             }
 

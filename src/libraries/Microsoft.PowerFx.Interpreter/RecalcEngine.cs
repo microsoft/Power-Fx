@@ -128,11 +128,22 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Create or update a named variable to a value. 
+        /// Create or update a named variable to a value, with custom CanSet/Mutate attributes. 
         /// </summary>
         /// <param name="name">variable name. This can be used in other formulas.</param>
-        /// <param name="value">constant value.</param>
+        /// <param name="value">constant value. The variable will take the type of this value on create.</param>
         public void UpdateVariable(string name, FormulaValue value)
+        {
+            UpdateVariable(name, value, new SymbolProperties { CanMutate = true, CanSet = true });
+        }
+
+        /// <summary>
+        /// Create or update a named variable to a value, with custom CanSet/Mutate attributes. 
+        /// </summary>
+        /// <param name="name">variable name. This can be used in other formulas.</param>
+        /// <param name="value">constant value. The variable will take the type of this value on create.</param>
+        /// <param name="newVarProps">symbol properties. This is only used on the initial create of the variable.</param>
+        public void UpdateVariable(string name, FormulaValue value, SymbolProperties newVarProps)
         {
             var x = value;
 
@@ -151,7 +162,12 @@ namespace Microsoft.PowerFx
             else
             {
                 // New
-                var slot = _symbolTable.AddVariable(name, value.Type, mutable: true);
+                if (newVarProps == null)
+                {
+                    newVarProps = new SymbolProperties { CanMutate = true, CanSet = true };
+                }
+
+                var slot = _symbolTable.AddVariable(name, value.Type, newVarProps);
 
                 Formulas[slot.SlotIndex] = RecalcFormulaInfo.NewVariable(slot, name, x.IRContext.ResultType);
                 _symbolValues.Set(slot, value);
@@ -381,13 +397,12 @@ namespace Microsoft.PowerFx
             var options = new ParserOptions()
             {
                 AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true,
                 Culture = parseCulture ?? CultureInfo.InvariantCulture
             };
 
             var sb = new StringBuilder();
 
-            var checkResult = new DefinitionsCheckResult()
+            var checkResult = new DefinitionsCheckResult(this.Config.Features)
                                     .SetText(script, options);
 
             var parseResult = checkResult.ApplyParse();
@@ -405,7 +420,7 @@ namespace Microsoft.PowerFx
             }
 
             // Compose will handle null symbols
-            var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions, PrimitiveTypes, _symbolTable);
+            var composedSymbols = SymbolTable.Compose(Config.ComposedConfigSymbols, SupportedFunctions, PrimitiveTypes, _symbolTable);
 
             if (parseResult.DefinedTypes.Any())
             {
@@ -430,7 +445,7 @@ namespace Microsoft.PowerFx
             var sb = new StringBuilder();
             var udfs = UserDefinedFunction.CreateFunctions(parsedUdfs, nameResolver, out var errors);
 
-            if (errors.Any())
+            if (errors.Any(error => error.Severity > DocumentErrorSeverity.Warning))
             {
                 sb.AppendLine("Something went wrong when processing user defined functions.");
 
@@ -444,14 +459,17 @@ namespace Microsoft.PowerFx
 
             foreach (var udf in udfs)
             {
-                Config.SymbolTable.AddFunction(udf);
                 var binding = udf.BindBody(nameResolver, new Glue2DocumentBinderGlue(), BindingConfig.Default, Config.Features);
 
                 List<TexlError> bindErrors = new List<TexlError>();
 
-                if (binding.ErrorContainer.GetErrors(ref errors))
+                if (binding.ErrorContainer.GetErrors(ref bindErrors))
                 {
                     sb.AppendLine(string.Join(", ", bindErrors.Select(err => err.ToString())));
+                }
+                else
+                {
+                    Config.SymbolTable.AddFunction(udf);
                 }
             }
 

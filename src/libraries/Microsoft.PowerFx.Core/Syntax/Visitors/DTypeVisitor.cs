@@ -68,7 +68,8 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
                 }
 
                 var ty = cNode.Accept(this, context);
-                if (ty == DType.Invalid)
+
+                if (ty == DType.Invalid || ty.IsVoid)
                 {
                     return DType.Invalid;
                 }
@@ -92,7 +93,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             var childNode = node.ChildNodes.First();
             var ty = childNode.Accept(this, context);
 
-            if (ty == DType.Invalid)
+            if (ty == DType.Invalid || ty.IsVoid)
             {
                 return DType.Invalid;
             }
@@ -106,6 +107,30 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             var rowType = DType.EmptyRecord.Add(new TypedName(ty, TableValue.ValueDName));
 
             return rowType.ToTable();
+        }
+
+        public override DType Visit(CallNode node, INameResolver context)
+        {
+            Contracts.AssertValue(node);
+            Contracts.AssertValue(context);
+            Contracts.AssertValue(node.Args);
+            Contracts.AssertAllValues(node.Args.ChildNodes);
+
+            if (!TypeLiteralNode.ValidRecordOfNode(node))
+            {
+                return DType.Invalid;
+            }
+
+            Contracts.Assert(node.Args.ChildNodes.Count == 1);
+
+            var childType = node.Args.ChildNodes.Single().Accept(this, context);
+
+            if (!childType.IsTable)
+            {
+                return DType.Invalid;
+            }
+
+            return childType.ToRecord();
         }
     }
 }

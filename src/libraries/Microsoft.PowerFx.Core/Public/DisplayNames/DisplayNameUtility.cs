@@ -16,11 +16,15 @@ namespace Microsoft.PowerFx.Core
     public static class DisplayNameUtility
     {
         /// <summary>
+        /// Ensures that display names are unique, by rewriting to 
+        /// `Display (logical)` for all colliding names.
+        /// </summary>
+        /// <remarks>
         /// PowerFx Display Names are required to be unique with respect to other display names in the same type,
         /// as well as the logical names of that type. This helper ensures that display names are unique, by rewriting to 
         /// `Display (logical)` for all colliding names. If uniqueness cannot be found, we fall back on using
         /// logical names as display names for all fields.
-        /// </summary>
+        /// </remarks>
         /// <param name="logicalToDisplayPairs">Enumerable of (logical, display) pairs.</param>
         /// <returns>Enumerable of unique (logical, display) pairs.</returns>
         public static DisplayNameProvider MakeUnique(IEnumerable<KeyValuePair<string, string>> logicalToDisplayPairs)

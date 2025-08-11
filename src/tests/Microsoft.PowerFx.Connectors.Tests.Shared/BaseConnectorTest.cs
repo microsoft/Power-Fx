@@ -22,6 +22,7 @@ using static Microsoft.PowerFx.Tests.PowerPlatformConnectorTests;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
+#pragma warning disable CS0618 // Type or member is obsolete https://github.com/microsoft/Power-Fx/issues/2940
     public abstract class BaseConnectorTest : PowerFxTest, IDisposable
     {
         internal ITestOutputHelper _output;
@@ -85,7 +86,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext(GetNamespace(), client, console: _output, tzi: tzi));
             runtimeConfig.SetClock(new TestClockService());
-            runtimeConfig.SetTimeZone(tzi);            
+            runtimeConfig.SetTimeZone(tzi);
 
             return (testConnector, apiDoc, config, httpClient, client, connectorSettings, runtimeConfig);
         }
@@ -109,7 +110,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     : ($@"Responses\{ef.Substring(4)}", (HttpStatusCode)int.Parse(ef.Substring(0, 3)))).ToArray());
             }
 
-            FormulaValue fv = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue fv = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig);
 
             string network = testConnector._log.ToString();
             string urls = string.Join("|", Regex.Matches(network, @"x-ms-request-method: (?<r>[^ \r\n]+)\s*x-ms-request-url: (?<u>[^ \r\n]+)").Select(g => $"{g.Groups["r"].Value}:{g.Groups["u"].Value}"));
@@ -131,7 +132,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 Assert.IsAssignableFrom<BlobValue>(fv);
 
                 BlobValue bv = (BlobValue)fv;
-                string blobStr = await bv.GetAsStringAsync(Encoding.UTF8, CancellationToken.None).ConfigureAwait(false);
+                string blobStr = await bv.GetAsStringAsync(Encoding.UTF8, CancellationToken.None);
                 Assert.StartsWith(expectedResult.Substring(8), blobStr);
             }
             else if (expectedResult.StartsWith("BLOB"))
@@ -139,7 +140,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 Assert.IsAssignableFrom<BlobValue>(fv);
 
                 BlobValue bv = (BlobValue)fv;
-                string blobStr = await bv.GetAsBase64Async(CancellationToken.None).ConfigureAwait(false);
+                string blobStr = await bv.GetAsBase64Async(CancellationToken.None);
                 Assert.StartsWith(expectedResult.Substring(5), blobStr);
             }
             else if (expectedResult == "RAW")
@@ -152,7 +153,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 ErrorValue ev = Assert.IsType<ErrorValue>(fv);
                 string err2 = string.Join(",", ev.Errors.Select(er => er.Message));
 
-                foreach (string er in expectedResult.Substring(4).Split("|"))
+                foreach (string er in expectedResult.Substring(4).Split('|'))
                 {
                     Assert.Contains(er, err2);
                 }
@@ -178,7 +179,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
                 if (expectedResult.StartsWith("STARTSWITH:"))
                 {
-                    // Not using Assert.StartsWith as in case of failure, we don't see where the issue is
+                    // Not using Assert.StartsWith as in case of failure, we don't see where the issue i                    
                     Assert.Equal(expectedResult.Substring(11), sv.Value.Substring(0, expectedResult.Length - 11));
                 }
                 else
@@ -192,7 +193,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             if (!string.IsNullOrEmpty(extra))
             {
-                foreach (string e in extra.Split("|"))
+                foreach (string e in extra.Split('|'))
                 {
                     Assert.Contains(e, network);
                 }

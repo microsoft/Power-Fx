@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Functions;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
@@ -31,20 +32,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void CheckImmutableTypeInInterpreter()
         {
-            // Per https://github.com/microsoft/Power-Fx/issues/1519,
-            // Add ThreadSafeImmutable and get these to pass. 
-            AnalyzeThreadSafety.VerifyThreadSafeImmutable(typeof(Core.IR.Nodes.IntermediateNode));
-            AnalyzeThreadSafety.VerifyThreadSafeImmutable(typeof(ReadOnlySymbolValues));
-            AnalyzeThreadSafety.VerifyThreadSafeImmutable(typeof(ComposedReadOnlySymbolValues));
-            AnalyzeThreadSafety.VerifyThreadSafeImmutable(typeof(ParsedExpression));
-
             var assemblies = new Assembly[] 
             {
                 typeof(RecalcEngine).Assembly,
                 typeof(Types.FormulaType).Assembly
             };
 
-            AnalyzeThreadSafety.CheckImmutableTypes(assemblies);
+            // https://github.com/microsoft/Power-Fx/issues/1519
+            // These types are marked as [ThreadSafeImmutable], but they fail the enforcement checks. 
+            var knownFailures = new HashSet<Type>
+            {
+                typeof(Core.Functions.TexlFunction),
+                typeof(Core.Types.DType),
+                typeof(Core.Utils.DPath),
+                typeof(PowerFx.Syntax.TexlNode),
+                typeof(ReadOnlySymbolTable),
+                typeof(FunctionInvokeInfo),
+                typeof(PowerFx.TableMarshallerProvider.TableMarshaller)
+            };
+
+            AnalyzeThreadSafety.CheckImmutableTypes(assemblies, knownFailures);
         }
     }
 }

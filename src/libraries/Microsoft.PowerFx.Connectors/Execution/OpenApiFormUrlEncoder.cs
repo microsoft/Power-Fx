@@ -16,44 +16,37 @@ namespace Microsoft.PowerFx.Connectors.Execution
     internal class OpenApiFormUrlEncoder : FormulaValueSerializer
     {
         private readonly StringBuilder _writer;
-        private readonly Stack<string> _stack;
-        private readonly Stack<int> _arrayIndex;
+        private readonly Stack<(string, int)> _stack;
         private readonly CancellationToken _cancellationToken;
+        private bool _wrotePropertyName;
 
         public OpenApiFormUrlEncoder(IConvertToUTC utcConverter, bool schemaLessBody, CancellationToken cancellationToken)
             : base(utcConverter, schemaLessBody)
         {
             _writer = new StringBuilder(1024);
-            _stack = new Stack<string>();
-            _arrayIndex = new Stack<int>();
+            _stack = new Stack<(string, int)>();
             _cancellationToken = cancellationToken;
         }
 
         protected override void StartArray(string name = null)
         {
-            WritePropertyName(name);
-            _arrayIndex.Push(0);
+            _stack.Push((name, -1));
         }
 
         protected override void StartArrayElement(string name)
         {
-            var currentIndex = _arrayIndex.Pop();
-            if (currentIndex++ != 0)
-            {
-                WritePropertyName(name);
-            }
-
-            _arrayIndex.Push(currentIndex);
+            var (existingName, currentIndex) = _stack.Pop();
+            _stack.Push((existingName, currentIndex + 1));
         }
 
         protected override void EndArray()
         {
-            _arrayIndex.Pop();
+            _stack.Pop();
         }
 
         protected override void StartObject(string prefix = null)
         {
-            _stack.Push(prefix);
+            _stack.Push((prefix, -2));
         }
 
         protected override void EndObject(string name = null)
@@ -68,57 +61,83 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected override void WriteBooleanValue(bool booleanValue)
         {
+            WritePropertyName(null);
             _writer.Append(booleanValue ? "true" : "false");
+            _wrotePropertyName = false;
         }
 
         protected override void WriteDateTimeValue(DateTime dateTimeValue)
         {
-            _writer.Append(HttpUtility.UrlEncode(dateTimeValue.ToString(UtcDateTimeFormat, CultureInfo.InvariantCulture)));
+            WritePropertyName(null);
+            _writer.Append(Uri.EscapeDataString(dateTimeValue.ToString(UtcDateTimeFormat, CultureInfo.InvariantCulture)));
+            _wrotePropertyName = false;
         }
 
         protected override void WriteDateTimeValueNoTimeZone(DateTime dateTimeValue)
         {
-            _writer.Append(HttpUtility.UrlEncode(dateTimeValue.ToString(DateTimeFormat, CultureInfo.InvariantCulture)));
+            WritePropertyName(null);
+            _writer.Append(Uri.EscapeDataString(dateTimeValue.ToString(DateTimeFormat, CultureInfo.InvariantCulture)));
+            _wrotePropertyName = false;
         }
 
         protected override void WriteDateValue(DateTime dateValue)
         {
-            _writer.Append(HttpUtility.UrlEncode(dateValue.Date.ToString("o", CultureInfo.InvariantCulture).Substring(0, 10)));
+            _writer.Append(Uri.EscapeDataString(dateValue.Date.ToString("o", CultureInfo.InvariantCulture).Substring(0, 10)));
+            _wrotePropertyName = false;
         }
 
         protected override void WriteNullValue()
         {
-            // Do nothing
+            WritePropertyName(null);
+            _wrotePropertyName = false;
         }
 
         protected override void WriteNumberValue(double numberValue)
         {
+            WritePropertyName(null);
             _writer.Append(numberValue);
+            _wrotePropertyName = false;
         }
 
         protected override void WriteDecimalValue(decimal decimalValue)
         {
+            WritePropertyName(null);
             _writer.Append(decimalValue);
+            _wrotePropertyName = false;
         }
 
         protected override void WritePropertyName(string name)
         {
-            AddSeparator();
-            var prefix = GetPrefix();
-
-            if (!string.IsNullOrEmpty(prefix))
+            if (!_wrotePropertyName)
             {
-                _writer.Append(HttpUtility.UrlEncode(prefix));
-                _writer.Append('.');
-            }
+                _wrotePropertyName = true;
+                AddSeparator();
+                var prefix = GetPrefix();
 
-            _writer.Append(HttpUtility.UrlEncode(name));
-            _writer.Append('=');
+                if (!string.IsNullOrEmpty(prefix))
+                {
+                    _writer.Append(prefix);
+
+                    if (!string.IsNullOrEmpty(name))
+                    {
+                        _writer.Append('.');
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(name))
+                {
+                    _writer.Append(Uri.EscapeDataString(name));
+                }
+
+                _writer.Append('=');
+            }
         }
 
         protected override void WriteStringValue(string stringValue)
         {
-            _writer.Append(HttpUtility.UrlEncode(stringValue));
+            WritePropertyName(null);
+            _writer.Append(Uri.EscapeDataString(stringValue));
+            _wrotePropertyName = false;
         }
 
         private void AddSeparator()
@@ -131,7 +150,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         private string GetPrefix()
         {
-            return string.Join(".", _stack.Where(e => !string.IsNullOrEmpty(e)));
+            // only return the indicators, not the array index [0], [1], ... as per current serialization standard
+            return string.Join(".", _stack.Select(e => e.Item1 ?? string.Empty).Where(s => !string.IsNullOrEmpty(s)));
         }
 
         internal override void StartSerialization(string refId)

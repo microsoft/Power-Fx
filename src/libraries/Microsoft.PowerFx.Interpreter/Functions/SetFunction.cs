@@ -2,16 +2,17 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
+using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 
 namespace Microsoft.PowerFx.Interpreter
 {
@@ -27,6 +28,9 @@ namespace Microsoft.PowerFx.Interpreter
     {
         // Set() is a behavior function. 
         public override bool IsSelfContained => false;
+
+        // Set() of a simple identifier is not a mutation through a reference (a mutate), but rather changing the reference (a true set).
+        public override bool MutatesArg(int argIndex, TexlNode arg) => argIndex == 0 && arg.Kind != NodeKind.FirstName;
 
         public override IEnumerable<StringGetter[]> GetSignatures()
         {
@@ -52,6 +56,12 @@ namespace Microsoft.PowerFx.Interpreter
             nodeToCoercedTypeMap = null;
             returnType = context.Features.PowerFxV1CompatibilityRules ? DType.Void : DType.Boolean;
 
+            if (argTypes[0].IsUntypedObject)
+            {
+                // if arg0 is untyped object, the host implementation will handle arg1.
+                return true;
+            }
+
             var isValid = CheckType(context, args[1], argTypes[1], argTypes[0], errors, ref nodeToCoercedTypeMap);
 
             return isValid;
@@ -71,54 +81,71 @@ namespace Microsoft.PowerFx.Interpreter
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
             var arg0 = argTypes[0];
+            var arg1 = argTypes[1];
 
-            var firstName = args[0].AsFirstName();
-
-            if (firstName != null)
+            // Type check
+            if (arg0.IsUntypedObject)
             {
-                var info = binding.GetInfo(firstName);
-                if (info.Data is NameSymbol nameSymbol && nameSymbol.Props.CanSet)
+                if (CheckMutability(binding, args, argTypes, errors))
                 {
-                    // We have a variable. type check
-                    var arg1 = argTypes[1];
+                    return;
+                }
+            }
+            else
+            {
+                if (!(arg0.Accepts(arg1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules) ||
+                 (arg0.IsNumeric && arg1.IsNumeric)))
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrBadType_ExpectedType_ProvidedType, arg0.GetKindString(), arg1.GetKindString());
+                    return;
+                }
 
-                    if (!(arg0.Accepts(arg1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules) ||
-                         (arg0.IsNumeric && arg1.IsNumeric)))
+                if (arg1.AggregateHasExpandedType())
+                {
+                    if (arg1.IsTable)
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrBadType_ExpectedType_ProvidedType, arg0.GetKindString(), arg1.GetKindString());
+                        errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrSetVariableWithRelationshipNotAllowTable);
                         return;
                     }
 
-                    if (arg1.AggregateHasExpandedType())
+                    if (arg1.IsRecord)
                     {
-                        if (binding.Features.SkipExpandableSetSemantics)
-                        {
-                            errors.EnsureError(DocumentErrorSeverity.Warning, args[1], WrnSetExpandableType);
-                            return;
-                        }
-                        else
-                        {
-                            if (arg1.IsTable)
-                            {
-                                errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrSetVariableWithRelationshipNotAllowTable);
-                                return;
-                            }
-
-                            if (arg1.IsRecord)
-                            {
-                                errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrSetVariableWithRelationshipNotAllowRecord);
-                                return;
-                            }
-                        }
+                        errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrSetVariableWithRelationshipNotAllowRecord);
+                        return;
                     }
+                }
 
-                    // Success
+                if (CheckMutability(binding, args, argTypes, errors))
+                {
                     return;
                 }
             }
 
             errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name, args[0]);
             return;
+        }
+
+        private bool CheckMutability(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            var firstName = args[0].AsFirstName();
+            if (firstName != null)
+            {
+                // Variable reference assignment, for example Set( x, 3 )
+                var info = binding.GetInfo(firstName);
+                if (info.Data is NameSymbol nameSymbol && nameSymbol.Props.CanSet)
+                {
+                    // We have a variable, success
+                    return true;
+                }
+            }
+            else if (binding.Features.PowerFxV1CompatibilityRules)
+            {
+                // Deep mutation, for example Set( x.a, 4 )
+                base.ValidateArgumentIsSetMutable(binding, args[0], errors);
+                return true;
+            }
+
+            return false;
         }
     }
 }

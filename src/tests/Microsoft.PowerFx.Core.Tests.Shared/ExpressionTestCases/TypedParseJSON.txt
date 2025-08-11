@@ -1,0 +1,152 @@
+// Primitives
+>> ParseJSON("5", Number)
+5
+
+>> ParseJSON("98765.4321", Number)
+98765.4321
+
+>> ParseJSON("98765.4321", Decimal)
+98765.4321
+
+>> ParseJSON("12345678901234.567890123456", Decimal)
+12345678901234.567890123456
+
+>> ParseJSON("-1.3", Decimal)
+-1.3
+
+>> ParseJSON("2e3", Decimal)
+2000
+
+>> ParseJSON("""HelloWorld""", Text)
+"HelloWorld"
+
+>> ParseJSON("""HelloWorld""", Type(Text))
+"HelloWorld"
+
+>> ParseJSON("""1984-01-01""", Date)
+Date(1984,1,1)
+
+>> ParseJSON("""1900-12-31T23:59:59.999""", Date)
+Date(1900,12,31)
+
+>> ParseJSON("""2008-01-01T12:12:12.100""", DateTime)
+DateTime(2008,1,1,12,12,12,100)
+
+>> ParseJSON("""1900-12-31""", DateTime)
+DateTime(1900,12,31,0,0,0,0)
+
+>> ParseJSON("""11:59:59.999""", Time)
+Time(11,59,59,999)
+
+>> ParseJSON("""00:00:00""", Time)
+Time(0,0,0,0)
+
+>> ParseJSON("""12:34:56.789""", Time) = TimeValue(ParseJSON("""12:34:56.789"""))
+true
+
+>> ParseJSON("""12:34:56.789""", Time) = TimeValue(ParseJSON("""12:34:56.7891"""))
+false
+
+>> ParseJSON("""1900-12-31T00:00:00.000Z""", DateTimeTZInd)
+DateTime(1900,12,31,0,0,0,0)
+
+>> ParseJSON("""1900-12-31T00:00:00.000-08:00""", DateTimeTZInd)
+DateTime(1900,12,31,8,0,0,0)
+
+>> Value(ParseJSON("42", Dynamic))
+42
+
+>> Value(ParseJSON("true", Dynamic))
+1
+
+>> ParseJSON("true", Boolean)
+true
+
+>> If(ParseJSON("false", Boolean), "No", "Yes")
+"Yes"
+
+>> ParseJSON("555", Number) = 555
+true
+
+>> 2 < ParseJSON("1", Number)
+false
+
+>> UniChar(ParseJSON("65", Number))
+"A"
+
+// record
+>> ParseJSON("{""foo"": true}", Type({foo: Boolean}))
+{foo:true}
+
+// record missing field
+>> ParseJSON("{""Name"": ""SpongeBob"", ""Age"": 1}", Type({Name: Text, Age: Number, Aquatic: Boolean})).Name
+"SpongeBob"
+
+>> ParseJSON("{""a"": 5, ""b"":true}", Type({a: Number}))
+{a:5}
+
+// Deeply nested record with table
+>> ParseJSON("{""a"": {""b"" : { ""c"" : [1, 2, 3, 4]}}}", Type({a: {b: {c: [Number]}}}))
+{a:{b:{c:Table({Value:1},{Value:2},{Value:3},{Value:4})}}}
+
+// Table
+>> ParseJSON("[{""a"": ""Hello"", ""b"": ""2012-01-02""}, {""a"": ""Hi"", ""b"": ""2012-01-03""}]", Type([{a: Text, b: Date}]))
+Table({a:"Hello",b:Date(2012,1,2)},{a:"Hi",b:Date(2012,1,3)})
+
+>> ParseJSON("[{""a"": [{""z"": true}, {""z"": false}]}, {""a"": [{""z"": false}, {""z"": true}]}]", Type([{a: [{z: Boolean}]}]))
+Table({a:Table({z:true},{z:false})},{a:Table({z:false},{z:true})})
+
+// Negative tests
+>> ParseJSON("5", Text)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("""42""", Number)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("""24:59:59.12345678""", Time)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("1", 1)
+Errors: Error 15-16: Invalid argument '1'. Expected valid type name or inline type expression.
+
+>> ParseJSON("""RED""", Color)
+Errors: Error 21-26: Unsupported type 'Color' in type argument.
+
+>> ParseJSON("5", Type(5))
+Errors: Error 20-21: Type expression is invalid. '5' cannot be used in a type expression.|Error 19-20: Type expression is invalid. 'Type(5)' cannot be used in a type expression.
+
+>> ParseJSON("true", UnKnown)
+Errors: Error 18-25: Name isn't valid. 'UnKnown' isn't recognized.|Error 0-26: Invalid argument 'UnKnown'. Expected valid type name or inline type expression.
+
+>> ParseJSON("fasle", Boolean)
+Error({Kind:ErrorKind.InvalidJSON})
+
+>> ParseJSON("true", Void)
+Errors: Error 18-22: Unsupported type 'Void' in type argument.
+
+>> ParseJSON("{""a"": 5}", Type({a: Number}), "Hello")
+Errors: Error 0-51: Invalid number of arguments: received 3, expected 2.
+
+>> ParseJSON("true", None)
+Errors: Error 18-22: Unsupported type 'Blank' in type argument.
+
+>> ParseJSON("null", None)
+Errors: Error 18-22: Unsupported type 'Blank' in type argument.
+
+>> ParseJSON("{}", Type({a: Text, b: [Color]}))
+Errors: Error 20-21: Unsupported type 'Color' in type argument.
+
+>> ParseJSON(If(1/0 > 1, "42"), Number)
+Error({Kind:ErrorKind.Div0})
+
+>> ParseJSON(Blank(), Number)
+Blank()
+
+>> ParseJSON("42", Blank())
+Errors: Error 16-23: Invalid argument 'Blank()'. Expected valid type name or inline type expression.
+
+>> ParseJSON("42", 1/0)
+Errors: Error 17-18: Invalid argument '1 / 0'. Expected valid type name or inline type expression.
+
+>> ParseJSON(Type(Text))
+Errors: Error 14-15: Unsupported usage: Type function can only be used in type arguments and type declarations.|Error 0-9: The function 'ParseJSON' has some invalid arguments.

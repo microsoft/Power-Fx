@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Түске (немесе түс мәндерінің бағанына) қолданылатын мөлдірлік пайызы (немесе пайыз мәндерінің бағаны). Пайыздың теріс мәні қарарақ реңкті жасайды. Пайыздың оң мәні ашығырақ реңкті жасайды.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Файл туралы ақпараты бар жазбаны қайтарады.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>Сол туралы ақпарат алатын файл блобы.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>файл</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Санның абсолюттік мәнін, яғни таңбасыз мәнді қайтарады.</value>
     
@@ -1796,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Берілген терілмеген мән берілген түрде болса шынайы мәнді қайтарады.</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>түрі</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>Көрсетілген түр ретінде түрлендіруге болатынын тексеруге арналған терілмеген мән.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>untypedValue тексергіміз келетін түр.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Көрсетілген мәнді берілген түр ретінде пайдаланады.</value>
     
@@ -1813,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>Мән үшін пайдаланғымыз келген түрді көрсететін нысан кестесі.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Терілмеген мәнді берілген түр ретінде тексереді және пайдаланады.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>түрі</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>Жаңа түр ретінде түрлендірілетін терілмеген мән.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>Мән ретінде пайдаланылуын қалайтын түрі.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Бірінші параметр берген ауқымның көмегімен екінші параметр ретінде берілген формуланы орындайды.</value>
@@ -1868,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>"{0}" — белгісіз немесе қолдау көрсетілмейтін функция.</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>"{0}" терудің көмекші функциясы ретінде танылады және оны тек Type функциясының ішінде пайдалануға болады.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -1982,10 +2033,6 @@
     <value>"{0}" бірінші аргументі жазба болуы тиіс.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Осы параметрлер жиынтығын тізім мәні ретінде немесе Choices функциясында пайдалану "{0}" нысанын деректер көзі ретінде қосуды қажет етеді. Қосу үшін "Көрініс" мәзірін пайдаланып, "Деректер көздері" параметрін таңдаңыз.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Көрсетілген сипат бұл контекстте қолжетімді емес.</value>
     
@@ -2026,10 +2073,6 @@
     <value>Аргумент жарамды күнді немесе уақыт мәнін білдірмейді.</value>
     
   </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Бұл деректер көзі жарамсыз. "Деректер көздері" аумағында қатені жойыңыз: "Контент -&gt; Деректер көздері" немесе "Көрініс -&gt; Параметрлер"</value>
-    
-  </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>Кіріс жазбаны шектеу үшін деректер көзінің идентификаторы күтілді.</value>
     
@@ -2068,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>"{0}" үшін баған атауы қайшылығы.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Жүйе жазбасына немесе жүйе жазбаларының кестесіне бағандарды қосу мүмкін емес. Алдымен сізге қажет арнайы бағандарды шығару үшін ShowColumns опциясын пайдаланыңыз.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Жүйе жазбасының немесе жүйе жазбаларының кестесіндегі бағандардың атауын өзгерту мүмкін емес. Алдымен сізге қажет арнайы бағандарды шығару үшін ShowColumns опциясын пайдаланыңыз.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -2670,6 +2721,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Өңдеуге арналған JSON жолы.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>JSON жолын терілген нысанға түрлендіреді.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>жол</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>Терілген нысанға түрлендіруге арналған JSON жолы.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>түрі</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>Кірістірілген түр анықтамасы немесе ғаламдық түрде анықталған атау түрі.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Берілген индексте кестедегі жазбаны қайтарады.</value>
     
@@ -2687,6 +2756,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Алынатын жазбаның индексі.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2707,6 +2788,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Штрихкод түрі</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2823,6 +2936,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Тексерілетін мән.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Мәтін түріндегі күн мен уақытты Power Apps күн-уақыт кодындағы күнді көрсететін санға түрлендіреді.</value>
@@ -3098,32 +3215,33 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Жазбаларды деректер көзіне қосады.</value>
+    <value>Көрсетілген жиынға бір не одан көп элемент қосады. Элементтер басқа кестеден немесе жиыннан (мысалы, Collect(collection, source_collection)) немесе бір не одан көп Collect(collection, {key1: val1, key2: val2, ...}, ...) жазбасынан болуы мүмкін.</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>деректер_көзі</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>жазу</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>жиынтық</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>элемент</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Жеделдетілетін жаңа немесе бар жиынтық.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Жиыннан барлық жазбаны жояды. Одан кейін бір жиынға басқа жазбалар жиынын қосады.</value>
+    <value>Алдымен жиынды өшіріп, көрсетілген жиынға бір не одан көп элемент қосады. Элементтер басқа кестеден немесе жиыннан (мысалы, ClearCollect(collection, source_collection)) немесе бір не одан көп ClearCollect(collection, {key1: val1, key2: val2, ...}, ...) жазбасынан болуы мүмкін.</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>деректер_көзі</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Жеделдетілетін жаңа немесе бар жиынтық.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>деректер_көзі</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>жазу</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Жиналатын жазба немесе кесте. Жазба жиынтыққа қосылады. Кестенің жолдары жиынтыққа қосылады.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Жаңартуларды көрсетілген жолға қолданады және көрсетілген деректер көзіндегі жолды өзгертеді. Жаңартылған жолды қайтарады.</value>
@@ -3259,6 +3377,10 @@
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Формуланың “{1}” орнындағы күтілмеген “{0}” таңбасы.</value>
     
@@ -3271,6 +3393,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3288,6 +3414,10 @@
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Күтпеген таңбалар. Формулада "{0}" бар, бірақ "{1}" күтілген.</value>
     
@@ -3301,6 +3431,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3318,6 +3452,10 @@
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Атау жарамсыз. Бұл идентификатор танылмады.</value>
     
@@ -3331,6 +3469,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3348,6 +3490,10 @@
     <value>Мақала: PowerApps үшін формула сілтемесі</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>"Негізгі" сілтеме жарамсыз. Бұл контексте негізгі басқару элементіне сілтеме жасай алмайсыз.</value>
     
@@ -3361,6 +3507,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Мақала. Power Apps жүйесінде кенеп бағдарламасының басқару элементін қосу және конфигурациялау</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3400,6 +3550,10 @@
     <value>Модуль: негізгі формулаларды пайдалану</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Сан күтілген. Формуладағы бұл жерде сан күтіледі.</value>
     
@@ -3413,6 +3567,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3430,6 +3588,10 @@
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Қос нүкте күтілген. Формуладағы бұл жерде қос нүкте (:) күтіледі.</value>
     
@@ -3445,6 +3607,10 @@
     <value>Мақала. Power Apps жүйесінде мәтінді, күндерді және уақыттарды көрсету</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Жұмыс режимі емес сипаттағы жұмыс режимі функциясы. Бұл сипатты бағдарламаның басқа жеріндегі мәндерді өзгерту үшін пайдалана алмайсыз.</value>
     
@@ -3458,6 +3624,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Мақала. Power Apps жүйесінде кенеп бағдарламалары үшін жұмыс режимі формулаларын түсіну</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Әрекетсіз пайдаланушы анықтаған функциядағы (UDF) әрекет функциясы. Әрекетті UDF жариялау үшін пайдаланушы анықтаған функцияның негізгі мәтінін бұйра жақшалармен ({...}) ораңыз.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Әрекет функциялары ағымдағы сеанс күйін өзгертеді. "Clear", "Collect", "Patch" және "Refresh" жалпы әрекет функциялары болып табылады.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Пайдаланушы анықтаған функция өрнегін бұйра жақшалардың ({...}) ішінде болатындай өңдеңіз.</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3497,6 +3679,10 @@
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Мәтін немесе сан күтілген. Формуладағы бұл жерде мәтін немесе сан күтіледі.</value>
     
@@ -3512,6 +3698,10 @@
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Жабатын жақша күтілген. Формуладағы бұл жерде жабатын жақша (}) күтіледі.</value>
     
@@ -3523,12 +3713,23 @@
     <value>Формуланы ол жақшаны қамтитын етіп өзгертіңіз.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Идентификаторды жабу күтілген. Формуладағы бұл жерде жабатын (') таңбасы күтіледі.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Жалғыз тырнақша идентификатордың соңын көрсетеді (мысалы, 'Аты').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Формуланы жабылатын жалғыз тырнақшаны қамтитын етіп өзгертіңіз.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Идентификаторда жарамды мәтін жоқ.</value>
+    <value>Идентификатор бос немесе қойынша немесе жаңа жол сияқты жарамсыз таңбаны қамтиды.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Идентификатор үшін мәтіннің болуына көз жеткізіңіз. Идентификатор бос немесе бос орындар болса, осы қате пайда болады.</value>
+    <value>Идентификатор ішінде жарамды мәтіннің болуына көз жеткізіңіз. Идентификатор бос немесе бос орындар болса, не болмаса қойынша немесе жаңа жолды қамтитын болса, осы қате пайда болады.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3554,8 +3755,16 @@
     <value>Модуль: негізгі формулаларды пайдалану</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Модуль: кестелермен және жазбалармен негізгі формулаларды жасау</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3570,6 +3779,10 @@
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Үйлесімсіз түр. Сіз жаңартып жатқан деректер көзіндегі "{0}" бағаны "{1}" түрін күтеді, ал сіз "{2}" түрін пайдаланып жатырсыз.</value>
     
@@ -3582,8 +3795,16 @@
     <value>Модуль: негізгі формулаларды пайдалану</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Модуль: кестелермен және жазбалармен негізгі формулаларды жасау</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3596,6 +3817,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3614,8 +3839,16 @@
     <value>Модуль: негізгі формулаларды пайдалану</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Модуль: кестелермен және жазбалармен негізгі формулаларды жасау</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3633,8 +3866,16 @@
     <value>Модуль: негізгі формулаларды пайдалану</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Модуль: кестелермен және жазбалармен негізгі формулаларды жасау</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3650,6 +3891,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3675,8 +3920,16 @@
     <value>Мақала: кенеп бағдарламасындағы өкілеттік беруді түсіну</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Блог: өкілеттік беру үшін деректер жолы шектеулері</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3702,8 +3955,16 @@
     <value>Мақала: кенеп бағдарламасындағы өкілеттік беруді түсіну</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Блог: өкілеттік беру үшін деректер жолы шектеулері</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3733,8 +3994,16 @@
     <value>Мақала: кенеп бағдарламасындағы өкілеттік беруді түсіну</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Блог: өкілеттік беру үшін деректер жолы шектеулері</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3766,8 +4035,70 @@
     <value>Мақала: кенеп бағдарламасындағы өкілеттік беруді түсіну</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Блог: өкілеттік беру үшін деректер жолы шектеулері</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Өкілге ескерту. {0} аталған формуласы өкілетті емес, сондықтан оны осы формулада пайдалану үлкен деректер жиындарында дұрыс жұмыс істемеуі мүмкін. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Деректер көзі формуланы өңдей алмауы мүмкін және толық емес деректер жиынтығын қайтаруы мүмкін. Деректер жиынтығы толық болмаса, бағдарламаңыз дұрыс нәтижелерді қайтармауы немесе дұрыс жұмыс істемеуі мүмкін.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Аталған формуланың анықтамасын жеңілдетіп көріңіз.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Мақала: кенеп бағдарламасындағы өкілеттік беруді түсіну</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Блог: өкілеттік беру үшін деректер жолы шектеулері</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Өкілге ескерту. {0} пайдаланушы анықтайтын функциясы өкілетті емес, сондықтан оны осы формулада пайдалану үлкен деректер жиындарында дұрыс жұмыс істемеуі мүмкін. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Деректер көзі формуланы өңдей алмауы мүмкін және толық емес деректер жиынтығын қайтаруы мүмкін. Деректер жиынтығы толық болмаса, бағдарламаңыз дұрыс нәтижелерді қайтармауы немесе дұрыс жұмыс істемеуі мүмкін.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Пайдаланушы анықтайтын функцияның анықтамасын жеңілдетіп көріңіз.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Мақала: кенеп бағдарламасындағы өкілеттік беруді түсіну</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Блог: өкілеттік беру үшін деректер жолы шектеулері</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3794,8 +4125,16 @@
     <value>Мақала: кенеп бағдарламасындағы өкілеттік беруді түсіну</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Блог: өкілеттік беру үшін деректер жолы шектеулері</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3824,6 +4163,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Сілтеме: кенеп бағдарламалары үшін ConfirmExit</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3858,12 +4201,24 @@
     <value>Аталған формула өрнек болуы керек.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Атауы бар түр туралы декларация жарамды түр өрнегі болуы керек.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Пайдаланушы анықтайтын функцияның негізгі мәтіні болуы керек.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>{0} функциясы анықталып қойған.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Ескерту: пайдаланушы анықтаған {0} функциясы бұрыннан бар кірістірілген {0} функциясын жауып қалады.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>{0} функция атауы шектелген.</value>
     
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
@@ -3875,15 +4230,19 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Мәлімделген функцияны қайтару түрі функцияның негізгі мәтінінің қайтару түріне сәйкес келмейді.</value>
+    <value>Мәлімделген "{0}" функциясын қайтару түрі "{1}" функциясының негізгі мәтінін қайтару түріне сәйкес келмейді.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>{0} функциясындағы параметрлер тым көп. Пайдаланушы анықтаған функциялар {1} параметрлерін қолдайды.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
-    <value>Функциялық қайтару түрі, мысалы, "FindMonth( d:Text ):Number = Month( DateParse( d ));" ішінде ":Number" жоқ</value>
+    <value>Функциялық қайтару түрі жоқ, мысалы, "FindMonth( d:Text ):Number = Month( DateParse( d ));" ішінде ":Number"</value>
     
   </data>
   <data name="ErrUDF_MissingParamType" xml:space="preserve">
-    <value>Функциялық аргумент түрі, мысалы, "FindMonth( d:Text ):Number = Month( DateParse( d ))" ішінде ":Text" жоқ</value>
+    <value>Функциялық аргумент түрі жоқ, мысалы, "FindMonth( d:Text ):Number = Month( DateParse( d ))" ішінде ":Text"</value>
     
   </data>
   <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
@@ -3902,7 +4261,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>"{0}" бірінші аргументі жарамды айнымалы атауы болуы тиіс және ол бар басқару элементі, экран, жиынтық немесе деректер көзі атауларына қайшы келмеуі тиіс. Табылған түрі: "{1}"</value>
+    <value>"{1}" қолданыстағы ауқым айнымалысы, деректер көзі немесе басқа нысан атауы бар "{0}" немесе қайшылықтар арқылы өзгертілмейді.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4063,6 +4422,10 @@
     <value>{0} сенім білдіру мүмкін емес: құрамында "{1}" тәртіптік функциясы бар.</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows кэштелген мәнді қайтаруы мүмкін. Соңғы санды алу үшін CountIf(DataSource, шын) пайдаланыңыз.</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Берілген мәтіннің берілген мәтін пішіміне сәйкестігін анықтайды.</value>
     
@@ -4156,24 +4519,232 @@
     <value>Жарамсыз тұрақты өрнек.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: кірістірілген опциялар тұрақты өрнектің басында пайда болуы керек, кейінірек «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: кірістірілген опциялар әріптер тіркесімімен [imnsx] шектелген, опцияларды өшіре алмайды және ішкі өрнекте пайдаланылмайды, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: сегіздік \0 таңба кодтарына қолдау көрсетілмейді, оның орнына он алтылық \x немесе Unicode \u кодын пайдаланыңыз, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: әріптік өрнек жақшалар кері қиғаш сызықпен шығарылуы керек, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: әріптік тік жақшалар, мысалы, \[ немесе \], тіпті таңбалар класында да кері қиғаш сызықпен шығуы керек, «{0}» соңында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: жабылмаған таңба класының тік жақшасы.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: қолдау көрсетілмейтін арнайы топ, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: таңбалар класында шығыс таңбаға рұқсат етілмеген, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: жоққа шығарылған таңбалар класында теріс шығыс таңбаға рұқсат етілмеген, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: таңбалар класынан тыс шығыс таңбаға рұқсат етілмеген, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: жарамсыз Unicode санатының атауы, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: қайталанатын кірістірілген опция, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: жабылмаған кірістірілген пікір.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: жабылмаған кірістірілген пікір, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: кірістірілген опция MatchOptions.NumberedSubMatches опциясымен үйлеспейді, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: тәуелдік кванфикаторларға қолдау көрсетілмейді, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: нақты квантификаторларды ? сияқты квантификатор модификаторларымен бірге пайдалануға болмайды, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: жарамсыз шығыс коды, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз қалыпты өрнек: «{0}» ішкі сәйкестігі анықталмаған немесе қолдау көрсетілмейтін бағыттау сілтемесі болып табылады.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: артқы көріністе ішкі сәйкестіктерге қолдау көрсетілмейді, «{0}» басында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: алдыңғы көріністер кірістірілмейді, «{0}» басында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: алдыңғы көріністерде шектеусіз квантификаторларға қолдау көрсетілмейді, «{0}» соңында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: алдыңғы немесе артқы көріністерде квантификаторларға қолдау көрсетілмейді, «{0}» соңында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: баламаға немесе нөлдік кванторға байланысты болмауы мүмкін ішкі сәйкестікке «{0}» кері сілтемесі.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: өзіне сілтеме жасайтын ішкі сәйкестіктерге қолдау көрсетілмейді, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: жабылмаған топтар, жабатын жақша тым аз.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: ашылмаған топтар, ашатын жақша тым аз.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: аталған ішкі сәйкестік бірнеше рет анықталған, «{0}» басында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: ішкі сәйкестік атауы сөздік таңбалардың тіркесімі болуы керек және санмен басталмауы тиіс, «{0}» басында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: кірістірілген опциялар тұрақты өрнектің басында пайда болуы керек, кейінірек «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: таңба таңбалар класында бірнеше рет пайда болады, қайталанатын «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: тік жақша таңба кластары бос болмауы тиіс, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: теңестіретін ішкі сәйкестіктерге қолдау көрсетілмейді, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: дара тырнақшаға қойылған түсірілімдерге қолдау көрсетілмейді, оның орнына (?&lt;...&gt;) синтаксисін пайдаланыңыз, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: шартты баламаға қолдау көрсетілмейді, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: MatchOptions.NumberedSubMatches опциясы қосылған кезде, аталған түсірілімдерді пайдалану мүмкін емес, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: «(?&lt;name&gt;...)» және «\k&lt;name&gt; » мәндері бар түсірілімдерді пайдаланыңыз немесе MatchOptions.NumberedSubMatches опциясын қосыңыз, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: таңбалар класындағы таңбалар класының орнына кері қиғаш сызық қойылуы тиіс, «\-» қойыңыз, «{0}» ішінде табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: таңбалар класында пайдаланылған кезде, әріптік таңба кері қиғаш сызықпен шығуы керек, «{0}» соңында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: топтағы басқа квантификаторды немесе бос баламаны қамтитын квантификатор түсініксіз нәтижеге әкелуі мүмкін, «{0}» соңында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз қалыпты өрнек: артқы көрініс максималды 250 таңба шегінен асып кетті, «{0}» соңында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: квантификатор ауқымының төменгі саны жоғары саннан үлкен, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: "{0}" басында табылған кірістірілген топтар тым көп.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: ішкі сәйкестік атауы тым ұзын, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: сан тым үлкен, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: таңбалар класы ауқымындағы таңбалардың реті өзгертілген, «{0}» соңында табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: таңбалар класы ауқымындағы таңбалар класы, немесе кері қиғаш сызықпен әріптік сызықша қоюдан аулақ болыңыз, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: шығарылмаған кері қиғаш сызықпен аяқталады.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: санау қажет мәні жоқ квантификатор, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: MatchOptions.DotAll және MatchOptions.FreeSpacing 1-нұсқадағы Power Fx бағдарламасымен ғана қолжетімді, «{0}» табылды.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек: артқы немесе алдыңғы көрініс ішіндегі ішкі сәйкестікке «{0}» кері сілтемесі.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Тұрақты өрнектердің мәндері тұрақты болуы керек.</value>
+    <value>Тұрақты өрнек тұрақты мән болуы керек.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions тұрақты мән болуы керек.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>"{0}" функциясына өткен мән өзгертілмеуі керек.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>"{0}" алу атауы регуляр өрнектің толық сәйкестігін қайтаратын алдын ала анықталған сипатты жасырады. Көрсетілген мәтіндегі толық сәйкестікті шығарып алу үшін сол аталған сипатты пайдаланғыңыз келсе, оның атауын өзгертіп көріңіз.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>«{0}» түсірілім атауында сәйкестік туралы ақпаратты қайтаратын алдын ала анықталған сипат жасырылған. Сәйкестік туралы ақпаратқа қол жеткізгіңіз келсе, оның атауын өзгертуді қарастырыңыз.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>"{0}" алу атауы регуляр өрнектегі топтық сәйкестіктерді қайтаратын алдын ала анықталған сипатты жасырады. Көрсетілген мәтіндегі толық емес сәйкестіктерді шығарып алу үшін сол аталған сипатты пайдаланғыңыз келсе, оның атауын өзгертіп көріңіз.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>"{0}" алу атауы регуляр өрнектің сәйкестік орнын қайтаратын алдын ала анықталған сипатты жасырады. Көрсетілген мәтіндегі толық сәйкестіктің орнын шығарып алу үшін сол аталған сипатты пайдаланғыңыз келсе, оның атауын өзгертіп көріңіз.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>«{0}» жинағындағы түсірілім атауларында сәйкестік туралы ақпаратты қайтаратын алдын ала анықталған сипаттар жасырылған. Сәйкестік туралы ақпаратқа қол жеткізгіңіз келсе, олардың атауларын өзгертуді қарастырыңыз.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4209,16 +4780,20 @@
     <value>Онлайн дереккөз мәні (кесте немесе жазба) бар айнымалыны орнату серверге бірнеше сұрау тудыруы мүмкін. Жақын арада ол бұғатталады.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Түрді литералды етіп жариялау жарамсыз. "{0}" өрнегі түр анықтамасында пайдаланылмауы керек.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Түр өрнегі жарамсыз. "{0}" өрнегі түр өрнегінде пайдаланылмауы керек.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>{0} түрін анықтау жарамсыз.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Қолдау көрсетілмейтін пайдалану: Type функциясын тек түр аргументтері мен түр декларациясында пайдалануға болады.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>{0} түріндегі декларация жарамсыз.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>{0} түріндегі анықтама жарамсыз және циклдерді қамтуы мүмкін.</value>
+    <value>{0} түріндегі декларация жарамсыз және циклдерді қамтуы мүмкін.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4419,6 +4994,16 @@
     <value>Белгісіз Partial амалы.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Деректер қосылатын дереккөз.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Жиналатын жазба немесе кесте. Жазба дереккөзге қосылады. Кестеде оның дереккөзге қосылған жолдары болады.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>элемент</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Өкілдік ету ескертуі. Бұл "{0}" аргументінің нәтижесі "{1}" функциясына өту алдында үлкен деректер жиыны үшін қысқартылуы мүмкін.</value>
     
@@ -4461,8 +5046,96 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Тазаланатын дереккөз.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Қатынастары бар бірнеше кестеге таралатын деректерді шығарады.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>1-көз</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>2-көз</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>бөлгіш</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Сол жақтағы кесте немесе жинақ.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Оң жақтағы кесте немесе жинақ.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Екі кесте немесе жинақтар арасындағы шартты біріктіру.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Екі кесте немесе жинақтар арасындағы біріктіру түрі.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Дереккөздердің біріндегі бұрыннан бар бағанның атын өзгертуге арналған аргументтер.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Көрсетілген деректер көзі бұл функциямен бірге пайдаланылмайды.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Жарамсыз аргумент '{0}'. Күтілетін жарамды түр атауы немесе кірістірілген түр өрнегі.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Аргумент түріндегі "{0}" қолдау көрсетілмейтін түрі.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>JSON пайдалы деректерін қарап шығу кезінде максималды тереңдікке жетті.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>JSON функциясында максималды ұзындыққа жетті.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>"Пайдаланушы анықтайтын түр" эксперименттік мүмкіндігі іске қосылмаған.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Дұрыс емес синтаксис: "=" пайдаланушы анықтайтын түрлерді жариялау үшін пайдаланылмайды. Оның орнына ":=" пайдаланыңыз.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>"{0}" атауы бірдей басқа бағанмен соқтығысуына байланысты қосу/атын өзгерту мүмкін емес.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Қарапайым "JoinType" сандық мәні күтілуде. Әртүрлі сандарға немесе оны басқа функция, яғни Join(..., If(true, JoinType.Inner, JoinType.Full)) арқылы өткізуге қолдау көрсетілмейді.</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>5-ші позициядан басталатын аргументтер бағандардың атын өзгертуге арналған және "As" түйін аргументтері, яғни LeftRecord.Name As NewName болады деп күтіледі.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Біріктіру нәтижесін жасау үшін кемінде бір "{0}" бағаны жариялануы керек.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>"{0}" мәні бұл мазмұнда жарамсыз. Ол "{1}" немесе "{2}" ауқым атауына сілтеме болуы керек.</value>
     
   </data>
 </root>

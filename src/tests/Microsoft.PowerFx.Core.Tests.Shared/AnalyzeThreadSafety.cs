@@ -9,7 +9,9 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Microsoft.PowerFx.Core.Texl.Builtins;
+using System.Security.AccessControl;
+using System.Threading;
+using Microsoft.PowerFx.Core.Functions;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -19,8 +21,7 @@ namespace Microsoft.PowerFx.Core.Tests
     /// </summary>
     public class AnalyzeThreadSafety
     {
-        // Return true if safe, false on error. 
-        public static bool VerifyThreadSafeImmutable(Type t)
+        public static bool IsThreadSafeImmutable(Type t)
         {
             int errors = 0;
 
@@ -32,7 +33,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 var name = prop.Name;
                 if (prop.CanWrite)
                 {
-                    var isInitKeyword = prop.SetMethod.ReturnParameter.GetRequiredCustomModifiers().Contains(typeof(System.Runtime.CompilerServices.IsExternalInit));
+                    var isInitKeyword = HasInitKeyword(prop);
                     if (!isInitKeyword)
                     {
                         // No mutable properties allowed. Init only ok. 
@@ -96,7 +97,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             return true;
         }
-
+                
         // Verify there are no "unsafe" static fields that could be threading issues.
         // Bugs - list of field types types that don't work. This should be driven to 0. 
         // BugNames - list of "Type.Field" that don't work. This should be driven to 0. 
@@ -188,22 +189,65 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Empty(errors);
         }
 
-        // $$$ Supersedes ImmutabilityTests.
-        // This is more aggressive (includes private fields), but they don't all pass. So assert is disabled.
-        public static void CheckImmutableTypes(Assembly[] assemblies, bool enableAssert = false)
+        // Does the property have 'init' keyword.
+        private static bool HasInitKeyword(PropertyInfo prop)
         {
+            var attrs = prop.SetMethod.ReturnParameter.GetRequiredCustomModifiers();
+
+            // Can't use typeof() because it may not be available in .Net 5.0+
+            // So check type name instead. 
+            // typeof(System.Runtime.CompilerServices.IsExternalInit)
+            bool hasInit = attrs.Any(type => type.Name == "IsExternalInit");
+
+            return hasInit;
+        }
+
+        // Does this type, or any of its base types or interfaces have [ThreadSafeImmutable].
+        public static bool InheritsThreadSafeImmutable(Type type)
+        {
+            var interfaces = type.GetInterfaces();
+            foreach (var x in interfaces)
+            {
+                if (x.GetCustomAttributes().OfType<ThreadSafeImmutableAttribute>().Any())
+                {
+                    return true;
+                }
+            }
+            
+            var attribute = type.GetCustomAttribute<ThreadSafeImmutableAttribute>(inherit: false);
+
+            if (attribute != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        // Check all types in the assembly list that have or inherit [ThreadSafeImmutable].
+        // See output window for verbose details on failures.
+        // Excuse knownFailures (thhose should be tracked down and fixed separately). 
+        public static void CheckImmutableTypes(Assembly[] assemblies, HashSet<Type> knownFailures = null)
+        {
+            var countPassed = new HashSet<string>();
+            var countFailed = new HashSet<string>();
+
             foreach (var assembly in assemblies)
             {
                 foreach (Type type in assembly.GetTypes())
                 {
+                    if (knownFailures != null && knownFailures.Contains(type))
+                    {
+                        continue;
+                    }
+
                     if (type.Name.StartsWith("<", StringComparison.OrdinalIgnoreCase))
                     {
                         continue; // exclude compiler generated closures. 
                     }
 
                     // includes base types 
-                    var attr = type.GetInterfaces().Select(x => x.GetCustomAttributes().OfType<ThreadSafeImmutableAttribute>());
-                    if (attr == null)
+                    if (!InheritsThreadSafeImmutable(type))
                     {
                         continue;
                     }
@@ -221,15 +265,22 @@ namespace Microsoft.PowerFx.Core.Tests
                         continue;
                     }
 
-                    bool ok = AnalyzeThreadSafety.VerifyThreadSafeImmutable(type);
-
-                    // Enable this, per  https://github.com/microsoft/Power-Fx/issues/1519
-                    if (enableAssert)
+                    bool ok = AnalyzeThreadSafety.IsThreadSafeImmutable(type);
+                    if (ok)
                     {
-                        Assert.True(ok);
+                        countPassed.Add(type.FullName);
+                    }
+                    else
+                    {
+                        countFailed.Add(type.FullName);
                     }
                 }
             }
+
+            Debugger.Log(0, string.Empty, $"{countPassed.Count} passed, {countFailed.Count} failed. {countPassed.Count + countFailed.Count} total.\r\n");
+
+            string failMsg = string.Join(", ", countFailed);
+            Assert.True(countFailed.Count == 0, $"Types failed. See output window: {failMsg}");
         }
 
         private static bool IsTypeConcurrent(Type type)
@@ -266,6 +317,8 @@ namespace Microsoft.PowerFx.Core.Tests
             typeof(System.Text.RegularExpressions.Regex),
             typeof(System.Numerics.BigInteger),
             typeof(NumberFormatInfo),
+            typeof(CultureInfo),
+            typeof(TimeZoneInfo),
 
             // Generics        
             typeof(IReadOnlyDictionary<,>),
@@ -274,7 +327,12 @@ namespace Microsoft.PowerFx.Core.Tests
             typeof(Nullable<>),
             typeof(IEnumerable<>),
             typeof(KeyValuePair<,>),
-            typeof(ISet<>)
+            typeof(ISet<>),
+            typeof(IServiceProvider),
+
+            // Concurrent types are thread safe.
+            typeof(ReaderWriterLockSlim),
+            typeof(System.Resources.ResourceManager)
         };
 
         // If the instance is readonly, is the type itself immutable ?

@@ -1,0 +1,6 @@
+# Has an error in expression. 
+# Test that error reporting gets right line. 
+Formulas: |
+  DoubleIt(x: Number) : Number = 
+        missing  // <-- error is on line 5
+    * 2; 

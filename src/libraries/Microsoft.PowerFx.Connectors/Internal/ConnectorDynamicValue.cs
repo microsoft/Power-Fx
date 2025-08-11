@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 
 namespace Microsoft.PowerFx.Connectors
@@ -40,7 +41,7 @@ namespace Microsoft.PowerFx.Connectors
         public string BuiltInOperation = null;
         */
 
-        internal ConnectorDynamicValue(OpenApiObject openApiObject)
+        internal ConnectorDynamicValue(IDictionary<string, IOpenApiAny> openApiObject)
             : base(openApiObject)
         {
         }

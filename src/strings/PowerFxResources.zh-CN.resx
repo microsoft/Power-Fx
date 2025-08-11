@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>颜色(或颜色值组成的列)进行淡化的百分比(或百分比值组成的列)。负百分比生成较深的底纹。正百分比生成较浅的底纹。</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>返回包含文件信息的记录。</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>用于获取相关信息的文件 Blob。</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>文件</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>返回数字的绝对值(不带符号的数字)。</value>
     
@@ -1796,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>如果所提供的非类型化值属于给定的类型，则返回 true。</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>类型</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>非类型化的值，用于检查它是否可以被转换为指定的类型。</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>我们希望检查 untypedValue 的类型。</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>将所提供的值用作给定类型。</value>
     
@@ -1813,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>表示我们希望将此值用作的实体表。</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>检查并使用所提供的 Untyped 值用作给定类型。</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>类型</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>要转换为新类型的非类型化值。</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>我们希望将值用作的类型。</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>使用第一个参数提供的范围来执行作为第二个参数提供的公式。</value>
@@ -1868,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>'{0}' 为未知或不支持的函数。</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' 被识别为类型帮助程序函数，并且它只能在 Type 函数中使用。</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -1982,10 +2033,6 @@
     <value>'{0}' 的第一个参数应是记录。</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>以枚举值的形式或在 Choices 功能中使用此选项设置将要求把“{0}”实体添加为数据源。若要添加，请使用“视图”菜单，然后选择“数据源”。</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>在此上下文中无法访问指定属性。</value>
     
@@ -2026,10 +2073,6 @@
     <value>变量未表示有效的日期或时间值。</value>
     
   </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>此数据源无效。请通过单击“内容 -&gt; 数据源”或“查看 -&gt; 选项”来修复“数据源”窗格中的错误</value>
-    
-  </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>应为限制内联记录的数据源标识符。</value>
     
@@ -2068,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>'{0}' 的列名冲突。</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>无法将列添加到系统记录或系统记录表。首先使用 ShowColumns 提取需要的特定列。</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>无法重命名系统记录或系统记录表的列。首先使用 ShowColumns 提取需要的特定列。</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -2302,7 +2353,7 @@
     
   </data>
   <data name="WeekdayArg2" xml:space="preserve">
-    <value>星期开始值</value>
+    <value>周开始</value>
     
   </data>
   <data name="AboutWeekday_date" xml:space="preserve">
@@ -2670,6 +2721,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>要处理的 JSON 字符串。</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>将 JSON 字符串转换为类型化对象。</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>字符串</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>要转换为类型化对象的 JSON 字符串。</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>类型</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>内联类型定义或全局定义的命名类型。</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>返回表中给定索引处的记录。</value>
     
@@ -2687,6 +2756,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>要检索的记录的索引。</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2707,6 +2788,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>条形码类型</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2823,6 +2936,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>要测试的值。</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>将文本形式的日期和时间转换为采用 Power Apps 日期时间代码表示日期的数字。</value>
@@ -3098,32 +3215,33 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>将记录添加到数据源。</value>
+    <value>将一个或多个项目添加到指定集合。这些项目可以来自不同的表或集合(例如 Collect(collection, source_collection))，也可以来自一条或多条记录 Collect(collection, {key1: val1, key2: val2, ...}, ...)。</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>数据源</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>记录</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>集合</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>项目</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>要扩充的新集合或现有集合。</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>删除集合中的所有记录。然后向同一集合添加另一组记录。</value>
+    <value>先清除集合，然后将一个或多个项目添加到指定集合。这些项目可以来自不同的表或集合(例如 ClearCollect(collection, source_collection))，也可以来自一条或多条记录 ClearCollect(collection, {key1: val1, key2: val2, ...}, ...)。</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>数据源</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>要扩充的新集合或现有集合。</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>数据源</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>记录</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>要收集的记录或表。记录将附加到集合中。表的行将附加到集合中。</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>将更新应用到指定行并更改指定数据源中的行。返回更新的行。</value>
@@ -3259,6 +3377,10 @@
     <value>文章: 针对 Power Apps 的公式引用</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>在公式中的位置 '{1}' 处存在意外字符 '{0}'。</value>
     
@@ -3271,6 +3393,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>文章: 针对 Power Apps 的公式引用</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3288,6 +3414,10 @@
     <value>文章: 针对 Power Apps 的公式引用</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>意外字符。应为 '{1}'，但公式包含的是 '{0}'。</value>
     
@@ -3301,6 +3431,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>文章: 针对 Power Apps 的公式引用</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3318,6 +3452,10 @@
     <value>文章: 针对 Power Apps 的公式引用</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>名称无效。无法识别此标识符。</value>
     
@@ -3331,6 +3469,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>文章: 针对 Power Apps 的公式引用</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3348,6 +3490,10 @@
     <value>文章: 针对 PowerApps 的公式引用</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>“父”引用无效。不能引用在此上下文中的父控件。</value>
     
@@ -3361,6 +3507,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>文章: 在 Power Apps 中添加和配置画布应用控件</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3400,6 +3550,10 @@
     <value>模块: 使用基本公式</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>应为数字。公式中的此处应为数字。</value>
     
@@ -3413,6 +3567,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>文章: 针对 Power Apps 的公式引用</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3430,6 +3588,10 @@
     <value>文章: 针对 Power Apps 的公式引用</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>应为冒号。公式的此处应使用冒号(:)。</value>
     
@@ -3445,6 +3607,10 @@
     <value>文章: 在 Power Apps 中显示文本、日期和时间</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>非行为属性中的行为函数。此属性不可用于更改应用中其他位置的值。</value>
     
@@ -3458,6 +3624,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>文章: 了解 Power Apps 中画布应用的行为公式</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>非行为用户定义函数(UDF)中的行为函数。请用大括号({...})将用户定义函数正文括在内，以声明行为 UDF。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>行为函数会更改当前会话状态。常见行为函数包括“Clear”、“Collect”、“Patch”和“Refresh”。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>编辑用户定义的函数表达式，使其位于大括号({...})内。</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3497,6 +3679,10 @@
     <value>文章: 针对 Power Apps 的公式引用</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>应为文本或数字。公式中的此处应为文本或数字。</value>
     
@@ -3512,6 +3698,10 @@
     <value>文章: 针对 Power Apps 的公式引用</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>应为右方括号。公式的此处应使用右方括号(})。</value>
     
@@ -3523,12 +3713,23 @@
     <value>请编辑公式，使其包含一个方括号。</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>标识符应使用右单引号。公式的此处应使用右单引号(')。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>右单引号表示标识符的结尾(例如 '名')。</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>编辑公式，使其包含右单引号。</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>此标识符没有有效文本。</value>
+    <value>标识符为空或包含无效字符，如制表符或换行符。</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>请确保标识符具有文本。当标识符全部空白或全为空格时，会发生此错误。</value>
+    <value>确保标识符中使用有效文本。当标识符为空白、仅有空格或者包含制表符或换行符时，会发生此错误。</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3554,8 +3755,16 @@
     <value>模块: 使用基本公式</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>模块: 使用表和记录创作基本公式</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3570,6 +3779,10 @@
     <value>文章: 针对 Power Apps 的公式引用</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>类型不兼容。正在更新的数据源中的 '{0}' 列应为 '{1}' 类型，但您使用的是 '{2}' 类型。</value>
     
@@ -3582,8 +3795,16 @@
     <value>模块: 使用基本公式</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>模块: 使用表和记录创作基本公式</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3596,6 +3817,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>文章: 针对 Power Apps 的公式引用</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3614,8 +3839,16 @@
     <value>模块: 使用基本公式</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>模块: 使用表和记录创作基本公式</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3633,8 +3866,16 @@
     <value>模块: 使用基本公式</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>模块: 使用表和记录创作基本公式</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3650,6 +3891,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>文章: 针对 Power Apps 的公式引用</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3675,8 +3920,16 @@
     <value>文章: 了解画布应用中的委派</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>博客: 针对委派的数据行限制</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3702,8 +3955,16 @@
     <value>文章: 了解画布应用中的委派</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>博客: 针对委派的数据行限制</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3733,8 +3994,16 @@
     <value>文章: 了解画布应用中的委派</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>博客: 针对委派的数据行限制</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3766,8 +4035,70 @@
     <value>文章: 了解画布应用中的委派</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>博客: 针对委派的数据行限制</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>委派警告。指定配方 {0} 不可委派，因此在此配方中的用法可能在大型数据集上无法正常工作。</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>数据源可能无法处理该公式且可能返回不完整的数据集。如果数据集不完整，应用程序可能不返回正确的结果或行为不正确。</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>尝试简化指定配方的定义。</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>文章: 了解画布应用中的委派</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>博客: 针对委派的数据行限制</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>委派警告。用户定义函数 {0} 不可委派，因此在此配方中的用法可能在大型数据集上无法正常工作。</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>数据源可能无法处理该公式且可能返回不完整的数据集。如果数据集不完整，应用程序可能不返回正确的结果或行为不正确。</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>尝试简化用户定义函数的定义。</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>文章: 了解画布应用中的委派</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>博客: 针对委派的数据行限制</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3794,8 +4125,16 @@
     <value>文章: 了解画布应用中的委派</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>博客: 针对委派的数据行限制</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3824,6 +4163,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>引用: 画布应用的 ConfirmExit</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3858,12 +4201,24 @@
     <value>指定的公式必须为表达式。</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>命名类型声明必须是有效的类型表达式。</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>用户定义的函数必须有正文。</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>函数 {0} 已定义。</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>警告: 用户定义的函数 {0} 将隐藏现有内置函数 {0}。</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>函数名称 {0} 受限制。</value>
     
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
@@ -3875,7 +4230,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>所说明的函数返回类型与函数正文的返回类型不匹配。</value>
+    <value>所说明的函数返回类型 "{0}" 与函数正文的返回类型 "{1}" 不匹配。</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>函数 {0} 的参数过多。用户定义的函数最多支持 {1} 个参数。</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +4261,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>“{0}”的第一个参数应为有效的变量名，且不能与任何现有控件、屏幕、集合或数据源名称冲突。找到的类型为“{1}”</value>
+    <value>"{1}" 无法用 "{0}" 进行修改，或者与现有范围变量、数据源或其他对象的名称冲突。</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4063,6 +4422,10 @@
     <value>无法委托 {0}: 包含行为函数 '{1}'。</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows 可能会返回缓存的值。请使用 CountIf(DataSource, true) 获取最新计数。</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>确定提供的文本是否与所提供的文本格式匹配。</value>
     
@@ -4156,24 +4519,232 @@
     <value>正则表达式无效。</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 内联选项必须显示在正则表达式的开头，稍后找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 内联选项仅限于字母 [imnsx] 的组合，无法禁用选项，并且不能用于子表达式，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 八进制 \0 字符代码不受支持，请改用十六进制 \x 或 Unicode \u，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 文字花括号必须用反斜杠进行转义，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 即使在字符类中，也必须使用反斜杠对文字方括号进行转义，例如 \[ 或 \]，在 "{0}" 的末尾找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 字符类方括号未封闭。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 特殊组不受支持，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 字符类中不允许使用转义字符，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 否定字符类中不允许使用负转义字符，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 在字符类外不允许使用转义字符，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: Unicode 类别名称无效，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 内联选项重复，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 内联注释未封闭。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 内联注释未封闭，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 内联选项与 MatchOptions.NumberedSubMatches 不兼容，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 占有限定符不受支持，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 精确限定符不能与表示延迟的 ? 等限定符修饰符一起使用，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 转义码无效，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 子匹配项 "{0}" 未定义或是不受支持的前向引用。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 此类匹配项在后瞻中不受支持，在 "{0}" 的开头找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 无法嵌套后瞻，在 "{0}" 的开头找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 无限限定符在后瞻中不受支持，在 "{0}" 的末尾找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 限定符在后瞻或前瞻中不受支持，在 "{0}" 的末尾找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 对因交替或限定符为零而可能不会发生的子匹配项的反向引用 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 自引用子匹配项不受支持，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 组未封闭，右括号太少。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 组未打开，左括号太少。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 多次定义了命名子匹配项，在 "{0}" 开头处找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 子匹配名称必须是字词字符的组合，且未以数字开头，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 内联选项必须显示在正则表达式的开头，稍后找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 字符在字符类中出现多次，找到重复的 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 方括号字符类不能为空，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 平衡子匹配项不受支持，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 使用带单引号的命名捕获不支持，请改用(?&lt;...&gt;)语法，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 条件交替不受支持，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 不能在启用 MatchOptions.NumberedSubMatches 的情况下使用命名捕获，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 将命名捕获与 "(?&lt;name&gt;...)" 和 "\k&lt;name&gt;" 结合使用，或者启用 MatchOptions.NumberedSubMatches，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 必须使用反斜杠对文字连字符进行转义，已使用 "\-" 转义，在 "{0}" 中找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 在字符类中使用时，需要使用反斜杠对文字字符进行转义，在 "{0}" 的末尾找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 组中的限定符包含另一个限定符或空交替，这可能会导致结果不明确，在 "{0}" 的末尾找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 后瞻超过 250 个字符的最大可能限制，在 "{0}" 的末尾找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 限定符范围下限数大于上限数，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 嵌套组过多，在 "{0}" 的开头找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 子匹配项的名称过长，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 数字过大，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 字符类范围中的字符被反转，在 "{0}" 的末尾找到。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 字符类在字符类范围内，或使用反斜杠对文字连字符进行转义，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 以未转义的反斜杠结尾。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 限定符没有要限定的内容，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: MatchOptions.DotAll 和 MatchOptions.FreeSpacing 仅适用于 Power Fx V1，找到 "{0}"。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效: 对后瞻或前瞻内的子匹配项的反向引用 "{0}"。</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>正则表达式必须是常数值。</value>
+    <value>正则表达式必须是常量值。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions 必须为常量值。</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>无法更改传递给 '{0}' 函数的值。</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>捕获名称“{0}”将隐藏要返回正则表达式完整匹配的预定义属性。如果要使用该命名属性来提取指定文本中的完整匹配项，请对其重命名。</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>捕获名称 '{0}' 正隐藏返回匹配项信息的预定义属性。如果想要访问匹配项信息，请考虑对其进行重命名。</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>捕获名称“{0}”将隐藏要返回正则表达式中组匹配项的预定义属性。如果要使用该命名属性来提取指定文本中的所有子匹配项，请对其重命名。</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>捕获名称“{0}”将隐藏要返回正则表达式匹配项位置的预定义属性。如果要使用该命名属性来提取指定文本中完整匹配项的位置，请对其重命名。</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>集 '{0}' 中的捕获名称正隐藏返回匹配项信息的预定义属性。如果想要访问匹配项信息，请考虑对其进行重命名。</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4209,16 +4780,20 @@
     <value>使用在线数据源值(表或记录)设置变量可能会导致对服务器提出多个请求。这很快将被阻止。</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>类型文字声明无效。表达式 '{0}' 不能用于类型定义。</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>类型表达式无效。'{0}' 不能用于类型表达式。</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>类型 {0} 的定义无效。</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>不支持的用法: Type 函数只能在类型参数和类型声明中使用。</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>类型 {0} 的声明无效。</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>类型 {0} 的定义无效，并且可能包含循环。</value>
+    <value>类型 {0} 的声明无效，并且可能包含循环。</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4419,6 +4994,16 @@
     <value>未知 Partial 运算符。</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>要将数据添加到的数据源。</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>要收集的记录或表。记录会附加到数据源。表会将其行附加到数据源。</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>项目</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>委派警告。对于大型数据集，此参数 '{0}' 的结果在传递给 '{1}' 函数之前可能会被截断。</value>
     
@@ -4461,8 +5046,96 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>要清除的源。</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>检索跨越多个具有关系的表的数据。</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>源1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>源2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>分母</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>左边的表或集合。</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>右边的表或集合。</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>两个表或集合之间的联接标准。</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>两个表或集合之间的联接类型。</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>用于重命名一个数据源中的现有列的参数。</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>指定的数据源不能与此函数一起使用。</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>参数 '{0}' 无效。预期有效的类型名称或内联类型表达式。</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>类型参数中不支持类型 '{0}'。</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>遍历 JSON 有效负载时达到最大深度。</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>在 JSON 函数中达到最大长度。</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>未启用“用户定义类型”实验功能。</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>语法不正确:“=”不能用于声明用户定义的类型。请改用“:=”。</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>由于与另一个同名列冲突，无法添加/重命名 '{0}'。</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>希望得到简单的“JoinType”枚举值。不支持不同的枚举或通过其他函数传递，例如 Join(..., If(true, JoinType.Inner, JoinType.Full))。</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>从第 5 位开始的参数用于重新命名列，并应是“As”节点参数，即 LeftRecord.Name As NewName。</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>必须至少声明一个 '{0}' 列才能组成联接结果。</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>'{0}' 值在此情况下无效。它应该是对 '{1}' 或 '{2}' 范围名称的引用。</value>
     
   </data>
 </root>

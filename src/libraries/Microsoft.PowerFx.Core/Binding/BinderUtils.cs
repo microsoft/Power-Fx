@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App.Controls;
@@ -14,6 +15,7 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -147,6 +149,12 @@ namespace Microsoft.PowerFx.Core.Binding
             var matchingFuncWithCoercionReturnType = DType.Invalid;
             nodeToCoercedTypeMap = null;
             Dictionary<TexlNode, DType> matchingFuncWithCoercionNodeToCoercedTypeMap = null;
+
+            // If a user-defined function exists as one of the possible overloads, always return that as it shadows existing built-in functions (provided it is not a restricted UDF name).
+            if (overloads.Any(overload => overload is UserDefinedFunction))
+            {
+                overloads = overloads.Where(overload => overload is UserDefinedFunction).ToArray();
+            }
 
             foreach (var maybeFunc in overloads)
             {
@@ -1500,6 +1508,28 @@ namespace Microsoft.PowerFx.Core.Binding
                 case NodeKind.StrLit:
                     nodeValue = node.AsStrLit().Value;
                     return true;
+                case NodeKind.StrInterp:
+                    var strInterpNode = node.AsStrInterp();
+                    var segments = new List<string>();
+                    foreach (var segmentNode in strInterpNode.Children)
+                    {
+                        if (TryGetConstantValue(context, segmentNode, out var segmentValue))
+                        {
+                            segments.Append(segmentValue);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    if (segments.Count == strInterpNode.Children.Count)
+                    {
+                        nodeValue = string.Join(string.Empty, segments);
+                        return true;
+                    }
+
+                    break;
                 case NodeKind.BinaryOp:
                     var binaryOpNode = node.AsBinaryOp();
                     if (binaryOpNode.Op == BinaryOp.Concat)
@@ -1535,6 +1565,42 @@ namespace Microsoft.PowerFx.Core.Binding
                             return true;
                         }
                     }
+                    else if ((callNode.Head.Name.Value == BuiltinFunctionsCore.Char.Name || callNode.Head.Name.Value == BuiltinFunctionsCore.UniChar.Name) && callNode.Args.Children.Count == 1)
+                    {
+                        int val = -1;
+
+                        if (callNode.Args.Children[0].Kind == NodeKind.DecLit)
+                        {
+                            val = (int)((DecLitNode)callNode.Args.Children[0]).ActualDecValue;
+                        }
+                        else if (callNode.Args.Children[0].Kind == NodeKind.NumLit)
+                        {
+                            val = (int)((NumLitNode)callNode.Args.Children[0]).ActualNumValue;
+                        }
+                        else if (callNode.Args.Children[0].Kind == NodeKind.Call)
+                        {
+                            var hexCallNode = callNode.Args.Children[0].AsCall();
+                            if (hexCallNode.Head.Name.Value == BuiltinFunctionsCore.Hex2Dec.Name && hexCallNode.Args.Children[0].Kind == NodeKind.StrLit)
+                            {
+                                var hexStr = hexCallNode.Args.Children[0].AsStrLit().Value;
+
+                                // check for 10 hex digits is the same as in LibraryMath.cs/Hex2Dec, Excel functions works on a 40 bit number
+                                // may result in a negative val, but that will be checked below
+                                if (hexStr.Length > 10 || !int.TryParse(hexStr, System.Globalization.NumberStyles.HexNumber, null, out val))
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+
+                        if (val < 1 || (val > 255 && callNode.Head.Name.Value == BuiltinFunctionsCore.Char.Name) || val > 0x10FFFF || (val >= 0xD800 && val <= 0xDFFF))
+                        {
+                            return false;
+                        }
+
+                        nodeValue = char.ConvertFromUtf32(val);
+                        return true;
+                    }
 
                     break;
                 case NodeKind.FirstName:
@@ -1558,17 +1624,8 @@ namespace Microsoft.PowerFx.Core.Binding
                     var dottedNameNode = node.AsDottedName();
                     if (dottedNameNode.Left.Kind == NodeKind.FirstName)
                     {
-                        // Strongly-typed enums
-                        if (context.NameResolver.Lookup(dottedNameNode.Left.AsFirstName().Ident.Name, out NameLookupInfo nameInfo) && nameInfo.Kind == BindKind.Enum)
-                        {
-                            if (nameInfo.Data is EnumSymbol enumSymbol && enumSymbol.TryGetValue(dottedNameNode.Right.Name, out OptionSetValue osv))
-                            {
-                                nodeValue = osv.ToObject().ToString();
-                                return true;
-                            }
-                        }
-
-                        // With strongly-typed enums disabled
+                        // If the entity scope exists, look up from there.
+                        // Once PA Client impls Strongly Typed enums, this may need to update.
                         DType enumType = DType.Invalid;
                         if (context.NameResolver.EntityScope?.TryGetNamedEnum(dottedNameNode.Left.AsFirstName().Ident.Name, out enumType) ?? false)
                         {
@@ -1579,6 +1636,16 @@ namespace Microsoft.PowerFx.Core.Binding
                                     nodeValue = strValue;
                                     return true;
                                 }
+                            }
+                        }
+
+                        // Strongly-typed enums
+                        if (context.NameResolver.Lookup(dottedNameNode.Left.AsFirstName().Ident.Name, out NameLookupInfo nameInfo, NameLookupPreferences.GlobalsOnly) && nameInfo.Kind == BindKind.Enum)
+                        {
+                            if (nameInfo.Data is EnumSymbol enumSymbol && enumSymbol.TryGetValue(dottedNameNode.Right.Name, out OptionSetValue osv))
+                            {
+                                nodeValue = osv.ToObject().ToString();
+                                return true;
                             }
                         }
                     }

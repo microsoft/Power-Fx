@@ -2,45 +2,103 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
+using Microsoft.PowerFx.Core.Public.Types;
 
-namespace Microsoft.PowerFx.Connectors.Tabular
+namespace Microsoft.PowerFx.Connectors
 {
     // Used by ConnectorDataSource.GetTablesAsync
-    internal class GetTables
+    internal class GetTables : ISupportsPostProcessing
     {
         [JsonPropertyName("value")]
         public List<RawTable> Value { get; set; }
+
+        public void PostProcess()
+        {
+            Value = Value.Select(rt => new RawTable() { Name = rt.Name, DisplayName = rt.DisplayName.Split('.').Last().Replace("[", string.Empty).Replace("]", string.Empty) }).ToList();
+        }
+    }
+
+    internal interface ISupportsPostProcessing
+    {
+        void PostProcess();
+    }
+
+    public class CDPMetadataItem
+    {
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        [JsonPropertyName("sensitivityLabelInfo")]
+        public IEnumerable<CDPSensitivityLabelInfo> SensitivityLabels { get; set; }
+    }
+
+    public class CDPSensitivityLabelInfo
+    {
+        [JsonPropertyName("sensitivityLabelId")]
+        public string SensitivityLabelId { get; set; }
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        [JsonPropertyName("displayName")]
+        public string DisplayName { get; set; }
+
+        [JsonPropertyName("tooltip")]
+        public string Tooltip { get; set; }
+
+        [JsonPropertyName("priority")]
+        public int Priority { get; set; }
+
+        [JsonPropertyName("color")]
+        public string Color { get; set; }
+
+        // These are strings in your JSON; if you'd rather parse to bool, you can add a converter.
+        [JsonPropertyName("isEncrypted")]
+        public bool IsEncrypted { get; set; }
+
+        [JsonPropertyName("isEnabled")]
+        public bool IsEnabled { get; set; }
+
+        [JsonPropertyName("isParent")]
+        public bool IsParent { get; set; }
+
+        [JsonPropertyName("parentSensitivityLabelId")]
+        public string ParentSensitivityLabelId { get; set; }
     }
 
     internal class RawTable
     {
+        // Logical Name
         [JsonPropertyName("Name")]
         public string Name { get; set; }
 
         [JsonPropertyName("DisplayName")]
         public string DisplayName { get; set; }
+
+        public override string ToString() => $"{DisplayName}: {Name}";
     }
 
     // Used by ConnectorDataSource.GetDatasetsMetadataAsync
-    internal class DatasetMetadata
+    public class DatasetMetadata
     {
         [JsonPropertyName("tabular")]
-        public RawTabular Tabular { get; set; }
+        public MetadataTabular Tabular { get; set; }
 
         [JsonPropertyName("blob")]
-        public RawBlob Blob { get; set; }
+        public MetadataBlob Blob { get; set; }
 
         [JsonPropertyName("datasetFormat")]
         public string DatasetFormat { get; set; }
 
         [JsonPropertyName("parameters")]
-        public List<RawDatasetMetadataParameter> Parameters { get; set; }
+        public IReadOnlyCollection<MetadataParameter> Parameters { get; set; }
 
         public bool IsDoubleEncoding => Tabular?.UrlEncoding == "double";
     }
 
-    internal class RawTabular
+    public class MetadataTabular
     {
         [JsonPropertyName("source")]
         public string Source { get; set; }
@@ -58,7 +116,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular
         public string TablePluralName { get; set; }
     }
 
-    internal class RawBlob
+    public class MetadataBlob
     {
         [JsonPropertyName("source")]
         public string Source { get; set; }
@@ -70,7 +128,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular
         public string UrlEncoding { get; set; }
     }
 
-    internal class RawDatasetMetadataParameter
+    public class MetadataParameter
     {
         [JsonPropertyName("name")]
         public string Name { get; set; }
@@ -91,10 +149,10 @@ namespace Microsoft.PowerFx.Connectors.Tabular
         public string XMsSummary { get; set; }
 
         [JsonPropertyName("x-ms-dynamic-values")]
-        public RawDynamicValues XMsDynamicValues { get; set; }
+        public MetadataDynamicValues XMsDynamicValues { get; set; }
     }
 
-    internal class RawDynamicValues
+    public class MetadataDynamicValues
     {
         [JsonPropertyName("path")]
         public string Path { get; set; }

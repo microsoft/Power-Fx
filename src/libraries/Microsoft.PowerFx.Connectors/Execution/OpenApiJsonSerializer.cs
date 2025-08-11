@@ -5,6 +5,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             : base(utcConverter, schemaLessBody)
         {
             _stream = new MemoryStream();
-            _writer = new Utf8JsonWriter(_stream, new JsonWriterOptions());
+            _writer = new Utf8JsonWriter(_stream, new JsonWriterOptions() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
             _cancellationToken = cancellationToken;
         }
 

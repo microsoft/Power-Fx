@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Connector.Tests
         [Fact]
         public void PublicSurfaceTest_Connectors()
         {
-            var asm = typeof(PowerPlatformConnectorClient).Assembly;
+            var asm = typeof(PowerPlatformConnectorClient2).Assembly;
 
             // The goal for public namespaces is to make the SDK easy for the consumer.
             // Namespace principles for public classes:            //
@@ -26,7 +26,14 @@ namespace Microsoft.PowerFx.Connector.Tests
             var allowed = new HashSet<string>()
             {
               "Microsoft.PowerFx.ConfigExtensions",
+              "Microsoft.PowerFx.Connectors.AiSensitivity",
               "Microsoft.PowerFx.Connectors.BaseRuntimeConnectorContext",
+              "Microsoft.PowerFx.Connectors.CdpDataSource",
+              "Microsoft.PowerFx.Connectors.CdpExtensions",
+              "Microsoft.PowerFx.Connectors.CdpService",
+              "Microsoft.PowerFx.Connectors.CdpServiceBase",
+              "Microsoft.PowerFx.Connectors.CdpTable",
+              "Microsoft.PowerFx.Connectors.CdpTableValue",
               "Microsoft.PowerFx.Connectors.ConnectorCompatibility",
               "Microsoft.PowerFx.Connectors.ConnectorEnhancedSuggestions",
               "Microsoft.PowerFx.Connectors.ConnectorFunction",
@@ -39,13 +46,15 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.ConnectorPermission",
               "Microsoft.PowerFx.Connectors.ConnectorSchema",
               "Microsoft.PowerFx.Connectors.ConnectorSettings",
-              "Microsoft.PowerFx.Connectors.ConnectorTableValue",
               "Microsoft.PowerFx.Connectors.ConnectorType",
               "Microsoft.PowerFx.Connectors.Constants",
-              "Microsoft.PowerFx.Connectors.EngineExtensions",
+              "Microsoft.PowerFx.Connectors.DatasetMetadata",
               "Microsoft.PowerFx.Connectors.LogCategory",
               "Microsoft.PowerFx.Connectors.MediaKind",
-              "Microsoft.PowerFx.Connectors.ODataParameters",
+              "Microsoft.PowerFx.Connectors.MetadataBlob",
+              "Microsoft.PowerFx.Connectors.MetadataDynamicValues",
+              "Microsoft.PowerFx.Connectors.MetadataParameter",
+              "Microsoft.PowerFx.Connectors.MetadataTabular",
               "Microsoft.PowerFx.Connectors.OpenApiExtensions",
               "Microsoft.PowerFx.Connectors.OpenApiParser",
               "Microsoft.PowerFx.Connectors.PowerFxConnectorException",
@@ -53,11 +62,11 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.RuntimeConfigExtensions",
               "Microsoft.PowerFx.Connectors.RuntimeConnectorContextExtensions",
               "Microsoft.PowerFx.Connectors.SupportsConnectorErrors",
-              "Microsoft.PowerFx.Connectors.Tabular.ConnectorDataSource",
-              "Microsoft.PowerFx.Connectors.Tabular.ConnectorServiceBase",
-              "Microsoft.PowerFx.Connectors.Tabular.ConnectorTable",
-              "Microsoft.PowerFx.Connectors.Tabular.TabularService",
-              "Microsoft.PowerFx.Connectors.Visibility"
+              "Microsoft.PowerFx.Connectors.Visibility",
+              "Microsoft.PowerFx.Connectors.CDPSensitivityLabelInfo",
+              "Microsoft.PowerFx.Connectors.CDPMetadataItem",
+              "Microsoft.PowerFx.Connectors.ICDPAggregateMetadata",
+              "Microsoft.PowerFx.Connectors.PowerPlatformConnectorHelper"
             };
 
             var sb = new StringBuilder();

@@ -21,6 +21,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// Sentence in Natural Language.
         /// </summary>
         public string Sentence { get; set; }
+
+        /// <summary>
+        /// Name of the NL2Fx feature being used.
+        /// </summary>
+        public string FeatureName { get; set; }
     }
 
     /// <summary>

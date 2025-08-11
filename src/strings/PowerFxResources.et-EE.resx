@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Protsent (või protsendiväärtuste veerg), mille võrra värvi (või värviväärtuste veeru) varjundit muudetakse. Negatiivne protsent loob tumedama varjundi. Positiivne protsent loob heledama varjundi.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Tagastab kirje koos failiteabega.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>Failibloob teabe saamiseks.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>fail</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Tagastab arvu absoluutväärtuse, mis on sama arv ilma märgita.</value>
     
@@ -1796,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Tagastab väärtuse „tõene“, kui esitatud tüübita väärtus on antud tüüpi.</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>tüüp</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>Tüübita väärtus kontrollimaks, kas seda saab määratud tüübiks teisendada.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>Tüüp, millena soovime untypedValue-väärtust kontrollida.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Kasutab esitatud väärtust antud tüübina.</value>
     
@@ -1813,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>Olemi tabel, mis esindab seda tüüpi, millena soovime väärtust kasutada.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Kontrollib ja kasutab antud tüübina esitatud tüübita väärtust.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>tüüp</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>Tüübita väärtus uueks tüübiks teisendamiseks.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>Tüüp, millena soovime väärtust kasutada.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Käivitab esitatud valemi teise parameetrina, kasutades esimese esitatud ulatust.</value>
@@ -1868,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>„{0}“ on tundmatu või toetuseta funktsioon.</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>„{0}“ on tuvastatud tüübi abifunktsioonina ja seda saab kasutada ainult funktsioonis Type.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -1982,10 +2033,6 @@
     <value>Funktsiooni {0} esimene argument peab olema kirje.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Kui see valik on määratud loetelu väärtuseks või on kasutusel funktsioonis Choices, on nõutav olemi '{0}' lisamine andmeallikana. Lisamiseks kasutage menüüd Vaade ja seejärel valige andmeallikad.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Määratud atribuudile ei pääse selles kontekstis juurde.</value>
     
@@ -2026,10 +2073,6 @@
     <value>Argument ei esinda kehtivat kuupäeva- ega kellaajaväärtust.</value>
     
   </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>See andmeallikas ei sobi. Parandage viga paanil Andmeallikad, valides Sisu -&gt; Andmeallikad või Vaade -&gt; Suvandid</value>
-    
-  </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>Eeldati, et andmeallika identifikaator piirab tekstisisest kirjet.</value>
     
@@ -2068,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>{0}: veerunime konflikt.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Süsteemikirjele või süsteemikirjete tabelile ei saa veerge lisada. Esimesena vajatavate konkreetsete veergude ekstraktimiseks kasutage valikut ShowColumns.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Süsteemikirjete veerge või süsteemikirjete tabelit ei saa ümber nimetada. Esimesena vajatavate konkreetsete veergude ekstraktimiseks kasutage valikut ShowColumns.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -2670,6 +2721,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Töödeldav JSON-string.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>Teisendab JSON-stringi tüübiga objektiks.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>string</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>Tüübiga objektiks teisendatav JSON-string.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>tüüp</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>Lehesisene tüübimääratlus või globaalselt määratletud nimega tüüp.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Tagastab tabelis kirje antud registriga.</value>
     
@@ -2687,6 +2756,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Toodava kirje register.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2707,6 +2788,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Vöötkoodi tüüp</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2823,6 +2936,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Testitav väärtus.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Teisendab kuupäeva ja kellaaja tekstivormingust arvuvormingusse, millega tähistatakse Power Appsi kuupäeva- ja kellaajakoodis kuupäeva.</value>
@@ -3098,32 +3215,33 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Lisab kirjed andmeallikasse.</value>
+    <value>Lisab määratud kogumisse ühe või mitu üksust. Üksused võivad olla pärit mõnest muust tabelist või kogumist (nt Collect(collection, source_collection)) või ühest või mitmest kirjest Collect(collection, {key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>andmeallikas</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>kirje</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>kogum</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>üksus</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Uus või olemasolev kogum täiendamiseks.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Kustutab kõik kirjed kogumist. Seejärel lisab samasse kogumisse teise kirjete kogumi.</value>
+    <value>Esmalt tühjendab kogumi ja lisab määratud kogumisse ühe või mitu üksust. Üksused võivad olla teisest tabelist või kogumist (nt ClearCollect(collection, source_collection)) või ühest või mitmest kirjest ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>andmeallikas</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Uus või olemasolev kogum täiendamiseks.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>andmeallikas</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>kirje</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Koondatav kirje või tabel. Kirje lisatakse kogumisse. Tabeliread lisatakse kogumisse.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Rakendab värskendused määratud reale ja muudab rea määratud andmeallikas. Tagastab värskendatud rea.</value>
@@ -3259,6 +3377,10 @@
     <value>Artikkel: Power Appsi valemiviide</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Valemi asukohas '{1}' on ootamatu märk '{0}'.</value>
     
@@ -3271,6 +3393,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3288,6 +3414,10 @@
     <value>Artikkel: Power Appsi valemiviide</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Ootamatud tärgid. Valem sisaldab tärki '{0}', kuid eeldatud on '{1}'.</value>
     
@@ -3301,6 +3431,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3318,6 +3452,10 @@
     <value>Artikkel: Power Appsi valemiviide</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Nimi ei sobi. Identifikaatorit ei tuvastatud.</value>
     
@@ -3331,6 +3469,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3348,6 +3490,10 @@
     <value>Artikkel: PowerAppsi valemiviide</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>Viide 'Parent' ei sobi. Te ei saa selles kontekstis emajuhtelemendile viidata.</value>
     
@@ -3361,6 +3507,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Artikkel: lõuendirakenduse juhtelemendi lisamine ja konfigureerimine Power Appsis</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3400,6 +3550,10 @@
     <value>Moodul: põhivalemite kasutamine</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Eeldati arvu. Siinkohal eeldame valemis arvu.</value>
     
@@ -3413,6 +3567,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3430,6 +3588,10 @@
     <value>Artikkel: Power Appsi valemiviide</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Eeldati koolonit. Siinkohal eeldame valemis koolonit (:).</value>
     
@@ -3445,6 +3607,10 @@
     <value>Artikkel: Power Appsis teksti, kuupäevade ja kellaaegade kuvamine</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Käitumise funktsioon on mitte-käitumise atribuut. Te ei saa seda atribuuti kasutada väärtuste muutmiseks mujal rakenduses.</value>
     
@@ -3458,6 +3624,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Artikkel: Power Appsi lõuendirakenduste käitumisvalemite mõistmine</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Käitumisfunktsioon mittekäituva kasutaja määratletud funktsioonis (UDF). Käitumise UDF-i deklareerimiseks ümbritsege kasutaja määratletud funktsiooni sisu looksulgudega ({...}).</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Käitumisfunktsioonid muudavad praeguse seansi olekut. Tavalised käitumisfunktsioonid on Clear, Collect, Patch ja Refresh.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Redigeerige kasutaja määratletud funktsiooniavaldist nii, et see oleks looksulgude sees ({...}).</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3497,6 +3679,10 @@
     <value>Artikkel: Power Appsi valemiviide</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Eeldati teksti või arvu. Siinkohal eeldame valemis teksti või arvu.</value>
     
@@ -3512,6 +3698,10 @@
     <value>Artikkel: Power Appsi valemiviide</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Eeldati sulgevat sulgu. Siinkohal eeldame valemis sulgevat sulgu (}).</value>
     
@@ -3523,12 +3713,23 @@
     <value>Redigeerige oma valemit nii, et see sisaldaks sulgu.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Eeldatakse identifikaatori sulgemist. Valemi selles kohas eeldame lõpuüksikjutumärki (').</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Lõpuüksikjutumärk tähistab identifikaatori lõppu (nt ’Eesnimi’).</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Redigeerige oma valemit nii, et see sisaldaks lõpuüksikjutumärki.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Identifikaatoril puudub sobiv tekst.</value>
+    <value>Identifikaator on tühiväärtusega või sisaldab sobimatut märki (nt tabeldust või uut rida).</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Veenduge, et teil oleks oma identifikaatorile tekst. See tõrge ilmneb, kui identifikaator koosneb ainult tühiväärtustest või tühikutest.</value>
+    <value>Veenduge, et teil oleks oma identifikaatoris sobiv tekst. See tõrge ilmneb, kui identifikaator on tühiväärtusega koosneb ainult tühikutest või sisaldab tabeldust või uut rida.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3554,8 +3755,16 @@
     <value>Moodul: põhivalemite kasutamine</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Moodul: põhivalemite loomine tabelite ja kirjetega</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3570,6 +3779,10 @@
     <value>Artikkel: Power Appsi valemiviide</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Ühildumatu tüüp. Värskendatavas andmeallikas olev veerg '{0}' eeldab tüüpi '{1}', teie kasutate tüüpi '{2}'.</value>
     
@@ -3582,8 +3795,16 @@
     <value>Moodul: põhivalemite kasutamine</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Moodul: põhivalemite loomine tabelite ja kirjetega</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3596,6 +3817,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3614,8 +3839,16 @@
     <value>Moodul: põhivalemite kasutamine</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Moodul: põhivalemite loomine tabelite ja kirjetega</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3633,8 +3866,16 @@
     <value>Moodul: põhivalemite kasutamine</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Moodul: põhivalemite loomine tabelite ja kirjetega</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3650,6 +3891,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3675,8 +3920,16 @@
     <value>Artikkel: lõuendirakenduse delegeerimise selgitus</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Ajaveeb: delegeerimise andmereapiirangud</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3702,8 +3955,16 @@
     <value>Artikkel: lõuendirakenduse delegeerimise selgitus</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Ajaveeb: delegeerimise andmereapiirangud</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3733,8 +3994,16 @@
     <value>Artikkel: lõuendirakenduse delegeerimise selgitus</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Ajaveeb: delegeerimise andmereapiirangud</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3766,8 +4035,70 @@
     <value>Artikkel: lõuendirakenduse delegeerimise selgitus</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Ajaveeb: delegeerimise andmereapiirangud</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Delegeerimishoiatus. Kuna nimega valemit {0} ei saa delegeerida, ei pruugi selle kasutamine selles valemis suurte andmehulkade korral õigesti töötada. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Võib juhtuda, et andmeallikas ei saa valemit töödelda ja võib tagastada pooliku andmehulga. Kui andmehulk on poolik, võib teie rakendus tagastada valed tulemid või käituda valesti.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Proovige nimega valemi määratlust lihtsustada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Artikkel: Lõuendirakenduse delegeerimise selgitus</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Ajaveeb: Delegeerimise andmereapiirangud</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Delegeerimishoiatus. Kuna kasutaja määratletud funktsiooni {0} ei saa delegeerida, ei pruugi selle kasutamine selles valemis suurte andmehulkade korral õigesti töötada. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Võib juhtuda, et andmeallikas ei saa valemit töödelda ja võib tagastada pooliku andmehulga. Kui andmehulk on poolik, võib teie rakendus tagastada valed tulemid või käituda valesti.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Proovige kasutaja määratletud funktsiooni määratlust lihtsustada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Artikkel: Lõuendirakenduse delegeerimise selgitus</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Ajaveeb: Delegeerimise andmereapiirangud</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3794,8 +4125,16 @@
     <value>Artikkel: lõuendirakenduse delegeerimise selgitus</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Ajaveeb: delegeerimise andmereapiirangud</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3824,6 +4163,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Viide: ConfirmExit lõuendirakenduste jaoks</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3858,12 +4201,24 @@
     <value>Nimega valem peab olema avaldis.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Nimega tüübi deklaratsioon peab olema kehtiv tüübiavaldis.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Kasutaja määratletud funktsioonil peab olema sisu.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Funktsioon {0} on juba määratletud.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Hoiatus: kasutaja määratletud funktsioon {0} varjutab olemasoleva sisseehitatud funktsiooni {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Funktsiooni nimi {0} on piiratud.</value>
     
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
@@ -3875,7 +4230,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Märgitud funktsiooni tagastustüüp ei vasta funktsiooni sisu tagastustüübile.</value>
+    <value>Märgitud funktsiooni tagastustüüp {0} ei vasta funktsiooni sisu {1} tagastustüübile.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Funktsioonil {0} on liiga palju parameetreid. Kasutaja määratletud funktsioonid toetavad kuni {1} parameetrit.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +4261,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Üksuse '{0}' esimene argument peab olema kehtiv muutuja nimi ja see ei tohi olla vastuolus ühegi olemasoleva juhtelemendi, ekraani, kogumi või andmeallika nimega. Leitud tüüp '{1}'</value>
+    <value>Üksust {1} ei saa muuta üksusega {0} või see läheb vastuollu olemasoleva ulatusemuutuja, andmeallika või muu objekti nimega.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4063,6 +4422,10 @@
     <value>Üksust {0} ei saa delegeerida: sisaldab käitumisfunktsiooni „{1}“.</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows võib tagastada vahemällu salvestatud väärtuse. Uusima arvu toomiseks kasutage parameetrit CountIf(DataSource, true).</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Määrab, kas esitatud tekstil esineb esitatud tekstivormingu vaste.</value>
     
@@ -4156,24 +4519,232 @@
     <value>Kehtetu regulaaravaldis.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: tekstisisesed suvandid tuleb kuvada regulaaravaldise alguses, hiljem leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: tekstisisesed suvandid on piiratud tähtede [imnsx] kombinatsiooniga, suvandeid ei saa keelata ja neid ei saa kasutada alamavaldises, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: Octal \0 märgikoode ei toetata, kasutage selle asemel kuueteistkümnendsüsteemi \x või Unicode \u, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: sõnasõnalised looksulud tuleb eraldada kurakriipsuga, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: sõnasõnalised nurksulud tuleb eraldada kurakriipsuga, isegi märgiklassides, näiteks \[ või \], leiti {0} lõpust.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: sulgemata märgiklassi nurksulg.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: toetuseta erirühm, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: paomärk pole märgiklassis lubatud, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: negatiivne paomärk pole eitavas märgiklassis lubatud, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: paomärk pole märgiklassist väljaspool lubatud, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: sobimatu Unicode’i kategoorianimi, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: korduv tekstisisene suvand, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: sulgemata tekstisisene kommentaar.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: sulgemata tekstisisene kommentaar, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: tekstisisene suvand ei ühildu alamvastetega MatchOptions.NumberedSubMatches, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: omastavaid kvantoreid ei toetata, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: täpseid kvantoreid ei saa kasutada koos kvantorite muutujatega, näiteks ? laisa jaoks, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: sobimatu paomärk, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: alamvaste {0} pole määratletud või on toetuseta edasisuunas viide.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: alamvasteid ei toetata tagasivaadetes, leiti {0} algusest.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: tagasivaateid ei saa pesastada, leiti {0} algusest.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: piiramatud kvantorid pole toetatud tagasivaadetes, leiti {0} lõpust.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: kvantorid pole toetatud tagasi- või edasivaates, leiti {0} lõpust.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: tagasiviide {0} alamvastele, mis ei pruugi juhtuda vaheldumise või nullkvantori tõttu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: enesele viitavaid alamvasteid ei toetata, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: sulgemata rühmad, liiga vähe sulgevaid ümarsulge.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: avamata rühmad, liiga vähe avavaid ümarsulge.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: nimega alamvaste, mis on määratletud mitu korda, leiti {0} algusest.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: alamvaste nimi peab olema sõnamärkide kombinatsioon ja mitte algama arvuga, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: tekstisisesed suvandid tuleb kuvada regulaaravaldise alguses, hiljem leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: märk esineb märgiklassis mitu korda, leiti korduv {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: nurksulgudes märgiklassid ei tohi olla tühiväärtusega, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: tasakaalustavaid alamvasteid ei toetata, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: üksikjutumärgiga nimega jäädvustuste kasutamist ei toetata, kasutage selle asemel (?&lt;... &gt;) süntaksit, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: tingimuslikku vaheldumist ei toetata, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: nimega jäädvustusi ei saa kasutada lubatud alamvastetega MatchOptions.NumberedSubMatches, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: kasutage nimega jäädvustusi koos suvandiga (?&lt;name&gt;...) ja "\k&lt;name&gt; või lubage MatchOptions.NumberedSubMatches, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: sõnasõnaline sidekriips märgiklassivahemikus tuleb eraldada kurakriipsuga \-, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: sõnasõnaline märk tuleb eraldada kurakriipsuga, kui seda kasutatakse märgiklassis, leiti {0} lõpust.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: kvantor rühmas, mis sisaldab teist kvantorit või tühja vaheldumist, mis võib anda mitmetähendusliku tulemuse, leiti {0} lõpust.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: tagasivaade ületas maksimaalse lubatud märkide arvu 250, leiti {0} lõpust.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: kvantorivahemik väike arv on suurem kui suur arv, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: {0} alguses leiti liiga palju pesastatud rühmi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: alamvaste nimi on liiga pikk, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: arv on liiga suur, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: märgiklassi vahemikus olevad märgid pööratakse ümber, leiti {0} lõpust.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: märgiklass märgiklassivahemikus või eraldage sõnasõnaline sidekriips kurakriipsuga, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: lõpeb paomärgita kurakriips.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: kvantor, millel pole midagi kvantifitseerida, leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: MatchOptions.DotAll ja MatchOptions.FreeSpacing on saadaval ainult Power Fx V1-ga , leiti {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Sobimatu regulaaravaldis: tagasiviide {0} alamvastele, mis asub tagasi- või edasivaate sees.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Regulaaravaldised peavad olema konstantsed väärtused.</value>
+    <value>Regulaaravaldis peab olema konstandi väärtus.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions peab olema konstandi väärtus.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Funktsioonile „{0}“ edastatud väärtust ei saa muuta.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Hõive nimi '{0}' peidab eelnevalt määratletud atribuuti, mis tagastab regulaaravaldise täieliku vaste. Soovitame selle ümber nimetada, kui soovite kasutada selle nimega atribuuti, et ekstraktida määratud tekstis täielik vaste.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Jäädvustusnimi {0} peidab eelmääratletud atribuuti, mis tagastab vastendusteabe. Kaaluge selle ümbernimetamist, kui soovite vasteteabele juurde pääseda.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Hõive nimi '{0}' peidab eelnevalt määratletud atribuuti, mis tagastab regulaaravaldise rühma vasted. Soovitame selle ümber nimetada, kui soovite kasutada selle nimega atribuuti, et ekstraktida määratud tekstis kõik alamvasted.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Hõive nimi '{0}' peidab eelnevalt määratletud atribuuti, mis tagastab regulaaravaldise vaste asukoha. Soovitame selle ümber nimetada, kui soovite kasutada selle nimega atribuuti, et ekstraktida määratud tekstis täieliku vaste asukoha.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Komplektis {0} olevad jäädvustusnimed peidavad eelmääratletud atribuudid, mis tagastavad vastendusteabe. Kaaluge nende ümbernimetamist, kui soovite vasteteabele juurde pääseda.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4209,16 +4780,20 @@
     <value>Veebiandmeallika väärtusega (tabel või kirje) muutuja määramine võib põhjustada serverisse mitme taotluse esitamise. Varsti see blokeeritakse.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Tüübiavaldis ei sobi. Olemit „{0}“ ei saa tüübiavaldises kasutada.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tüübi {0} määratlus ei sobi.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Toetamata kasutusviis: funktsiooni Type saab kasutada üksnes tüübi argumentides ja tüübi deklaratsioonides.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Tüübi {0} deklaratsioon ei sobi.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Tüübi {0} määratlus ei sobi ja võib sisaldada tsükleid.</value>
+    <value>Tüübi {0} deklaratsioon ei sobi ja võib sisaldada tsükleid.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4419,6 +4994,16 @@
     <value>Tundmatu tehtemärk Partial.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Andmeallikas, millesse andmeid lisada.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Koondatav kirje või tabel. Kirje lisatakse andmeallikasse. Tabeliread lisatakse andmeallikasse.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>üksus</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Delegeerimise hoiatus. Selle argumendi tulemit {0} võib enne funktsioonile {1} edastamist kärpida suurte andmekogumite puhul.</value>
     
@@ -4459,10 +5044,98 @@
     <value>Tühjendatav kogum.</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>Eemaldatav allikas.</value>
+  </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Toob andmed, mis hõlmavad mitut seoseid sisaldavat tabelit.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>allikas1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>allikas2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>nimetaja</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Vasakpoolne tabel või kogum.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Parempoolne tabel või kogum.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Kahe tabeli või kogumi vahelised liitmiskriteeriumid.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Kahe tabeli või kogumi vaheline liitmise tüüp.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Argumendid olemasoleva veeru ümbernimetamiseks ühes allikas.</value>
+    
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Määratud andmeallikat ei saa selle funktsiooniga kasutada.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Sobimatu argument „{0}“. Eeldati sobivat tüübinime või tekstisisest tüübiavaldist.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Toetuseta tüüp „{0}“ tüübiargumendis.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>JSON-i lasti läbimisel on saavutatud sügavuse maksimum.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>JSON-i funktsioonis on jõutud pikkuse ülempiirini.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Katsefunktsioon „Kasutaja määratletud tüüp“ pole lubatud.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Sobimatut süntaksit '=' ei saa kasutada kasutaja määratletud tüüpide kinnitamiseks. Kasutage selle asemel süntaksit ':='.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>Veergu „{0}“ ei saa lisada / ümber nimetada teise samanimelise veeruga kokkulangevuse tõttu.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Eeldatud on lihtne loendiväärtus „JoinType“. Teistsuguseid loendeid või selle saatmist mõne muu funktsiooni kaudu ei toetata, nt „Join(..., If(true, JoinType.Inner, JoinType.Full))“.</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argumendid alates 5. positsioonist on mõeldud veergude ümbernimetamiseks ja peaksid eelduste kohaselt olema „As“-sõlme argumendid, st „LeftRecord.Name As NewName“.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Liitmistulemuse koostamiseks peab vähemalt üks veerg „{0}“ olema deklareeritud.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Väärtus „{0}“ on selles kontekstis sobimatu. See peaks olema viide kas ulatuse nimele „{1}“ või „{2}“.</value>
     
   </data>
 </root>

@@ -26,8 +26,8 @@ namespace Microsoft.PowerFx.Connectors
         {
             try
             {
-                configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} Namespace {@namespace}");
-                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(new ConnectorSettings(@namespace), openApiDocument, configurationLogger, globalValues);
+                configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} Namespace {@namespace}");                
+                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(new ConnectorSettings(@namespace), openApiDocument, configurationLogger, globalValues);                
                 configurationLogger?.LogInformation($"Exiting {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} Namespace {@namespace}, returning {functions.Count()} functions");
                 return functions.Where(f => ShouldIncludeFunction(f));
             }
@@ -47,14 +47,56 @@ namespace Microsoft.PowerFx.Connectors
         {
             try
             {
-                configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}");
-                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger, globalValues);
+                configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}");                
+                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger, globalValues);                
                 configurationLogger?.LogInformation($"Exiting {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}, returning {functions.Count()} functions");
                 return functions.Where(f => ShouldIncludeFunction(f, connectorSettings));
             }
             catch (Exception ex)
             {
                 configurationLogger?.LogException(ex, $"Exception in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}, {LogException(ex)}");
+                throw;
+            }
+        }
+
+        public static IEnumerable<ConnectorFunction> GetTriggers(string @namespace, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null)
+        {
+            return GetTriggers(@namespace, openApiDocument, null, configurationLogger);
+        }
+
+        public static IEnumerable<ConnectorFunction> GetTriggers(string @namespace, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, ConnectorLogger configurationLogger = null)
+        {
+            try
+            {
+                configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetTriggers)}, with {nameof(ConnectorSettings)} Namespace {@namespace}");                
+                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(new ConnectorSettings(@namespace), openApiDocument, configurationLogger, globalValues, FunctionType.Trigger);                
+                configurationLogger?.LogInformation($"Exiting {nameof(OpenApiParser)}.{nameof(GetTriggers)}, with {nameof(ConnectorSettings)} Namespace {@namespace}, returning {functions.Count()} functions");
+                return functions.Where(f => ShouldIncludeFunction(f));
+            }
+            catch (Exception ex)
+            {
+                configurationLogger?.LogException(ex, $"Exception in {nameof(OpenApiParser)}.{nameof(GetTriggers)}, {nameof(ConnectorSettings)} Namespace {@namespace}, {LogException(ex)}");
+                throw;
+            }
+        }
+
+        public static IEnumerable<ConnectorFunction> GetTriggers(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null)
+        {
+            return GetTriggers(connectorSettings, openApiDocument, null, configurationLogger);
+        }
+
+        public static IEnumerable<ConnectorFunction> GetTriggers(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, ConnectorLogger configurationLogger = null)
+        {
+            try
+            {
+                configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetTriggers)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}");                
+                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger, globalValues, FunctionType.Trigger);                
+                configurationLogger?.LogInformation($"Exiting {nameof(OpenApiParser)}.{nameof(GetTriggers)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}, returning {functions.Count()} functions");
+                return functions.Where(f => ShouldIncludeFunction(f, connectorSettings));
+            }
+            catch (Exception ex)
+            {
+                configurationLogger?.LogException(ex, $"Exception in {nameof(OpenApiParser)}.{nameof(GetTriggers)}, {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}, {LogException(ex)}");
                 throw;
             }
         }
@@ -67,7 +109,7 @@ namespace Microsoft.PowerFx.Connectors
                    (function.IsSupported || settings?.AllowUnsupportedFunctions == true);
         }
 
-        internal static IEnumerable<ConnectorFunction> GetFunctionsInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
+        internal static IEnumerable<ConnectorFunction> GetFunctionsInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null, FunctionType functionType = FunctionType.Function)
         {
             bool connectorIsSupported = true;
             string connectorNotSupportedReason = string.Empty;
@@ -113,7 +155,7 @@ namespace Microsoft.PowerFx.Connectors
                 string notSupportedReasonForPath = string.Empty;
 
                 // Skip Webhooks
-                if (ops.Extensions.Any(kvp => kvp.Key == XMsNotificationContent))
+                if (!connectorSettings.IncludeWebhookFunctions && ops.Extensions.Any(kvp => kvp.Key == XMsNotificationContent))
                 {
                     configurationLogger?.LogInformation($"Skipping Webhook {path} {ops.Description}");
                     continue;
@@ -135,10 +177,15 @@ namespace Microsoft.PowerFx.Connectors
                         continue;
                     }
 
-                    // We only want to keep "actions", triggers are always ignored
-                    if (op.IsTrigger())
+                    if (functionType == FunctionType.Function && op.IsTrigger())
                     {
                         configurationLogger?.LogInformation($"Operation {verb} {path} is trigger");
+                        continue;
+                    }
+
+                    if (functionType == FunctionType.Trigger && !op.IsTrigger())
+                    {
+                        configurationLogger?.LogInformation($"Operation {verb} {path} is a function");
                         continue;
                     }
 
@@ -186,7 +233,7 @@ namespace Microsoft.PowerFx.Connectors
         private static bool ValidateSupportedOpenApiDocument(OpenApiDocument openApiDocument, ref bool isSupported, ref string notSupportedReason, bool failOnUnknownExtensions, ConnectorLogger logger = null)
         {
             // OpenApiDocument - https://learn.microsoft.com/en-us/dotnet/api/microsoft.openapi.models.openapidocument?view=openapi-dotnet
-            // AutoRest Extensions for OpenAPI 2.0 - https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md            
+            // AutoRest Extensions for OpenAPI 2.0 - https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md
 
             if (openApiDocument.Paths == null)
             {
@@ -197,12 +244,12 @@ namespace Microsoft.PowerFx.Connectors
             if (failOnUnknownExtensions)
             {
                 // All these Info properties can be ignored
-                // openApiDocument.Info.Description 
+                // openApiDocument.Info.Description
                 // openApiDocument.Info.Version
                 // openApiDocument.Info.Title
                 // openApiDocument.Info.Contact
                 // openApiDocument.Info.License
-                // openApiDocument.Info.TermsOfService            
+                // openApiDocument.Info.TermsOfService
                 List<string> infoExtensions = openApiDocument.Info.Extensions.Keys.ToList();
 
                 // Undocumented but safe to ignore
@@ -271,7 +318,7 @@ namespace Microsoft.PowerFx.Connectors
                     logger?.LogWarning($"Unsupported document: {notSupportedReason}");
                 }
 
-                // openApiDocument.Components.Parameters is ok                
+                // openApiDocument.Components.Parameters is ok
                 // openApiDocument.Components.RequestBodies is ok
                 // openApiDocument.Components.Responses contains references from "path" definitions
                 // openApiDocument.Components.Schemas contains global "definitions"
@@ -284,7 +331,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (isSupported && failOnUnknownExtensions)
             {
-                List<string> extensions = openApiDocument.Extensions.Where(e => !((e.Value is OpenApiArray oaa && oaa.Count == 0) || (e.Value is OpenApiObject oao && oao.Count == 0))).Select(e => e.Key).ToList();
+                List<string> extensions = openApiDocument.Extensions.Where(e => !((e.Value is IList<IOpenApiAny> oaa && oaa.Count == 0) || (e.Value is OpenApiObject oao && oao.Count == 0))).Select(e => e.Key).ToList();
 
                 // Only metadata that can be ignored
                 // https://learn.microsoft.com/en-us/connectors/custom-connectors/certification-submission
@@ -305,7 +352,7 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             // openApiDocument.ExternalDocs - can be ignored
-            // openApiDocument.SecurityRequirements - can be ignored as we don't manage this part        
+            // openApiDocument.SecurityRequirements - can be ignored as we don't manage this part
             // openApiDocument.Tags - can be ignored
 
             if (isSupported && openApiDocument.Workspace != null)
@@ -329,7 +376,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 if (pathExtensions.Count != 0)
                 {
-                    // x-swagger-router-controller not supported - https://github.com/swagger-api/swagger-inflector#development-lifecycle                                
+                    // x-swagger-router-controller not supported - https://github.com/swagger-api/swagger-inflector#development-lifecycle
                     // x-ms-notification - https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#x-ms-notification-content
                     isSupported = false;
                     notSupportedReason = $"OpenApiPathItem contains unsupported Extensions {string.Join(", ", ops.Extensions.Keys)}";
@@ -444,9 +491,9 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        // Parse an OpenApiDocument and return functions. 
+        // Parse an OpenApiDocument and return functions.
         internal static (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) ParseInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
-        {
+        {            
             List<ConnectorFunction> cFunctions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger, globalValues).Where(f => ShouldIncludeFunction(f, connectorSettings)).ToList();
             List<ConnectorTexlFunction> tFunctions = cFunctions.Select(f => new ConnectorTexlFunction(f)).ToList();
 
@@ -472,11 +519,25 @@ namespace Microsoft.PowerFx.Connectors
                 if (hc.BaseAddress == null && openApiServers.Any())
                 {
                     // descending order to prefer https
-                    return openApiServers.Select(s => new Uri(s.Url)).Where(s => s.Scheme == "https").FirstOrDefault()?.OriginalString;
+                    Uri uri = openApiServers.Select(s => new Uri(s.Url)).Where(s => s.Scheme == "https").FirstOrDefault();
+
+                    if (uri == null)
+                    {
+                        return null;
+                    }
+
+                    return $"https://{uri.Authority}";
                 }
             }
 
             return null;
         }
+    }
+
+    internal enum FunctionType
+    {
+        Function,
+
+        Trigger
     }
 }

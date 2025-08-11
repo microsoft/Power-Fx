@@ -75,17 +75,19 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Evaluating expressions with swagger compatibilty shouldn't be done as this might interfere with parameter ordering
             // This has no consequence for these particular connector calls
+#pragma warning disable CS0618 // Type or member is obsolete https://github.com/microsoft/Power-Fx/issues/2940
             (LoggingTestServer testConnector, OpenApiDocument apiDoc, PowerFxConfig config, HttpClient httpClient, PowerPlatformConnectorClient client, ConnectorSettings connectorSettings, RuntimeConfig runtimeConfig) = GetElements(true, true);
+#pragma warning restore CS0618 // Type or member is obsolete
             IReadOnlyList<ConnectorFunction> funcs = config.AddActionConnector(connectorSettings, apiDoc, new ConsoleLogger(_output));
             RecalcEngine engine = new RecalcEngine(config);
 
             // Get list of connectors
             string expr = $"PowerAppsForMakers.GetConnectors({{ showApisWithToS: true, '$filter': \"environment eq '{GetEnvironment()}'\"}})";
-            FormulaValue fv = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue fv = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig);
 
             if (fv is ErrorValue ev)
             {
-                Assert.True(false, $"{string.Join(", ", ev.Errors.Select(er => er.Message))}");
+                Assert.Fail($"{string.Join(", ", ev.Errors.Select(er => er.Message))}");
             }
 
             // Extract all connector names from result (key: name, value: display name)
@@ -114,7 +116,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     // As we use ConnectorSettings with ReturnUnknownRecordFieldsAsUntypedObjects we'll get get a FormulaValue with 'swagger' field in "properties"
                     // We can't use '.properties" in the expression as the IR isn't containing 'swagger' field (as it's not described in the PowerAppsForMakers swagger definition) and it would be removed in RecordValue.GetFieldAsync
                     expr = $"PowerAppsForMakers.GetConnector(\"{connectorName.Key}\", {{'$filter': \"environment eq '{GetEnvironment()}'\"}})";
-                    fv = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+                    fv = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig);
 
                     if (fv is ErrorValue ev2)
                     {
@@ -141,7 +143,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
                         // Here we assume UO implementation is JsonUntypedObject
                         string swagger = ((JsonUntypedObject)uo.Impl)._element.ToString();
 
-                        await File.WriteAllTextAsync($@"{swaggerRoot}\{connectorName.Value.Replace("/", "_")}.json", IndentJson(swagger)).ConfigureAwait(false);
+#if !NET462
+                        await File.WriteAllTextAsync($@"{swaggerRoot}\{connectorName.Value.Replace("/", "_")}.json", IndentJson(swagger));
+#else
+                        File.WriteAllText($@"{swaggerRoot}\{connectorName.Value.Replace("/", "_")}.json", IndentJson(swagger));
+#endif 
                         _output.WriteLine("OK");
                     }
                 }

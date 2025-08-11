@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Tests
 
             // sets should be equal
             var sorted = result.TopLevelIdentifiers.OrderBy(x => x).ToArray();
-            var actualStr = string.Join(',', sorted);
+            var actualStr = string.Join(",", sorted);
 
             Assert.Equal(dependsOn, actualStr);
         }

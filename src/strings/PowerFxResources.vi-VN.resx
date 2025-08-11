@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Phần trăm (hoặc cột giá trị phần trăm) màu sắc (hoặc cột giá trị màu) sẽ mờ dần. Phần trăm âm tạo ra bóng tối hơn. Phần trăm dương tạo ra bóng sáng hơn.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Trả về một bản ghi với thông tin về một tệp.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>Các blob tệp để lấy thông tin.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>tệp</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Trả về giá trị tuyệt đối của một số, một số không có dấu.</value>
     
@@ -1796,12 +1807,30 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Trả về đúng nếu giá trị chưa được phân loại được cung cấp thuộc loại đã cho.</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>kiểu</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>Giá trị chưa được phân loại để kiểm tra xem có thể truyền dưới dạng loại được chỉ định hay không.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>Loại mà chúng tôi muốn kiểm tra untypedValue.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Sử dụng giá trị được cung cấp dưới dạng loại cho trước.</value>
     
   </data>
   <data name="AsTypeArg1" xml:space="preserve">
-    <value>giá_trị</value>
+    <value>giá trị</value>
     
   </data>
   <data name="AsTypeArg2" xml:space="preserve">
@@ -1813,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>Bảng thực thể cho biết chúng tôi muốn sử dụng giá trị dưới dạng loại nào.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Kiểm tra và sử dụng giá trị Chưa được phân loại được cung cấp dưới dạng loại cho trước.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>loại</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>Giá trị chưa được phân loại để truyền dưới dạng loại mới.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>Loại cho giá trị mà chúng tôi muốn sử dụng.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Thực thi công thức được cung cấp dưới dạng tham số thứ hai bằng cách sử dụng phạm vi được cung cấp bởi tham số thứ nhất.</value>
@@ -1868,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>"{0}" là một hàm không xác định hoặc không được hỗ trợ.</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>"{0}" được nhận dạng là hàm trợ giúp kiểu và chỉ có thể sử dụng trong hàm Type.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -1982,10 +2033,6 @@
     <value>Đối số đầu tiên của '{0}' phải là một bản ghi.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Việc sử dụng tùy chọn này để đặt làm giá trị liệt kê hoặc sử dụng trong hàm Choices yêu cầu thêm thực thể '{0}' dưới dạng Nguồn dữ liệu. Để thêm, hãy sử dụng menu Xem, rồi chọn Nguồn dữ liệu.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Không thể truy nhập thuộc tính được chỉ định trong ngữ cảnh này.</value>
     
@@ -2026,10 +2073,6 @@
     <value>Đối số này không biểu thị một giá trị ngày hoặc giờ hợp lệ.</value>
     
   </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Nguồn Dữ liệu này không hợp lệ. Vui lòng khắc phục lỗi trong ngăn "Nguồn dữ liệu" bằng cách bấm vào "Nội dung -&gt; Nguồn dữ liệu" hoặc "Xem -&gt; Tùy chọn"</value>
-    
-  </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>Kỳ vọng mã định danh nguồn dữ liệu sẽ hạn chế bản ghi nội tuyến.</value>
     
@@ -2068,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Tên cột xung đột với '{0}'.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Không thể thêm cột vào bản ghi hệ thống hoặc bảng bản ghi hệ thống. Trước tiên, hãy dùng ShowColumns để trích xuất các cột cụ thể mà bạn cần.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Không thể đổi tên cột của bản ghi hệ thống hoặc bảng bản ghi hệ thống. Trước tiên, hãy dùng ShowColumns để trích xuất các cột cụ thể mà bạn cần.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -2670,6 +2721,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Một chuỗi JSON để xử lý.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>Chuyển đổi một chuỗi JSON thành đối tượng được phân loại.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>chuỗi</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>Một chuỗi JSON để chuyển đổi thành đối tượng được phân loại.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>loại</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>Một định nghĩa loại nội tuyến hoặc một loại có tên được xác định trên toàn cầu.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Trả về bản ghi trong bảng tại một chỉ mục nhất định.</value>
     
@@ -2687,6 +2756,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Chỉ mục của bản ghi sẽ được truy xuất.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2707,6 +2788,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Loại mã vạch</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2823,6 +2936,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Giá trị cần thử nghiệm.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Chuyển đổi ngày giờ ở dạng văn bản thành một số biểu diễn ngày theo mã ngày/giờ của Power Apps.</value>
@@ -3098,32 +3215,33 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Thêm bản ghi vào nguồn dữ liệu.</value>
+    <value>Thêm một hoặc nhiều mục vào bộ sưu tập được chỉ định. Mục có thể từ một bảng hoặc bộ sưu tập khác (ví dụ: Collect(collection, source_collection)), hoặc một hay nhiều bản ghi Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>nguồn_dữ_liệu</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>record</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>bộ sưu tập</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>mục</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Bộ sưu tập mới hoặc hiện có để bổ sung.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Xóa tất cả các bản ghi khỏi bộ sưu tập. Sau đó, thêm một bộ bản ghi khác nhau vào cùng một bộ sưu tập.</value>
+    <value>Trước tiên, hãy xóa bộ sưu tập và thêm một hoặc nhiều mục vào bộ sưu tập được chỉ định. Mục có thể từ một bảng hoặc bộ sưu tập khác (ví dụ: ClearCollect(collection, source_collection)), hoặc một hay nhiều bản ghi ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>nguồn_dữ_liệu</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Bộ sưu tập mới hoặc hiện có để bổ sung.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>nguồn_dữ_liệu</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>record</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Bản ghi hoặc bảng cần thu thập. Một bản ghi sẽ được nối vào bộ sưu tập. Bảng sẽ có các hàng được nối vào bộ sưu tập.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Áp dụng nội dung cập nhật cho hàng được chỉ định, đồng thời thay đổi hàng trong nguồn dữ liệu được chỉ định. Trả về hàng đã cập nhật.</value>
@@ -3259,6 +3377,10 @@
     <value>Bài viết: Tham chiếu công thức cho Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Ký tự không mong muốn "{0}" ở vị trí "{1}" trong công thức.</value>
     
@@ -3271,6 +3393,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Bài viết: Tham chiếu công thức cho Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3288,6 +3414,10 @@
     <value>Bài viết: Tham chiếu công thức cho Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Ký tự ngoài dự kiến. Công thức chứa '{0}' trong khi dự kiến có '{1}'.</value>
     
@@ -3301,6 +3431,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Bài viết: Tham chiếu công thức cho Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3318,6 +3452,10 @@
     <value>Bài viết: Tham chiếu công thức cho Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Tên không hợp lệ. Không nhận dạng được mã định danh này.</value>
     
@@ -3331,6 +3469,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Bài viết: Tham chiếu công thức cho Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3348,6 +3490,10 @@
     <value>Bài viết: Tham chiếu công thức cho PowerApps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>Tham chiếu 'Parent' không hợp lệ. Bạn không thể tham chiếu kiểm soát cha trong ngữ cảnh này.</value>
     
@@ -3361,6 +3507,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Bài viết: Thêm và đặt cấu hình cho kiểm soát ứng dụng bảng vẽ trong Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3400,6 +3550,10 @@
     <value>Mô-đun: Sử dụng các công thức cơ bản</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Đã dự kiến có số. Chúng tôi dự kiến có số tại điểm này trong công thức.</value>
     
@@ -3413,6 +3567,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Bài viết: Tham chiếu công thức cho Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3430,6 +3588,10 @@
     <value>Bài viết: Tham chiếu công thức cho Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Đã dự kiến có dấu hai chấm. Chúng tôi dự kiến có dấu hai chấm (:) tại điểm này trong công thức.</value>
     
@@ -3445,6 +3607,10 @@
     <value>Bài viết: Hiển thị văn bản, ngày và giờ trong Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Hàm hành vi trong thuộc tính không thuộc hành vi. Bạn không thể sử dụng thuộc tính này để thay đổi các giá trị ở nơi khác trong ứng dụng.</value>
     
@@ -3458,6 +3624,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Bài viết: Hiểu rõ công thức hành vi của các ứng dụng canvas trong Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Hàm hành vi trong hàm do người dùng xác định (UDF) không phải là hành vi. Vui lòng đặt nội dung hàm do người dùng xác định trong dấu ngoặc nhọn ({...}) để khai báo UDF hành vi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Các hàm hành vi thay đổi trạng thái phiên hiện tại. "Clear", "Collect", "Patch" và "Refresh" là các hàm hành vi phổ biến.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Chỉnh sửa biểu thức hàm do người dùng xác định sao cho biểu thức nằm trong dấu ngoặc nhọn ({...}).</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3497,6 +3679,10 @@
     <value>Bài viết: Tham chiếu công thức cho Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Đã dự kiến có văn bản hoặc số. Chúng tôi dự kiến có văn bản hoặc số tại điểm này trong công thức.</value>
     
@@ -3512,6 +3698,10 @@
     <value>Bài viết: Tham chiếu công thức cho Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Đã dự kiến có dấu ngoặc đóng. Chúng tôi dự kiến có dấu ngoặc đóng (}) tại điểm này trong công thức.</value>
     
@@ -3523,12 +3713,23 @@
     <value>Chỉnh sửa công thức của bạn để công thức có chứa dấu ngoặc.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Cần kết thúc thông tin định danh. Chúng tôi yêu cầu một dấu (') đóng tại vị trí này trong công thức.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Một dấu nháy đơn đóng báo hiệu kết thúc một thông tin nhận dạng (ví dụ: 'Tên').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Chỉnh sửa công thức của bạn để công thức có chứa dấu nháy đơn đóng.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Mã định danh không có văn bản hợp lệ.</value>
+    <value>Thông tin nhận dạng còn trống hoặc chứa ký tự không hợp lệ, chẳng hạn như tab hoặc ký tự xuống dòng.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Hãy đảm bảo mã định danh của bạn chứa văn bản. Lỗi này xảy ra khi mã định danh chứa toàn khoảng trống hoặc dấu cách.</value>
+    <value>Đảm bảo rằng bạn có văn bản hợp lệ trong thông tin nhận dạng. Lỗi này xảy ra khi thông tin nhận dạng trống, chỉ chứa khoảng trắng, hoặc chứa tab hoặc ký tự xuống dòng.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3554,8 +3755,16 @@
     <value>Mô-đun: Sử dụng các công thức cơ bản</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Mô-đun: Tạo các công thức cơ bản với bảng và bản ghi</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3570,6 +3779,10 @@
     <value>Bài viết: Tham chiếu công thức cho Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Loại không tương thích. Cột '{0}' trong nguồn dữ liệu bạn đang cập nhật dự kiến có loại '{1}' mà bạn lại đang sử dụng loại '{2}'.</value>
     
@@ -3582,8 +3795,16 @@
     <value>Mô-đun: Sử dụng các công thức cơ bản</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Mô-đun: Tạo các công thức cơ bản với bảng và bản ghi</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3596,6 +3817,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Bài viết: Tham chiếu công thức cho Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3614,8 +3839,16 @@
     <value>Mô-đun: Sử dụng các công thức cơ bản</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Mô-đun: Tạo các công thức cơ bản với bảng và bản ghi</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3633,8 +3866,16 @@
     <value>Mô-đun: Sử dụng các công thức cơ bản</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Mô-đun: Tạo các công thức cơ bản với bảng và bản ghi</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3650,6 +3891,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Bài viết: Tham chiếu công thức cho Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3675,8 +3920,16 @@
     <value>Bài viết: Hiểu rõ về ủy quyền trong ứng dụng canvas</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Blog: Giới hạn hàng dữ liệu đối với ủy quyền</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3702,8 +3955,16 @@
     <value>Bài viết: Hiểu rõ về ủy quyền trong ứng dụng canvas</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Blog: Giới hạn hàng dữ liệu đối với ủy quyền</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3733,8 +3994,16 @@
     <value>Bài viết: Hiểu rõ về ủy quyền trong ứng dụng canvas</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Blog: Giới hạn hàng dữ liệu đối với ủy quyền</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3766,8 +4035,70 @@
     <value>Bài viết: Hiểu rõ về ủy quyền trong ứng dụng canvas</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Blog: Giới hạn hàng dữ liệu đối với ủy quyền</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Cảnh báo về việc ủy quyền. Không ủy quyền được công thức được đặt tên {0}. Vì vậy, việc sử dụng công thức đó trong công thức này có thể không hoạt động chính xác trên các tập hợp dữ liệu lớn. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Nguồn dữ liệu này có thể không xử lý được công thức và có thể trả về một tập hợp dữ liệu không đầy đủ. Ứng dụng của bạn có thể không trả về kết quả chính xác hoặc hoạt động đúng cách nếu tập hợp dữ liệu không đầy đủ.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Thử đơn giản hóa định nghĩa cho công thức được đặt tên.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Bài viết: Hiểu rõ về ủy quyền trong ứng dụng canvas</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Giới hạn hàng dữ liệu đối với ủy quyền</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Cảnh báo về việc ủy quyền. Không thể ủy quyền hàm do người dùng xác định {0}. Vì vậy, việc sử dụng hàm đó trong công thức này có thể không hoạt động chính xác trên các tập hợp dữ liệu lớn. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Nguồn dữ liệu này có thể không xử lý được công thức và có thể trả về một tập hợp dữ liệu không đầy đủ. Ứng dụng của bạn có thể không trả về kết quả chính xác hoặc hoạt động đúng cách nếu tập hợp dữ liệu không đầy đủ.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Hãy thử đơn giản hóa định nghĩa cho hàm do người dùng xác định.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Bài viết: Hiểu rõ về ủy quyền trong ứng dụng canvas</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Giới hạn hàng dữ liệu đối với ủy quyền</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3794,8 +4125,16 @@
     <value>Bài viết: Hiểu rõ về ủy quyền trong ứng dụng canvas</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Blog: Giới hạn hàng dữ liệu đối với ủy quyền</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3824,6 +4163,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Tham chiếu: ConfirmExit cho ứng dụng canvas</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3858,16 +4201,28 @@
     <value>Công thức được đặt tên phải là một biểu thức.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Khai báo kiểu được đặt tên phải là một biểu thức kiểu hợp lệ.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
-    <value>Chức năng do người dùng xác định phải có nội dung.</value>
+    <value>Hàm do người dùng xác định phải có nội dung.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Chức năng {0} đã được xác định.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Cảnh báo: Hàm {0} do người dùng xác định sẽ được ưu tiên sử dụng thay vì hàm {0} tạo sẵn hiện có.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Tên hàm {0} bị hạn chế.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
-    <value>Tham số {0} là một bản sao.</value>
+    <value>Tham số {0} bị trùng lặp.</value>
     
   </data>
   <data name="ErrUDF_UnknownType" xml:space="preserve">
@@ -3875,15 +4230,19 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Loại trả về hàm đã nêu không khớp với kiểu trả về của nội dung hàm.</value>
+    <value>Loại trả về hàm đã nêu "{0}" không khớp với kiểu trả về của nội dung hàm "{1}".</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Hàm {0} có quá nhiều tham số. Hàm do người dùng xác định hỗ trợ tối đa {1} tham số.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
-    <value>Thiếu kiểu trả về hàm, ví dụ ":Number" trong "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    <value>Thiếu loại trả về hàm, ví dụ ":Number" trong "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
     
   </data>
   <data name="ErrUDF_MissingParamType" xml:space="preserve">
-    <value>Thiếu kiểu đối số hàm, ví dụ ":Text" trong "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    <value>Thiếu loại đối số hàm, ví dụ ":Text" trong "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
   <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
@@ -3902,7 +4261,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Đối số đầu tiên của '{0}' phải là một tên biến hợp lệ và không được xung đột với bất kỳ điều khiển, màn hình, tuyển tập hoặc tên nguồn dữ liệu nào. Loại tìm được '{1}'</value>
+    <value>"{1}" không thể được sửa đổi bằng "{0}" hoặc xung đột với tên của biến phạm vi, nguồn dữ liệu hoặc đối tượng khác hiện có.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4063,6 +4422,10 @@
     <value>Không thể ủy quyền {0}: chứa hàm hành vi "{1}".</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows có thể trả về giá trị được lưu trong bộ đệm ẩn. Hãy dùng hàm CountIf(DataSource, true) để lấy số lượng mới nhất.</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Xác định xem văn bản được cung cấp có khớp với định dạng văn bản được cung cấp không.</value>
     
@@ -4156,24 +4519,232 @@
     <value>Biểu thức chính quy không hợp lệ.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Các tùy chọn nội tuyến phải xuất hiện ở đầu biểu thức chính quy, tìm thấy "{0}" ở vị trí sau.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Các tùy chọn nội tuyến chỉ giới hạn trong tổ hợp các chữ cái [imnsx], không thể vô hiệu hóa tùy chọn và không thể sử dụng trên biểu thức con, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Mã ký tự bát phân \0 không được hỗ trợ, hãy dùng mã thập lục phân \x hoặc Unicode \u, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Phải thoát dấu ngoặc nhọn ký tự bằng dấu gạch chéo ngược, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Dấu ngoặc vuông ký tự phải được thoát bằng dấu gạch chéo ngược ngay cả trong lớp ký tự, ví dụ \[ hoặc \], tìm thấy ở cuối "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Dấu ngoặc vuông lớp ký tự chưa được đóng.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Nhóm đặc biệt không được hỗ trợ, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Ký tự thoát không được cho phép trong lớp ký tự, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Ký tự thoát phủ định không được cho phép trong lớp ký tự phủ định, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Ký tự thoát không được phép nằm ngoài lớp ký tự, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Tên thể loại Unicode không hợp lệ, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Tùy chọn nội tuyến lặp lại, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Nhận xét nội tuyến chưa được đóng.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Nhận xét nội tuyến chưa được đóng, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Tùy chọn nội tuyến không tương thích với MatchOptions.NumberedSubMatches, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Không hỗ trợ lượng từ sở hữu, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Không thể sử dụng lượng từ chính xác với các bộ sửa đổi lượng từ như dấu ? cho chế độ so khớp lười, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Mã thoát không hợp lệ, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Kết quả so khớp phụ "{0}" không được định nghĩa hoặc là một tham chiếu tiến không được hỗ trợ.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Kết quả so khớp phụ không được hỗ trợ trong khẳng định tìm kiếm phía sau, tìm thấy ở đầu "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Các khẳng định tìm phía sau không được lồng nhau, tìm thấy ở đầu "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Lượng từ không giới hạn không được hỗ trợ trong các khẳng định tìm phía sau, tìm thấy ở cuối "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Lượng từ không được hỗ trợ trên các khẳng định tìm phía sau hoặc phía trước, tìm thấy ở cuối "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Tham chiếu "{0}" trở lại kết quả so khớp phụ có thể không xảy ra do lượng từ bằng không hoặc phép luân phiên.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Không hỗ trợ kết quả so khớp phụ tự tham chiếu, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Nhóm không đóng, quá ít dấu ngoặc đơn đóng.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Nhóm không mở, quá ít dấu ngoặc đơn mở.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Kết quả so khớp phụ có tên được xác định nhiều lần, tìm thấy ở đầu "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Tên so khớp phụ phải là tổ hợp các ký tự từ và không được bắt đầu bằng một số, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Các tùy chọn nội tuyến phải xuất hiện ở đầu biểu thức chính quy, tìm thấy "{0}" ở vị trí sau.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Ký tự xuất hiện nhiều lần trong lớp ký tự, tìm thấy "{0}" lặp lại.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Không được để trống các lớp ký tự dấu ngoặc vuông, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Không hỗ trợ kết quả so khớp phụ cân bằng, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Không hỗ trợ sử dụng nhóm chiếm giữ có tên trong dấu nháy đơn, thay vào đó, hãy sử dụng (?&lt;...&gt;), tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Không hỗ trợ phép luân phiên có điều kiện, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Không thể sử dụng nhóm chiếm giữ có tên với MatchOptions.NumberedSubMatches được bật, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Sử dụng nhóm chiếm giữ có tên với "(?&lt;name&gt;...)" và "\k&lt;name&gt;" hoặc bật MatchOptions.NumberedSubMatches, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Dấu gạch ngang ký tự trong lớp ký tự phải được thoát bằng dấu gạch chéo ngược, thoát bằng "\-", tìm thấy trong "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Ký tự chữ cần được thoát bằng dấu gạch chéo ngược khi sử dụng trong một lớp ký tự, tìm thấy ở cuối "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Lượng từ trên một nhóm chứa một lượng từ khác hoặc phép luân phiên trống có thể dẫn đến kết quả không rõ ràng, tìm thấy ở cuối "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Khẳng định tìm kiếm phía sau vượt quá giới hạn ký tự tối đa có thể là 250, tìm thấy ở cuối "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Phạm vi lượng từ có số thấp lớn hơn số cao, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Quá nhiều nhóm lồng nhau, tìm thấy ở đầu "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Tên của kết quả so khớp phụ quá dài, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Số quá lớn, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Các ký tự trong phạm vi lớp ký tự được đảo ngược, tìm thấy ở cuối "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Lớp ký tự trong một phạm vi lớp ký tự hoặc thoát dấu gạch ngang ký tự bằng dấu gạch chéo ngược, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Kết thúc bằng dấu gạch chéo ngược không thoát.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Lượng từ không có gì để định lượng, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: MatchOptions.DotAll và MatchOptions.FreeSpacing chỉ khả dụng với Power Fx V1, tìm thấy "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ: Tham chiếu "{0}" trở lại kết quả so khớp phụ nằm bên trong một khẳng định tìm kiếm phía sau hoặc phía trước.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Biểu thức chính quy phải là các giá trị không đổi.</value>
+    <value>Biểu thức chính quy phải là một giá trị không đổi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions phải là một giá trị không đổi.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Không thể thay đổi giá trị được truyền đến hàm "{0}".</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Tên thu thập '{0}' đang ẩn thuộc tính được xác định trước mà trả về kết quả khớp đầy đủ của biểu thức thông thường. Hãy xem xét việc đặt lại tên nếu bạn muốn sử dụng các thuộc tính có tên để trích xuất các kết quả khớp đầy đủ trong văn bản được chỉ định.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Tên nhóm chiếm giữ "{0}" đang che giấu thuộc tính được định nghĩa sẵn trả về thông tin khớp. Hãy cân nhắc đổi tên nhóm nếu bạn muốn truy cập thông tin khớp.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Tên thu thập '{0}' đang ẩn thuộc tính được xác định trước mà trả về kết quả khớp nhóm của biểu thức thông thường. Hãy xem xét việc đặt lại tên nếu bạn muốn sử dụng các thuộc tính có tên để trích xuất mọi kết quả khớp phụ trong văn bản được chỉ định.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Tên thu thập '{0}' đang ẩn thuộc tính được xác định trước mà trả về vị trí kết quả khớp của biểu thức thông thường. Hãy xem xét việc đặt lại tên nếu bạn muốn sử dụng các thuộc tính có tên để trích xuất các vị trí kết quả khớp đầy đủ trong văn bản được chỉ định.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Các tên nhóm chiếm giữ trong tập "{0}" đang che giấu các thuộc tính được định nghĩa sẵn trả về thông tin khớp. Hãy cân nhắc đổi tên chúng nếu bạn muốn truy cập thông tin khớp.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4209,16 +4780,20 @@
     <value>Việc đặt một biến có giá trị nguồn dữ liệu trực tuyến (bảng hoặc bản ghi) có thể gây ra nhiều yêu cầu đến máy chủ. Tính năng này sẽ sớm bị chặn.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Biểu thức kiểu không hợp lệ. Không thể sử dụng "{0}" trong biểu thức kiểu.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Định nghĩa loại {0} không hợp lệ.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Cách sử dụng không được hỗ trợ: chỉ có thể sử dụng hàm Type trong đối số kiểu và khai báo kiểu.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Khai báo kiểu {0} không hợp lệ.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Định nghĩa loại {0} không hợp lệ và có thể chứa chu kỳ.</value>
+    <value>Khai báo kiểu {0} không hợp lệ và có thể chứa chu kỳ.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4419,6 +4994,16 @@
     <value>Toán tử Partial không xác định.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Nguồn dữ liệu để thêm dữ liệu vào.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Bản ghi hoặc bảng cần thu thập. Một bản ghi sẽ được nối vào nguồn dữ liệu. Bảng sẽ có các hàng được nối vào nguồn dữ liệu.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>mục</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Cảnh báo về ủy quyền. Kết quả của đối số "{0}" này có thể bị cắt ngắn đối với các tập hợp dữ liệu lớn trước khi được chuyển đến hàm "{1}".</value>
     
@@ -4459,10 +5044,98 @@
     <value>Bộ sưu tập cần xóa.</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>Nguồn cần xóa.</value>
+  </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Truy xuất dữ liệu trải dài trên nhiều bảng có mối quan hệ.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>nguồn1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>nguồn2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>mẫu số</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Bảng hoặc bộ sưu tập bên trái.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Bảng hoặc bộ sưu tập bên phải.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Liên kết các tiêu chí giữa hai bảng hoặc bộ sưu tập.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Kiểu liên kết giữa hai bảng hoặc bộ sưu tập.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Những đối số để đổi tên một cột hiện có ở một trong các nguồn.</value>
+    
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Không thể sử dụng nguồn dữ liệu được chỉ định với hàm này.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Đối số "{0}" không hợp lệ. Cần tên kiểu hoặc biểu thức kiểu nội tuyến hợp lệ.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Loại không được hỗ trợ "{0}" trong đối số loại.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Đã đạt đến độ sâu tối đa trong khi chuyển ngang tải trọng JSON.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Đã đạt đến độ dài tối đa trong hàm JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Tính năng thử nghiệm "loại do người dùng xác định" không được bật.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Cú pháp không đúng: không thể sử dụng '=' để khai báo loại do người dùng xác định. Thay vào đó, hãy sử dụng ':='.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>Không thể thêm/đổi tên "{0}" do trùng với cột khác có cùng tên.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Cần là giá trị kiểu liệt kê thuần túy "JoinType". Các kiểu liệt kê khác hoặc việc truyền kiểu liệt kê qua một hàm khác không được hỗ trợ, ví dụ: Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Những đối số bắt đầu từ vị trí thứ 5 là nhằm đổi tên các cột và được dự kiến là đối số nút "As", tức là LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Phải khai báo ít nhất một cột "{0}" để tạo nên kết quả liên kết.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Giá trị "{0}" không hợp lệ trong ngữ cảnh này. Giá trị này phải là một tham chiếu đến tên phạm vi "{1}" hoặc "{2}".</value>
     
   </data>
 </root>

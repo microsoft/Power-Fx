@@ -99,6 +99,13 @@ namespace Microsoft.PowerFx.Syntax
 
         // TODO: Comment - what are the differences between different spans defined here?
         // TODO: Should we keep this internal?
+
+        /// <summary>
+        /// Gets the text span associated with the current token.
+        /// </summary>
+        /// <remarks>The returned <see cref="Span"/> is constructed using the minimum and limit values  of
+        /// the token's span. Ensure that the token is valid before calling this method.</remarks>
+        /// <returns>A <see cref="Span"/> representing the range of text covered by the token.</returns>
         public virtual Span GetTextSpan()
         {
             return new Span(Token.VerifyValue().Span.Min, Token.VerifyValue().Span.Lim);
@@ -106,6 +113,13 @@ namespace Microsoft.PowerFx.Syntax
 
         // TODO: Comment - what are the differences between different spans defined here?
         // TODO: Should we keep this internal?
+
+        /// <summary>
+        /// Gets the complete span of the current object, including all relevant text.
+        /// </summary>
+        /// <remarks>The returned <see cref="Span"/> is constructed based on the text span of the current
+        /// object.</remarks>
+        /// <returns>A <see cref="Span"/> object representing the complete span of the current object.</returns>
         public virtual Span GetCompleteSpan()
         {
             return new Span(GetTextSpan());
@@ -113,6 +127,15 @@ namespace Microsoft.PowerFx.Syntax
 
         // TODO: Comment - what are the differences between different spans defined here?
         // TODO: Should we keep this internal?
+
+        /// <summary>
+        /// Calculates the span that encompasses all tokens in the source list.
+        /// </summary>
+        /// <remarks>If the source list contains no tokens, the method returns the complete span.
+        /// Otherwise, it determines the span based on the minimum position of the first token  and the limit position
+        /// of the last token in the source list.</remarks>
+        /// <returns>A <see cref="Span"/> representing the range of all tokens in the source list,  or the complete span if the
+        /// source list is empty.</returns>
         public Span GetSourceBasedSpan()
         {
             if (SourceList.Tokens.Count() == 0)

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -161,7 +161,7 @@
     
   </data>
   <data name="SwitchCaseExpr" xml:space="preserve">
-    <value>column_name</value>
+    <value>τιμή_συμφωνίας</value>
     
   </data>
   <data name="SwitchCaseArg" xml:space="preserve">
@@ -478,7 +478,7 @@
     
   </data>
   <data name="TextArg2" xml:space="preserve">
-    <value>'μορφοποίηση_κείμενο'</value>
+    <value>μορφοποίηση_κείμενο</value>
     
   </data>
   <data name="TextArg3" xml:space="preserve">
@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Ποσοστό (ή στήλη ποσοστιαίων τιμών) με βάση το οποίο θα σβήνει σταδιακά το χρώμα (ή στήλη τιμών χρωμάτων). Ένα αρνητικό ποσοστό παράγει πιο σκούρα σκίαση. Ένα θετικό ποσοστό παράγει πιο ανοικτή σκίαση.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Επιστρέφει μια καρτέλα με πληροφορίες σχετικά με ένα αρχείο.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>Το αντικείμενο blob αρχείου για τη λήψη πληροφοριών.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>αρχείο</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Επιστρέφει την απόλυτη τιμή ενός αριθμού. Ένας αριθμός χωρίς το πρόσημό του.</value>
     
@@ -1796,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Επιστρέφει την τιμή true, αν η παρεχόμενη, μη τυπολογημένη τιμή είναι του παρεχόμενου τύπου.</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>τύπος</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>Η μη τυπολογημένη τιμή για έλεγχο του αν μπορεί να μετατραπεί ρητά ως καθορισμένος τύπος.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>Ο τύπος που θέλουμε να ελέγξει το untypedValue.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Χρησιμοποιεί την καταχωρημένη τιμή ως τον παρεχόμενο τύπο.</value>
     
@@ -1813,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>Ο πίνακας οντότητας που αντιπροσωπεύει τον τύπο με τον οποίο θέλουμε να χρησιμοποιηθεί η τιμή.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Ελέγχει και χρησιμοποιεί την παρεχόμενη, μη τυπολογημένη τιμή ως τον παρεχόμενο τύπο.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>τύπος</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>Η μη τυπολογημένη τιμή που θα μετατραπεί ρητά ως νέος τύπος.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>Ο τύπος ως τον οποίο θέλουμε να χρησιμοποιηθεί η τιμή.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Εκτελεί τον τύπο που παρέχεται ως δεύτερη παράμετρος χρησιμοποιώντας την εμβέλεια που παρέχεται από την πρώτη.</value>
@@ -1868,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>'{0}' είναι μια άγνωστη ή μη υποστηριζόμενη συνάρτηση.</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>Το '{0}' αναγνωρίζεται ως συνάρτηση type helper και μπορεί να χρησιμοποιηθεί μόνο εντός της συνάρτησης Type.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -1982,10 +2033,6 @@
     <value>Το πρώτο όρισμα του '{0}' θα πρέπει να είναι εγγραφή.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Για να χρησιμοποιήσετε αυτήν την επιλογή ως τιμή απαρίθμησης ή στη συνάρτηση Choices, πρέπει να προσθέσετε την οντότητα "{0}" ως προέλευση δεδομένων. Για να την προσθέσετε, χρησιμοποιήστε το μενού "Προβολή" και έπειτα επιλέξτε "Προελεύσεις δεδομένων".</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Δεν είναι δυνατή η πρόσβαση στην καθορισμένη ιδιότητα σε αυτό το περιβάλλον.</value>
     
@@ -2026,10 +2073,6 @@
     <value>Το όρισμα δεν αντιπροσωπεύει έγκυρη τιμή ημερομηνίας ή ώρας.</value>
     
   </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Αυτή η προέλευση δεδομένων δεν είναι έγκυρη. Διορθώστε το σφάλμα στο παράθυρο "Προελεύσεις δεδομένων" κάνοντας κλικ στην επιλογή "Περιεχόμενο -&gt; Προελεύσεις δεδομένων" ή "Προβολή -&gt; Επιλογές"</value>
-    
-  </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>Αναμενόταν ένα αναγνωριστικό προέλευσης δεδομένων για περιορισμό της ενσωματωμένης εγγραφής.</value>
     
@@ -2068,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Διένεξη ονόματος στήλης για '{0}'.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Δεν είναι δυνατή η προσθήκη στηλών σε μια καρτέλα συστήματος ή σε έναν πίνακα καρτελών συστήματος. Χρησιμοποιήστε το ShowColumns για να εξαγάγετε τις συγκεκριμένες στήλες που χρειάζεστε πρώτα.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Δεν είναι δυνατή η μετονομασία στηλών σε μια καρτέλα συστήματος ή σε έναν πίνακα καρτελών συστήματος. Χρησιμοποιήστε το ShowColumns για να εξαγάγετε τις συγκεκριμένες στήλες που χρειάζεστε πρώτα.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -2670,6 +2721,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Μια συμβολοσειρά JSON για επεξεργασία.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>Μετατρέπει μια συμβολοσειρά JSON σε τυπολογημένο αντικείμενο.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>συμβολοσειρά</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>Μια συμβολοσειρά JSON για μετατροπή σε τυπολογημένο αντικείμενο.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>τύπος</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>Ένας ορισμός ενσωματωμένου τύπου ή ένας τύπος με όνομα καθολικά ορισμένο.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Επιστρέφει την καρτέλα σε έναν πίνακα σε ένα δεδομένο ευρετήριο.</value>
     
@@ -2687,6 +2756,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Το ευρετήριο της καρτέλας προς ανάκτηση.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2707,6 +2788,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Τύπος γραμμικού κώδικα</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2823,6 +2936,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Η τιμή προς δοκιμή.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Μετατρέπει μια ημερομηνία και ώρα στη μορφή κειμένου σε έναν αριθμό που αντιπροσωπεύει την ημερομηνία σε κώδικα ημερομηνίας-ώρας του Power Apps.</value>
@@ -3098,32 +3215,33 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Προσθέτει καρτέλες σε μια προέλευση δεδομένων.</value>
+    <value>Προσθέτει ένα ή περισσότερα στοιχεία στην καθορισμένη συλλογή. Τα στοιχεία μπορεί να είναι από διαφορετικό πίνακα ή διαφορετική συλλογή (π.χ. Collect(collection, source_collection)) ή μία ή περισσότερες εγγραφές Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>δεδομένα_προέλευση</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>καρτέλα</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>συλλογή</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>στοιχείο</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Μια νέα ή υπάρχουσα συλλογή προς αύξηση.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Διαγράφει όλες τις καρτέλες από μια συλλογή. Στη συνέχεια, προσθέτει ένα διαφορετικό σύνολο καρτελών στην ίδια συλλογή.</value>
+    <value>Εκκαθαρίζει πρώτα τη συλλογή και προσθέτει ένα ή περισσότερα στοιχεία στην καθορισμένη συλλογή. Τα στοιχεία μπορεί να είναι από διαφορετικό πίνακα ή διαφορετική συλλογή (π.χ. ClearCollect(collection, source_collection)) ή μία ή περισσότερες εγγραφές ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>δεδομένα_προέλευση</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Μια νέα ή υπάρχουσα συλλογή προς αύξηση.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>δεδομένα_προέλευση</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>καρτέλα</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Καρτέλα ή πίνακας για συλλογή. Στη συλλογή θα προσαρτηθεί μια καρτέλα. Στη συλλογή θα προσαρτηθούν οι γραμμές ενός πίνακα.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Εφαρμόζει τις ενημερώσεις στην καθορισμένη γραμμή και αλλάζει τη γραμμή στην καθορισμένη προέλευση δεδομένων. Επιστρέφει την ενημερωμένη γραμμή.</value>
@@ -3259,6 +3377,10 @@
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Μη αναμενόμενος χαρακτήρας «{0}» στη θέση «{1}» στον τύπο.</value>
     
@@ -3271,6 +3393,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3288,6 +3414,10 @@
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Μη αναμενόμενοι χαρακτήρες. Ο τύπος περιέχει "{0}" σε σημείο όπου αναμένεται "{1}".</value>
     
@@ -3301,6 +3431,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3318,6 +3452,10 @@
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Το όνομα δεν είναι έγκυρο. Αυτό το αναγνωριστικό δεν αναγνωρίζεται.</value>
     
@@ -3331,6 +3469,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3348,6 +3490,10 @@
     <value>Άρθρο: Αναφορά τύπου για το PowerApps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>Η αναφορά Parent δεν είναι έγκυρη. Δεν μπορείτε να αναφέρετε ένα γονικό στοιχείο ελέγχου σε αυτό το περιβάλλον.</value>
     
@@ -3361,6 +3507,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Άρθρο: Προσθήκη και ρύθμιση παραμέτρων ενός στοιχείου ελέγχου εφαρμογής καμβά στο Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3400,6 +3550,10 @@
     <value>Εκπαιδευτική ενότητα: Χρήση βασικών τύπων</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Αναμενόταν αριθμός. Σε αυτό το σημείο στον τύπο αναμένεται αριθμός.</value>
     
@@ -3413,6 +3567,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3430,6 +3588,10 @@
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Αναμενόταν άνω και κάτω τελεία. Σε αυτό το σημείο στον τύπο αναμένεται άνω και κάτω τελεία (:).</value>
     
@@ -3445,6 +3607,10 @@
     <value>Άρθρο: Εμφάνιση κειμένου, ημερομηνιών και ωρών στο Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Συνάρτηση συμπεριφοράς σε μια ιδιότητα που δεν σχετίζεται με τη συμπεριφορά. Δεν μπορείτε να χρησιμοποιήσετε αυτή την ιδιότητα για να αλλάξετε τιμές αλλού στην εφαρμογή.</value>
     
@@ -3458,6 +3624,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Άρθρο: Κατανόηση τύπων συμπεριφοράς για εφαρμογές καμβά στο Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Συνάρτηση συμπεριφοράς σε μια συνάρτηση που δεν έχει συμπεριφορά και ορίζεται από τον χρήστη (UDF). Για να δηλώσετε μια UDF συμπεριφοράς, τυλίξτε το σώμα της συνάρτησης που ορίζεται από τον χρήστη με αγκύλες ({...}).</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Οι συναρτήσεις συμπεριφοράς αλλάζουν την τρέχουσα κατάσταση περιόδου λειτουργίας. Οι συναρτήσεις "Clear", "Collect", "Patch" και "Refresh" είναι κοινές λειτουργίες συμπεριφοράς.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Επεξεργαστείτε την παράσταση συνάρτησης που ορίζεται από τον χρήστη έτσι ώστε να βρίσκεται μέσα σε αγκύλες ({...}).</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3497,6 +3679,10 @@
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Αναμενόταν κείμενο ή αριθμός. Σε αυτό το σημείο στον τύπο αναμένεται κείμενο ή αριθμός.</value>
     
@@ -3512,6 +3698,10 @@
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Αναμενόταν δεξιά αγκύλη. Σε αυτό το σημείο στον τύπο αναμένεται μια δεξιά αγκύλη (}).</value>
     
@@ -3523,12 +3713,23 @@
     <value>Επεξεργαστείτε τον τύπο ώστε να περιλαμβάνει μια αγκύλη.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Αναμενόμενο κλείσιμο αναγνωριστικού. Σε αυτό το σημείο στον τύπο αναμένουμε ένα (') κλεισίματος.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Μια μεμονωμένη προσφορά κλεισίματος υποδεικνύει το τέλος ενός αναγνωριστικού (για παράδειγμα, 'Όνομα').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Επεξεργαστείτε τον τύπο σας ώστε να περιλαμβάνει μια μεμονωμένη προσφορά κλεισίματος.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Το αναγνωριστικό δεν έχει έγκυρο κείμενο.</value>
+    <value>Το αναγνωριστικό είναι κενό ή περιέχει μη έγκυρο χαρακτήρα, όπως καρτέλα ή νέα γραμμή.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Βεβαιωθείτε ότι έχετε κείμενο για το αναγνωριστικό. Αυτό το σφάλμα παρουσιάζεται όταν το αναγνωριστικό αποτελείται μόνο από κενά ή διαστήματα.</value>
+    <value>Βεβαιωθείτε ότι έχετε έγκυρο κείμενο στο αναγνωριστικό ας. Αυτό το σφάλμα παρουσιάζεται όταν το αναγνωριστικό είναι κενό, έχει μόνο διαστήματα ή περιέχει μια καρτέλα ή νέα γραμμή.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3554,8 +3755,16 @@
     <value>Εκπαιδευτική ενότητα: Χρήση βασικών τύπων</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Εκπαιδευτική ενότητα: Σύνταξη βασικών τύπων με πίνακες και εγγραφές</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3570,6 +3779,10 @@
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Μη συμβατός τύπος. Η στήλη "{0}" στην προέλευση δεδομένων που ενημερώνετε αναμένει τύπο "{1}" και εσείς χρησιμοποιείτε τύπο "{2}".</value>
     
@@ -3582,8 +3795,16 @@
     <value>Εκπαιδευτική ενότητα: Χρήση βασικών τύπων</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Εκπαιδευτική ενότητα: Σύνταξη βασικών τύπων με πίνακες και εγγραφές</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3596,6 +3817,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3614,8 +3839,16 @@
     <value>Εκπαιδευτική ενότητα: Χρήση βασικών τύπων</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Εκπαιδευτική ενότητα: Σύνταξη βασικών τύπων με πίνακες και εγγραφές</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3633,8 +3866,16 @@
     <value>Εκπαιδευτική ενότητα: Χρήση βασικών τύπων</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Εκπαιδευτική ενότητα: Σύνταξη βασικών τύπων με πίνακες και εγγραφές</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3650,6 +3891,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3675,8 +3920,16 @@
     <value>Άρθρο: Κατανόηση της ανάθεσης σε μια εφαρμογή καμβά</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Ιστολόγιο: Όριο γραμμών δεδομένων για ανάθεση</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3702,8 +3955,16 @@
     <value>Άρθρο: Κατανόηση της ανάθεσης σε μια εφαρμογή καμβά</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Ιστολόγιο: Όριο γραμμών δεδομένων για ανάθεση</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3733,8 +3994,16 @@
     <value>Άρθρο: Κατανόηση της ανάθεσης σε μια εφαρμογή καμβά</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Ιστολόγιο: Όριο γραμμών δεδομένων για ανάθεση</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3766,8 +4035,70 @@
     <value>Άρθρο: Κατανόηση της ανάθεσης σε μια εφαρμογή καμβά</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Ιστολόγιο: Όριο γραμμών δεδομένων για ανάθεση</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Προειδοποίηση ανάθεσης. Ο κατονομαζόμενος τύπος {0} δεν έχει δυνατότητα ανάθεσης, επομένως η χρήση του σε αυτόν τον τύπο ενδέχεται να μην λειτουργεί σωστά σε μεγάλα σύνολα δεδομένων. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Η επεξεργασία του τύπου μπορεί να μην είναι δυνατή από την προέλευση δεδομένων και μπορεί να επιστραφεί ελλιπές σύνολο δεδομένων. Η εφαρμογή σας μπορεί να μην επιστρέψει σωστά αποτελέσματα ή να μην συμπεριφέρεται σωστά, αν το σύνολο δεδομένων είναι ελλιπές.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Δοκιμάστε να απλοποιήσετε τον ορισμό για τον τύπο με όνομα.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Άρθρο: Κατανόηση της ανάθεσης σε μια εφαρμογή καμβά</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Ιστολόγιο: Όριο γραμμών δεδομένων για ανάθεση</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Προειδοποίηση ανάθεσης. Η καθορισμένη από τον χρήστη συνάρτηση {0} δεν έχει δυνατότητα ανάθεσης, επομένως η χρήση του σε αυτόν τον τύπο ενδέχεται να μην λειτουργεί σωστά σε μεγάλα σύνολα δεδομένων. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Η επεξεργασία του τύπου μπορεί να μην είναι δυνατή από την προέλευση δεδομένων και μπορεί να επιστραφεί ελλιπές σύνολο δεδομένων. Η εφαρμογή σας μπορεί να μην επιστρέψει σωστά αποτελέσματα ή να μην συμπεριφέρεται σωστά, αν το σύνολο δεδομένων είναι ελλιπές.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Δοκιμάστε να απλοποιήσετε τον ορισμό για τη λειτουργία που ορίζεται από τον χρήστη.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Άρθρο: Κατανόηση της ανάθεσης σε μια εφαρμογή καμβά</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Ιστολόγιο: Όριο γραμμών δεδομένων για ανάθεση</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3794,8 +4125,16 @@
     <value>Άρθρο: Κατανόηση της ανάθεσης σε μια εφαρμογή καμβά</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Ιστολόγιο: Όριο γραμμών δεδομένων για ανάθεση</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3824,6 +4163,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Αναφορά: ConfirmExit για εφαρμογές καμβά</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3858,12 +4201,24 @@
     <value>Ο τύπος με όνομα πρέπει να είναι παράσταση.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Μια δήλωση τύπου με όνομα πρέπει να είναι έγκυρη παράσταση τύπου.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Η συνάρτηση που ορίζεται από τον χρήστη πρέπει να έχει σώμα.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Η συνάρτηση {0} έχει ήδη οριστεί.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Προειδοποίηση: Η συνάρτηση που ορίζεται από {0} χρήστη θα επισκιάσει την υπάρχουσα ενσωματωμένη συνάρτηση {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Το όνομα συνάρτησης {0} είναι περιορισμένο.</value>
     
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
@@ -3875,7 +4230,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Ο τύπος επιστροφής της συνάρτησης που έχει δηλωθεί δεν συμφωνεί με τον τύπο επιστροφής του σώματος συνάρτησης.</value>
+    <value>Ο τύπος επιστροφής της συνάρτησης που έχει δηλωθεί '{0}' δεν συμφωνεί με τον τύπο επιστροφής του σώματος συνάρτησης '{1}'.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Η συνάρτηση {0} έχει πάρα πολλές παραμέτρους. Οι συναρτήσεις που ορίζονται από τον χρήστη υποστηρίζουν έως {1} παραμέτρους.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +4261,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Το πρώτο όρισμα του "{0}" πρέπει να είναι ένα έγκυρο όνομα μεταβλητής και δεν πρέπει να έρχεται σε διένεξη με τυχόν υπάρχοντα ονόματα στοιχείου ελέγχου, οθόνης, συλλογής ή προέλευσης δεδομένων. Εντοπίστηκε τύπος "{1}"</value>
+    <value>Το '{1}' δεν μπορεί να τροποποιηθεί με '{0}' ή βρίσκεται σε διένεξη με το όνομα μιας υπάρχουσας μεταβλητής πεδίου, προέλευσης δεδομένων ή άλλου αντικειμένου.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4063,6 +4422,10 @@
     <value>Δεν είναι δυνατή η ανάθεση {0}: περιέχει μια συνάρτηση συμπεριφοράς '{1}'.</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>Το CountRows μπορεί να επιστρέψει μια τιμή στο cache. Χρησιμοποιήστε το CountIf(DataSource, true) για να λάβετε το πιο πρόσφατο πλήθος.</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Προσδιορίζει αν το παρεχόμενο κείμενο διαθέτει αντιστοιχία με την παρεχόμενη μορφή κειμένου.</value>
     
@@ -4156,24 +4519,232 @@
     <value>Μη έγκυρη κανονική παράσταση.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Οι ενσωματωμένες επιλογές πρέπει να εμφανίζονται στην αρχή της κανονικής παράστασης, που βρέθηκαν "{0}" αργότερα.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Οι ενσωματωμένες επιλογές περιορίζονται σε έναν συνδυασμό των γραμμάτων [imnsx], δεν είναι δυνατή η απενεργοποίηση των επιλογών και δεν μπορούν να χρησιμοποιηθούν σε μια δευτερεύουσα παράσταση, που βρέθηκαν "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Οι οκταδικοί κωδικοί χαρακτήρων \0 δεν υποστηρίζονται. Χρησιμοποιήστε δεκαεξαδικό \x ή Unicode \u, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: πρέπει να γίνεται διαφυγή των κυριολεκτικών καμπύλων αγκύλων με μια ανάστροφη κάθετο, που βρέθηκαν "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: πρέπει να γίνεται διαφυγή των κυριολεκτικών τετραγωνικών αγκύλων με ανάστροφη κάθετο ακόμα και σε κλάσεις χαρακτήρων, για παράδειγμα \[ ή \], που βρίσκονται στο τέλος του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: τετράγωνη αγκύλη κλάσης μη κλειστών χαρακτήρων.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Μη υποστηριζόμενη ειδική ομάδα, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Ο χαρακτήρας διαφυγής δεν επιτρέπεται εντός της κλάσης χαρακτήρων, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Ο αρνητικός χαρακτήρας διαφυγής δεν επιτρέπεται εντός της κλάσης χαρακτήρων που απορρίφθηκε, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Ο χαρακτήρας διαφυγής δεν επιτρέπεται εκτός μιας κλάσης χαρακτήρων, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: μη έγκυρο όνομα κατηγορίας Unicode, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Επαναλαμβανόμενη ενσωματωμένη επιλογή, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Μη κλεισμένο ενσωματωμένο σχόλιο.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Μη κλεισμένο ενσωματωμένο σχόλιο, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Η ενσωματωμένη επιλογή δεν είναι συμβατή με MatchOptions.NumberedSubMatches, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Δεν υποστηρίζονται κτητικοί δευτερεύουσες ποσοδείκτες, που βρέθηκαν "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Δεν είναι δυνατή η χρήση ακριβών ποσοδεικτών με τροποποιητές ποσοδεικτών όπως; Για τεμπέλης, βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: μη έγκυρος κώδικας διαφυγής, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Η δευτερεύουσα αντιστοίχιση "{0}" δεν έχει οριστεί ή είναι μη υποστηριζόμενη αναφορά προώθησης.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Οι δευτερεύουσες αντιστοιχίσεις δεν υποστηρίζονται σε αναζήτηση πίσω, που βρίσκονται στην αρχή του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: οι αναζητήσεις πίσω δεν μπορούν να είναι ένθετες, που βρίσκονται στην αρχή του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Οι απεριόριστοι ποσοδείκτες δεν υποστηρίζονται σε αναζητήσεις πίσω, που βρίσκονται στο τέλος του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Οι ποσοδείκτες δεν υποστηρίζονται σε αναζητήσεις πίσω ή αναζητήσεις μπροστά, που βρίσκονται στο τέλος του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: αναφορά πίσω "{0}" σε δευτερεύουσα αντιστοίχιση που ενδέχεται να μην συμβεί λόγω εναλλαγής ή μηδενικού ποσοδείκτη.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Δεν υποστηρίζονται δευτερεύουσες αντιστοιχίσεις αυτοαναφορών, που βρίσκονται "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Μη κλειστές ομάδες, πολύ λίγες παρενθέσεις κλεισίματος.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Μη ανοιχτές ομάδες, πολύ λίγες παρενθέσεις ανοίγματος.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Κατονομαζόμενη δευτερεύουσα αντιστοίχιση που ορίζεται περισσότερες από μία φορές, βρίσκεται στην αρχή του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Το όνομα δευτερεύουσας αντιστοίχισης πρέπει να είναι συνδυασμός χαρακτήρων λέξης και να μην αρχίζει με αριθμό, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Οι ενσωματωμένες επιλογές πρέπει να εμφανίζονται στην αρχή της κανονικής παράστασης, που βρέθηκαν "{0}" αργότερα.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Ο χαρακτήρας εμφανίζεται περισσότερες από μία φορές στην κλάση χαρακτήρων, βρέθηκε επαναλαμβανόμενος "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Οι κλάσεις χαρακτήρων τετράγωνης αγκύλης δεν μπορούν να είναι κενές, που βρέθηκαν "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Δεν υποστηρίζονται δευτερεύουσες αντιστοιχίσεις εξισορρόπησης, που βρίσκονται "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Η χρήση καταγραφών με όνομα με μονά εισαγωγικά δεν υποστηρίζεται, χρησιμοποιήστε σύνταξη (?&lt;... &gt;), που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Η εναλλαγή υπό όρους δεν υποστηρίζεται, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη τακτική παράσταση: Δεν είναι δυνατή η χρήση κατονομαζόμενων καταγραφών με MatchOptions.NumberedSubMatches ενεργοποιημένο, που βρέθηκαν "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Χρησιμοποιήστε κατονομαζόμενες καταγραφές με "(?&lt;name&gt;..)" και "\k&lt;name&gt;" ή ενεργοποιήστε MatchOptions.NumberedSubMatches, που βρέθηκαν "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: πρέπει να γίνεται διαφυγή κυριολεκτικής παύλας σε κλάση χαρακτήρων με ανάστροφη κάθετο, διαφυγή με "\-", που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: πρέπει να γίνεται διαφυγή του κυριολεκτικού χαρακτήρα με ανάστροφη κάθετο, όταν χρησιμοποιείται σε κλάση χαρακτήρων, που βρίσκεται στο τέλος του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Ποσοδείκτης σε μια ομάδα που περιέχει έναν άλλο ποσοδείκτη ή κενή εναλλαγή που θα μπορούσε να οδηγήσει σε ένα διφορούμενο αποτέλεσμα, το οποίο βρίσκεται στο τέλος του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Η αναζήτηση πίσω υπερέβη το μέγιστο δυνατό όριο χαρακτήρων των 250 χαρακτήρων, το οποίο βρίσκεται στο τέλος του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη τακτική παράσταση: ο χαμηλός αριθμός εύρους ποσοδείκτη είναι μεγαλύτερος από υψηλό αριθμό, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Υπάρχουν πάρα πολλές ένθετες ομάδες, που βρέθηκαν στην αρχή του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Το όνομα της δευτερεύουσας αντιστοίχισης είναι υπερβολικά μεγάλο, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Ο αριθμός είναι πολύ μεγάλος, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Οι χαρακτήρες σε μια περιοχή κλάσης χαρακτήρων αντιστρέφονται, που βρίσκονται στο τέλος του "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: κλάση χαρακτήρων σε μια περιοχή κλάσης χαρακτήρων ή διαφυγή μιας κυριολεκτικής παύλας με ανάστροφη κάθετο, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Τελειώνει με ανάστροφη κάθετο χωρίς διαφυγή.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: Ποσοδείκτης χωρίς κάτι για ποσοτικό προσδιορισμό, που βρέθηκε "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: MatchOptions.DotAll και MatchOptions.FreeSpacing είναι διαθέσιμες μόνο με Power Fx V1, που βρέθηκαν "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση: αναφορά πίσω "{0}" σε δευτερεύουσα αντιστοίχιση που βρίσκεται μέσα σε μια αναζήτηση πίσω ή μια αναζήτηση μπροστά.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Οι κανονικές παραστάσεις πρέπει να είναι τιμές σταθεράς.</value>
+    <value>Η κανονική παράσταση πρέπει να είναι μια τιμή σταθεράς.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>Το MatchOptions πρέπει να είναι τιμή σταθεράς.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Η τιμή που μεταβιβάστηκε στη συνάρτηση '{0}' δεν είναι δυνατό να αλλάξει.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Το όνομα καταγραφής "{0}" αποκρύπτει την προκαθορισμένη ιδιότητα που επιστρέφει την πλήρη αντιστοίχιση της κανονικής παράστασης. Εξετάστε το ενδεχόμενο μετονομασίας της καταγραφής, αν θέλετε να χρησιμοποιήσετε τη συγκεκριμένη ιδιότητα με αυτό το όνομα για την εξαγωγή της πλήρους αντιστοίχισης στο καθορισμένο κείμενο.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Το όνομα καταγραφής '{0}' κρύβει μια προκαθορισμένη ιδιότητα που επιστρέφει πληροφορίες αντιστοίχισης. Εξετάστε το ενδεχόμενο να τη μετονομάσετε, αν θέλετε να αποκτήσετε πρόσβαση στις πληροφορίες αντιστοίχισης.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Το όνομα καταγραφής "{0}" αποκρύπτει την προκαθορισμένη ιδιότητα που επιστρέφει τις αντιστοιχίσεις ομάδας στην κανονική παράσταση. Εξετάστε το ενδεχόμενο μετονομασίας της καταγραφής, αν θέλετε να χρησιμοποιήσετε τη συγκεκριμένη ιδιότητα με αυτό το όνομα για την εξαγωγή όλων των δευτερευουσών αντιστοιχίσεων στο καθορισμένο κείμενο.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Το όνομα καταγραφής "{0}" αποκρύπτει την προκαθορισμένη ιδιότητα που επιστρέφει τη θέση της αντιστοίχισης της κανονικής παράστασης. Εξετάστε το ενδεχόμενο μετονομασίας της καταγραφής, αν θέλετε να χρησιμοποιήσετε τη συγκεκριμένη ιδιότητα με αυτό το όνομα για την εξαγωγή της θέσης της πλήρους αντιστοίχισης στο καθορισμένο κείμενο.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Τα ονόματα καταγραφής στο σύνολο '{0}' αποκρύπτουν προκαθορισμένες ιδιότητες που επιστρέφουν πληροφορίες αντιστοίχισης. Εξετάστε το ενδεχόμενο να τις μετονομάσετε, αν θέλετε να αποκτήσετε πρόσβαση στις πληροφορίες αντιστοίχισης.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4209,16 +4780,20 @@
     <value>Εάν ορίσετε μια μεταβλητή με μια τιμή προέλευσης δεδομένων online (πίνακας ή καρτέλα) μπορεί να προκαλέσει πολλαπλές αιτήσεις στον διακομιστή. Σύντομα θα αποκλειστεί.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Η κυριολεκτική δήλωση τύπου δεν είναι έγκυρη. Η παράσταση '{0}' δεν μπορεί να χρησιμοποιηθεί σε έναν ορισμό τύπου.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Η παράσταση τύπου δεν είναι έγκυρη. Το '{0}' δεν μπορεί να χρησιμοποιηθεί σε μια παράσταση τύπου.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Ο ορισμός τύπου {0} δεν είναι έγκυρος.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Μη υποστηριζόμενη χρήση: η συνάρτηση οι Type μπορεί να χρησιμοποιηθεί μόνο σε ορίσματα τύπου και δηλώσεις τύπου.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Η δήλωση τύπου {0} δεν είναι έγκυρη.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Ο ορισμός τύπου {0} δεν είναι έγκυρος και μπορεί να περιέχει κύκλους.</value>
+    <value>Η δήλωση τύπου {0} δεν είναι έγκυρη και μπορεί να περιέχει κύκλους.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4419,6 +4994,16 @@
     <value>Άγνωστος τελεστής Partial.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Η προέλευση δεδομένων στην οποία θα προστεθούν δεδομένα.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Καρτέλα ή πίνακας για συλλογή. Στην προέλευση δεδομένων θα προσαρτηθεί μια καρτέλα. Στην προέλευση δεδομένων θα προσαρτηθούν οι γραμμές ενός πίνακα.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>στοιχείο</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Προειδοποίηση ανάθεσης. Το αποτέλεσμα αυτού του ορίσματος '{0}' μπορεί να περικοπεί για μεγάλα σύνολα δεδομένων, προτού διαβιβαστεί στη συνάρτηση '{1}'.</value>
     
@@ -4461,8 +5046,96 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Η προέλευση για απαλοιφή.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Ανακτά δεδομένα που εκτείνονται σε πολλούς πίνακες με σχέσεις.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>προέλευση 1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>προέλευση 2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>παρονομαστής</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Ο αριστερός πίνακας ή συλλογή.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Ο δεξιός πίνακας ή συλλογή.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Κριτήρια σύνδεσης μεταξύ των δύο πινάκων ή συλλογών.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Ο τύπος σύνδεσης μεταξύ των δύο πινάκων ή συλλογών.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Τα ορίσματα για μετονομασία μιας υπάρχουσας στήλης σε μία από τις προελεύσεις.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Η καθορισμένη προέλευση δεδομένων δεν μπορεί να χρησιμοποιηθεί με αυτήν τη συνάρτηση.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Μη έγκυρο όρισμα '{0}'. Αναμενόμενο όνομα έγκυρου τύπου ή παράσταση ενσωματωμένου τύπου.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Μη υποστηριζόμενος τύπος '{0}' σε όρισμα τύπου.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Το μέγιστο βάθος που επιτεύχθηκε κατά τη διέλευση ωφέλιμου φορτίου JSON.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Το μέγιστο μήκος που επιτεύχθηκε σε συνάρτηση JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Δεν είναι ενεργοποιημένη η πειραματική δυνατότητα 'Τύποι καθορισμένοι από τον χρήστη'.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Εσφαλμένη σύνταξη: Το '=' δεν μπορεί να χρησιμοποιηθεί για τη δήλωση τύπων καθορισμένων από τον χρήστη. Χρησιμοποιήστε το ":=" αντ' αυτού.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>Το "{0}" δεν μπορεί να προστεθεί/μετονομαστεί λόγω διένεξης με άλλη στήλη με το ίδιο όνομα.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Αναμενόμενη απλή τιμή απαρίθμησης 'JoinType'. Διαφορετικά απαριθμήσεις ή διέλευση από μια άλλη συνάρτηση δεν υποστηρίζεται, π.χ. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Τα ορίσματα που ξεκινούν από την 5η θέση προορίζονται για μετονομασία στηλών και αναμένεται να είναι ορίσματα κόμβου "As" π.χ. LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Τουλάχιστον μία στήλη '{0}' πρέπει να έχει δηλωθεί, για να συνθέσει το αποτέλεσμα σύνδεσης.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Η τιμή '{0}' δεν είναι έγκυρη σε αυτό το περιβάλλον. Θα πρέπει να είναι μια αναφορά στο όνομα πεδίου είτε '{1}' είτε '{2}'.</value>
     
   </data>
 </root>

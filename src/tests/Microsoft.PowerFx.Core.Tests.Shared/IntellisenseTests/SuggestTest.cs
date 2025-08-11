@@ -7,7 +7,9 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -162,7 +164,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         // FirstNameNodeSuggestionHandler
         [InlineData("Tru|", "true", "Trunc")] // Though it recommends only a boolean, the suggestions are still provided by the first name handler
-        [InlineData("[@In|]", "ErrorKind")]
+        [InlineData("[@In|]", "ErrorKind", "JoinType")]
 
         // FunctionRecordNameSuggestionHandler
         [InlineData("Error({Kin|d:0})")]
@@ -180,7 +182,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         // AddSuggestionsForEnums
         [InlineData("Monday|", "StartOfWeek.Monday", "StartOfWeek.MondayZero")]
         [InlineData("Value(Missing|", "ErrorKind.MissingRequired")]
-        [InlineData("ErrorKind.Inv|", "InvalidArgument", "InvalidFunctionUsage")]
+        [InlineData("ErrorKind.Inv|", "InvalidArgument", "InvalidFunctionUsage", "InvalidJSON")]
         [InlineData("Quota|", "ErrorKind.QuotaExceeded")]
         [InlineData("DateTimeFormat.h|", "ShortDate", "ShortTime", "ShortTime24", "ShortDateTime", "ShortDateTime24")]
         [InlineData("SortOrder|", "SortOrder", "SortOrder.Ascending", "SortOrder.Descending")]
@@ -191,6 +193,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Table({F1:1, F2:2},{F2:1}).|")]
         [InlineData("[1,2,3].|")]
         [InlineData("With({testVar: \"testStr\"}, InvalidFunc(StartsWith(test|", "testVar")]
+
+        // Suggests keywords and reserved words with indentifier escape.
+        [InlineData("With({'Children':1}, ThisRecord.|", "'Children'")]
+        [InlineData("With({'true':1}, ThisRecord.|", "'true'")]
+        [InlineData("With({'Children':1,'Child':1, Cuscuz:1}, ThisRecord.C|", "'Child'", "'Children'", "Cuscuz")]
         public void TestSuggest(string expression, params string[] expectedSuggestions)
         {
             // Note that the expression string needs to have balanced quotes or we hit a bug in NUnit running the tests:
@@ -201,6 +208,53 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
             actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+        }
+
+        // Suggests multiple scopes for functions that creates multiple scopes.
+        [Theory]
+        [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),|", "LeftRecord", "RightRecord")]
+        [InlineData("Join(Table({a:1,b:1}) As t1,Table({a:1,c:2,d:2}) As t2,|", "t1", "t2")]
+        [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),LeftRecord.|", "a", "b")]
+        [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),LeftRecord.a = RightRecord.|", "a", "c", "d")]
+        [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),LeftRecord.a = RightRecord.a,|", "JoinType.Full", "JoinType.Inner", "JoinType.Left", "JoinType.Right")]
+        [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),LeftRecord.a = RightRecord.a, JoinType.Inner,|", "LeftRecord", "RightRecord")]
+        [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),LeftRecord.a = RightRecord.a, JoinType.Inner,LeftRecord.|", "a", "b")]
+        [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),LeftRecord.a = RightRecord.a, JoinType.Inner,RightRecord.|", "a", "c", "d")]
+        public void TestSuggestMultipleScopes(string expression, params string[] expectedSuggestions)
+        {
+            var config = Default;
+            config.SymbolTable.AddFunction(new JoinFunction());
+
+            var actualSuggestions = SuggestStrings(expression, config);
+            Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+        }
+
+        // Making sure that functions with multiple scopes wont throw an out of range exception.
+        [Theory]
+        [InlineData("Join(Sequence(3), ForAll(Sequence(3,1,2), { Value : ThisRecord.Value, Value2 : ThisRecord.Value * ThisRecord.Value}), LeftRecord.Value = RightRecord.Value, JoinType.Left, RightRecord.Value2 As V2)")]
+        public void MultipleScopesExceptionTest(string expression)
+        {
+            var config = new PowerFxConfig();
+            config.SymbolTable.AddFunction(new JoinFunction());
+
+            // Test if at any point in the expression we going to get a out of range exception.
+            for (int i = 1; i < expression.Length; i++)
+            {
+#pragma warning disable CA1845 // Use span-based 'string.Concat'
+                var subExpr = expression.Substring(0, i) + "|";
+#pragma warning restore CA1845 // Use span-based 'string.Concat'
+
+                try
+                {
+                    SuggestStrings(subExpr, config);
+                }
+                catch (Exception ex)
+                {
+                    Assert.Fail(ex.Message);
+                }
+            }
+
+            Assert.True(true);
         }
 
         /// <summary>
@@ -283,6 +337,41 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         }
 
         [Theory]
+        [InlineData("SortByColumns(|", "Tabela a ser classificada.", "Classifica 'source' (origem) com base na coluna, com a opção de especificar uma 'order' (ordem) de classificação.", "pt-BR")]
+        [InlineData("First(|", "Table dont la première ligne sera retournée.", "Retourne la première ligne de « source ».", "fr-FR")]
+        [InlineData("First(|", "A table whose first row will be returned.", "Returns the first row of 'source'.", "")] // Invariant culture
+        [InlineData("If(|", "Condição que resulta em um valor booleano.", "Verifica se alguma das condições especificadas foi atendida e retorna o valor correspondente. Se nenhuma das condições for atendida, a função retornará o valor padrão especificado.", "pt-BR")]
+        public void TestIntellisenseFunctionParameterDescriptionLocale(string expression, string expectedParameterDescription, string expectedDefinition, string locale)
+        {
+            var result = Suggest(expression, Default, CultureInfo.InvariantCulture, CultureInfo.CreateSpecificCulture(locale));
+
+            var signature = result.SignatureHelp.Signatures[result.SignatureHelp.ActiveSignature];
+            var overload = result.FunctionOverloads.ToArray()[result.CurrentFunctionOverloadIndex];
+
+            Assert.Equal(expectedDefinition, signature.Documentation);
+            Assert.Equal(expectedDefinition, overload.Definition);
+
+            Assert.Equal(expectedParameterDescription, signature.Parameters[0].Documentation);
+            Assert.Equal(expectedParameterDescription, overload.FunctionParameterDescription);
+        }
+
+        /// <summary>
+        /// In cases for which Intellisense produces exceedingly numerous results, they should
+        /// contain localized strings.
+        /// </summary>
+        [Fact]
+        public void TestNonEmptyLocalizedSuggest()
+        {
+            var expression = "| ForAll([1],Value)";
+            var config = Default;
+            var suggestions = Suggest(expression, Default, null, CultureInfo.CreateSpecificCulture("pt-BR"));
+
+            // Fetching arg1 (Abs function).
+            var definition = suggestions.Suggestions.ToArray()[1].Definition;
+            Assert.Equal("Retorna o valor absoluto de um número, sem o sinal.", definition);
+        }
+
+        [Theory]
         [InlineData("çava,comment,chat", "çava,chat,comment", "fr-FR")]
         [InlineData("azul,árvore,áurea", "árvore,áurea,azul", "pt-BR")]
         [InlineData("Choice,car", "car,Choice", "en-US")] // Case insensitive comparison
@@ -340,7 +429,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Test|", "![Test1: s, Test2: n, Test3: h]", "Test1", "Test2", "Test3")]
         [InlineData("RecordName[|", "![RecordName: ![StringName: s, NumberName: n]]", "@NumberName", "@StringName")]
         [InlineData("RecordName[|", "![RecordName: ![]]")]
-        [InlineData("Test |", "![Test: s]", "-", "&", "&&", "*", "/", "^", "||", "+", "<", "<=", "<>", "=", ">", ">=", "And", "As", "exactin", "in", "Or")]
+        [InlineData("Test |", "![Test: s]", "&", "&&", "*", "+", "-", "/", "<", "<=", "<>", "=", ">", ">=", "And", "As", "exactin", "in", "Or", "^", "||")]
         [InlineData("Filter(Table, Table[|", "![Table: *[Column: s]]", "@Column")]
 
         // ErrorNodeSuggestionHandler
@@ -379,6 +468,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Record.|", false, "Foo")]
         [InlineData("Loop.Loop.Record.|", false, "Foo")]
         [InlineData("Filter(TableLoop, EndsWith(|", true, "SomeString")]
+        [InlineData("Filter(TableLoop,|", true, "Loop", "Record", "SomeString", "TableLoop", "ThisRecord")]
         [InlineData("Loop.L|o", true, "Loop", "TableLoop")]
         public void TestSuggestLazyTypes(string expression, bool requiresExpansion, params string[] expectedSuggestions)
         {
@@ -539,58 +629,44 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             Assert.Equal(expected, suggestion);
         }
 
-        private class LazyRecursiveRecordType : RecordType
+        [Theory]
+        [InlineData("Filter(TableLoop,|")]
+        [InlineData("Filter(Accounts,|")]
+        public void LazyTypesStackOverflowTest(string expression)
         {
-            public override IEnumerable<string> FieldNames => GetFieldNames();
+            var lazyInstance = new LazyRecursiveRecordType();
+            var config = PowerFxConfig.BuildWithEnumStore(
+                new EnumStoreBuilder(),
+                new TexlFunctionSet(new[] { BuiltinFunctionsCore.Filter }));
 
-            public bool EnumerableIterated = false;
+            var suggestions = SuggestStrings(expression, config, null, lazyInstance);
 
-            public LazyRecursiveRecordType()
-                : base()
-            {
-            }
+            // Just check that the execution didn't stack overflow.
+            Assert.True(suggestions.Any());
+        }
 
-            public override bool TryGetFieldType(string name, out FormulaType type)
-            {
-                switch (name)
-                {
-                    case "SomeString":
-                        type = FormulaType.String;
-                        return true;
-                    case "TableLoop":
-                        type = ToTable();
-                        return true;
-                    case "Loop":
-                        type = this;
-                        return true;
-                    case "Record":
-                        type = RecordType.Empty().Add("Foo", FormulaType.Number);
-                        return true;
-                    default:
-                        type = FormulaType.Blank;
-                        return false;
-                }
-            }
+        [Theory]
+        [InlineData("ParseJSON(\"42\", Nu|", "Number")]
+        [InlineData("AsType(ParseJSON(\"42\"), Da|", "Date", "DateTime", "DateTimeTZInd")]
+        [InlineData("IsType(ParseJSON(\"42\"),|", "'My Type With Space'", "'Some \" DQuote'", "Boolean", "Date", "DateTime", "DateTimeTZInd", "Decimal", "Dynamic", "GUID", "Hyperlink", "MyNewType", "Number", "Text", "Time")]
+        [InlineData("ParseJSON(\"42\", Voi|")]
+        [InlineData("ParseJSON(\"42\", MyN|", "MyNewType")]
+        [InlineData("ParseJSON(\"42\", Tim|", "DateTime", "DateTimeTZInd", "Time")]
+        [InlineData("ParseJSON(\"42\", My|", "'My Type With Space'", "MyNewType")]
+        [InlineData("ParseJSON(\"42\", So|", "'Some \" DQuote'")]
+        public void TypeArgumentsTest(string expression, params string[] expected)
+        {
+            var symbolTable = SymbolTable.WithPrimitiveTypes();
 
-            private IEnumerable<string> GetFieldNames()
-            {
-                EnumerableIterated = true;
+            symbolTable.AddType(new DName("MyNewType"), FormulaType.String);
+            symbolTable.AddType(new DName("My Type With Space"), FormulaType.String);
+            symbolTable.AddType(new DName("Some \" DQuote"), FormulaType.String);
+            symbolTable.AddFunctions(new TexlFunctionSet(BuiltinFunctionsCore.TestOnly_AllBuiltinFunctions.Where(f => f.HasTypeArgs).ToArray()));
+            symbolTable.AddFunctions(new TexlFunctionSet(new[] { BuiltinFunctionsCore.ParseJSON }));
 
-                yield return "SomeString";
-                yield return "Loop";
-                yield return "Record";
-                yield return "TableLoop";
-            }
-
-            public override bool Equals(object other)
-            {
-                return other is LazyRecursiveRecordType; // All the same 
-            }
-
-            public override int GetHashCode()
-            {
-                return 1;
-            }
+            var config = new PowerFxConfig();
+            var actualSuggestions = SuggestStrings(expression, config, null, symbolTable);
+            Assert.Equal(expected, actualSuggestions);
         }
     }
 }

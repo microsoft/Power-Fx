@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Persentase (atau kolom nilai persentase) warna (atau kolom nilai warna) yang akan memudar. Persentase negatif menghasilkan bayangan yang lebih gelap. Persentase positif menghasilkan bayangan yang lebih terang.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Mengembalikan rekaman dengan informasi tentang file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>File blob untuk mendapatkan informasi.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Menampilkan nilai absolut angka, angka tanpa tanda.</value>
     
@@ -1796,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Menghasilkan true jika nilai tidak berjenis yang disediakan adalah dari jenis yang diberikan.</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>jenis</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>Nilai tidak berjenis untuk diperiksa apakah dapat dikonversi eksplisit sebagai jenis yang ditentukan.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>Jenis yang kami inginkan untuk memeriksa untypedValue.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Menggunakan nilai yang disediakan sebagai tipe yang diberikan.</value>
     
@@ -1813,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>Tabel entitas menunjukkan tipe yang kami inginkan untuk digunakan nilainya.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Memeriksa dan menggunakan nilai Tidak Berjenis yang disediakan sebagai jenis yang diberikan.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>jenis</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>Nilai tidak berjenis untuk dikonversi eksplisit sebagai jenis baru.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>Jenis yang kami inginkan untuk menggunakan nilai.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Mengeksekusi rumus yang diberikan sebagai parameter kedua menggunakan cakupan yang diberikan oleh parameter pertama.</value>
@@ -1868,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>'{0}' adalah fungsi yang tidak diketahui atau tidak didukung.</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' dikenali sebagai fungsi pembantu jenis dan hanya dapat digunakan di dalam fungsi Type.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -1982,10 +2033,6 @@
     <value>Argumen pertama dari '{0}' harus berupa catatan.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Menggunakan set opsi ini sebagai nilai pencacahan atau dalam fungsi Choices mengharuskan entitas '{0}' ditambahkan sebagai Sumber Data. Untuk menambahkan, gunakan menu Tampilan, lalu pilih Sumber data.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Properti yang ditentukna tidak dapat diakses dalam konteks ini.</value>
     
@@ -2026,10 +2073,6 @@
     <value>Argumen tidak menunjukkan nilai tanggal atau waktu yang valid.</value>
     
   </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Sumber Data ini tidak valid. Perbaiki kesalahan di panel "Sumber data" dengan mengeklik "Konten -&gt; Sumber data" atau "View -&gt; Opsi"</value>
-    
-  </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>Mengharapkan pengidentifikasi sumber data untuk membatasi catatan sebaris.</value>
     
@@ -2068,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Konflik nama kolom untuk '{0}'.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Tidak dapat menambahkan kolom ke rekaman sistem atau tabel rekaman sistem. Gunakan ShowColumns untuk mengekstrak kolom yang Anda butuhkan terlebih dahulu.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Tidak dapat mengubah nama kolom rekaman sistem atau tabel rekaman sistem. Gunakan ShowColumns untuk mengekstrak kolom yang Anda butuhkan terlebih dahulu.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -2670,6 +2721,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>String JSON yang akan diproses.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>Mengonversi string JSON menjadi objek berjenis.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>string</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>String JSON untuk dikonversi menjadi objek berjenis.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>jenis</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>Definisi jenis sebaris atau jenis bernama yang didefinisikan secara global.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Mengembalikan rekaman di tabel pada indeks tertentu.</value>
     
@@ -2687,6 +2756,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Indeks rekaman yang akan diambil.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2707,6 +2788,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Jenis kode batang</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2823,6 +2936,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Nilai untuk diuji.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Mengonversi tanggal dan waktu dalam bentuk teks ke angka yang mewakili tanggal di kode tanggal-waktu Power Apps.</value>
@@ -3098,32 +3215,33 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Menambahkan rekaman ke sumber data.</value>
+    <value>Menambahkan satu atau beberapa item ke koleksi yang ditentukan. Item dapat berasal dari tabel atau koleksi berbeda (misalnya, Collect(collection, source_collection)), atau satu atau beberapa catatan Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>sumber_data</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>rekaman</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>koleksi</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>butir</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Koleksi baru atau yang sudah ada untuk ditambahkan.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Menghapus semua rekaman dari suatu kumpulan, kemudian menambahkan rangkaian rekaman lain ke kumpulan yang sama.</value>
+    <value>Menghapus koleksi terlebih dahulu dan menambah satu atau beberapa item ke koleksi yang ditentukan. Item dapat berasal dari tabel atau koleksi berbeda (misalnya, ClearCollect(collection, source_collection)), atau satu atau beberapa catatan ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>sumber_data</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Koleksi baru atau yang sudah ada untuk ditambahkan.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>sumber_data</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>rekaman</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Rekaman atau tabel untuk dikumpulkan. Rekaman akan ditambahkan ke koleksi. Kolom tabel akan ditambahkan ke koleksi.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Menerapkan pembaruan ke baris yang ditentukan dan mengubah baris di sumber data tertentu. Mengembalikan baris yang diperbarui.</value>
@@ -3259,6 +3377,10 @@
     <value>Artikel: Referensi rumus untuk Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Karakter '{0}' tidak diharapkan pada posisi '{1}' dalam rumus.</value>
     
@@ -3271,6 +3393,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3288,6 +3414,10 @@
     <value>Artikel: Referensi rumus untuk Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Karakter yang tidak terduga. Rumus berisi '{0}' ketika '{1}' diharapkan.</value>
     
@@ -3301,6 +3431,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3318,6 +3452,10 @@
     <value>Artikel: Referensi rumus untuk Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Nama tidak valid. Pengidentifikasi ini tidak dikenali.</value>
     
@@ -3331,6 +3469,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3348,6 +3490,10 @@
     <value>Artikel: Referensi rumus untuk PowerApps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>Referensi 'Induk' tidak valid. Anda tidak dapat mereferensikan kontrol induk dalam konteks ini.</value>
     
@@ -3361,6 +3507,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Artikel: Menambahkan dan mengonfigurasi kontrol aplikasi kanvas di Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3400,6 +3550,10 @@
     <value>Modul: Menggunakan rumus dasar</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Angka yang diharapkan. Kami mengharapkan angka pada titik ini dalam rumus.</value>
     
@@ -3413,6 +3567,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3430,6 +3588,10 @@
     <value>Artikel: Referensi rumus untuk Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Titik dua yang diharapkan. Kami mengharapkan titik dua (:) pada titik ini dalam rumus.</value>
     
@@ -3445,6 +3607,10 @@
     <value>Artikel: Menampilkan teks, tanggal, dan waktu di Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Fungsi perilaku dalam properti non-perilaku. Anda tidak dapat menggunakan properti ini untuk mengubah nilai di tempat lain dalam aplikasi.</value>
     
@@ -3458,6 +3624,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Artikel: Memahami rumus perilaku untuk aplikasi kanvas di Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Fungsi perilaku dalam fungsi yang ditentukan pengguna (UDF) non-perilaku. Masukkan isi fungsi yang ditentukan pengguna ke dalam tanda kurung kurawal ({...}) untuk menyatakan UDF perilaku.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Fungsi perilaku akan mengubah status sesi saat ini. 'Clear', 'Collect', 'Patch', dan 'Refresh' adalah fungsi perilaku umum.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Edit ekspresi fungsi yang ditentukan pengguna sehingga berada di dalam tanda kurung kurawal ({...}).</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3497,6 +3679,10 @@
     <value>Artikel: Referensi rumus untuk Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Teks atau angka yang diharapkan. Kami mengharapkan teks atau angka pada titik ini dalam rumus.</value>
     
@@ -3512,6 +3698,10 @@
     <value>Artikel: Referensi rumus untuk Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Tanda kurung tutup yang diharapkan. Kami mengharapkan tanda kurung tutup (}) pada titik ini dalam rumus.</value>
     
@@ -3523,12 +3713,23 @@
     <value>Edit rumus Anda agar mencantumkan tanda kurung.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Tanda penutup yang diharapkan pada pengidentifikasi. Tanda penutup (') diharapkan ada pada titik ini dalam rumus.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Tanda kutip tunggal penutup menunjukkan akhir pengidentifikasi (misalnya, 'Nama Depan').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Edit rumus Anda agar mencantumkan tanda kutip tunggal penutup.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Pengidentifikasi tidak memiliki teks yang valid.</value>
+    <value>Pengidentifikasi kosong atau berisi karakter yang tidak valid, seperti tab atau baris baru.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Pastikan Anda memiliki teks untuk pengidentifikasi Anda. Kesalahan ini terjadi jika semua pengidentifikasi kosong atau berisi spasi.</value>
+    <value>Pastikan Anda memiliki teks yang valid pada pengidentifikasi Anda. Kesalahan ini terjadi jika pengidentifikasi kosong, hanya diisi dengan spasi, atau berisi tab atau baris baru.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3554,8 +3755,16 @@
     <value>Modul: Menggunakan rumus dasar</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Modul: Rumus dasar penulis dengan tabel dan data</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3570,6 +3779,10 @@
     <value>Artikel: Referensi rumus untuk Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Tipe tidak kompatibel. Kolom '{0}' dalam sumber data yang Anda perbarui memperkirakan tipe '{1}' dan Anda menggunakan tipe '{2}'.</value>
     
@@ -3582,8 +3795,16 @@
     <value>Modul: Menggunakan rumus dasar</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Modul: Rumus dasar penulis dengan tabel dan data</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3596,6 +3817,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3614,8 +3839,16 @@
     <value>Modul: Menggunakan rumus dasar</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Modul: Rumus dasar penulis dengan tabel dan data</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3633,8 +3866,16 @@
     <value>Modul: Menggunakan rumus dasar</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Modul: Rumus dasar penulis dengan tabel dan data</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3650,6 +3891,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3675,8 +3920,16 @@
     <value>Artikel: Memahami delegasi dalam aplikasi kanvas</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Blog: Batas baris data untuk delegasi</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3702,8 +3955,16 @@
     <value>Artikel: Memahami delegasi dalam aplikasi kanvas</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Blog: Batas baris data untuk delegasi</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3733,8 +3994,16 @@
     <value>Artikel: Memahami delegasi dalam aplikasi kanvas</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Blog: Batas baris data untuk delegasi</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3766,8 +4035,70 @@
     <value>Artikel: Memahami delegasi dalam aplikasi kanvas</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Blog: Batas baris data untuk delegasi</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Peringatan delegasi. Formula yang diberi nama {0} tidak dapat didelegasikan sehingga penggunaannya dalam formula ini pada himpunan data besar mungkin tidak sesuai. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Sumber data mungkin tidak dapat memproses rumus dan mungkin menghasilkan himpunan data yang tidak lengkap. Aplikasi Anda mungkin tidak memberikan hasil yang benar atau berperilaku dengan benar jika himpunan data tidak lengkap.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Coba sederhanakan definisi formula yang diberi nama.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Artikel: Memahami delegasi dalam aplikasi kanvas</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Batas baris data untuk delegasi</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Peringatan delegasi. Fungsi yang ditentukan pengguna {0} tidak dapat didelegasikan sehingga penggunaannya dalam formula ini pada himpunan data besar mungkin tidak sesuai. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Sumber data mungkin tidak dapat memproses rumus dan mungkin menghasilkan himpunan data yang tidak lengkap. Aplikasi Anda mungkin tidak memberikan hasil yang benar atau berperilaku dengan benar jika himpunan data tidak lengkap.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Coba sederhanakan definisi fungsi yang ditentukan pengguna.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Artikel: Memahami delegasi dalam aplikasi kanvas</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Batas baris data untuk delegasi</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3794,8 +4125,16 @@
     <value>Artikel: Memahami delegasi dalam aplikasi kanvas</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Blog: Batas baris data untuk delegasi</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3824,6 +4163,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Referensi: ConfirmExit untuk Aplikasi Kanvas</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3858,12 +4201,24 @@
     <value>Rumus bernama harus merupakan ekspresi.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Deklarasi jenis bernama harus berupa ekspresi jenis yang valid.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Fungsi yang ditentukan pengguna harus memiliki isi.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Fungsi {0} telah ditentukan.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Peringatan: Fungsi yang ditentukan pengguna {0} akan membayangi fungsi bawaan {0} yang ada.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Nama fungsi {0} dibatasi.</value>
     
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
@@ -3875,7 +4230,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Tipe pengembalian fungsi yang dinyatakan tidak cocok dengan tipe pengembalian dari isi fungsi.</value>
+    <value>Jenis pengembalian fungsi '{0}' yang dinyatakan tidak cocok dengan jenis pengembalian isi fungsi '{1}'.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Fungsi {0} memiliki terlalu banyak parameter. Fungsi yang ditentukan pengguna mendukung hingga {1} parameter.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +4261,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Argumen pertama dari '{0}' harus berisi nama variabel yang valid, dan tidak boleh bertentangan dengan kontrol, layar, koleksi, atau nama sumber data yang ada. Jenis '{1}' ditemukan</value>
+    <value>'{1}' tidak dapat diubah dengan '{0}' atau bertentangan dengan nama variabel cakupan, sumber data, atau objek lain yang ada.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4063,6 +4422,10 @@
     <value>Tidak dapat mendelegasikan {0}: berisi fungsi perilaku '{1}'.</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows dapat mengembalikan nilai cache. Gunakan CountIf(DataSource, true) untuk mendapatkan hitungan terbaru.</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Menentukan apakah teks yang diberikan sesuai dengan format teks yang ada.</value>
     
@@ -4156,24 +4519,232 @@
     <value>Ekspresi reguler tidak valid.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pilihan sebaris harus muncul di awal ekspresi reguler, ditemukan "{0}" nanti.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pilihan sebaris terbatas pada kombinasi huruf [imnsx], tidak dapat menonaktifkan opsi, dan tidak dapat digunakan pada subekspresi, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Kode karakter Oktal \0 tidak didukung, gunakan heksadesimal \x atau Unicode \u sebagai gantinya, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Kurung kurawal harfiah harus diberi escape garis miring terbalik, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Tanda kurung siku harfiah harus di-escape dengan garis miring terbalik meski dalam kelas karakter, contoh \[ atau \], ditemukan di akhir "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Tanda kurung siku kelas karakter tidak tertutup.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Grup khusus tidak didukung, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Karakter escape tidak diizinkan dalam kelas karakter, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Karakter escape negatif tidak diizinkan dalam kelas karakter yang dinegasikan, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Karakter escape tidak diizinkan di luar kelas karakter, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Nama kategori Unicode tidak valid, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Opsi sebaris berulang, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Komentar sebaris tidak tertutup.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Komentar sebaris tidak tertutup, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pilihan sebaris tidak kompatibel dengan MatchOptions.NumberedSubMatches, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pembilang kepemilikan tidak didukung, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pembilang yang tepat tidak dapat digunakan dengan pengubah pembilang seperti ? untuk lazy, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Kode escape tidak valid, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Subkecocokan "{0}" tidak ditentukan atau merupakan referensi penerusan yang tidak didukung.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Subkecocokan tidak didukung dalam lookbehind, ditemukan di awal "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Look behind tidak dapat ditumpuk, ditemukan di awal "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pembilang tidak terbatas tidak didukung di look behind, ditemukan di akhir "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pembilang tidak didukung pada look behind atau look ahead, ditemukan di akhir "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Referensi balik "{0}" ke subkecocokan yang mungkin tidak terjadi karena alternasi atau pembilang nol.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Subkecocokan referensi mandiri tidak didukung, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Grup tidak tertutup, tanda kurung tutup terlalu sedikit.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Grup tidak terbuka, tanda kurung pembuka terlalu sedikit.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Subkecocokan bernama didefinisikan lebih dari sekali, ditemukan di awal "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Nama subkecocokan harus merupakan kombinasi karakter kata dan tidak diawali dengan angka, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pilihan sebaris harus muncul di awal ekspresi reguler, ditemukan "{0}" nanti.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Karakter muncul lebih dari sekali di kelas karakter, ditemukan berulang "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Kelas karakter tanda kurung siku tidak boleh kosong, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Subkecocokan penyeimbangan tidak didukung, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Menggunakan tangkapan bernama dengan tanda kutip tunggal tidak didukung, gunakan sintaks (?&lt;...), ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Alternasi kondisional tidak didukung, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Tangkapan bernama tidak dapat digunakan ketika MatchOptions.NumberedSubMatches aktif, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Gunakan tangkapan bernama dengan "(?&lt;name&gt;...)" dan "\k&lt;name&gt;" atau aktifkan MatchOptions.NumberedSubMatches, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Tanda hubung harfiah dalam kelas karakter harus di-escape dengan garis miring terbalik, escape dengan "\-", ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Karakter harfiah perlu di-escape dengan garis miring terbalik saat digunakan dalam kelas karakter, ditemukan di akhir "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pembilang pada grup yang berisi pembilang lain atau alternasi kosong yang dapat menghasilkan hasil yang ambigu, ditemukan di akhir "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Lookbehind melampaui batas karakter maksimum 250, ditemukan di akhir "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Angka rendah rentang pembilang lebih besar dari angka tinggi, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Terlalu banyak grup bertumpuk, ditemukan di awal "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Nama subkecocokan terlalu panjang, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Angka terlalu besar, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Karakter dalam rentang kelas karakter dibalik, ditemukan di akhir "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Kelas karakter dalam rentang kelas karakter, atau escape tanda hubung harfiah dengan garis miring terbalik, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Berakhir dengan garis miring terbalik yang tidak di-escape.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Pembilang tanpa sesuatu untuk diukur, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: MatchOptions.DotAll dan MatchOptions.FreeSpacing hanya tersedia dengan Power Fx V1, ditemukan "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid: Referensi balik "{0}" ke subkecocokan yang ada di dalam lookbehind atau lookahead.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Ekspresi biasa harus berupa nilai konstanta.</value>
+    <value>Ekspresi reguler harus berupa nilai konstanta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions harus berupa nilai konstanta.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Nilai yang diteruskan ke fungsi '{0}' tidak dapat diubah.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Nama tangkapan '{0}' menyembunyikan properti standar yang menghasilkan kecocokan penuh pada ekspresi reguler. Pertimbangkan untuk mengganti namanya jika Anda ingin menggunakan properti bernama tersebut untuk mengekstrak kecocokan penuh pada teks yang ditentukan.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Nama tangkapan '{0}' menyembunyikan properti yang telah ditentukan sebelumnya yang mengembalikan informasi kecocokan. Pertimbangkan untuk mengganti namanya jika Anda ingin mengakses informasi kecocokan.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Nama tangkapan '{0}' menyembunyikan properti standar yang menghasilkan kecocokan grup dalam ekspresi reguler. Pertimbangkan untuk mengganti namanya jika Anda ingin menggunakan properti bernama tersebut untuk mengekstrak semua sub-kecocokan pada teks yang ditentukan.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Nama tangkapan '{0}' menyembunyikan properti standar yang menghasilkan lokasi kecocokan pada ekspresi reguler. Pertimbangkan untuk mengganti namanya jika Anda ingin menggunakan properti bernama tersebut untuk mengekstrak posisi kecocokan penuh pada teks yang ditentukan.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Nama tangkapan dalam set '{0}' menyembunyikan properti yang telah ditetapkan sebelumnya yang mengembalikan informasi kecocokan. Pertimbangkan untuk mengganti namanya jika Anda ingin mengakses informasi kecocokan.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4209,16 +4780,20 @@
     <value>Mengatur variabel dengan nilai sumber data online (tabel atau data) dapat menyebabkan banyak permintaan ke server. Hal ini akan segera diblokir.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Deklarasi harfiah jenis tidak valid. Ekspresi '{0}' tidak dapat digunakan dalam definisi jenis.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Ekspresi jenis tidak valid. '{0}' tidak dapat digunakan dalam ekspresi jenis.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definisi jenis {0} tidak valid.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Penggunaan yang tidak didukung: Fungsi Type hanya dapat digunakan dalam argumen jenis dan deklarasi jenis.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Deklarasi jenis {0} tidak valid.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definisi jenis {0} tidak valid dan mungkin berisi siklus.</value>
+    <value>Deklarasi jenis {0} tidak valid dan mungkin berisi siklus.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4419,6 +4994,16 @@
     <value>Operator Partial tidak diketahui.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Sumber data yang akan ditambahkan data.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Rekaman atau tabel yang akan dikumpulkan. Rekaman akan ditambahkan ke sumber data. Baris tabel akan ditambahkan ke koleksi.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>butir</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Peringatan delegasi. Hasil argumen '{0}' ini dapat dipotong untuk himpunan data besar sebelum diteruskan ke fungsi '{1}'.</value>
     
@@ -4461,8 +5046,96 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Sumber yang akan dihapus.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Mengambil data di beberapa tabel dengan relasi.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>sumber1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>sumber2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>penyebut</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Tabel atau kumpulan kiri.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Tabel atau kumpulan kanan.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Gabungkan kriteria antara dua tabel atau kumpulan.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Jenis penggabungan antara dua tabel atau kumpulan.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Argumen untuk mengganti nama kolom yang ada di salah satu sumber.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Sumber data yang ditentukan tidak dapat digunakan dengan fungsi ini.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Argumen '{0}' tidak valid. Yang diharapkan adalah nama jenis yang valid atau ekspresi jenis sebaris.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Jenis yang tidak didukung '{0}' dalam argumen jenis.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Kedalaman maksimum yang dicapai saat mengunjungi payload JSON.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Panjang maksimum yang dicapai dalam fungsi JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Fitur eksperimental 'Jenis yang ditentukan pengguna' tidak diaktifkan.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Sintaks salah: '=' tidak dapat digunakan untuk menentukan jenis yang ditentukan pengguna. Gunakan ':=' sebagai gantinya.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>'{0}' tidak dapat ditambahkan/diganti namanya karena bertabrakan dengan kolom lain dengan nama yang sama.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Nilai enum 'JoinType' yang diharapkan. Enum yang berbeda atau meneruskannya melalui fungsi lain tidak didukung yaitu Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argumen yang dimulai dari posisi ke-5 ditujukan untuk mengganti nama kolom dan diperkirakan sebagai argumen node 'As', yakni LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Minimal satu kolom '{0}' harus dinyatakan untuk menyusun hasil penggabungan.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Nilai '{0}' tidak valid dalam konteks ini. Nilai tersebut seharusnya menjadi referensi untuk nama cakupan '{1}' atau '{2}'.</value>
     
   </data>
 </root>

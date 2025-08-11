@@ -16,6 +16,9 @@ namespace Microsoft.PowerFx.Core.Tests
     /// </summary>
     internal class ImmutabilityTests : PowerFxTest
     {
+        // We cannot use this code in .Net 5.0+ as it uses System.Runtime.CompilerServices.IsExternalInit hack defined in PFX.Core and which is only valid pre-Net 5.0
+        // The symbol would be defined twice
+#if !NET7_0_OR_GREATER
         // Include non-public types
         // Include non-public properties!
         // Are private-setters ok?
@@ -80,5 +83,6 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.True(errors.Length == 0, $"Mutability errors: {errors}");
         }
+#endif // !NET7_0_OR_GREATER
     }
 }

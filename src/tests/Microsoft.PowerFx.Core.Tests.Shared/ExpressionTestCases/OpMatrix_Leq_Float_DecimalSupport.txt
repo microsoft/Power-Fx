@@ -11,28 +11,28 @@ true
 false
 
 >> "2" <= Decimal("2.000000000000000000000002")
-Errors: Error 0-3: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 0-3: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> "1e100" <= Decimal("2.000000000000000000000002")
-Errors: Error 0-7: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 0-7: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> true <= Decimal("1.000000000000000000000002")
-Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> true <= Decimal(1)
-Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> true <= Decimal(0)
-Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> false <= Decimal("1.000000000000000000000002")
-Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> false <= Decimal(1)
-Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> false <= Decimal(0)
-Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> Blank() <= Decimal("2.000000000000000000000002")
 true
@@ -86,10 +86,10 @@ true
 false
 
 >> Decimal("16.000000000000000000000001") <= "16"
-Errors: Error 42-46: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 42-46: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> Decimal("1.000000000000000000000001") <= true
-Errors: Error 41-45: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 41-45: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, Dynamic.
 
 >> Decimal("0.000000000000000000000001") <= Blank()
 false

@@ -14,7 +14,6 @@ using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
-using NuGet.Frameworks;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
@@ -68,7 +67,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var check = engine.Check("User." + propName);                
                 Assert.True(check.IsSuccess);
 
-                var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+                var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
 
                 // ToObject is type specific, will validate we have correct type (string vs guid).
                 Assert.Equal(expectedValue, result.ToObject());
@@ -144,7 +143,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check("User.FullName");
             Assert.True(check.IsSuccess);
 
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await check.GetEvaluator().EvalAsync(CancellationToken.None, rc));
         }
 
         // Verify disambiguation between User property and User field in rowscope. 
@@ -152,7 +151,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("[@User].FullName", "Full")]
         [InlineData("User", "rowscope")]
         [InlineData("Field", "field")]
-        public void DisambiguationTest(string expr, object expected)
+        public async Task DisambiguationTest(string expr, object expected)
         {
             var userInfo = new BasicUserInfo
             {
@@ -174,7 +173,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             rc.SetUserInfo(userInfo);
             rc.Values = rowScope;
 
-            var result = engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: rc).Result;
+            var result = await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: rc);
 
             Assert.Equal(expected, result.ToObject());
         }
@@ -269,7 +268,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             cancel.CancelAfter(50);
 
-            await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await task.ConfigureAwait(false)).ConfigureAwait(false);
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await task);
         }
 
         // Test callback that throws an error. 
@@ -314,7 +313,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 var task = _tsc.Task;
                 var timeout = Task.Delay(Timeout.Infinite, cancel);
-                var x = await Task.WhenAny(task, timeout).ConfigureAwait(false);
+                var x = await Task.WhenAny(task, timeout);
 
                 cancel.ThrowIfCancellationRequested();
 

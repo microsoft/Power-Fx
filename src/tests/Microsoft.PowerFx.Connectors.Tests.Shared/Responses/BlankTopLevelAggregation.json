@@ -1,0 +1,9 @@
+{
+  "@odata.context": "https://d5ecf3dd-b678-e86f-827c-07be75e98964.07.common.tip2.azure-apihub.net/apim/sql/b83da26628184be880d6b0ce5f69f289/$metadata#datasets('testconnector.database.windows.net%2Ctestconnector')/tables('%5Bdbo%5D.%5BEmployees%5D')/items",
+  "value": [
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "3986130d-79eb-46ce-a0f8-2aff9be5da68"
+    }
+  ]
+}

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,9 +23,9 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Internal adapter for adding custom functions. 
     /// </summary>
-    internal class CustomTexlFunction : TexlFunction
+    internal class CustomTexlFunction : TexlFunction, IFunctionInvoker
     {
-        public Func<IServiceProvider, FormulaValue[], CancellationToken, Task<FormulaValue>> _impl;
+        public Func<IServiceProvider, IReadOnlyList<FormulaValue>, CancellationToken, Task<FormulaValue>> _impl;
 
         internal BigInteger LamdaParamMask;
 
@@ -53,9 +54,10 @@ namespace Microsoft.PowerFx
             yield return CustomFunctionUtility.GenerateArgSignature(_argNames, ParamTypes);
         }
 
-        public virtual Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
+        public virtual Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
         {
-            return _impl(serviceProvider, args, cancellationToken);
+            var serviceProvider = invokeInfo.FunctionServices;
+            return _impl(serviceProvider, invokeInfo.Args, cancellationToken);
         }
 
         public override bool IsLazyEvalParam(TexlNode node, int index, Features features)

@@ -5,7 +5,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.PowerFx.Connectors.Tabular
+namespace Microsoft.PowerFx.Connectors
 {
     internal class ComplexColumnCapabilitiesConverter : JsonConverter<ComplexColumnCapabilities>
     {

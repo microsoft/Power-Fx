@@ -364,7 +364,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             cancellationToken.ThrowIfCancellationRequested();
 
             // We know the primary key name is "Id" and can use it here
-            FormulaValue idValue = await baseRecord.GetFieldAsync("Id", cancellationToken).ConfigureAwait(false);
+            FormulaValue idValue = await baseRecord.GetFieldAsync("Id", cancellationToken);
 
             if (idValue is not DecimalValue idNumValue)
             {
@@ -376,7 +376,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 throw new ArgumentException($"Record with ID {idNumValue.Value} doesn't exist", nameof(baseRecord));
             }
 
-            DValue<RecordValue> ret = await dbRecord.UpdateFieldsAsync(changeRecord, cancellationToken).ConfigureAwait(false);
+            DValue<RecordValue> ret = await dbRecord.UpdateFieldsAsync(changeRecord, cancellationToken);
             Refresh();
 
             return ret;

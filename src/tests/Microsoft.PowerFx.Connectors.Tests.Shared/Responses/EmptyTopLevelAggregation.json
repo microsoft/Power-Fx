@@ -1,0 +1,6 @@
+{
+  "@odata.context": "https://2e60e1f8-dcfd-e26e-ad11-76bce40da16b.09.common.tip2.azure-apihub.net/apim/sql/49e3d59c1f094ac2b293e2c7519941ac/$metadata#datasets('testconnector.database.windows.net%2Ctestconnector')/tables('%5Bdbo%5D.%5BEmployees%5D')/items",
+  "value": [
+
+  ]
+}

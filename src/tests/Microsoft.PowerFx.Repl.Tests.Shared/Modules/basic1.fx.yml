@@ -1,0 +1,3 @@
+# Most basic Power Fx module. 
+Formulas: |
+  DoubleIt(x: Number) : Number = x * 2;

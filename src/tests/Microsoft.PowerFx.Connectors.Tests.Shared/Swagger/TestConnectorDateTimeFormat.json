@@ -1,0 +1,105 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "v2.0",
+    "title": "Azure Cognitive Service for Language",
+    "description": "Azure Cognitive Service for Language, previously known as 'Text Analytics' connector detects language, sentiment and more of the text you provide.",
+    "contact": {
+      "name": "Microsoft",
+      "url": "https://gallery.cortanaanalytics.com/MachineLearningAPI/Text-Analytics-2",
+      "email": "mlapi@microsoft.com"
+    },
+    "x-ms-api-annotation": {
+      "status": "Production"
+    }
+  },
+  "host": "tip1-shared-002.azure-apim.net",
+  "basePath": "/apim/cognitiveservicestextanalytics",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/{connectionId}/language/analyze-conversations/jobs/": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "description": "Submit a collection of conversations for analysis. Specify one or more unique tasks to be executed..",
+        "operationId": "AnalyzeConversationTextSubmitJob",
+        "summary": "Async Conversation PII (text) (2022-05-15-preview)",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Analysis job status and metadata.",
+            "schema": {
+              "$ref": "#/definitions/ConversationalPIITextJobState"
+            }
+          },
+          "202": {
+            "description": "A successful call results with an Operation-Location header used to check the status of the analysis job.",
+            "headers": {
+              "Operation-Location": {
+                "type": "string"
+              }
+            }
+          },
+          "default": {
+            "description": "Error response.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/cognitiveservicestextanalytics/#async-conversation-pii-(text)-(2022-05-15-preview)"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ConversationalPIITextJobState": {
+      "type": "object",
+      "description": "Contains the status of the analyze conversations job submitted along with related statistics.",
+      "properties": {
+        "displayName": {
+          "type": "string"
+        },
+        "createdDateTime": {
+          "format": "date-time",
+          "description": "The date and time in the UTC time zone when the item was created.",
+          "type": "string",
+          "x-ms-summary": "Created Date"
+        }
+      },
+      "required": []
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "required": [
+        "error"
+      ],
+      "properties": {
+        "error": {}
+      }
+    }
+  },
+  "parameters": {},
+  "x-ms-connector-metadata": [
+    {
+      "propertyName": "Website",
+      "propertyValue": "https://azure.microsoft.com/services/cognitive-services/text-analytics/"
+    }
+  ],
+  "externalDocs": {
+    "url": "https://docs.microsoft.com/connectors/cognitiveservicestextanalytics"
+  }
+}

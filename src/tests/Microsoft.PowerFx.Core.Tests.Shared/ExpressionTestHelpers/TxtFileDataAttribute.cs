@@ -6,10 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
-using Microsoft.PowerFx.Core.Parser;
-using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Types;
 using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -26,13 +22,18 @@ namespace Microsoft.PowerFx.Core.Tests
         private readonly string _filePathSpecific;
         private readonly string _engineName;
         private readonly Dictionary<string, bool> _setup;
+        private readonly Dictionary<string, bool> _requiredSetup;
 
-        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName, string setup)
+        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName, string setup, string requiredSetup = null)
         {
             _filePathCommon = filePathCommon;
             _filePathSpecific = filePathSpecific;
             _engineName = engineName;
             _setup = TestRunner.ParseSetupString(setup);
+            if (requiredSetup != null)
+            {
+                _requiredSetup = TestRunner.ParseSetupString(requiredSetup);
+            }
         }
 
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
@@ -63,7 +64,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                             if (file.EndsWith(".txt", StringComparison.InvariantCultureIgnoreCase))
                             {
-                                parser.AddFile(_setup, file);
+                                parser.AddFile(_setup, file, _requiredSetup);
                             }
                         }
                     }
@@ -92,7 +93,10 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal static string GetDefaultTestDir(string filePath)
         {
+#pragma warning disable SYSLIB0012 // 'Assembly.CodeBase' is obsolete
             var executable = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
+#pragma warning restore SYSLIB0012 // 'Assembly.CodeBase' is obsolete
+
             var curDir = Path.GetFullPath(Path.GetDirectoryName(executable));
             var testDir = Path.Combine(curDir, filePath);
             return testDir;

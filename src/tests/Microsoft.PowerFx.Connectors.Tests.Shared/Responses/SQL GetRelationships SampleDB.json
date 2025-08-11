@@ -1,0 +1,21 @@
+{
+  "ResultSets": {
+    "Table1": [
+      {
+        "FK_Name": "FK_Product_ProductModel_ProductModelID",
+        "Parent_Table": "[SalesLT].[Product]",
+        "Parent_Column": "ProductModelID",
+        "Referenced_Table": "[SalesLT].[ProductModel]",
+        "Referenced_Column": "ProductModelID"
+      },
+      {
+        "FK_Name": "FK_Product_ProductCategory_ProductCategoryID",
+        "Parent_Table": "[SalesLT].[Product]",
+        "Parent_Column": "ProductCategoryID",
+        "Referenced_Table": "[SalesLT].[ProductCategory]",
+        "Referenced_Column": "ProductCategoryID"
+      }
+    ]
+  },
+  "OutputParameters": {}
+}

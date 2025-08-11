@@ -5,8 +5,10 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -36,8 +38,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             innerServices.AddService(Features.PowerFxV1);
 
-            var function = Activator.CreateInstance(type) as IAsyncTexlFunction3;
-            var result = await function.InvokeAsync(FormulaType.Unknown, args, CancellationToken.None).ConfigureAwait(false);
+            var function = Activator.CreateInstance(type) as IFunctionInvoker;
+            var invokeInfo = new FunctionInvokeInfo
+            {
+                 Args = args,
+                 IRContext = IRContext.NotInSource(FormulaType.Unknown)
+            };
+
+            var result = await function.InvokeAsync(invokeInfo, CancellationToken.None);
 
             Assert.IsType<ErrorValue>(result);
         }

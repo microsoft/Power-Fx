@@ -6,6 +6,14 @@ using System.Collections.Generic;
 
 namespace Microsoft.PowerFx.Intellisense
 {
+    /// <summary>
+    /// Represents the result of an IntelliSense operation, providing suggestions, replacement details,  and contextual
+    /// information for the current input position.
+    /// </summary>
+    /// <remarks>This interface is designed to support IntelliSense-like functionality, such as code
+    /// completion  and function signature help. It provides suggestions for the current input context, details about 
+    /// how to replace text with a selected suggestion, and additional information about the function scope  and
+    /// overloads if applicable.</remarks>
     public interface IIntellisenseResult
     {
         /// <summary>

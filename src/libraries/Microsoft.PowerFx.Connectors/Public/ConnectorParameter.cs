@@ -22,30 +22,31 @@ namespace Microsoft.PowerFx.Connectors
 
         internal bool IsBodyParameter = false;
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, ConnectorCompatibility compatibility)
-            : this(openApiParameter, null, false, compatibility)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, ConnectorSettings settings)
+            : this(openApiParameter, null, false, settings)
+        {
+        } 
+
+        internal ConnectorParameter(OpenApiParameter openApiParameter, bool useHiddenTypes, ConnectorSettings settings)
+            : this(openApiParameter, null, useHiddenTypes, settings)
         {
         }
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, bool useHiddenTypes, ConnectorCompatibility compatibility)
-            : this(openApiParameter, null, useHiddenTypes, compatibility)
-        {
-        }
-
-        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, ConnectorCompatibility compatibility)
-            : this(openApiParameter, bodyExtensions, false, compatibility)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, ConnectorSettings settings)
+            : this(openApiParameter, bodyExtensions, false, settings)
         {
             IsBodyParameter = true;
         }
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, ConnectorCompatibility compatibility)
-            : base(openApiParameter, bodyExtensions, useHiddenTypes, compatibility)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, ConnectorSettings settings)
+            : base(SwaggerParameter.New(openApiParameter), SwaggerExtensions.New(bodyExtensions), useHiddenTypes, settings)
         {
             Name = openApiParameter.Name;
             Description = openApiParameter.Description;
             Location = openApiParameter.In;
         }
 
+        // Intellisense only
         internal ConnectorParameter(ConnectorParameter connectorParameter, ConnectorType connectorType)
             : base(connectorParameter, connectorType)
         {

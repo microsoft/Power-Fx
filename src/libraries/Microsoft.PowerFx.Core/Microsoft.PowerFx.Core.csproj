@@ -4,7 +4,7 @@
     <Version Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</Version>
     <PackageVersion Condition=" '$(ReleasePackageVersion)' == '' ">$(LocalPackageVersion)</PackageVersion>
     <PackageVersion Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</PackageVersion>
-    <Configurations>Debug;Release</Configurations>
+    <Configurations>Debug;Release;Debug462;Debug70;DebugAll;Release462;Release70;ReleaseAll</Configurations>
   </PropertyGroup>
 
   <!-- Nuget Properties -->
@@ -15,6 +15,7 @@
     <Description>The core library for all Microsoft Power Fx Compiler targets</Description>
     <Summary>The core library for all Microsoft Power Fx Compiler targets</Summary>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
     <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
   </PropertyGroup>
 
@@ -35,5 +36,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.PowerFx.Transport.Attributes\Microsoft.PowerFx.Transport.Attributes.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\readme.md" Link="readme.md" Pack="true" PackagePath="\">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

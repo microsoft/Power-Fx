@@ -214,14 +214,18 @@ Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 15-37
 
 // The thousands separator in the fi-FI locale is the no-break space (U+00A0)
 >> Text(12345.6789, $"[$-fi-FI]#{Char(160)}##0.00", "en-US")
-Error({Kind:ErrorKind.InvalidArgument})
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 17-47: Incorrect format specifier for 'Text'.
 
 >> Text(12345.6789, $"[$-fi-FI]#{Char(160)}##0.00", "fi-FI")
-Error({Kind:ErrorKind.InvalidArgument})
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 17-47: Incorrect format specifier for 'Text'.
 
 // The thousands separator in the fr-FR locale is the narrow no-break space (U+202F)
 >> Text(12345.6789, $"[$-fr-FR]#{ParseJSON("""\u202F""")}##0.00", "en-US")
 Error({Kind:ErrorKind.InvalidArgument})
+
+// The thousands separator in the fr-FR locale is the narrow no-break space (U+202F)
+>> Text(12345.6789, $"[$-fr-FR]#{UniChar(8239)}##0.00", "en-US")
+Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 17-51: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "[$-en-US]", "en-US")
 Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 16-27: Incorrect format specifier for 'Text'.
@@ -985,12 +989,18 @@ true
 >> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.ShortTime)
 "5:30 PM"
 
+// .Net 7 produces "17:02:03" as LongTimePattern varies between .Net versions
+#DISABLE.NET: 70
 >> Text(Time(17,2,3), DateTimeFormat.LongTime, "vi-VN")
 "5:02:03 CH"
 
+// .Net 7 produces "Thứ Hai, 27 tháng 2, 2023" as LongDatePattern varies between .Net versions
+#DISABLE.NET: 70
 >> Text(DateValue("02/27/2023"), DateTimeFormat.LongDate, "vi-VN")
 "27 Tháng Hai 2023"
 
+// .Net 7 produces "Thứ Hai, 27 tháng 2, 2023 00:00:00 SA" as LongDateTimePattern varies between .Net versions
+#DISABLE.NET: 70
 >> Text(DateTimeValue("02/27/2023"), DateTimeFormat.LongDateTime, "vi-VN")
 "27 Tháng Hai 2023 12:00:00 SA"
 

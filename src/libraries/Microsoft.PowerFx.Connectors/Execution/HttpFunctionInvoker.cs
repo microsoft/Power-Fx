@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
-        public async Task<HttpRequestMessage> BuildRequest(FormulaValue[] args, IConvertToUTC utcConverter, CancellationToken cancellationToken)
+        public async Task<HttpRequestMessage> BuildRequest(IReadOnlyList<FormulaValue> args, IConvertToUTC utcConverter, CancellationToken cancellationToken)
         {
             HttpContent body = null;
             var path = _function.OperationPath;
@@ -57,15 +57,28 @@ namespace Microsoft.PowerFx.Connectors
             // Header names are not case sensitive.
             // From RFC 2616 - "Hypertext Transfer Protocol -- HTTP/1.1", Section 4.2, "Message Headers"
             var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            Dictionary<string, (OpenApiSchema, FormulaValue)> bodyParts = new ();
+            Dictionary<string, (ISwaggerSchema, FormulaValue)> bodyParts = new ();            
             Dictionary<string, FormulaValue> incomingParameters = ConvertToNamedParameters(args);
             string contentType = null;
 
             foreach (KeyValuePair<ConnectorParameter, FormulaValue> param in _function._internals.OpenApiBodyParameters)
-            {
+            {                
                 if (incomingParameters.TryGetValue(param.Key.Name, out var paramValue))
                 {
-                    bodyParts.Add(param.Key.Name, (param.Key.Schema, paramValue));
+                    if (_function._internals.SpecialBodyHandling && paramValue is RecordValue rv)
+                    {
+                        foreach (NamedValue field in rv.Fields)
+                        {
+                            string type = FormulaValueSerializer.GetType(field.Value.Type);
+                            string format = FormulaValueSerializer.GetFormat(field.Value.Type);
+
+                            bodyParts.Add(field.Name, (new SwaggerSchema(type, format), field.Value));
+                        }
+                    }
+                    else
+                    {
+                        bodyParts.Add(param.Key.Name, (param.Key.Schema, paramValue));
+                    }
                 }
                 else if (param.Key.Schema.Default != null && param.Value != null)
                 {
@@ -82,20 +95,20 @@ namespace Microsoft.PowerFx.Connectors
 
                     if (param.GetDoubleEncoding())
                     {
-                        valueStr = HttpUtility.UrlEncode(valueStr);
+                        valueStr = Uri.EscapeDataString(valueStr);
                     }
 
                     switch (param.In.Value)
                     {
                         case ParameterLocation.Path:
-                            path = path.Replace("{" + param.Name + "}", HttpUtility.UrlEncode(valueStr));
+                            path = path.Replace("{" + param.Name + "}", Uri.EscapeDataString(valueStr));
                             break;
 
                         case ParameterLocation.Query:
                             query.Append((query.Length == 0) ? "?" : "&");
                             query.Append(param.Name);
                             query.Append('=');
-                            query.Append(HttpUtility.UrlEncode(valueStr));
+                            query.Append(Uri.EscapeDataString(valueStr));
                             break;
 
                         case ParameterLocation.Header:
@@ -193,13 +206,14 @@ namespace Microsoft.PowerFx.Connectors
             return request;
         }
 
-        public Dictionary<string, FormulaValue> ConvertToNamedParameters(FormulaValue[] args)
+        public Dictionary<string, FormulaValue> ConvertToNamedParameters(IReadOnlyList<FormulaValue> args)
         {
             // First N are required params.
             // Last param is a record with each field being an optional.
             // Parameter names are case sensitive.
 
             Dictionary<string, FormulaValue> map = new ();
+            bool specialBodyHandling = _function._internals.SpecialBodyHandling;
 
             // Seed with default values. This will get overwritten if provided.
             foreach (KeyValuePair<string, (bool required, FormulaValue fValue, DType dType)> kv in _function._internals.ParameterDefaultValues)
@@ -217,9 +231,9 @@ namespace Microsoft.PowerFx.Connectors
             {
                 string parameterName = _function.RequiredParameters[i].Name;
                 FormulaValue paramValue = args[i];
-
+                
                 // Objects are always flattenned
-                if (paramValue is RecordValue record && !_function.RequiredParameters[i].IsBodyParameter)
+                if (paramValue is RecordValue record && (specialBodyHandling || !_function.RequiredParameters[i].IsBodyParameter))
                 {
                     foreach (NamedValue field in record.Fields)
                     {
@@ -241,9 +255,9 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             // Optional parameters are next and stored in a Record
-            if (_function.OptionalParameters.Length > 0 && args.Length > _function.RequiredParameters.Length)
+            if (_function.OptionalParameters.Length > 0 && args.Count > _function.RequiredParameters.Length)
             {
-                FormulaValue optionalArg = args[args.Length - 1];
+                FormulaValue optionalArg = args[args.Count - 1];
 
                 // Objects are always flattenned
                 if (optionalArg is RecordValue record)
@@ -327,14 +341,14 @@ namespace Microsoft.PowerFx.Connectors
 
             foreach (NamedValue nv in lst)
             {
-                rt = rt.SafeAdd(nv.Name, nv.Value.Type, OpenApiExtensions.GetDisplayName(nv.Name));
+                rt = rt.Add(nv.Name, nv.Value.Type, OpenApiExtensions.GetDisplayName(nv.Name));
             }
 
             return new InMemoryRecordValue(IRContext.NotInSource(rt), lst);
         }
 
         [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
-        private async Task<HttpContent> GetBodyAsync(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, IConvertToUTC utcConverter, string contentType, CancellationToken cancellationToken)
+        private async Task<HttpContent> GetBodyAsync(string referenceId, bool schemaLessBody, Dictionary<string, (ISwaggerSchema Schema, FormulaValue Value)> map, IConvertToUTC utcConverter, string contentType, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             FormulaValueSerializer serializer = null;
@@ -354,18 +368,27 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(utcConverter, schemaLessBody, cancellationToken),
                     OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(utcConverter, schemaLessBody, cancellationToken),
+                    OpenApiExtensions.ContentType_Multipart => new OpenApiMultipart(utcConverter, schemaLessBody, cancellationToken),
                     _ => new OpenApiJsonSerializer(utcConverter, schemaLessBody, cancellationToken)
                 };
 
                 serializer.StartSerialization(referenceId);
-                foreach (KeyValuePair<string, (OpenApiSchema Schema, FormulaValue Value)> kv in map)
+                foreach (KeyValuePair<string, (ISwaggerSchema Schema, FormulaValue Value)> kv in map)
                 {
                     await serializer.SerializeValueAsync(kv.Key, kv.Value.Schema, kv.Value.Value).ConfigureAwait(false);
                 }
 
                 serializer.EndSerialization();
-                string body = serializer.GetResult();
-                return new StringContent(body, Encoding.Default, ct);
+
+                if (serializer.GeneratesHttpContent)
+                {
+                    return serializer.GetHttpContent();
+                }
+                else
+                {
+                    string body = serializer.GetResult();
+                    return new StringContent(body, Encoding.UTF8, ct);
+                }
             }
             finally
             {
@@ -376,7 +399,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response, bool throwOnError = false)
+        public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response, FormulaType returnTypeOverride, bool throwOnError = false)
         {
             // https://github.com/microsoft/Power-Fx/issues/2119
             // https://github.com/microsoft/Power-Fx/issues/1172
@@ -426,14 +449,21 @@ namespace Microsoft.PowerFx.Connectors
 
             if (statusCode < 300)
             {
-                // We only return UO for unknown fields (not declared in swagger file) if compatibility is SwaggerCompatibility
-                bool returnUnknownRecordFieldAsUO = _function.ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility && _function.ConnectorSettings.ReturnUnknownRecordFieldsAsUntypedObjects;
+                // We only return UO for unknown fields (not declared in swagger file) if compatibility is SwaggerCompatibility or CDP
+                bool returnUnknownRecordFieldAsUO = _function.ConnectorSettings.Compatibility.IncludeUntypedObjects() && 
+                                                    _function.ConnectorSettings.ReturnUnknownRecordFieldsAsUntypedObjects;
+
+                var typeToUse = _function.ReturnType;
+                if (returnTypeOverride != null)
+                {
+                    typeToUse = returnTypeOverride;
+                }
 
                 return string.IsNullOrWhiteSpace(text)
-                    ? FormulaValue.NewBlank(_function.ReturnType)
+                    ? FormulaValue.NewBlank(typeToUse)
                     : _returnRawResults
                     ? FormulaValue.New(text)
-                    : FormulaValueJSON.FromJson(text, new FormulaValueJsonSerializerSettings() { ReturnUnknownRecordFieldsAsUntypedObjects = returnUnknownRecordFieldAsUO }, _function.ReturnType);
+                    : FormulaValueJSON.FromJson(text, new FormulaValueJsonSerializerSettings() { ReturnUnknownRecordFieldsAsUntypedObjects = returnUnknownRecordFieldAsUO }, typeToUse);
             }
 
             string reasonPhrase = string.IsNullOrEmpty(response.ReasonPhrase) ? string.Empty : $" ({response.ReasonPhrase})";
@@ -444,7 +474,7 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             return FormulaValue.NewError(
-                    new ExpressionError()
+                    new HttpExpressionError(statusCode)
                     {
                         Kind = ErrorKind.Network,
                         Severity = ErrorSeverity.Critical,
@@ -453,7 +483,7 @@ namespace Microsoft.PowerFx.Connectors
                     _function.ReturnType);
         }
 
-        public async Task<FormulaValue> InvokeAsync(IConvertToUTC utcConverter, string cacheScope, FormulaValue[] args, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, bool throwOnError = false)
+        public async Task<FormulaValue> InvokeAsync(IConvertToUTC utcConverter, string cacheScope, IReadOnlyList<FormulaValue> args, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, FormulaType expectedType, bool throwOnError = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -470,17 +500,17 @@ namespace Microsoft.PowerFx.Connectors
                 });
             }
 
-            return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, cancellationToken).ConfigureAwait(false);
+            return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, expectedType, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<FormulaValue> InvokeAsync(string url, string cacheScope, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, bool throwOnError = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
             using HttpRequestMessage request = new HttpRequestMessage(_function.HttpMethod, new Uri(url).PathAndQuery);
-            return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, cancellationToken).ConfigureAwait(false);
+            return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, null, cancellationToken).ConfigureAwait(false);
         }
 
-        private async Task<FormulaValue> ExecuteHttpRequest(string cacheScope, bool throwOnError, HttpRequestMessage request, HttpMessageInvoker localInvoker, CancellationToken cancellationToken)
+        private async Task<FormulaValue> ExecuteHttpRequest(string cacheScope, bool throwOnError, HttpRequestMessage request, HttpMessageInvoker localInvoker, FormulaType returnTypeOverride, CancellationToken cancellationToken)
         {
             HttpMessageInvoker client = localInvoker ?? _httpClient;
             HttpResponseMessage response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
@@ -494,7 +524,7 @@ namespace Microsoft.PowerFx.Connectors
                 _logger?.LogInformation($"In Power Fx {nameof(HttpFunctionInvoker)}.{nameof(ExecuteHttpRequest)}, response status code: {(int)response.StatusCode} {response.StatusCode}");
             }
 
-            return await DecodeResponseAsync(response, throwOnError).ConfigureAwait(false);
+            return await DecodeResponseAsync(response, returnTypeOverride, throwOnError).ConfigureAwait(false);
         }
     }
 
@@ -521,12 +551,12 @@ namespace Microsoft.PowerFx.Connectors
 
         internal HttpFunctionInvoker Invoker => _invoker;
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(IReadOnlyList<FormulaValue> args, BaseRuntimeConnectorContext runtimeContext, FormulaType outputTypeOverride, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);
-            return await _invoker.InvokeAsync(new ConvertToUTC(runtimeContext.TimeZoneInfo), _cacheScope, args, localInvoker, cancellationToken, _throwOnError).ConfigureAwait(false);
+            return await _invoker.InvokeAsync(new ConvertToUTC(runtimeContext.TimeZoneInfo), _cacheScope, args, localInvoker, cancellationToken, outputTypeOverride, _throwOnError).ConfigureAwait(false);
         }
 
         public async Task<FormulaValue> InvokeAsync(string url, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
@@ -538,6 +568,7 @@ namespace Microsoft.PowerFx.Connectors
         }
     }
 
+    [ThreadSafeImmutable]
     internal interface IConvertToUTC
     {
         DateTime ToUTC(DateTimeValue d);

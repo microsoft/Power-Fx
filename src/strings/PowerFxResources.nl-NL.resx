@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Een percentage (of kolom met percentagewaarden) waarmee de kleur (of de kolom met kleurwaarden) zal vervagen. Een negatief percentage produceert een donkerdere schaduw. Een positief percentage produceert een lichtere schaduw.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Retourneert een record met informatie over een bestand.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>De bestandsblob om informatie over op te halen.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>bestand</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Hiermee wordt de absolute waarde van een nummer, een nummer zonder het bijbehorende teken, geretourneerd.</value>
     
@@ -1796,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Hiermee wordt waar geretourneerd als de verstrekte niet-getypeerde waarde van het opgegeven type is.</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>type</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>De niet-getypeerde waarde om te controleren of deze als opgegeven type kan worden gecast.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>Het type waarvoor we de untypedValue willen controleren.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Hierbij wordt de opgegeven waarde als gegeven type gebruikt.</value>
     
@@ -1813,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>De entiteitstabel die het type vertegenwoordigt dat we als waarde willen gebruiken.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Hierbij wordt de opgegeven niet-getypeerde waarde als gegeven type gecontroleerd en gebruikt.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>type</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>De niet-getypeerde waarde die als nieuw type moet worden gebruikt.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>Het type dat we als waarde willen gebruiken.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Hiermee wordt de formule uitgevoerd die als tweede parameter is opgegeven. Hiervoor wordt het bereik gebruikt dat voor de eerste parameter is opgegeven.</value>
@@ -1868,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>{0} is een onbekende of niet-ondersteunde functie.</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' wordt herkend als type helperfunctie en kan alleen worden gebruikt binnen de functie Type.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -1982,10 +2033,6 @@
     <value>Het eerste argument van {0} moet een record zijn.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Als deze optie is ingesteld als een opsommingswaarde of in de functie Choices, is het vereist dat de entiteit {0} wordt toegevoegd als een gegevensbron. Als u deze wilt toevoegen, opent u het menu Weergeven en selecteert u Gegevensbronnen.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>De opgegeven eigenschap is niet toegankelijk in deze context.</value>
     
@@ -2026,10 +2073,6 @@
     <value>Het argument vertegenwoordigt geen geldige datum- of tijdwaarde.</value>
     
   </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Deze gegevensbron is ongeldig. Los de fout in het deelvenster Gegevensbronnen op door achtereenvolgens op Inhoud -&gt; Gegevensbronnen of Weergeven -&gt; Opties te klikken</value>
-    
-  </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>Een gegevensbron-id wordt verwacht om de inlinerecord te beperken.</value>
     
@@ -2068,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Conflict met de kolomnaam voor {0}.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Kan geen kolommen toevoegen aan een systeemrecord of tabel met systeemrecords. Gebruik ShowColumns deze om eerst de specifieke kolommen te extraheren die u nodig hebt.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Kan geen namen van kolommen wijzigen van een systeemrecord of tabel met systeemrecords. Gebruik ShowColumns deze om eerst de specifieke kolommen te extraheren die u nodig hebt.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -2670,6 +2721,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Een JSON-tekenreeks die moet worden verwerkt.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>Converteert een JSON-tekenreeks naar een getypeerd object.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>tekenreeks</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>Een JSON-tekenreeks om te converteren naar een getypeerd object.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>type</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>Een definitie van een in-linetype of een algemeen gedefinieerd benoemd type.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Retourneert de record in een tabel bij een bepaalde index.</value>
     
@@ -2687,6 +2756,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>De index van de record die moet worden opgehaald.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2707,6 +2788,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Type streepjescode</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2823,6 +2936,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>De waarde die moet worden getest.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Hiermee worden een datum en tijd in het tekstformulier geconverteerd naar een getal dat de datum weergeeft in de Power Apps datum/tijdcode.</value>
@@ -3098,32 +3215,33 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Hiermee worden records aan een gegevensbron toegevoegd.</value>
+    <value>Hiermee worden een of meer items aan de opgegeven verzameling toegevoegd. Het item kan afkomstig zijn uit een andere tabel of verzameling (bijv. Collect(collection, source_collection)), of een of meer records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>gegevens_bron</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>record</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>verzameling</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>item</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Een nieuwe of bestaande verzameling om te verbeteren.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Hiermee worden alle records uit een verzameling verwijderd. Vervolgens wordt een andere set records aan dezelfde verzameling toegevoegd.</value>
+    <value>Hiermee wordt eerst de verzameling gewist en worden vervolgens een of meer items aan de opgegeven verzameling toegevoegd. De items kunnen afkomstig zijn uit een andere tabel of verzameling (bijv. ClearCollect(collection, source_collection)), of een of meer records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>gegevens_bron</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Een nieuwe of bestaande verzameling om te verbeteren.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>gegevens_bron</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>record</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Een record of tabel die moet worden verzameld. Een record wordt aan de verzameling toegevoegd. Van een tabel worden de rijen aan de verzameling toegevoegd.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Hiermee worden de updates toegepast op de opgegeven rijen en wordt de rij in de opgegeven gegevensbron gewijzigd. De bijgewerkte rij wordt geretourneerd.</value>
@@ -3259,6 +3377,10 @@
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Er staat een onverwacht teken {0} op positie {1} in de formule.</value>
     
@@ -3271,6 +3393,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3288,6 +3414,10 @@
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Onverwachte tekens. De formule bevat {0} terwijl {1} wordt verwacht.</value>
     
@@ -3301,6 +3431,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3318,6 +3452,10 @@
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>De naam is ongeldig. Deze id wordt niet herkend.</value>
     
@@ -3331,6 +3469,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3348,6 +3490,10 @@
     <value>Artikel: Formuleverwijzing voor PowerApps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>De verwijzing naar het bovenliggende item is ongeldig. U kunt in deze context niet verwijzen naar een bovenliggend besturingselement.</value>
     
@@ -3361,6 +3507,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Artikel: Een canvas-app-besturingselement in Power Apps toevoegen of configureren</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3400,6 +3550,10 @@
     <value>Module: Basisformules gebruiken</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Er wordt een getal verwacht. Op deze positie in de formule wordt een getal verwacht.</value>
     
@@ -3413,6 +3567,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3430,6 +3588,10 @@
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Er wordt een dubbele punt verwacht. Op deze positie in de formule wordt een dubbele punt (:) verwacht.</value>
     
@@ -3445,6 +3607,10 @@
     <value>Artikel: Tekst, datums en tijden weergeven in Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>De gedragsfunctie in een niet-gedragseigenschap. U kunt deze eigenschap niet gebruiken om waarden elders in de app te wijzigen.</value>
     
@@ -3458,6 +3624,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Artikel: Gedragsformules voor canvas-apps in Power Apps begrijpen</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Gedragsfunctie in een niet-gedrag gebruikersgedefinieerde functie (UDF). Plaats de hoofdtekst van de door de gebruiker gedefinieerde functie tussen accolades ({...}) om een UDF voor gedrag te specificeren.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Gedragsfuncties wijzigen de huidige sessietoestand. 'Clear', 'Collect', 'Patch' en 'Refresh' zijn algemene gedragsfuncties.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Bewerk de door de gebruiker gedefinieerde functie-uitdrukking zodat deze binnen accolades ({...}) staat.</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3497,6 +3679,10 @@
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Er wordt een tekst of een getal verwacht. Op deze positie in de formule wordt een tekst of een getal verwacht.</value>
     
@@ -3512,6 +3698,10 @@
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Er wordt een afsluitende accolade verwacht. Op deze positie in de formule wordt een afsluitende accolade (}) verwacht.</value>
     
@@ -3523,12 +3713,23 @@
     <value>Bewerk de formule zodanig dat deze een accolade bevat.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Afsluiting van id wordt verwacht. Op deze positie in de formule wordt een afsluitend aanhalingsteken (') verwacht.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Een enkel afsluitend aanhalingsteken geeft het einde aan van een id (bijvoorbeeld 'Voornaam').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Bewerk uw formule zodanig dat deze een enkel afsluitend aanhalingsteken bevat.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>De id heeft geen geldige tekst.</value>
+    <value>De id is leeg of bevat een ongeldig teken, zoals een tab of nieuwe regel.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Zorg dat er tekst voor de id is. Deze fout treedt op wanneer de id uitsluitend uit spaties of lege ruimte bestaat.</value>
+    <value>Zorg dat uw id geldige tekst bevat. Deze fout treedt op wanneer de id leeg is, uitsluitend uit spaties bestaat of een tab of nieuwe regel bevat.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3554,8 +3755,16 @@
     <value>Module: Basisformules gebruiken</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Module: Basisformules met tabellen en records schrijven</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3570,6 +3779,10 @@
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Niet-compatibel type. De kolom {0} in de gegevensbron die u bijwerkt, verwacht het type {1} en u gebruikt het type {2}.</value>
     
@@ -3582,8 +3795,16 @@
     <value>Module: Basisformules gebruiken</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Module: Basisformules met tabellen en records schrijven</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3596,6 +3817,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3614,8 +3839,16 @@
     <value>Module: Basisformules gebruiken</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Module: Basisformules met tabellen en records schrijven</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3633,8 +3866,16 @@
     <value>Module: Basisformules gebruiken</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Module: Basisformules met tabellen en records schrijven</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3650,6 +3891,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3675,8 +3920,16 @@
     <value>Artikel: Overdracht in een canvas-app begrijpen</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Blog: Gegevensrijlimieten voor overdracht</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3702,8 +3955,16 @@
     <value>Artikel: Overdracht in een canvas-app begrijpen</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Blog: Gegevensrijlimieten voor overdracht</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3733,8 +3994,16 @@
     <value>Artikel: Overdracht in een canvas-app begrijpen</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Blog: Gegevensrijlimieten voor overdracht</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3766,8 +4035,70 @@
     <value>Artikel: Overdracht in een canvas-app begrijpen</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Blog: Gegevensrijlimieten voor overdracht</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Waarschuwing bij delegering. De benoemde formule {0} is niet delegeerbaar, zodat het gebruik ervan in deze formule mogelijk niet correct werkt bij grote gegevenssets. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Mogelijk kan de gegevensbron de formule niet verwerken en wordt er een onvolledige gegevensset geretourneerd. Uw toepassing kan onjuiste resultaten retourneren of zich onjuist gedragen als de gegevensset niet compleet is.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Probeer de definitie van de benoemde formule te vereenvoudigen.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Artikel: Overdracht in een canvas-app begrijpen</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Gegevensrijlimieten voor overdracht</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Waarschuwing bij delegering. De door de gebruiker gedefinieerde functie {0} is niet delegeerbaar, zodat het gebruik ervan in deze formule mogelijk niet correct werkt bij grote gegevenssets. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Mogelijk kan de gegevensbron de formule niet verwerken en wordt er een onvolledige gegevensset geretourneerd. Uw toepassing kan onjuiste resultaten retourneren of zich onjuist gedragen als de gegevensset niet compleet is.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Probeer de definitie van de door de gebruiker gedefinieerde functie te vereenvoudigen.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Artikel: Overdracht in een canvas-app begrijpen</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Gegevensrijlimieten voor overdracht</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3794,8 +4125,16 @@
     <value>Artikel: Overdracht in een canvas-app begrijpen</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Blog: Gegevensrijlimieten voor overdracht</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3824,6 +4163,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Verwijzing: ConfirmExit voor canvas-apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3858,12 +4201,24 @@
     <value>De genoemde formule moet een expressie zijn.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Een declaratie van een benoemd type moet een geldige type-expressie zijn.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Door de gebruiker gedefinieerde functie moet een hoofdtekst hebben.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Functie {0} is al gedefinieerd.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Waarschuwing: door de gebruiker gedefinieerde {0} schaduwt de bestaande, ingebouwde functie {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Functienaam {0} is beperkt.</value>
     
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
@@ -3875,7 +4230,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Het vermelde retourtype van de werkfunctie komt niet overeen met het retourtype van de functiehoofdtekst.</value>
+    <value>Het vermelde retourtype van de functie '{0}' komt niet overeen met het retourtype van de functiehoofdtekst '{1}'.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Functie {0} heeft te veel parameters. Door de gebruiker gedefinieerde functies ondersteunen maximaal {1} parameters.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +4261,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Het eerste argument van {0} moet een geldige naam voor een variabele zijn en mag geen conflict hebben met een bestaande naam van een besturingselement, scherm, verzameling of gegevensbron. Type {1} gevonden</value>
+    <value>'{1}' kan niet worden gewijzigd met '{0}' of conflicteert met de naam van een bestaande bereikvariabele, gegevensbron of ander object.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4063,6 +4422,10 @@
     <value>Kan {0} niet machtigen: bevat de gedragsfunctie {1}.</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows kan een waarde in cache retourneren. Gebruik CountIf(DataSource, true) om het meest recente aantal op te halen.</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Bepaalt of er voor de opgegeven tekst een overeenkomst in de aangeleverde tekstindeling bestaat.</value>
     
@@ -4156,24 +4519,232 @@
     <value>Ongeldige reguliere expressie.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: inline opties moeten aan het begin van de reguliere expressie worden weergegeven. {0} later gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: inline opties zijn beperkt tot een combinatie van de letters [imnsx]. Opties kunnen niet worden uitgeschakeld en kunnen niet worden gebruikt voor een subexpressie. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: Octale \0-tekencodes worden niet ondersteund. Gebruik in plaats daarvan hexadecimale \x of Unicode \u. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: letterlijke accolades moeten worden escaped met een backslash. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: Letterlijke vierkante accolades moeten worden escaped met een backslash, zelfs in tekenklassen, bijvoorbeeld \[ of \]. Gevonden aan het einde van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Ongeldige gewone expressie: niet-gesloten vierkante haak van tekenklasse.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: niet-ondersteunde speciale groep. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: het escapeteken is niet toegestaan in de tekenklasse. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: negatief escapeteken is niet toegestaan in de genegeerde tekenklasse. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: het escapeteken is niet toegestaan buiten een tekenklasse. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: ongeldige Unicode-categorienaam. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: herhaalde inline optie. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: niet-gesloten inline opmerking.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: niet-gesloten inline opmerking. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: inline optie is incompatibel met MatchOptions.NumberedSubMatches. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: bezittelijke kwantificatoren worden niet ondersteund. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: exacte kwantificatoren kunnen niet worden gebruikt met kwantificatormodificatoren zoals ? voor lui. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: ongeldige escapecode. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: subovereenkomst {0} is niet gedefinieerd of is een niet-ondersteunde doorgestuurde verwijzing.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: subovereenkomsten worden niet ondersteund in achterliggende elementen. Gevonden aan het begin van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: terugblikken kunnen niet worden genest. Gevonden aan het begin van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: onbeperkte kwantificatoren worden niet ondersteund in terugblikken. Gevonden aan het einde van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: kwantificatoren worden niet ondersteund voor terugblikken of vooruitblikken. Gevonden aan het einde van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: terugverwijzing {0} naar subovereenkomst die mogelijk niet plaatsvindt vanwege afwisseling of nulkwantificator.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: zelfverwijzende subovereenkomsten worden niet ondersteund. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: niet-gesloten groepen. Te weinig haakjes sluiten.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: niet-geopende groepen. Te weinig haakjes openen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: meerdere keren benoemde subovereenkomst gedefinieerd. Gevonden aan het begin van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: de naam van de subovereenkomst moet een combinatie van woordtekens zijn en mag niet beginnen met een getal. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: inline opties moeten aan het begin van de reguliere expressie worden weergegeven. {0} later gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: het teken komt meerdere keren voor in de tekenklasse. {0} herhaaldelijk gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: tekenklassen tussen vierkante haken mogen niet leeg zijn. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: balancerende subovereenkomsten worden niet ondersteund. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: het gebruik van benoemde opnamen met enkele aanhalingstekens wordt niet ondersteund. Gebruik in plaats daarvan de syntaxis (?&lt;... &gt;). {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: voorwaardelijke afwisseling wordt niet ondersteund. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: benoemde opnamen kunnen niet worden gebruikt met MatchOptions.NumberedSubMatches ingeschakeld. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: gebruik benoemde opnamen met (?&lt;name&gt;...) en \k&lt;name&gt; of schakel MatchOptions.NumberedSubMatches in. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: letterlijk koppelteken in een tekenklassebereik moet worden escaped met een backslash. Escape met \-. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: letterlijk teken moet worden escaped met een backslash, zelfs in tekenklassen. Gevonden aan het einde van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: kwantificator voor een groep die een andere kwantificator of lege afwisseling bevat die kan resulteren in een dubbelzinnig resultaat. Gevonden aan het einde van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: terugblik heeft de maximaal mogelijke tekenlimiet van 250 overschreden. Gevonden aan het einde van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: het lage getal van het kwantificatorbereik is groter dan het hoogste getal. Gevonden in {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: er zijn te veel geneste groepen. Gevonden aan het begin van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: de naam van de subovereenkomst is te lang. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: het getal is te groot. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: de tekens in een tekenklassebereik zijn omgekeerd. Gevonden aan het einde van {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: tekenklasse in een tekenklassebereik of escape-code van een letterlijk koppelteken met een backslash. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: eindigt met een backslash zonder escapes.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: kwantificator zonder iets om te kwantificeren. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: MatchOptions.DotAll en MatchOptions.FreeSpacing zijn alleen beschikbaar met Power Fx V1. {0} gevonden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie: terugverwijzing {0} naar subovereenkomst die zich in een terugblik of vooruitblik bevindt.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Reguliere expressies moeten constante waarden zijn.</value>
+    <value>Reguliere expressie moete een constante waarde zijn.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions moet een constante waarde zijn.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>De waarde die is doorgegeven aan functie {0} kan niet worden gewijzigd.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>De opnamenaam {0} verbergt de vooraf gedefinieerde eigenschap waarmee de volledige overeenkomst van de reguliere expressie wordt geretourneerd. Overweeg deze te hernoemen als u die benoemde eigenschap wilt gebruiken om de volledige overeenkomst in de opgegeven tekst te extraheren.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>De opnamenaam in de set {0} verbergt een vooraf gedefinieerde eigenschap die overeenkomstinformatie retourneert. Overweeg de naam te wijzigen als je toegang wilt tot de overeenkomstinformatie.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>De opnamenaam {0} verbergt de vooraf gedefinieerde eigenschap waarmee de groepsovereenkomsten in de reguliere expressie worden geretourneerd. Overweeg deze te hernoemen als u die benoemde eigenschap wilt gebruiken om alle subovereenkomsten in de opgegeven tekst te extraheren.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>De opnamenaam {0} verbergt de vooraf gedefinieerde eigenschap waarmee de locatie van de overeenkomst van de reguliere expressie wordt geretourneerd. Overweeg deze te hernoemen als u die benoemde eigenschap wilt gebruiken om de positie van de volledige overeenkomst in de opgegeven tekst te extraheren.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>De opnamenamen in de set {0} verbergen vooraf gedefinieerde eigenschappen die overeenkomstinformatie retourneren. Overweeg de naam te wijzigen als je toegang wilt tot de overeenkomstinformatie.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4209,16 +4780,20 @@
     <value>Het instellen van een variabele met een onlinegegevensbronwaarde (tabel of record) kan meerdere aanvragen bij de server veroorzaken. Dit wordt binnenkort geblokkeerd.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Letterlijke aangifte van het type is ongeldig. De expressie {0} kan niet in een typedefinitie worden gebruikt.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Type expressie is ongeldig. '{0}' kan niet in een type-expressie worden gebruikt.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definitie van type {0} is ongeldig.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Niet-ondersteund gebruik: functie Type kan alleen worden gebruikt in typeargumenten en typedeclaraties.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Declaratie van type {0} is ongeldig.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definitie van het type {0} is ongeldig en bevat mogelijk cycli.</value>
+    <value>Declaratie van type {0} is ongeldig en bevat mogelijk cycli.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4419,6 +4994,16 @@
     <value>Onbekende Partial-operator.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>De gegevensbron om gegevens aan toe te voegen.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Een record of tabel die moet worden verzameld. Een record wordt aan de gegevensbron toegevoegd. Van een tabel worden de rijen aan de gegevensbron toegevoegd.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>item</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Waarschuwing bij overdracht. Het resultaat van dit argument {0} wordt mogelijk afgekapt voor grote gegevenssets voordat het wordt doorgegeven aan de functie {1}.</value>
     
@@ -4461,8 +5046,96 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>De bron om te wissen.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Hiermee worden gegevens opgehaald uit meerdere tabellen met relaties.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>bron1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>bron2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>noemen</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>De linkertabel of -verzameling.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>De rechtertabel of -verzameling.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Samenvoegingscriteria tussen de twee tabellen of verzamelingen.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Het samenvoegingstype tussen de twee tabellen of verzamelingen.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>De argumenten om de naam van een bestaande kolom in een van de bronnen te wijzigen.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>De opgegeven gegevensbron kan niet worden gebruikt met deze functie.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Ongeldig argument '{0}'. Verwachte geldige typenaam of inline-expressie voor type.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Niet-ondersteund type '{0}' in typeargument.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Maximumdiepte bereikt tijdens doorlopen van JSON-nettolading.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Maximale lengte bereikt in JSON-functie.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>De experimentele functie 'Door gebruiker gedefinieerd type' is niet ingeschakeld.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Onjuiste syntaxis: = kan niet worden gebruikt voor het declareren van door de gebruiker gedefinieerde typen. Gebruik in plaats daarvan :=.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>{0} kan niet worden toegevoegd/hernoemd vanwege een andere kolom met dezelfde naam.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Platte enum-waarde 'JoinType' verwacht. Verschillende enum's of doorvoeren door andere functies wordt niet ondersteund, bijv. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argumenten die beginnen vanaf de 5e positie worden gebruikt om kolommen een andere naam te geven en zijn naar verwachting 'As'-knooppuntargumenten, bijv. LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Er moet ten minste één {0}-kolom worden gedeclareerd om het samenvoegingsresultaat samen te stellen.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>De waarde {0} is ongeldig in deze context. Het moet een verwijzing zijn naar de bereiknaam {1} of {2}.</value>
     
   </data>
 </root>

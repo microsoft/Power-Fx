@@ -54,7 +54,7 @@ Blank()
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> Value(ParseJSON("This "" Is , "" Invalid ").a)
-Error({Kind:ErrorKind.InvalidArgument})
+Error({Kind:ErrorKind.InvalidJSON})
 
 // Text tests
 >> Text(Index(ParseJSON("[""s""]"), 1))
@@ -199,22 +199,22 @@ Errors: Error 29-37: Name isn't valid. 'ThisItem' isn't recognized.|Error 0-6: T
 1
 
 >> ParseJSON("5") = ParseJSON("5")
-Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: Dynamic, Dynamic.
 
 >> ParseJSON("5") > ParseJSON("5")
-Errors: Error 15-16: This operation isn't valid on these types: UntypedObject, UntypedObject.
+Errors: Error 15-16: This operation isn't valid on these types: Dynamic, Dynamic.
 
 >> ParseJSON("5") < ParseJSON("5")
-Errors: Error 15-16: This operation isn't valid on these types: UntypedObject, UntypedObject.
+Errors: Error 15-16: This operation isn't valid on these types: Dynamic, Dynamic.
 
 >> ParseJSON("5") <> ParseJSON("5")
-Errors: Error 15-17: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+Errors: Error 15-17: Incompatible types for comparison. These types can't be compared: Dynamic, Dynamic.
 
 >> ParseJSON("5") >= ParseJSON("5")
-Errors: Error 15-17: This operation isn't valid on these types: UntypedObject, UntypedObject.
+Errors: Error 15-17: This operation isn't valid on these types: Dynamic, Dynamic.
 
 >> ParseJSON("5") <= ParseJSON("5")
-Errors: Error 15-17: This operation isn't valid on these types: UntypedObject, UntypedObject.
+Errors: Error 15-17: This operation isn't valid on these types: Dynamic, Dynamic.
 
 >> CountRows(ParseJSON("[1, 2, 3]"))
 3
@@ -503,3 +503,16 @@ true
 
 >> Text(ParseJSON("null"))
 Blank()
+
+// Coercion
+>> ParseJSON("{""a"":9}").a + 1
+10
+
+>> Day(ParseJSON("{""x"":""2022-05-15""}").x)
+15
+
+>> ParseJSON("{""x"":""ABC""}").x & "DEF"
+"ABCDEF"
+
+>> If(ParseJSON("{""x"":false}").x, 1,0)
+0

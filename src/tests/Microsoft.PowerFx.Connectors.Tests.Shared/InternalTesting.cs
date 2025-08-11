@@ -11,20 +11,21 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using Microsoft.Data.SqlClient;
 using Microsoft.OpenApi.Models;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Tests;
-using Microsoft.PowerFx.TexlFunctionExporter;
 using Xunit;
 using Xunit.Abstractions;
 using static Microsoft.PowerFx.Connectors.OpenApiExtensions;
 
+#if !NET462
+using Microsoft.PowerFx.TexlFunctionExporter;
+
 namespace Microsoft.PowerFx.Connectors.Tests
 {
+#pragma warning disable CS0618 // Type or member is obsolete https://github.com/microsoft/Power-Fx/issues/2940
+
     [TestCaseOrderer("Microsoft.PowerFx.Connectors.Tests.PriorityOrderer", "Microsoft.PowerFx.Connectors.Tests")]
     public class InternalTesting
     {
@@ -73,7 +74,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         private (string outFolder, string srcFolder) GetFolders()
         {
-            string outFolder = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..\.."));
+            string outFolder = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..\..\.."));
             string srcFolder = Path.GetFullPath(Path.Combine(outFolder, ".."));
 
             // On build servers: ENV: C:\__w\1\s\pfx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Release\netcoreapp3.1
@@ -194,7 +195,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                         // @"OK - All ([0-9]+) functions are supported - \[([^\]]*)\]"
                         Match m2 = rex2.Match(line);
                         supportedFunctions = int.Parse(m2.Groups[1].Value);
-                        supportedFunctionList = string.Join(", ", m2.Groups[2].Value.Split(",").Select(x => x.Trim()).OrderBy(x => x));
+                        supportedFunctionList = string.Join(", ", m2.Groups[2].Value.Split(',').Select(x => x.Trim()).OrderBy(x => x));
                         result = string.Empty;
                     }
 
@@ -203,7 +204,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                         // @"OK - ([0-9]+) supported functions \[([^\]]+)\], ([0-9]+) not supported functions(.*)"
                         Match m3 = rex3.Match(result);
                         supportedFunctions = int.Parse(m3.Groups[1].Value);
-                        supportedFunctionList = string.Join(", ", m3.Groups[2].Value.Split(",").Select(x => x.Trim()).OrderBy(x => x));
+                        supportedFunctionList = string.Join(", ", m3.Groups[2].Value.Split(',').Select(x => x.Trim()).OrderBy(x => x));
 
                         // @"(?<func>[^' ]*): ((?<dep>'OpenApiOperation is deprecated')|(?<uns>'[^']+'))"
                         MatchCollection m4 = rex4.Matches(result);
@@ -385,7 +386,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     ConnectorSettings connectorSettings = new ConnectorSettings("Connector") { AllowUnsupportedFunctions = true, IncludeInternalFunctions = true };
                     ConnectorSettings swaggerConnectorSettings = new ConnectorSettings("Connector") { AllowUnsupportedFunctions = true, IncludeInternalFunctions = true, Compatibility = ConnectorCompatibility.SwaggerCompatibility };
 
-                    title = $"{doc.Info.Title} [{swaggerFile}]";
+                    if (doc.Info?.Title != null)
+                    {
+                        title = $"{doc.Info?.Title} [{swaggerFile}]";
+                    }
 
                     // Check we can get the functions
                     IEnumerable<ConnectorFunction> functions1 = OpenApiParser.GetFunctions(connectorSettings, doc, logger);
@@ -397,7 +401,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     config.AddActionConnector(connectorSettings, doc, logger);
 
                     IEnumerable<ConnectorFunction> functions2 = OpenApiParser.GetFunctions(swaggerConnectorSettings, doc);
-                    string cFolder = Path.Combine(outFolder, reportFolder, doc.Info.Title);
+                    string cFolder = Path.Combine(outFolder, reportFolder, doc.Info?.Title ?? $"Unknown_{title.GetHashCode()}");
 
                     int ix = 2;
                     while (Directory.Exists(cFolder))
@@ -436,7 +440,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 }
                 catch (Exception ex)
                 {
-                    string key = $"{ex.GetType().Name}: {ex.Message}".Split("\r\n")[0];
+                    string key = $"{ex.GetType().Name}: {ex.Message}".Split(new string[] { "\r\n" }, StringSplitOptions.None)[0];
 
                     writer.WriteLine($"{title}: Exception {key}");
                     j++;
@@ -550,7 +554,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         /// <param name="folders">List of folders to consider when identifying swagger files. 
         /// Wehn no folder is provided, use internal Library.
         /// When 2 swagger files will have the same display name and version, the one from first folder will be preferred.
-        /// </param>
+        /// </param>        
         // This test is only meant for internal testing
 #if GENERATE_CONNECTOR_STATS
         [Theory]        
@@ -559,7 +563,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 #endif
         [TestPriority(1)]
         [InlineData("Library")] // Default Power-Fx library
-        [InlineData("Aapt-Ppc", 0, "apidefinition*swagger*.json", @"aapt\src", @"ppc")]
+        [InlineData("Aapt-Ppc", 0, "apidefinition*swagger*.json", @"aapt\src\Connectors", @"ppc")]
         [InlineData("Baseline", 1, "*.json", @"Power-Fx-TexlFunctions-Baseline\Swaggers")]
         public void GenerateYamlFiles(string reference, int folderExclusionIndex = -1, string pattern = null, params string[] folders)
         {
@@ -627,7 +631,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
                 // Step 3: Export TexlFunctions to Yaml
                 ExportConnectorFunctionsToYaml(reference, outFolderPath, connector.Key, connectorFunctions);
-            }            
+            }
         }
 
 #if GENERATE_CONNECTOR_STATS
@@ -728,6 +732,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 _output.WriteLine(functionStat.ToString());
             }
 
+#if false
             // Upload to SQL 
             string connectionString = Environment.GetEnvironmentVariable("PFXDEV_CONNECTORANALYSIS");
             string buildId = Environment.GetEnvironmentVariable("BUILD_ID"); // int
@@ -806,7 +811,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     row[19] = functionStat.RequiredParameterSchemas ?? (object)DBNull.Value;
                     row[20] = functionStat.OptionalParameterSchemas ?? (object)DBNull.Value;
                     row[21] = functionStat.ReturnSchema ?? (object)DBNull.Value;
-                    
+
                     functionsTable.Rows.Add(row);
                 }
 
@@ -816,6 +821,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
                 _output.WriteLine($"Copied {bulkCopy.RowsCopied} rows in Functions table");
             }
+#endif
         }
 
         [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Managed outside")]
@@ -997,7 +1003,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             IsBehavior = connectorFunction.IsBehavior;
             IsSupported = connectorFunction.IsSupported;
             NotSupportedReason = connectorFunction.NotSupportedReason;
-            Warnings = connectorFunction.Warnings.Count > 0 ? string.Join(", ", connectorFunction.Warnings.Select(erk => ErrorUtils.FormatMessage(StringResources.Get(erk), null, Name, connectorFunction.Namespace))) : null;
+            Warnings = connectorFunction.Warnings.Count > 0 ? string.Join(", ", connectorFunction.Warnings.Select(ee => ee.Message)) : null;
             IsDeprecated = connectorFunction.IsDeprecated;
             IsInternal = connectorFunction.IsInternal;
             IsPageable = connectorFunction.IsPageable;
@@ -1032,7 +1038,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public int ArityMin;
         public int ArityMax;
         public YamlConnectorParameter[] RequiredParameters;
-        public YamlConnectorParameter[] OptionalParameters;        
+        public YamlConnectorParameter[] OptionalParameters;
 
         string IYamlFunction.GetName()
         {
@@ -1164,7 +1170,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             }
 
             Title = connectorParam.Title;
-            ExplicitInput = connectorParam.ConnectorExtensions.ExplicitInput;            
+            ExplicitInput = connectorParam.ConnectorExtensions.ExplicitInput;
         }
 
         public string Name;
@@ -1174,7 +1180,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public YamlConnectorType Type;
         public string DefaultValue;
         public string Title;
-        public bool ExplicitInput;        
+        public bool ExplicitInput;
     }
 
     public class YamlConnectorType
@@ -1201,7 +1207,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             FormulaType = connectorType.FormulaType._type.ToString();
             ExplicitInput = connectorType.ExplicitInput;
-            IsEnum = connectorType.IsEnum;            
+            IsEnum = connectorType.IsEnum;
 
             if (connectorType.IsEnum)
             {
@@ -1260,7 +1266,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 };
             }
 
-            Schema = connectorType.Schema?.GetString();
+            Schema = (connectorType.Schema as SwaggerSchema)?._schema.GetString();
         }
 
         public string Name;
@@ -1365,10 +1371,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
     {
         public static string GetString(this OpenApiSchema schema)
         {
-            StringBuilder sb = new StringBuilder();            
-            schema.GetStringInternal(new ConnectorTypeGetterSettings(0), sb);            
+            StringBuilder sb = new StringBuilder();
+            SymbolTable optionSets = new SymbolTable();
+            schema.GetStringInternal(new ConnectorTypeGetterSettings(new ConnectorSettings(null), null, optionSets), sb);
             return sb.ToString();
-        }        
+        }
 
         private static void GetStringInternal(this OpenApiSchema schema, ConnectorTypeGetterSettings ctgs, StringBuilder sb)
         {
@@ -1376,16 +1383,21 @@ namespace Microsoft.PowerFx.Connectors.Tests
             {
                 sb.Append("<TooManyLevels>");
                 return;
-            }                      
+            }
+
+            if (schema == null)
+            {
+                return;
+            }
 
             sb.Append(schema.Type);
-            
+
             if (!string.IsNullOrEmpty(schema.Format))
             {
                 sb.Append('.');
                 sb.Append(schema.Format);
             }
-                                 
+
             if (schema.Enum != null && schema.Enum.Any())
             {
                 sb.Append($"[en:{schema.Enum.First().GetType().Name}]");
@@ -1394,8 +1406,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             if (schema.Items != null)
             {
                 sb.Append($"[it:");
-                
-                var itemIdentifier = OpenApiExtensions.GetUniqueIdentifier(schema.Items);
+
+                var itemIdentifier = OpenApiExtensions.GetUniqueIdentifier(SwaggerSchema.New(schema.Items));
                 if (itemIdentifier.StartsWith("R:", StringComparison.Ordinal) && ctgs.Chain.Contains(itemIdentifier))
                 {
                     sb.Append($"<circularRef:{itemIdentifier.Substring(2)}>]");
@@ -1409,14 +1421,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             string discriminator = schema.Items?.Discriminator?.PropertyName;
             if (discriminator != null)
-            {                
+            {
                 sb.Append($"[di:{discriminator}]");
             }
-            
+
             if (schema.AdditionalProperties != null)
             {
                 sb.Append($"[ad:");
-                var additionalPropIdentifier = OpenApiExtensions.GetUniqueIdentifier(schema.AdditionalProperties);
+                var additionalPropIdentifier = OpenApiExtensions.GetUniqueIdentifier(SwaggerSchema.New(schema.AdditionalProperties));
                 if (additionalPropIdentifier.StartsWith("R:", StringComparison.Ordinal) && ctgs.Chain.Contains(additionalPropIdentifier))
                 {
                     sb.Append($"<circularRef:{additionalPropIdentifier.Substring(2)}>]");
@@ -1426,7 +1438,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 GetStringInternal(schema.AdditionalProperties, ctgs.Stack(additionalPropIdentifier), sb);
                 ctgs.UnStack();
                 sb.Append(']');
-            }                       
+            }
 
             if (schema.Properties != null && schema.Properties.Any())
             {
@@ -1443,7 +1455,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     sb.Append(prop.Key);
                     sb.Append(':');
 
-                    var propIdentifier = OpenApiExtensions.GetUniqueIdentifier(prop.Value);
+                    var propIdentifier = OpenApiExtensions.GetUniqueIdentifier(SwaggerSchema.New(prop.Value));
                     if (propIdentifier.StartsWith("R:", StringComparison.Ordinal) && ctgs.Chain.Contains(propIdentifier))
                     {
                         sb.Append($"<circularRef:{propIdentifier.Substring(2)}>]");
@@ -1462,7 +1474,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             if (schema.Extensions != null && schema.Extensions.Any())
             {
                 sb.Append($"[ex:{string.Join(", ", schema.Extensions.Keys)}]");
-            }            
+            }
         }
 
         public static void Dump(this object obj, ITestOutputHelper console)
@@ -1483,3 +1495,5 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
     }
 }
+
+#endif

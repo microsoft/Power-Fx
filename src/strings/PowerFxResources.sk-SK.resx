@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Percento (alebo stĺpec percentuálnych hodnôt), podľa ktorého vybledne farba (alebo stĺpec hodnôt farieb). Záporné percento znamená tmavší odtieň. Kladné percento znamená svetlejší odtieň.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Vráti záznam s informáciami o súbore.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>Objekt BLOB súboru, o ktorom sa majú získať informácie.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>súbor</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Vráti absolútnu hodnotu čísla, t. j. číslo bez znamienka.</value>
     
@@ -1796,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Vráti hodnotu true, ak je zadaná netypová hodnota daného typu.</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>typ</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>Netypová hodnota, v ktorej sa má skontrolovať, či ju možno pretypovať ako určený typ.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>Typ, ktorý sa má skontrolovať v untypedValue.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Zadanú hodnotu použije ako určený typ.</value>
     
@@ -1813,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>Tabuľka entity predstavuje typ hodnoty, ktorý sa má použiť.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Skontroluje a použije zadanú netypovú hodnotu ako určený typ.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>typ</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>Netypová hodnota, ktorá sa má pretypovať ako nový typ.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>Typ, ktorý sa má použiť pre hodnotu.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Spustí vzorec, ktorý bol zadaný ako druhý parameter, pomocou rozsahu, ktorý sa zadal ako prvý.</value>
@@ -1868,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>{0} je neznáma alebo nepodporovaná funkcia.</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>{0} je rozpoznaná ako pomocná funkcia typu a možno ju použiť iba v rámci funkcie Type.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -1982,10 +2033,6 @@
     <value>Prvý argument pre {0} má byť záznam.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Ak chcete použiť túto množinu možností ako hodnotu enumerácie alebo vo funkcii Choices, musíte entitu {0} pridať ako zdroj údajov. Pridáte ju pomocou ponuky Zobraziť a výberom možnosti Zdroje údajov.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Zadaná vlastnosť nie je v tomto kontexte prístupná.</value>
     
@@ -2026,10 +2073,6 @@
     <value>Argument nepredstavuje platnú hodnotu dátumu alebo času.</value>
     
   </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Tento zdroj údajov je neplatný. Opravte chybu na table Zdroje údajov kliknutím na položku Obsah -&gt; Zdroje údajov alebo Zobraziť -&gt; Možnosti.</value>
-    
-  </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>Očakával sa identifikátor zdroja údajov, ktorý obmedzí vnorený záznam.</value>
     
@@ -2068,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>Konflikt názvu stĺpca pre {0}.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Do systémového záznamu alebo tabuľky systémových záznamov nemožno pridať stĺpce. Na extrahovanie konkrétnych stĺpcov, ktoré potrebujete ako prvé, použite možnosť ShowColumns.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Stĺpce systémového záznamu alebo tabuľky systémových záznamov nie je možné premenovať. Na extrahovanie konkrétnych stĺpcov, ktoré potrebujete ako prvé, použite možnosť ShowColumns.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -2670,6 +2721,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Reťazec JSON, ktorý sa má spracovať.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>Konvertuje reťazec JSON na typový objekt.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>reťazec</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>Reťazec JSON, ktorý sa má konvertovať na typový objekt.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>typ</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>Vnorená definícia typu alebo globálne definovaný pomenovaný typ.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Vráti záznam v tabuľke v rámci daného indexu.</value>
     
@@ -2687,6 +2756,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Index záznamu, ktorý sa má načítať.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2707,6 +2788,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Typ čiarového kódu</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2823,6 +2936,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Hodnota na testovanie.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Skonvertuje dátum a čas vo formáte textu na číslo reprezentujúce dátum v kóde dátumu a času služby Power Apps.</value>
@@ -3098,32 +3215,33 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Pridá záznamy do zdroja údajov.</value>
+    <value>Pridá jednu alebo viacero položiek do zadanej kolekcie. Položky môžu byť z inej tabuľky alebo kolekcie (napr. Collect(collection, source_collection)), prípadne jeden alebo viacero záznamov Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>zdroj_údajov</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>záznam</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>kolekcia</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>položka</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Nová alebo existujúca kolekcia, ktorá sa má rozšíriť.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Odstráni všetky záznamy z kolekcie. Potom do tej istej kolekcie pridá inú množinu záznamov.</value>
+    <value>Najprv vyčistí kolekciu a pridá jednu alebo viacero položiek do zadanej kolekcie. Položky môžu byť z inej tabuľky alebo kolekcie (napr. ClearCollect(collection, source_collection)), prípadne jeden alebo viacero záznamov ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>zdroj_údajov</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Nová alebo existujúca kolekcia, ktorá sa má rozšíriť.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>zdroj_údajov</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>záznam</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Záznam alebo tabuľka na zhromaždenie do kolekcie. Záznam sa pripojí ku kolekcii. Tabuľka bude mať riadky pripojené ku kolekcii.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Použije aktualizácie na zadaný riadok a zmení riadok v zadanom zdroji údajov. Vráti aktualizovaný riadok.</value>
@@ -3259,6 +3377,10 @@
     <value>Článok: Referenčné informácie pre vzorce v službe Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Neočakávaný znak {0} na pozícii {1} vo vzorci.</value>
     
@@ -3271,6 +3393,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Článok: Referenčné informácie pre vzorce v službe Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3288,6 +3414,10 @@
     <value>Článok: Referenčné informácie pre vzorce v službe Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Neočakávané znaky. Vzorec obsahuje {0} tam, kde sa očakáva {1}.</value>
     
@@ -3301,6 +3431,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Článok: Referenčné informácie pre vzorce v službe Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3318,6 +3452,10 @@
     <value>Článok: Referenčné informácie pre vzorce v službe Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Názov nie je platný. Tento identifikátor nie je rozpoznaný.</value>
     
@@ -3331,6 +3469,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Článok: Referenčné informácie pre vzorce v službe Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3348,6 +3490,10 @@
     <value>Článok: Referenčné informácie pre vzorce v službe PowerApps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>Odkaz Nadradené nie je platný. Nie je možné odkazovať na nadradený ovládací prvok v tomto kontexte.</value>
     
@@ -3361,6 +3507,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Článok: Pridávanie a konfigurácia ovládacieho prvku aplikácie plátna v službe Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3400,6 +3550,10 @@
     <value>Modul: Používanie základných vzorcov</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Očakávalo sa číslo. V tomto bode vzorca sa očakáva číslo.</value>
     
@@ -3413,6 +3567,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Článok: Referenčné informácie pre vzorce v službe Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3430,6 +3588,10 @@
     <value>Článok: Referenčné informácie pre vzorce v službe Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Očakávala sa dvojbodka. V tomto bode vzorca sa očakáva dvojbodka (:).</value>
     
@@ -3445,6 +3607,10 @@
     <value>Článok: Zobrazovanie textu, dátumov a časov v službe Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Funkcia správania vo vlastnosti, ktorá nie je správaním. Pomocou tejto vlastnosti nie je možné meniť hodnoty inde v aplikácii.</value>
     
@@ -3458,6 +3624,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Článok: Informácie o správaní vzorcov pre aplikácie plátna v službe Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Funkcia správania v používateľom definovanej funkcii (UDF) inej ako funkcii správania. Ak chcete deklarovať funkciu UDF správania, zabaľte telo používateľom definovanej funkcie do zložených zátvoriek ({...}).</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Funkcie správania menia aktuálny stav relácie. Bežné funkcie správania sú Clear, Collect, Patch a Refresh.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Upravte výraz používateľom definovanej funkcie tak, aby bol v zložených zátvorkách ({...}).</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3497,6 +3679,10 @@
     <value>Článok: Referenčné informácie pre vzorce v službe Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Očakával sa text alebo číslo. V tomto bode vzorca sa očakáva text alebo číslo.</value>
     
@@ -3512,6 +3698,10 @@
     <value>Článok: Referenčné informácie pre vzorce v službe Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Očakávala sa pravá zátvorka. V tomto bode vzorca sa očakáva pravá zátvorka (}).</value>
     
@@ -3523,12 +3713,23 @@
     <value>Upravte vzorec tak, aby obsahoval zátvorku.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Očakávalo sa ukončenie identifikátora. V tomto bode vzorca sa očakáva koncová zátvorka (').</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Jednoduchá koncová úvodzovka označuje koniec identifikátora (napríklad 'Krstné meno').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Upravte vzorec tak, aby obsahoval koncovú jednoduchú úvodzovku.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Identifikátor nemá žiadny platný text.</value>
+    <value>Identifikátor je prázdny alebo obsahuje neplatný znak, napríklad tabulátor alebo nový riadok.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Uistite sa, že pre svoj identifikátor máte nejaký text. K tejto chybe dôjde v prípade, že identifikátor obsahuje len medzery alebo prázdne znaky.</value>
+    <value>Uistite sa, že identifikátor má platný text. K tejto chybe dôjde v prípade, že identifikátor je prázdny, sú v ňom iba medzery alebo obsahuje tabulátor či nový riadok.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3554,8 +3755,16 @@
     <value>Modul: Používanie základných vzorcov</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Modul: Vytváranie základných vzorcov pomocou tabuliek a záznamov</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3570,6 +3779,10 @@
     <value>Článok: Referenčné informácie pre vzorce v službe Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Nekompatibilný typ. Stĺpec {0} v zdroji údajov, ktorý aktualizujete, očakáva typ {1} a vy používate typ {2}.</value>
     
@@ -3582,8 +3795,16 @@
     <value>Modul: Používanie základných vzorcov</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Modul: Vytváranie základných vzorcov pomocou tabuliek a záznamov</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3596,6 +3817,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Článok: Referenčné informácie pre vzorce v službe Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3614,8 +3839,16 @@
     <value>Modul: Používanie základných vzorcov</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Modul: Vytváranie základných vzorcov pomocou tabuliek a záznamov</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3633,8 +3866,16 @@
     <value>Modul: Používanie základných vzorcov</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Modul: Vytváranie základných vzorcov pomocou tabuliek a záznamov</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3650,6 +3891,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Článok: Referenčné informácie pre vzorce v službe Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3675,8 +3920,16 @@
     <value>Článok: Informácie o delegovaní v aplikácii plátna</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Blog: Obmedzenia riadkov údajov pre delegovanie</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3702,8 +3955,16 @@
     <value>Článok: Informácie o delegovaní v aplikácii plátna</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Blog: Obmedzenia riadkov údajov pre delegovanie</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3733,8 +3994,16 @@
     <value>Článok: Informácie o delegovaní v aplikácii plátna</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Blog: Obmedzenia riadkov údajov pre delegovanie</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3766,8 +4035,70 @@
     <value>Článok: Informácie o delegovaní v aplikácii plátna</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Blog: Obmedzenia riadkov údajov pre delegovanie</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Upozornenie na delegovanie. Pomenovaný vzorec {0} nie je delegovateľný, takže jeho použitie v tomto vzorci nemusí vo veľkých množinách údajov fungovať správne. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Zdroj údajov nemusí byť schopný spracovať vzorec a môže vrátiť neúplnú množinu údajov. Vaša aplikácia nemusí vrátiť správne výsledky alebo sa nemusí správať správne, ak je množina údajov neúplná.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Skúste zjednodušiť definíciu pomenovaného vzorca.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Článok: Informácie o delegovaní v aplikácii plátna</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Obmedzenia riadkov údajov pre delegovanie</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Upozornenie na delegovanie. Používateľom definovaná funkcia {0} nie je delegovateľná, takže jej použitie v tomto vzorci nemusí vo veľkých množinách údajov fungovať správne. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Zdroj údajov nemusí byť schopný spracovať vzorec a môže vrátiť neúplnú množinu údajov. Vaša aplikácia nemusí vrátiť správne výsledky alebo sa nemusí správať správne, ak je množina údajov neúplná.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Skúste zjednodušiť definíciu používateľom definovanej funkcie.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Článok: Informácie o delegovaní v aplikácii plátna</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Obmedzenia riadkov údajov pre delegovanie</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3794,8 +4125,16 @@
     <value>Článok: Informácie o delegovaní v aplikácii plátna</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Blog: Obmedzenia riadkov údajov pre delegovanie</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3824,6 +4163,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Odkaz: ConfirmExit pre aplikácie plátna</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3858,12 +4201,24 @@
     <value>Pomenovaný vzorec musí byť výraz.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Deklarácia pomenovaného typu musí byť platným výrazom typu.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Funkcia definovaná používateľom musí mať telo.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Funkcia {0} je už definovaná.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Upozornenie: Používateľom definovaná funkcia {0} bude tieňová vo vzťahu k existujúcej integrovanej funkcii {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Názov funkcie {0} je obmedzený.</value>
     
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
@@ -3875,7 +4230,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Uvedený typ vrátenej hodnoty funkcie sa nezhoduje s typom vrátenej hodnoty tela funkcie.</value>
+    <value>Uvedený typ vrátenej hodnoty funkcie {0} sa nezhoduje s typom vrátenej hodnoty tela funkcie {1}.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Funkcia {0} má príliš veľa parametrov. Maximálny počet parametrov podporovaný používateľom definovanými funkciami je {1}.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +4261,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Prvý argument pre {0} musí byť platný názov premennej a nemôže byť v konflikte so žiadnym existujúcim názvom ovládacieho prvku, obrazovky, kolekcie alebo zdroja údajov. Nájdený typ: {1}</value>
+    <value>{1} nie je možné upraviť pomocou položky {0} alebo je v konflikte s názvom existujúcej premennej rozsahu, zdroja údajov alebo iného objektu.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4063,6 +4422,10 @@
     <value>{0} nie je možné delegovať: obsahuje funkciu správania {1}.</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>Funkcia CountRows môže vrátiť hodnotu uloženú vo vyrovnávacej pamäti. Na získanie najnovšieho počtu použite funkciu CountIf(DataSource, true).</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Určuje, či zadaný text obsahuje zhodu zadaného formátu textu.</value>
     
@@ -4156,24 +4519,232 @@
     <value>Neplatný regulárny výraz.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: vnorené možnosti sa musia zobraziť na začiatku regulárneho výrazu, neskôr sa našlo: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: vnorené možnosti sú obmedzené na kombináciu písmen [imnsx], nemôžu zakázať možnosti a nemôžu sa použiť pre podvýraz, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: osmičkové kódy znakov \0 nie sú podporované, použite namiesto toho šestnástkové znaky \x alebo Unicode \u, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: literálne zložené zátvorky musia byť escapované opačnou lomkou, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: literálne hranaté zátvorky musia byť escapované opačnou lomkou aj v triedach znakov, napríklad \[ alebo \], našlo sa na konci {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: neuzavretá hranatá zátvorka triedy znakov.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: nepodporovaná špeciálna skupina, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: v triede znakov nie je povolený escapovací znak, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: negatívny escapovací znak nie je v rámci negovanej triedy znakov povolený, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: escapovací znak nie je mimo triedy znakov povolený, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: neplatný názov kategórie Unicode, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: opakovaná vnorená možnosť, našlo sa {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: neuzavretý vnorený komentár.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: neuzavretý vnorený komentár, našlo sa {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: vnorená možnosť je nekompatibilná s MatchOptions.NumberedSubMatches, našlo sa {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: posesívne kvantifikátory nie sú podporované, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: presné kvantifikátory nemožno použiť s modifikátormi kvantifikátora, ako napríklad ? pre pomalú kvantifikáciu, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: neplatný escapovací kód, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: podzhoda {0} nie je definovaná alebo je nepodporovaným dopredným odkazom.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: podzhody nie sú podporované v spätných náhľadoch, našlo sa na začiatku {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: spätné náhľady sa nedajú vnoriť, našlo sa na začiatku {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: neobmedzené kvantifikátory nie sú podporované v spätných náhľadoch, našlo sa na konci {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: kvantifikátory nie sú podporované v spätných a predbežných náhľadoch, našlo sa na konci {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: spätný odkaz {0} na podzhodu, ku ktorej nemusí dôjsť v dôsledku alternácie alebo nulového kvantifikátora.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: podzhody odkazujúce na seba nie sú podporované, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: neuzavreté skupiny, príliš málo pravých zátvoriek.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: neotvorené skupiny, príliš málo ľavých zátvoriek.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: pomenovaná podzhoda bola definovaná viac ako raz, našla sa na začiatku výrazu {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: názov podzhody musí byť kombináciou slovných znakov a nesmie sa začínať číslom, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: vnorené možnosti sa musia zobraziť na začiatku regulárneho výrazu, neskôr sa našlo: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: znak sa v triede znakov vyskytuje viackrát, našiel sa opakujúci znak {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: triedy znakov v hranatých zátvorkách nemôžu byť prázdne, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: vyrovnávacie podzhody nie sú podporované, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: používanie jednoduchých úvodzoviek pre pomenované záznamy nie je podporované, namiesto toho použite syntax (?&lt;... &gt;), našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: podmienená alternácia nie je podporovaná, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: pomenované záznamy nemožno použiť s povolenou hodnotou MatchOptions.NumberedSubMatches, našlo sa {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: použite pomenované záznamy s (?&lt;name&gt;...) a \k&lt;name&gt; alebo povoľte MatchOptions.NumberedSubMatches, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: literálny spojovník v triede znakov musí byť escapovaný opačnou lomkou, escapujte pomocou výrazu \-, našlo sa v {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: literálny znak musí byť escapovaný opačnou lomkou pri použití v triede znakov, našlo sa na konci {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: kvantifikátor v skupine obsahujúcej iný kvantifikátor alebo prázdne striedanie, ktoré by mohlo viesť k nejednoznačnému výsledku, našlo sa na konci {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: spätný náhľad prekročil maximálny možný limit znakov 250, našlo sa na konci {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: dolné číslo rozsahu kvantifikátora je väčšie ako horné číslo, našlo sa {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: príliš veľa vnorených skupín sa našlo na začiatku {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: názov podzhody je príliš dlhý, našlo sa {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: číslo je príliš veľké, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: znaky v rozsahu triedy znakov sú obrátené, našlo sa na konci {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: trieda znakov v rozsahu triedy znakov alebo escapovanie literálneho spojovníka pomocou opačnej lomky, našlo sa {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: končí sa neescapovanou opačnou lomkou.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: kvantifikátor nemá objekt na kvantifikáciu, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: MatchOptions.DotAll a MatchOptions.FreeSpacing sú k dispozícii iba s Power Fx V1, našlo sa: {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz: spätný odkaz {0} na podzhodu, ktorá sa nachádza v spätnom alebo predbežnom náhľade.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Regulárne výrazy musia byť konštantnými hodnotami.</value>
+    <value>Regulárny výraz musí byť konštantnou hodnotou.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions musí byť konštantná hodnota.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Hodnotu odovzdanú funkcii {0} nemožno zmeniť.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Názov záznamu {0} skrýva preddefinovanú vlastnosť, ktorá vracia úplnú zhodu daného regulárneho výrazu. Zvážte jeho premenovanie, pokiaľ chcete takto nazvanú vlastnosť použiť na extrahovanie úplnej zhody v zadanom texte.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>Názov záznamu {0} skrýva preddefinovanú vlastnosť, ktorá vracia informácie o zhode. Ak chcete získať prístup k informáciám o zhode, zvážte jeho premenovanie.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Názov záznamu {0} skrýva preddefinovanú vlastnosť, ktorá vracia skupinovú zhodu daného regulárneho výrazu. Zvážte jeho premenovanie, pokiaľ chcete takto nazvanú vlastnosť použiť na extrahovanie čiastočnej zhody v zadanom texte.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Názov záznamu {0} skrýva preddefinovanú vlastnosť, ktorá vracia miesto, kde nastala zhoda s daným regulárnym výrazom. Zvážte jeho premenovanie, pokiaľ chcete takto nazvanú vlastnosť použiť na extrahovanie pozície úplnej zhody v zadanom texte.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>Názvy záznamov v množine {0} skrývajú preddefinované vlastnosti, ktoré vracajú informácie o zhode. Ak chcete získať prístup k informáciám o zhode, zvážte ich premenovanie.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4209,16 +4780,20 @@
     <value>Nastavenie premennej s hodnotou online zdroja údajov (tabuľky alebo záznamu) môže spôsobiť viacero požiadaviek na server. Čoskoro to bude zablokované.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Výraz typu je neplatný. {0} nemožno použiť vo výraze typu.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definícia typu {0} je neplatná.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Nepodporované použitie: funkcia Type sa môže používať iba v argumentoch typu a deklaráciách typu.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Deklarácia typu {0} je neplatná.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definícia typu {0} je neplatná a môže obsahovať cykly.</value>
+    <value>Deklarácia typu {0} je neplatná a môže obsahovať cykly.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4419,6 +4994,16 @@
     <value>Neznámy operátor Partial.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Zdroj údajov, do ktorého sa majú pridať údaje.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Záznam alebo tabuľka na zhromaždenie do kolekcie. Záznam sa pripojí k zdroju údajov. Tabuľka bude mať riadky pripojené k zdroju údajov.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>položka</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Upozornenie na delegovanie. Pred odovzdaním funkcii {1} sa výsledok tohto argumentu {0} môže skrátiť pre veľké množiny údajov.</value>
     
@@ -4459,10 +5044,98 @@
     <value>Kolekcia na vymazanie.</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>Zdroj, ktorý sa má vyčistiť.</value>
+  </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Načíta údaje z viacerých tabuliek so vzťahmi.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>zdroj1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>zdroj2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>menovateľ</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Ľavá tabuľka alebo kolekcia.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Pravá tabuľka alebo kolekcia.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Kritériá spojenia dvoch tabuliek alebo kolekcií.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Typ spojenia dvoch tabuliek alebo kolekcií.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Argumenty na premenovanie existujúceho stĺpca v jednom zo zdrojov.</value>
+    
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Zadaný zdroj údajov sa nedá použiť s touto funkciou.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Neplatný argument {0}. Očakával sa platný názov typu alebo výraz vnoreného typu.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Nepodporovaný typ {0} v argumente typu.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Pri prechádzaní údajovej časti JSON bola dosiahnutá maximálna hĺbka.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Vo funkcii JSON bola dosiahnutá maximálna dĺžka.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Experimentálna funkcia Typy definované používateľom nie je povolená.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Nesprávna syntax: „=“ nemožno použiť na deklarovanie typov definovaných používateľom. Namiesto toho použite „:=“.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>{0} nemožno pridať/premenovať z dôvodu kolízie s iným stĺpcom s rovnakým názvom.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Očakáva sa obyčajná hodnota enumerácie JoinType. Nie sú podporované iné enumerácie ani odovzdanie cez inú funkciu, napr. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argumenty od 5. pozície sú určené na premenovanie stĺpcov a očakáva sa, že to budú argumenty uzla As, t. j. LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Na vytvorenie výsledku spojenia musí byť deklarovaný aspoň jeden stĺpec {0}.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Hodnota {0} je v tomto kontexte neplatná. Mal by to byť odkaz na názov rozsahu {1} alebo {2}.</value>
     
   </data>
 </root>

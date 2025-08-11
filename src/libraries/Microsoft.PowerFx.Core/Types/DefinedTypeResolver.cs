@@ -112,7 +112,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                 if (resolvedType == DType.Invalid)
                 {
-                    _errors.Add(new TexlError(currentType.Type.TypeRoot, DocumentErrorSeverity.Severe, TexlStrings.ErrNamedType_InvalidTypeDefinition, currentType.Ident.Name));
+                    _errors.Add(new TexlError(currentType.Type.TypeRoot, DocumentErrorSeverity.Severe, TexlStrings.ErrNamedType_InvalidTypeDeclaration, currentType.Ident.Name));
                     continue;
                 }
 

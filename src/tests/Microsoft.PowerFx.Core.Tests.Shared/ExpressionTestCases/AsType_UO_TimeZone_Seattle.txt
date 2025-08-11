@@ -1,0 +1,19 @@
+#SETUP: TimeZoneInfo("Pacific Standard Time")
+
+>> AsType(ParseJSON("""1900-12-31T23:59:59.999Z"""), DateTime)
+DateTime(1900,12,31,15,59,59,999)
+
+>> AsType(ParseJSON("""1900-12-31T23:59:59.999+00:00"""), DateTime)
+DateTime(1900,12,31,15,59,59,999)
+
+>> AsType(ParseJSON("""1900-12-31T23:59:59.999-08:00"""), DateTime)
+DateTime(1900,12,31,23,59,59,999)
+
+>> DateTimeValue(AsType(ParseJSON("""1900-12-31T00:00:00.000Z"""), Dynamic))
+DateTime(1900,12,30,16,0,0,0)
+
+>> DateValue(AsType(ParseJSON("""1900-12-31T00:00:00.000Z"""), Dynamic))
+Date(1900,12,30)
+
+>> AsType(ParseJSON("""1900-12-31T24:59:59.1002Z"""), DateTime)
+Error({Kind:ErrorKind.InvalidArgument})

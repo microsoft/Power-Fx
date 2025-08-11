@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>เปอร์เซ็นต์ (หรือคอลัมน์ของค่าเปอร์เซ็นต์) ที่ต้องการเลือนสี (หรือคอลัมน์ของค่าสี) เปอร์เซ็นต์ค่าลบสร้างเฉดที่เข้มกว่า เปอร์เซ็นต์ค่าบวกสร้างเฉดที่อ่อนกว่า</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>ส่งกลับเรกคอร์ดที่มีข้อมูลเกี่ยวกับไฟล์</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>Blob ไฟล์ที่จะรับข้อมูล</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>ไฟล์</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>คืนค่าสัมบูรณ์ของตัวเลข, ตัวเลขที่ไม่มีเครื่องหมาย</value>
     
@@ -1796,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>ส่งกลับว่าเป็นจริงถ้าค่าที่ไม่ได้กำหนดชนิดที่ระบุเป็นชนิดที่กำหนด</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>ชนิด</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>ค่าที่ไม่ได้กำหนดชนิดที่ต้องการตรวจสอบว่าสามารถแปลงเป็นชนิดที่ระบุได้หรือไม่</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>ชนิดที่เราต้องการให้ตรวจสอบ untypedValue</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>ใช้ค่าที่ระบุเป็นชนิดที่กำหนดให้</value>
     
@@ -1813,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>ตารางเอนทิตีแสดงชนิดของค่าที่เราต้องการให้ใช้</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>ตรวจสอบและใช้ค่าที่ไม่ได้กำหนดชนิดที่ระบุให้เป็นชนิดที่กำหนด</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>ชนิด</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>ค่าที่ไม่ได้กำหนดชนิดที่จะแปลงเป็นชนิดใหม่</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>ชนิดที่เราต้องการให้ใช้ค่าเป็น</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>ดำเนินการสูตรที่ระบุให้เป็นพารามิเตอร์ที่สองโดยใช้ขอบเขตที่กำหนดให้โดยพารามิเตอร์แรก</value>
@@ -1868,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>'{0}' เป็นฟังก์ชันที่ไม่รู้จักหรือไม่ได้รับการสนับสนุน</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' ได้รับการยอมรับว่าเป็นฟังก์ชันตัวช่วยชนิด และสามารถใช้ได้ภายในฟังก์ชัน Type เท่านั้น</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -1982,10 +2033,6 @@
     <value>อาร์กิวเมนต์แรกของ '{0}' ควรเป็นเรกคอร์ด</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>การใช้ชุดตัวเลือกนี้เป็นค่าจาระไนหรือในฟังก์ชัน Choices จำเป็นต้องมีการเพิ่มเอนทิตี '{0}' เป็นแหล่งข้อมูล เมื่อต้องการเพิ่ม ให้ใช้เมนู มุมมอง แล้วเลือกแหล่งข้อมูล</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>คุณสมบัติที่ระบุไม่สามารถเข้าถึงได้ในบริบทนี้</value>
     
@@ -2026,10 +2073,6 @@
     <value>อาร์กิวเมนต์ไม่ได้แสดงค่าวันที่หรือเวลาที่ถูกต้อง</value>
     
   </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>แหล่งข้อมูลนี้ไม่ถูกต้อง: โปรดแก้ไขข้อผิดพลาดในบานหน้าต่าง "แหล่งข้อมูล" โดยคลิก "เนื้อหา -&gt; แหล่งเครื่องมือ" หรือ "แสดง -&gt; ตัวเลือก"</value>
-    
-  </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>คาดหวังให้ตัวระบุแหล่งข้อมูลจำกัดระเบียนแบบอินไลน์</value>
     
@@ -2068,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>ชื่อคอลัมน์มีข้อขัดแย้งสำหรับ '{0}'</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>ไม่สามารถเพิ่มคอลัมน์ลงในเรกคอร์ดระบบหรือตารางของเรกคอร์ดระบบ ใช้ ShowColumns เพื่อแยกคอลัมน์เฉพาะที่คุณต้องการก่อน</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>ไม่สามารถเปลี่ยนชื่อคอลัมน์ลงในเรกคอร์ดระบบหรือตารางของเรกคอร์ดระบบ ใช้ ShowColumns เพื่อแยกคอลัมน์เฉพาะที่คุณต้องการก่อน</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -2670,6 +2721,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>สตริง JSON ที่จะประมวลผล</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>แปลงสตริง JSON ให้เป็นออบเจ็กต์ที่กำหนดชนิด</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>สตริง</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>สตริง JSON ที่จะแปลงเป็นออบเจ็กต์ที่กำหนดชนิด</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>ชนิด</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>การกำหนดชนิดแบบอินไลน์หรือชนิดที่มีชื่อที่กำหนดทั้งหมด</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>ส่งกลับเรกคอร์ดในตารางตามดัชนีที่กำหนด</value>
     
@@ -2687,6 +2756,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>ดัชนีของเรกคอร์ดที่จะเรียก</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2707,6 +2788,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>ประเภทบาร์โค้ด</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2823,6 +2936,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>ค่าที่จะทดสอบ</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>แปลงวันที่และเวลาในรูปแบบข้อความให้เป็นตัวเลขที่แสดงวันที่เป็นรหัสวันที่-เวลาของ Power Apps</value>
@@ -3098,32 +3215,33 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>เพิ่มเรกคอร์ดลงในแหล่งข้อมูล</value>
+    <value>เพิ่มหนึ่งรายการหรือมากกว่าไปยังคอลเลกชันที่ระบุ รายการสามารถมาจากตารางหรือคอลเลกชันที่ต่างกัน (เช่น Collect(collection, source_collection)) หรือจากหนึ่งเรกคอร์ดหรือมากกว่าของ Collect(collection, {key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>แหล่งข้อมูล</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>เรกคอร์ด</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>คอลเลกชัน</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>รายการ</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>คอลเลกชันใหม่หรือที่มีอยู่แล้วที่จะขยาย</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>ลบเรกคอร์ดทั้งหมดออกจากคอลเลกชัน จากนั้นเพิ่มชุดเรกคอร์ดอื่นลงในคอลเลกชันเดียวกัน</value>
+    <value>ล้างข้อมูลคอลเลกชันก่อน และเพิ่มหนึ่งรายการขึ้นไปในคอลเลกชันที่ระบุ รายการต่างๆ อาจมาจากตารางหรือคอลเลกชันอื่นก็ได้ (เช่น ClearCollect(collection, source_collection)) หรือหนึ่งเรกคอร์ดขึ้นไป ClearCollect(collection, {key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>แหล่งข้อมูล</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>คอลเลกชันใหม่หรือที่มีอยู่แล้วที่จะขยาย</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>แหล่งข้อมูล</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>เรกคอร์ด</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>เรกคอร์ดหรือตารางที่จะรวบรวม เรกคอร์ดจะถูกผนวกเข้ากับคอลเลกชัน แถวต่างๆ ในตารางจะถูกผนวกเข้ากับคอลเลกชัน</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>ใช้การอัปเดตกับแถวที่กำหนด และเปลี่ยนแปลงแถวในแหล่งข้อมูลที่กำหนด ส่งกลับแถวที่อัปเดตแล้ว</value>
@@ -3259,6 +3377,10 @@
     <value>บทความ: การอ้างอิงสูตรสำหรับ Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>อักขระที่ไม่ควรมี '{0}' ที่ตําแหน่ง '{1}' ในสูตร</value>
     
@@ -3271,6 +3393,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>บทความ: การอ้างอิงสูตรสำหรับ Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3288,6 +3414,10 @@
     <value>บทความ: การอ้างอิงสูตรสำหรับ Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>อักขระที่ไม่คาดคิด สูตรประกอบด้วย '{0}' โดยมีการคาดหวัง '{1}'</value>
     
@@ -3301,6 +3431,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>บทความ: การอ้างอิงสูตรสำหรับ Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3318,6 +3452,10 @@
     <value>บทความ: การอ้างอิงสูตรสำหรับ Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>ชื่อไม่ถูกต้อง ไม่รู้จักตัวระบุนี้</value>
     
@@ -3331,6 +3469,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>บทความ: การอ้างอิงสูตรสำหรับ Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3348,6 +3490,10 @@
     <value>บทความ: การอ้างอิงสูตรสำหรับ PowerApps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>การอ้างอิง 'หลัก' ไม่ถูกต้อง คุณไม่สามารถอ้างอิงตัวควบคุมหลักในบริบทนี้ได้</value>
     
@@ -3361,6 +3507,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>บทความ: เพิ่มและกำหนดค่าตัวควบคุมแอปพื้นที่ทำงานใน Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3400,6 +3550,10 @@
     <value>มอดูล: ใช้สูตรพื้นฐาน</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>ตัวเลขที่คาดไว้ เราคาดหวังตัวเลขในจุดนี้ในสูตร</value>
     
@@ -3413,6 +3567,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>บทความ: การอ้างอิงสูตรสำหรับ Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3430,6 +3588,10 @@
     <value>บทความ: การอ้างอิงสูตรสำหรับ Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>ทวิภาคที่คาดไว้ เราคาดหวังทวิภาค (:) ในจุดนี้ในสูตร</value>
     
@@ -3445,6 +3607,10 @@
     <value>บทความ: แสดงข้อความ วันที่ และเวลาใน Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>ฟังก์ชันลักษณะการทำงานในคุณสมบัติที่ไม่ใช่ลักษณะการทำงาน คุณไม่สามารถใช้คุณสมบัตินี้เพื่อเปลี่ยนค่าส่วนอื่นในแอปได้</value>
     
@@ -3458,6 +3624,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>บทความ: เข้าใจสูตรลักษณะการทำงานสำหรับแอปพื้นที่ทำงานใน Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>ฟังก์ชันลักษณะการทำงานในฟังก์ชันที่ผู้ใช้กำหนดซึ่งไม่ใช่ลักษณะการทำงาน (UDF) โปรดใส่เครื่องหมายวงเล็บปีกกา ({...}) ในเนื้อหาของฟังก์ชันที่ผู้ใช้กำหนด เพื่อประกาศ UDF ลักษณะการทำงาน</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>ฟังก์ชันลักษณะการทำงานจะเปลี่ยนสถานะเซสชันปัจจุบัน 'Clear', 'Collect', 'Patch' และ 'Refresh' เป็นฟังก์ชันลักษณะการทำงานทั่วไป</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>แก้ไขนิพจน์ฟังก์ชันที่ผู้ใช้กำหนดเพื่อให้อยู่ภายในวงเล็บปีกกา ({...})</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3497,6 +3679,10 @@
     <value>บทความ: การอ้างอิงสูตรสำหรับ Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>ข้อความหรือหมายเลขที่คาดไว้ เราคาดหวังข้อความหรือหมายเลขในจุดนี้ในสูตร</value>
     
@@ -3512,6 +3698,10 @@
     <value>บทความ: การอ้างอิงสูตรสำหรับ Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>วงเล็บเหลี่ยมปิดที่คาดไว้ เราคาดหวังวงเล็บเหลี่ยมปิด (}) ในจุดนี้ในสูตร</value>
     
@@ -3523,12 +3713,23 @@
     <value>แก้ไขสูตรของคุณเพื่อให้มีเครื่องหมายวงเล็บเหลี่ยม</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>ต้องมีเครื่องหมายปิดของตัวระบุ เราต้องการเครื่องหมายปิด (') ที่จุดนี้ในสูตร</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>เครื่องหมายอัญประกาศเดี่ยวปิดจะระบุจุดสิ้นสุดของตัวระบุ (ตัวอย่างเช่น 'ชื่อ')</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>แก้ไขสูตรของคุณเพื่อให้มีเครื่องหมายเครื่องหมายอัญประกาศเดี่ยวปิด</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>ตัวระบุไม่มีข้อความถูกต้อง</value>
+    <value>ตัวระบุว่างเปล่าหรือมีอักขระที่ไม่ถูกต้อง เช่น แท็บหรือบรรทัดใหม่</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>ตรวจสอบให้แน่ใจว่าคุณมีข้อความสำหรับตัวระบุของคุณ ข้อผิดพลาดนี้เกิดขึ้นเมื่อตัวตัวระบุนั้นเว้นว่างไว้หรือเป็นพื้นที่ว่างทั้งหมด</value>
+    <value>ตรวจสอบให้แน่ใจว่าคุณมีข้อความที่ถูกต้องในตัวระบุของคุณ ข้อผิดพลาดนี้เกิดขึ้นเมื่อตัวระบุนั้นเว้นว่างไว้ หรือมีเฉพาะเว้นวรรค หรือมีแท็บหรือบรรทัดใหม่</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3554,8 +3755,16 @@
     <value>มอดูล: ใช้สูตรพื้นฐาน</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>มอดูล: สูตรพื้นฐานของผู้สร้างที่มีตารางและระเบียน</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3570,6 +3779,10 @@
     <value>บทความ: การอ้างอิงสูตรสำหรับ Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>ชนิดที่ไม่เข้ากัน คอลัมน์ '{0}' ในแหล่งข้อมูลที่คุณกำลังปรับปรุงคาดหวังชนิด '{1}' และคุณกำลังใช้ชนิด '{2}'</value>
     
@@ -3582,8 +3795,16 @@
     <value>มอดูล: ใช้สูตรพื้นฐาน</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>มอดูล: สูตรพื้นฐานของผู้สร้างที่มีตารางและระเบียน</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3596,6 +3817,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>บทความ: การอ้างอิงสูตรสำหรับ Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3614,8 +3839,16 @@
     <value>มอดูล: ใช้สูตรพื้นฐาน</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>มอดูล: สูตรพื้นฐานของผู้สร้างที่มีตารางและระเบียน</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3633,8 +3866,16 @@
     <value>มอดูล: ใช้สูตรพื้นฐาน</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>มอดูล: สูตรพื้นฐานของผู้สร้างที่มีตารางและระเบียน</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3650,6 +3891,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>บทความ: การอ้างอิงสูตรสำหรับ Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3675,8 +3920,16 @@
     <value>บทความ: เข้าใจการรับมอบสิทธิ์ในแอปพื้นที่ทำงาน</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>บล็อก: ขีดจำกัดแถวข้อมูลสำหรับการรับมอบสิทธิ์</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3702,8 +3955,16 @@
     <value>บทความ: เข้าใจการรับมอบสิทธิ์ในแอปพื้นที่ทำงาน</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>บล็อก: ขีดจำกัดแถวข้อมูลสำหรับการรับมอบสิทธิ์</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3733,8 +3994,16 @@
     <value>บทความ: เข้าใจการรับมอบสิทธิ์ในแอปพื้นที่ทำงาน</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>บล็อก: ขีดจำกัดแถวข้อมูลสำหรับการรับมอบสิทธิ์</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3766,8 +4035,70 @@
     <value>บทความ: เข้าใจการรับมอบสิทธิ์ในแอปพื้นที่ทำงาน</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>บล็อก: ขีดจำกัดแถวข้อมูลสำหรับการรับมอบสิทธิ์</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>คำเตือนการมอบหมาย สูตรที่มีชื่อ {0} ไม่สามารถมอบหมายได้ ดังนั้นการใช้งานในสูตรนี้อาจใช้ไม่ได้อย่างถูกต้องกับชุดข้อมูลขนาดใหญ่ </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>แหล่งข้อมูลอาจไม่สามารถประมวลผลสูตรและอาจส่งชุดข้อมูลที่ไม่สมบูรณ์กลับมา แอปพลิเคชันของคุณอาจไม่ส่งผลลัพธ์ที่ถูกต้องกลับมาหรือทำงานได้อย่างถูกต้องหากชุดข้อมูลไม่สมบูรณ์</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>ลองลดความซับซ้อนของคำจำกัดความของสูตรที่มีชื่อ</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>บทความ: เข้าใจการรับมอบสิทธิ์ในแอปพื้นที่ทำงาน</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>บล็อก: ขีดจำกัดแถวข้อมูลสำหรับการรับมอบสิทธิ์</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>คำเตือนการมอบหมาย ฟังก์ชันที่ผู้ใช้กำหนด {0} ไม่สามารถมอบหมายได้ ดังนั้นการใช้งานในสูตรนี้อาจใช้ไม่ได้อย่างถูกต้องกับชุดข้อมูลขนาดใหญ่ </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>แหล่งข้อมูลอาจไม่สามารถประมวลผลสูตรและอาจส่งชุดข้อมูลที่ไม่สมบูรณ์กลับมา แอปพลิเคชันของคุณอาจไม่ส่งผลลัพธ์ที่ถูกต้องกลับมาหรือทำงานได้อย่างถูกต้องหากชุดข้อมูลไม่สมบูรณ์</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>ลองลดความซับซ้อนของคำจำกัดความของฟังก์ชันที่ผู้ใช้กำหนด</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>บทความ: เข้าใจการรับมอบสิทธิ์ในแอปพื้นที่ทำงาน</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>บล็อก: ขีดจำกัดแถวข้อมูลสำหรับการรับมอบสิทธิ์</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3794,8 +4125,16 @@
     <value>บทความ: เข้าใจการรับมอบสิทธิ์ในแอปพื้นที่ทำงาน</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>บล็อก: ขีดจำกัดแถวข้อมูลสำหรับการรับมอบสิทธิ์</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3824,6 +4163,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>อ้างอิง: ConfirmExit สำหรับแอปพื้นที่ทำงาน</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3858,12 +4201,24 @@
     <value>สูตรที่มีชื่อต้องเป็นนิพจน์</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>การประกาศชนิดที่มีชื่อจะต้องเป็นนิพจน์ของชนิดที่ถูกต้อง</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>ฟังก์ชันที่ผู้ใช้กำหนดต้องมีเนื้อหา</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>มีการกำหนดฟังก์ชัน {0} ไว้แล้ว</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>คำเตือน: ฟังก์ชันที่ผู้ใช้กำหนด {0} จะติดตามฟังก์ชันในตัวที่มีอยู่ {0}</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>ชื่อฟังก์ชัน {0} ถูกจำกัด</value>
     
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
@@ -3875,7 +4230,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>ประเภทการส่งคืนฟังก์ชันที่ระบุไม่ตรงกับประเภทการส่งคืนของตัวฟังก์ชัน</value>
+    <value>ประเภทการส่งคืนฟังก์ชันที่ระบุ '{0}' ไม่ตรงกับประเภทการส่งคืนของตัวฟังก์ชัน '{1}'</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>ฟังก์ชัน {0} มีพารามิเตอร์มากเกินไป ฟังก์ชันที่ผู้ใช้กำหนดรองรับสูงสุด {1} พารามิเตอร์</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +4261,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>อาร์กิวเมนต์แรกของ '{0}' ควรเป็นชื่อตัวแปรที่ถูกต้อง และไม่สามารถขัดแย้งกับการควบคุม หน้าจอ การรวบรวม หรือชื่อของแหล่งข้อมูลที่มีอยู่ พบประเภท '{1}'</value>
+    <value>ไม่สามารถแก้ไข '{1}' ด้วย '{0}' หรือขัดแย้งกับชื่อของตัวแปรขอบเขต แหล่งข้อมูล หรือออบเจ็กต์อื่นๆ ที่มีอยู่</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4063,6 +4422,10 @@
     <value>ไม่สามารถมอบสิทธิ์ {0} ได้: มีฟังก์ชันการทำงาน '{1}'</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows อาจส่งคืนค่าที่เก็บไว้ในแคช ใช้ CountIf(DataSource, true) เพื่อรับจำนวนล่าสุด</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>กำหนดว่าข้อความที่ป้อนมีส่วนที่ตรงกับรูปแบบข้อความที่ป้อนหรือไม่</value>
     
@@ -4156,24 +4519,232 @@
     <value>นิพจน์ปกติไม่ถูกต้อง</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ตัวเลือกแบบอินไลน์ต้องปรากฏที่จุดเริ่มต้นของนิพจน์ปกติ พบ "{0}" ในภายหลัง</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ตัวเลือกแบบอินไลน์จำกัดเฉพาะตัวอักษร [imnsx] ผสมกัน ไม่สามารถปิดใช้งานตัวเลือก และไม่สามารถใช้กับนิพจน์ย่อยได้ พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่รองรับรหัสอักขระ \0 รูปแบบฐานแปด ให้ใช้เลขฐานสิบหก \x หรือ Unicode \u แทน พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: เครื่องหมายวงเล็บปีกกาตามตัวอักษรจะต้องใช้เครื่องหมายแบคสแลชเพื่อหลีก พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: วงเล็บปีกกาสี่เหลี่ยมตามตัวอักษรจะต้องใช้เครื่องหมายแบคสแลชเพื่อหลีก แม้ในคลาสอักขระ ตัวอย่างเช่น \[ หรือ \] พบที่ส่วนท้ายของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: วงเล็บเหลี่ยมของคลาสอักขระที่ไม่ได้ปิด</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่รองรับกลุ่มพิเศษ พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่อนุญาตให้ใช้อักขระหลีกภายในคลาสอักขระ พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่อนุญาตให้ใช้อักขระหลีกที่เป็นลบภายในคลาสอักขระที่ถูกปฏิเสธ พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่อนุญาตให้ใช้อักขระหลีกภายนอกคลาสอักขระ พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ชื่อชนิด Unicode ไม่ถูกต้อง พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ตัวเลือกอินไลน์ซ้ำกัน พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ความเห็นแบบอินไลน์ที่ไม่ได้ปิด</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ความเห็นแบบอินไลน์ที่ไม่ได้ปิด พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ตัวเลือกแบบอินไลน์เข้ากันไม่ได้กับ MatchOptions.NumberedSubMatches พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่รองรับตัวระบุความเป็นเจ้าของ พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่สามารถใช้ตัวระบุปริมาณที่แน่นอนกับตัวปรับแต่งตัวระบุปริมาณ เช่น ? สำหรับ lazy พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: อักขระหลีกไม่ถูกต้อง พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: การจับคู่ย่อย "{0}" ไม่ได้กำหนดหรือเป็นการอ้างอิงการส่งต่อที่ไม่รองรับ</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่รองรับการจับคู่ย่อยใน lookbehind ซึ่งอยู่ที่จุดเริ่มต้นของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: Lookbehinds ไม่สามารถซ้อนกันได้ พบที่จุดเริ่มต้นของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่รองรับตัวระบุปริมาณที่ไม่จำกัดใน lookbehinds หรือ lookaheads พบที่ส่วนท้ายของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่รองรับตัวระบุปริมาณใน lookbehinds หรือ lookaheads พบที่ส่วนท้ายของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: การอ้างอิงย้อนกลับ "{0}" ไปยังการจับคู่ย่อยที่อาจไม่เกิดขึ้นเนื่องจากการสลับหรือตัวระบุปริมาณเป็นศูนย์</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่รองรับการจับคู่ย่อยที่อ้างอิงตนเอง พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: กลุ่มที่ไม่ได้ปิด วงเล็บปิดน้อยเกินไป</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: กลุ่มที่ไม่ได้เปิด วงเล็บเปิดน้อยเกินไป</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: มีการกำหนดการจับคู่ย่อยที่กำหนดชื่อมากกว่าหนึ่งครั้ง ซึ่งพบที่จุดเริ่มต้นของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ชื่อการจับคู่ย่อยต้องประกอบด้วยชุดของอักขระคำและไม่ขึ้นต้นด้วยตัวเลข พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ตัวเลือกแบบอินไลน์ต้องปรากฏที่จุดเริ่มต้นของนิพจน์ปกติ พบ "{0}" ในภายหลัง</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: อักขระปรากฏมากกว่าหนึ่งครั้งในคลาสอักขระ พบ "{0}" ซ้ำกัน</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: คลาสอักขระวงเล็บเหลี่ยมต้องไม่ว่างเปล่า พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่รองรับการจับคู่ย่อยที่ปรับสมดุล พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่รองรับการใช้การบันทึกที่ระบุชื่อโดยใช้เครื่องหมายคำพูดเดี่ยว ให้ใช้ไวยากรณ์ (?&lt;... &gt;) แทน พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่รองรับการสลับตามเงื่อนไข พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ไม่สามารถใช้การบันทึกที่กำหนดชื่อกับ MatchOptions.NumberedSubMatches ที่เปิดใช้งาน พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ใช้การบันทึกที่กำหนดชื่อกับ "(?&lt;name&gt;...)" และ "\k&lt;name&gt;" หรือเปิดใช้งาน MatchOptions.NumberedSubMatches พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: เครื่องหมายยัติภังค์ตามตัวอักษรในคลาสอักขระต้องถูกหลีกด้วยเครื่องหมายแบคสแลช, อักขระหลีกที่มี เครื่องหมายยัติภังค์ตามตัวอักษร, พบใน "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: อักขระตามตัวอักษรจะต้องใช้เครื่องหมายแบคสแลชเพื่อหลีก เมื่อใช้ในคลาสอักขระ พบที่ส่วนท้ายของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ตัวระบุปริมาณในกลุ่มที่มีตัวระบุปริมาณอื่นหรือการสลับที่ว่างเปล่า ซึ่งอาจส่งผลให้เกิดผลลัพธ์ที่ไม่ชัดเจน พบที่ส่วนท้ายของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: Lookbehind เกินขีดจำกัดอักขระสูงสุดที่เป็นไปได้ที่ 250 ตัว พบที่ส่วนท้ายของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ตัวเลขต่ำในช่วงตัวระบุปริมาณสูงกว่าตัวเลขสูง พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: พบกลุ่มที่ซ้อนกันมากเกินไปที่จุดเริ่มต้นของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ชื่อของการจับคู่ย่อยยาวเกินไป พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ตัวเลขใหญ่เกินไป พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: อักขระในช่วงคลาสอักขระจะถูกกลับรายการ พบที่ส่วนท้ายของ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: คลาสอักขระในช่วงคลาสอักขระ หรือหลีกเครื่องหมายยัติภังค์ตามตัวอักษรด้วยเครื่องหมายแบคสแลช พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ลงท้ายด้วยเครื่องหมายทับขวาที่ไม่มีการหลีก</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: ตัวระบุปริมาณที่ไม่มีสิ่งที่จะวัดปริมาณ พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: MatchOptions.DotAll และ MatchOptions.FreeSpacing ใช้ได้เฉพาะกับ Power Fx V1 เท่านั้น พบ "{0}"</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง: การอ้างอิงย้อนกลับ "{0}" ไปยังการจับคู่ย่อยที่อยู่ภายใน lookbehind หรือ lookahead</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>นิพจน์ปกติจะต้องเป็นค่าคงที่</value>
+    <value>นิพจน์ปกติต้องเป็นค่าคงที่</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions ต้องเป็นค่าคงที่</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>ค่าที่ส่งผ่านไปยังฟังก์ชัน '{0}' ไม่สามารถเปลี่ยนแปลงได้</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>ชื่อการจับภาพ '{0}' กำลังซ่อนคุณสมบัติที่กำหนดไว้ล่วงหน้าที่ส่งกลับการจับคู่ที่ตรงกันทั้งหมดของนิพจน์ทั่วไป ลองเปลี่ยนชื่อถ้าคุณต้องการใช้คุณสมบัติที่มีการตั้งชื่อเพื่อแยกการจับคู่ที่ตรงกันทั้งหมดในข้อความที่ระบุ</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>ชื่อการบันทึก '{0}' กำลังซ่อนคุณสมบัติที่กำหนดไว้ล่วงหน้าซึ่งส่งคืนข้อมูลการจับคู่ พิจารณาเปลี่ยนชื่อหากคุณต้องการเข้าถึงข้อมูลการจับคู่</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>ชื่อการจับภาพ '{0}' กำลังซ่อนคุณสมบัติที่กำหนดไว้ล่วงหน้าที่ส่งกลับการจับคู่กลุ่มในนิพจน์ทั่วไป ลองเปลี่ยนชื่อถ้าคุณต้องการใช้คุณสมบัติที่มีการตั้งชื่อเพื่อแยกการจับคู่แบบย่อยทั้งหมดในข้อความที่ระบุ</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>ชื่อการจับภาพ '{0}' กำลังซ่อนคุณสมบัติที่กำหนดไว้ล่วงหน้าที่ส่งกลับตำแหน่งที่ตั้งของการจับคู่ของนิพจน์ทั่วไป ลองเปลี่ยนชื่อถ้าคุณต้องการใช้คุณสมบัติที่มีการตั้งชื่อเพื่อแยกตำแหน่งของการจับคู่ที่ตรงกันทั้งหมดในข้อความที่ระบุ</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>ชื่อการบันทึกในชุด '{0}' กำลังซ่อนคุณสมบัติที่กำหนดไว้ล่วงหน้าซึ่งส่งคืนข้อมูลการจับคู่ พิจารณาเปลี่ยนชื่อหากคุณต้องการเข้าถึงข้อมูลการจับคู่</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4209,16 +4780,20 @@
     <value>การตั้งค่าตัวแปรที่มีค่าแหล่งข้อมูลแบบออนไลน์ (ตารางหรือเรกคอร์ด) อาจทำให้เกิดการร้องขอหลายรายการไปยังเซิร์ฟเวอร์ การดำเนินการแบบนี้จะถูกบล็อกในเร็วๆ นี้</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>นิพจน์ของชนิดไม่ถูกต้อง ไม่สามารถใช้ '{0}' ในนิพจน์ของชนิดได้</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>การกำหนดชนิด {0} ไม่ถูกต้อง</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>การใช้งานที่ไม่ได้รับการสนับสนุน: สามารถใช้ฟังก์ชัน Type ได้เฉพาะในอาร์กิวเมนต์ชนิดและการประกาศชนิดเท่านั้น</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>การประกาศชนิด {0} ไม่ถูกต้อง</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>การกำหนดชนิด {0} ไม่ถูกต้องและอาจมีรอบ</value>
+    <value>การประกาศชนิด {0} ไม่ถูกต้องและอาจมีรอบ</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4419,6 +4994,16 @@
     <value>ไม่รู้จักตัวดำเนินการ Partial</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>แหล่งข้อมูลที่จะเพิ่มข้อมูลไป</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>เรกคอร์ดหรือตารางที่จะรวบรวม เรกคอร์ดจะถูกผนวกไปยังแหล่งข้อมูล แถวต่างๆ ในตารางจะถูกผนวกไปยังแหล่งข้อมูล</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>รายการ</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>คำเตือนการมอบสิทธิ์ ผลลัพธ์ของอาร์กิวเมนต์นี้ '{0}' อาจถูกตัดทอนสำหรับชุดข้อมูลขนาดใหญ่ก่อนที่จะส่งผ่านไปยังฟังก์ชัน '{1}'</value>
     
@@ -4459,10 +5044,98 @@
     <value>คอลเลกชันที่จะล้าง</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>แหล่งที่มาที่จะล้าง</value>
+  </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>ดึงข้อมูลที่ครอบคลุมหลายตารางที่มีความสัมพันธ์กัน</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>ที่มา1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>ที่มา2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>ตัวหาร</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>ตารางหรือคอลเลกชันด้านซ้าย</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>ตารางหรือคอลเลกชันด้านขวา</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>รวมเกณฑ์ระหว่างตารางหรือคอลเลกชันทั้งสอง</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>ชนิดการรวมระหว่างตารางหรือคอลเลกชันทั้งสอง</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>อาร์กิวเมนต์เพื่อเปลี่ยนชื่อคอลัมน์ที่มีอยู่ในแหล่งข้อมูลใดแหล่งหนึ่ง</value>
+    
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>แหล่งข้อมูลที่ระบุไม่สามารถใช้กับฟังก์ชันนี้ได้</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>อาร์กิวเมนต์ '{0}' ไม่ถูกต้อง ต้องระบุชื่อชนิดหรือนิพจน์ของชนิดแบบอินไลน์ที่ถูกต้อง</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>ไม่รองรับชนิด '{0}' ในอาร์กิวเมนต์ชนิด</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>ความลึกสูงสุดที่เข้าถึงขณ ะส่งผ่านส่วนข้อมูล JSON</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>ถึงความยาวสูงสุดในฟังก์ชัน JSON แล้ว</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>ไม่ได้เปิดใช้งานคุณลักษณะแบบทดลอง 'ชนิดที่ผู้ใช้กำหนด'</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>รูปแบบไม่ถูกต้อง: ไม่สามารถใช้ '=' เพื่อประกาศชนิดที่ผู้ใช้กำหนดได้ ให้ใช้ ':=' แทน</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>ไม่สามารถเพิ่ม/เปลี่ยนชื่อ '{0}' ได้ เนื่องจากขัดแย้งกับคอลัมน์อื่นที่มีชื่อเดียวกัน</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>คาดว่าค่า enum 'JoinType' แบบธรรมดา ไม่รองรับค่า enum ที่แตกต่างกันหรือการส่งผ่านฟังก์ชันอื่น เช่น Join(..., If(true, JoinType.Inner, JoinType.Full))</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>อาร์กิวเมนต์ที่เริ่มต้นจากตำแหน่งที่ 5 มีไว้เพื่อเปลี่ยนชื่อคอลัมน์และคาดว่าจะเป็นอาร์กิวเมนต์โหนด 'As' นั่นคือ LeftRecord.Name As NewName</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>ต้องประกาศคอลัมน์ '{0}' อย่างน้อยหนึ่งคอลัมน์เพื่อสร้างผลลัพธ์การรวม</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>ค่า '{0}' ไม่ถูกต้องในบริบทนี้ ควรเป็นการอ้างอิงถึงชื่อขอบเขต '{1}' หรือ '{2}'</value>
     
   </data>
 </root>

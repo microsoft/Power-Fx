@@ -145,7 +145,8 @@ namespace Microsoft.PowerFx
             var props = new SymbolProperties
             {
                  CanMutate = true,
-                 CanSet = false
+                 CanSet = false,
+                 CanSetMutate = false
             };
 
             var data = new NameSymbol(logical, props)

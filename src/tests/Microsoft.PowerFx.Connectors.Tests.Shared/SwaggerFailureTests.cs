@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.PowerFx.Types;
@@ -14,9 +16,12 @@ using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
+#pragma warning disable CS0618 // Type or member is obsolete https://github.com/microsoft/Power-Fx/issues/2940
     public class SwaggerFailureTests
     {
         public readonly ITestOutputHelper _output;
+
+        private static Task<string> DummyTokenProvider(CancellationToken ct) => Task.FromResult("dummy-token");
 
         public SwaggerFailureTests(ITestOutputHelper output)
         {
@@ -46,6 +51,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // Throws when no authority (Hosts in swagger)
             PowerFxConnectorException ex = Assert.Throws<PowerFxConnectorException>(() => new PowerPlatformConnectorClient(doc, "environmentId", "connectionId", () => "Token"));
             Assert.Contains("Swagger document doesn't contain an endpoint", ex.Message);
+
+            using var dummyHandler = new HttpClientHandler();
+            var exception = Assert.Throws<PowerFxConnectorException>(() => PowerPlatformConnectorHelper.FromDocument(doc, "environmentId", "connectionId", DummyTokenProvider, dummyHandler));
+            Assert.Contains("Swagger document doesn't contain an endpoint", exception.Message);
         }
 
         [Fact]

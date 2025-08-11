@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -18,7 +19,7 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
-    /// This encapsulates a named formula and user defined functions: its original script, the parsed result, and any parse errors.
+    /// This encapsulates a named formula and user-defined functions: its original script, the parsed result, and any parse errors.
     /// </summary>
     internal sealed class UserDefinitions
     {
@@ -30,7 +31,9 @@ namespace Microsoft.PowerFx.Syntax
         private readonly Features _features;
 
         // Exposing it so hosts can filter out the intellisense suggestions
-        public static readonly ISet<DType> RestrictedTypes = new HashSet<DType> { DType.DateTimeNoTimeZone, DType.ObjNull,  DType.Decimal };
+        public static readonly ISet<DType> RestrictedTypes = ImmutableHashSet.Create(DType.DateTimeNoTimeZone, DType.ObjNull, DType.Decimal);
+
+        public static readonly ISet<DType> RestrictedParameterTypes = ImmutableHashSet.Create(DType.Void).Union(RestrictedTypes);
 
         private UserDefinitions(string script, ParserOptions parserOptions, Features features = null)
         {
@@ -40,18 +43,19 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         /// <summary>
-        /// Parses a script with both named formulas, user defined functions and user defined types.
+        /// Parses a script with both named formulas, user-defined functions and user-defined types.
         /// </summary>
-        /// <param name="script">Script with named formulas, user defined functions and user defined types.</param>
+        /// <param name="script">Script with named formulas, user-defined functions and user-defined types.</param>
         /// <param name="parserOptions">Options for parsing an expression.</param>
+        /// <param name="features">Power Fx feature flags.</param>
         /// <returns><see cref="ParseUserDefinitionResult"/>.</returns>
-        public static ParseUserDefinitionResult Parse(string script, ParserOptions parserOptions)
+        public static ParseUserDefinitionResult Parse(string script, ParserOptions parserOptions, Features features = null)
         {
-            var parseResult = TexlParser.ParseUserDefinitionScript(script, parserOptions);
+            var parseResult = TexlParser.ParseUserDefinitionScript(script, parserOptions, features);
 
             if (parserOptions.AllowAttributes)
             {
-                var userDefinitions = new UserDefinitions(script, parserOptions);
+                var userDefinitions = new UserDefinitions(script, parserOptions, features);
                 parseResult = userDefinitions.ProcessPartialAttributes(parseResult);
             }
 
@@ -133,7 +137,7 @@ namespace Microsoft.PowerFx.Syntax
                         firstAttribute));
             }
 
-            return new ParseUserDefinitionResult(newFormulas, parsed.UDFs, parsed.DefinedTypes, errors, parsed.Comments);
+            return new ParseUserDefinitionResult(newFormulas, parsed.UDFs, parsed.DefinedTypes, errors, parsed.Comments, parsed.UserDefinitionSourceInfos);
         }
 
         private Formula GetPartialCombinedFormula(string name, PartialAttribute.AttributeOperationKind operationKind, IList<NamedFormula> formulas)

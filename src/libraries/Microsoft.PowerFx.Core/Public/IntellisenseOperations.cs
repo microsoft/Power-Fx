@@ -21,22 +21,20 @@ namespace Microsoft.PowerFx.Intellisense
         /// <summary>
         /// Initializes a new instance of the <see cref="IntellisenseOperations"/> class.
         /// </summary>
-        /// <param name="result"></param>
+        /// <param name="result">The <see cref="CheckResult"/> to use for IntelliSense operations.</param>
         public IntellisenseOperations(CheckResult result)
         {
             _checkResult = result;
         }
 
         /// <summary>
-        /// Checks whether a call to a function with name <paramref name="functionName" /> is valid with argument list
-        /// <paramref name="args" />. Additionally returns (as an out parameter) the return type of this invocation.
-        /// 
+        /// Checks whether a call to a function with the specified name is valid with the given argument list. Additionally returns (as an out parameter) the return type of this invocation.
         /// Note: all arguments must belong to the formula that belongs to this <see cref="CheckResult" />.
         /// </summary>
-        /// <param name="functionName"></param>
-        /// <param name="args"></param>
-        /// <param name="retType"></param>
-        /// <returns></returns>
+        /// <param name="functionName">The name of the function to validate.</param>
+        /// <param name="args">The list of argument nodes for the function call.</param>
+        /// <param name="retType">When this method returns, contains the return type of the function invocation if valid; otherwise, null.</param>
+        /// <returns>True if the function invocation is valid; otherwise, false.</returns>
         public bool ValidateInvocation(string functionName, IReadOnlyList<TexlNode> args, out FormulaType retType)
         {
             retType = null;
@@ -94,11 +92,11 @@ namespace Microsoft.PowerFx.Intellisense
         }
 
         /// <summary>
-        /// Checks whether function's n-th argument can be row scoped in any of the overload of the function.
+        /// Checks whether the function's n-th argument can be row scoped in any of the overloads of the function.
         /// </summary>
-        /// <param name="functionIdentifier"></param>
-        /// <param name="argNum"></param>
-        /// <returns></returns>
+        /// <param name="functionIdentifier">The identifier of the function to check.</param>
+        /// <param name="argNum">The zero-based index of the argument to check for row scoping.</param>
+        /// <returns>True if the argument can be row scoped in any overload; otherwise, false.</returns>
         public bool MaybeRowScopeArg(Identifier functionIdentifier, int argNum)
         {
             if (functionIdentifier is null)
@@ -130,11 +128,11 @@ namespace Microsoft.PowerFx.Intellisense
         }
 
         /// <summary>
-        /// Checks whether function's n-th argument can be row scoped in any of the overload of the function.
+        /// Checks whether the function's n-th argument can be row scoped in any of the overloads of the function.
         /// </summary>
-        /// <param name="functionName"></param>
-        /// <param name="argNum"></param>
-        /// <returns></returns>
+        /// <param name="functionName">The name of the function to check.</param>
+        /// <param name="argNum">The zero-based index of the argument to check for row scoping.</param>
+        /// <returns>True if the argument can be row scoped in any overload; otherwise, false.</returns>
         public bool MaybeRowScopeArg(string functionName, int argNum)
         {
             if (functionName == null)

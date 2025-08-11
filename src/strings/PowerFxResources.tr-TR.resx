@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Renk (veya renk değerlerinin sütunu) soluklaştırma yüzdesi (veya yüzde değerleri sütunu). Negatif yüzde değeri daha koyu bir gölge oluşturur. Pozitif yüzde değeri ise daha açık bir gölge oluşturur.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Dosyayla ilgili bilgileri içeren bir kaydı döndürür.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>Hakkında bilgi alınacak dosya blob'u.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>dosya</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Bir sayının mutlak değerini (işareti olmadan) döndürür.</value>
     
@@ -1796,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Sağlanan türü belirsiz değeri verilen türde ise true değerini döndürür.</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>tür</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>Belirli bir türe dönüştürülebilip dönüştürülemeyeceğini kontrol etmek üzere belirsiz tür değeri.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>untypedValue değerini kontrol etmek istediğimiz tür.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Sağlanan değeri verilen tür olarak kullanır.</value>
     
@@ -1813,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>Değerin hangi tür olarak kullanılmasını istediğimizi gösteren varlık tablosu.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Sağlanan Türü belirsiz değerini kontrol eder ve verilen tür olarak kullanır.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>tür</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>Yeni tür olarak dönüştürülecek türü belirsiz değeri.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>Değerin kullanılmasını istediğimiz tür.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>İkinci parametre olarak sağlanan formülü, ilk parametre tarafından sağlanan kapsamı kullanarak yürütür.</value>
@@ -1868,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>'{0}' bilinmeyen veya desteklenmeyen bir işlevdir.</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}', tür yardımcısı işlevi olarak algılandı ve yalnızca Type işlevi içinde kullanılabilir.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -1982,10 +2033,6 @@
     <value>'{0}' öğesinin ilk bağımsız değişkeninin bir kayıt olması gerekir.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Bu seçenek kümesini bir numaralandırma değeri olarak veya Choices işlevi içinde kullanmak '{0}' varlığının bir Veri Kaynağı olarak eklenmesini gerektirir. Eklemek için, Görünüm menüsünü kullanın ve ardından Veri kaynaklarını seçin.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Belirtilen özellik bu bağlamda erişilebilir değil.</value>
     
@@ -2026,10 +2073,6 @@
     <value>Bağımsız değişken, geçerli bir tarih veya saat değerini temsil etmiyor.</value>
     
   </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Bu Veri kaynağı geçersiz. Lütfen sırasıyla şunlara tıklayarak "Veri kaynakları" bölmesindeki hatayı düzeltin: "İçerik -&gt; Veri kaynakları" veya "Görünüm -&gt; Seçenekler"</value>
-    
-  </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>Satır içi kaydı kısıtlamak için bir veri kaynağı tanımlayıcısı bekleniyordu.</value>
     
@@ -2068,6 +2111,14 @@
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
     <value>'{0}' için sütun adı çakışıyor.</value>
+    
+  </data>
+  <data name="ErrAddToSealed" xml:space="preserve">
+    <value>Sistem kaydına veya sistem kayıtları tablosuna sütun eklenemiyor. Önce ihtiyacınız olan belirli sütunları ayıklamak için ShowColumns kullanın.</value>
+    
+  </data>
+  <data name="ErrRenameOfSealed" xml:space="preserve">
+    <value>Sistem kaydının veya sistem kayıtları tablosunun sütunları yeniden adlandırılamıyor. Önce ihtiyacınız olan belirli sütunları ayıklamak için ShowColumns kullanın.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
@@ -2670,6 +2721,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>İşlenecek JSON dizesi.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>JSON dizesini bir türü belirli nesneye dönüştürür.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>dize</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>Türü belirli nesneye dönüştürülecek bir JSON dizesi.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>tür</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>Bir satır içine alınmış türü tanımı veya genel olarak tanımlanmış adlandırılmış bir tür.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Belirli bir dizinde bir tablodaki kaydı döndürür.</value>
     
@@ -2687,6 +2756,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Alınacak kaydın dizini.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2707,6 +2788,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Barkod türü</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2823,6 +2936,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Test edilecek değer.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Metin biçimindeki tarih ve saat değerini, Power Apps tarih-saat kodunda tarihi temsil eden bir sayıya dönüştürür.</value>
@@ -3098,32 +3215,33 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Bir veri kaynağına kayıt ekler.</value>
+    <value>Belirtilen koleksiyona bir veya daha fazla öğe ekler. Öğeler, farklı bir tablo veya koleksiyondan (ör. Collect(collection, source_collection)) veya bir ya da daha fazla kayıttan alınabilir. Örneğin, Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>veri_kaynağı</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>kayıt</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>koleksiyon</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>öğe</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Çoğaltılacak yeni veya mevcut bir koleksiyon.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Bir koleksiyondaki tüm kayıtları siler. Daha sonra aynı koleksiyona farklı bir kayıt kümesi ekler.</value>
+    <value>Önce koleksiyonu siler ve ardından belirtilen koleksiyona bir veya daha fazla öğe ekler. Öğeler, farklı bir tablo veya koleksiyondan (ör. ClearCollect(collection, source_collection)) veya bir ya da daha fazla kayıttan alınabilir. Örneğin, ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>veri_kaynağı</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Çoğaltılacak yeni veya mevcut bir koleksiyon.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>veri_kaynağı</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>kayıt</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Toplanacak bir kayıt veya tablo. Koleksiyona bir kayıt eklenir. Tablonun satırları da koleksiyona eklenir.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Güncelleştirmeleri belirtilen satırlara uygular ve belirtilen veri kaynağındaki satırı değiştirir. Güncelleştirilen satırı döndürür.</value>
@@ -3259,6 +3377,10 @@
     <value>Makale: Power Apps için formül başvurusu</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Formüldeki '{1}' konumunda beklenmeyen '{0}' karakteri.</value>
     
@@ -3271,6 +3393,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3288,6 +3414,10 @@
     <value>Makale: Power Apps için formül başvurusu</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Beklenmeyen karakterler. Formül içeriyor '{1}' beklenirken '{0}' içeriyor.</value>
     
@@ -3301,6 +3431,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3318,6 +3452,10 @@
     <value>Makale: Power Apps için formül başvurusu</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Ad geçerli değil. Bu tanımlayıcı tanınmıyor.</value>
     
@@ -3331,6 +3469,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3348,6 +3490,10 @@
     <value>Makale: PowerApps için formül başvurusu</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>'Parent' başvurusu geçerli değil. Bu bağlamda bir üst denetime başvurulamaz.</value>
     
@@ -3361,6 +3507,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Makale: Power Apps'te bir tuval uygulaması denetimi ekleme ve yapılandırma</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3400,6 +3550,10 @@
     <value>Modül: Temel formülleri kullanma</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Sayı bekleniyor. Formülde bu noktada bir sayı bekleniyor.</value>
     
@@ -3413,6 +3567,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3430,6 +3588,10 @@
     <value>Makale: Power Apps için formül başvurusu</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>İki nokta üst üste bekleniyor. Formülde bu noktada bir iki nokta üst üste (:) bekleniyor.</value>
     
@@ -3445,6 +3607,10 @@
     <value>Makale: Power Apps'te metin, tarih ve saat gösterme</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Davranış olmayan bir özellikte davranış işlevi. Bu özelliği uygulamanın başka bir yerinde değerleri değiştirmek için kullanamazsınız.</value>
     
@@ -3458,6 +3624,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Makale: Power Apps'te tuval uygulamaları için davranış formüllerini anlama</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Davranış dışı bir kullanıcı tarafından tanımlanan işlevde (UDF) davranış işlevi. Bir davranış UDF'si bildirmek için lütfen kullanıcı tarafından tanımlanan işlev gövdesini büyük ayraçlar ({...}) içine alın.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Davranış işlevleri, mevcut oturum durumunu değiştirir. "Clear", "Collect", "Patch" ve "Refresh" yaygın kullanılan davranış işlevleridir.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Kullanıcı tarafından tanımlanan işlev ifadesini, büyük ayraçlar içinde ({...}) olacak şekilde düzenleyin.</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3497,6 +3679,10 @@
     <value>Makale: Power Apps için formül başvurusu</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Metin veya sayı bekleniyor. Formülde bu noktada metin veya bir sayı bekleniyor.</value>
     
@@ -3512,6 +3698,10 @@
     <value>Makale: Power Apps için formül başvurusu</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Sağ küme ayracı bekleniyor. Formülde bu noktada bir sağ küme ayracı (}) bekleniyor.</value>
     
@@ -3523,12 +3713,23 @@
     <value>Formülünüzü ayraç içerecek şekilde düzenleyin.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Tanımlayıcı kapanışı bekleniyor. Formülde bu noktada bir kapanış (') bekleniyor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Kapatma tekli tırnak işareti, bir tanımlayıcının sonunu belirtir (örneğin 'Ad').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Formülünüzü tekli kapatma tekli tırnak işareti içerecek şekilde düzenleyin.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Tanımlayıcıda geçerli metin yok.</value>
+    <value>Tanımlayıcı boş veya sekme ya da yeni satır gibi geçersiz bir karakter içeriyor.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Tanımlayıcınız için metne sahip olduğunuzdan emin olun. Bu hata, tanımlayıcı yalnızca boşluklardan oluştuğunda oluşur.</value>
+    <value>Tanımlayıcınızda geçerli metne sahip olduğunuzdan emin olun. Bu hata, tanımlayıcı boşsa, yalnızca boşluk içeriyorsa veya bir sekme ya da yeni satır içeriyorsa oluşur.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3554,8 +3755,16 @@
     <value>Modül: Temel formülleri kullanma</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Modül: Tablo ve kayıtlarla temel formüller yazma</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3570,6 +3779,10 @@
     <value>Makale: Power Apps için formül başvurusu</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Uyumsuz tür. Güncelleştirmekte olduğunuz veri kaynağındaki '{0}' sütunu bir '{1}' türü bekliyor ancak '{2}' türünü kullanıyorsunuz.</value>
     
@@ -3582,8 +3795,16 @@
     <value>Modül: Temel formülleri kullanma</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Modül: Tablo ve kayıtlarla temel formüller yazma</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3596,6 +3817,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3614,8 +3839,16 @@
     <value>Modül: Temel formülleri kullanma</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Modül: Tablo ve kayıtlarla temel formüller yazma</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3633,8 +3866,16 @@
     <value>Modül: Temel formülleri kullanma</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Modül: Tablo ve kayıtlarla temel formüller yazma</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3650,6 +3891,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3675,8 +3920,16 @@
     <value>Makale: Tuval uygulamasında temsilci atamayı anlama</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Blog: Temsilci atamaya yönelik veri satırı sınırları</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3702,8 +3955,16 @@
     <value>Makale: Tuval uygulamasında temsilci atamayı anlama</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Blog: Temsilci atamaya yönelik veri satırı sınırları</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3733,8 +3994,16 @@
     <value>Makale: Tuval uygulamasında temsilci atamayı anlama</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Blog: Temsilci atamaya yönelik veri satırı sınırları</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3766,8 +4035,70 @@
     <value>Makale: Tuval uygulamasında temsilci atamayı anlama</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Blog: Temsilci atamaya yönelik veri satırı sınırları</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Temsilci uyarısı. {0} adlandırılmış formülü temsil edilemez ve bu nedenle bu formülde kullanılması, büyük veri kümelerinde doğru şekilde çalışmayabilir. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Veri kaynağı, formülü işleyemeyebilir ve eksik bir veri kümesi döndürebilir. Veri kümesi eksikse uygulamanız doğru sonuçlar döndürmeyebilir veya düzgün çalışmayabilir.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Adlandırılmış formülün tanımını basitleştirmeyi deneyin.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Makale: Tuval uygulamasında temsilci atamayı anlama</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Temsilci atamaya yönelik veri satırı sınırları</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Temsilci uyarısı. Kullanıcı tarafından tanımlanan {0} işlevi temsil edilemez ve bu nedenle bu formülde kullanılması, büyük veri kümelerinde doğru şekilde çalışmayabilir. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Veri kaynağı, formülü işleyemeyebilir ve eksik bir veri kümesi döndürebilir. Veri kümesi eksikse uygulamanız doğru sonuçlar döndürmeyebilir veya düzgün çalışmayabilir.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Kullanıcı tarafından belirlenen işlev tanımını basitleştirmeyi deneyin.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Makale: Tuval uygulamasında temsilci atamayı anlama</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Temsilci atamaya yönelik veri satırı sınırları</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3794,8 +4125,16 @@
     <value>Makale: Tuval uygulamasında temsilci atamayı anlama</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Blog: Temsilci atamaya yönelik veri satırı sınırları</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3824,6 +4163,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Başvuru: Tuval Uygulamaları için ConfirmExit</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3858,12 +4201,24 @@
     <value>Adlandırılmış formül bir ifade olmalı.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Adlandırılmış tür bildirimi, geçerli bir tür ifadesi olmalıdır.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
-    <value>Kullanıcı tanımlı işlevin gövdesi olmalı.</value>
+    <value>Kullanıcı tanımlı işlevin gövdesi olmalıdır.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>{0} işlevi zaten tanımlandı.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Uyarı: {0} adlı kullanıcı tanımlı işlev, {0} adlı mevcut yerleşik işlevi gölgeler.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>İşlev adı {0} kısıtlı.</value>
     
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
@@ -3875,7 +4230,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Belirtilen işlev dönüş türü, işlev gövdesinin dönüş türüyle eşleşmiyor.</value>
+    <value>Belirtilen '{0}' işlev dönüş türü, '{1}' işlev gövdesinin dönüş türüyle eşleşmiyor.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>{0} işlevi çok fazla parametreye sahip. Kullanıcı tanımlı işlevler en fazla {1} parametreyi destekler.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +4261,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>'{0}' için ilk bağımsız değişken, geçerli bir değişken adı olmalı ve mevcut denetim, ekran, koleksiyon veya veri kaynağı adlarıyla çakışmamalıdır. Bulunan tür: '{1}'</value>
+    <value>'{1}' öğesi '{0}' ile değiştirilemiyor ya da mevcut bir kapsam değişkeni, veri kaynağı veya farklı bir nesne ile aynı adı taşıdığı için çakışıyor.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4063,6 +4422,10 @@
     <value>{0} atanamıyor: '{1}' davranış işlevini içeriyor.</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows, önbelleğe alınmış bir değer geri döndürülebilir. En son sayımı almak için CountIf(DataSource, true) kullanın.</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Sağlanan metnin, sağlanan metin biçimi ile eşleşip eşleşmediğini belirler.</value>
     
@@ -4156,24 +4519,232 @@
     <value>Geçersiz normal ifade.</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidRegExWithContext_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Satır içi seçenekler, normal ifadenin başında olmalıdır, sonrasında "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Satır içi seçenekler, [imnsx] harflerinin birleşimiyle sınırlıdır, seçenekler devre dışı bırakılamaz ve alt ifadede kullanılamaz, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Sekizli \0 karakter kodları desteklenmez, bunun yerine onaltılık \x veya Unicode \u kullanın, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Değişmez kıvrımlı ayraçlarda ters eğik çizgi ile kaçış yapılmalıdır, "{0}," bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Değişmez köşeli parantezler, karakter sınıflarında bile ters eğik çizgi ile kaçış yapılmalıdır, örneğin \[ veya \], "{0}" sonunda bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnterminatedSquare_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Kapanmamış karakter sınıfı köşeli parantez mevcut.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Desteklenmeyen özel grup, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Karakter sınıfı içinde kaçış karakterine izin verilmez, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Negatif yapılımlı karakter sınıfı içinde negatif kaçış karakterine izin verilmez, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Karakter sınıfı dışında kaçış karakterine izin verilmez, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Geçersiz Unicode kategori adı, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Tekrarlanan satır içi seçeneği, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineComment_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Kapanmamış satır içi yorum mevcut.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedInlineCommentWithContext_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Kapanmamış satır içi yorum mevcut, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Satır içi seçeneği, MatchOptions.NumberedSubMatches ile uyumsuz, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: İyelik niceleyicileri desteklenmez, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Tam niceleyiciler, yavaş için ? gibi niceleyici değiştiricileri ile birlikte kullanılamaz, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Geçersiz kaçış kodu, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Alt eşleşme "{0}" tanımlanmamış veya desteklenmeyen bir iletme başvurusu var.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Alt eşleşmeler, arkaya bakmalarda desteklenmez, "{0}" başlangıcında bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Arkaya bakmalar iç içe olamaz, "{0}" başlangıcında bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Arkaya bakmalarda sınırsız niceleyiciler desteklenmez, "{0}" sonunda bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Niceleyiciler, arkaya bakma veya öne bakmalarda desteklenmez, "{0}" sonunda bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Değişim veya sıfır niceleyici nedeniyle gerçekleşmeyebilecek alt eşleşmeye "{0}" geri referansı.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Kendine başvuran alt eşleşmeler desteklenmez, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Kapatılmamış gruplar, çok az sayıda parantez kapama mevcut.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Açılmamış gruplar, çok az sayıda parantez açma mevcut.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Birden fazla kez tanımlanmış adlandırılmış alt eşleşme var, "{0}" başlangıcında bulundu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Alt eşleme adı, sözcük karakterlerinin birleşimi olmalı ve sayı ile başlamamalıdır, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Satır içi seçenekler, normal ifadenin başında olmalıdır, sonrasında "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Karakter, karakter sınıfında birden çok kez görünüyor, tekrarlanan "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Köşeli parantez karakter sınıfları boş olamaz, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Dengeleyici alt eşleşmeler desteklenmez, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Tek tırnak işaretli adlandırılmış yakalamaların kullanılması desteklenmez, bunun yerine (?&lt;... &gt;) sözdizimi kullanın, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Koşullu değişim desteklenmez, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Adlandırılmış yakalamalar, MatchOptions.NumberedSubMatches etkin olarak kullanılamaz, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Adlandırılmış yakalamaları "(?&lt;name&gt;...)" ve "\k&lt;name&gt;" ile kullanın ya da MatchOptions.NumberedSubMatches seçeneğini etkinleştirin, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Karakter sınıfında değişmez çizgi, arka çizgi ile kaçış yapılmalıdır, "\-" ile kaçış, "{0}" içinde bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Değişmez karakterin, karakter sınıfında kullanıldığında ters eğik çizgi ile kaçış yapılması gerekir, "{0}" sonunda bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Belirsiz bir sonuca yol açabilecek başka bir niceleyici veya belirsiz sonuca yol açabilecek bir boş alternatif mevcut, "{0}" sonunda bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Lookbehind, 250 karakterlik olası maksimum karakter sınırını aşıyor, "{0}" sonunda bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Niceleyici aralığı düşük sayısı, yüksek sayıdan büyük, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Çok fazla iç içe grup mevcut, "{0}" başlangıcında bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Alt eşleşme adı çok uzun, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberOverflow_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Sayı çok büyük, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassRangeReverse_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Bir karakter sınıfı aralığındaki karakterler ters çevrilmiş, "{0}" sonunda bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCharacterClassCategoryUse_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Karakter sınıfı aralığında karakter sınıfı veya değişmez çizgide arka çizgi ile kaçış, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEndsWithBackslash_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Kaçış olmayan ters eğik çizgi ile bitiyor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierOnNothing_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Ölçülecek bir öğe içermeyen niceleyici mevcut, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExV1Options_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: MatchOptions.DotAll ve MatchOptions.FreeSpacing yalnızca Power Fx V1 ile kullanılabilir, "{0}" bulundu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToCaptureInLookaround_ShortMessage" xml:space="preserve">
+    <value>Geçersiz normal ifade: Lookbehind veya lookahead içindeki alt eşleşmeye "{0}" geri referansı.</value>
+    
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Normal ifadeler sabit değer olmalıdır.</value>
+    <value>Normal ifade, sabit bir değer olmalıdır.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>MatchOptions, sabit bir değer olmalıdır.</value>
     
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>'{0}' işlevine aktarılan değer değiştirilemez.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
-    <value>Yakalama adı '{0}', normal ifadenin tam eşleşmesini döndüren önceden tanımlanmış özelliğini gizliyor. Belirtilen metinde tam eşleşmeyi ayıklamak için bu adlandırılan özelliği kullanmak istiyorsanız yeniden adlandırmanız yararlı olabilir.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
+    <value>"{0}" yakalama adında, eşleşme bilgileri döndüren önceden tanımlanmış özellikler gizli. Eşleşme bilgilerine erişmek istiyorsanız bunları yeniden adlandırın.</value>
     
   </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
-    <value>Yakalama adı '{0}', normal ifadedeki grup eşleşmelerini döndüren önceden tanımlanmış özelliğini gizliyor. Belirtilen metinde tam eşleşmeyi ayıklamak için bu adlandırılan özelliği kullanmak istiyorsanız yeniden adlandırmanız yararlı olabilir.</value>
-    
-  </data>
-  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
-    <value>Yakalama adı '{0}', normal ifade eşleşmesinin konumunu döndüren önceden tanımlanmış özelliğini gizliyor. Belirtilen metinde tam eşleşmeyi ayıklamak için bu adlandırılan özelliği kullanmak istiyorsanız yeniden adlandırmanız yararlı olabilir.</value>
+  <data name="InfoRegExCaptureNameHidesPredefinedPlural" xml:space="preserve">
+    <value>"{0}" kümesindeki yakalama adlarında eşleşme bilgileri döndüren önceden tanımlanmış özellikler gizli. Eşleşme bilgilerine erişmek istiyorsanız bunları yeniden adlandırın.</value>
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
@@ -4209,16 +4780,20 @@
     <value>Çevrimiçi bir veri kaynağı değerine (tablo veya kayıt) değişken ayarlamak, sunucuya birden fazla istek gönderilmesine neden olabilir. Bu, yakında engellenecektir.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Tür ifadesi geçersiz. '{0}', bir tür ifadesinde kullanılamaz.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tanım türü {0} geçersiz.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Desteklenmeyen kullanım: Type işlevi yalnızca tür bağımsız değişkenleri ve tür bildirimlerinde kullanılabilir.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Bildirim türü {0} geçersiz.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>{0} türünün tanımı geçersiz ve döngü içerebilir.</value>
+    <value>{0} türünün bildirimi geçersiz ve döngü içerebilir.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4419,6 +4994,16 @@
     <value>Bilinmeyen Partial işleci.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Verilerin ekleneceği veri kaynağı.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Eklenecek kayıt veya tablo. Veri kaynağına bir kayıt eklenir. Tablonun satırları da veritabanına eklenir.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>öğe</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Temsilci uyarısı. '{0}' bağımsız değişkeninin sonucu, '{1}' işlevine aktarılamadan önce büyük veri kümeleri için kısaltılabilir.</value>
     
@@ -4459,10 +5044,98 @@
     <value>Silinecek koleksiyon.</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>Temizlenecek kaynak.</value>
+  </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>İlişkilere sahip birden fazla tablo geneline yayılmış verileri alır.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>kaynak1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>kaynak2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>payda</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Soldaki tablo veya koleksiyon.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Sağdaki tablo veya koleksiyon.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>İki tablo veya koleksiyon arasındaki birleştirme ölçütleri.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>İki tablo veya koleksiyon arasındaki birleştirme türü.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Kaynaklardan birindeki mevcut bir sütunun adını değiştirmeye yönelik bağımsız değişkenler.</value>
+    
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Belirtilen veri kaynağı bu işlevle kullanılamıyor.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Geçersiz bağımsız değişken '{0}'. Beklenen geçerli tür adı veya satır içi türü ifade.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Bağımsız değişkende desteklenmeyen "{0}" türü.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>JSON yükünde dolaşırken maksimum derinliğe ulaşıldı.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>JSON işlevinde maksimum uzunluğa ulaşıldı.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>"Kullanıcı tanımlı türler" adlı deneysel özellik etkin değil.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Yanlış söz dizimi: '=' kullanıcı tarafından tanımlanan türleri bildirmek için kullanılamaz. Bunun yerine ':=' kullanın.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>'{0}' öğesi, aynı ada sahip başka bir sütun ile çakışma olması nedeniyle eklenemez/yeniden adlandırılamaz.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Düz 'JoinType' sabit liste değeri bekleniyordu. Farklı sabit liste değerleri veya bunların başka bir işlevden geçirilmesi desteklenmez, ör. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>5. konumdan başlayan bağımsız değişkenler, sütunları yeniden adlandırmayı yöneliktir ve "As" düğüm bağımsız değişkenleri olmaları beklenir; ör. LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Birleştirme sonucunun oluşturulabilmesi için en az bir '{0}' sütunu bildirilmelidir.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>'{0}' değeri bu bağlamda geçersizdir. Değer, '{1}' veya '{2}' kapsam adına başvuru olmalıdır.</value>
     
   </data>
 </root>

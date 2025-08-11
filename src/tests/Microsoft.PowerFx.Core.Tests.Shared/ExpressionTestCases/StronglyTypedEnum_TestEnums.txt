@@ -28,7 +28,7 @@
 // Misc
 //   15. Since there is no longer an Accepts relationship between enums and their backing kinds, more likely to get Void results
 //   16. Everything coerces to string
-//   17. Everything equals compares to Blank() (ObjNull), can order compare with numbers and CanCompareNumerics set
+//   17. Everything equals compares to Blank() (Blank), can order compare with numbers and CanCompareNumerics set
 //
 // Examples
 //   18. TestYesNo - Standard DV Boolean backed option set, with CoerceToBackingKind and CoerceFromBackingKind
@@ -144,28 +144,28 @@ Errors: Error 30-31: Incompatible types for comparison. These types can't be com
 // Booleans cannot be used in math expressions, even if they support coercion to backing kind
 
 >> TestBooleanNoCoerce.SuperFalse + 2
-Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> TestBooleanNoCoerce.SuperFalse * 2
-Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> TestBooleanNoCoerce.SuperFalse / 2
-Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> TestBooleanNoCoerce.SuperFalse ^ 2
-Errors: Error 19-30: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 19-30: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 >> TestYesNo.Yes + 2
-Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> TestYesNo.No * 2
-Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> TestYesNo.Yes / 2
-Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> TestYesNo.Yes ^ 2
-Errors: Error 9-13: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, Dynamic.
 
 //===========================================================================================================
 //
@@ -173,22 +173,22 @@ Errors: Error 9-13: Invalid argument type. Expecting one of the following: Numbe
 //
 
 >> TestYesNo.Yes && TestBooleanNoCoerce.SuperTrue
-Errors: Error 36-46: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
+Errors: Error 36-46: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, Dynamic.
 
 >> TestBooleanNoCoerce.SuperTrue && TestBooleanNoCoerce.SuperFalse
-Errors: Error 19-29: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.|Error 52-63: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
+Errors: Error 19-29: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, Dynamic.|Error 52-63: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, Dynamic.
 
 >> TestBooleanNoCoerce.SuperTrue && false
-Errors: Error 19-29: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
+Errors: Error 19-29: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, Dynamic.
 
 >> !TestBooleanNoCoerce.SuperTrue
-Errors: Error 20-30: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
+Errors: Error 20-30: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, Dynamic.
 
 >> TestYesNo.Yes Or TestBooleanNoCoerce.SuperTrue
-Errors: Error 36-46: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
+Errors: Error 36-46: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, Dynamic.
 
 >> Not TestBooleanNoCoerce.SuperTrue And Not TestBooleanNoCoerce.SuperFalse
-Errors: Error 23-33: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.|Error 61-72: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
+Errors: Error 23-33: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, Dynamic.|Error 61-72: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, Dynamic.
 
 >> TestBooleanNoCoerce.SuperTrue
 TestBooleanNoCoerce.SuperTrue
@@ -273,6 +273,26 @@ Errors: Error 24-28: Invalid argument type (Enum (TestYeaNay)). Expecting a Enum
 >> TestXORYesNo( TestYesNo.No, TestYesNo.Yes )
 true
 
+>> If( false, TestYeaNay.Yea, false )
+TestYeaNay.Nay
+
+>> Text( If( false, TestYeaNay.Yea, false ) )
+"Nay"
+
+// 10 is a part of the option set.  In the future we may want to have this return .X instead.
+>> If( false, TestNumberCompareNumericCoerceFrom.V, 10 )
+TestNumberCompareNumericCoerceFrom.CalculatedOptionSetValue
+
+>> Text( If( false, TestNumberCompareNumericCoerceFrom.V, 10 ) )
+"CalculatedOptionSetValue"
+
+// 11 is not a part of the option set.
+>> If( false, TestNumberCompareNumericCoerceFrom.V, 11 )
+TestNumberCompareNumericCoerceFrom.CalculatedOptionSetValue
+
+>> Text( If( false, TestNumberCompareNumericCoerceFrom.V, 11 ) )
+"CalculatedOptionSetValue"
+
 //===========================================================================================================
 //
 // 11. CanCoerceToBackingKind - For example, ErrorKind that can be used as a number
@@ -284,8 +304,32 @@ true
 >> Int( TestNumberCoerceTo.V )
 5
 
+>> Power( TestNumberCoerceTo.V, 2 )
+25
+
+>> TestSignNumber( TestNumberCoerceTo.V )
+1
+
+>> TestSignDecimal( TestNumberCoerceTo.V )
+1
+
 >> Power( TestNumberCoerceTo.V, TestNumberCoerceTo.V )
 3125
+
+>> Int( TestNumberCompareNumeric.V )
+Errors: Error 0-3: The function 'Int' has some invalid arguments.|Error 29-31: Invalid argument type (Enum (TestNumberCompareNumeric)). Expecting a Decimal value instead.
+
+>> Power( TestNumberCompareNumeric.V, 2 )
+Errors: Error 0-5: The function 'Power' has some invalid arguments.|Error 31-33: Invalid argument type (Enum (TestNumberCompareNumeric)). Expecting a Number value instead.
+
+>> TestSignNumber( TestNumberCompareNumeric.V )
+Errors: Error 40-42: Invalid argument type (Enum (TestNumberCompareNumeric)). Expecting a Number value instead.|Error 0-14: The function 'TestSignNumber' has some invalid arguments.
+
+>> TestSignDecimal( TestNumberCompareNumeric.V )
+Errors: Error 41-43: Invalid argument type (Enum (TestNumberCompareNumeric)). Expecting a Decimal value instead.|Error 0-15: The function 'TestSignDecimal' has some invalid arguments.
+
+>> Power( TestNumberCompareNumeric.V, TestNumberCompareNumeric.V )
+Errors: Error 0-5: The function 'Power' has some invalid arguments.|Error 31-33: Invalid argument type (Enum (TestNumberCompareNumeric)). Expecting a Number value instead.|Error 59-61: Invalid argument type (Enum (TestNumberCompareNumeric)). Expecting a Number value instead.
 
 // Unless there is a specific reason, CanCoerceToBackingKind is expected to be true for most Boolean option sets
 
@@ -533,7 +577,7 @@ false
 
 //===========================================================================================================
 //
-// 17. Everything equals compares to Blank() (ObjNull), can order compare with numbers and CanCompareNumerics set
+// 17. Everything equals compares to Blank() (Blank), can order compare with numbers and CanCompareNumerics set
 //
 
 >> TestYesNo.Yes = Blank()
@@ -561,28 +605,28 @@ true
 true
 
 >> TestYesNo.No >= Blank()
-Errors: Error 13-15: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), ObjNull.
+Errors: Error 13-15: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), Blank.
 
 >> TestYesNo.No < Blank()
-Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), ObjNull.
+Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), Blank.
 
 >> Blank() < TestYesNo.Yes
-Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestYesNo).
+Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: Blank, Enum (TestYesNo).
 
 >> Blank() <= TestYesNo.Yes
-Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestYesNo).
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: Blank, Enum (TestYesNo).
 
 >> TestNumberCompareNumeric.V2 < Blank()
-Errors: Error 28-29: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), ObjNull.
+Errors: Error 28-29: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), Blank.
 
 >> TestNumberCompareNumeric.V2 <= Blank()
-Errors: Error 28-30: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), ObjNull.
+Errors: Error 28-30: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), Blank.
 
 >> TestNumberCompareNumeric.V2 >= Blank()
-Errors: Error 28-30: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), ObjNull.
+Errors: Error 28-30: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), Blank.
 
 >> TestNumberCompareNumeric.V2 > Blank()
-Errors: Error 28-29: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), ObjNull.
+Errors: Error 28-29: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), Blank.
 
 >> TestNumberCompareNumeric.V2 = Blank()
 false
@@ -591,16 +635,16 @@ false
 true
 
 >> Blank() < TestNumberCompareNumeric.V2
-Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestNumberCompareNumeric).
+Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: Blank, Enum (TestNumberCompareNumeric).
 
 >> Blank() <= TestNumberCompareNumeric.V2
-Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestNumberCompareNumeric).
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: Blank, Enum (TestNumberCompareNumeric).
 
 >> Blank() >= TestNumberCompareNumeric.V2
-Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestNumberCompareNumeric).
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: Blank, Enum (TestNumberCompareNumeric).
 
 >> Blank() > TestNumberCompareNumeric.V2
-Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestNumberCompareNumeric).
+Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: Blank, Enum (TestNumberCompareNumeric).
 
 >> Blank() = TestNumberCompareNumeric.V2
 false
@@ -609,7 +653,7 @@ false
 true
 
 >> TestNumberCoerceTo.V > Blank()
-Errors: Error 21-22: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCoerceTo), ObjNull.
+Errors: Error 21-22: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCoerceTo), Blank.
 
 >> TestNumberCoerceTo.V = Blank()
 false
@@ -724,7 +768,10 @@ true
 false
 
 >> If( false, TestYesNo.Yes, false )
-TestYesNo.CalculatedOptionSetValue
+TestYesNo.No
+
+>> Text( If( false, TestYesNo.Yes, false ) )
+"No"
 
 // Can be used as a Boolean (CanCoerceToBackingKind = true)
 
@@ -735,10 +782,10 @@ Errors: Error 0-4: The function 'Sqrt' has some invalid arguments.|Error 15-18: 
 Errors: Error 0-3: The function 'Mod' has some invalid arguments.|Error 14-17: Invalid argument type (Enum (TestYesNo)). Expecting a Decimal value instead.
 
 >> TestYesNo.No + 3
-Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> TestYesNo.No + TestYesNo.Yes
-Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 24-28: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.|Error 24-28: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
 
 >> If( false, true, TestYesNo.No )  // first type rule
 false

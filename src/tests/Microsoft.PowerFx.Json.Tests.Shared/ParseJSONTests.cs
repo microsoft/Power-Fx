@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Tests;
@@ -25,7 +26,7 @@ namespace Microsoft.PowerFx.Json.Tests
         }
 
         [Fact]
-        public void SingleColumnTableFromJson()
+        public async Task SingleColumnTableFromJson()
         {
             var tableType = RecordType.Empty().Add("Value", FormulaType.String).ToTable();
             var res = FormulaValueJSON.FromJson("[ { \"Value\": \"Seattle\"}, { \"Value\": \"Redmond\"} ]", tableType);
@@ -39,7 +40,7 @@ namespace Microsoft.PowerFx.Json.Tests
             config.EnableJsonFunctions();
 
             var engine = new RecalcEngine(config);
-            var result = engine.EvalAsync("First(table).Value", CancellationToken.None, symValue).ConfigureAwait(false).GetAwaiter().GetResult();
+            var result = await engine.EvalAsync("First(table).Value", CancellationToken.None, symValue);
             Assert.Equal("Seattle", result.ToObject());
         }
 
@@ -68,12 +69,12 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.Equal(17m, ((DecimalValue)wv2).Value);
             Assert.Equal("w", wv2.Type.ToStringWithDisplayNames());
 
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, TableType.Empty()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, RecordType.Empty()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.String));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Boolean));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Guid));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Color));
+            Assert.Equal($"PowerFxJsonException Expecting Table but received a Number", (FormulaValueJSON.FromJson(expr, TableType.Empty()) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Record but received a Number", (FormulaValueJSON.FromJson(expr, RecordType.Empty()) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting String but received a Number", (FormulaValueJSON.FromJson(expr, FormulaType.String) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Boolean but received a Number", (FormulaValueJSON.FromJson(expr, FormulaType.Boolean) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Guid but received a Number", (FormulaValueJSON.FromJson(expr, FormulaType.Guid) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Color but received a Number", (FormulaValueJSON.FromJson(expr, FormulaType.Color) as ErrorValue).Errors.First().Message);
 
             FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType());
             Assert.NotNull(fv3);
@@ -116,12 +117,12 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.Equal(17m, ((DecimalValue)wv2).Value);
             Assert.Equal("w", wv2.Type.ToStringWithDisplayNames());
 
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, TableType.Empty(), numberIsFloat: true));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, RecordType.Empty(), numberIsFloat: true));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.String, numberIsFloat: true));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Boolean, numberIsFloat: true));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Guid, numberIsFloat: true));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Color, numberIsFloat: true));
+            Assert.Equal($"PowerFxJsonException Expecting Table but received a Number", (FormulaValueJSON.FromJson(expr, TableType.Empty(), numberIsFloat: true) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Record but received a Number", (FormulaValueJSON.FromJson(expr, RecordType.Empty(), numberIsFloat: true) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting String but received a Number", (FormulaValueJSON.FromJson(expr, FormulaType.String, numberIsFloat: true) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Boolean but received a Number", (FormulaValueJSON.FromJson(expr, FormulaType.Boolean, numberIsFloat: true) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Guid but received a Number", (FormulaValueJSON.FromJson(expr, FormulaType.Guid, numberIsFloat: true) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Color but received a Number", (FormulaValueJSON.FromJson(expr, FormulaType.Color, numberIsFloat: true) as ErrorValue).Errors.First().Message);
 
             FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType(), numberIsFloat: true);
             Assert.NotNull(fv3);
@@ -154,13 +155,13 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.True(fv2 is StringValue);
             Assert.Equal("abc", ((StringValue)sv).Value);
 
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, TableType.Empty()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, RecordType.Empty()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Number));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Decimal));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Boolean));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Guid));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Color));
+            Assert.Equal($"PowerFxJsonException Expecting Table but received a String", (FormulaValueJSON.FromJson(expr, TableType.Empty()) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Record but received a String", (FormulaValueJSON.FromJson(expr, RecordType.Empty()) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Number but received a String", (FormulaValueJSON.FromJson(expr, FormulaType.Number) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Decimal but received a String", (FormulaValueJSON.FromJson(expr, FormulaType.Decimal) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Boolean but received a String", (FormulaValueJSON.FromJson(expr, FormulaType.Boolean) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Guid but received a String", (FormulaValueJSON.FromJson(expr, FormulaType.Guid) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Color but received a String", (FormulaValueJSON.FromJson(expr, FormulaType.Color) as ErrorValue).Errors.First().Message);
 
             FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType());
             Assert.NotNull(fv3);
@@ -224,13 +225,14 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.True(fv2 is BooleanValue);
             Assert.Equal(expectedBoolean, ((BooleanValue)bv).Value);
 
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, TableType.Empty()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, RecordType.Empty()));            
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Number));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Decimal));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.String));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Guid));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Color));
+            string expectedBooleanStr = expectedBoolean.ToString().ToLowerInvariant();
+            Assert.Equal($"PowerFxJsonException Expecting Table but received a Boolean ({expectedBooleanStr})", (FormulaValueJSON.FromJson(expr, TableType.Empty()) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Record but received a Boolean ({expectedBooleanStr})", (FormulaValueJSON.FromJson(expr, RecordType.Empty()) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Number but received a Boolean ({expectedBooleanStr})", (FormulaValueJSON.FromJson(expr, FormulaType.Number) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Decimal but received a Boolean ({expectedBooleanStr})", (FormulaValueJSON.FromJson(expr, FormulaType.Decimal) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting String but received a Boolean ({expectedBooleanStr})", (FormulaValueJSON.FromJson(expr, FormulaType.String) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Guid but received a Boolean ({expectedBooleanStr})", (FormulaValueJSON.FromJson(expr, FormulaType.Guid) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Color but received a Boolean ({expectedBooleanStr})", (FormulaValueJSON.FromJson(expr, FormulaType.Color) as ErrorValue).Errors.First().Message);
 
             FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType());
             Assert.NotNull(fv3);
@@ -261,13 +263,13 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.NotNull(fv2);
             Assert.True(fv2 is RecordValue);
 
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, TableType.Empty()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Number));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Decimal));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.String));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Boolean));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Guid));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Color));
+            Assert.IsAssignableFrom<TableValue>(FormulaValueJSON.FromJson(expr, TableType.Empty()));
+            Assert.Equal($"PowerFxJsonException Expecting Number but received a Record", (FormulaValueJSON.FromJson(expr, FormulaType.Number) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Decimal but received a Record", (FormulaValueJSON.FromJson(expr, FormulaType.Decimal) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting String but received a Record", (FormulaValueJSON.FromJson(expr, FormulaType.String) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Boolean but received a Record", (FormulaValueJSON.FromJson(expr, FormulaType.Boolean) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Guid but received a Record", (FormulaValueJSON.FromJson(expr, FormulaType.Guid) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Color but received a Record", (FormulaValueJSON.FromJson(expr, FormulaType.Color) as ErrorValue).Errors.First().Message);
 
             FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType());
             Assert.NotNull(fv3);
@@ -311,13 +313,13 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.NotNull(fv2);
             Assert.True(fv2 is RecordValue);
 
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, TableType.Empty()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Number));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Decimal));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.String));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Boolean));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Guid));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Color));
+            Assert.IsAssignableFrom<TableValue>(FormulaValueJSON.FromJson(expr, TableType.Empty()));
+            Assert.Equal($"PowerFxJsonException Expecting Number but received a Record", (FormulaValueJSON.FromJson(expr, FormulaType.Number) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Decimal but received a Record", (FormulaValueJSON.FromJson(expr, FormulaType.Decimal) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting String but received a Record", (FormulaValueJSON.FromJson(expr, FormulaType.String) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Boolean but received a Record", (FormulaValueJSON.FromJson(expr, FormulaType.Boolean) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Guid but received a Record", (FormulaValueJSON.FromJson(expr, FormulaType.Guid) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Color but received a Record", (FormulaValueJSON.FromJson(expr, FormulaType.Color) as ErrorValue).Errors.First().Message);
 
             FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType());
             Assert.NotNull(fv3);
@@ -388,13 +390,13 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.NotNull(fv2);
             Assert.True(fv2 is RecordValue);
 
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, TableType.Empty(), numberIsFloat: true));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Number, numberIsFloat: true));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Decimal, numberIsFloat: true));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.String, numberIsFloat: true));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Boolean, numberIsFloat: true));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Guid, numberIsFloat: true));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Color, numberIsFloat: true));
+            Assert.IsAssignableFrom<TableValue>(FormulaValueJSON.FromJson(expr, TableType.Empty(), numberIsFloat: true));
+            Assert.Equal($"PowerFxJsonException Expecting Number but received a Record", (FormulaValueJSON.FromJson(expr, FormulaType.Number, numberIsFloat: true) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Decimal but received a Record", (FormulaValueJSON.FromJson(expr, FormulaType.Decimal, numberIsFloat: true) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting String but received a Record", (FormulaValueJSON.FromJson(expr, FormulaType.String, numberIsFloat: true) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Boolean but received a Record", (FormulaValueJSON.FromJson(expr, FormulaType.Boolean, numberIsFloat: true) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Guid but received a Record", (FormulaValueJSON.FromJson(expr, FormulaType.Guid, numberIsFloat: true) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Color but received a Record", (FormulaValueJSON.FromJson(expr, FormulaType.Color, numberIsFloat: true) as ErrorValue).Errors.First().Message);
 
             FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType(), numberIsFloat: true);
             Assert.NotNull(fv3);
@@ -448,13 +450,13 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.NotNull(fv2);
             Assert.True(fv2 is TableValue);
 
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, RecordType.Empty()));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Number));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Decimal));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.String));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Boolean));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Guid));
-            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Color));
+            Assert.Equal($"PowerFxJsonException Expecting Record but received a Table with 0 elements", (FormulaValueJSON.FromJson(expr, RecordType.Empty()) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Number but received a Table with 0 elements", (FormulaValueJSON.FromJson(expr, FormulaType.Number) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Decimal but received a Table with 0 elements", (FormulaValueJSON.FromJson(expr, FormulaType.Decimal) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting String but received a Table with 0 elements", (FormulaValueJSON.FromJson(expr, FormulaType.String) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Boolean but received a Table with 0 elements", (FormulaValueJSON.FromJson(expr, FormulaType.Boolean) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Guid but received a Table with 0 elements", (FormulaValueJSON.FromJson(expr, FormulaType.Guid) as ErrorValue).Errors.First().Message);
+            Assert.Equal($"PowerFxJsonException Expecting Color but received a Table with 0 elements", (FormulaValueJSON.FromJson(expr, FormulaType.Color) as ErrorValue).Errors.First().Message);
 
             FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType());
             Assert.NotNull(fv3);
@@ -579,6 +581,41 @@ namespace Microsoft.PowerFx.Json.Tests
         {
             FormulaValue prototypeValue = FormulaValueJSON.FromJson(prototypeJson);
             Assert.Throws<InvalidOperationException>(() => FormulaValueJSON.FromJson(valueJson, prototypeValue.Type));
+        }
+
+        [Fact]
+        public void ParseDates_Blank()
+        {
+            using var doc = JsonDocument.Parse("\"\"");
+            var je = doc.RootElement;
+
+            var value = FormulaValueJSON.ParseDate(je, FormulaType.DateTime, (datetime) => throw new InvalidOperationException($"don't invoke this"));
+
+            Assert.True(value is BlankValue);
+            Assert.True(value.Type == FormulaType.DateTime);
+        }
+
+        [Fact]
+        public void ParseDates_Error()
+        {
+            using var doc = JsonDocument.Parse("\"123\""); // not a date
+            var je = doc.RootElement;
+
+            Assert.Throws<FormatException>(() =>
+                FormulaValueJSON.ParseDate(je, FormulaType.DateTime, (datetime) => throw new InvalidOperationException($"don't invoke this")));
+        }
+
+        [Fact]
+        public void ParseDates_Value()
+        {
+            using var doc = JsonDocument.Parse("\"2024-10-02T23:13:50.123456\""); // not a date
+            var je = doc.RootElement;
+
+            var value = FormulaValueJSON.ParseDate(je, FormulaType.DateTime, (datetime) => FormulaValue.New(datetime));
+
+            var dtValue = Assert.IsType<DateTimeValue>(value);
+            var dt = dtValue.GetConvertedValue(TimeZoneInfo.Local);
+            Assert.Equal(2024, dt.Year);
         }
     }
 }
