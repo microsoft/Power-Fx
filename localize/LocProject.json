@@ -1,0 +1,28 @@
+{
+  "Projects": [
+    {
+      "LanguageSet": "PowerPlatform_NoBi-di_41_Languages",
+      "_LanguageSet.comment" : "PowerPlatform_NoBi-di_41_Languages resolves to bg-BG;ca-ES;cs-CZ;da-DK;de-DE;el-GR;es-ES;et-EE;eu-ES;fi-FI;fr-FR;gl-ES;hi-IN;hr-HR;hu-HU;id-ID;it-IT;ja-JP;kk-KZ;ko-KR;lt-LT;lv-LV;ms-MY;nb-NO;nl-NL;pl-PL;pt-BR;pt-PT;ro-RO;ru-RU;sk-SK;sl-SI;sr-Cyrl-RS;sr-Latn-RS;sv-SE;th-TH;tr-TR;uk-UA;vi-VN;zh-CN;zh-TW",
+      "LocItems": [
+        {
+          "SourceFile": "src\\strings\\PowerFxConnectorResources.en-US.resx",
+          "CopyOption": "UsePlaceholders",
+          "OutputPath": "src\\strings\\PowerFxConnectorResources.{Lang}.resx",
+          "_OutputPath.comment": "For instance, for ko-KR (Korean), OutputPath resolves to src\\strings\\PowerFxConnectorResources.ko-KR.resx"
+        },
+        {
+          "SourceFile": "src\\strings\\PowerFxResources.en-US.resx",
+          "CopyOption": "UsePlaceholders",
+          "OutputPath": "src\\strings\\PowerFxResources.{Lang}.resx",
+          "_OutputPath.comment": "For instance, for ko-KR (Korean), OutputPath resolves to src\\strings\\PowerFxConnectorResources.ko-KR.resx"
+        },
+        {
+          "SourceFile": "src\\strings\\PowerFxRuntimeResources.en-US.resx",
+          "CopyOption": "UsePlaceholders",
+          "OutputPath": "src\\strings\\PowerFxRuntimeResources.{Lang}.resx",
+          "_OutputPath.comment": "For instance, for ko-KR (Korean), OutputPath resolves to src\\strings\\PowerFxConnectorResources.ko-KR.resx"
+        }
+      ]
+    }
+  ]
+}
