@@ -487,11 +487,11 @@ namespace Microsoft.PowerFx.Connectors
 
             if ((int)response.StatusCode >= 300)
             {
-                _logger?.LogError($"In {nameof(HttpFunctionInvoker)}.{nameof(ExecuteHttpRequest)}, response status code: {(int)response.StatusCode} {response.StatusCode}");
+                _logger?.LogWarning($"In PowerFX {nameof(HttpFunctionInvoker)}.{nameof(ExecuteHttpRequest)}, response status code: {(int)response.StatusCode} {response.StatusCode}");
             }
             else
             {
-                _logger?.LogInformation($"In {nameof(HttpFunctionInvoker)}.{nameof(ExecuteHttpRequest)}, response status code: {(int)response.StatusCode} {response.StatusCode}");
+                _logger?.LogInformation($"In PowerFX {nameof(HttpFunctionInvoker)}.{nameof(ExecuteHttpRequest)}, response status code: {(int)response.StatusCode} {response.StatusCode}");
             }
 
             return await DecodeResponseAsync(response, throwOnError).ConfigureAwait(false);
