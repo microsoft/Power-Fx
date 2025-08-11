@@ -14,13 +14,13 @@
           "SourceFile": "src\\strings\\PowerFxResources.en-US.resx",
           "CopyOption": "UsePlaceholders",
           "OutputPath": "src\\strings\\PowerFxResources.{Lang}.resx",
-          "_OutputPath.comment": "For instance, for ko-KR (Korean), OutputPath resolves to src\\strings\\PowerFxConnectorResources.ko-KR.resx"
+          "_OutputPath.comment": "For instance, for ko-KR (Korean), OutputPath resolves to src\\strings\\PowerFxResources.ko-KR.resx"
         },
         {
           "SourceFile": "src\\strings\\PowerFxRuntimeResources.en-US.resx",
           "CopyOption": "UsePlaceholders",
           "OutputPath": "src\\strings\\PowerFxRuntimeResources.{Lang}.resx",
-          "_OutputPath.comment": "For instance, for ko-KR (Korean), OutputPath resolves to src\\strings\\PowerFxConnectorResources.ko-KR.resx"
+          "_OutputPath.comment": "For instance, for ko-KR (Korean), OutputPath resolves to src\\strings\\PowerFxRuntimeResources.ko-KR.resx"
         }
       ]
     }
