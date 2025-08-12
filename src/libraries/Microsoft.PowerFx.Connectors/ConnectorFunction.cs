@@ -874,7 +874,6 @@ namespace Microsoft.PowerFx.Connectors
 
             if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network || e.Kind == ErrorKind.InvalidJSON || e.Kind == ErrorKind.InvalidArgument)) != null)
             {
-                runtimeContext.ExecutionLogger?.LogError($"{this.LogFunction(nameof(PostProcessResultAsync))}, ErrorValue is returned with {er.Message}");
                 ExpressionError newError = er is HttpExpressionError her
                     ? new HttpExpressionError(her.StatusCode) { Kind = er.Kind, Severity = er.Severity, Message = $"{DPath.Root.Append(new DName(Namespace)).ToDottedSyntax()}.{Name} failed: {er.Message}" }
                     : new ExpressionError() { Kind = er.Kind, Severity = er.Severity, Message = $"{DPath.Root.Append(new DName(Namespace)).ToDottedSyntax()}.{Name} failed: {er.Message}" };
@@ -1823,3 +1822,4 @@ namespace Microsoft.PowerFx.Connectors
         }
     }
 }
+
