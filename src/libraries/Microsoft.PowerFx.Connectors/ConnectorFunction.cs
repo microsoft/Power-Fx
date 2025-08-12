@@ -1822,4 +1822,3 @@ namespace Microsoft.PowerFx.Connectors
         }
     }
 }
-
