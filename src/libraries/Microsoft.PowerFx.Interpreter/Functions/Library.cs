@@ -471,6 +471,22 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: DateAdd)
             },
             {
+                BuiltinFunctionsCore.Workday,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.Workday.Name,
+                    expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new BlankValue(IRContext.NotInSource(FormulaType.Blank))),
+                    replaceBlankValues: ReplaceBlankWith(
+                        new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
+                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+                    checkRuntimeTypes: ExactSequence(
+                        DateOrTimeOrDateTime,
+                        ExactValueTypeOrBlank<NumberValue>,
+                        StringOrOptionSetBackedByString),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Workday)
+            },
+            {
                 BuiltinFunctionsCore.DateDiff,
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.DateDiff.Name,

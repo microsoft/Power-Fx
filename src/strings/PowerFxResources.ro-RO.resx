@@ -2599,6 +2599,10 @@
     <value>Adăugați numărul de unități specificat la o dată.</value>
     
   </data>
+  <data name="AboutWorkday_date" xml:space="preserve">
+    <value>Adăugați numărul de zile lucrătoare înainte sau după o dată.</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Calculați diferența dintre două date.</value>
     

@@ -2599,6 +2599,10 @@
     <value>Lägg till det angivna antalet enheter till ett datum.</value>
     
   </data>
+  <data name="AboutWorkday_date" xml:space="preserve">
+    <value>Lägg till antal arbetsdagar före eller efter ett datum.</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Beräkna skillnaden mellan två datum.</value>
     

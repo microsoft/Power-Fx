@@ -2599,6 +2599,10 @@
     <value>對日期新增指定的單位數。</value>
     
   </data>
+  <data name="AboutWorkday_date" xml:space="preserve">
+    <value>新增日期前後的工作天數。</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>計算兩個日期之間的差異。</value>
     

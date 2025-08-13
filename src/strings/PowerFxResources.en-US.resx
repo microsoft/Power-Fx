@@ -2607,6 +2607,10 @@
     <value>Add the specified number of units to a date.</value>
     <comment>Description of 'DateAdd' function.</comment>
   </data>
+  <data name="AboutWorkday_date" xml:space="preserve">
+    <value>Add number of working days before or after a date.</value>
+    <comment>Description of 'Workday' function.</comment>
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Calculate the difference between two dates.</value>
     <comment>Description of 'DateDiff' function</comment>

@@ -2599,6 +2599,10 @@
     <value>Pridá zadaný počet jednotiek do dátumu.</value>
     
   </data>
+  <data name="AboutWorkday_date" xml:space="preserve">
+    <value>Pridajte počet pracovných dní pred alebo po dátume.</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Vypočíta rozdiel medzi dvomi dátumami.</value>
     

@@ -1,0 +1,50 @@
+>> Workday(Date(2024,9,13), 10)
+Date(2024,9,27)
+
+>> Workday(Date(2024,9,13), -10)
+Date(2024,8,30)
+
+>> Workday(45565,1)
+Date(2024,10,1)
+
+>> Workday(Date(2024,9,30), "true")
+<Error: The value 'true' cannot be converted to a number.>
+
+>> DateAdd(false, 1)
+Error 8-13: Invalid argument type (Boolean). Expecting a DateTime value instead.
+Error 0-7: The function 'DateAdd' has some invalid arguments.
+
+>> Workday("false",1)
+<Error: The date or time value cannot be parsed.>
+
+>> Workday([Date(2000,1,1)],1)
+Error 8-24: Invalid argument type (Table). Expecting a DateTime value instead.
+
+Error 0-7: The function 'Workday' has some invalid arguments.
+>> Workday(null,1)
+Error 8-12: Use of a reserved word that is currently not supported.
+Error 8-12: Invalid argument type (Error). Expecting a DateTime value instead.
+Error 0-7: The function 'Workday' has some invalid arguments.
+
+>> Workday(Date(2024,9,30), null)
+Error 25-29: Use of a reserved word that is currently not supported.
+Error 25-29: Invalid argument type (Error). Expecting a Number value instead.
+Error 0-7: The function 'Workday' has some invalid arguments.
+
+>> Workday(Date(2024,9,30), [])
+Error 25-27: Invalid argument type (Table). Expecting a Number value instead.
+Error 0-7: The function 'Workday' has some invalid arguments.
+
+>> Workday(,)
+Error 8-9: Unexpected characters. Characters are used in the formula in an unexpected way.
+Error 9-10: Unexpected characters. Characters are used in the formula in an unexpected way.
+Error 10-10: Unexpected characters. The formula contains 'Eof' where 'ParenClose' is expected.
+Error 8-9: Invalid argument type (Error). Expecting a DateTime value instead.
+Error 9-10: Invalid argument type (Error). Expecting a Number value instead.
+Error 0-7: The function 'Workday' has some invalid arguments.
+
+>> Workday(DateTimeValue(\"1 Jan 2015\"), 2))
+Error 22-23: Unexpected characters. Characters are used in the formula in an unexpected way.
+Error 23-36: Expected operator. We expect an operator such as +, *, or & at this point in the formula.
+Error 36-37: Unexpected characters. Characters are used in the formula in an unexpected way.
+Error 0-42: Invalid number of arguments: received 1, expected 2.

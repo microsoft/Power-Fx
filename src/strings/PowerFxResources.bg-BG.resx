@@ -2599,6 +2599,10 @@
     <value>Добавя указания брой единици към дадена дата.</value>
     
   </data>
+  <data name="AboutWorkday_date" xml:space="preserve">
+    <value>Добавете брой работни дни преди или след дата.</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Изчислява разликата между две дати.</value>
     

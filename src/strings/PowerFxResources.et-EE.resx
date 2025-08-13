@@ -2599,6 +2599,10 @@
     <value>Lisab kuupäevale määratud arvu ühikuid.</value>
     
   </data>
+  <data name="AboutWorkday_date" xml:space="preserve">
+    <value>Lisage tööpäevade arv enne või pärast kuupäeva.</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Arvutab kahe kuupäeva vahelise erinevuse.</value>
     

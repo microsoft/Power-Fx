@@ -622,6 +622,59 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
+    // Workday(timestamp: d, delta: n) : d
+    internal sealed class WorkdayFunction : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public WorkdayFunction()
+            : base("Workday", TexlStrings.AboutWorkday, FunctionCategories.DateTime, DType.DateTime, 0, 2, 2, DType.DateTime, DType.Number)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.WorkdayArg1, TexlStrings.WorkdayArg2 };
+        }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.Assert(args.Length == argTypes.Length);
+            Contracts.AssertValue(errors);
+            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
+
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            Contracts.Assert(returnType == DType.DateTime);
+
+            var type0 = argTypes[0];
+
+            if (fValid)
+            {
+                if (type0.Kind == DKind.Date || type0.Kind == DKind.DateTime || type0.Kind == DKind.Time)
+                {
+                    // Arg0 should be a Time, DateTime or Date.
+                    returnType = type0;
+                }
+                else if (nodeToCoercedTypeMap != null && nodeToCoercedTypeMap.TryGetValue(args[0], out var coercedType))
+                {
+                    // Or a type that can be coerced to it
+                    returnType = coercedType;
+                }
+                else
+                {
+                    fValid = false;
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrDateExpected);
+                    returnType = ReturnType;
+                }
+            }
+
+            return fValid;
+        }
+    }
+
     // DateDiff(startdate: d, enddate : d, [ unit: TimeUnits ]) : n
     internal sealed class DateDiffFunction : BuiltinFunction
     {
