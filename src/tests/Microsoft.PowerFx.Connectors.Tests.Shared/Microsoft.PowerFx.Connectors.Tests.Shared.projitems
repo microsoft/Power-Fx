@@ -109,6 +109,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\OpenAI CreateImageEditWithMask.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\OpenAI CreateImageVariation.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\OpenAI CreateImageVariation2.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\PdfWithTable.pdf" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_DVReturnType_00.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_DVReturnType_01.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_DVReturnType_02.json" />
@@ -328,6 +329,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Mask.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\FileDownloadConnector.json" />
     <Content Include="$(MSBuildThisFileDirectory)Swagger\testSwagger.json" />
   </ItemGroup>
 </Project>

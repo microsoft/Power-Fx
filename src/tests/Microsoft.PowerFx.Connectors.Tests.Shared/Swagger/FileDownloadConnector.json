@@ -1,0 +1,42 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "FileDownloadConnector",
+    "description": "Connector to download binary files."
+  },
+  "host": "localhost",
+  "basePath": "/api",
+  "schemes": ["https"],
+  "paths": {
+    "/download/{fileId}": {
+      "get": {
+        "summary": "Download a file",
+        "description": "Downloads a file as binary content.",
+        "operationId": "DownloadFile",
+        "produces": ["application/octet-stream"],
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the file to download."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Binary file content",
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "default": {
+            "description": "Error"
+          }
+        }
+      }
+    }
+  }
+}
