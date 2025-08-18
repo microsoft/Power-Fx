@@ -1281,7 +1281,12 @@ namespace Microsoft.PowerFx.Core.Types
 
                 case DKind.LazyRecord:
                 case DKind.LazyTable:
-                    return LazyTypeProvider.TryGetFieldType(name, out type);
+                    if (LazyTypeProvider != null)
+                    {
+                        return LazyTypeProvider.TryGetFieldType(name, out type);
+                    }
+
+                    goto default;
                 case DKind.Enum:
                     if (ValueTree.Contains(name.Value))
                     {
@@ -2795,7 +2800,7 @@ namespace Microsoft.PowerFx.Core.Types
             rightType.AssertValid();
 
             if (features.PowerFxV1CompatibilityRules && leftType != rightType &&
-                ((leftType.IsSealed && rightType != DType.ObjNull && rightType != DType.EmptyRecord && rightType != DType.EmptyTable) 
+                ((leftType.IsSealed && rightType != DType.ObjNull && rightType != DType.EmptyRecord && rightType != DType.EmptyTable)
                  || (rightType.IsSealed && leftType != DType.ObjNull && leftType != DType.EmptyRecord && leftType != DType.EmptyTable)))
             {
                 fError = true;
