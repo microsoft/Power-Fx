@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Microsoft.PowerFx.Core.Annotations;
@@ -17,6 +18,7 @@ using Microsoft.PowerFx.Intellisense.IntellisenseData;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.LanguageServerProtocol.LanguageServer;
 
 namespace Microsoft.PowerFx
@@ -44,7 +46,7 @@ namespace Microsoft.PowerFx
     ///  A scope is the context for a specific formula bar. 
     ///  This includes helpers to aide in customizing the editing experience. 
     /// </summary>
-    public sealed class EditorContextScope : IPowerFxScopeV2, IPowerFxScopeFx2NL
+    public sealed class EditorContextScope : IPowerFxScope, IPowerFxScopeFx2NL
     {
         private readonly GuardSingleThreaded _guard = new GuardSingleThreaded();
 
@@ -253,116 +255,157 @@ namespace Microsoft.PowerFx
             return _checkUserDefinedFunctions?.Invoke(expression) ?? throw new NotImplementedException();
         }
 
-        public IIntellisenseResult Suggest(string expression, int cursorPosition, LSPMode mode)
+        public IIntellisenseResult Suggest(string expression, int cursorPosition, LSPExpressionMode mode)
         {
-            if (mode == LSPMode.Default)
+            return mode switch
             {
-                return ((IPowerFxScope)this).Suggest(expression, cursorPosition);
-            }
-            else if (mode == LSPMode.UserDefiniedFunction)
+                LSPExpressionMode.Default => ((IPowerFxScope)this).Suggest(expression, cursorPosition),
+                LSPExpressionMode.UserDefiniedFunction => SuggestForUdf(expression, cursorPosition),
+                _ => throw new ArgumentException($"Unknown LSP mode {mode}")
+            };
+        }
+
+        private IIntellisenseResult SuggestForUdf(string expression, int cursorPosition)
+        {
+            var checkUdf = CheckUserDefinedFunctions(expression);
+            var parsedUdfs = checkUdf.ApplyParse();
+
+            foreach (var parsedUdf in parsedUdfs.UDFs)
             {
-                var checkUDF = CheckUserDefinedFunctions(expression);
+                // Maybe cache per-UDF if this is on a hot path.
+                var udf = UserDefinedFunction.CreatePartialFunction(parsedUdf, checkUdf.UDFBindingSymbols, out _);
+                var nameResolver = udf.GetUDFNameResolver(checkUdf.UDFBindingSymbols);
 
-                var parsedUDFs = checkUDF.ApplyParse();
-
-                foreach (var parsedUDF in parsedUDFs.UDFs)
+                // No body: only type suggestions (arg types OR return type)
+                if (parsedUdf.Body == null)
                 {
-                    // $$$ maybe cache binding in the other usage.
-                    var udf = UserDefinedFunction.CreatePartialFunction(parsedUDF, checkUDF.UDFBindingSymbols, out var functions);
-                    var nameResolver = udf.GetUDFNameResolver(checkUDF.UDFBindingSymbols);
-                    if (parsedUDF.Body == null)
+                    // Parameter type position: foo(x: |
+                    foreach (var arg in parsedUdf.Args)
                     {
-                        // No body, so no suggestions, implement this for types.
-                        UDFArg cursorArg = null;
-                        foreach (var arg in parsedUDF.Args)
+                        if (!IsUDFArgTypePosition(cursorPosition, arg))
                         {
-                            // If the cursor is after the colon, then we can suggest types.
-                            if (IsUDFArgTypePosition(cursorPosition, arg))
-                            {
-                                cursorArg = arg;
-                                var suggestions = new IntellisenseSuggestionList();
-                                foreach (var kvp in nameResolver.NamedTypes)
-                                {
-                                    if (!UserDefinitions.RestrictedParameterTypes.Contains(kvp.Value._type))
-                                    {
-                                        var cursor = arg.ColonToken.Span.Lim + 1;         // right after the colon
-                                        var typedPrefix = kvp.Key.Value;
-
-                                        var suggestion = new IntellisenseSuggestion(
-                                            new UIString(kvp.Key.Value),           // what shows up in UI
-                                            SuggestionKind.Type,                   // or Function/Other depending on context
-                                            SuggestionIconKind.Other,               // choose appropriate icon kind
-                                            kvp.Value._type,                       // DType
-                                            kvp.Key.Value,                         // exact match string
-                                            -1,                                    // argCount (not relevant here)
-                                            string.Empty,            // definition or description
-                                            string.Empty);
-
-                                        suggestions.Add(suggestion);
-                                    }
-                                }
-
-                                var startIndex = arg.TypeIdent?.Span.Min ?? arg.ColonToken.Span.Lim + 1; // if TypeIdent is null, then we are after the colon
-                                var data = new UDFIntellisenseData(
-                                    replacementStartIndex: startIndex,
-                                    replacementLength: cursorPosition,
-                                    0,
-                                    0,
-                                    script: expression,
-                                    locale: checkUDF.UDFParserOptions.Culture);
-
-                                suggestions.Sort(checkUDF.UDFParserOptions.Culture);
-                                IList<IntellisenseSuggestion> suggestionList = suggestions;
-                                var result = new IntellisenseResult(
-                                        data,
-                                        (IReadOnlyList<IntellisenseSuggestion>)suggestionList,
-                                        Enumerable.Empty<TexlFunction>());
-                                return result;
-                            }
-                            else if (IsUDFReturnTypePosition(cursorPosition, parsedUDF))
-                            {
-                                cursorArg = arg;
-                                foreach (var kvp in nameResolver.NamedTypes)
-                                {
-                                    if (!UserDefinitions.RestrictedTypes.Contains(kvp.Value._type))
-                                    {
-                                        // add suggestion.
-                                        // create IIntellisenseResult below and add name of the kvp as the suggestion.
-                                    }
-
-                                    throw new NotImplementedException($"Suggesting types for UDF return type is not implemented yet. Type: {kvp.Key}, Value: {kvp.Value}");
-                                }
-
-                                break;
-                            }
+                            continue;
                         }
 
-                        continue;
+                        var suggestions = BuildTypeSuggestionList(
+                            nameResolver.NamedTypes,
+                            t => !UserDefinitions.RestrictedParameterTypes.Contains(t._type));
+
+                        // start right at the type ident if present, otherwise just after the colon
+                        var startIndex = arg.TypeIdent?.Span.Min ?? (arg.ColonToken.Span.Lim + 1);
+                        var length = SafeLengthFrom(startIndex, cursorPosition);
+
+                        return MakeTypeSuggestionResult(
+                            expression,
+                            checkUdf.UDFParserOptions.Culture,
+                            suggestions,
+                            startIndex,
+                            length);
                     }
 
-                    var udfBinding = udf.BindBody(
-                        checkUDF.UDFBindingSymbols,
-                        new Glue2DocumentBinderGlue(),
-                        checkUDF.UDFBindingConfig);
-
-                    var bodySpan = parsedUDF.Body.GetCompleteSpan();
-                    if (cursorPosition > bodySpan.Min && cursorPosition <= bodySpan.Lim)
+                    // Return type position: Foo(...): |
+                    if (IsUDFReturnTypePosition(cursorPosition, parsedUdf))
                     {
-                        // parsedUDF.Body.ToString()
-                        var formula = new Formula(expression, parsedUDF.Body, checkUDF.UDFParserOptions.Culture);
+                        var suggestions = BuildTypeSuggestionList(
+                            nameResolver.NamedTypes,
+                            t => !UserDefinitions.RestrictedTypes.Contains(t._type));
 
-                        var cr = _getCheckResult.Invoke(string.Empty);
-                        var newCursorPosition = cursorPosition; // - bodySpan.Min;
-                        return cr.Engine.Suggest(formula, udfBinding, newCursorPosition, this.Services);
+                        // If a return type ident already exists, replace from its start; else from after the ':' of return type.
+                        var rtStart = parsedUdf.ReturnType?.Span.Min
+                                      ?? (parsedUdf.ReturnTypeColonToken?.Span.Lim + 1)
+                                      ?? cursorPosition; // fallback safety
+
+                        var length = SafeLengthFrom(rtStart, cursorPosition);
+
+                        return MakeTypeSuggestionResult(
+                            expression,
+                            checkUdf.UDFParserOptions.Culture,
+                            suggestions,
+                            rtStart,
+                            length);
                     }
+
+                    // Not in a typeable spot within a body-less UDF; check the next UDF.
+                    continue;
                 }
 
-                throw new ArgumentException($"Cursor position {cursorPosition} is not within any user-defined function in the expression."); // intead of throwing return empty.
+                // Has body: delegate to engine if cursor is inside body span
+                var bodySpan = parsedUdf.Body.GetCompleteSpan();
+                if (cursorPosition > bodySpan.Min && cursorPosition <= bodySpan.Lim)
+                {
+                    var formula = new Formula(expression, parsedUdf.Body, checkUdf.UDFParserOptions.Culture);
+                    var binding = udf.BindBody(checkUdf.UDFBindingSymbols, new Glue2DocumentBinderGlue(), checkUdf.UDFBindingConfig);
+                    var cr = _getCheckResult.Invoke(string.Empty);
+                    return cr.Engine.Suggest(formula, binding, cursorPosition, this.Services);
+                }
             }
-            else
+
+            return MakeTypeSuggestionResult(
+                script: expression,
+                culture: checkUdf.UDFParserOptions.Culture, // or use default parser culture
+                suggestions: new IntellisenseSuggestionList(),
+                replacementStartIndex: cursorPosition,
+                replacementLength: 0);
+        }
+
+        private static int SafeLengthFrom(int startIndex, int cursorPosition)
+        {
+            var len = cursorPosition - startIndex;
+            return len < 0 ? 0 : len;
+        }
+
+        private static IntellisenseSuggestionList BuildTypeSuggestionList(
+            IEnumerable<KeyValuePair<DName, FormulaType>> namedTypes,
+            Func<FormulaType, bool> includePredicate)
+        {
+            var list = new IntellisenseSuggestionList();
+
+            foreach (var kvp in namedTypes)
             {
-                throw new ArgumentException($"Unknown LSP mode {mode}");
+                var typeName = kvp.Key.Value;
+                var val = kvp.Value;
+
+                if (!includePredicate(val))
+                {
+                    continue;
+                }
+
+                list.Add(new IntellisenseSuggestion(
+                    new UIString(typeName),         // UI text
+                    SuggestionKind.Type,             // Kind
+                    SuggestionIconKind.Other,        // Icon
+                    val._type,                       // DType
+                    typeName,                       // exact match
+                    -1,                              // argCount (N/A for types)
+                    string.Empty,                    // description
+                    string.Empty));                  // help
             }
+
+            return list;
+        }
+
+        private static IIntellisenseResult MakeTypeSuggestionResult(
+            string script,
+            CultureInfo culture,
+            IntellisenseSuggestionList suggestions,
+            int replacementStartIndex,
+            int replacementLength)
+        {
+            var data = new UDFIntellisenseData(
+                replacementStartIndex: replacementStartIndex,
+                replacementLength: replacementLength,
+                0,
+                0,
+                script: script,
+                locale: culture);
+
+            suggestions.Sort(culture);
+            IList<IntellisenseSuggestion> list = suggestions;
+
+            return new IntellisenseResult(
+                data,
+                (IReadOnlyList<IntellisenseSuggestion>)list,
+                Enumerable.Empty<TexlFunction>());
         }
 
         ///// <summary>
