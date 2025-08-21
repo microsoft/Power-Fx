@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Tests.Shared.IntellisenseTests
 
             // engine.AddUserDefinedFunction(expression);
 
-            var iResult = scope.Suggest(expression, expression.IndexOf('|'), LSPMode.UserDefiniedFunction);
+            var iResult = scope.Suggest(expression, expression.IndexOf('|'), LSPExpressionMode.UserDefiniedFunction);
 
             var suggestions = iResult.Suggestions;
 

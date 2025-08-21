@@ -35,11 +35,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="cursorPosition">Cursor Position.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
         /// <returns>Suggestions and Signatures.</returns>
-        private Task<IIntellisenseResult> SuggestAsync(LanguageServerOperationContext operationContext, string uri, string expression, int cursorPosition, CancellationToken cancellationToken)
+        private Task<IIntellisenseResult> SuggestAsync(LanguageServerOperationContext operationContext, string uri, string expression, int cursorPosition, LSPExpressionMode mode, CancellationToken cancellationToken)
         {
             return operationContext.ExecuteHostTaskAsync(
             uri,
-            (scope) => Task.FromResult(scope?.Suggest(expression, cursorPosition)),
+            (scope) => Task.FromResult(scope?.Suggest(expression, cursorPosition, mode)),
             cancellationToken);
         }
 
@@ -58,7 +58,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             }
 
             var documentUri = new Uri(completionParams.TextDocument.Uri);
-            var expression = LanguageServerHelper.ChooseExpression(completionParams, HttpUtility.ParseQueryString(documentUri.Query));
+
+            var query = HttpUtility.ParseQueryString(documentUri.Query);
+            var expression = LanguageServerHelper.ChooseExpression(completionParams, query);
             if (expression == null)
             {
                 operationContext.Logger?.LogError($"[PFX] HandleCompletionRequest: InvalidParams, expression is null");
@@ -66,10 +68,16 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 return;
             }
 
+            if (!(query.Get("lspMode")?.ToString() is string lspModeStr &&
+                Enum.TryParse<LSPExpressionMode>(lspModeStr, true, out var lspMode)))
+            {
+                lspMode = LSPExpressionMode.Default;
+            }
+
             var cursorPosition = PositionRangeHelper.GetPosition(expression, completionParams.Position.Line, completionParams.Position.Character);
 
             operationContext.Logger?.LogInformation($"[PFX] HandleCompletionRequest: calling Suggest...");
-            var results = await SuggestAsync(operationContext, completionParams.TextDocument.Uri, expression, cursorPosition, cancellationToken).ConfigureAwait(false);
+            var results = await SuggestAsync(operationContext, completionParams.TextDocument.Uri, expression, cursorPosition, lspMode, cancellationToken).ConfigureAwait(false);
             if (results == null || results == default)
             {
                 operationContext.OutputBuilder.AddInternalError(operationContext.RequestId, "Failed to get suggestions for completions operation");
