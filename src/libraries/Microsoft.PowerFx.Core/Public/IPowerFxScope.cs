@@ -31,16 +31,13 @@ namespace Microsoft.PowerFx.Intellisense
         /// <param name="expression">The expression to convert for display.</param>
         /// <returns>The expression with display formatting applied.</returns>
         string ConvertToDisplay(string expression);
-    }
 
-    public interface IPowerFxScopeV2 : IPowerFxScope
-    {
         DefinitionsCheckResult CheckUserDefinedFunctions(string expression);
 
-        IIntellisenseResult Suggest(string expression, int cursorPosition, LSPMode mode);
+        IIntellisenseResult Suggest(string expression, int cursorPosition, LSPExpressionMode mode);
     }
 
-    public enum LSPMode
+    public enum LSPExpressionMode
     {
         Default,
         UserDefiniedFunction,
