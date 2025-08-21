@@ -406,11 +406,17 @@ namespace Microsoft.PowerFx.Connectors
             // response.Content could be a ByteArrayContent
             // we'll need to use _mediaKind to correctly create an Fx Image or Blob in this case
             // when MediaKind.NotBinary is used, we'll always return a string (used for dynamic intellisense)
+            var statusCode = (int)response.StatusCode;
+            var returnBlob = _function.ReturnType is BlobType;
+            if (statusCode < 300 && returnBlob && response?.Content != null)
+            {
+                var bytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                return FormulaValue.NewBlob(bytes);
+            }
+
             var text = response?.Content == null
                             ? string.Empty
                             : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-            var statusCode = (int)response.StatusCode;
 
 #if RECORD_RESULTS
             if (response.RequestMessage.Headers.TryGetValues("x-ms-request-url", out IEnumerable<string> urlHeader) &&

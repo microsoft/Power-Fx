@@ -2259,6 +2259,37 @@ POST https://tip1-shared-002.azure-apim.net/invoke
         }
 
         [Fact]
+        public async Task ReturnBinaryFile()
+        {
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\FileDownloadConnector.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+
+            PowerFxConfig config = new PowerFxConfig();
+            string token = @"eyJ0eXAiO..";
+
+            using HttpClient httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "ba347af5-05f5-e331-a109-ad48533ebffc" /* env */, "393a9f94ee8841e7887da9d706387c33" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
+
+            ConnectorSettings connectorSettings = new ConnectorSettings("cds") { Compatibility = ConnectorCompatibility.SwaggerCompatibility };
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("cds", ppClient, console: _output);
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
+            ConnectorFunction downloadFile = functions.First(functions => functions.Name == "DownloadFile");
+
+            FormulaValue[] parameters = new FormulaValue[]
+            {
+                FormulaValue.New("fileId")
+            };
+
+            const string outputFile = @"Responses\PdfWithTable.pdf";
+            testConnector.SetResponseFromFiles(outputFile);
+            FormulaValue result = await downloadFile.InvokeAsync(parameters, runtimeContext, CancellationToken.None);
+            BlobValue blobValue = Assert.IsType<BlobValue>(result);
+            var expectedBytes = (byte[])Helpers.ReadStream(outputFile);
+            var actualBytes = await blobValue.Content.GetAsByteArrayAsync(CancellationToken.None);
+            Assert.Equal(expectedBytes, actualBytes);
+        }
+
+        [Fact]
         public async Task DVDynamicReturnType()
         {
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\Dataverse.json", _output);
