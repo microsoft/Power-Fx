@@ -13,4 +13,9 @@ namespace Microsoft.PowerFx.Intellisense
         /// </summary>
         IIntellisenseResult Suggest(IntellisenseContext context, TexlBinding binding, Formula formula);
     }
+
+    internal interface IIntellisenseV2 : IIntellisense
+    {
+        IIntellisenseResult Suggest(IntellisenseContext context, DefinitionsCheckResult definitionsCheckResult);
+    }
 }

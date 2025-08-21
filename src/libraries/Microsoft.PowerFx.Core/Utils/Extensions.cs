@@ -210,5 +210,7 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             return node.Head.Namespace.Length == 0 && node.Head.Name.Value == functionName;
         }
+
+        internal static bool IsInRange(this Span span, int cursorPosition) => span.Min <= cursorPosition && cursorPosition <= span.Lim;
     }
 }
