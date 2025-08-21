@@ -13,6 +13,7 @@ using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
@@ -429,7 +430,7 @@ namespace Microsoft.PowerFx
 
             // CheckResult has the binding, which has already captured both the INameResolver and any row scope parameters. 
             // So these both become available to intellisense. 
-            var context = new IntellisenseContext(expression, cursorPosition, checkResult.ExpectedReturnType)
+            var context = new IntellisenseContext(expression, cursorPosition, checkResult.ExpectedReturnType, false)
             {
                 Services = services
             };
@@ -437,6 +438,18 @@ namespace Microsoft.PowerFx
             var intellisense = this.CreateIntellisense();
             var suggestions = intellisense.Suggest(context, binding, formula);
 
+            return suggestions;
+        }
+
+        internal IIntellisenseResult Suggest(Formula formula, TexlBinding udfBinding, int cursorPosition, IServiceProvider services)
+        {
+            var context = new IntellisenseContext(formula.Script, cursorPosition, FormulaType.Unknown, true)
+            {
+                Services = services
+            };
+
+            var intellisense = this.CreateIntellisense();
+            var suggestions = intellisense.Suggest(context, udfBinding, formula);
             return suggestions;
         }
 
@@ -545,10 +558,11 @@ namespace Microsoft.PowerFx
             return ExpressionLocalizationHelper.ConvertExpression(expressionText, ruleScope, GetDefaultBindingConfig(), CreateResolverInternal(symbolTable), CreateBinderGlue(), culture, Config.Features, toDisplay: true);
         }
 
+        internal ReadOnlySymbolTable UDFDefaultBindingSymbols => ReadOnlySymbolTable.Compose(PrimitiveTypes, SupportedFunctions, Config.InternalConfigSymbols);
+
         public DefinitionsCheckResult AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, bool allowSideEffects = false)
         {
-            var engineTypesAndFunctions = ReadOnlySymbolTable.Compose(PrimitiveTypes, SupportedFunctions, Config.InternalConfigSymbols);
-            return Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, engineTypesAndFunctions, symbolTable, allowSideEffects);
+            return Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, UDFDefaultBindingSymbols, symbolTable, allowSideEffects);
         }
     }
 }

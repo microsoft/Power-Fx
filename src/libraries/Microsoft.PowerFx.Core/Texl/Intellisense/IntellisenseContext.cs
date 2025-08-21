@@ -25,19 +25,30 @@ namespace Microsoft.PowerFx.Intellisense
 
         public DType ExpectedExpressionReturnType { get; }
 
+        public bool IsUDF { get; }
+
         public IntellisenseContext(string inputText, int cursorPosition)
             : this(inputText, cursorPosition, null)
         {
         }
 
         public IntellisenseContext(string inputText, int cursorPosition, FormulaType expectedExpressionReturnType)
+            : this(inputText, cursorPosition, expectedExpressionReturnType, false)
+        {
+        }
+
+        public IntellisenseContext(string inputText, int cursorPosition, FormulaType expectedExpressionReturnType, bool isUDF)
         {
             Contracts.CheckValue(inputText, "inputText");
-            Contracts.CheckParam(cursorPosition >= 0 && cursorPosition <= inputText.Length, "cursorPosition");
+            if (!isUDF)
+            {
+                Contracts.CheckParam(cursorPosition >= 0 && cursorPosition <= inputText.Length, "cursorPosition");
+            }
 
             InputText = inputText;
             CursorPosition = cursorPosition;
             ExpectedExpressionReturnType = expectedExpressionReturnType?._type ?? DType.Unknown;
+            IsUDF = isUDF;
         }
 
         public void InsertTextAtCursorPos(string insertedText)
