@@ -56,6 +56,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             { "OptionSetSortTestSetup", (null, OptionSetSortTestSetup, null, null) },
             { "OptionSetTestSetup", (null, OptionSetTestSetup1, OptionSetTestSetup2, null) },
             { "RegEx", (null, RegExSetup, null, null) },
+            { "Units", (null, UnitsSetup, null, null) },
             { "TraceSetup", (null, null, null, TraceSetup) },
         };
 
@@ -86,6 +87,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
 #pragma warning restore CS0618 // Type or member is obsolete
             }
+
+            return null;
+        }
+
+        private static object UnitsSetup(PowerFxConfig config, SymbolTable symbolTables)
+        {
+
 
             return null;
         }

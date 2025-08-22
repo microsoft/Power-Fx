@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Globalization;
+using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Parser;
 using static Microsoft.PowerFx.Core.Parser.TexlParser;
 
@@ -52,6 +53,8 @@ namespace Microsoft.PowerFx
         /// This is an early prototype, and so is internal.
         /// </summary>
         internal bool AllowAttributes { get; set; }
+
+        internal UnitsInfo Units { get; set; }
 
         public ParserOptions()
         {
