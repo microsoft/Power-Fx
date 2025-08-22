@@ -104,4 +104,48 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// </returns>
         public string GenerateParameterDescriptionSuffix(TexlFunction function, string paramName);
     }
+
+    internal class UDFIntellisenseData : IIntellisenseData
+    {
+        public int ReplacementStartIndex { get; private set; }
+
+        public int ReplacementLength { get; private set; }
+
+        public TexlFunction CurFunc { get; private set; }
+
+        public int ArgCount { get; private set; }
+
+        public int ArgIndex { get; private set; }
+
+        public string Script { get; private set; }
+
+        public CultureInfo Locale { get; private set; }
+
+        public UDFIntellisenseData(int replacementStartIndex, int replacementLength, int argCount, int argIndex, string script, CultureInfo locale)
+        {
+            ReplacementStartIndex = replacementStartIndex;
+            ReplacementLength = replacementLength;
+            CurFunc = null;
+            ArgCount = argCount;
+            ArgIndex = argIndex;
+            Script = script;
+            Locale = locale;
+        }
+
+        public bool TryAugmentSignature(TexlFunction func, int argIndex, string paramName, int highlightStart, out int newHighlightStart, out int newHighlightEnd, out string newParamName, out string newInvariantParamName)
+        {
+            // Default implementation does not augment signature.
+            newHighlightStart = highlightStart;
+            newHighlightEnd = highlightStart + paramName.Length;
+            newParamName = paramName;
+            newInvariantParamName = paramName;
+            return false;
+        }
+
+        public string GenerateParameterDescriptionSuffix(TexlFunction function, string paramName)
+        {
+            // Default implementation does not generate a suffix.
+            return string.Empty;
+        }
+    }
 }

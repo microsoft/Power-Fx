@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Intellisense
                 Contracts.AssertValue(intellisenseData);
 
                 var cursorPos = intellisenseData.CursorPos;
-                var isCursorInsideComment = intellisenseData.Comments.Where(com => com.Span.Min <= cursorPos && com.Span.Lim >= cursorPos).Any();
+                var isCursorInsideComment = intellisenseData.Comments?.Where(com => com.Span.Min <= cursorPos && com.Span.Lim >= cursorPos).Any() ?? false;
                 if (isCursorInsideComment)
                 {
                     // No intellisense for editing comment

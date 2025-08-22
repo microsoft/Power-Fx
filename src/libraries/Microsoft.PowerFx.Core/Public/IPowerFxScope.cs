@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+
 namespace Microsoft.PowerFx.Intellisense
 {
     /// <summary>
@@ -29,5 +31,15 @@ namespace Microsoft.PowerFx.Intellisense
         /// <param name="expression">The expression to convert for display.</param>
         /// <returns>The expression with display formatting applied.</returns>
         string ConvertToDisplay(string expression);
+
+        DefinitionsCheckResult CheckUserDefinedFunctions(string expression);
+
+        IIntellisenseResult Suggest(string expression, int cursorPosition, LSPExpressionMode mode);
+    }
+
+    public enum LSPExpressionMode
+    {
+        Default,
+        UserDefinedFunction,
     }
 }
