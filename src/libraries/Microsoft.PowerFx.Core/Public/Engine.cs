@@ -123,6 +123,11 @@ namespace Microsoft.PowerFx
 
         internal IEnumerable<TexlFunction> GetFunctionsByName(string name) => Functions.WithName(name);
 
+        /// <summary>
+        /// Binding symbols used for UDFs.
+        /// </summary>
+        internal ReadOnlySymbolTable UDFDefaultBindingSymbols => ReadOnlySymbolTable.Compose(PrimitiveTypes, SupportedFunctions, Config.InternalConfigSymbols);
+
         internal int FunctionCount => Functions.Count();
 
         // Additional symbols for the engine.
@@ -430,7 +435,7 @@ namespace Microsoft.PowerFx
 
             // CheckResult has the binding, which has already captured both the INameResolver and any row scope parameters. 
             // So these both become available to intellisense. 
-            var context = new IntellisenseContext(expression, cursorPosition, checkResult.ExpectedReturnType, false)
+            var context = new IntellisenseContext(expression, cursorPosition, checkResult.ExpectedReturnType)
             {
                 Services = services
             };
@@ -441,10 +446,10 @@ namespace Microsoft.PowerFx
             return suggestions;
         }
 
-        // $$$ used by udf intellisense, maybe can be merged with above.
+        // $$$ used by udf intellisense, maybe we can be merged with above.
         internal IIntellisenseResult Suggest(Formula formula, TexlBinding binding, int cursorPosition, IServiceProvider services)
         {
-            var context = new IntellisenseContext(formula.Script, cursorPosition, FormulaType.Unknown, true)
+            var context = new IntellisenseContext(formula.Script, cursorPosition, FormulaType.Unknown)
             {
                 Services = services
             };
@@ -558,8 +563,6 @@ namespace Microsoft.PowerFx
             var ruleScope = this.GetRuleScope();
             return ExpressionLocalizationHelper.ConvertExpression(expressionText, ruleScope, GetDefaultBindingConfig(), CreateResolverInternal(symbolTable), CreateBinderGlue(), culture, Config.Features, toDisplay: true);
         }
-
-        internal ReadOnlySymbolTable UDFDefaultBindingSymbols => ReadOnlySymbolTable.Compose(PrimitiveTypes, SupportedFunctions, Config.InternalConfigSymbols);
 
         public DefinitionsCheckResult AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, bool allowSideEffects = false)
         {

@@ -14,12 +14,12 @@ namespace Microsoft.PowerFx.Core.Tests.Shared.IntellisenseTests
     public class UDFIntellisenseTests
     {
         [Theory]
-        [InlineData("AddNumbers(x: Number, y: Number): Number = x + y; |")]
-        [InlineData("AddNumbers(x: Number, y: Number): Number = x + |")]
-        [InlineData("AddNumbers(x: Number, y: Number): Number = x + Su|")]
-        [InlineData("AddNumbers(x: Number, y: Number): |")]
-        [InlineData("AddNumbers(x: Number, y: |")]
-        public void UDFSuggestionTest(string expression)
+        [InlineData("AddNumbers(x: Number, y: Number): Number = x + y; |", "")]
+        [InlineData("AddNumbers(x: Number, y: Number): Number = x + |", "")]
+        [InlineData("AddNumbers(x: Number, y: Number): Number = x + Su|", "ErrorKind.InsufficientMemory,ErrorKind.NotSupported,StartOfWeek.Sunday,Sum,Substitute,TraceOptions.IgnoreUnsupportedTypes")]
+        [InlineData("AddNumbers(x: Number, y: Number): |", "Boolean,Color,Date,DateTime,Dynamic,GUID,Hyperlink,Number,Text,Time,Void")]
+        [InlineData("AddNumbers(x: Number, y: |", "Boolean,Color,Date,DateTime,Dynamic,GUID,Hyperlink,Number,Text,Time")]
+        public void UDFSuggestionTest(string expression, string expected)
         {
             var config = new PowerFxConfig();
             var engine = new Engine(config);
@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Tests.Shared.IntellisenseTests
             var suggestions = iResult.Suggestions;
 
             var sugg = string.Join(",", suggestions.Select(s => s.DisplayText.Text));
-            Assert.Equal(" ", sugg);
+            Assert.Equal(expected, sugg);
         }
     }
 }

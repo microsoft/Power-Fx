@@ -372,13 +372,13 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         /// <summary>
-        /// Helper to create IR UserDefinedFunctions.
+        /// Helper to create parial UserDefinedFunctions for Intellisense.
         /// </summary>
-        /// <param name="udf">Valid Parsed UDFs to be converted into UserDefinedFunction.</param>
+        /// <param name="udf">Parsed UDFs to be converted into UserDefinedFunction.</param>
         /// <param name="nameResolver">NameResolver to resolve type names.</param>
         /// <param name="errors">Errors when creating functions.</param>
         /// <returns>IEnumerable of UserDefinedFunction.</returns>
-        public static UserDefinedFunction CreatePartialFunction(UDF udf, INameResolver nameResolver, out List<TexlError> errors)
+        internal static UserDefinedFunction CreatePartialFunction(UDF udf, INameResolver nameResolver, out List<TexlError> errors)
         {
             Contracts.AssertValue(udf);
 
