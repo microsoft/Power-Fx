@@ -40,6 +40,6 @@ namespace Microsoft.PowerFx.Intellisense
     public enum LSPExpressionMode
     {
         Default,
-        UserDefiniedFunction,
+        UserDefinedFunction,
     }
 }

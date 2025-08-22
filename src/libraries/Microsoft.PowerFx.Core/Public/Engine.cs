@@ -441,7 +441,8 @@ namespace Microsoft.PowerFx
             return suggestions;
         }
 
-        internal IIntellisenseResult Suggest(Formula formula, TexlBinding udfBinding, int cursorPosition, IServiceProvider services)
+        // $$$ used by udf intellisense, maybe can be merged with above.
+        internal IIntellisenseResult Suggest(Formula formula, TexlBinding binding, int cursorPosition, IServiceProvider services)
         {
             var context = new IntellisenseContext(formula.Script, cursorPosition, FormulaType.Unknown, true)
             {
@@ -449,7 +450,7 @@ namespace Microsoft.PowerFx
             };
 
             var intellisense = this.CreateIntellisense();
-            var suggestions = intellisense.Suggest(context, udfBinding, formula);
+            var suggestions = intellisense.Suggest(context, binding, formula);
             return suggestions;
         }
 
