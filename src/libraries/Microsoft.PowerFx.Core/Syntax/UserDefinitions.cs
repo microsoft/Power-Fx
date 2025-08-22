@@ -31,6 +31,7 @@ namespace Microsoft.PowerFx.Syntax
         private readonly Features _features;
 
         // Exposing it so hosts can filter out the intellisense suggestions
+
         /// <summary>
         /// Restricted return type.
         /// </summary>

@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -33,6 +34,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result = await engine.EvalAsync("local+global", CancellationToken.None, runtimeConfig: locals);
 
             Assert.Equal(5.0, result.ToObject());
+
+            var engine2 = new RecalcEngine();
+            var scope = engine2.CreateEditorScope();
+
+            scope.Suggest("AddNum(x:Number, y:Number):Number = x + y;", 10, Intellisense.LSPExpressionMode.UserDefinedFunction);
+
+            var res = ((IPowerFxScope)scope).Suggest("AddN", 4);
         }
 
         [Fact]

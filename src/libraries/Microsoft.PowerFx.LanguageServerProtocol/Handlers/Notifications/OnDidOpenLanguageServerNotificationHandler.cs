@@ -1,9 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
@@ -35,6 +38,22 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             didOpenParams.TextDocument.Uri,
             (scope) => 
             {
+                var dURI = new Uri(didOpenParams.TextDocument.Uri);
+                var query = HttpUtility.ParseQueryString(dURI.Query);
+                
+                if (!(query.Get("lspMode")?.ToString() is string lspModeStr &&
+                Enum.TryParse<LSPExpressionMode>(lspModeStr, true, out var lspMode)))
+                {
+                    lspMode = LSPExpressionMode.Default;
+                }
+
+                if (lspMode == LSPExpressionMode.UserDefinedFunction)
+                {
+                    var udfCheck = scope?.CheckUserDefinedFunctions(didOpenParams.TextDocument.Text);
+                    operationContext.OutputBuilder.WriteDiagnosticsNotification(didOpenParams.TextDocument.Uri, didOpenParams.TextDocument.Text, udfCheck.Errors.ToArray());
+                    return;
+                }
+
                 var checkResult = scope?.Check(didOpenParams.TextDocument.Text);
                 if (checkResult == null)
                 {
