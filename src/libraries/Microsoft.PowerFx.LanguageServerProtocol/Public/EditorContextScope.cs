@@ -74,6 +74,11 @@ namespace Microsoft.PowerFx
         // This can feed into Fx2NL and other help services. 
         public UsageHints UsageHints { get; init; }
 
+        /// <summary>
+        /// Temporary storage for UDFs created during intellisense session. so we can add them to the symbol table for subsequent checks.
+        /// </summary>
+        private SymbolTable _localUDFs = new SymbolTable();
+
         internal EditorContextScope(
             Engine engine,
             ParserOptions parserOptions,
@@ -84,6 +89,34 @@ namespace Microsoft.PowerFx
                     .SetBindingInfo(symbols), 
                   (string expr) => new DefinitionsCheckResult().SetText(expr, parserOptions).SetBindingInfo(ReadOnlySymbolTable.Compose(engine.UDFDefaultBindingSymbols, symbols)))
         {
+            _getCheckResult = (string expr) =>
+            {
+                var composed = ComposeWithLocal(symbols);
+                return new CheckResult(engine)
+                    .SetText(expr, parserOptions)
+                    .SetBindingInfo(composed);
+            };
+
+            // Factory for UDF checks: engine's default UDF binding symbols + caller symbols + local UDFs.
+            _checkUserDefinedFunctions = (string expr) =>
+            {
+                var udfBase = ReadOnlySymbolTable.Compose(engine.UDFDefaultBindingSymbols, symbols);
+                var composed = ComposeWithLocal(udfBase);
+                return new DefinitionsCheckResult()
+                    .SetText(expr, parserOptions)
+                    .SetBindingInfo(composed);
+            };
+        }
+
+        private ReadOnlySymbolTable ComposeWithLocal(ReadOnlySymbolTable baseSymbols)
+        {
+            // Avoid extra layering if nothing local was added.
+            if (_localUDFs == null || !_localUDFs.Functions.Any())
+            {
+                return baseSymbols;
+            }
+
+            return ReadOnlySymbolTable.Compose(baseSymbols, _localUDFs);
         }
 
         public EditorContextScope(Func<string, CheckResult> getCheckResult)
@@ -260,7 +293,7 @@ namespace Microsoft.PowerFx
             return mode switch
             {
                 LSPExpressionMode.Default => ((IPowerFxScope)this).Suggest(expression, cursorPosition),
-                LSPExpressionMode.UserDefiniedFunction => SuggestForUdf(expression, cursorPosition),
+                LSPExpressionMode.UserDefinedFunction => SuggestForUdf(expression, cursorPosition),
                 _ => throw new ArgumentException($"Unknown LSP mode {mode}")
             };
         }
@@ -269,6 +302,15 @@ namespace Microsoft.PowerFx
         {
             var checkUdf = CheckUserDefinedFunctions(expression);
             var parsedUdfs = checkUdf.ApplyParse();
+
+            // Add valid functions to engine if not already done.
+            var funcs = checkUdf.ApplyCreateUserDefinedFunctions();
+            _localUDFs = new SymbolTable();
+            _localUDFs.AddFunctions(funcs);
+
+            // $$$ find a better way to get engine.
+            var cr = _getCheckResult.Invoke(string.Empty);
+            var engine = cr.Engine;
 
             foreach (var parsedUdf in parsedUdfs.UDFs)
             {
@@ -335,8 +377,7 @@ namespace Microsoft.PowerFx
                 {
                     var formula = new Formula(expression, parsedUdf.Body, checkUdf.UDFParserOptions.Culture);
                     var binding = udf.BindBody(checkUdf.UDFBindingSymbols, new Glue2DocumentBinderGlue(), checkUdf.UDFBindingConfig);
-                    var cr = _getCheckResult.Invoke(string.Empty);
-                    return cr.Engine.Suggest(formula, binding, cursorPosition, this.Services);
+                    return engine.Suggest(formula, binding, cursorPosition, this.Services);
                 }
             }
 
@@ -408,87 +449,6 @@ namespace Microsoft.PowerFx
                 Enumerable.Empty<TexlFunction>());
         }
 
-        ///// <summary>
-        ///// Adds suggesstions for UDF return type & param types
-        ///// </summary>
-        ///// <param name="data"></param>
-        //private void AddSuggestionsForUDFTypes(CanvasIntellisenseData data)
-        //{
-        //    Contracts.AssertValue(data);
-
-        //    var userDefinitions = ParseUserDefinitions(data.Script, _doc.Properties);
-        //    var pos = data.CursorPos;
-
-        //    foreach (var udf in userDefinitions.UDFs)
-        //    {
-        //        foreach (var arg in udf.Args)
-        //        {
-        //            if ((arg.TypeIdent != null && pos >= arg.TypeIdent.Span.Min && pos <= arg.TypeIdent.Span.Lim)
-        //                || (arg.ColonToken != null && pos >= arg.ColonToken.Span.Min && pos <= arg.ColonToken.Span.Lim))
-        //            {
-        //                AddSuggestionsForTypes(data);
-        //                return;
-        //            }
-        //        }
-
-        //        if ((udf.ReturnType != null && pos >= udf.ReturnType.Span.Min && pos <= udf.ReturnType.Span.Lim) ||
-        //            (udf.ReturnTypeColonToken != null && pos >= udf.ReturnTypeColonToken.Span.Min && pos <= udf.ReturnTypeColonToken.Span.Lim))
-        //        {
-        //            AddSuggestionsForTypes(data);
-        //        }
-        //    }
-        //}
-
-        //private bool TryGetIntellisenseDataForUDT(ICanvasIntellisenseContext context, ControlProperty property, ControlInfo currentControlInfo, ControlInfo currentScreen, IEnumerable<DefinedType> udts, out CanvasIntellisenseData data)
-        //{
-        //    Contracts.AssertValue(context);
-        //    Contracts.AssertValue(udts);
-        //    Contracts.AssertAllValues(udts);
-
-        //    var cursorPosition = context.CursorPosition;
-
-        //    foreach (var udt in udts)
-        //    {
-        //        if (udt.Type == null || udt.Type.TypeRoot == null)
-        //        {
-        //            continue;
-        //        }
-
-        //        var span = udt.Type.TypeRoot.GetCompleteSpan();
-
-        //        if (span.IsInRange(cursorPosition))
-        //        {
-        //            data = new CanvasIntellisenseData(context, _config, property, _doc, currentControlInfo, currentScreen, DType.Unknown, null, null, udt.Type, 0, 0, Helper.DefaultIsValidSuggestionFunc, null, Enumerable.Empty<CommentToken>().ToList(), false);
-        //            return true;
-        //        }
-        //    }
-
-        //    data = null;
-        //    return false;
-        //}
-
-        //internal static bool IsUDFTypePosition(int cursorPos, UDF parsedUDF)
-        //{
-        //    Contracts.AssertValue(parsedUDF);
-
-        //    foreach (var arg in parsedUDF.Args)
-        //    {
-        //        if ((arg.TypeIdent != null && arg.TypeIdent.Span.IsInRange(cursorPos))
-        //            || (arg.ColonToken != null && arg.ColonToken.Span.IsInRange(cursorPos)))
-        //        {
-        //            return true;
-        //        }
-        //    }
-
-        //    if ((parsedUDF.ReturnType != null && parsedUDF.ReturnType.Span.IsInRange(cursorPos)) ||
-        //        (parsedUDF.ReturnTypeColonToken != null && parsedUDF.ReturnTypeColonToken.Span.IsInRange(cursorPos)))
-        //    {
-        //        return true;
-        //    }
-
-        //    return false;
-        //}
-
         internal static bool IsUDFArgTypePosition(int cursorPos, UDFArg arg)
         {
             Contracts.AssertValue(arg);
@@ -505,20 +465,5 @@ namespace Microsoft.PowerFx
                    (parsedUDF.ReturnTypeColonToken != null && parsedUDF.ReturnTypeColonToken.Span.IsInRange(cursorPos)) ||
                    (parsedUDF.ReturnType == null && parsedUDF.ReturnTypeColonToken != null && cursorPos > parsedUDF.ReturnTypeColonToken.Span.Lim);
         }
-
-        //private void AddSuggestionsForTypes(CanvasIntellisenseData data)
-        //{
-        //    Contracts.AssertValue(data);
-
-        //    var types = _doc.NameResolver.NamedTypes;
-
-        //    foreach (var type in types)
-        //    {
-        //        if (!UserDefinitions.RestrictedTypes.Contains(type.Value._type))
-        //        {
-        //            IntellisenseHelper.AddSuggestion(data, type.Key, SuggestionKind.KeyWord, SuggestionIconKind.Other, DType.String, requiresSuggestionEscaping: false);
-        //        }
-        //    }
-        //}
     }
 }

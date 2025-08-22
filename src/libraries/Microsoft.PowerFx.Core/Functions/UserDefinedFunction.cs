@@ -404,6 +404,11 @@ namespace Microsoft.PowerFx.Core.Functions
             var parametersOk = CheckParameters(udf.Args, errors, nameResolver, out var parameterTypes);
             var returnTypeOk = CheckReturnType(udf.ReturnType, errors, nameResolver, udf.IsImperative, out var returnType);
 
+            if (!returnTypeOk)
+            {
+                returnType = DType.Unknown;
+            }
+
             if (nameResolver.Functions.WithName(udfName).Any())
             {
                 errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Warning, TexlStrings.WrnUDF_ShadowingBuiltInFunction, udfName));
