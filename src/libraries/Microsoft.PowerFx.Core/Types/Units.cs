@@ -29,158 +29,91 @@ namespace Microsoft.PowerFx.Core.Types
 
     public class UnitsInfo
     {
-        private IReadOnlyDictionary<string, Dimension> Dimensions { get; }
+        private IReadOnlyDictionary<string, Dimension> DimensionNames { get; }
+
+        public static IReadOnlyList<Dimension> DefaultDimensions = new List<Dimension>()
+        {
+            new Dimension("angle"),        // rad, deg, grad
+            new Dimension("currency"),     // usd, 
+            new Dimension("current"),      // ampere
+            new Dimension("length"),       // inch, meter, mile, parsec
+            new Dimension("luminosity"),   // candella
+            new Dimension("mass"),         // kilogram, pound
+            new Dimension("power"),        // watt
+            new Dimension("resistance"),   // ohm
+            new Dimension("quantity"),     // quant, mole
+            new Dimension("temperature"),  // can only use one unit at a time, as zero points are not the same            
+            new Dimension("time"),         // time of day
+            new Dimension("timespan"),     // second, weeks
+            new Dimension("volume"),       // liter, cc
+        };
 
         private IReadOnlyDictionary<string, Unit> UnitNames { get; }
 
-        public UnitsInfo(List<Dimension> dimensions, List<Unit> units)
+        public UnitsInfo(List<Unit> units)
+            : this(DefaultDimensions, units)
+        {
+        }
+
+        public UnitsInfo(IReadOnlyList<Dimension> dimensions, List<Unit> units)
         {
             // validate dimensions
-            Dimensions = dimensions;
+            var dimensionNames = new Dictionary<string, Dimension>();
+            foreach (var dim in dimensions)
+            {
+                if (dimensionNames.ContainsKey(dim.Name))
+                {
+                    throw new Exception($"Dimensions duplicate name {dim.Name}");
+                }
+
+                dimensionNames.Add(dim.Name, dim);
+            }
+
+            DimensionNames = dimensionNames;
 
             // validate units
-            List<string, Unit> names;
+            var unitNames = new Dictionary<string, Unit>();
 
             foreach (var unit in units)
             {
-                if (symbols.Contains(unit.Singular))
+                if (!dimensionNames.ContainsValue(unit._dimension))
+                {
+                    throw new Exception($"Dimension not found for {unit.Singular}");
+                }
+
+                if (unitNames.ContainsKey(unit.Singular))
                 {
                     throw new Exception($"Units duplicate name for singular name {unit.Singular}");
                 }
 
-                symbols.Add(unit.Singular, unit);
+                unitNames.Add(unit.Singular, unit);
 
-                if (symbols.Contains(unit.Plural))
+                if (unitNames.ContainsKey(unit.Plural))
                 {
                     throw new Exception($"Units duplicate name for plural name {unit.Plural}");
                 }
 
-                symbols.Add(unit.Plural, unit);
+                unitNames.Add(unit.Plural, unit);
 
-                if (symbols.Contains(unit.Abbreviation))
+                if (unitNames.ContainsKey(unit.Abbreviation))
                 {
                     throw new Exception($"Units duplicate name for abbreviation name {unit.Abbreviation}");
                 }
 
-                symbols.Add(unit.Abbreviation, unit);
+                unitNames.Add(unit.Abbreviation, unit);
             }
 
-            Units = symbols;
-        }
-
-        public UnitsInfo(List<Dimension> customDimensions, bool includeDefaultDimensions = true)
-        {
-            List<Dimension> dims;
-            
-            if (includeDefaultDimensions)
-            {
-                dims = DefaultDimensions();
-            }
-            else
-            {
-                dims = new List<Dimension>
-            }    
-
-            foreach (var dim in customDimensions)
-            {
-                var cleanDim = dim.ToLower().Trim();
-                if (dims.Contains(cleanDim))
-                {
-                    dims.Add(cleanDim);
-                }
-            }
-
-            Dimensions = dims;
+            UnitNames = unitNames;
         }
 
         public static Unit LookUpUnit(string name)
         {
-            if (Units.TryGetValue(name, out var unit))
+            if (UnitNames.TryGetValue(name, out var unit))
             {
                 return unit;
             }
 
             return null;
-        }
-
-        public static bool IsPreSymbol(string name)
-        {
-            return PreSymbols.TryGetValue(name, out _);
-        }
-
-        public static bool IsPostSymbol(string name)
-        {
-            return PostSymbols.TryGetValue(name, out _);
-        }
-
-        public static bool IsSymbol(string name)
-        {
-            return PreSymbols.TryGetValue(name, out _) || PostSymbols.TryGetValue(name, out _);
-        }
-
-        public static Unit LookUpPreSymbol(string name)
-        {
-            if (PreSymbols.TryGetValue(name, out var unit))
-            {
-                return unit;
-            }
-            else
-            {
-                throw new Exception("symbol not found");
-            }
-        }
-
-        public static Unit LookUpPostSymbol(string name)
-        {
-            if (PostSymbols.TryGetValue(name, out var unit))
-            {
-                return unit;
-            }
-            else
-            {
-                throw new Exception("symbol not found");
-            }
-        }
-
-        void AddDimension(string name)
-        {
-            name = name.ToLower().Trim();
-
-            if (Dimensions.Contains(name))
-            {
-                throw new ArgumentException($"Dimension '{name}' already exists.");
-            }
-
-            Dimensions.
-            var dimension = new Dimension(name);
-            Dimensions[name] = dimension;
-        }
-
-        private static Dictionary<string, Dimension> InitDimensions()
-        {
-            var dimensions = new Dictionary<string, Dimension>();
-
-            void AddDimension(string name)
-            {
-                if (dimensions.ContainsKey(name))
-                {
-                    throw new ArgumentException($"Dimension '{name}' already exists.");
-                }
-
-                var dimension = new Dimension(name);
-                dimensions[name] = dimension;
-            }
-
-            // Add predefined dimensions
-            AddDimension("currency");
-            AddDimension("length");
-            AddDimension("mass");
-            AddDimension("time");
-            AddDimension("power");
-            AddDimension("angle");
-            AddDimension("quantity");
-
-            return dimensions;
         }
 
         private static (Dictionary<string, Unit>, Dictionary<string, Unit>, Dictionary<string, Unit>) InitUnits()
