@@ -119,318 +119,318 @@
   </resheader>
   <data name="ErrDivByZero" xml:space="preserve">
     <value>Nevažeća operacija: deljenje nulom.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRuntimeTypeMismatch" xml:space="preserve">
     <value>Nepodudaranja tipa izvršavanja.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrArgumentOutOfRange" xml:space="preserve">
     <value>Argument je izvan opsega.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidCharValue" xml:space="preserve">
     <value>Nevažeća numerička vrednost, mora biti u opsegu 1...255.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrBadLanguageCode" xml:space="preserve">
     <value>Šifra jezika „{0}“ nije podržana.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNonFiniteArgument" xml:space="preserve">
     <value>Argument funkcije „{0}“ mora biti konačan.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNonFiniteResult" xml:space="preserve">
     <value>Funkcija „{0}“ vratila beskonačan broj.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidDateTimeParsingError" xml:space="preserve">
     <value>Vrednost datuma ili vremena ne može biti raščlanjena.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidDateTimeError" xml:space="preserve">
     <value>Nevažeća vrednost datuma ili vremena.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidBooleanFormatError" xml:space="preserve">
     <value>Vrednost nije mogla biti tumačena kao Bulova.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidColorFormatError" xml:space="preserve">
     <value>Vrednost nije mogla biti tumačena kao boja.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUnreachableCodeError" xml:space="preserve">
     <value>Nepoznata greška.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNotYetImplementedFunctionError" xml:space="preserve">
     <value>Funkcija koja još uvek nije primenjena: {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNotYetImplementedUnaryOperatorError" xml:space="preserve">
     <value>Unarni operator koji još uvek nije primenjen: {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidChain" xml:space="preserve">
     <value>Nevažeći lanac: {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrMaxCallDepth" xml:space="preserve">
     <value>Premašena je maksimalna dubina poziva.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRecordNotFound" xml:space="preserve">
     <value>Nije moguće pronaći zapis</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOnlyPrimitiveValuesAllowed" xml:space="preserve">
     <value>Za operaciju su dozvoljene samo primitivne vrednosti.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCanNotConvertToNumber" xml:space="preserve">
     <value>Vrednost „{0}“ ne može da se konvertuje u broj.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrStartOfWeekInvalid" xml:space="preserve">
     <value>Očekivana je vrednost iz nabrajanja StartOfWeek radi označavanja načina numerisanja radnih dana.</value>
-    
+    <comment>{Locked=StartOfWeek}</comment>
   </data>
   <data name="ErrRuntimeExceptionError" xml:space="preserve">
     <value>Prikazan je izuzetak: {0}</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNameIsNotValid" xml:space="preserve">
     <value>Ime nije važeće. „{0}“ nije prepoznato.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrMondayZeroValueNotSupported" xml:space="preserve">
     <value>Vrednost MondayZero, iz prebrojavanja StartOfWeek, nije podržana u funkciji WeekNum.</value>
-    
+    <comment>{Locked=MondayZero}{Locked=StartOfWeek}{Locked=WeekNum}</comment>
   </data>
   <data name="ErrAggregateArgsSameNumberOfRecords" xml:space="preserve">
     <value>Oba agregirana argumenta moraju da imaju isti broj zapisa.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidArgument" xml:space="preserve">
     <value>Nevažeći argument</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUntypedObjectDoesNotImplementSetProperty" xml:space="preserve">
     <value>Klasa „{0}“ ne primenjuje „SetProperty“.</value>
-    
+    <comment>{Locked=SetProperty}</comment>
   </data>
   <data name="ErrLowerValueGreaterThanUpperValue" xml:space="preserve">
     <value>Niža vrednost ne može da bude veća od gornje vrednosti.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUntypedObjectNotArray" xml:space="preserve">
     <value>UntypedObject ne predstavlja niz.</value>
-    
+    <comment>{Locked=UntypedObject}</comment>
   </data>
   <data name="ErrNotApplicable" xml:space="preserve">
     <value>Nije primenjivo</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrAccessingFieldNotValidValue" xml:space="preserve">
     <value>Pristup polju nije važeći za ovu vrednost.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSystemNoError" xml:space="preserve">
     <value>Nema sistemske greške</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSystemError" xml:space="preserve">
     <value>Sistemska greška</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrMissingRequiredField" xml:space="preserve">
     <value>Nedostaje obavezno polje</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCreateRecordPermissionDenied" xml:space="preserve">
     <value>Dozvola za kreiranje zapisa je odbijena</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUpdateRecordPermissionDenied" xml:space="preserve">
     <value>Dozvola za ažuriranje zapisa je odbijena</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrDeleteRecordPermissionDenied" xml:space="preserve">
     <value>Dozvola za brisanje zapisa je odbijena</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrColumnServerGenerated" xml:space="preserve">
     <value>Server generiše kolonu i nju nije moguće promeniti</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRecordUpdateConflict" xml:space="preserve">
     <value>Neusaglašenost ažuriranja zapisa, osvežite zapis i ponovno primenite promenu</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrValidationError" xml:space="preserve">
     <value>Greška u proveri valjanosti</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrColumnReadOnly" xml:space="preserve">
     <value>Kolona je samo za čitanje</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidRecord" xml:space="preserve">
     <value>Zapis je nevažeći</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="DivisionByZero" xml:space="preserve">
     <value>Deljenje nulom</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrBadLanguage" xml:space="preserve">
     <value>Loš kôd jezika ili nevažeća vrednost</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRegexSyntaxError" xml:space="preserve">
     <value>Greška sintakse u redovnom izrazu</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidFunctionUsage" xml:space="preserve">
     <value>Nevažeća upotreba funkcije</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrFileNotFound" xml:space="preserve">
     <value>Datoteka nije pronađena</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSystemAnalysisError" xml:space="preserve">
     <value>Greška u analizi sistema</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReadRecordPermissionDenied" xml:space="preserve">
     <value>Dozvola za čitanje zapisa je odbijena</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOperationNotSupportedByPlayerDevice" xml:space="preserve">
     <value>Ovaj plejer ili uređaj ne podržavaju operaciju</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInsufficientMemoryStorage" xml:space="preserve">
     <value>Nema dovoljno memorije ili skladišta uređaja</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrStorageQuotaExceeded" xml:space="preserve">
     <value>Premašena je kvota za skladištenje</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNetworkError" xml:space="preserve">
     <value>Greška mreže</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNumericError" xml:space="preserve">
     <value>Numerička greška</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrTimeoutError" xml:space="preserve">
     <value>Greška vremenskog ograničenja</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOnlineServiceNotAvailable" xml:space="preserve">
     <value>Veza sa uslugom na mreži nije dostupna</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidJsonFormat" xml:space="preserve">
     <value>Nevažeći JSON format</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCustomError" xml:space="preserve">
     <value>Prilagođena greška</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCustomErrorArg" xml:space="preserve">
     <value>Prilagođena greška ({0})</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReservedErrorArg" xml:space="preserve">
     <value>Rezervisana greška ({0})</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOverflow" xml:space="preserve">
     <value>Višak.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrFilterPredicate" xml:space="preserve">
     <value>Filter() podržava samo jedan predikat.</value>
-    
+    <comment>{Locked=Filter()}</comment>
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
     <value>Argument netipiziranog objekta do „{0}“ funkcije ima netačan tip. Očekivano: {1}, stvarno: {2}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">
     <value>Argument mesta mora da bude dovoljno veliki da bi rezultat bio zadržan.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidSortColumn" xml:space="preserve">
     <value>Navedena kolona „{0}“ ne postoji ili je nevažeći tip kolone sortiranja.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOrderTableDuplicateValues" xml:space="preserve">
     <value>Tabela redosleda ne sme da ima duple vrednosti</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrManagedConnRefreshOnly" xml:space="preserve">
     <value>Moguće je osvežiti samo kontrolisane veze.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUntypedNumberNotValidDecimal" xml:space="preserve">
     <value>Netipizirani broj nije važeća decimalna vrednost, moguć je višak.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSingleColumnTableAccessNodeNotYetImplemented" xml:space="preserve">
     <value>Pristup tabeli sa jednom kolonom još uvek nije primenjen.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReturnTypeDifference" xml:space="preserve">
     <value>Tip vraćanja bi trebalo da bude „{0}", pronađen je „{1}“.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrThirdArgumentIsInvalid" xml:space="preserve">
     <value>Treći argument funkcije {0} je nevažeći.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReturnedNonFiniteNumber" xml:space="preserve">
     <value>Izraz je vratio beskonačan broj.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReturnedNumberBeyondDecimalValues" xml:space="preserve">
     <value>Izraz je vratio broj koji je izvan opsega decimalnih vrednosti.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrPlacesBetweenRange" xml:space="preserve">
     <value>Mesta treba da budu između 1 i 10.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidOperatorForTypes" xml:space="preserve">
     <value>Operator je nevažeći za ove tipove.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRegexTimeoutException" xml:space="preserve">
     <value>Vremensko ograničenje regularnog izraza (iznad {0} ms) – {1}</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidRegexException" xml:space="preserve">
     <value>Nevažeći regularni izraz – {rexParseEx.Message}</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInputOutsideRange" xml:space="preserve">
     <value>Ulazna vrednost {0} je izvan dozvoljenog opsega.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidNumberInput" xml:space="preserve">
     <value>Ulazna vrednost {0} je nevažeći unos.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUnrecognizedSymbol" xml:space="preserve">
     <value>Neprepoznat simbol {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
 </root>

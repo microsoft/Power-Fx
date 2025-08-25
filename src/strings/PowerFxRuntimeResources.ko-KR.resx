@@ -119,318 +119,318 @@
   </resheader>
   <data name="ErrDivByZero" xml:space="preserve">
     <value>잘못된 작업: 0으로 나누기.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRuntimeTypeMismatch" xml:space="preserve">
     <value>런타임 유형 불일치.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrArgumentOutOfRange" xml:space="preserve">
     <value>범위를 벗어난 인수입니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidCharValue" xml:space="preserve">
     <value>숫자 값이 잘못되었습니다. 1...255 범위에 있어야 합니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrBadLanguageCode" xml:space="preserve">
     <value>'{0}' 언어 코드는 지원되지 않습니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNonFiniteArgument" xml:space="preserve">
     <value>'{0}' 함수에 대한 인수는 유한해야 합니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNonFiniteResult" xml:space="preserve">
     <value>함수가 '{0}' 수를 반환하지 않습니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidDateTimeParsingError" xml:space="preserve">
     <value>날짜 또는 시간 값을 구문 분석할 수 없습니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidDateTimeError" xml:space="preserve">
     <value>날짜 또는 시간 값이 잘못되었습니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidBooleanFormatError" xml:space="preserve">
     <value>값을 부울로 해석할 수 없습니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidColorFormatError" xml:space="preserve">
     <value>값을 색상으로 해석할 수 없습니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUnreachableCodeError" xml:space="preserve">
     <value>알 수 없는 오류입니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNotYetImplementedFunctionError" xml:space="preserve">
     <value>아직 구현되지 않은 기능: {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNotYetImplementedUnaryOperatorError" xml:space="preserve">
     <value>아직 구현되지 않은 단항 연산자: {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidChain" xml:space="preserve">
     <value>잘못된 체인: {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrMaxCallDepth" xml:space="preserve">
     <value>최대 호출 깊이를 초과했습니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRecordNotFound" xml:space="preserve">
     <value>레코드를 찾을 수 없음</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOnlyPrimitiveValuesAllowed" xml:space="preserve">
     <value>이 작업에는 기본 값만 허용됩니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCanNotConvertToNumber" xml:space="preserve">
     <value>'{0}' 값을 숫자로 변환할 수 없습니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrStartOfWeekInvalid" xml:space="preserve">
     <value>평일에 번호를 지정하는 방법을 나타내려면 StartOfWeek 열거의 값이 필요합니다.</value>
-    
+    <comment>{Locked=StartOfWeek}</comment>
   </data>
   <data name="ErrRuntimeExceptionError" xml:space="preserve">
     <value>예외 발생: {0}</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNameIsNotValid" xml:space="preserve">
     <value>이름이 잘못되었습니다. '{0}'을(를) 인식할 수 없습니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrMondayZeroValueNotSupported" xml:space="preserve">
     <value>WeekNum 함수에서 StartOfWeek 열거형의 MondayZero 값은 지원되지 않습니다.</value>
-    
+    <comment>{Locked=MondayZero}{Locked=StartOfWeek}{Locked=WeekNum}</comment>
   </data>
   <data name="ErrAggregateArgsSameNumberOfRecords" xml:space="preserve">
     <value>두 집계 인수는 동일한 수의 레코드를 가져야 합니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidArgument" xml:space="preserve">
     <value>잘못된 인수</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUntypedObjectDoesNotImplementSetProperty" xml:space="preserve">
     <value>'{0}' 클래스가 'SetProperty'를 구현하지 않습니다.</value>
-    
+    <comment>{Locked=SetProperty}</comment>
   </data>
   <data name="ErrLowerValueGreaterThanUpperValue" xml:space="preserve">
     <value>낮은 값은 높은 값보다 클 수 없습니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUntypedObjectNotArray" xml:space="preserve">
     <value>UntypedObject는 배열을 나타내지 않습니다.</value>
-    
+    <comment>{Locked=UntypedObject}</comment>
   </data>
   <data name="ErrNotApplicable" xml:space="preserve">
     <value>해당 없음</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrAccessingFieldNotValidValue" xml:space="preserve">
     <value>이 값에서는 필드에 액세스할 수 없습니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSystemNoError" xml:space="preserve">
     <value>시스템 오류 없음</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSystemError" xml:space="preserve">
     <value>시스템 오류</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrMissingRequiredField" xml:space="preserve">
     <value>필수 필드 없음</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCreateRecordPermissionDenied" xml:space="preserve">
     <value>레코드 만들기 권한 거부됨</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUpdateRecordPermissionDenied" xml:space="preserve">
     <value>레코드 업데이트 권한 거부됨</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrDeleteRecordPermissionDenied" xml:space="preserve">
     <value>레코드 삭제 권한 거부됨</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrColumnServerGenerated" xml:space="preserve">
     <value>열은 서버에서 생성되어 수정할 수 없습니다</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRecordUpdateConflict" xml:space="preserve">
     <value>레코드 업데이트 충돌, 레코드 새로 고침 및 변경 내용 다시 적용</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrValidationError" xml:space="preserve">
     <value>유효성 검사 오류</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrColumnReadOnly" xml:space="preserve">
     <value>열이 읽기 전용임</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidRecord" xml:space="preserve">
     <value>레코드가 잘못되었습니다</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="DivisionByZero" xml:space="preserve">
     <value>0으로 나눔</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrBadLanguage" xml:space="preserve">
     <value>잘못된 언어 코드 또는 잘못된 값</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRegexSyntaxError" xml:space="preserve">
     <value>정규식의 구문 오류</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidFunctionUsage" xml:space="preserve">
     <value>잘못된 함수 사용</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrFileNotFound" xml:space="preserve">
     <value>파일 없음</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSystemAnalysisError" xml:space="preserve">
     <value>시스템 분석 오류</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReadRecordPermissionDenied" xml:space="preserve">
     <value>레코드 읽기 권한 거부됨</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOperationNotSupportedByPlayerDevice" xml:space="preserve">
     <value>이 플레이어 또는 디바이스에서 지원하지 않는 작업</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInsufficientMemoryStorage" xml:space="preserve">
     <value>메모리 또는 디바이스 저장 공간 부족</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrStorageQuotaExceeded" xml:space="preserve">
     <value>스토리지 할당량 초과</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNetworkError" xml:space="preserve">
     <value>네트워크 오류</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNumericError" xml:space="preserve">
     <value>숫자 오류</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrTimeoutError" xml:space="preserve">
     <value>시간 제한 오류</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOnlineServiceNotAvailable" xml:space="preserve">
     <value>온라인 서비스 연결을 사용할 수 없음</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidJsonFormat" xml:space="preserve">
     <value>잘못된 JSON 형식</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCustomError" xml:space="preserve">
     <value>사용자 지정 오류</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCustomErrorArg" xml:space="preserve">
     <value>사용자 지정 오류({0})</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReservedErrorArg" xml:space="preserve">
     <value>예약된 오류({0})</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOverflow" xml:space="preserve">
     <value>오버플로.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrFilterPredicate" xml:space="preserve">
     <value>Filter()는 하나의 조건자만 지원합니다.</value>
-    
+    <comment>{Locked=Filter()}</comment>
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
     <value>'{0}' 함수에 형식화되지 않은 개체 인수의 유형이 잘못되었습니다. 예상: {1}, 실제: {2}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">
     <value>장소 인수는 결과를 수용할 만큼 충분히 커야 합니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidSortColumn" xml:space="preserve">
     <value>지정된 열 '{0}'이(가) 없거나 잘못된 정렬 열 유형입니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOrderTableDuplicateValues" xml:space="preserve">
     <value>순서 테이블에는 중복된 값이 있을 수 없습니다</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrManagedConnRefreshOnly" xml:space="preserve">
     <value>관리되는 연결만 새로 고칠 수 있습니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUntypedNumberNotValidDecimal" xml:space="preserve">
     <value>입력되지 않은 숫자는 유효한 10진수 값이 아니며 오버플로가 발생할 수 있습니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSingleColumnTableAccessNodeNotYetImplemented" xml:space="preserve">
     <value>단일 열 테이블 액세스는 아직 구현되지 않았습니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReturnTypeDifference" xml:space="preserve">
     <value>반환 유형은 '{0}'이어야 했는데 '{1}'을(를) 찾았습니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrThirdArgumentIsInvalid" xml:space="preserve">
     <value>{0} 함수에 대한 세 번째 인수가 잘못되었습니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReturnedNonFiniteNumber" xml:space="preserve">
     <value>식에서 비정기 번호를 반환합니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReturnedNumberBeyondDecimalValues" xml:space="preserve">
     <value>해당 식이 10진수 값 범위를 넘어서는 숫자를 반환했습니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrPlacesBetweenRange" xml:space="preserve">
     <value>자릿수는 1에서 10 사이여야 합니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidOperatorForTypes" xml:space="preserve">
     <value>해당 유형에는 연산자가 유효하지 않습니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRegexTimeoutException" xml:space="preserve">
     <value>정규 표현식 시간 초과({0}ms 이상) - {1}</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidRegexException" xml:space="preserve">
     <value>잘못된 정규식 - {rexParseEx.Message}</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInputOutsideRange" xml:space="preserve">
     <value>입력 값 {0}이(가) 허용 범위를 벗어났습니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidNumberInput" xml:space="preserve">
     <value>입력 값 {0}이(가) 잘못된 입력입니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUnrecognizedSymbol" xml:space="preserve">
     <value>{0} 기호를 인식할 수 없습니다.</value>
-    
+    <comment>Error Message.</comment>
   </data>
 </root>

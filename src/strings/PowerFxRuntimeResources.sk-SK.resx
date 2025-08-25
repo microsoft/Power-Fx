@@ -119,318 +119,318 @@
   </resheader>
   <data name="ErrDivByZero" xml:space="preserve">
     <value>Neplatná operácia: delenie nulou.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRuntimeTypeMismatch" xml:space="preserve">
     <value>Nesúlad typu runtime.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrArgumentOutOfRange" xml:space="preserve">
     <value>Argument je mimo rozsahu.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidCharValue" xml:space="preserve">
     <value>Neplatná číselná hodnota, musí byť v rozsahu 1 až 255.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrBadLanguageCode" xml:space="preserve">
     <value>Kód jazyka {0} nie je podporovaný.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNonFiniteArgument" xml:space="preserve">
     <value>Argumenty funkcie {0} musia byť konečné.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNonFiniteResult" xml:space="preserve">
     <value>Funkcia {0} vrátila nekonečné číslo.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidDateTimeParsingError" xml:space="preserve">
     <value>Hodnotu dátumu alebo času nemožno analyzovať.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidDateTimeError" xml:space="preserve">
     <value>Hodnota dátumu alebo času je neplatná.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidBooleanFormatError" xml:space="preserve">
     <value>Hodnotu nebolo možné interpretovať ako booleovskú.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidColorFormatError" xml:space="preserve">
     <value>Hodnotu nebolo možné interpretovať ako farbu.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUnreachableCodeError" xml:space="preserve">
     <value>Neznáma chyba.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNotYetImplementedFunctionError" xml:space="preserve">
     <value>Zatiaľ neimplementovaná funkcia: {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNotYetImplementedUnaryOperatorError" xml:space="preserve">
     <value>Zatiaľ neimplementovaný unárny operátor: {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidChain" xml:space="preserve">
     <value>Neplatný reťazec: {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrMaxCallDepth" xml:space="preserve">
     <value>Bola prekročená maximálna hĺbka volania.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRecordNotFound" xml:space="preserve">
     <value>Záznam sa nenašiel</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOnlyPrimitiveValuesAllowed" xml:space="preserve">
     <value>Pre operáciu sú povolené len primitívne hodnoty.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCanNotConvertToNumber" xml:space="preserve">
     <value>Hodnotu {0} nie je možné konvertovať na číslo.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrStartOfWeekInvalid" xml:space="preserve">
     <value>Očakávala sa hodnota z enumerácie StartOfWeek, ktorá by určovala spôsob číslovania dní v týždni.</value>
-    
+    <comment>{Locked=StartOfWeek}</comment>
   </data>
   <data name="ErrRuntimeExceptionError" xml:space="preserve">
     <value>Bola vyvolaná výnimka: {0}</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNameIsNotValid" xml:space="preserve">
     <value>Názov nie je platný. Identifikátor {0} sa nerozpoznal.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrMondayZeroValueNotSupported" xml:space="preserve">
     <value>Hodnota MondayZero z enumerácie StartOfWeek nie je podporovaná vo funkcii WeekNum.</value>
-    
+    <comment>{Locked=MondayZero}{Locked=StartOfWeek}{Locked=WeekNum}</comment>
   </data>
   <data name="ErrAggregateArgsSameNumberOfRecords" xml:space="preserve">
     <value>Oba súhrnné argumenty musia mať rovnaký počet záznamov.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidArgument" xml:space="preserve">
     <value>Neplatný argument</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUntypedObjectDoesNotImplementSetProperty" xml:space="preserve">
     <value>Trieda {0} neimplementuje 'SetProperty'.</value>
-    
+    <comment>{Locked=SetProperty}</comment>
   </data>
   <data name="ErrLowerValueGreaterThanUpperValue" xml:space="preserve">
     <value>Dolná hodnota nemôže byť väčšia ako horná hodnota.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUntypedObjectNotArray" xml:space="preserve">
     <value>UntypedObject nepredstavuje pole.</value>
-    
+    <comment>{Locked=UntypedObject}</comment>
   </data>
   <data name="ErrNotApplicable" xml:space="preserve">
     <value>Nevzťahuje sa</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrAccessingFieldNotValidValue" xml:space="preserve">
     <value>Prístup k poľu nie je pri tejto hodnote platný.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSystemNoError" xml:space="preserve">
     <value>Systémová chyba – žiadna</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSystemError" xml:space="preserve">
     <value>Systémová chyba</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrMissingRequiredField" xml:space="preserve">
     <value>Chýba povinné pole</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCreateRecordPermissionDenied" xml:space="preserve">
     <value>Povolenie na vytvorenie záznamu bolo zamietnuté</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUpdateRecordPermissionDenied" xml:space="preserve">
     <value>Povolenie na aktualizáciu záznamu bolo zamietnuté</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrDeleteRecordPermissionDenied" xml:space="preserve">
     <value>Povolenie na odstránenie záznamu bolo zamietnuté</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrColumnServerGenerated" xml:space="preserve">
     <value>Stĺpec je generovaný serverom a nemožno ho upravovať</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRecordUpdateConflict" xml:space="preserve">
     <value>Konflikt aktualizácie záznamu, obnovte záznam a znova použite zmenu</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrValidationError" xml:space="preserve">
     <value>Chyba overenia</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrColumnReadOnly" xml:space="preserve">
     <value>Stĺpec je iba na čítanie</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidRecord" xml:space="preserve">
     <value>Záznam je neplatný</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="DivisionByZero" xml:space="preserve">
     <value>Delenie nulou</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrBadLanguage" xml:space="preserve">
     <value>Chybný kód jazyka alebo neplatná hodnota</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRegexSyntaxError" xml:space="preserve">
     <value>Syntaktická chyba v regulárnom výraze</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidFunctionUsage" xml:space="preserve">
     <value>Neplatné použitie funkcie</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrFileNotFound" xml:space="preserve">
     <value>Súbor sa nenašiel</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSystemAnalysisError" xml:space="preserve">
     <value>Chyba systémovej analýzy</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReadRecordPermissionDenied" xml:space="preserve">
     <value>Povolenie na čítanie záznamu bolo zamietnuté</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOperationNotSupportedByPlayerDevice" xml:space="preserve">
     <value>Tento prehrávač alebo zariadenie nepodporuje operáciu</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInsufficientMemoryStorage" xml:space="preserve">
     <value>Nedostatok pamäte alebo ukladacieho priestoru v zariadení</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrStorageQuotaExceeded" xml:space="preserve">
     <value>Prekročená kvóta úložiska</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNetworkError" xml:space="preserve">
     <value>Chyba siete</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNumericError" xml:space="preserve">
     <value>Číselná chyba</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrTimeoutError" xml:space="preserve">
     <value>Chyba uplynutia časového limitu</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOnlineServiceNotAvailable" xml:space="preserve">
     <value>Online pripojenie k službe nie je k dispozícii</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidJsonFormat" xml:space="preserve">
     <value>Neplatný formát JSON</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCustomError" xml:space="preserve">
     <value>Vlastná chyba</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCustomErrorArg" xml:space="preserve">
     <value>Vlastná chyba ({0})</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReservedErrorArg" xml:space="preserve">
     <value>Vyhradená chyba ({0})</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOverflow" xml:space="preserve">
     <value>Pretečenie.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrFilterPredicate" xml:space="preserve">
     <value>Filter() podporuje iba jeden predikát.</value>
-    
+    <comment>{Locked=Filter()}</comment>
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
     <value>Argument netypového objektu funkcie {0} má nesprávny typ. Očakávaný: {1}, skutočný: {2}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">
     <value>Argument miest musí byť dostatočne veľký, aby udržal výsledok.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidSortColumn" xml:space="preserve">
     <value>Zadaný stĺpec {0} neexistuje alebo je neplatným typom zoradenia stĺpcov.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOrderTableDuplicateValues" xml:space="preserve">
     <value>Tabuľka poradia nemôže mať duplicitné hodnoty</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrManagedConnRefreshOnly" xml:space="preserve">
     <value>Obnovovať možno iba spravované pripojenia.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUntypedNumberNotValidDecimal" xml:space="preserve">
     <value>Netypové číslo nie je platnou desatinnou hodnotou. Môže dôjsť k pretečeniu.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSingleColumnTableAccessNodeNotYetImplemented" xml:space="preserve">
     <value>Prístup k tabuľke s jedným stĺpcom ešte nie je implementovaný.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReturnTypeDifference" xml:space="preserve">
     <value>Typ návratu mal mať hodnotu {0}, nájdená hodnota {1}'.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrThirdArgumentIsInvalid" xml:space="preserve">
     <value>Tretí argument funkcie {0} je neplatný.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReturnedNonFiniteNumber" xml:space="preserve">
     <value>Výraz vrátil nekonečné číslo.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReturnedNumberBeyondDecimalValues" xml:space="preserve">
     <value>Výraz vrátil číslo, ktoré je mimo rozsahu desatinných hodnôt.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrPlacesBetweenRange" xml:space="preserve">
     <value>Miesta by mali byť medzi 1 a 10.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidOperatorForTypes" xml:space="preserve">
     <value>Operátor je pre tieto typy neplatný.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRegexTimeoutException" xml:space="preserve">
     <value>Časový limit regulárneho výrazu (nad {0} ms) – {1}</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidRegexException" xml:space="preserve">
     <value>Neplatný regulárny výraz – {rexParseEx.Message}</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInputOutsideRange" xml:space="preserve">
     <value>Vstupná hodnota {0} je mimo povoleného rozsahu.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidNumberInput" xml:space="preserve">
     <value>Vstupná hodnota {0} je neplatná vstupná hodnota.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUnrecognizedSymbol" xml:space="preserve">
     <value>Nerozpoznaný symbol {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
 </root>

@@ -119,318 +119,318 @@
   </resheader>
   <data name="ErrDivByZero" xml:space="preserve">
     <value>Geçersiz işlem: sıfıra bölme.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRuntimeTypeMismatch" xml:space="preserve">
     <value>Çalışma zamanı türü uyuşmazlığı.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrArgumentOutOfRange" xml:space="preserve">
     <value>Bağımsız değişken aralık dışında.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidCharValue" xml:space="preserve">
     <value>Geçersiz sayısal değer, 1...255 aralığında olmalıdır.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrBadLanguageCode" xml:space="preserve">
     <value>'{0}' dil kodu desteklenmiyor.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNonFiniteArgument" xml:space="preserve">
     <value>'{0}' işlevinin bağımsız değişkenleri sonlu olmalı.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNonFiniteResult" xml:space="preserve">
     <value>'{0}' işlevi, sonlu olmayan bir sayı döndürdü.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidDateTimeParsingError" xml:space="preserve">
     <value>Tarih veya saat değeri ayrıştırılamadı.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidDateTimeError" xml:space="preserve">
     <value>Geçersiz tarih veya saat değeri.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidBooleanFormatError" xml:space="preserve">
     <value>Değer, boole değeri olarak yorumlanamadı.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidColorFormatError" xml:space="preserve">
     <value>Değer, renk değeri olarak yorumlanamadı.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUnreachableCodeError" xml:space="preserve">
     <value>Bilinmeyen hata.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNotYetImplementedFunctionError" xml:space="preserve">
     <value>Henüz uygulanmayan işlev: {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNotYetImplementedUnaryOperatorError" xml:space="preserve">
     <value>Henüz uygulanmayan tekil işleç: {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidChain" xml:space="preserve">
     <value>Geçersiz zincir: {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrMaxCallDepth" xml:space="preserve">
     <value>Maksimum arama derinliği aşıldı.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRecordNotFound" xml:space="preserve">
     <value>Kayıt bulunamadı</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOnlyPrimitiveValuesAllowed" xml:space="preserve">
     <value>İşlem için yalnızca temel değerlere izin verilir.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCanNotConvertToNumber" xml:space="preserve">
     <value>'{0}' değeri sayıya dönüştürülemez.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrStartOfWeekInvalid" xml:space="preserve">
     <value>Hafta içi günlerin nasıl numaralanacağını belirtmek üzere StartOfWeek sabit listesinden bir değer bekleniyor.</value>
-    
+    <comment>{Locked=StartOfWeek}</comment>
   </data>
   <data name="ErrRuntimeExceptionError" xml:space="preserve">
     <value>Bir özel durum verildi: {0}</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNameIsNotValid" xml:space="preserve">
     <value>Ad geçerli değil. '{0}' tanınmıyor.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrMondayZeroValueNotSupported" xml:space="preserve">
     <value>StartOfWeek numaralamasındaki MondayZero değeri, WeekNum işlevinde desteklenmiyor.</value>
-    
+    <comment>{Locked=MondayZero}{Locked=StartOfWeek}{Locked=WeekNum}</comment>
   </data>
   <data name="ErrAggregateArgsSameNumberOfRecords" xml:space="preserve">
     <value>Her iki toplama bağımsız değişkeninde de aynı sayıda kayıt olmalıdır.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidArgument" xml:space="preserve">
     <value>Geçersiz bağımsız değişken</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUntypedObjectDoesNotImplementSetProperty" xml:space="preserve">
     <value>'{0}' sınıfı 'SetProperty' öğesini uygulamıyor.</value>
-    
+    <comment>{Locked=SetProperty}</comment>
   </data>
   <data name="ErrLowerValueGreaterThanUpperValue" xml:space="preserve">
     <value>Alt değer, üst değerden büyük olamaz.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUntypedObjectNotArray" xml:space="preserve">
     <value>UntypedObject bir diziyi temsil etmiyor.</value>
-    
+    <comment>{Locked=UntypedObject}</comment>
   </data>
   <data name="ErrNotApplicable" xml:space="preserve">
     <value>Uygulanamaz</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrAccessingFieldNotValidValue" xml:space="preserve">
     <value>Bu değerde bir alana erişim geçerli değil.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSystemNoError" xml:space="preserve">
     <value>Sistem hatası yok</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSystemError" xml:space="preserve">
     <value>Sistem hatası</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrMissingRequiredField" xml:space="preserve">
     <value>Gerekli alan eksik</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCreateRecordPermissionDenied" xml:space="preserve">
     <value>Kayıt oluşturma izni reddedildi</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUpdateRecordPermissionDenied" xml:space="preserve">
     <value>Kayıt güncelleştirme izni reddedildi</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrDeleteRecordPermissionDenied" xml:space="preserve">
     <value>Kayıt silme izni reddedildi</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrColumnServerGenerated" xml:space="preserve">
     <value>Sütun sunucu tarafından oluşturuldu ve değiştirilemez</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRecordUpdateConflict" xml:space="preserve">
     <value>Kayıt güncelleştirme çakışması oluştu, kaydı yenileyin ve değişikliğinizi yeniden uygulayın</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrValidationError" xml:space="preserve">
     <value>Doğrulama hatası</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrColumnReadOnly" xml:space="preserve">
     <value>Sütun salt okunur</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidRecord" xml:space="preserve">
     <value>Kayıt geçersiz</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="DivisionByZero" xml:space="preserve">
     <value>Sıfıra bölme</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrBadLanguage" xml:space="preserve">
     <value>Hatalı dil kodu veya geçersiz değer</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRegexSyntaxError" xml:space="preserve">
     <value>Normal ifadede sözdizimi hatası</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidFunctionUsage" xml:space="preserve">
     <value>Geçersiz işlev kullanımı</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrFileNotFound" xml:space="preserve">
     <value>Dosya bulunamadı</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSystemAnalysisError" xml:space="preserve">
     <value>Sistem analiz hatası</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReadRecordPermissionDenied" xml:space="preserve">
     <value>Kayıt okuma izni reddedildi</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOperationNotSupportedByPlayerDevice" xml:space="preserve">
     <value>İşlem bu oyuncu veya cihaz tarafından desteklenmiyor</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInsufficientMemoryStorage" xml:space="preserve">
     <value>Yetersiz bellek veya cihaz depolama alanı</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrStorageQuotaExceeded" xml:space="preserve">
     <value>Depolama kotası aşıldı</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNetworkError" xml:space="preserve">
     <value>Ağ hatası</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNumericError" xml:space="preserve">
     <value>Sayı hatası</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrTimeoutError" xml:space="preserve">
     <value>Zaman aşımı hatası</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOnlineServiceNotAvailable" xml:space="preserve">
     <value>Çevrimiçi servis bağlantısı kullanılamıyor</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidJsonFormat" xml:space="preserve">
     <value>Geçersiz JSON biçimi</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCustomError" xml:space="preserve">
     <value>Özel hata</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCustomErrorArg" xml:space="preserve">
     <value>Özel hata ({0})</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReservedErrorArg" xml:space="preserve">
     <value>Ayrılmış değer hatası ({0})</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOverflow" xml:space="preserve">
     <value>Taşma.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrFilterPredicate" xml:space="preserve">
     <value>Filter() yalnızca bir ifadeyi destekler.</value>
-    
+    <comment>{Locked=Filter()}</comment>
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
     <value>'{0}' işlevine yönelik türü belirtilmemiş nesne bağımsız değişkeninin türü yanlış. Beklenen: {1}, Mevcut: {2}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">
     <value>Yerler bağımsız değişkeni, sonucu tutacak kadar büyük olmalı.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidSortColumn" xml:space="preserve">
     <value>Belirtilen '{0}' sütunu yok veya geçersiz bir sıralama sütunu türü.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOrderTableDuplicateValues" xml:space="preserve">
     <value>Düzen tablosunda yinelenen değerler bulunamaz</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrManagedConnRefreshOnly" xml:space="preserve">
     <value>Yalnızca yönetilen bağlantılar yenilenebilir.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUntypedNumberNotValidDecimal" xml:space="preserve">
     <value>Tür atanmamış sayı geçerli bir Ondalık değer değil, olası taşma.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSingleColumnTableAccessNodeNotYetImplemented" xml:space="preserve">
     <value>Tek sütunlu tablo erişimi henüz uygulanmadı.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReturnTypeDifference" xml:space="preserve">
     <value>İade türü '{0}' olmalı, '{1}' bulundu.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrThirdArgumentIsInvalid" xml:space="preserve">
     <value>{0} işlevinin üçüncü bağımsız değişkeni geçersiz.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReturnedNonFiniteNumber" xml:space="preserve">
     <value>İfade sonlu olmayan bir sayı döndürdü.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReturnedNumberBeyondDecimalValues" xml:space="preserve">
     <value>İfade, ondalık değerler aralığının dışında bir sayı döndürüldü.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrPlacesBetweenRange" xml:space="preserve">
     <value>Yerler, 1 ve 10 arasında olmalıdır.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidOperatorForTypes" xml:space="preserve">
     <value>İşleç, bu türler için geçersiz.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRegexTimeoutException" xml:space="preserve">
     <value>Normal ifade zaman aşımı ({0} ms'den fazla) - {1}</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidRegexException" xml:space="preserve">
     <value>Geçersiz normal ifade - {rexParseEx.Message}</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInputOutsideRange" xml:space="preserve">
     <value>Giriş değeri {0}, izin verilebilir aralığın dışında.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidNumberInput" xml:space="preserve">
     <value>Giriş değeri {0}, geçersiz bir giriştir.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUnrecognizedSymbol" xml:space="preserve">
     <value>Tanınmayan simge {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
 </root>

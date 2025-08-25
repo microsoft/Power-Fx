@@ -119,318 +119,318 @@
   </resheader>
   <data name="ErrDivByZero" xml:space="preserve">
     <value>Operasi tidak sah: pembahagian dengan sifar.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRuntimeTypeMismatch" xml:space="preserve">
     <value>Jenis masa jalanan tidak sepadan.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrArgumentOutOfRange" xml:space="preserve">
     <value>Argumen di luar julat.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidCharValue" xml:space="preserve">
     <value>Nilai berangka tidak sah, mesti dalam julat 1...255.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrBadLanguageCode" xml:space="preserve">
     <value>Kod bahasa '{0}' tidak disokong.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNonFiniteArgument" xml:space="preserve">
     <value>Argumen kepada fungsi '{0}' mesti terbatas.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNonFiniteResult" xml:space="preserve">
     <value>Fungsi '{0}' mengembalikan nombor yang tidak terbatas.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidDateTimeParsingError" xml:space="preserve">
     <value>Nilai tarikh atau masa tidak boleh dihuraikan.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidDateTimeError" xml:space="preserve">
     <value>Tarikh atau nilai masa tidak sah.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidBooleanFormatError" xml:space="preserve">
     <value>Nilai tidak dapat ditafsirkan sebagai boolean.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidColorFormatError" xml:space="preserve">
     <value>Nilai tidak dapat ditafsirkan sebagai warna.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUnreachableCodeError" xml:space="preserve">
     <value>Ralat tidak diketahui.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNotYetImplementedFunctionError" xml:space="preserve">
     <value>Fungsi tidak dilaksanakan: {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNotYetImplementedUnaryOperatorError" xml:space="preserve">
     <value>Belum melaksanakan operator tunggal: {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidChain" xml:space="preserve">
     <value>Rantaian tidak sah: {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrMaxCallDepth" xml:space="preserve">
     <value>Kedalaman panggilan maksimum tercapai.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRecordNotFound" xml:space="preserve">
     <value>Rekod tidak ditemukan</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOnlyPrimitiveValuesAllowed" xml:space="preserve">
     <value>Hanya nilai primer dibenarkan untuk operasi.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCanNotConvertToNumber" xml:space="preserve">
     <value>Nilai '{0}' tidak boleh ditukar kepada nombor.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrStartOfWeekInvalid" xml:space="preserve">
     <value>Menjangkakan nilai daripada penyenaraian StartOfWeek untuk menunjukkan cara menomborkan hari biasa.</value>
-    
+    <comment>{Locked=StartOfWeek}</comment>
   </data>
   <data name="ErrRuntimeExceptionError" xml:space="preserve">
     <value>Pengecualian telah dibuang: {0}</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNameIsNotValid" xml:space="preserve">
     <value>Nama tidak sah. '{0}' ini tidak dikenali.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrMondayZeroValueNotSupported" xml:space="preserve">
     <value>Nilai MondayZero, daripada penghitungan StartOfWeek, tidak disokong dalam fungsi WeekNum.</value>
-    
+    <comment>{Locked=MondayZero}{Locked=StartOfWeek}{Locked=WeekNum}</comment>
   </data>
   <data name="ErrAggregateArgsSameNumberOfRecords" xml:space="preserve">
     <value>Kedua-dua argumen agregat mesti mempunyai bilangan rekod yang sama.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidArgument" xml:space="preserve">
     <value>Argumen tidak sah</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUntypedObjectDoesNotImplementSetProperty" xml:space="preserve">
     <value>Kelas '{0}' tidak melaksanakan 'SetProperty'.</value>
-    
+    <comment>{Locked=SetProperty}</comment>
   </data>
   <data name="ErrLowerValueGreaterThanUpperValue" xml:space="preserve">
     <value>Nilai yang lebih rendah tidak boleh lebih besar daripada nilai yang lebih tinggi.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUntypedObjectNotArray" xml:space="preserve">
     <value>UntypedObject tidak mewakili tatasusunan.</value>
-    
+    <comment>{Locked=UntypedObject}</comment>
   </data>
   <data name="ErrNotApplicable" xml:space="preserve">
     <value>Tidak berkenaan</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrAccessingFieldNotValidValue" xml:space="preserve">
     <value>Mencapai medan tidak sah pada nilai ini.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSystemNoError" xml:space="preserve">
     <value>Tiada ralat sistem</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSystemError" xml:space="preserve">
     <value>Ralat sistem</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrMissingRequiredField" xml:space="preserve">
     <value>Medan diperlukan tidak ditemukan</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCreateRecordPermissionDenied" xml:space="preserve">
     <value>Cipta keizinan rekod dinafikan</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUpdateRecordPermissionDenied" xml:space="preserve">
     <value>Kemas kini keizinan rekod dinafikan</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrDeleteRecordPermissionDenied" xml:space="preserve">
     <value>Padam keizinan rekod dinafikan</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrColumnServerGenerated" xml:space="preserve">
     <value>Lajur dijana oleh pelayan dan tidak boleh diubah suai</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRecordUpdateConflict" xml:space="preserve">
     <value>Percanggahan kemas kini rekod, segar semula rekod dan gunakan semula perubahan anda</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrValidationError" xml:space="preserve">
     <value>Ralat pensahihan</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrColumnReadOnly" xml:space="preserve">
     <value>Lajur adalah baca sahaja</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidRecord" xml:space="preserve">
     <value>Rekod tidak sah</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="DivisionByZero" xml:space="preserve">
     <value>Pembahagian dengan sifar</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrBadLanguage" xml:space="preserve">
     <value>Kod bahasa buruk atau nilai tidak sah</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRegexSyntaxError" xml:space="preserve">
     <value>Ralat sintaks dalam ungkapan biasa</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidFunctionUsage" xml:space="preserve">
     <value>Penggunaan fungsi tidak sah</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrFileNotFound" xml:space="preserve">
     <value>Fail tidak ditemui</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSystemAnalysisError" xml:space="preserve">
     <value>Ralat analisis sistem</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReadRecordPermissionDenied" xml:space="preserve">
     <value>Baca keizinan rekod dinafikan</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOperationNotSupportedByPlayerDevice" xml:space="preserve">
     <value>Operasi tidak disokong oleh pemain atau peranti ini</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInsufficientMemoryStorage" xml:space="preserve">
     <value>Memori atau storan peranti tidak mencukupi</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrStorageQuotaExceeded" xml:space="preserve">
     <value>Kuota storan dilebihi</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNetworkError" xml:space="preserve">
     <value>Ralat rangkaian</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNumericError" xml:space="preserve">
     <value>Ralat angka</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrTimeoutError" xml:space="preserve">
     <value>Ralat tamat masa</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOnlineServiceNotAvailable" xml:space="preserve">
     <value>Sambungan perkhidmatan dalam talian tidak tersedia</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidJsonFormat" xml:space="preserve">
     <value>Format JSON tidak sah</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCustomError" xml:space="preserve">
     <value>Ralat tersuai</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCustomErrorArg" xml:space="preserve">
     <value>Ralat tersuai ({0})</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReservedErrorArg" xml:space="preserve">
     <value>Ralat tertempah ({0})</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOverflow" xml:space="preserve">
     <value>Limpahan.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrFilterPredicate" xml:space="preserve">
     <value>Filter() hanya menyokong satu ramalan.</value>
-    
+    <comment>{Locked=Filter()}</comment>
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
     <value>Argumen objek tanpa jenis kepada fungsi '{0}' mempunyai jenis yang salah. Dijangkakan: {1}, Sebenar: {2}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">
     <value>Argumen tempat mestilah cukup besar untuk memegang hasil.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidSortColumn" xml:space="preserve">
     <value>Lajur '{0}' yang ditentukan tidak wujud atau jenis lajur isih tidak sah.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOrderTableDuplicateValues" xml:space="preserve">
     <value>Jadual pesanan tidak boleh mempunya nilai pendua</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrManagedConnRefreshOnly" xml:space="preserve">
     <value>Hanya sambungan terurus boleh disegar semula.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUntypedNumberNotValidDecimal" xml:space="preserve">
     <value>Nombor tanpa jenis bukan nilai Perpuluhan yang sah, limpahan mungkin berlaku.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSingleColumnTableAccessNodeNotYetImplemented" xml:space="preserve">
     <value>Capaian jadual lajur tunggal belum dilaksanakan.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReturnTypeDifference" xml:space="preserve">
     <value>Jenis pengembalian seharusnya '{0}', '{1}' ditemui.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrThirdArgumentIsInvalid" xml:space="preserve">
     <value>Argumen ketiga untuk fungsi {0} tidak sah.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReturnedNonFiniteNumber" xml:space="preserve">
     <value>Ungkapan mengembalikan nombor yang tidak terbatas.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReturnedNumberBeyondDecimalValues" xml:space="preserve">
     <value>Ungkapan mengembalikan nombor yang melampaui julat nilai perpuluhan.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrPlacesBetweenRange" xml:space="preserve">
     <value>Tempat hendaklah antara 1 dengan 10.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidOperatorForTypes" xml:space="preserve">
     <value>Operator tidak sah untuk jenis ini.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRegexTimeoutException" xml:space="preserve">
     <value>Habis masa ungkapan biasa (melebihi {0} ms) - {1}</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidRegexException" xml:space="preserve">
     <value>Ungkapan biasa tidak sah - {rexParseEx.Message}</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInputOutsideRange" xml:space="preserve">
     <value>Nilai input {0} berada di luar julat yang dibenarkan.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidNumberInput" xml:space="preserve">
     <value>Nilai input {0} ialah input yang tidak sah.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUnrecognizedSymbol" xml:space="preserve">
     <value>Simbol tidak dikenali {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
 </root>
