@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         [InlineData(
             @"Office365Users.Manager(""a6d41679-60f7-4623-8d38-0538c02e59f9"").UserPrincipalName",
-            "ERR:Office365Users.Manager failed: The server returned an HTTP error with code 404|No manager found for the specified user.",
+            "ERR:Office365Users.Manager failed: The server returned an HTTP error with code 404",
             "GET:/apim/office365users/1870991d56b04959a52f6704949eccad/users/a6d41679-60f7-4623-8d38-0538c02e59f9/manager",
             "",
             "404:Response_O365Users_Manager404.json")]

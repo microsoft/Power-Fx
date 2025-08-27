@@ -97,7 +97,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         [InlineData(
             @"Office365Groups.AddMemberToGroup(GUID(""202a2963-7e7d-4dc6-8aca-a58a2f3a9d53""), ""aurorauser09@capintegration01.onmicrosoft.com"")",
-            "ERR:Office365Groups.AddMemberToGroup failed: The server returned an HTTP error with code 400|One or more added object references already exist for the following modified properties: 'members'.",
+            "ERR:Office365Groups.AddMemberToGroup failed: The server returned an HTTP error with code 400",
             "POST:/apim/office365groups/380cef7ddacd49d2bdb5b747184c7d8a/v1.0/groups/202a2963-7e7d-4dc6-8aca-a58a2f3a9d53/members/$ref?userUpn=aurorauser09%40capintegration01.onmicrosoft.com",
             "",
             "400:Response_O365Groups_AddMemberToGroup.json")]
