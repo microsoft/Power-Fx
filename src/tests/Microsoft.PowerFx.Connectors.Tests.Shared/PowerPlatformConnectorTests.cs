@@ -406,7 +406,7 @@ namespace Microsoft.PowerFx.Tests
 
                 Assert.Equal(ErrorKind.Network, err.Kind);
                 Assert.Equal(ErrorSeverity.Critical, err.Severity);
-                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode} ({reasonPhrase}). Response: {statusCode}", err.Message);
+                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode} ({reasonPhrase}).", err.Message);
 
                 HttpExpressionError her = Assert.IsType<HttpExpressionError>(err);
 
@@ -427,7 +427,7 @@ namespace Microsoft.PowerFx.Tests
             }
             else
             {
-                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode} ({reasonPhrase}). Response: {statusCode}", sv2.Value);
+                Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode} ({reasonPhrase}).", sv2.Value);
             }
 
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
