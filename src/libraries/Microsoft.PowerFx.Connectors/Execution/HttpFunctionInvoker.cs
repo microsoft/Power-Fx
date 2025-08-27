@@ -440,7 +440,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (throwOnError)
             {
-                throw new HttpRequestException($"Http Status Error {statusCode}{reasonPhrase}: {text}");
+                throw new HttpRequestException($"Http Status Error {statusCode}{reasonPhrase}");
             }
 
             return FormulaValue.NewError(
@@ -448,7 +448,7 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         Kind = ErrorKind.Network,
                         Severity = ErrorSeverity.Critical,
-                        Message = $"The server returned an HTTP error with code {statusCode}{reasonPhrase}. Response: {text}"
+                        Message = $"The server returned an HTTP error with code {statusCode}{reasonPhrase}."
                     },
                     _function.ReturnType);
         }
