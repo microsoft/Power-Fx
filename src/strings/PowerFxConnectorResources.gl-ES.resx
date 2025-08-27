@@ -117,11 +117,31 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is deprecated.</value>
+    <value>No espazo de nomes {1}, a función {0} está obsoleta.</value>
     <comment>A warning message when a function is deprecated.</comment>
   </data>
   <data name="WarnFunctionUseBinary" xml:space="preserve">
-    <value>This function uses 'binary' format and might not work as expected.</value>
+    <value>Esta función usa o formato "binario" e pode que non funcione como se espera.</value>
     <comment>A warning message when a function is using binary type.</comment>
+  </data>
+  <data name="WarnFunctionUseByte" xml:space="preserve">
+    <value>Esta función usa o formato "byte" e pode que non funcione como se espera.</value>
+    <comment>A warning message when a function is using byte type.</comment>
+  </data>
+  <data name="WarnInvalidProperty" xml:space="preserve">
+    <value>A propiedade obrigatoria "{0}" non é un campo existente en {1}.</value>
+    <comment>A warning message when a CDP property is referenced but not declared.</comment>
+  </data>
+  <data name="WarnInvalidFunction" xml:space="preserve">
+    <value>A función "{0}" non é un nome de función válido en {1}.</value>
+    <comment>A warning message when a CDP delegated function is referenced but doesn't exist.</comment>
+  </data>
+  <data name="WarnUnsupportedODataVersion" xml:space="preserve">
+    <value>A versión OData "{0}" non é compatible con {1}.</value>
+    <comment>A warning message when a CDP schema uses an invalid OData version.</comment>
+  </data>
+  <data name="WarnInvalidPagingOption" xml:space="preserve">
+    <value>Opción de paxinación "{0}" non válida en {1}.</value>
+    <comment>A warning message when a CDP schema uses an invalid paging option.</comment>
   </data>
 </root>

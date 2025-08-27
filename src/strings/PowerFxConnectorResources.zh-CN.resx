@@ -117,11 +117,31 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is deprecated.</value>
+    <value>在命名空间 {1} 中，函数 {0} 已弃用。</value>
     <comment>A warning message when a function is deprecated.</comment>
   </data>
   <data name="WarnFunctionUseBinary" xml:space="preserve">
-    <value>This function uses 'binary' format and might not work as expected.</value>
+    <value>此函数使用“二进制”格式，可能无法按预期工作。</value>
     <comment>A warning message when a function is using binary type.</comment>
+  </data>
+  <data name="WarnFunctionUseByte" xml:space="preserve">
+    <value>此函数使用“byte”格式，可能无法按预期工作。</value>
+    <comment>A warning message when a function is using byte type.</comment>
+  </data>
+  <data name="WarnInvalidProperty" xml:space="preserve">
+    <value>所需属性“{0}”不是 {1} 中的现有字段。</value>
+    <comment>A warning message when a CDP property is referenced but not declared.</comment>
+  </data>
+  <data name="WarnInvalidFunction" xml:space="preserve">
+    <value>函数“{0}”在 {1} 中不是有效的函数名称。</value>
+    <comment>A warning message when a CDP delegated function is referenced but doesn't exist.</comment>
+  </data>
+  <data name="WarnUnsupportedODataVersion" xml:space="preserve">
+    <value>{1} 中不支持 ODataVersion“{0}”。</value>
+    <comment>A warning message when a CDP schema uses an invalid OData version.</comment>
+  </data>
+  <data name="WarnInvalidPagingOption" xml:space="preserve">
+    <value>{1} 中的分页选项“{0}”无效。</value>
+    <comment>A warning message when a CDP schema uses an invalid paging option.</comment>
   </data>
 </root>

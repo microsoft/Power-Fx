@@ -117,11 +117,31 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is deprecated.</value>
+    <value>A l'espai de noms del servei {1}, la funció {0} està obsoleta.</value>
     <comment>A warning message when a function is deprecated.</comment>
   </data>
   <data name="WarnFunctionUseBinary" xml:space="preserve">
-    <value>This function uses 'binary' format and might not work as expected.</value>
+    <value>Aquesta funció utilitza el format “binari” i pot ser que no funcioni com s'esperava.</value>
     <comment>A warning message when a function is using binary type.</comment>
+  </data>
+  <data name="WarnFunctionUseByte" xml:space="preserve">
+    <value>Aquesta funció utilitza el format “byte” i pot ser que no funcioni com s'esperava.</value>
+    <comment>A warning message when a function is using byte type.</comment>
+  </data>
+  <data name="WarnInvalidProperty" xml:space="preserve">
+    <value>La propietat “{0}” requerida no és un camp existent a {1}.</value>
+    <comment>A warning message when a CDP property is referenced but not declared.</comment>
+  </data>
+  <data name="WarnInvalidFunction" xml:space="preserve">
+    <value>La funció “{0}” no és un nom de funció vàlid a {1}.</value>
+    <comment>A warning message when a CDP delegated function is referenced but doesn't exist.</comment>
+  </data>
+  <data name="WarnUnsupportedODataVersion" xml:space="preserve">
+    <value>ODataVersion “{0}” no s’admet a {1}.</value>
+    <comment>A warning message when a CDP schema uses an invalid OData version.</comment>
+  </data>
+  <data name="WarnInvalidPagingOption" xml:space="preserve">
+    <value>Opció de paginació no vàlida “{0}” a {1}.</value>
+    <comment>A warning message when a CDP schema uses an invalid paging option.</comment>
   </data>
 </root>

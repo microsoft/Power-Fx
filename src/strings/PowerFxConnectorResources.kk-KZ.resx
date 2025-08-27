@@ -117,11 +117,31 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is deprecated.</value>
+    <value>{1} атау кеңістігінде, {0} функциясы ескірген.</value>
     <comment>A warning message when a function is deprecated.</comment>
   </data>
   <data name="WarnFunctionUseBinary" xml:space="preserve">
-    <value>This function uses 'binary' format and might not work as expected.</value>
+    <value>Бұл функция 'екілік' форматында жұмыс істейді және күтілгендей жұмыс істемеуі мүмкін.</value>
     <comment>A warning message when a function is using binary type.</comment>
+  </data>
+  <data name="WarnFunctionUseByte" xml:space="preserve">
+    <value>Бұл функция 'байт' форматында жұмыс істейді және күтілгендей жұмыс істемеуі мүмкін.</value>
+    <comment>A warning message when a function is using byte type.</comment>
+  </data>
+  <data name="WarnInvalidProperty" xml:space="preserve">
+    <value>'{0}' сипатталатын қасиет {1} ішінде жоқ.</value>
+    <comment>A warning message when a CDP property is referenced but not declared.</comment>
+  </data>
+  <data name="WarnInvalidFunction" xml:space="preserve">
+    <value>'{0}' функциясы {1} ішінде жарамсыз функция атауы.</value>
+    <comment>A warning message when a CDP delegated function is referenced but doesn't exist.</comment>
+  </data>
+  <data name="WarnUnsupportedODataVersion" xml:space="preserve">
+    <value>AODataVersion '{0}' {1} нұсқасына қолдау көрсетілмейді.</value>
+    <comment>A warning message when a CDP schema uses an invalid OData version.</comment>
+  </data>
+  <data name="WarnInvalidPagingOption" xml:space="preserve">
+    <value>'{0}' {1} үшін жарамсыз беттеу параметрі.</value>
+    <comment>A warning message when a CDP schema uses an invalid paging option.</comment>
   </data>
 </root>

@@ -119,318 +119,318 @@
   </resheader>
   <data name="ErrDivByZero" xml:space="preserve">
     <value>Μη έγκυρη λειτουργία: διαίρεση με το μηδέν.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRuntimeTypeMismatch" xml:space="preserve">
     <value>Αναντιστοιχία τύπου περιβάλλοντος εκτέλεσης.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrArgumentOutOfRange" xml:space="preserve">
     <value>Όρισμα εκτός εύρους.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidCharValue" xml:space="preserve">
     <value>Μη έγκυρη αριθμητική τιμή, πρέπει να είναι στην περιοχή 1...255.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrBadLanguageCode" xml:space="preserve">
     <value>Ο κωδικός γλώσσας "{0}" δεν υποστηρίζεται.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNonFiniteArgument" xml:space="preserve">
     <value>Τα ορίσματα στη συνάρτηση '{0}' πρέπει να είναι πεπερασμένα.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNonFiniteResult" xml:space="preserve">
     <value>Η συνάρτηση '{0}' επέστρεψε έναν αριθμό που δεν είναι πεπερασμένος.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidDateTimeParsingError" xml:space="preserve">
     <value>Δεν είναι δυνατή η ανάλυση της τιμής ημερομηνίας ή ώρας.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidDateTimeError" xml:space="preserve">
     <value>Μη έγκυρη ημερομηνία ή τιμή ώρας.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidBooleanFormatError" xml:space="preserve">
     <value>Η τιμή δεν ήταν δυνατό να ερμηνευθεί ως δυαδική τιμή.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidColorFormatError" xml:space="preserve">
     <value>Η τιμή δεν ήταν δυνατό να ερμηνευθεί ως χρώμα.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUnreachableCodeError" xml:space="preserve">
     <value>Άγνωστο σφάλμα.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNotYetImplementedFunctionError" xml:space="preserve">
     <value>Η συνάρτηση δεν έχει υλοποιηθεί ακόμα: {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNotYetImplementedUnaryOperatorError" xml:space="preserve">
     <value>Δεν έχει εφαρμοστεί ακόμη μονομελής τελεστής: {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidChain" xml:space="preserve">
     <value>Μη έγκυρη αλυσίδα: {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrMaxCallDepth" xml:space="preserve">
     <value>Υπέρβαση μέγιστου βάθους κλήσης.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRecordNotFound" xml:space="preserve">
     <value>Δεν ήταν δυνατή η εύρεση της καρτέλας</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOnlyPrimitiveValuesAllowed" xml:space="preserve">
     <value>Για τη λειτουργία επιτρέπονται μόνο στοιχειώδεις τιμές.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCanNotConvertToNumber" xml:space="preserve">
     <value>Η τιμή '{0}' δεν είναι δυνατό να μετατραπεί σε έναν αριθμό.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrStartOfWeekInvalid" xml:space="preserve">
     <value>Αναμενόταν μια τιμή από την απαρίθμηση StartOfWeek που υποδεικνύει τον τρόπο αρίθμησης των ημερών της εβδομάδας.</value>
-    
+    <comment>{Locked=StartOfWeek}</comment>
   </data>
   <data name="ErrRuntimeExceptionError" xml:space="preserve">
     <value>Παρουσιάστηκε εξαίρεση: {0}</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNameIsNotValid" xml:space="preserve">
     <value>Το όνομα δεν είναι έγκυρο. Το '{0}' δεν αναγνωρίζεται.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrMondayZeroValueNotSupported" xml:space="preserve">
     <value>Η τιμή MondayZero, από την απαρίθμηση StartOfWeek, δεν υποστηρίζεται στη λειτουργία WeekNum.</value>
-    
+    <comment>{Locked=MondayZero}{Locked=StartOfWeek}{Locked=WeekNum}</comment>
   </data>
   <data name="ErrAggregateArgsSameNumberOfRecords" xml:space="preserve">
     <value>Και τα δύο συγκεντρωτικά ορίσματα πρέπει να έχουν τον ίδιο αριθμό καρτελών.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidArgument" xml:space="preserve">
     <value>Μη έγκυρο όρισμα</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUntypedObjectDoesNotImplementSetProperty" xml:space="preserve">
     <value>Η κλάση '{0}' δεν υλοποιεί 'SetProperty'.</value>
-    
+    <comment>{Locked=SetProperty}</comment>
   </data>
   <data name="ErrLowerValueGreaterThanUpperValue" xml:space="preserve">
     <value>Η χαμηλότερη τιμή δεν μπορεί να είναι μεγαλύτερη από την ανώτατη τιμή.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUntypedObjectNotArray" xml:space="preserve">
     <value>Το UntypedObject δεν αντιπροσωπεύει πίνακα.</value>
-    
+    <comment>{Locked=UntypedObject}</comment>
   </data>
   <data name="ErrNotApplicable" xml:space="preserve">
     <value>Δεν ισχύει</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrAccessingFieldNotValidValue" xml:space="preserve">
     <value>Η πρόσβαση σε ένα πεδίο δεν είναι έγκυρη σε αυτήν την τιμή.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSystemNoError" xml:space="preserve">
     <value>Δεν υπάρχει σφάλμα στο σύστημα</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSystemError" xml:space="preserve">
     <value>Σφάλμα συστήματος</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrMissingRequiredField" xml:space="preserve">
     <value>Λείπει υποχρεωτικό πεδίο</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCreateRecordPermissionDenied" xml:space="preserve">
     <value>Το δικαίωμα δημιουργίας καρτέλας απορρίφθηκε</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUpdateRecordPermissionDenied" xml:space="preserve">
     <value>Το δικαίωμα ενημέρωσης καρτέλας απορρίφθηκε</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrDeleteRecordPermissionDenied" xml:space="preserve">
     <value>Το δικαίωμα διαγραφής καρτέλας απορρίφθηκε</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrColumnServerGenerated" xml:space="preserve">
     <value>Η στήλη δημιουργείται από το διακομιστή και δεν είναι δυνατό να τροποποιηθεί</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRecordUpdateConflict" xml:space="preserve">
     <value>Διένεξη ενημέρωσης καρτελών, ανανέωση καρτέλας και εκ νέου εφαρμογή της αλλαγής σας</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrValidationError" xml:space="preserve">
     <value>Σφάλμα επικύρωσης</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrColumnReadOnly" xml:space="preserve">
     <value>Η στήλη είναι μόνο για ανάγνωση</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidRecord" xml:space="preserve">
     <value>Η καρτέλα δεν είναι έγκυρη</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="DivisionByZero" xml:space="preserve">
     <value>Διαίρεση με το μηδέν</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrBadLanguage" xml:space="preserve">
     <value>Εσφαλμένος κωδικός γλώσσας ή μη έγκυρη τιμή</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRegexSyntaxError" xml:space="preserve">
     <value>Σφάλμα σύνταξης στην κανονική παράσταση</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidFunctionUsage" xml:space="preserve">
     <value>Μη έγκυρη χρήση συνάρτησης</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrFileNotFound" xml:space="preserve">
     <value>Το αρχείο δεν βρέθηκε</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSystemAnalysisError" xml:space="preserve">
     <value>Σφάλμα ανάλυσης συστήματος</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReadRecordPermissionDenied" xml:space="preserve">
     <value>Το δικαίωμα ανάγνωσης καρτέλας απορρίφθηκε</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOperationNotSupportedByPlayerDevice" xml:space="preserve">
     <value>Η λειτουργία δεν υποστηρίζεται από αυτόν τον παίκτη ή τη συσκευή</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInsufficientMemoryStorage" xml:space="preserve">
     <value>Ανεπαρκής μνήμη ή χώρος αποθήκευσης συσκευών</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrStorageQuotaExceeded" xml:space="preserve">
     <value>Υπέρβαση στόχων πωλήσεων χώρου αποθήκευσης</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNetworkError" xml:space="preserve">
     <value>Σφάλμα δικτύου</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrNumericError" xml:space="preserve">
     <value>Αριθμητικό σφάλμα</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrTimeoutError" xml:space="preserve">
     <value>Σφάλμα ορίου λήξης</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOnlineServiceNotAvailable" xml:space="preserve">
     <value>Η σύνδεση με την ηλεκτρονική υπηρεσία δεν είναι διαθέσιμη</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidJsonFormat" xml:space="preserve">
     <value>Μη έγκυρη μορφή JSON</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCustomError" xml:space="preserve">
     <value>Προσαρμοσμένο σφάλμα</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrCustomErrorArg" xml:space="preserve">
     <value>Προσαρμοσμένο σφάλμα ({0})</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReservedErrorArg" xml:space="preserve">
     <value>Δεσμευμένο σφάλμα ({0})</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOverflow" xml:space="preserve">
     <value>Υπερχείλιση.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrFilterPredicate" xml:space="preserve">
     <value>Το Filter() υποστηρίζει μόνο ένα κατηγόρημα.</value>
-    
+    <comment>{Locked=Filter()}</comment>
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
     <value>Το όρισμα μη τυπολογημένου αντικειμένου στη συνάρτησης '{0}' έχει εσφαλμένο τύπο. Αναμενόμενο: {1}, Πραγματικό: {2}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">
     <value>Το όρισμα τοποθεσιών πρέπει να είναι αρκετά μεγάλο ώστε να μπορεί να κρατά το αποτέλεσμα.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidSortColumn" xml:space="preserve">
     <value>Η καθορισμένη στήλη '{0}' δεν υπάρχει ή είναι μη έγκυρος τύπος στήλης ταξινόμησης.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrOrderTableDuplicateValues" xml:space="preserve">
     <value>Ο πίνακας κατάταξης δεν μπορεί να έχει διπλότυπες τιμές</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrManagedConnRefreshOnly" xml:space="preserve">
     <value>Είναι δυνατή η ανανέωση μόνο διαχειριζόμενων συνδέσεων.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUntypedNumberNotValidDecimal" xml:space="preserve">
     <value>Ο μη πληκτρολογημένος αριθμός δεν είναι έγκυρη δεκαδική τιμή, πιθανή υπερχείλιση.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrSingleColumnTableAccessNodeNotYetImplemented" xml:space="preserve">
     <value>Η πρόσβαση πίνακα μίας στήλης δεν έχει εφαρμοστεί ακόμα.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReturnTypeDifference" xml:space="preserve">
     <value>Ο τύπος επιστροφής θα έπρεπε να ήταν '{0}', βρέθηκε '{1}'.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrThirdArgumentIsInvalid" xml:space="preserve">
     <value>Το τρίτο όρισμα της συνάρτησης {0} δεν είναι έγκυρο.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReturnedNonFiniteNumber" xml:space="preserve">
     <value>Η παράσταση επέστρεψε έναν αριθμό που δεν είναι πεπερασμένος.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrReturnedNumberBeyondDecimalValues" xml:space="preserve">
     <value>Η παράσταση επέστρεψε έναν αριθμό που βρίσκεται πέρα από την περιοχή των δεκαδικών τιμών.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrPlacesBetweenRange" xml:space="preserve">
     <value>Οι τοποθεσίες πρέπει να είναι μεταξύ 1 και 10.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidOperatorForTypes" xml:space="preserve">
     <value>Ο τελεστής δεν είναι έγκυρος για αυτούς τους τύπους.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrRegexTimeoutException" xml:space="preserve">
     <value>Χρονικό όριο κανονικής παράστασης (πάνω από {0} ms) - {1}</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidRegexException" xml:space="preserve">
     <value>Η κανονική παράσταση δεν είναι έγκυρη - {rexParseEx.Message}</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInputOutsideRange" xml:space="preserve">
     <value>Η τιμή εισόδου {0} βρίσκεται εκτός της επιτρεπόμενης περιοχής.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidNumberInput" xml:space="preserve">
     <value>Η τιμή εισόδου {0} δεν είναι έγκυρη.</value>
-    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrUnrecognizedSymbol" xml:space="preserve">
     <value>Μη αναγνωρίσιμο σύμβολο {0}.</value>
-    
+    <comment>Error Message.</comment>
   </data>
 </root>

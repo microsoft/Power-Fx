@@ -117,11 +117,31 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is deprecated.</value>
+    <value>名前空間 {1} では、関数 {0} は非推奨です。</value>
     <comment>A warning message when a function is deprecated.</comment>
   </data>
   <data name="WarnFunctionUseBinary" xml:space="preserve">
-    <value>This function uses 'binary' format and might not work as expected.</value>
+    <value>この関数は 'binary' 形式を使用しており、期待どおりに動作しない可能性があります。</value>
     <comment>A warning message when a function is using binary type.</comment>
+  </data>
+  <data name="WarnFunctionUseByte" xml:space="preserve">
+    <value>この関数は 'byte' 形式を使用しており、期待どおりに動作しない可能性があります。</value>
+    <comment>A warning message when a function is using byte type.</comment>
+  </data>
+  <data name="WarnInvalidProperty" xml:space="preserve">
+    <value>必要なプロパティ '{0}' は {1} に存在しないフィールドです。</value>
+    <comment>A warning message when a CDP property is referenced but not declared.</comment>
+  </data>
+  <data name="WarnInvalidFunction" xml:space="preserve">
+    <value>関数 '{0}' は {1} で有効な関数名ではありません。</value>
+    <comment>A warning message when a CDP delegated function is referenced but doesn't exist.</comment>
+  </data>
+  <data name="WarnUnsupportedODataVersion" xml:space="preserve">
+    <value>ODataVersion '{0}' は {1} でサポートされていません。</value>
+    <comment>A warning message when a CDP schema uses an invalid OData version.</comment>
+  </data>
+  <data name="WarnInvalidPagingOption" xml:space="preserve">
+    <value>{1} 内のページング オプション '{0}' が無効です。</value>
+    <comment>A warning message when a CDP schema uses an invalid paging option.</comment>
   </data>
 </root>
