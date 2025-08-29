@@ -6,15 +6,11 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -38,6 +34,8 @@ namespace Microsoft.PowerFx
         private CultureInfo _defaultErrorCulture;
         private ParserOptions _parserOptions;
 
+        internal ParserOptions UDFParserOptions => _parserOptions;
+
         private ParseUserDefinitionResult _parse;
 
         private readonly Features _features;
@@ -48,9 +46,19 @@ namespace Microsoft.PowerFx
         // Power Fx expression containing definitions
         private string _definitions;
 
+        // $$$ use this to generate binding for intellisense suggestions.
+        internal string Definitions => _definitions;
+
+        internal ReadOnlySymbolTable UDFBindingSymbols => ReadOnlySymbolTable.Compose(_localSymbolTable, _symbols);
+
+        private BindingConfig _bindingConfig;
+
+        internal BindingConfig UDFBindingConfig => _bindingConfig;
+
         // All errors accumulated. 
         private readonly List<ExpressionError> _errors = new List<ExpressionError>();
 
+        // $$$ should we mark ctor as internal?
         public DefinitionsCheckResult() 
             : this(Features.PowerFxV1) 
         { 
@@ -87,6 +95,7 @@ namespace Microsoft.PowerFx
 
             _definitions = definitions;
             _parserOptions = parserOptions ?? new ParserOptions();
+            _bindingConfig = new BindingConfig(allowsSideEffects: _parserOptions.AllowsSideEffects, useThisRecordForRuleScope: false, numberIsFloat: false, userDefinitionsMode: true);
             _defaultErrorCulture = _parserOptions.Culture ?? CultureInfo.InvariantCulture;
 
             return this;
@@ -166,9 +175,7 @@ namespace Microsoft.PowerFx
             {
                 _userDefinedFunctions = new TexlFunctionSet();
 
-                var composedSymbols = ReadOnlySymbolTable.Compose(_localSymbolTable, _symbols);
-
-                var partialUDFs = UserDefinedFunction.CreateFunctions(_parse.UDFs.Where(udf => udf.IsParseValid), composedSymbols, out var errors);
+                var partialUDFs = UserDefinedFunction.CreateFunctions(_parse.UDFs.Where(udf => udf.IsParseValid), UDFBindingSymbols, out var errors);
 
                 if (errors.Any())
                 {
@@ -177,9 +184,8 @@ namespace Microsoft.PowerFx
 
                 foreach (var udf in partialUDFs)
                 {
-                    var config = new BindingConfig(allowsSideEffects: _parserOptions.AllowsSideEffects, useThisRecordForRuleScope: false, numberIsFloat: false, userDefinitionsMode: true);
-                    var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), config);
-
+                    var binding = udf.BindBody(UDFBindingSymbols, new Glue2DocumentBinderGlue(), UDFBindingConfig);
+                    
                     List<TexlError> bindErrors = new List<TexlError>();
 
                     if (binding.ErrorContainer.GetErrors().Any(error => error.Severity > DocumentErrorSeverity.Warning))

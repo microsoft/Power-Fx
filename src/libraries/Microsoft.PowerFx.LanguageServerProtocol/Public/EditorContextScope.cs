@@ -3,12 +3,23 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Linq;
 using System.Threading;
 using Microsoft.PowerFx.Core.Annotations;
+using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Public;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
+using Microsoft.PowerFx.Intellisense.IntellisenseData;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
+using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.LanguageServerProtocol.LanguageServer;
 
 namespace Microsoft.PowerFx
@@ -28,7 +39,16 @@ namespace Microsoft.PowerFx
             ReadOnlySymbolTable symbols = null)
         {
             return new EditorContextScope(engine, parserOptions, symbols);
-        }                  
+        }
+        
+        public static EditorContextScope CreateUDFEditorScope(
+            this Engine engine,
+            CultureInfo cultureInfo = null,
+            ReadOnlySymbolTable symbols = null,
+            bool allowSideEffects = false)
+        {
+            return new UDFEditorContextScope(engine, cultureInfo, symbols, allowSideEffects);
+        }
     }
 
     /// <summary>
@@ -36,7 +56,7 @@ namespace Microsoft.PowerFx
     ///  A scope is the context for a specific formula bar. 
     ///  This includes helpers to aide in customizing the editing experience. 
     /// </summary>
-    public sealed class EditorContextScope : IPowerFxScope, IPowerFxScopeFx2NL
+    public class EditorContextScope : IPowerFxScopeV2, IPowerFxScopeFx2NL
     {
         private readonly GuardSingleThreaded _guard = new GuardSingleThreaded();
 
@@ -68,8 +88,8 @@ namespace Microsoft.PowerFx
             : this((string expr) => new CheckResult(engine)
                     .SetText(expr, parserOptions)
                     .SetBindingInfo(symbols))
-        {            
-        }        
+        {
+        }
 
         public EditorContextScope(Func<string, CheckResult> getCheckResult)
         {
@@ -92,7 +112,7 @@ namespace Microsoft.PowerFx
             return check;
         }
 
-        string IPowerFxScope.ConvertToDisplay(string expression)
+        public string ConvertToDisplay(string expression)
         {
             var check = _getCheckResult(expression);
             var symbols = check._symbols;
@@ -106,7 +126,7 @@ namespace Microsoft.PowerFx
             return engine.GetDisplayExpression(expression, symbols, check.ParserCultureInfo);
         }
 
-        IIntellisenseResult IPowerFxScope.Suggest(string expression, int cursorPosition)
+        public virtual IIntellisenseResult Suggest(string expression, int cursorPosition)
         {
             // Suggestions just need the binding, not other things like Dependency Info or errors. 
             var check = _getCheckResult(expression);
@@ -121,7 +141,7 @@ namespace Microsoft.PowerFx
         /// Optional, can be null.
         /// </summary>
         public IServiceProvider Services { get; set; }
-         
+
         public void AddQuickFixHandlers(params CodeFixHandler[] codeFixHandlers)
         {
             this.AddQuickFixHandlers((IEnumerable<CodeFixHandler>)codeFixHandlers);
@@ -185,8 +205,8 @@ namespace Microsoft.PowerFx
                 catch (Exception e)
                 {
                     var e2 = new Exception($"Handler {handler.Key} threw {e.GetDetailedExceptionMessage()}", e);
-                    
-                        // Dont' let exceptions from a handler block other handlers. 
+
+                    // Dont' let exceptions from a handler block other handlers. 
                     logUnhandledExceptionHandler?.Invoke(e2);
                     continue;
                 }
@@ -218,15 +238,21 @@ namespace Microsoft.PowerFx
                 }
 
                 handler.OnCodeActionApplied(codeAction.ActionResultContext.ActionIdentifier);
-            }            
+            }
         }
 
         public Fx2NLParameters GetFx2NLParameters()
         {
             return new Fx2NLParameters
             {
-                 UsageHints = this.UsageHints
+                UsageHints = this.UsageHints
             };
+        }
+
+        public IEnumerable<ExpressionError> GetErrors(string expression)
+        {
+            var check = _getCheckResult(expression);
+            return check.Errors;
         }
     }
 }

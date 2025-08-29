@@ -192,11 +192,16 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative, userDefinitionsMode: true);
-            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, ParamTypes), bindingConfig, features: features, rule: rule, updateDisplayNames: updateDisplayNames);
+            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, GetUDFNameResolver(nameResolver), bindingConfig, features: features, rule: rule, updateDisplayNames: updateDisplayNames);
 
             CheckTypesOnDeclaration(_binding.CheckTypesContext, _binding.ResultType, _binding);
 
             return _binding;
+        }
+
+        internal INameResolver GetUDFNameResolver(INameResolver resolver)
+        {
+            return UserDefinitionsNameResolver.Create(resolver, _args, ParamTypes);
         }
 
         /// <summary>
@@ -366,6 +371,56 @@ namespace Microsoft.PowerFx.Core.Functions
             return userDefinedFunctions;
         }
 
+        /// <summary>
+        /// Helper to create parial UserDefinedFunctions for Intellisense.
+        /// </summary>
+        /// <param name="udf">Parsed UDFs to be converted into UserDefinedFunction.</param>
+        /// <param name="nameResolver">NameResolver to resolve type names.</param>
+        /// <param name="errors">Errors when creating functions.</param>
+        /// <returns>IEnumerable of UserDefinedFunction.</returns>
+        internal static UserDefinedFunction CreatePartialFunction(UDF udf, INameResolver nameResolver, out List<TexlError> errors)
+        {
+            Contracts.AssertValue(udf);
+
+            var texlFunctionSet = new TexlFunctionSet();
+            errors = new List<TexlError>();
+
+            var udfName = udf.Ident.Name;
+            if (texlFunctionSet.AnyWithName(udfName))
+            {
+                errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionAlreadyDefined, udfName));
+            }
+            else if (_restrictedUDFNames.Contains(udfName) ||
+                nameResolver.Functions.WithName(udfName).Any(func => func.IsRestrictedUDFName))
+            {
+                errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionNameRestricted, udfName));
+            }
+
+            if (udf.Args.Count > MaxParameterCount)
+            {
+                errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_TooManyParameters, udfName, MaxParameterCount));
+            }
+
+            var parametersOk = CheckParameters(udf.Args, errors, nameResolver, out var parameterTypes);
+            var returnTypeOk = CheckReturnType(udf.ReturnType, errors, nameResolver, udf.IsImperative, out var returnType);
+
+            if (!returnTypeOk)
+            {
+                returnType = DType.Unknown;
+            }
+
+            if (nameResolver.Functions.WithName(udfName).Any())
+            {
+                errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Warning, TexlStrings.WrnUDF_ShadowingBuiltInFunction, udfName));
+            }
+
+            var dummyref = 0;
+            var udfBody = udf.Body ?? new PowerFx.Syntax.ErrorNode(ref dummyref, new CommentToken("dummy token", new Span(0, 0)), "dummy error");
+            var func = new UserDefinedFunction(udfName.Value, returnType, udfBody, udf.IsImperative, udf.Args, parameterTypes);
+
+            return func;
+        }
+
         private static bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors, INameResolver nameResolver, out DType[] parameterTypes)
         {
             if (args.Count == 0)
@@ -380,6 +435,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             foreach (var arg in args)
             {
+                parameterTypes[arg.ArgIndex] = DType.Unknown;
                 if (argsAlreadySeen.Contains(arg.NameIdent.Name))
                 {
                     errors.Add(new TexlError(arg.NameIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_DuplicateParameter, arg.NameIdent.Name));
@@ -389,21 +445,28 @@ namespace Microsoft.PowerFx.Core.Functions
                 {
                     argsAlreadySeen.Add(arg.NameIdent.Name);
 
-                    if (!nameResolver.LookupType(arg.TypeIdent.Name, out var parameterType))
+                    if (arg.TypeIdent != null)
                     {
-                        errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
-                        isParamCheckSuccessful = false;
-                    }
-                    else if (IsRestrictedType(parameterType, UserDefinitions.RestrictedParameterTypes))
-                    {
-                        errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_InvalidParamType, arg.TypeIdent.Name));
-                        isParamCheckSuccessful = false;
+                        if (!nameResolver.LookupType(arg.TypeIdent.Name, out var parameterType))
+                        {
+                            errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
+                            isParamCheckSuccessful = false;
+                        }
+                        else if (IsRestrictedType(parameterType, UserDefinitions.RestrictedParameterTypes))
+                        {
+                            errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_InvalidParamType, arg.TypeIdent.Name));
+                            isParamCheckSuccessful = false;
+                        }
+                        else
+                        {
+                            Contracts.Assert(arg.ArgIndex >= 0);
+                            Contracts.Assert(arg.ArgIndex < args.Count);
+                            parameterTypes[arg.ArgIndex] = parameterType._type;
+                        }
                     }
                     else
                     {
-                        Contracts.Assert(arg.ArgIndex >= 0);
-                        Contracts.Assert(arg.ArgIndex < args.Count);
-                        parameterTypes[arg.ArgIndex] = parameterType._type;
+                        isParamCheckSuccessful = false;
                     }
                 }
             }
@@ -413,6 +476,12 @@ namespace Microsoft.PowerFx.Core.Functions
 
         private static bool CheckReturnType(IdentToken returnTypeToken, List<TexlError> errors, INameResolver nameResolver, bool isImperative, out DType returnType)
         {
+            if (returnTypeToken == null)
+            {
+                returnType = DType.Unknown;
+                return false;
+            }
+
             if (!nameResolver.LookupType(returnTypeToken.Name, out var returnTypeFormulaType))
             {
                 errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnTypeToken.Name));

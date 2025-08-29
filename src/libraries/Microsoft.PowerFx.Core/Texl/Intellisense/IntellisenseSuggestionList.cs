@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Intellisense
     // Specialized IntellisenseSuggestion list that allows for some effient operations on the list.
     // For example, checking if the list contains a suggestion with a particular display name is
     // O(1) for this class instead of an O(N) search.
-    internal sealed class IntellisenseSuggestionList : IList<IntellisenseSuggestion>
+    internal sealed class IntellisenseSuggestionList : IList<IntellisenseSuggestion>, IReadOnlyList<IntellisenseSuggestion>
     {
         private readonly Dictionary<string, int> _displayNameToCount;
         private readonly Dictionary<string, List<IntellisenseSuggestion>> _textToSuggestions;

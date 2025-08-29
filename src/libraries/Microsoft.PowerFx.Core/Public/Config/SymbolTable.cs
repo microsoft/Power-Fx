@@ -212,6 +212,15 @@ namespace Microsoft.PowerFx
             _variables.Add(name, info); // can't exist
         }
 
+        internal static ParserOptions GetUDFParserOptions(CultureInfo culture, bool allowSideEffects)
+        {
+            return new ParserOptions()
+            {
+                AllowsSideEffects = allowSideEffects,
+                Culture = culture ?? CultureInfo.InvariantCulture,
+            };
+        }
+
         /// <summary>
         /// Adds user defined functions in the script.
         /// </summary>
@@ -222,21 +231,10 @@ namespace Microsoft.PowerFx
         /// <param name="allowSideEffects">Allow for curly brace parsing.</param>
         internal DefinitionsCheckResult AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolTable extraSymbolTable = null, bool allowSideEffects = false)
         {
-            // Phase 1: Side affects are not allowed.
-            // Phase 2: Introduces side effects and parsing of function bodies.
-            var options = new ParserOptions() 
-            { 
-                AllowsSideEffects = allowSideEffects, 
-                Culture = parseCulture ?? CultureInfo.InvariantCulture,
-            };
+            var composedSymbolTable = ReadOnlySymbolTable.Compose(this, symbolTable, extraSymbolTable);
+            var checkResult = GetDefinitionsCheckResult(script, parseCulture, composedSymbolTable, allowSideEffects);
 
-            var composedSymbols = Compose(this, symbolTable, extraSymbolTable);
-
-            var checkResult = new DefinitionsCheckResult();
-
-            var udfs = checkResult.SetText(script, options)
-                .SetBindingInfo(composedSymbols)
-                .ApplyCreateUserDefinedFunctions();
+            var udfs = checkResult.ApplyCreateUserDefinedFunctions();
 
             Contracts.AssertValue(udfs);
 
@@ -246,6 +244,14 @@ namespace Microsoft.PowerFx
             }
 
             return checkResult;
+        }
+
+        internal static DefinitionsCheckResult GetDefinitionsCheckResult(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, bool allowSideEffects = false)
+        {
+            var options = GetUDFParserOptions(parseCulture, allowSideEffects);
+            var checkResult = new DefinitionsCheckResult();
+            return checkResult.SetText(script, options)
+                .SetBindingInfo(symbolTable);
         }
 
         /// <summary>
