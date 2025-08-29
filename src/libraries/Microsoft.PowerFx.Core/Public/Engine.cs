@@ -568,5 +568,12 @@ namespace Microsoft.PowerFx
         {
             return Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, UDFDefaultBindingSymbols, symbolTable, allowSideEffects);
         }
+
+        public ReadOnlySymbolTable GetUserDefinedFunctionSymbol(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, bool allowSideEffects = false)
+        {
+            var resultSymbols = new SymbolTable();
+            resultSymbols.AddUserDefinedFunction(script, parseCulture, UDFDefaultBindingSymbols, symbolTable, allowSideEffects);
+            return resultSymbols;
+        }
     }
 }

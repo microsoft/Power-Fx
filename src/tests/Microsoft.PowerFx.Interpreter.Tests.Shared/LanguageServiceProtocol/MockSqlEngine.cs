@@ -23,15 +23,5 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             return expression.Replace("new_price", "Price").Replace("new_quantity", "Quantity");
         }
-
-        public DefinitionsCheckResult CheckUserDefinedFunctions(string expression)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public IIntellisenseResult Suggest(string expression, int cursorPosition, LSPExpressionMode mode)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }
