@@ -30,15 +30,5 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             throw new System.NotImplementedException();
         }
-
-        public DefinitionsCheckResult CheckUserDefinedFunctions(string expression)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public IIntellisenseResult Suggest(string expression, int cursorPosition, LSPExpressionMode mode)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }
