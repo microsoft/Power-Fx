@@ -508,13 +508,13 @@ namespace Microsoft.PowerFx
                 definitionsCheckResult.SetText(expression, this.ParserOptions)
                     .ApplyParseErrors();
 
-                if (this.AllowUserDefinedFunctions && definitionsCheckResult.IsSuccess && definitionsCheckResult.ContainsUDF)
+                if (definitionsCheckResult.IsSuccess)
                 {
-                    var defCheckResult = this.Engine.AddUserDefinedFunction(expression, this.ParserOptions.Culture, extraSymbolTable);
+                    definitionsCheckResult.SetBindingInfo(this.Engine.GetAllSymbols());
 
-                    if (!defCheckResult.IsSuccess)
+                    if (definitionsCheckResult.ApplyErrors().Any())
                     {
-                        foreach (var error in defCheckResult.Errors)
+                        foreach (var error in definitionsCheckResult.Errors)
                         {
                             var kind = error.IsWarning ? OutputKind.Warning : OutputKind.Error;
                             var msg = error.ToString();
@@ -522,9 +522,25 @@ namespace Microsoft.PowerFx
                             await this.Output.WriteLineAsync(lineError + msg, kind, cancel)
                                 .ConfigureAwait(false);
                         }
+
+                        return new ReplResult();
                     }
 
+                    this.Engine.AddUserDefinitions(expression, this.ParserOptions.Culture);
+
                     return new ReplResult();
+                }
+
+                if (check.ApplyParse().Errors.Any() && definitionsCheckResult.Errors.Any())
+                {
+                    foreach (var error in definitionsCheckResult.Errors)
+                    {
+                        var kind = error.IsWarning ? OutputKind.Warning : OutputKind.Error;
+                        var msg = error.ToString();
+
+                        await this.Output.WriteLineAsync(lineError + msg, kind, cancel)
+                            .ConfigureAwait(false);
+                    }
                 }
 
                 foreach (var error in check.Errors)
