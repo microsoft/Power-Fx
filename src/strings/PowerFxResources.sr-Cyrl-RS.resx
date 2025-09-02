@@ -3394,7 +3394,7 @@
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
-    <value>На пример, знак „\“ се не очекује после броја, овако: „32\“. Очекује се размак („32 “) како би то био само број 32 или се очекује неки други број (на пример, „323“).</value>
+    <value>На пример, знак “\” се не очекује после броја, овако: “32\”. Очекује се размак (“32 ”) како би то био само број 32 или се очекује неки други број (на пример, “323”).</value>
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Уклоните или замените неочекивани знак.</value>
