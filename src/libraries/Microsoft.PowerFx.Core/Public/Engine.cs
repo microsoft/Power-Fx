@@ -13,6 +13,7 @@ using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
@@ -121,6 +122,11 @@ namespace Microsoft.PowerFx
         }
 
         internal IEnumerable<TexlFunction> GetFunctionsByName(string name) => Functions.WithName(name);
+
+        /// <summary>
+        /// Binding symbols used for UDFs.
+        /// </summary>
+        internal ReadOnlySymbolTable UDFDefaultBindingSymbols => ReadOnlySymbolTable.Compose(PrimitiveTypes, SupportedFunctions, Config.InternalConfigSymbols);
 
         internal int FunctionCount => Functions.Count();
 
@@ -440,6 +446,19 @@ namespace Microsoft.PowerFx
             return suggestions;
         }
 
+        // $$$ used by udf intellisense, maybe we can be merged with above.
+        internal IIntellisenseResult Suggest(Formula formula, TexlBinding binding, int cursorPosition, IServiceProvider services)
+        {
+            var context = new IntellisenseContext(formula.Script, cursorPosition, FormulaType.Unknown)
+            {
+                Services = services
+            };
+
+            var intellisense = this.CreateIntellisense();
+            var suggestions = intellisense.Suggest(context, binding, formula);
+            return suggestions;
+        }
+
         /// <summary>
         /// Creates a renamer instance for updating a field reference from <paramref name="parameters"/> in expressions.
         /// </summary>
@@ -547,8 +566,14 @@ namespace Microsoft.PowerFx
 
         public DefinitionsCheckResult AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, bool allowSideEffects = false)
         {
-            var engineTypesAndFunctions = ReadOnlySymbolTable.Compose(PrimitiveTypes, SupportedFunctions, Config.InternalConfigSymbols);
-            return Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, engineTypesAndFunctions, symbolTable, allowSideEffects);
+            return Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, UDFDefaultBindingSymbols, symbolTable, allowSideEffects);
+        }
+
+        public ReadOnlySymbolTable GetUserDefinedFunctionSymbol(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, bool allowSideEffects = false)
+        {
+            var resultSymbols = new SymbolTable();
+            resultSymbols.AddUserDefinedFunction(script, parseCulture, UDFDefaultBindingSymbols, symbolTable, allowSideEffects);
+            return resultSymbols;
         }
     }
 }

@@ -1,6 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Public;
+using Microsoft.PowerFx.Types;
+
 namespace Microsoft.PowerFx.Intellisense
 {
     /// <summary>
@@ -29,5 +33,10 @@ namespace Microsoft.PowerFx.Intellisense
         /// <param name="expression">The expression to convert for display.</param>
         /// <returns>The expression with display formatting applied.</returns>
         string ConvertToDisplay(string expression);
+    }
+
+    internal interface IPowerFxScopeV2 : IPowerFxScope
+    {
+        IEnumerable<ExpressionError> GetErrors(string expression);
     }
 }

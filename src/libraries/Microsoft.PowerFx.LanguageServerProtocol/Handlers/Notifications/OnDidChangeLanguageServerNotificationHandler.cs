@@ -4,6 +4,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
@@ -51,6 +52,14 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             (scope) =>
             {
                 _notifyDidChange?.Invoke(didChangeParams);
+
+                if (scope is UDFEditorContextScope scopev2)
+                {
+                    var expressionErrors = scopev2.GetErrors(expression);
+                    operationContext.OutputBuilder.WriteDiagnosticsNotification(didChangeParams.TextDocument.Uri, expression, expressionErrors.ToArray());
+                    return;
+                }
+
                 var checkResult = scope?.Check(expression);
 
                 operationContext.OutputBuilder.WriteDiagnosticsNotification(didChangeParams.TextDocument.Uri, expression, checkResult.Errors.ToArray());
