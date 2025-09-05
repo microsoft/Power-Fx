@@ -3499,8 +3499,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     // We block the property access usage for scoped component properties or functional properties
                     // TODO remove feature gate when ECS flag is completely rolled out
                     if (template.IsComponent &&
-                        (property.IsScopeVariable ||
-                        ((_txb.Document?.Properties?.EnabledFeatures?.IsEnhancedComponentFunctionPropertyEnabled ?? false) && property.IsScopedProperty)))
+                        (property.IsScopeVariable || property.IsScopedProperty))
                     {
                         SetDottedNameError(node, TexlStrings.ErrInvalidPropertyReference);
                         return;
@@ -3508,8 +3507,6 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     // Binding function property and its parameters should not allow DottedNameNode
                     bool isBindingPropertyFunctionPropertyOrParameter = template.IsComponent &&
-                        (_txb.Document?.Properties?.EnabledFeatures?.IsEnhancedComponentFunctionPropertyEnabled ?? false) &&
-                        !(_txb.Document?.Properties?.EnabledFeatures?.IsComponentFunctionPropertyDataflowEnabled ?? false) &&
                         _txb.Property?.PropertyCategory == PropertyRuleCategory.Data &&
                         ((_txb.Property?.IsScopeVariable ?? false) || (_txb.Property?.IsScopedProperty ?? false));
                     if (isBindingPropertyFunctionPropertyOrParameter)
