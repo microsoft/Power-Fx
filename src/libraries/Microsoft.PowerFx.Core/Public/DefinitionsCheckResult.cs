@@ -184,10 +184,8 @@ namespace Microsoft.PowerFx
 
                 foreach (var udf in partialUDFs)
                 {
-                    var binding = udf.BindBody(UDFBindingSymbols, new Glue2DocumentBinderGlue(), UDFBindingConfig);
+                    var binding = udf.BindBody(UDFBindingSymbols, new Glue2DocumentBinderGlue(), UDFBindingConfig, _features);
                     
-                    List<TexlError> bindErrors = new List<TexlError>();
-
                     if (binding.ErrorContainer.GetErrors().Any(error => error.Severity > DocumentErrorSeverity.Warning))
                     {
                         _errors.AddRange(ExpressionError.New(binding.ErrorContainer.GetErrors(), _defaultErrorCulture));
@@ -254,6 +252,11 @@ namespace Microsoft.PowerFx
 
             this._defaultErrorCulture = culture;
             return this;
+        }
+
+        public void AddErrors(IEnumerable<ExpressionError> moreErrors)
+        {
+            _errors.AddRange(moreErrors);
         }
 
         /// <summary>

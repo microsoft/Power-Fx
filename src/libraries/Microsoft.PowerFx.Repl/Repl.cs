@@ -373,7 +373,7 @@ namespace Microsoft.PowerFx
 
             if (check.Parse.IsSuccess)
             {
-                // comments, pseudo functions, and named formula assignments, handled outside of the interpreter
+                // comments and pseudo functions are handled outside of the interpreter
                 // for our purposes, we don't need the engine's features or the parser options
 
                 // comment only
@@ -402,39 +402,6 @@ namespace Microsoft.PowerFx
                     }
 
                     return new ReplResult();
-                }
-
-                // named formula assignment
-                if (check.Parse.Root is BinaryOpNode bo && bo.Op == BinaryOp.Equal && bo.Left.Kind == NodeKind.FirstName)
-                {
-                    var formula = bo.Right.ToString();
-                    CheckResult formulaCheck = this.Engine.Check(formula, options: this.ParserOptions, symbolTable: extraSymbolTable);
-
-                    if (formulaCheck.IsSuccess)
-                    {
-                        try
-                        {
-                            Engine.SetFormula(bo.Left.ToString(), formula, OnFormulaUpdate);
-                        }
-                        catch (Exception ex)
-                        {
-                            await this.Output.WriteLineAsync(lineError + "Error: " + ex.Message, OutputKind.Error, cancel)
-                                .ConfigureAwait(false);
-                        }
-
-                        return new ReplResult();
-                    }
-                    else
-                    {
-                        foreach (var error in formulaCheck.Errors)
-                        {
-                            var kind = error.IsWarning ? OutputKind.Warning : OutputKind.Error;
-                            await this.Output.WriteLineAsync(lineError + error.ToString(), kind, cancel)
-                                .ConfigureAwait(false);
-                        }
-
-                        return new ReplResult { CheckResult = formulaCheck };
-                    }
                 }
             }
 
@@ -503,18 +470,11 @@ namespace Microsoft.PowerFx
             var errors = check.ApplyErrors();
             if (!check.IsSuccess)
             {
-                var definitionsCheckResult = new DefinitionsCheckResult(this.Engine.Config.Features);
-
-                definitionsCheckResult.SetText(expression, this.ParserOptions)
-                    .ApplyParseErrors();
-
-                if (this.AllowUserDefinedFunctions && definitionsCheckResult.IsSuccess && definitionsCheckResult.ContainsUDF)
+                if (this.Engine.TryAddUserDefinitions(expression, out var userDefinitionsErrors, this.ParserOptions, OnFormulaUpdate))
                 {
-                    var defCheckResult = this.Engine.AddUserDefinedFunction(expression, this.ParserOptions.Culture, extraSymbolTable);
-
-                    if (!defCheckResult.IsSuccess)
+                    if (userDefinitionsErrors.Any())
                     {
-                        foreach (var error in defCheckResult.Errors)
+                        foreach (var error in userDefinitionsErrors)
                         {
                             var kind = error.IsWarning ? OutputKind.Warning : OutputKind.Error;
                             var msg = error.ToString();
@@ -524,7 +484,7 @@ namespace Microsoft.PowerFx
                         }
                     }
 
-                    return new ReplResult();
+                    return new ReplResult() { CheckResult = new CheckResult(userDefinitionsErrors) };
                 }
 
                 foreach (var error in check.Errors)
