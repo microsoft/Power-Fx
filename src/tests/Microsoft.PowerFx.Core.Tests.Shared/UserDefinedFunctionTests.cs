@@ -701,5 +701,21 @@ namespace Microsoft.PowerFx.Core.Tests
             var errors = checkResult.ApplyErrors();
             Assert.Contains(errors, e => e.MessageKey.Contains("ErrUDF_NonImperativeVoidType"));
         }
+
+        [Theory]
+        [InlineData("F():Number = 5;", true)]
+        [InlineData("F():Number = {5};", true)]
+        [InlineData("F():Number = {5}; G():Number = F();", false)]
+        [InlineData("F():Number = 5;   G():Number = F();", true)]
+        [InlineData("F():Number = {5}; G():Number = {F()};", true)]
+        public void TestBehaviorFuncsInNonBehaviorFuncs(string expression, bool valid)
+        {
+            var parserOptions = new ParserOptions() { AllowsSideEffects = true };
+            var checkResult = new DefinitionsCheckResult()
+                                            .SetText(expression, parserOptions)
+                                            .SetBindingInfo(_primitiveTypes);
+            var errors = checkResult.ApplyErrors();
+            Assert.True((valid && !errors.Any()) || (!valid && errors.Any()));
+        }
     }
 }
