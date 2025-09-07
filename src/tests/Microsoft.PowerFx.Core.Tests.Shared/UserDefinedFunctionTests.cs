@@ -17,7 +17,6 @@ using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
