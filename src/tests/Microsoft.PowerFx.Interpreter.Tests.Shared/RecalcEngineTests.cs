@@ -2066,9 +2066,11 @@ namespace Microsoft.PowerFx.Tests
             "countMinors([{Name: \"Bob\", Age: 21, Title: \"Engineer\"}, {Name: \"Alice\", Age: 25, Title: \"Manager\"}])",
             true,
             false)]
+
+        // TODO: Name shouldn't be quoted, but is neede until Features is properly plumbed thrrough with https://github.com/microsoft/Power-Fx/pull/2960
         [InlineData(
             @"Employee := Type({Name: Text, Age: Number, Title: Text}); Employees := Type([Employee]);  EmployeeNames := Type([{Name: Text}]); 
-              getNames(e: Employees):EmployeeNames = ShowColumns(e, Name); 
+              getNames(e: Employees):EmployeeNames = ShowColumns(e, ""Name""); 
               getNamesCount(e: EmployeeNames):Number = CountRows(getNames(e));",
             "getNamesCount([{Name: \"Jim\", Age:25}, {Name: \"Tony\", Age:42}])",
             true,
