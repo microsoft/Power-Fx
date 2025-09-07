@@ -229,6 +229,7 @@ namespace Microsoft.PowerFx
         /// <param name="symbolTable">Extra symbols to bind UDF. Commonly coming from Engine.</param>
         /// <param name="extraSymbolTable">Additional symbols to bind UDF.</param>
         /// <param name="allowSideEffects">Allow for curly brace parsing.</param>
+        /// <param name="features">Features in effect for processing the body of the UDF.</param>
         internal DefinitionsCheckResult AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolTable extraSymbolTable = null, bool allowSideEffects = false, Features features = null)
         {
             var composedSymbolTable = ReadOnlySymbolTable.Compose(this, symbolTable, extraSymbolTable);
