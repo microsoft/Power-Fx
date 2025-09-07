@@ -357,7 +357,12 @@ namespace Microsoft.PowerFx.Core.Functions
                     continue;
                 }
 
-                if (nameResolver.Functions.WithName(udfName).Any())
+                if (nameResolver.Functions.WithName(udfName).Any(udf => udf is UserDefinedFunction))
+                {
+                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionAlreadyDefined, udfName));
+                    continue;
+                }
+                else if (nameResolver.Functions.WithName(udfName).Any())
                 {
                     errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Warning, TexlStrings.WrnUDF_ShadowingBuiltInFunction, udfName));
                 }
@@ -409,7 +414,11 @@ namespace Microsoft.PowerFx.Core.Functions
                 returnType = DType.Unknown;
             }
 
-            if (nameResolver.Functions.WithName(udfName).Any())
+            if (nameResolver.Functions.WithName(udfName).Any(udf => udf is UserDefinedFunction))
+            {
+                errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionAlreadyDefined, udfName));
+            }
+            else if (nameResolver.Functions.WithName(udfName).Any())
             {
                 errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Warning, TexlStrings.WrnUDF_ShadowingBuiltInFunction, udfName));
             }

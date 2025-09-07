@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -16,6 +17,7 @@ using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -650,6 +652,64 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(errors.Count() == 1 &&
                 errors.Any(error => error.MessageKey == "WrnUDF_ShadowingBuiltInFunction" &&
                 error.Severity == DocumentErrorSeverity.Warning));
+        }
+
+        [Theory]
+        [InlineData("MyFunc():Number = 1;", false)]
+        [InlineData("Count():Number = 1;", true)]
+        public void TestUDFHasErrorWhenDuplicate(string script, bool shadowWarning)
+        {
+            // need to be added in two seperate calls to AddUserDefinedFunction
+            // a single call runs through a different path for duplicate checking, see next test
+
+            SymbolTable symbolTable = new SymbolTable();
+
+            var add1 = symbolTable.AddUserDefinedFunction(script, extraSymbolTable: ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            Assert.True(add1.IsSuccess);
+            if (shadowWarning)
+            {
+                Assert.True(add1.Errors.Count() == 1 &&
+                    add1.Errors.Any(error => error.MessageKey == "WrnUDF_ShadowingBuiltInFunction" &&
+                        error.Severity == ErrorSeverity.Warning));
+            }
+            else
+            {
+                Assert.True(!add1.Errors.Any());
+            }
+
+            var add2 = symbolTable.AddUserDefinedFunction(script, extraSymbolTable: ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            Assert.False(add2.IsSuccess);
+            Assert.True(add2.Errors.Count() == 1 &&
+                add2.Errors.Any(error => error.MessageKey == "ErrUDF_FunctionAlreadyDefined" &&
+                    error.Severity == ErrorSeverity.Severe));
+        }
+
+        [Theory]
+        [InlineData("MyFunc():Number = 1; MyFunc():Number = 1;", false)]
+        [InlineData("Count():Number = 1; Count():Number = 1;", true)]
+        public void TestUDFHasErrorWhenDuplicateMultiple(string script, bool shadowWarning)
+        {
+            // need to be added in two seperate calls to AddUserDefinedFunction
+            // a single call runs through a different path for duplicate checking, see next test
+
+            SymbolTable symbolTable = new SymbolTable();
+
+            var add1 = symbolTable.AddUserDefinedFunction(script, extraSymbolTable: ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            Assert.False(add1.IsSuccess);
+            if (shadowWarning)
+            {
+                Assert.True(add1.Errors.Count() == 2 &&
+                    add1.Errors.Any(error => error.MessageKey == "WrnUDF_ShadowingBuiltInFunction" &&
+                        error.Severity == ErrorSeverity.Warning));
+            }
+            else
+            {
+                Assert.True(add1.Errors.Count() == 1);
+            }
+
+            Assert.True(add1.Errors.Count() >= 1 && 
+                add1.Errors.Any(error => error.MessageKey == "ErrUDF_FunctionAlreadyDefined" &&
+                    error.Severity == ErrorSeverity.Severe));
         }
 
         [Fact]
