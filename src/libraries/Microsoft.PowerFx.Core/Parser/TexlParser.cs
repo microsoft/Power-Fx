@@ -293,6 +293,13 @@ namespace Microsoft.PowerFx.Core.Parser
                     attribute = MaybeParseAttribute();
                 }
 
+                // allow empty semicolons
+                if (_curs.TidCur == TokKind.Semicolon)
+                {
+                    _curs.TokMove();
+                    continue;
+                }
+
                 var thisIdentifier = TokEat(TokKind.Ident);
                 if (thisIdentifier == null)
                 {
@@ -303,13 +310,6 @@ namespace Microsoft.PowerFx.Core.Parser
 
                 ParseTrivia();
                 _startingIndex = thisIdentifier.Span.Min;
-
-                if (_curs.TidCur == TokKind.Semicolon)
-                {
-                    CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
-                    _curs.TokMove();
-                    continue;
-                }
 
                 if (_curs.TidCur == TokKind.ColonEqual && _features.IsUserDefinedTypesEnabled)
                 {
@@ -324,15 +324,8 @@ namespace Microsoft.PowerFx.Core.Parser
                     }
 
                     // Extract expression
-                    while (_curs.TidCur != TokKind.Semicolon)
+                    while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
                     {
-                        // Check if we're at EOF before a semicolon is found
-                        if (_curs.TidCur == TokKind.Eof)
-                        {
-                            CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
-                            break;
-                        }
-
                         // Parse expression
                         definitionBeforeTrivia.Add(ParseTrivia());
                         var result = ParseExpr(Precedence.None);
@@ -379,15 +372,8 @@ namespace Microsoft.PowerFx.Core.Parser
                     }
 
                     // Extract expression
-                    while (_curs.TidCur != TokKind.Semicolon)
+                    while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
                     {
-                        // Check if we're at EOF before a semicolon is found
-                        if (_curs.TidCur == TokKind.Eof)
-                        {
-                            CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
-                            break;
-                        }
-
                         // Parse expression
                         definitionBeforeTrivia.Add(ParseTrivia());
                         var result = ParseExpr(Precedence.None);
@@ -510,16 +496,6 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         var result = isImperative ? ParseUDFBody(ref definitionBeforeTrivia) : ParseExpr(Precedence.None);
 
-                        // Check if we're at EOF before a semicolon is found
-                        if (_curs.TidCur == TokKind.Eof)
-                        {
-                            // Add incomplete UDF as they are needed for intellisense 
-                            udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, isImperative: isImperative, parserOptions.NumberIsFloat, isValid: false));
-                            userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.UDF, thisIdentifier.As<IdentToken>(), declaration, new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));
-                            CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
-                            break;
-                        }
-
                         var bodyParseValid = _errors?.Count == errorCount;
 
                         udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, isImperative: isImperative, parserOptions.NumberIsFloat, isValid: bodyParseValid));
@@ -538,8 +514,14 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     ParseTrivia();
 
+                    if (_curs.TidCur == TokKind.Eof)
+                    {
+                        break;
+                    }
+
                     if (TokEat(TokKind.Semicolon) == null)
                     {
+                        // TokEat will add an error
                         break;
                     }
 
