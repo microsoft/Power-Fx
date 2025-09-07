@@ -259,6 +259,11 @@ namespace Microsoft.PowerFx
             _errors.AddRange(moreErrors);
         }
 
+        public void AddError(ExpressionError error)
+        {
+            _errors.Add(error);
+        }
+
         /// <summary>
         /// True if no errors for stages run so far. 
         /// </summary>

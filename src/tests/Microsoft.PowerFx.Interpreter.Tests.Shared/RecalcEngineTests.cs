@@ -2126,6 +2126,24 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        // named formulas, UDTs, and UDFs are all in seperate namespaces. 
+        [Theory]
+        [InlineData("a = 3; a = 4;", false)]
+        [InlineData("f():Number = 4; f():Number = 5;", false)]
+        [InlineData("f():Number = 4; f(a:Boolean):Boolean = false;", false)]
+        [InlineData("T := Type(Number); T := Type(Boolean);", false)]
+        [InlineData("a := Type(Number); a = 3;", true)]
+        [InlineData("a := Type(Number); a():Number = 3;", true)]
+        [InlineData("a = 3;  a():Number = 4;", true)]
+        public void TestDuplicateUserDefinitions(string definition, bool valid)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig());
+
+            engine.TryAddUserDefinitions(definition, out var errors, new ParserOptions());
+
+            Assert.True((valid && !errors.Any()) || (!valid && errors.Any()));
+        }
+
         [Theory]
         [InlineData(
             "F():Point = {x: 5, y:5};",

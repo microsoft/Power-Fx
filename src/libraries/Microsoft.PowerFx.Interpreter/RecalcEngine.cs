@@ -476,7 +476,21 @@ namespace Microsoft.PowerFx
 
                     if (formulaCheck.IsSuccess)
                     {
-                        SetFormula(namedFormula.Ident.Name, namedFormula.Formula.ToString(), onUpdate);
+                        try
+                        {
+                            SetFormula(namedFormula.Ident.Name, namedFormula.Formula.ToString(), onUpdate);
+                        }
+                        catch (Exception ex)
+                        {
+                            var error = new ExpressionError()
+                            {
+                                Message = ex.Message,
+                                Severity = ErrorSeverity.Critical,
+                                Span = namedFormula.Ident.Span
+                            };
+
+                            checkResult.AddError(error);
+                        }
                     }
                     else
                     {
