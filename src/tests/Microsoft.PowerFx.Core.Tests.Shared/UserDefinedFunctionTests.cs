@@ -701,5 +701,23 @@ namespace Microsoft.PowerFx.Core.Tests
             var errors = checkResult.ApplyErrors();
             Assert.Contains(errors, e => e.MessageKey.Contains("ErrUDF_NonImperativeVoidType"));
         }
+
+        [Theory]
+        [InlineData("f(x:GUID):Boolean = x+1 And true;")] // PowerFXV1CompatibilityRules doesn't support GUID+1
+        public void TestUDFBodyFeaturesSupport(string expression)
+        {
+            var checkResultV1 = new DefinitionsCheckResult(Features.PowerFxV1)
+                                            .SetText(expression)
+                                            .SetBindingInfo(_primitiveTypes);
+            var errorsV1 = checkResultV1.ApplyErrors();
+            Assert.True(errorsV1.Any());
+
+            // test inverse, that an error occurs with the opposite features setting
+            var checkResultNone = new DefinitionsCheckResult(Features.None)
+                                            .SetText(expression)
+                                            .SetBindingInfo(_primitiveTypes);
+            var errorsNone = checkResultNone.ApplyErrors();
+            Assert.True(!errorsNone.Any());
+        }
     }
 }

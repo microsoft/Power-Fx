@@ -184,10 +184,8 @@ namespace Microsoft.PowerFx
 
                 foreach (var udf in partialUDFs)
                 {
-                    var binding = udf.BindBody(UDFBindingSymbols, new Glue2DocumentBinderGlue(), UDFBindingConfig);
-                    
-                    List<TexlError> bindErrors = new List<TexlError>();
-
+                    var binding = udf.BindBody(UDFBindingSymbols, new Glue2DocumentBinderGlue(), UDFBindingConfig, _features);
+ 
                     if (binding.ErrorContainer.GetErrors().Any(error => error.Severity > DocumentErrorSeverity.Warning))
                     {
                         _errors.AddRange(ExpressionError.New(binding.ErrorContainer.GetErrors(), _defaultErrorCulture));

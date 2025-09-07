@@ -227,5 +227,22 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Assert.False(udf.IsAsync);
             }
         }
+
+        [Theory]
+        [InlineData("f():Number = First(ShowColumns([1,2,3], Value)).Value;", "f()", true, 1)] // SupportColumnNamesAsIdentifiers
+        [InlineData("f():Number = First(ShowColumns([1,2,3], \"Value\")).Value;", "f()", false, 1)] // SupportColumnNamesAsIdentifiers
+        public void UDFBodyUsesFeatures(string script, string eval, bool powerFxV1, double expected)
+        {
+            var configWorks = new PowerFxConfig(powerFxV1 ? Features.PowerFxV1 : Features.None);
+            var engineWorks = new RecalcEngine(configWorks);
+
+            engineWorks.AddUserDefinitions(script);
+
+            var checkEvalWorks = engineWorks.Check(eval);
+            Assert.True(checkEvalWorks.IsSuccess);
+
+            var resultWorks = (NumberValue)checkEvalWorks.GetEvaluator().Eval();
+            Assert.Equal(expected, resultWorks.Value);
+        }
     }
 }
