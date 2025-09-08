@@ -267,7 +267,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a = 1.234;")]
         [InlineData("a = Mid( \"abc\", 2, 1 );")]
         [InlineData("a = First( Table( {x:1, y:2} ) );")]
-        [InlineData("a = First( Table( {x:1, y:2} ) ).a;")]
+        [InlineData("a = First( Table( {x:1, y:2} ) ).x;")]
         [InlineData("a = First( Table( {x:1, y:2} ) ); b = 4; c = \"hello\";")]
         public void TestCulture(string expressionDot)
         {
