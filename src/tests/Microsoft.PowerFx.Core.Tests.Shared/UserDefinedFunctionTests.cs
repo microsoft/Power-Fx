@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
@@ -700,6 +701,50 @@ namespace Microsoft.PowerFx.Core.Tests
                                             .SetBindingInfo(_primitiveTypes);
             var errors = checkResult.ApplyErrors();
             Assert.Contains(errors, e => e.MessageKey.Contains("ErrUDF_NonImperativeVoidType"));
+        }
+
+        [Theory]
+        [InlineData("F():Number = 5;")]
+        [InlineData("F():Number = 5.1234;")]
+        [InlineData("F():Number = Max(1,2,3);")]
+        [InlineData("F(x: Number):Number = x * 2;")]
+        [InlineData("F(x: Number, y:Number):Number = x * y;")]
+        [InlineData("F(x: Number, y:Number):Number = Average(x,y);")]
+        [InlineData("F(x: Number, y:Number):Number = { Average(x,y); 1+2 };")]
+        [InlineData("F(x: Number, y:Number):Number = First( Table({a:1, b:2}) ).a;")]
+        [InlineData("F(x: Number, y:Number):Number = { If( true, 1; x, 4; y ) };")]
+        [InlineData("F1():Number = 5;F2():Number = 5.1234;F3():Number = Max(1,2,3);")]
+        public void TestCulture(string expressionDot)
+        {
+            var parserOptionsDot = new ParserOptions(new System.Globalization.CultureInfo("en-us")) { AllowsSideEffects = true };
+            var parserOptionsComma = new ParserOptions(new System.Globalization.CultureInfo("es-es")) { AllowsSideEffects = true };
+
+            // convert expressionDot into the comma decimal sepeartor version
+            var expressionComma = Regex.Replace(expressionDot.Replace(";", ";;").Replace(",", ";"), @"(?<=\d)\.(?=\d)", ",");
+
+            var checkResultDot = new DefinitionsCheckResult()
+                               .SetText(expressionDot, parserOptionsDot)
+                               .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            var errorsDot = checkResultDot.ApplyErrors();
+            Assert.False(errorsDot.Any());
+
+            var checkResultCommaFail = new DefinitionsCheckResult()
+                                .SetText(expressionDot, parserOptionsComma)
+                                .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            var errorsCommaFail = checkResultCommaFail.ApplyErrors();
+            Assert.True(errorsCommaFail.Any());
+
+            var checkResultComma = new DefinitionsCheckResult()
+                                 .SetText(expressionComma, parserOptionsComma)
+                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            var errorsComma = checkResultComma.ApplyErrors();
+            Assert.False(errorsComma.Any());
+
+            var checkResultDotFail = new DefinitionsCheckResult()
+                                 .SetText(expressionComma, parserOptionsDot)
+                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            var errorsDotFail = checkResultDotFail.ApplyErrors();
+            Assert.True(errorsDotFail.Any());
         }
     }
 }

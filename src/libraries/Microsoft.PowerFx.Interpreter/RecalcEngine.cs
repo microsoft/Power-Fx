@@ -230,9 +230,9 @@ namespace Microsoft.PowerFx
         }
 
         // Invoke onUpdate() each time this formula is changed, passing in the new value. 
-        public void SetFormula(string name, string expr, Action<string, FormulaValue> onUpdate)
+        public void SetFormula(string name, string expr, Action<string, FormulaValue> onUpdate, ParserOptions parserOptions = null)
         {
-            SetFormula(name, new FormulaWithParameters(expr), onUpdate);
+            SetFormula(name, new FormulaWithParameters(expr), onUpdate, parserOptions);
         }
 
         /// <summary>
@@ -241,9 +241,10 @@ namespace Microsoft.PowerFx
         /// <param name="name">name of formula. This can be used in other formulas.</param>
         /// <param name="expr">expression.</param>
         /// <param name="onUpdate">Callback to fire when this value is updated.</param>
-        public void SetFormula(string name, FormulaWithParameters expr, Action<string, FormulaValue> onUpdate)
+        /// <param name="parserOptions">Parser options, including locale to interpret the formula.</param>
+        public void SetFormula(string name, FormulaWithParameters expr, Action<string, FormulaValue> onUpdate, ParserOptions parserOptions = null)
         {
-            var check = Check(expr._expression, expr._schema);
+            var check = Check(expr._expression, expr._schema, parserOptions);
             check.ThrowOnErrors();
             var binding = check.Binding;
 
@@ -478,7 +479,7 @@ namespace Microsoft.PowerFx
                     {
                         try
                         {
-                            SetFormula(namedFormula.Ident.Name, namedFormula.Formula.ToString(), onUpdate);
+                            SetFormula(namedFormula.Ident.Name, namedFormula.Formula.ToString(), onUpdate, parserOptions);
                         }
                         catch (Exception ex)
                         {
