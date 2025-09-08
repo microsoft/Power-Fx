@@ -925,6 +925,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static ErrorResourceKey ErrUserDefinedTypesDisabled = new ErrorResourceKey("ErrUserDefinedTypesDisabled");
         public static ErrorResourceKey ErrUserDefinedTypeIncorrectSyntax = new ErrorResourceKey("ErrUserDefinedTypeIncorrectSyntax");
+        public static ErrorResourceKey ErrNamedFormulaColonEqualRequired = new ErrorResourceKey("ErrNamedFormulaColonEqualRequired");
         public static ErrorResourceKey ErrJoinCantAddRename = new ErrorResourceKey("ErrJoinCantAddRename");
         public static ErrorResourceKey ErrJoinNotPlainJoinTypeEnum = new ErrorResourceKey("ErrJoinNotPlainJoinTypeEnum");
         public static ErrorResourceKey ErrJoinArgIsNotAsNode = new ErrorResourceKey("ErrJoinArgIsNotAsNode");

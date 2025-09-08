@@ -53,6 +53,12 @@ namespace Microsoft.PowerFx
         /// </summary>
         internal bool AllowAttributes { get; set; }
 
+        /// <summary>
+        /// Allow named formulas to be defined with a single = instead
+        /// of requiring a := as is always needed for type definitions.
+        /// </summary>
+        internal bool AllowEqualOnlyNamedFormulas { get; set; }
+
         public ParserOptions()
         {
         }

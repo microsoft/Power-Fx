@@ -48,12 +48,14 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("bar = AsType(foo, Type({Age: Number}));")]
-        public void AsTypeTest(string script)
+        [InlineData("bar = AsType(foo, Type({Age: Number}));", true)]
+        [InlineData("bar := AsType(foo, Type({Age: Number}));", false)]
+        public void AsTypeTest(string script, bool requiresEqualOnly)
         {
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
+                AllowEqualOnlyNamedFormulas = requiresEqualOnly
             };
             var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions, Features.PowerFxV1);
             Assert.False(parsedNamedFormulasAndUDFs.HasErrors);
@@ -135,28 +137,43 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Foo(): Number {// comment \nSum(1, 1); Sum(2, 2); };Bar(): Number {Foo();};x=1;y=2;", 0, 0, true)]
-        [InlineData("Foo(x: /*comment\ncomment*/Number):/*comment*/Number = /*comment*/Abs(x);", 0, 1, false)]
-        [InlineData("x", 0, 0, true)]
-        [InlineData("x=", 0, 0, true)]
-        [InlineData("x=1", 1, 0, true)]
-        [InlineData("x=1;", 1, 0, false)]
-        [InlineData("x=1;Foo(", 1, 0, true)]
-        [InlineData("x=1;Foo(x", 1, 0, true)]
-        [InlineData("x=1;Foo(x:", 1, 0, true)]
-        [InlineData("x=1;Foo(x:Number", 1, 0, true)]
-        [InlineData("x=1;Foo(x:Number)", 1, 0, true)]
-        [InlineData("x=1;Foo(x:Number):", 1, 0, true)]
-        [InlineData("x=1;Foo(x:Number):Number", 1, 0, true)]
-        [InlineData("x=1;Foo(x:Number):Number = ", 1, 0, true)]
-        [InlineData("x=1;Foo(x:Number):Number = 10 * x", 1, 0, true)]
-        [InlineData("x=1;Foo(x:Number):Number = 10 * x;", 1, 1, false)]
-        [InlineData("x=1;Foo(:Number):Number = 10 * x;", 1, 0, true)]
-        public void NamedFormulaAndUdfTest(string script, int namedFormulaCount, int udfCount, bool expectErrors)
+        [InlineData("Foo(): Number {// comment \nSum(1, 1); Sum(2, 2); };Bar(): Number {Foo();};x=1;y=2;", 0, 0, true, false)]
+        [InlineData("Foo(x: /*comment\ncomment*/Number):/*comment*/Number = /*comment*/Abs(x);", 0, 1, false, false)]
+        [InlineData("x", 0, 0, true, true)]
+        [InlineData("x=", 0, 0, true, true)]
+        [InlineData("x=1", 1, 0, true, true)]
+        [InlineData("x=1;", 1, 0, false, true)]
+        [InlineData("x=1;Foo(", 1, 0, true, true)]
+        [InlineData("x=1;Foo(x", 1, 0, true, true)]
+        [InlineData("x=1;Foo(x:", 1, 0, true, true)]
+        [InlineData("x=1;Foo(x:Number", 1, 0, true, true)]
+        [InlineData("x=1;Foo(x:Number)", 1, 0, true, true)]
+        [InlineData("x=1;Foo(x:Number):", 1, 0, true, true)]
+        [InlineData("x=1;Foo(x:Number):Number", 1, 0, true, true)]
+        [InlineData("x=1;Foo(x:Number):Number = ", 1, 0, true, true)]
+        [InlineData("x=1;Foo(x:Number):Number = 10 * x", 1, 0, true, true)]
+        [InlineData("x=1;Foo(x:Number):Number = 10 * x;", 1, 1, false, true)]
+        [InlineData("x=1;Foo(:Number):Number = 10 * x;", 1, 0, true, true)]
+        [InlineData("x:=", 0, 0, true, false)]
+        [InlineData("x:=1", 1, 0, true, false)]
+        [InlineData("x:=1;", 1, 0, false, false)]
+        [InlineData("x:=1;Foo(", 1, 0, true, false)]
+        [InlineData("x:=1;Foo(x", 1, 0, true, false)]
+        [InlineData("x:=1;Foo(x:", 1, 0, true, false)]
+        [InlineData("x:=1;Foo(x:Number", 1, 0, true, false)]
+        [InlineData("x:=1;Foo(x:Number)", 1, 0, true, false)]
+        [InlineData("x:=1;Foo(x:Number):", 1, 0, true, false)]
+        [InlineData("x:=1;Foo(x:Number):Number", 1, 0, true, false)]
+        [InlineData("x:=1;Foo(x:Number):Number = ", 1, 0, true, false)]
+        [InlineData("x:=1;Foo(x:Number):Number = 10 * x", 1, 0, true, false)]
+        [InlineData("x:=1;Foo(x:Number):Number = 10 * x;", 1, 1, false, false)]
+        [InlineData("x:=1;Foo(:Number):Number = 10 * x;", 1, 0, true, false)]
+        public void NamedFormulaAndUdfTest(string script, int namedFormulaCount, int udfCount, bool expectErrors, bool requiresEqualOnly)
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = false,
+                AllowEqualOnlyNamedFormulas = requiresEqualOnly
             };
 
             var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
@@ -257,6 +274,35 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Equal(scriptX, formulas.ElementAt(0).formula.Script);
             Assert.Equal(scriptY, formulas.ElementAt(1).formula.Script);
+        }
+
+        [Theory]
+        [InlineData("x = 3;", true)]
+        [InlineData("x := 3;", false)]
+        public void EqualNamedFormulaSyntax(string script, bool requiresEqualOnly)
+        {
+            var parseOptions1 = new ParserOptions()
+            {
+                AllowEqualOnlyNamedFormulas = true,
+            };
+
+            var result1 = UserDefinitions.Parse(script, parseOptions1);
+            Assert.False(result1.HasErrors);
+
+            var parseOptions2 = new ParserOptions()
+            {
+                AllowEqualOnlyNamedFormulas = false,
+            };
+
+            var result2 = UserDefinitions.Parse(script, parseOptions2);
+            if (requiresEqualOnly)
+            {
+                Assert.True(result2.HasErrors);
+            }
+            else
+            {
+                Assert.False(result2.HasErrors);
+            }
         }
     }
 }
