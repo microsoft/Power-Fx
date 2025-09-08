@@ -301,6 +301,5 @@ namespace Microsoft.PowerFx.Core.Tests
             var errorsDotFail = checkResultDotFail.ApplyErrors();
             Assert.True(errorsDotFail.Any());
         }
-
     }
 }
