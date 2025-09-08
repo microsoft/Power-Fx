@@ -323,7 +323,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     _curs.TokMove();
                     definitionBeforeTrivia.Add(ParseTrivia());
 
-                    if (_curs.TidCur == TokKind.Semicolon)
+                    if (_curs.TidCur == TokKind.Semicolon || _curs.TidCur == TokKind.Eof)
                     {
                         CreateError(thisIdentifier, TexlStrings.ErrNamedType_MissingTypeExpression);
                     }
@@ -371,7 +371,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     _curs.TokMove();
                     definitionBeforeTrivia.Add(ParseTrivia());
 
-                    if (_curs.TidCur == TokKind.Semicolon)
+                    if (_curs.TidCur == TokKind.Semicolon || _curs.TidCur == TokKind.Eof)
                     {
                         CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
                     }
