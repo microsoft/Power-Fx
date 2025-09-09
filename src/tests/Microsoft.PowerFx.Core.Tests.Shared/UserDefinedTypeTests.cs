@@ -168,8 +168,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("f(x:T):Number = x.n; T := Type({n: Number}); g(): Number = f({n: 5, m: 5});", "ErrBadSchema_AdditionalField")]
         [InlineData("f():T = [{x: 5}]; T := Type([{x: Number}]);", null)]
         [InlineData("f(x:T):T = x; T := Type([{n: Number}]); g(): T = f([{n: 5, m: 5}]);", "ErrBadSchema_AdditionalField")]
-        [InlineData("f(x:T):T = {n: \"Foo\"}; T := Type({n: GUID});", null)]
-        [InlineData("f():GUID = \"Foo\";", null)]
+        [InlineData("f(x:T):T = {n: \"Foo\"}; T := Type({n: GUID});", null)] // returns an error with PreV1
+        [InlineData("f():GUID = \"Foo\";", null)] // returns an error with PreV1
         public void TestAggregateTypeErrors(string typeDefinition, string expectedMessageKey)
         {
             // with number is float
