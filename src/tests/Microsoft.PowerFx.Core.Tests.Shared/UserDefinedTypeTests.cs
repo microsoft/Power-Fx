@@ -160,13 +160,12 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Contains(errors, e => e.MessageKey.Contains(expectedMessageKey));
         }
 
-        // needs fixing in UserDefinedFunctions.cs CheckTypesOnDeclaration
-        // [InlineData("f():T = [{x: 5, y: 5}]; T := Type([{x: Number}]);", "ErrUDF_ReturnTypeSchemaAdditionalFields")]
-
         [Theory]
         [InlineData("f():T = {x: true, y: 1}; T := Type({x: Boolean});", "ErrUDF_ReturnTypeSchemaAdditionalFields")]
         [InlineData("f(x:T):Number = x.n; T := Type({n: Number}); g(): Number = f({n: 5, m: 5});", "ErrBadSchema_AdditionalField")]
         [InlineData("f():T = [{x: 5}]; T := Type([{x: Number}]);", null)]
+        [InlineData("f():T = [{x: 5}]; T := Type([{x: GUID}]);", "ErrUDF_ReturnTypeSchemaIncompatible")]
+        [InlineData("f():T = [{x: 5, y: 5}]; T := Type([{x: Number}]);", "ErrUDF_ReturnTypeSchemaAdditionalFields")]
         [InlineData("f(x:T):T = x; T := Type([{n: Number}]); g(): T = f([{n: 5, m: 5}]);", "ErrBadSchema_AdditionalField")]
         [InlineData("f(x:T):T = {n: \"Foo\"}; T := Type({n: GUID});", null)] // returns an error with PreV1
         [InlineData("f():GUID = \"Foo\";", null)] // returns an error with PreV1
