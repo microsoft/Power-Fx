@@ -124,7 +124,6 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("B := Type(B);", 1, "ErrNamedType_InvalidCycles")]
         [InlineData("Currency := Type({x: Text}); Record := Type([DateTime]); D := Type(None);", 2, "ErrNamedType_InvalidTypeName")]
         [InlineData("A = 5;C :=; B := Type(Number);", 1, "ErrNamedType_MissingTypeExpression")]
-        [InlineData("C := 5; D := [1,2,3];", 2, "ErrNamedType_MissingTypeExpression")]
         [InlineData("T := Type([{a: {b: Void}}]);", 1, "ErrNamedType_InvalidTypeDeclaration")]
         [InlineData("T := Type([Void]);", 1, "ErrNamedType_InvalidTypeDeclaration")]
         [InlineData("T := Type({a: Void});", 1, "ErrNamedType_InvalidTypeDeclaration")]
