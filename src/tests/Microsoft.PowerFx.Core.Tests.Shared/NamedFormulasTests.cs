@@ -48,12 +48,14 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("bar = AsType(foo, Type({Age: Number}));")]
-        public void AsTypeTest(string script)
+        [InlineData("bar = AsType(foo, Type({Age: Number}));", true)]
+        [InlineData("bar := AsType(foo, Type({Age: Number}));", false)]
+        public void AsTypeTest(string script, bool requiresEqualOnly)
         {
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
+                AllowEqualOnlyNamedFormulas = requiresEqualOnly
             };
             var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions, Features.PowerFxV1);
             Assert.False(parsedNamedFormulasAndUDFs.HasErrors);
@@ -71,6 +73,39 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(result.HasErrors);
             var udf = result.UDFs.First();
             Assert.Equal("Bar", udf.Ident.ToString());
+        }
+
+        [Theory]
+        [InlineData("a = 3;", true)]
+        [InlineData("a := 3;", false)]
+        [InlineData("a = \"hello\"; b = \"world\"; c := \"colon is optional\";", true)]
+        [InlineData("a := \"hello\"; b = \"world\"; c := \"colon is optional\";", true)]
+        [InlineData("a := \"hello\"; b := \"world\"; c := \"colon is required\";", false)]
+        public void OptionalColonTests(string script, bool requiresEqualOnly)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+                AllowEqualOnlyNamedFormulas = requiresEqualOnly
+            };
+            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions, Features.PowerFxV1);
+            Assert.False(parsedNamedFormulasAndUDFs.HasErrors);
+        }
+
+        // Even with EqualOnly for named formulas, Type definitions require the colon
+
+        [Theory]
+        [InlineData("Foo = Type(Number);")]
+        [InlineData("k := 4; Foo = Type(Number);")]
+        public void FailParsingTestEqualOnly(string script)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+                AllowEqualOnlyNamedFormulas = true
+            };
+            var result = UserDefinitions.Parse(script, parserOptions, Features.PowerFxV1);
+            Assert.True(result.HasErrors);
         }
 
         [Theory]

@@ -310,7 +310,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     continue;
                 }
 
-                if (_curs.TidCur == TokKind.ColonEqual && _features.IsUserDefinedTypesEnabled)
+                if (_curs.TidCur == TokKind.ColonEqual)
                 {
                     var declaration = script.Substring(declarationStart, _curs.TokCur.Span.Min - declarationStart);
                     _curs.TokMove();
@@ -335,7 +335,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         definitionBeforeTrivia.Add(ParseTrivia());
                         var result = ParseExpr(Precedence.None);
 
-                        if (result is TypeLiteralNode typeLiteralNode)
+                        if (result is TypeLiteralNode typeLiteralNode && _features.IsUserDefinedTypesEnabled)
                         {
                             definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode, typeLiteralNode.IsValid(out var _)));
                             userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.DefinedType, thisIdentifier.As<IdentToken>(), declaration, new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));
@@ -346,7 +346,9 @@ namespace Microsoft.PowerFx.Core.Parser
                         }
                         else
                         {
-                            CreateError(_curs.TokCur, TexlStrings.ErrNamedType_MissingTypeExpression);
+                            namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex, attribute));
+                            userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.NamedFormula, thisIdentifier.As<IdentToken>(), declaration, new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));
+                            definitionBeforeTrivia = new List<ITexlSource>();
                         }
 
                         // If the result was an error, keep moving cursor until end of named type expression
