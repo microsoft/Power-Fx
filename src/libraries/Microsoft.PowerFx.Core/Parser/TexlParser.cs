@@ -292,13 +292,6 @@ namespace Microsoft.PowerFx.Core.Parser
                     attribute = MaybeParseAttribute();
                 }
 
-                // allow empty semicolons
-                if (_curs.TidCur == TokKind.Semicolon)
-                {
-                    _curs.TokMove();
-                    continue;
-                }
-
                 var thisIdentifier = TokEat(TokKind.Ident);
                 if (thisIdentifier == null)
                 {

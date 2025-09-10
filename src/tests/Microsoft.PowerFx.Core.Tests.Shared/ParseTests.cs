@@ -813,11 +813,12 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("A_Formula = 10;")]
         [InlineData("'A Formula  ' = 10;")]
         [InlineData("'Formul@  ^%' = 10;")]
+        [InlineData("'Formul@  ^%' = 10")]
+        [InlineData("'Formul@  ^%' = 10    ")]
         [InlineData("   a    =  10    ;  ")]
         [InlineData("a = b = 10;")]
         [InlineData("a = 10; c = 20;")]
-        [InlineData(";")]
-        [InlineData("a = 10;;")]
+        [InlineData("a = 10; c = 20")]
         [InlineData("a = 10")]
         public void TestFormulasParse(string script)
         {
@@ -830,6 +831,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("/*b=10*/;a = ;c=3;")]
         [InlineData("Formul@ = 10; b = 20;")]
         [InlineData("a;")]
+        [InlineData(";")]
+        [InlineData("a = 10;;")]
         [InlineData("a = 10; b")]
         [InlineData("A = If(true,1;);")]
         [InlineData("A = If(true,1;2);")]
