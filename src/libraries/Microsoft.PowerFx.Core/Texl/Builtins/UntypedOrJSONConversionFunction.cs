@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argIndex == 1;
         }
 
-        internal static readonly ISet<DType> SupportedJSONTypes = new HashSet<DType> { DType.Boolean, DType.Number, DType.Decimal, DType.Date, DType.DateTime, DType.DateTimeNoTimeZone, DType.Time, DType.String, DType.Guid, DType.Hyperlink, DType.UntypedObject };
+        internal static readonly ISet<DType> UnSupportedJSONTypes = new HashSet<DType> { DType.Color, DType.ObjNull, DType.Void };
 
         public UntypedOrJSONConversionFunction(string name, TexlStrings.StringGetter description, DType returnType, int arityMax, params DType[] paramTypes)
             : base(name, description, FunctionCategories.Text, returnType, 0, 2, arityMax, paramTypes)
@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             base.CheckSemantics(binding, args, argTypes, errors);
 
             // check if the given type argument is not supported
-            if (!DType.IsSupportedType(argTypes[1], SupportedJSONTypes, out var unsupportedType))
+            if (!DType.IsSupportedType(argTypes[1], UnSupportedJSONTypes, out var unsupportedType))
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrUnsupportedTypeInTypeArgument, unsupportedType.GetKindString());
             }

@@ -51,7 +51,6 @@ namespace Microsoft.PowerFx.Json.Tests
             CheckIsTypeAsTypeParseJSON(engine, "\"1234.56789\"", "Decimal", 1234.56789m);
             CheckIsTypeAsTypeParseJSON(engine, "\"42\"", "T", 42D);
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"Power Fx\"\"\"", "Type(Text)", "Power Fx");
-            CheckIsTypeAsTypeParseJSON(engine, "\"\"\"2000-01-01T00:00:01.100Z\"\"\"", "DateTimeTZInd", new DateTime(2000, 1, 1, 0, 0, 1, 100));
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"11:59:59\"\"\"", "Time", new TimeSpan(11, 59, 59));
 
             // Negative tests - Coercions not allowed
@@ -62,7 +61,7 @@ namespace Microsoft.PowerFx.Json.Tests
             CheckIsTypeAsTypeParseJSON(engine, "\"true\"", "Number", false, false);
 
             // Negative tests - types not supported in FromJSON converter
-            CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"42\"", "None", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key);
+            CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"42\"", "None", TexlStrings.ErrInvalidArgumentExpectedType.Key);
             CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"\"\"RED\"\"\"", "Color", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key);
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"abcd-efgh-1234-ijkl\"\"\"", "GUID", string.Empty, false);
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"foo/bar/uri\"\"\"", "Hyperlink", string.Empty, false);

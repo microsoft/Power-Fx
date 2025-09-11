@@ -264,7 +264,7 @@ namespace Microsoft.PowerFx.Intellisense
                 // If cursor is currently at type argument, add handler to cleanup SuggestionKinds other than Type.
                 data.CleanupHandlers.Add(new TypeArgCleanUpHandler());
 
-                var types = data.Binding.NameResolver.NamedTypes.Where(t => DType.IsSupportedType(t.Value._type, UntypedOrJSONConversionFunction.SupportedJSONTypes, out var _));
+                var types = data.Binding.NameResolver.NamedTypes.Where(t => DType.IsSupportedType(t.Value._type, UntypedOrJSONConversionFunction.UnSupportedJSONTypes, out var _));
                 return types.Select(t => new KeyValuePair<string, DType>(TexlLexer.EscapeName(t.Key), t.Value._type));
             }
 

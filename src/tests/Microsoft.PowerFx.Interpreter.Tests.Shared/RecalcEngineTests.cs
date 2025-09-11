@@ -1973,20 +1973,20 @@ namespace Microsoft.PowerFx.Tests
               Patients := Type([Patient]);
               Dummy():Number = CountRows([]);",
             "Dummy()",
-            true,
+            false,
             true,
             0.0)]
 
         // Aggregate types with restricted types are not allowed in UDF
         [InlineData(
-            @"Patient := Type({DOB: DateTimeTZInd, Weight: Decimal, Dummy: None}); 
+            @"Patient := Type({DOB: DateTimeTZInd, Weight: Void, Dummy: None}); 
               Patients := Type([Patient]);
               getAnomaly(p: Patients): Patients = Filter(p, Weight < 0);",
             "",
             false)]
 
         [InlineData(
-            @"Patient := Type({Name: Text, Details: {h: Number, w:Decimal}}); 
+            @"Patient := Type({Name: Text, Details: {h: Number, w:Void}}); 
               getPatient(): Patient = {Name:""Alice"", Details: {h: 1, w: 2}};",
             "",
             false)]

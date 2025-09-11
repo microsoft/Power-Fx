@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Syntax
         /// <summary>
         /// Restricted return type.
         /// </summary>
-        public static readonly ISet<DType> RestrictedTypes = ImmutableHashSet.Create(DType.DateTimeNoTimeZone, DType.ObjNull, DType.Decimal);
+        public static readonly ISet<DType> RestrictedTypes = ImmutableHashSet.Create(DType.ObjNull);
 
         /// <summary>
         /// REstricted parameter type.
