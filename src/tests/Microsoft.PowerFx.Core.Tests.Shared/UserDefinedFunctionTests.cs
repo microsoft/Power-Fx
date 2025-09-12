@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -435,7 +437,15 @@ namespace Microsoft.PowerFx.Core.Tests
             var extra = new SymbolTable();
             extra.AddVariable("K1", FormulaType.Number);
 
-            var engine = new Engine();
+            var engine = new Engine()
+            {
+                PrimitiveTypes =
+                    SymbolTable.NewDefaultTypes(ImmutableDictionary.CreateRange(new Dictionary<DName, FormulaType>()
+                            {
+                                { new DName("Number"), FormulaType.Number },
+                            }))
+            };
+
             engine.AddUserDefinedFunction("Foo1(x: Number): Number = Abs(K1);", symbolTable: extra);
 
             var check = engine.Check("Foo1(3)");
@@ -503,10 +513,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData("Foo(x: Number): None = Abs(x);")]
         [InlineData("Foo(x: None): Number = Abs(x);")]
-        [InlineData("Foo(x: Decimal): Number =  Abs(x);")]
-        [InlineData("Foo(x: Number): Decimal =  Abs(x);")]
-        [InlineData("Foo(x: DateTimeTZInd): Decimal =  Abs(x);")]
-        [InlineData("Foo(x: Number): DateTimeTZInd =  Abs(x);")]
+        [InlineData("Foo(x: Void): Number =  Abs(x);")]
+        [InlineData("Foo(x: Number): Void =  Abs(x);")]
         public void TestUDFsWithRestrictedTypes(string script)
         {
             var parserOptions = new ParserOptions()
@@ -518,7 +526,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            Assert.Contains(errors, x => x.MessageKey == "ErrUDF_InvalidReturnType" || x.MessageKey == "ErrUDF_InvalidParamType");
+            Assert.Contains(errors, x => x.MessageKey == "ErrUDF_NonImperativeVoidType" || x.MessageKey == "ErrUDF_UnknownType" || x.MessageKey == "ErrUDF_InvalidReturnType" || x.MessageKey == "ErrUDF_InvalidParamType");
         }
 
         [Theory]

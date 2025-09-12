@@ -45,7 +45,7 @@ true
 true
 
 >> IsType(ParseJSON("""1900-12-31T00:00:00.000Z"""), DateTimeTZInd)
-true
+Errors: Error 50-63: Name isn't valid. 'DateTimeTZInd' isn't recognized.|Error 0-64: Invalid argument 'DateTimeTZInd'. Expected valid type name or inline type expression.
 
 >> IsType(ParseJSON("""true"""), Boolean)
 false
@@ -111,7 +111,7 @@ Errors: Error 26-30: Unsupported type 'Void' in type argument.
 Errors: Error 0-59: Invalid number of arguments: received 3, expected 2.
 
 >> IsType(ParseJSON("true"), None)
-Errors: Error 26-30: Unsupported type 'Blank' in type argument.
+Errors: Error 26-30: Name isn't valid. 'None' isn't recognized.|Error 0-31: Invalid argument 'None'. Expected valid type name or inline type expression.
 
 >> IsType(ParseJSON("{}"), Type({a: Text, b: [Color]}))
 Errors: Error 28-29: Unsupported type 'Color' in type argument.

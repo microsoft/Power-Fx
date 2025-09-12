@@ -48,10 +48,10 @@ true
 false
 
 >> AsType(ParseJSON("""1900-12-31T00:00:00.000Z"""), DateTimeTZInd)
-DateTime(1900,12,31,0,0,0,0)
+Errors: Error 50-63: Name isn't valid. 'DateTimeTZInd' isn't recognized.|Error 0-64: Invalid argument 'DateTimeTZInd'. Expected valid type name or inline type expression.
 
 >> AsType(ParseJSON("""1900-12-31T00:00:00.000-08:00"""), DateTimeTZInd)
-DateTime(1900,12,31,8,0,0,0)
+Errors: Error 55-68: Name isn't valid. 'DateTimeTZInd' isn't recognized.|Error 0-69: Invalid argument 'DateTimeTZInd'. Expected valid type name or inline type expression.
 
 >> Value(AsType(ParseJSON("42"), Dynamic))
 42
@@ -119,10 +119,10 @@ Errors: Error 26-30: Unsupported type 'Void' in type argument.
 Errors: Error 0-59: Invalid number of arguments: received 3, expected 2.
 
 >> AsType(ParseJSON("true"), None)
-Errors: Error 26-30: Unsupported type 'Blank' in type argument.
+Errors: Error 26-30: Name isn't valid. 'None' isn't recognized.|Error 0-31: Invalid argument 'None'. Expected valid type name or inline type expression.
 
 >> AsType(ParseJSON("null"), None)
-Errors: Error 26-30: Unsupported type 'Blank' in type argument.
+Errors: Error 26-30: Name isn't valid. 'None' isn't recognized.|Error 0-31: Invalid argument 'None'. Expected valid type name or inline type expression.
 
 >> AsType(ParseJSON("{}"), Type({a: Text, b: [Color]}))
 Errors: Error 28-29: Unsupported type 'Color' in type argument.

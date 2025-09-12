@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -43,6 +44,23 @@ namespace Microsoft.PowerFx
         {
         }
 
+        internal static readonly ReadOnlySymbolTable _recalcPrimitiveTypes =
+            SymbolTable.NewDefaultTypes(ImmutableDictionary.CreateRange(new Dictionary<DName, FormulaType>()
+                    {
+                        { FormulaType.Boolean.Name, FormulaType.Boolean },
+                        { FormulaType.Color.Name, FormulaType.Color },
+                        { FormulaType.Date.Name, FormulaType.Date },
+                        { FormulaType.Time.Name, FormulaType.Time },
+                        { FormulaType.DateTime.Name, FormulaType.DateTime },
+                        { FormulaType.Guid.Name, FormulaType.Guid },
+                        { FormulaType.Number.Name, FormulaType.Number },
+                        { FormulaType.Decimal.Name, FormulaType.Decimal },
+                        { FormulaType.String.Name, FormulaType.String }, // Text
+                        { FormulaType.Hyperlink.Name, FormulaType.Hyperlink },
+                        { FormulaType.UntypedObject.Name, FormulaType.UntypedObject }, // Dynamic
+                        { FormulaType.Void.Name, FormulaType.Void },
+                    }));
+
         public RecalcEngine(PowerFxConfig powerFxConfig)
             : base(powerFxConfig)
         {
@@ -51,6 +69,8 @@ namespace Microsoft.PowerFx
             _symbolValues.OnUpdate += OnSymbolValuesOnUpdate;
 
             base.EngineSymbols = _symbolTable;
+
+            base.PrimitiveTypes = _recalcPrimitiveTypes;
 
             // Add Builtin functions that aren't yet in the shared library. 
             SupportedFunctions = _interpreterSupportedFunctions;

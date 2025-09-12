@@ -3,12 +3,15 @@
 
 using System.Diagnostics;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
     [DebuggerDisplay("{_type}:tzi")]
     public class DateTimeNoTimeZoneType : FormulaType
     {
+        public override DName Name => new DName("DateTimeTZInd");
+
         internal DateTimeNoTimeZoneType()
             : base(DType.DateTimeNoTimeZone)
         {

@@ -4,11 +4,14 @@
 using System;
 using System.Text;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
     public class TimeType : FormulaType
     {
+        public override DName Name => new DName("Time");
+
         internal TimeType()
             : base(DType.Time)
         {
