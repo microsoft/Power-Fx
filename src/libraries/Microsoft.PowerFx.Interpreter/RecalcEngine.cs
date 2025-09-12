@@ -43,6 +43,23 @@ namespace Microsoft.PowerFx
         {
         }
 
+        internal static readonly ReadOnlySymbolTable _recalcPrimitiveTypes =
+            SymbolTable.NewDefaultTypes(ImmutableDictionary.CreateRange(new Dictionary<DName, FormulaType>()
+                    {
+                        { new DName("Boolean"), FormulaType.Boolean },
+                        { new DName("Color"), FormulaType.Color },
+                        { new DName("Date"), FormulaType.Date },
+                        { new DName("Time"), FormulaType.Time },
+                        { new DName("DateTime"), FormulaType.DateTime },
+                        { new DName("GUID"), FormulaType.Guid },
+                        { new DName("Float"), FormulaType.Number },
+                        { new DName("Decimal"), FormulaType.Decimal },
+                        { new DName("Text"), FormulaType.String },
+                        { new DName("Hyperlink"), FormulaType.Hyperlink },
+                        { new DName("Dynamic"), FormulaType.UntypedObject },
+                        { new DName("Void"), FormulaType.Void },
+                    }));
+
         public RecalcEngine(PowerFxConfig powerFxConfig)
             : base(powerFxConfig)
         {
@@ -392,14 +409,8 @@ namespace Microsoft.PowerFx
         /// <param name="script">Script containing user defined functions and/or named formulas.</param>
         /// <param name="parseCulture">Locale to parse user defined script.</param>
         /// <param name="onUpdate">Function to be called when update is triggered.</param>
-        public void AddUserDefinitions(string script, CultureInfo parseCulture = null, Action<string, FormulaValue> onUpdate = null)
+        public void AddUserDefinitions(string script, ParserOptions options, Action<string, FormulaValue> onUpdate = null)
         {
-            var options = new ParserOptions()
-            {
-                AllowsSideEffects = false,
-                Culture = parseCulture ?? CultureInfo.InvariantCulture
-            };
-
             var sb = new StringBuilder();
 
             var checkResult = new DefinitionsCheckResult(this.Config.Features)

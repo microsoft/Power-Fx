@@ -141,7 +141,7 @@ namespace Microsoft.PowerFx
             {
                 if (_parse.DefinedTypes.Any())
                 {
-                    this._resolvedTypes = DefinedTypeResolver.ResolveTypes(_parse.DefinedTypes.Where(dt => dt.IsParseValid), _symbols, out var errors);
+                    this._resolvedTypes = DefinedTypeResolver.ResolveTypes(_parse.DefinedTypes.Where(dt => dt.IsParseValid), _symbols, _parserOptions.NumberIsFloat, out var errors);
                     this._localSymbolTable.AddTypes(this._resolvedTypes);
                     _errors.AddRange(ExpressionError.New(errors, _defaultErrorCulture));
                 }

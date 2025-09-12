@@ -52,7 +52,8 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = true
+                AllowsSideEffects = true,
+                NumberIsFloat = true
             };
 
             var types = FormulaType.PrimitiveTypes.Union(new Dictionary<DName, FormulaType>() 

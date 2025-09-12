@@ -84,7 +84,8 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = false,
+                NumberIsFloat = true
             };
 
             var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library);
@@ -136,7 +137,8 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = false,
+                NumberIsFloat = true,
             };
 
             var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes);
@@ -403,8 +405,9 @@ namespace Microsoft.PowerFx.Core.Tests
         public void Basic()
         {
             var st1 = SymbolTable.WithPrimitiveTypes();
-            st1.AddUserDefinedFunction("Foo1(x: Number): Number = x*2;");
-            st1.AddUserDefinedFunction("Foo2(x: Number): Number = Foo1(x)+1;");
+            var parserOptions = new ParserOptions() { NumberIsFloat = true };
+            st1.AddUserDefinedFunction("Foo1(x: Number): Number = x*2;", parserOptions);
+            st1.AddUserDefinedFunction("Foo2(x: Number): Number = Foo1(x)+1;", parserOptions);
 
             var engine = new Engine();
             var check = engine.Check("Foo2(3)", symbolTable: st1);
@@ -435,8 +438,17 @@ namespace Microsoft.PowerFx.Core.Tests
             var extra = new SymbolTable();
             extra.AddVariable("K1", FormulaType.Number);
 
-            var engine = new Engine();
-            engine.AddUserDefinedFunction("Foo1(x: Number): Number = Abs(K1);", symbolTable: extra);
+            var engine = new Engine()
+            {
+                PrimitiveTypes =
+                    SymbolTable.NewDefaultTypes(ImmutableDictionary.CreateRange(new Dictionary<DName, FormulaType>()
+                            {
+                                { new DName("Float"), FormulaType.Number },
+                            }))
+            };
+
+            var parserOptions = new ParserOptions() { NumberIsFloat = true };
+            engine.AddUserDefinedFunction("Foo1(x: Number): Number = Abs(K1);", parserOptions, symbolTable: extra);
 
             var check = engine.Check("Foo1(3)");
             Assert.True(check.IsSuccess);

@@ -16,9 +16,9 @@ namespace Microsoft.PowerFx.Core.Tests.Shared.IntellisenseTests
         [Theory]
         [InlineData("AddNumbers(x: Number, y: Number): Number = x + y; |", "")]
         [InlineData("AddNumbers(x: Number, y: Number): Number = x + |", "")]
-        [InlineData("AddNumbers(x: Number, y: Number): Number = x + Su|", "ErrorKind.InsufficientMemory,ErrorKind.NotSupported,StartOfWeek.Sunday,Sum,Substitute,TraceOptions.IgnoreUnsupportedTypes")]
-        [InlineData("AddNumbers(x: Number, y: Number): |", "Boolean,Color,Date,DateTime,Dynamic,GUID,Hyperlink,Number,Text,Time,Void")]
-        [InlineData("AddNumbers(x: Number, y: |", "Boolean,Color,Date,DateTime,Dynamic,GUID,Hyperlink,Number,Text,Time")]
+        [InlineData("AddNumbers(x: Number, y: Number): Number = x + Su|", "ErrorKind.InsufficientMemory,ErrorKind.NotSupported,StartOfWeek.Sunday,Substitute,Sum,TraceOptions.IgnoreUnsupportedTypes")]
+        [InlineData("AddNumbers(x: Number, y: Number): |", "Boolean,Color,Date,DateTime,Decimal,Dynamic,GUID,Hyperlink,Number,Text,Time,Void")]
+        [InlineData("AddNumbers(x: Number, y: |", "Boolean,Color,Date,DateTime,Decimal,Dynamic,GUID,Hyperlink,Number,Text,Time")]
 
         // Suggest UDF names when calling one UDF from another
         [InlineData("AddNumbers(x: Number, y: Number): Number = x + y; AddNumbers2(x: Number, y: Text): Number = AddNum|", "AddNumbers")]

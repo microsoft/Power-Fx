@@ -380,9 +380,10 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig();
             config.EnableSetFunction();
             var engine = new RecalcEngine(config);
+            var options = new ParserOptions { AllowsSideEffects = true, NumberIsFloat = true }; 
 
             engine.UpdateVariable("A", 1m);
-            engine.AddUserDefinitions("B=A*2;C=A*B;", onUpdate: OnUpdate);
+            engine.AddUserDefinitions("B=A*2;C=A*B;", options: options, onUpdate: OnUpdate);
             AssertUpdate("B-->2;C-->2;");
 
             // Can't set formulas, they're read only 
@@ -549,7 +550,7 @@ namespace Microsoft.PowerFx.Tests
 
             try
             {
-                recalcEngine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture);
+                recalcEngine.AddUserDefinedFunction(udfExpression);
 
                 var check = recalcEngine.Check(expression);
 
@@ -576,7 +577,7 @@ namespace Microsoft.PowerFx.Tests
 
             engine.UpdateVariable("myArg", FormulaValue.New(10));
 
-            symbolTable.AddUserDefinedFunction(script, CultureInfo.InvariantCulture, engine.SupportedFunctions, engine.PrimitiveTypes);
+            symbolTable.AddUserDefinedFunction(script, symbolTable: engine.SupportedFunctions, extraSymbolTable: engine.PrimitiveTypes);
 
             var check = engine.Check(expression, symbolTable: symbolTable);
             var result = check.GetEvaluator().Eval();
@@ -592,7 +593,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var engine = new RecalcEngine();
 
-            Assert.False(engine.AddUserDefinedFunction(script, CultureInfo.InvariantCulture).IsSuccess);
+            Assert.False(engine.AddUserDefinedFunction(script).IsSuccess);
         }
 
         // Overloads and conflict 
@@ -606,7 +607,8 @@ namespace Microsoft.PowerFx.Tests
             st.AddConstant("K1", FormulaValue.New(9999));            
 
             var engine = new RecalcEngine();
-            engine.AddUserDefinedFunction(script, symbolTable: st);
+            var parserOptions = new ParserOptions { NumberIsFloat = true };
+            engine.AddUserDefinedFunction(script, parserOptions: parserOptions, symbolTable: st);
 
             var check = engine.Check("foo(1)");
             Assert.True(check.IsSuccess);
@@ -620,35 +622,38 @@ namespace Microsoft.PowerFx.Tests
         public void ShadowingFunctionPrecedenceTest()
         {
             var engine = new RecalcEngine();
-            engine.AddUserDefinedFunction("Concat(x:Text):Text = \"xyz\"; Average(x:Number):Number = 11111;");
+            var parserOptions = new ParserOptions { AllowsSideEffects = true, NumberIsFloat = true };
+            engine.AddUserDefinedFunction("Concat(x:Text):Text = \"xyz\"; Average(x:Number):Number = 11111;", parserOptions: parserOptions);
 
-            var check = engine.Check("Concat(\"abc\")");
+            var check = engine.Check("Concat(\"abc\")", parserOptions);
             Assert.True(check.IsSuccess);
             Assert.Equal(FormulaType.String, check.ReturnType);
 
             var result = check.GetEvaluator().Eval();
             Assert.Equal("xyz", ((StringValue)result).Value);
 
-            check = engine.Check("Average(123)");
+            check = engine.Check("Average(123)", parserOptions);
             Assert.True(check.IsSuccess);
             Assert.Equal(FormulaType.Number, check.ReturnType);
 
             result = check.GetEvaluator().Eval();
             Assert.Equal(11111, result.AsDouble());
 
-            engine.AddUserDefinitions("Test := Type({A: Number}); TestTable := Type([{A: Number}]);" +
-                "Filter(X: TestTable):Test = First(X); ShowColumns(X: TestTable):TestTable = FirstN(X, 3);");
+            engine.AddUserDefinitions(
+                "Test := Type({A: Number}); TestTable := Type([{A: Number}]);" +
+                    "Filter(X: TestTable):Test = First(X); ShowColumns(X: TestTable):TestTable = FirstN(X, 3);",
+                options: parserOptions);
 
-            check = engine.Check("Filter([{A: 123}]).A");
+            check = engine.Check("Filter([{A: 123}]).A", options: parserOptions);
             Assert.True(check.IsSuccess);
             Assert.Equal(FormulaType.Number, check.ReturnType);
 
             result = check.GetEvaluator().Eval();
             Assert.Equal(123, result.AsDouble());
 
-            check = engine.Check("CountRows(ShowColumns([{A: 123}, {A: 124}, {A:125}, {A:126}, {A: 127}]))");
+            check = engine.Check("CountRows(ShowColumns([{A: 123}, {A: 124}, {A:125}, {A:126}, {A: 127}]))", options: parserOptions);
             Assert.True(check.IsSuccess);
-            Assert.Equal(FormulaType.Decimal, check.ReturnType);
+            Assert.Equal(FormulaType.Number, check.ReturnType);
 
             result = check.GetEvaluator().Eval();
             Assert.Equal(3, result.AsDouble());
@@ -677,7 +682,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
             engine.UpdateVariable("a", 1m);
 
-            var result = engine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: allowSideEffects);
+            var result = engine.AddUserDefinedFunction(udfExpression, symbolTable: engine.EngineSymbols, allowSideEffects: allowSideEffects);
             Assert.True(expectedError ? result.Errors.Count() > 0 : result.Errors.Count() == 0);
 
             if (expectedError)
@@ -711,7 +716,7 @@ namespace Microsoft.PowerFx.Tests
             var recalcEngine = new RecalcEngine(config);
             recalcEngine.UpdateVariable("a", 1m);
 
-            var definitionsCheckResult = recalcEngine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
+            var definitionsCheckResult = recalcEngine.AddUserDefinedFunction(udfExpression, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
 
             if (!expectedError)
             { 
@@ -751,7 +756,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
             engine.UpdateVariable("x", 1m);
 
-            var result = engine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: allowSideEffects);
+            var result = engine.AddUserDefinedFunction(udfExpression, symbolTable: engine.EngineSymbols, allowSideEffects: allowSideEffects);
             Assert.True(expectedError ? result.Errors.Count() > 0 : result.Errors.Count() == 0);
 
             if (expectedError)
@@ -793,7 +798,7 @@ namespace Microsoft.PowerFx.Tests
 
             var recalcEngine = new RecalcEngine(config);
 
-            recalcEngine.AddUserDefinedFunction("A():MyDataSourceTableType = Filter(MyDataSource, Value > 10);C():MyDataSourceTableType = A(); B():MyDataSourceTableType = Filter(C(), Value > 11); D():MyDataSourceTableType = { Filter(B(), Value > 12); };", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
+            recalcEngine.AddUserDefinedFunction("A():MyDataSourceTableType = Filter(MyDataSource, Value > 10);C():MyDataSourceTableType = A(); B():MyDataSourceTableType = Filter(C(), Value > 11); D():MyDataSourceTableType = { Filter(B(), Value > 12); };", symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
             var result = recalcEngine.Check("A()");
             Assert.True(result.IsSuccess);
             var callNode = result.Binding.Top.AsCall();
@@ -829,7 +834,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(callInfo.Function.IsServerDelegatable(callNode, result.Binding));
 
             // Binding fails for recursive definitions and hence function is not added.
-            Assert.False(recalcEngine.AddUserDefinedFunction("E():Void = { E(); };", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true).IsSuccess);
+            Assert.False(recalcEngine.AddUserDefinedFunction("E():Void = { E(); };", symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true).IsSuccess);
         }
 
         [Fact]
@@ -860,7 +865,7 @@ namespace Microsoft.PowerFx.Tests
 
             var recalcEngine = new RecalcEngine(config);
 
-            recalcEngine.AddUserDefinedFunction("A():MyDataSourceTableType = Filter(MyDataSource, Value > 10);C():MyDataSourceTableType = A(); CheckCountRowsOfUDF():Number = CountRows(C()); CheckCountRowsOfDS():Number = CountRows(MyDataSource);", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
+            recalcEngine.AddUserDefinedFunction("A():MyDataSourceTableType = Filter(MyDataSource, Value > 10);C():MyDataSourceTableType = A(); CheckCountRowsOfUDF():Number = CountRows(C()); CheckCountRowsOfDS():Number = CountRows(MyDataSource);", symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
             var result = recalcEngine.Check("A()");
             Assert.True(result.IsSuccess);
             var callNode = result.Binding.Top.AsCall();
@@ -922,12 +927,12 @@ namespace Microsoft.PowerFx.Tests
             };
             var engine = new RecalcEngine(config);
 
-            var result = engine.AddUserDefinedFunction("NonDelegatableUDF():MyDataSourceTableType = Filter(MyDataSource, Sqrt(Value) > 5);", CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: true);
+            var result = engine.AddUserDefinedFunction("NonDelegatableUDF():MyDataSourceTableType = Filter(MyDataSource, Sqrt(Value) > 5);", symbolTable: engine.EngineSymbols, allowSideEffects: true);
             Assert.True(result.IsSuccess);
             var func = engine.Functions.WithName("NonDelegatableUDF").First() as UserDefinedFunction;
             Assert.True(func.HasDelegationWarning);
 
-            result = engine.AddUserDefinedFunction("NonDelegatableUDF2():MyDataSourceTableType = NonDelegatableUDF();", CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: true);
+            result = engine.AddUserDefinedFunction("NonDelegatableUDF2():MyDataSourceTableType = NonDelegatableUDF();", symbolTable: engine.EngineSymbols, allowSideEffects: true);
             Assert.True(result.IsSuccess);
             func = engine.Functions.WithName("NonDelegatableUDF2").First() as UserDefinedFunction;
             Assert.True(func.HasDelegationWarning);
@@ -2088,9 +2093,10 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig();
             var recalcEngine = new RecalcEngine(config);
-            var parserOptions = new ParserOptions()
+            var parserOptions = new ParserOptions() 
             {
                 AllowsSideEffects = false,
+                NumberIsFloat = true
             };
 
             var entityType = new Interpreter.Tests.DatabaseSimulationTests.TestEntityType(new Tests.BindingEngineTests.LazyRecursiveRecordType().ToTable()._type);
@@ -2100,7 +2106,8 @@ namespace Microsoft.PowerFx.Tests
 
             if (isValidDefinition)
             {
-                recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture);
+                var options = new ParserOptions { AllowsSideEffects = true, NumberIsFloat = true };
+                recalcEngine.AddUserDefinitions(userDefinitions, options: options);
 
                 if (isValidEval)
                 {
@@ -2121,7 +2128,8 @@ namespace Microsoft.PowerFx.Tests
             {
                 Assert.Throws<InvalidOperationException>(() =>
                 {
-                    recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture);
+                    var options = new ParserOptions { AllowsSideEffects = true, NumberIsFloat = true };
+                    recalcEngine.AddUserDefinitions(userDefinitions, options);
                 });
             }
         }
@@ -2153,6 +2161,7 @@ namespace Microsoft.PowerFx.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = true,
+                NumberIsFloat = true
             };
 
             var extraSymbols = new SymbolTable();
@@ -2160,12 +2169,12 @@ namespace Microsoft.PowerFx.Tests
 
             if (isValid)
             {
-                recalcEngine.AddUserDefinedFunction(udf, CultureInfo.InvariantCulture, extraSymbols, true);
+                recalcEngine.AddUserDefinedFunction(udf, parserOptions: parserOptions, symbolTable: extraSymbols, allowSideEffects: true);
                 Assert.Equal(expectedResult, recalcEngine.Eval(evalExpression, options: parserOptions).ToObject());
             }
             else
             {
-                Assert.False(recalcEngine.AddUserDefinedFunction(udf, CultureInfo.InvariantCulture, extraSymbols, true).IsSuccess);
+                Assert.False(recalcEngine.AddUserDefinedFunction(udf, parserOptions: parserOptions, symbolTable: extraSymbols, allowSideEffects: true).IsSuccess);
             }
         }
 
@@ -2275,19 +2284,21 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig();
             var recalcEngine = new RecalcEngine(config);
-            var parserOptions = new ParserOptions();
+            var parserOptions = new ParserOptions() { NumberIsFloat = true };
 
             recalcEngine.Config.SymbolTable.AddType(new DName("Accounts"), FormulaType.Build(TestUtils.DT("*[id: n, name:s, address:s]")));
             recalcEngine.Config.SymbolTable.AddType(new DName("SomeRecord"), FormulaType.Build(TestUtils.DT("![id: n, name:s]")));
 
             if (isValid)
             {
-                recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture);
+                recalcEngine.AddUserDefinitions(userDefinitions, options: parserOptions);
+                var r = recalcEngine.Eval(evalExpression, options: parserOptions).ToObject();
                 Assert.Equal(expectedResult, recalcEngine.Eval(evalExpression, options: parserOptions).ToObject());
             }
             else
             {
-                Assert.Throws<InvalidOperationException>(() => recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture));
+                var options = new ParserOptions { AllowsSideEffects = true, NumberIsFloat = true };
+                Assert.Throws<InvalidOperationException>(() => recalcEngine.AddUserDefinitions(userDefinitions, options: options));
             }
         }
 
@@ -2304,8 +2315,8 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig();
             var recalcEngine = new RecalcEngine(config);
-            var parserOptions = new ParserOptions();
-            recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture);
+            var parserOptions = new ParserOptions() { NumberIsFloat = true };
+            recalcEngine.AddUserDefinitions(userDefinitions, parserOptions);
             var ex = Assert.Throws<AggregateException>(() =>
             {
                 recalcEngine.Eval(evalExpression, options: parserOptions);

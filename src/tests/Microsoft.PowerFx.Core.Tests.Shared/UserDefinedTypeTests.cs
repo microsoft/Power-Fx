@@ -43,8 +43,9 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("A := Type({})", "", false)]
         public void TestUserDefinedType(string typeDefinition, string expectedDefinedTypeString, bool isValid)
         {
+            var parserOptions = new ParserOptions() { NumberIsFloat = true };
             var checkResult = new DefinitionsCheckResult()
-                                            .SetText(typeDefinition)
+                                            .SetText(typeDefinition, parserOptions)
                                             .SetBindingInfo(_primitiveTypes);
             checkResult.ApplyResolveTypes();
 

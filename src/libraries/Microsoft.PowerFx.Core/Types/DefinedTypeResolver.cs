@@ -23,6 +23,7 @@ namespace Microsoft.PowerFx.Core.Types
     {
         private readonly Dictionary<string, DefinedType> _typesDict;
         private readonly ReadOnlySymbolTable _globalSymbols;
+        private readonly bool _numberIsFloat;
 
         private readonly IEnumerable<string> _nodes;
         private readonly List<TopologicalSortEdge<string>> _edges;
@@ -32,7 +33,7 @@ namespace Microsoft.PowerFx.Core.Types
         // TODO: Add more future type names
         private static readonly ISet<string> _restrictedTypeNames = new HashSet<string> { "Record", "Table", "Currency" };
 
-        private DefinedTypeResolver(IEnumerable<DefinedType> definedTypes, ReadOnlySymbolTable globalSymbols)
+        private DefinedTypeResolver(IEnumerable<DefinedType> definedTypes, ReadOnlySymbolTable globalSymbols, bool numberIsFloat)
         {
             Contracts.AssertValue(globalSymbols);
             Contracts.AssertValue(definedTypes);
@@ -41,6 +42,7 @@ namespace Microsoft.PowerFx.Core.Types
             _errors = new List<TexlError>();
             _typesDict = new Dictionary<string, DefinedType>();
             _globalSymbols = globalSymbols;
+            _numberIsFloat = numberIsFloat;
 
             foreach (var dt in definedTypes)
             {
@@ -77,7 +79,7 @@ namespace Microsoft.PowerFx.Core.Types
         {
             Contracts.AssertValue(dt);
 
-            var typeName = dt.Ident.Name;
+            var typeName = DType.MapNumber(dt.Ident.Name, _numberIsFloat);
 
             if (_restrictedTypeNames.Contains(typeName))
             {
@@ -108,7 +110,8 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 PopType(typeName, out var currentType);
 
-                var resolvedType = DTypeVisitor.Run(currentType.Type.TypeRoot, composedSymbols);
+                var visitor = new DTypeVisitor(_numberIsFloat);
+                var resolvedType = visitor.Run(currentType.Type.TypeRoot, composedSymbols);
 
                 if (resolvedType == DType.Invalid)
                 {
@@ -153,13 +156,13 @@ namespace Microsoft.PowerFx.Core.Types
         }
 
         // Resolve a given set of DefinedType ASTs to FormulaType.
-        public static IReadOnlyDictionary<DName, FormulaType> ResolveTypes(IEnumerable<DefinedType> definedTypes, ReadOnlySymbolTable typeNameResolver, out List<TexlError> errors)
+        public static IReadOnlyDictionary<DName, FormulaType> ResolveTypes(IEnumerable<DefinedType> definedTypes, ReadOnlySymbolTable typeNameResolver, bool numberIsFloat, out List<TexlError> errors)
         {
             Contracts.AssertValue(typeNameResolver);
             Contracts.AssertValue(definedTypes);
             Contracts.AssertAllValues(definedTypes);
 
-            var typeGraph = new DefinedTypeResolver(definedTypes, typeNameResolver);
+            var typeGraph = new DefinedTypeResolver(definedTypes, typeNameResolver, numberIsFloat);
             var resolvedTypes = typeGraph.ResolveTypes();
             errors = typeGraph._errors;
             return resolvedTypes;

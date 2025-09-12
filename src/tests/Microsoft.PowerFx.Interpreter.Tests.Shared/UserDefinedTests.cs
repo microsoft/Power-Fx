@@ -30,8 +30,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void NamedFormulaEntryTest(string script, string expression, double expected)
         {
             var engine = new RecalcEngine();
+            var options = new ParserOptions()
+            {
+                AllowsSideEffects = true,
+                NumberIsFloat = true,
+            };  
 
-            engine.AddUserDefinitions(script);
+            engine.AddUserDefinitions(script, options: options);
 
             var check = engine.Check(expression);
             Assert.True(check.IsSuccess);

@@ -170,7 +170,7 @@ namespace Microsoft.PowerFx.Repl
             var definedTypes = parseResult.DefinedTypes;
             if (definedTypes != null && definedTypes.Any())
             {
-                var resolvedTypes = DefinedTypeResolver.ResolveTypes(definedTypes, incomingSymbols, out var errors4);
+                var resolvedTypes = DefinedTypeResolver.ResolveTypes(definedTypes, incomingSymbols, false, out var errors4);
                 errors.AddRange(ExpressionError.NewFragment(errors4, str, fragmentLocation));
                 if (errors.Any(x => !x.IsWarning))
                 {

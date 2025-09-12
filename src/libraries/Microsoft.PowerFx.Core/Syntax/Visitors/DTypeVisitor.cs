@@ -17,17 +17,20 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
     // Visitor to resolve TypeLiteralNode.TypeRoot into DType.
     internal class DTypeVisitor : DefaultVisitor<DType, INameResolver>
     {
-        private DTypeVisitor() 
+        private readonly bool _numberIsFloat;
+
+        public DTypeVisitor(bool numberIsFloat)
             : base(DType.Invalid)
         {
+            _numberIsFloat = numberIsFloat;
         }
 
-        public static DType Run(TexlNode node, INameResolver context)
+        public DType Run(TexlNode node, INameResolver context)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(context);
 
-            return node.Accept(new DTypeVisitor(), context);
+            return node.Accept(this, context);
         }
 
         public override DType Visit(FirstNameNode node, INameResolver context)
@@ -35,7 +38,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             Contracts.AssertValue(node);
             Contracts.AssertValue(context);
 
-            var name = node.Ident.Name;
+            var name = DType.MapNumber(node.Ident.Name, _numberIsFloat);
             if (context.LookupType(name, out FormulaType ft))
             {
                 return ft._type;

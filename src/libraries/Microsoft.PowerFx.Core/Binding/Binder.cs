@@ -325,7 +325,7 @@ namespace Microsoft.PowerFx.Core.Binding
             HasParentItemReference = false;
 
             ContextScope = ruleScope;
-            BinderNodeMetadataArgTypeVisitor = new BinderNodesMetadataArgTypeVisitor(this, resolver, ruleScope, BindingConfig.UseThisRecordForRuleScope, features);
+            BinderNodeMetadataArgTypeVisitor = new BinderNodesMetadataArgTypeVisitor(this, resolver, ruleScope, BindingConfig.UseThisRecordForRuleScope, features, BindingConfig.NumberIsFloat);
             HasReferenceToAttachment = false;
             NodesToReplace = new List<KeyValuePair<Token, string>>();
             UpdateDisplayNames = updateDisplayNames;
@@ -430,7 +430,7 @@ namespace Microsoft.PowerFx.Core.Binding
             features ??= Features.None;
 
             var txb = new TexlBinding(glue, scopeResolver, queryOptionsMap, node, resolver, bindingConfig, ruleScope, updateDisplayNames, forceUpdateDisplayNames, rule: rule, features: features, delegationHintProvider: delegationHintProvider);
-            var vis = new Visitor(txb, resolver, ruleScope, bindingConfig.UseThisRecordForRuleScope, features);
+            var vis = new Visitor(txb, resolver, ruleScope, bindingConfig.UseThisRecordForRuleScope, features, bindingConfig.NumberIsFloat);
             vis.Run();
 
             // If the expression is dataflow only Ie non-side effecting, void doesn't have any practical use and should be converted to errors.
@@ -1061,8 +1061,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     return dataSourceInfo != null;
 
                 case NodeKind.DottedName:
-                    IExpandInfo info;
-                    if (TryGetEntityInfo(node.AsDottedName(), out info))
+                    if (TryGetEntityInfo(node.AsDottedName(), out IExpandInfo info))
                     {
                         dataSourceInfo = info.ParentDataSource;
                         return dataSourceInfo != null;
@@ -2508,8 +2507,9 @@ namespace Microsoft.PowerFx.Core.Binding
             private Scope _currentScope;
             private int _currentScopeDsNodeId;
             private readonly Features _features;
+            private readonly bool _numberIsFloat;
 
-            public Visitor(TexlBinding txb, INameResolver resolver, DType topScope, bool useThisRecordForRuleScope, Features features)
+            public Visitor(TexlBinding txb, INameResolver resolver, DType topScope, bool useThisRecordForRuleScope, Features features, bool numberIsFloat)
             {
                 Contracts.AssertValue(txb);
                 Contracts.AssertValueOrNull(resolver);
@@ -2517,6 +2517,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb = txb;
                 _nameResolver = resolver;
                 _features = features;
+                _numberIsFloat = numberIsFloat;
 
                 _topScope = new Scope(null, null, topScope ?? DType.Error, useThisRecordForRuleScope ? new[] { ThisRecordDefaultName } : default);
                 _currentScope = _topScope;
@@ -2609,7 +2610,8 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
-                var type = DTypeVisitor.Run(node.TypeRoot, _nameResolver);
+                var visitor = new DTypeVisitor(_numberIsFloat);
+                var type = visitor.Run(node.TypeRoot, _nameResolver);
 
                 if (type.IsValid)
                 {
@@ -5178,7 +5180,8 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (args[1] is FirstNameNode typeName)
                 {
-                    if (_nameResolver.LookupType(typeName.Ident.Name, out var typeArgType))
+                    var name = DType.MapNumber(typeName.Ident.Name, _numberIsFloat);
+                    if (_nameResolver.LookupType(name, out var typeArgType))
                     {
                         _txb.SetType(typeName, typeArgType._type);
                         _txb.SetInfo(typeName, FirstNameInfo.Create(typeName, new NameLookupInfo(BindKind.NamedType, typeArgType._type, DPath.Root, 0)));

@@ -350,8 +350,8 @@ namespace Microsoft.PowerFx.Core.Functions
                     continue;
                 }
 
-                var parametersOk = CheckParameters(udf.Args, errors, nameResolver, out var parameterTypes);
-                var returnTypeOk = CheckReturnType(udf.ReturnType, errors, nameResolver, udf.IsImperative, out var returnType);
+                var parametersOk = CheckParameters(udf.Args, errors, nameResolver, udf.NumberIsFloat, out var parameterTypes);
+                var returnTypeOk = CheckReturnType(udf.ReturnType, errors, nameResolver, udf.IsImperative, udf.NumberIsFloat, out var returnType);
                 if (!parametersOk || !returnTypeOk)
                 {
                     continue;
@@ -401,8 +401,8 @@ namespace Microsoft.PowerFx.Core.Functions
                 errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_TooManyParameters, udfName, MaxParameterCount));
             }
 
-            var parametersOk = CheckParameters(udf.Args, errors, nameResolver, out var parameterTypes);
-            var returnTypeOk = CheckReturnType(udf.ReturnType, errors, nameResolver, udf.IsImperative, out var returnType);
+            var parametersOk = CheckParameters(udf.Args, errors, nameResolver, udf.NumberIsFloat, out var parameterTypes);
+            var returnTypeOk = CheckReturnType(udf.ReturnType, errors, nameResolver, udf.IsImperative, udf.NumberIsFloat, out var returnType);
 
             if (!returnTypeOk)
             {
@@ -421,7 +421,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return func;
         }
 
-        private static bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors, INameResolver nameResolver, out DType[] parameterTypes)
+        private static bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors, INameResolver nameResolver, bool numberIsFloat, out DType[] parameterTypes)
         {
             if (args.Count == 0)
             {
@@ -447,7 +447,9 @@ namespace Microsoft.PowerFx.Core.Functions
 
                     if (arg.TypeIdent != null)
                     {
-                        if (!nameResolver.LookupType(arg.TypeIdent.Name, out var parameterType))
+                        var name = DType.MapNumber(arg.TypeIdent.Name, numberIsFloat: numberIsFloat);
+
+                        if (!nameResolver.LookupType(name, out var parameterType))
                         {
                             errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
                             isParamCheckSuccessful = false;
@@ -474,7 +476,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return isParamCheckSuccessful;
         }
 
-        private static bool CheckReturnType(IdentToken returnTypeToken, List<TexlError> errors, INameResolver nameResolver, bool isImperative, out DType returnType)
+        private static bool CheckReturnType(IdentToken returnTypeToken, List<TexlError> errors, INameResolver nameResolver, bool isImperative, bool numberIsFloat, out DType returnType)
         {
             if (returnTypeToken == null)
             {
@@ -482,7 +484,9 @@ namespace Microsoft.PowerFx.Core.Functions
                 return false;
             }
 
-            if (!nameResolver.LookupType(returnTypeToken.Name, out var returnTypeFormulaType))
+            var name = DType.MapNumber(returnTypeToken.Name, numberIsFloat);
+
+            if (!nameResolver.LookupType(name, out var returnTypeFormulaType))
             {
                 errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnTypeToken.Name));
                 returnType = DType.Invalid;
