@@ -88,14 +88,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var args = callNode.Args.Children.VerifyValue();
-
-            // Without lookup reduction delegation, follow the legacy logic to determine if the function call is delegatable
-            // NOTE that with the reduction delegation enabled, the reduction node can only make a LookUp not delegatable if it is used inside another filter
-            if (!binding.Features.IsLookUpReductionDelegationEnabled && args.Count > 2 && binding.IsDelegatable(args[2]))
-            {
-                SuggestDelegationHint(args[2], binding);
-                return false;
-            }
             
             if (args.Count < 2)
             {
@@ -166,9 +158,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var function = binding.GetInfo(node)?.Function;
             var args = node.Args.Children.VerifyValue();          
 
-            // if enabled, only for Lookup functions, verify if the reduction formula is valid for delegation
-            if (binding.Features.IsLookUpReductionDelegationEnabled &&
-                function is LookUpFunction lookup && args.Count > 2 && 
+            // Only for Lookup function calls with a reduction formula, verify it is valid for delegation
+            if (function is LookUpFunction lookup && args.Count > 2 && 
                 !lookup.IsValidDelegatableReductionNode(node, args[2], binding))
             {
                 this.SuggestDelegationHint(args[2], binding);
