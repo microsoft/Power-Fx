@@ -47,18 +47,18 @@ namespace Microsoft.PowerFx
         internal static readonly ReadOnlySymbolTable _recalcPrimitiveTypes =
             SymbolTable.NewDefaultTypes(ImmutableDictionary.CreateRange(new Dictionary<DName, FormulaType>()
                     {
-                        { new DName("Boolean"), FormulaType.Boolean },
-                        { new DName("Color"), FormulaType.Color },
-                        { new DName("Date"), FormulaType.Date },
-                        { new DName("Time"), FormulaType.Time },
-                        { new DName("DateTime"), FormulaType.DateTime },
-                        { new DName("GUID"), FormulaType.Guid },
-                        { new DName("Number"), FormulaType.Number },
-                        { new DName("Decimal"), FormulaType.Decimal },
-                        { new DName("Text"), FormulaType.String },
-                        { new DName("Hyperlink"), FormulaType.Hyperlink },
-                        { new DName("Dynamic"), FormulaType.UntypedObject },
-                        { new DName("Void"), FormulaType.Void },
+                        { FormulaType.Boolean.Name, FormulaType.Boolean },
+                        { FormulaType.Color.Name, FormulaType.Color },
+                        { FormulaType.Date.Name, FormulaType.Date },
+                        { FormulaType.Time.Name, FormulaType.Time },
+                        { FormulaType.DateTime.Name, FormulaType.DateTime },
+                        { FormulaType.Guid.Name, FormulaType.Guid },
+                        { FormulaType.Number.Name, FormulaType.Number },
+                        { FormulaType.Decimal.Name, FormulaType.Decimal },
+                        { FormulaType.String.Name, FormulaType.String }, // Text
+                        { FormulaType.Hyperlink.Name, FormulaType.Hyperlink },
+                        { FormulaType.UntypedObject.Name, FormulaType.UntypedObject }, // Dynamic
+                        { FormulaType.Void.Name, FormulaType.Void },
                     }));
 
         public RecalcEngine(PowerFxConfig powerFxConfig)

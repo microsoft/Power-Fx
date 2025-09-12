@@ -25,6 +25,8 @@ namespace Microsoft.PowerFx.Types
         internal DType _type { get; private protected init; }
 #pragma warning restore SA1300 // Element should begin with upper-case letter
 
+        public virtual DName Name { get; }
+
         public static FormulaType Blank { get; } = new BlankType();
 
         // Well-known types 
@@ -76,20 +78,20 @@ namespace Microsoft.PowerFx.Types
 
         internal static readonly IReadOnlyDictionary<DName, FormulaType> PrimitiveTypes = ImmutableDictionary.CreateRange(new Dictionary<DName, FormulaType>()
         {
-            { new DName("Boolean"), Boolean },
-            { new DName("Color"), Color },
-            { new DName("Date"), Date },
-            { new DName("Time"), Time },
-            { new DName("DateTime"), DateTime },
-            { new DName("DateTimeTZInd"), DateTimeNoTimeZone },
-            { new DName("GUID"), Guid },
-            { new DName("Number"), Number },
-            { new DName("Decimal"), Decimal },
-            { new DName("Text"), String },
-            { new DName("Hyperlink"), Hyperlink },
-            { new DName("None"), Blank },
-            { new DName("Dynamic"), UntypedObject },
-            { new DName("Void"), Void },
+            { Boolean.Name, Boolean },
+            { Color.Name, Color },
+            { Date.Name, Date },
+            { Time.Name, Time },
+            { DateTime.Name, DateTime },
+            { DateTimeNoTimeZone.Name, DateTimeNoTimeZone },
+            { Guid.Name, Guid },
+            { Number.Name, Number },
+            { Decimal.Name, Decimal },
+            { String.Name, String },
+            { Hyperlink.Name, Hyperlink },
+            { Blank.Name, Blank },
+            { UntypedObject.Name, UntypedObject },
+            { Void.Name, Void },
         });
 
         /// <summary>

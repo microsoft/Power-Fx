@@ -3,11 +3,14 @@
 
 using System.Text;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
     public class NumberType : FormulaType
     {
+        public override DName Name => new DName("Number");
+
         internal NumberType()
             : base(DType.Number)
         {
