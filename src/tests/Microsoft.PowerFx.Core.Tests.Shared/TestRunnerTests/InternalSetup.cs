@@ -45,9 +45,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 case "FirstLastNRequiresSecondArguments":
                     this.Features = new Features(this.Features) { FirstLastNRequiresSecondArguments = featureValue };
                     return true;
-                case "IsLookUpReductionDelegationEnabled":
-                    this.Features = new Features(this.Features) { IsLookUpReductionDelegationEnabled = featureValue };
-                    return true;
                 case "IsUserDefinedTypesEnabled":
                     this.Features = new Features(this.Features) { IsUserDefinedTypesEnabled = featureValue };
                     return true;
