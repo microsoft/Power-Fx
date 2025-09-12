@@ -25,10 +25,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             Engine engine,
             CultureInfo cultureInfo,
             ReadOnlySymbolTable symbols = null,
+            bool numberIsFloat = false,
             bool allowSideEffects = false)
             : this(
                   engine,
-                  SymbolTable.GetUDFParserOptions(cultureInfo, allowSideEffects),
+                  SymbolTable.GetUDFParserOptions(cultureInfo, numberIsFloat, allowSideEffects),
                   ReadOnlySymbolTable.Compose(engine.UDFDefaultBindingSymbols, symbols))
         {
         }

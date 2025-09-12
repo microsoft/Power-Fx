@@ -564,16 +564,18 @@ namespace Microsoft.PowerFx
             return ExpressionLocalizationHelper.ConvertExpression(expressionText, ruleScope, GetDefaultBindingConfig(), CreateResolverInternal(symbolTable), CreateBinderGlue(), culture, Config.Features, toDisplay: true);
         }
 
-        public DefinitionsCheckResult AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, bool allowSideEffects = false)
+        public DefinitionsCheckResult AddUserDefinedFunction(string script, ParserOptions parserOptions = null, ReadOnlySymbolTable symbolTable = null, bool allowSideEffects = false)
         {
-            return Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, UDFDefaultBindingSymbols, symbolTable, allowSideEffects);
+            return Config.SymbolTable.AddUserDefinedFunction(script, parserOptions, UDFDefaultBindingSymbols, symbolTable, allowSideEffects);
         }
 
+#if false
         public ReadOnlySymbolTable GetUserDefinedFunctionSymbol(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, bool allowSideEffects = false)
         {
             var resultSymbols = new SymbolTable();
             resultSymbols.AddUserDefinedFunction(script, parseCulture, UDFDefaultBindingSymbols, symbolTable, allowSideEffects);
             return resultSymbols;
         }
+#endif
     }
 }

@@ -37,6 +37,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argIndex == 1;
         }
 
+        // This list needs to be used with the intersection of Engine.PrimitiveTypes. The parser will effectively do this.
+        // Notably this list excludes ObjNull and Void, which make no sense to use in this context.
+        // It also excludes Color, as we have not implemented the coversion of "Red" and other color names.
         internal static readonly ISet<DType> SupportedJSONTypes = new HashSet<DType> { DType.Boolean, DType.Number, DType.Decimal, DType.Date, DType.DateTime, DType.DateTimeNoTimeZone, DType.Time, DType.String, DType.Guid, DType.Hyperlink, DType.UntypedObject };
 
         public UntypedOrJSONConversionFunction(string name, TexlStrings.StringGetter description, DType returnType, int arityMax, params DType[] paramTypes)

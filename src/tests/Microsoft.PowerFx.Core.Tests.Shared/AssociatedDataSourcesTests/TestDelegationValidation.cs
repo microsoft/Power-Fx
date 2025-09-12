@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             var engine = new Engine(config);
             if (!string.IsNullOrWhiteSpace(udfScript))
             {
-                engine.AddUserDefinedFunction(udfScript, CultureInfo.InvariantCulture);
+                engine.AddUserDefinedFunction(udfScript);
             }
 
             var result = engine.Check(expression);

@@ -4081,5 +4081,17 @@ namespace Microsoft.PowerFx.Core.Types
 
             return true;
         }
+
+        internal static DName MapNumber(DName name, bool numberIsFloat)
+        {
+            if (name.Value == "Number")
+            {
+                return numberIsFloat ? new DName("Float") : new DName("Decimal");
+            }
+            else
+            {
+                return name;
+            }
+        }
     }
 }

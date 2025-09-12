@@ -212,12 +212,13 @@ namespace Microsoft.PowerFx
             _variables.Add(name, info); // can't exist
         }
 
-        internal static ParserOptions GetUDFParserOptions(CultureInfo culture, bool allowSideEffects)
+        internal static ParserOptions GetUDFParserOptions(CultureInfo culture, bool numberIsFloat, bool allowSideEffects)
         {
             return new ParserOptions()
             {
                 AllowsSideEffects = allowSideEffects,
                 Culture = culture ?? CultureInfo.InvariantCulture,
+                NumberIsFloat = numberIsFloat
             };
         }
 
@@ -225,14 +226,15 @@ namespace Microsoft.PowerFx
         /// Adds user defined functions in the script.
         /// </summary>
         /// <param name="script">String representation of the user defined function.</param>
-        /// <param name="parseCulture">CultureInfo to parse the script againts. Default is invariant.</param>
+        /// <param name="parserOptions">CultureInfo to parse the script againts. Default is invariant.</param>
         /// <param name="symbolTable">Extra symbols to bind UDF. Commonly coming from Engine.</param>
         /// <param name="extraSymbolTable">Additional symbols to bind UDF.</param>
         /// <param name="allowSideEffects">Allow for curly brace parsing.</param>
-        internal DefinitionsCheckResult AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolTable extraSymbolTable = null, bool allowSideEffects = false)
+        internal DefinitionsCheckResult AddUserDefinedFunction(string script, ParserOptions parserOptions = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolTable extraSymbolTable = null, bool allowSideEffects = false)
         {
             var composedSymbolTable = ReadOnlySymbolTable.Compose(this, symbolTable, extraSymbolTable);
-            var checkResult = GetDefinitionsCheckResult(script, parseCulture, composedSymbolTable, allowSideEffects);
+            var options = parserOptions ?? new ParserOptions(CultureInfo.InvariantCulture);
+            var checkResult = GetDefinitionsCheckResult(script, options, composedSymbolTable, allowSideEffects);
 
             var udfs = checkResult.ApplyCreateUserDefinedFunctions();
 
@@ -246,9 +248,9 @@ namespace Microsoft.PowerFx
             return checkResult;
         }
 
-        internal static DefinitionsCheckResult GetDefinitionsCheckResult(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, bool allowSideEffects = false)
+        internal static DefinitionsCheckResult GetDefinitionsCheckResult(string script, ParserOptions parserOptions, ReadOnlySymbolTable symbolTable = null, bool allowSideEffects = false)
         {
-            var options = GetUDFParserOptions(parseCulture, allowSideEffects);
+            var options = GetUDFParserOptions(parserOptions.Culture, parserOptions.NumberIsFloat, allowSideEffects);
             var checkResult = new DefinitionsCheckResult();
             return checkResult.SetText(script, options)
                 .SetBindingInfo(symbolTable);

@@ -24,7 +24,7 @@
     },
     "Foo": {
       "Type": {
-        "Name": "Number"
+        "Name": "Float"
       }
     }
   }

@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Types
             { new DName("DateTime"), DateTime },
             { new DName("DateTimeTZInd"), DateTimeNoTimeZone },
             { new DName("GUID"), Guid },
-            { new DName("Number"), Number },
+            { new DName("Float"), Number },
             { new DName("Decimal"), Decimal },
             { new DName("Text"), String },
             { new DName("Hyperlink"), Hyperlink },

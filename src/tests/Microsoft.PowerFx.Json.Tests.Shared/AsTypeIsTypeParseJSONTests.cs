@@ -38,7 +38,8 @@ namespace Microsoft.PowerFx.Json.Tests
             var engine = SetupEngine();
 
             // custom-type type alias
-            engine.AddUserDefinitions("T := Type(Number);");
+            var options = new ParserOptions() { NumberIsFloat = true };
+            engine.AddUserDefinitions("T := Type(Number);", options);
 
             // Positive tests
             CheckIsTypeAsTypeParseJSON(engine, "\"42\"", "Number", 42D);
@@ -73,7 +74,8 @@ namespace Microsoft.PowerFx.Json.Tests
         {
             var engine = SetupEngine();
 
-            engine.AddUserDefinitions("T := Type({a: Number});");
+            var options = new ParserOptions() { NumberIsFloat = true };
+            engine.AddUserDefinitions("T := Type({a: Number});", options);
 
             dynamic obj1 = new ExpandoObject();
             obj1.a = 5D;
@@ -104,7 +106,8 @@ namespace Microsoft.PowerFx.Json.Tests
         {
             var engine = SetupEngine();
 
-            engine.AddUserDefinitions("T := Type([{a: Number}]);");
+            var options = new ParserOptions() { NumberIsFloat = true };
+            engine.AddUserDefinitions("T := Type([{a: Number}]);", options);
 
             var t1 = new object[] { 5D };
             var t2 = new object[] { 1m, 2m, 3m, 4m };
@@ -184,13 +187,15 @@ namespace Microsoft.PowerFx.Json.Tests
 
         private void CheckIsTypeAsTypeParseJSON(RecalcEngine engine, string json, string type, object expectedValue, bool isValid = true, ParserOptions options = null)
         {
-            var result = engine.Eval($"AsType(ParseJSON({json}), {type})", options: options);
+            var parserOptions = options ?? new ParserOptions() { NumberIsFloat = true };
+
+            var result = engine.Eval($"AsType(ParseJSON({json}), {type})", options: parserOptions);
             CheckResult(expectedValue, result, isValid);
 
-            result = engine.Eval($"ParseJSON({json}, {type})", options: options);
+            result = engine.Eval($"ParseJSON({json}, {type})", options: parserOptions);
             CheckResult(expectedValue, result, isValid);
 
-            result = engine.Eval($"IsType(ParseJSON({json}), {type})", options: options);
+            result = engine.Eval($"IsType(ParseJSON({json}), {type})", options: parserOptions);
             Assert.Equal(isValid, result.ToObject());
         }
 
