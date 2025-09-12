@@ -27,17 +27,60 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("x=1;y=2;z=x+y;", "Float(Abs(-(x+y+z)))", 6d)]
         [InlineData("x=1;y=2;Foo(x: Number): Number = Abs(x);", "Foo(-(y*y)+x)", 3d)]
         [InlineData("myvar=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Bar(1) + myvar", 2d)]
+        [InlineData("a=2e200;b=2e200;", "a+b", 4e200d)]
         public void NamedFormulaEntryTest(string script, string expression, double expected)
         {
             var engine = new RecalcEngine();
+            var parserOptions = new ParserOptions() { NumberIsFloat = true }; 
 
-            engine.AddUserDefinitions(script);
+            engine.TryAddUserDefinitions(script, out var errors, parserOptions);
+            Assert.True(!errors.Any());
 
             var check = engine.Check(expression);
             Assert.True(check.IsSuccess);
 
             var result = (NumberValue)check.GetEvaluator().Eval();
             Assert.Equal(expected, result.Value);
+        }
+
+        [Theory]
+        [InlineData("x=1;y=2;z=x+y;", "Decimal(Abs(-(x+y+z)))", "6")]
+        [InlineData("x=1;y=2;Foo(x: Number): Number = Abs(x);", "Decimal(Foo(-(y*y)+x))", "3")]
+        [InlineData("myvar=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Decimal(Bar(1) + myvar)", "2")]
+        [InlineData("a=2.0000000000000000000001;b=2.0000000000000000000001;", "a+b", "4.0000000000000000000002")]
+        public void NamedFormulaEntryTestDecimal(string script, string expression, string expected)
+        {
+            var engine = new RecalcEngine();
+            var parserOptions = new ParserOptions() { NumberIsFloat = false };
+
+            engine.TryAddUserDefinitions(script, out var errors, parserOptions);
+            Assert.True(!errors.Any());
+
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess);
+
+            var result = (DecimalValue)check.GetEvaluator().Eval();
+            Assert.True(decimal.TryParse(expected, out var expectedDecimal));
+            Assert.Equal(expectedDecimal, result.Value);
+        }
+
+        [Theory]
+        [InlineData("a=Max(2,1;4,2;-5,4);;b=Average(2,1;4,2;-5,4);;", "a+b", "4.5")]
+        [InlineData("a=2,0000000000000000000001;;b=2,0000000000000000000001;;", "a+b", "4.0000000000000000000002")]
+        public void NamedFormulaEntryTestCulture(string script, string expression, string expected)
+        {
+            var engine = new RecalcEngine();
+            var parserOptions = new ParserOptions() { NumberIsFloat = false, Culture = new CultureInfo("fr-fr") };
+
+            engine.TryAddUserDefinitions(script, out var errors, parserOptions);
+            Assert.True(!errors.Any());
+
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess);
+
+            var result = (DecimalValue)check.GetEvaluator().Eval();
+            Assert.True(decimal.TryParse(expected, out var expectedDecimal));
+            Assert.Equal(expectedDecimal, result.Value);
         }
 
         [Theory]

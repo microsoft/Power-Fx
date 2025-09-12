@@ -1,0 +1,18 @@
+
+>> Reverse(x: Text): Text = Concat(ForAll(Sequence(Len(x), Len(x), -1), Mid(x, Value, 1)), Value);
+#no value
+
+>> Reverse("Hello, World")
+"dlroW ,olleH"
+
+>> T := Type({a:Text, b:Number});
+#no value
+
+>> Set(offset, 10)
+10
+
+>> F(x:T):Text = x.a & ": " & (x.b+offset);
+#no value
+
+>> F({a:"Start at", b:1})
+"Start at: 11"

@@ -244,7 +244,10 @@ namespace Microsoft.PowerFx
         /// <param name="parserOptions">Parser options, including locale to interpret the formula.</param>
         public void SetFormula(string name, FormulaWithParameters expr, Action<string, FormulaValue> onUpdate, ParserOptions parserOptions = null)
         {
-            var check = Check(expr._expression, expr._schema, parserOptions);
+            // remove AllowSideEffects, TextFirst, AllowAttributes, etc.
+            var scrubbedParserOptions = ParserOptions.ScrubForSetFormula(parserOptions);
+
+            var check = Check(expr._expression, expr._schema, scrubbedParserOptions);
             check.ThrowOnErrors();
             var binding = check.Binding;
 
