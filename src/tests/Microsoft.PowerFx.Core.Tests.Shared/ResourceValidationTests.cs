@@ -52,6 +52,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal("This is sample message #2 long version", er.GetSingleValue(ErrorResource.LongMessageTag));
             Assert.Equal("This is sample message #2 how to fix", er.GetSingleValue(ErrorResource.HowToFixTag));
             Assert.Equal("This is sample message #2 link", er.HelpLinks[0].DisplayText);
+            Assert.Equal("https://go.microsoft.com/fwlink/?linkid=99999999", er.HelpLinks[0].Url);
 
             // This is the correct way to get this resource here as it's really an ErrorResourceKey
             ErrorResource er2 = StringResources.GetErrorResource(TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn);

@@ -73,11 +73,6 @@ namespace Microsoft.PowerFx
         internal bool JsonFunctionAcceptsLazyTypes { get; init; }
 
         /// <summary>
-        /// Enables more robust lookup reduction delegation.
-        /// </summary>
-        internal bool IsLookUpReductionDelegationEnabled { get; init; }
-
-        /// <summary>
         /// Enables User-defined types functionality.
         /// </summary>
         internal bool IsUserDefinedTypesEnabled { get; init; } = false;
@@ -123,7 +118,6 @@ namespace Microsoft.PowerFx
             IsUserDefinedTypesEnabled = other.IsUserDefinedTypesEnabled;
             AsTypeLegacyCheck = other.AsTypeLegacyCheck;
             JsonFunctionAcceptsLazyTypes = other.JsonFunctionAcceptsLazyTypes;
-            IsLookUpReductionDelegationEnabled = other.IsLookUpReductionDelegationEnabled;
         }
     }
 }

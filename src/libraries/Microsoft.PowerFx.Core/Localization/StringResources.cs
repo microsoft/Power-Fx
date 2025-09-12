@@ -332,7 +332,7 @@ namespace Microsoft.PowerFx.Core.Localization
                                 members.Add(ErrorResource.LinkTagUrlTag, linkKeys);
                             }
 
-                            linkKeys.Add(i, member);
+                            linkKeys.Add(i, link);
                         }
                     }
                 }
