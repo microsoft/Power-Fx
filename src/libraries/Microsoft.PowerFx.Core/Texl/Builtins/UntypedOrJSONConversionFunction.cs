@@ -37,6 +37,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argIndex == 1;
         }
 
+        // This list is intersected with Engine.PrimitiveTypes, which the parser will only let through.
+        // In other words, just because a type is listed here, does not mean it is supported unless it is also in Engine.PrimitiveTypes.
+        // Notably this list excludes ObjNull and Void, which make no sense to use in this context.
+        // It also excludes Color, as we have not implemented the coversion of "Red" and other color names.
+        internal static readonly ISet<DType> SupportedJSONTypes = new HashSet<DType> { DType.Boolean, DType.Number, DType.Decimal, DType.Date, DType.DateTime, DType.DateTimeNoTimeZone, DType.Time, DType.String, DType.Guid, DType.Hyperlink, DType.UntypedObject };
+
         internal static readonly ISet<DType> UnSupportedJSONTypes = new HashSet<DType> { DType.Color, DType.ObjNull, DType.Void };
 
         public UntypedOrJSONConversionFunction(string name, TexlStrings.StringGetter description, DType returnType, int arityMax, params DType[] paramTypes)
@@ -74,7 +80,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             base.CheckSemantics(binding, args, argTypes, errors);
 
             // check if the given type argument is not supported
-            if (!DType.IsSupportedType(argTypes[1], UnSupportedJSONTypes, out var unsupportedType))
+            if (!DType.IsSupportedType(argTypes[1], SupportedJSONTypes, out var unsupportedType))
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrUnsupportedTypeInTypeArgument, unsupportedType.GetKindString());
             }

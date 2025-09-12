@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Builtin Types supported by this engine for UDFs and UDTs. 
         /// </summary>
-        public ReadOnlySymbolTable PrimitiveTypes { get; init; }
+        public ReadOnlySymbolTable PrimitiveTypes { get; protected internal set; }
 
         // By default, we pull the core functions. 
         // These can be overridden. 

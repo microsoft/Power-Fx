@@ -4048,7 +4048,7 @@ namespace Microsoft.PowerFx.Core.Types
             return !fError;
         }
 
-        internal static bool IsSupportedType(DType type, ISet<DType> exclusionTypes, out DType unsupportedType)
+        internal static bool IsSupportedType(DType type, ISet<DType> supportedTypes, out DType unsupportedType)
         {
             unsupportedType = null;
 
@@ -4063,7 +4063,7 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 foreach (var ctype in type.TypeTree)
                 {
-                    if (!IsSupportedType(ctype.Value, exclusionTypes, out unsupportedType))
+                    if (!IsSupportedType(ctype.Value, supportedTypes, out unsupportedType))
                     {
                         return false;
                     }
@@ -4073,7 +4073,7 @@ namespace Microsoft.PowerFx.Core.Types
                 return true;
             }
 
-            if (exclusionTypes.Contains(type))
+            if (!supportedTypes.Contains(type))
             {
                 unsupportedType = type;
                 return false;
