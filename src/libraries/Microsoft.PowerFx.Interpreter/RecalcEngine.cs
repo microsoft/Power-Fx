@@ -407,7 +407,7 @@ namespace Microsoft.PowerFx
                 Culture = parseCulture ?? CultureInfo.InvariantCulture
             };
 
-            if (TryAddUserDefinitions(script, out var errors, parserOptions, onUpdate))
+            if (TryAddUserDefinitions(script, out var errors, parserOptions, onUpdate: onUpdate))
             {
                 if (errors.Any(error => error.Severity > ErrorSeverity.Warning))
                 {
@@ -437,7 +437,8 @@ namespace Microsoft.PowerFx
         /// <param name="errors">Errors if it is likely that the script contained user definitions.</param>/// 
         /// <param name="parserOptions">Parser options, especially culture, number-is-float, and side-effects.</param>
         /// <param name="onUpdate">Function to be called when update is triggered.</param>
-        public bool TryAddUserDefinitions(string script, out IEnumerable<ExpressionError> errors, ParserOptions parserOptions, Action<string, FormulaValue> onUpdate = null)
+        /// <param name="extraFunctions">Additional functions to be added to symbol table.</param>
+        public bool TryAddUserDefinitions(string script, out IEnumerable<ExpressionError> errors, ParserOptions parserOptions, ReadOnlySymbolTable extraFunctions = null, Action<string, FormulaValue> onUpdate = null)
         {
             var checkResult = new DefinitionsCheckResult(this.Config.Features)
                                     .SetText(script, parserOptions);
@@ -453,7 +454,7 @@ namespace Microsoft.PowerFx
             if (checkResult.IsSuccess)
             {
                 // Compose will handle null symbols
-                var composedSymbols = SymbolTable.Compose(Config.ComposedConfigSymbols, SupportedFunctions, PrimitiveTypes, _symbolTable);
+                var composedSymbols = SymbolTable.Compose(Config.ComposedConfigSymbols, SupportedFunctions, PrimitiveTypes, _symbolTable, extraFunctions);
 
                 checkResult
                     .SetBindingInfo(composedSymbols)

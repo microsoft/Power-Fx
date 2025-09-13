@@ -470,7 +470,7 @@ namespace Microsoft.PowerFx
             var errors = check.ApplyErrors();
             if (!check.IsSuccess)
             {
-                if (this.Engine.TryAddUserDefinitions(expression, out var userDefinitionsErrors, this.ParserOptions, OnFormulaUpdate))
+                if (this.Engine.TryAddUserDefinitions(expression, out var userDefinitionsErrors, this.ParserOptions, MetaFunctions, OnFormulaUpdate))
                 {
                     if (userDefinitionsErrors.Any())
                     {
