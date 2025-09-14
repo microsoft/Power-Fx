@@ -712,7 +712,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var errorsV1 = checkResultV1.ApplyErrors();
             Assert.True(errorsV1.Any());
 
-            // test inverse, that an error occurs with the opposite features setting
+            // test inverse, that there is no error if no features used, that in fact the features setting is having an impact
             var checkResultNone = new DefinitionsCheckResult(Features.None)
                                             .SetText(expression)
                                             .SetBindingInfo(_primitiveTypes);
