@@ -55,12 +55,24 @@ namespace Microsoft.PowerFx.Core.Parser
         /// Parses a formulas script and returns the result. (Obsolete: Use unified UDF parser.)
         /// </summary>
         /// <param name="script">The formulas script to parse.</param>
+        /// <param name="loc">The culture info to use for parsing. Optional.</param> 
+        /// <returns>The result of parsing the formulas script.</returns>
+        [Obsolete("Use unified UDF parser")]
+        public static ParseFormulasResult ParseFormulasScript(string script, CultureInfo loc = null)
+        {
+            return TexlParser.ParseFormulasScript(script, loc);
+        }
+
+        /// <summary>
+        /// Parses a formulas script and returns the result. (Obsolete: Use unified UDF parser.)
+        /// </summary>
+        /// <param name="script">The formulas script to parse.</param>
         /// <param name="parserOptions">Parser options, including culture, to use for parsing.</param>
         /// <returns>The result of parsing the formulas script.</returns>
         [Obsolete("Use unified UDF parser")]
         public static ParseFormulasResult ParseFormulasScript(string script, ParserOptions parserOptions)
         {
-            return TexlParser.ParseFormulasScript(script, parserOptions); 
+            return TexlParser.ParseFormulasScript(script, parserOptions);
         }
     }
 
