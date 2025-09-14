@@ -811,7 +811,6 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData(" ")]
 
         // without colon-equal
-        [InlineData(" ")]
         [InlineData("AFormula = 10;")]
         [InlineData("A_Formula = 10;")]
         [InlineData("'A Formula  ' = 10;")]
@@ -847,6 +846,21 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TestFormulasParse_ColonEqual(string script)
         {
             TestFormulasParseRoundtrip(script, false);
+        }
+
+        [Theory]
+
+        // without colon-equal
+        [InlineData("AFormula = 10;")]
+        [InlineData("A_Formula = 10;")]
+        [InlineData("'A Formula  ' = 10;")]
+        [InlineData("'Formul@  ^%' = 10;")]
+        [InlineData("   a    =  10    ;  ")]
+        [InlineData("a = b = 10;")]
+        [InlineData("a = 10; c = 20;")]
+        public void TestFormulasParse_ColonEqual_Negative(string script)
+        {
+            TestFormulasParseError(script, false);
         }
 
         [Theory]

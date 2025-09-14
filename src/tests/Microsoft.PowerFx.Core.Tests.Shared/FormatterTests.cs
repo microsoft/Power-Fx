@@ -306,16 +306,11 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("T := Type/*com*/( /*com*/ Number /*com*/) /*com*/;", "T := Type/*com*/( /*com*/Number /*com*/)/*com*/;")]
         [InlineData("T := Type(/*RecordOf*/ RecordOf(Accounts));", "T := Type(/*RecordOf*/RecordOf(Accounts));")]
 
-        // with colon
+        // with colon (named formulas only)
         [InlineData("x:= /* test */ 1;", "x := /* test */1;")]
         [InlineData("y :=3 /* test */;", "y := 3/* test */;")]
-        [InlineData("F(ax: Number /* testttt */ , ab: Number): Number = ax* ab+y   + 2 + x;", "F(ax: Number /* testttt */ , ab: Number): Number = ax * ab + y + 2 + x;")]
-        [InlineData("X():Void = { /* test */ Notify(\"SADF\"); /* asfddsf */ Notify(\"ASDFSFD\"); /* hi */ };", "X():Void = \n{\n\t/* test */Notify(\"SADF\");\n    /* asfddsf */Notify(\"ASDFSFD\");\n    /* hi */\n};")]
         [InlineData("x:= /* test */ 1; y :=3 /* test */; F(ax: Number /* testttt */ , ab: Number): Number = ax* ab+y   + 2 + x;X():Void = { /* test */ Notify(\"SADF\"); /* asfddsf */ Notify(\"ASDFSFD\"); /* hi */ };", "x := /* test */1;\ny := 3/* test */;\nF(ax: Number /* testttt */ , ab: Number): Number = ax * ab + y + 2 + x;\nX():Void = \n{\n\t/* test */Notify(\"SADF\");\n    /* asfddsf */Notify(\"ASDFSFD\");\n    /* hi */\n};")]
-        [InlineData("T := Type(Number);", "T := Type(Number);")]
         [InlineData("N := 5; /*Type Dec*/ T := Type([{name: Text, age: Number}]);", "N := 5;\n/*Type Dec*/ T := Type([\n    {\n        name: Text,\n        age: Number\n    }\n]);")]
-        [InlineData("T := Type/*com*/( /*com*/ Number /*com*/) /*com*/;", "T := Type/*com*/( /*com*/Number /*com*/)/*com*/;")]
-        [InlineData("T := Type(/*RecordOf*/ RecordOf(Accounts));", "T := Type(/*RecordOf*/RecordOf(Accounts));")]
 
         // mixed := and =
         [InlineData("x:=5;y=3;z:=8;a=9;T:=Type(Number);", "x := 5;\ny = 3;\nz := 8;\na = 9;\nT := Type(Number);")] 
