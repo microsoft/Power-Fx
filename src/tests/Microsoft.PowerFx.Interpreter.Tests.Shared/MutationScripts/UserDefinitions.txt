@@ -30,11 +30,11 @@
 >> PlaceholderNFT2 := Type(Boolean); NF2 = 20 * offset;
 #no value
 
->> NF1 * NF2
+>> NF1 * NF2 // offset = 10
 20000
 
 >> Set(offset, 5)
-#no value
+5
 
->> NF1 * NF2
-10000
+>> NF1 * NF2 // offset = 5
+5000
