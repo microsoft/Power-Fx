@@ -1,9 +1,13 @@
 
+// UDF
+
 >> Reverse(x: Text): Text = Concat(ForAll(Sequence(Len(x), Len(x), -1), Mid(x, Value, 1)), Value);
 #no value
 
 >> Reverse("Hello, World")
 "dlroW ,olleH"
+
+// UDT
 
 >> T := Type({a:Text, b:Number});
 #no value
@@ -16,3 +20,21 @@
 
 >> F({a:"Start at", b:1})
 "Start at: 11"
+
+// Named formula
+// Prefixed "placeholder" type definition is needed until we have := named formula support https://github.com/microsoft/Power-Fx/pull/2966, otherwise it would be interpreted as a comparison
+
+>> PlaceholderNFT1 := Type(Boolean); NF1 = 10 * offset;
+#no value
+
+>> PlaceholderNFT2 := Type(Boolean); NF2 = 20 * offset;
+#no value
+
+>> NF1 * NF2
+20000
+
+>> Set(offset, 5)
+#no value
+
+>> NF1 * NF2
+10000

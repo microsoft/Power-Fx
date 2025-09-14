@@ -2067,7 +2067,7 @@ namespace Microsoft.PowerFx.Tests
             true,
             false)]
 
-        // TODO: Name shouldn't be quoted, but is neede until Features is properly plumbed thrrough with https://github.com/microsoft/Power-Fx/pull/2960
+        // TODO: Name shouldn't be quoted, but is needed until Features is properly plumbed thrrough with https://github.com/microsoft/Power-Fx/pull/2960
         [InlineData(
             @"Employee := Type({Name: Text, Age: Number, Title: Text}); Employees := Type([Employee]);  EmployeeNames := Type([{Name: Text}]); 
               getNames(e: Employees):EmployeeNames = ShowColumns(e, ""Name""); 

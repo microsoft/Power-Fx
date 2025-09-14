@@ -392,11 +392,13 @@ namespace Microsoft.PowerFx
 
         /// <summary>
         /// Add a set of user-defined formulas and functions to the engine.
-        /// Throws an exception if there is a problem.
+        /// Throws an exception if there is a problem, used for testing.
+        /// Use TryAddUserDefinitions() for more robust error handling.
         /// </summary>
         /// <param name="script">Script containing user defined functions and/or named formulas.</param>
         /// <param name="parseCulture">Locale to parse user defined script.</param>
         /// <param name="onUpdate">Function to be called when update is triggered.</param>
+        /// <exception cref="InvalidOperationException">Thrown if there are errors in the user defined script.</exception>
         public void AddUserDefinitions(string script, CultureInfo parseCulture = null, Action<string, FormulaValue> onUpdate = null)
         {
             var sb = new StringBuilder();
@@ -434,7 +436,7 @@ namespace Microsoft.PowerFx
         /// Returns true if it is likely that the script contains user definitions, even if it has errors.
         /// </summary>
         /// <param name="script">Script containing user defined functions and/or named formulas.</param>
-        /// <param name="errors">Errors if it is likely that the script contained user definitions.</param>/// 
+        /// <param name="errors">Errors if it is likely that the script contained user definitions.</param>
         /// <param name="parserOptions">Parser options, especially culture, number-is-float, and side-effects.</param>
         /// <param name="onUpdate">Function to be called when update is triggered.</param>
         /// <param name="extraFunctions">Additional functions to be added to symbol table.</param>
