@@ -657,6 +657,14 @@ namespace Microsoft.PowerFx.Core.Parser
             return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after, script, culture);
         }
 
+        public static ParseFormulasResult ParseFormulasScript(string script, CultureInfo loc = null, Flags flags = Flags.None)
+        {
+            Contracts.AssertValue(script);
+            Contracts.AssertValueOrNull(loc);
+
+            return ParseFormulasScript(script, new ParserOptions() { Culture = loc }, flags);
+        }
+
         public static ParseFormulasResult ParseFormulasScript(string script, ParserOptions parserOptions, Flags flags = Flags.None)
         {
             Contracts.AssertValue(script);

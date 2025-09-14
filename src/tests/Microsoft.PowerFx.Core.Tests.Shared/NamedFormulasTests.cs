@@ -237,6 +237,8 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+
+        // with colon
         [InlineData("Foo(): Number {// comment \nSum(1, 1); Sum(2, 2); };Bar(): Number {Foo();};x:=1;y:=2;", 0, 0, true)]
         [InlineData("Foo(x: /*comment\ncomment*/Number):/*comment*/Number = /*comment*/Abs(x);", 0, 1, false)]
         [InlineData("x", 0, 0, true)]
@@ -255,6 +257,23 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("x:=1;Foo(x:Number):Number = 10 * x", 1, 0, true)]
         [InlineData("x:=1;Foo(x:Number):Number = 10 * x;", 1, 1, false)]
         [InlineData("x:=1;Foo(:Number):Number = 10 * x;", 1, 0, true)]
+
+        // without colon
+        [InlineData("Foo(): Number {// comment \nSum(1, 1); Sum(2, 2); };Bar(): Number {Foo();};x=1;y=2;", 0, 0, true)]
+        [InlineData("x=", 0, 0, true)]
+        [InlineData("x=1", 0, 0, true)]
+        [InlineData("x=1;", 0, 0, true)]
+        [InlineData("x=1;Foo(", 0, 0, true)]
+        [InlineData("x=1;Foo(x", 0, 0, true)]
+        [InlineData("x=1;Foo(x:", 0, 0, true)]
+        [InlineData("x=1;Foo(x:Number", 0, 0, true)]
+        [InlineData("x=1;Foo(x:Number)", 0, 0, true)]
+        [InlineData("x=1;Foo(x:Number):", 0, 0, true)]
+        [InlineData("x=1;Foo(x:Number):Number", 0, 0, true)]
+        [InlineData("x=1;Foo(x:Number):Number = ", 0, 0, true)]
+        [InlineData("x=1;Foo(x:Number):Number = 10 * x", 0, 0, true)]
+        [InlineData("x=1;Foo(x:Number):Number = 10 * x;", 0, 1, true)]
+        [InlineData("x=1;Foo(:Number):Number = 10 * x;", 0, 0, true)]
         public void NamedFormulaAndUdfTestColonEqual(string script, int namedFormulaCount, int udfCount, bool expectErrors)
         {
             var parserOptions = new ParserOptions()

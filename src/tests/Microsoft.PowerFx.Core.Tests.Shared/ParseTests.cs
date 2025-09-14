@@ -1160,6 +1160,33 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("a = 10; b = in'valid ; c = 20;", 0, 3)]
+        [InlineData("a = 10; b = in(valid ; c = 20;", 0, 3)]
+        [InlineData("a = 10; b = in)valid ; c = 20;", 0, 3)]
+        [InlineData("a = 10; b = in{valid ; c = 20;", 0, 3)]
+        [InlineData("a = 10; b = in}valid ; c = 20;", 0, 3)]
+        [InlineData("x = 1; Foo(x: Number): Number = Abs(x); y = 2;", 1, 2)]
+        [InlineData("Add(x: Number, y:Number): Number = x + y; Foo(x: Number): Number = Abs(x); y = 2;", 2, 1)]
+        [InlineData("Add(x: Number, y:Number): Number = x + y;;; Foo(x: Number): Number = Abs(x); y = 2;", 2, 1)]
+        [InlineData("Add(x: Number, y:Number): Number = (x + y;;; Foo(x: Number): Number = Abs(x); y = 2;", 1, 1)]
+        public void TestUDFNamedFormulaCountsRestart_ColonEqual_Error(string script, int validUDFCount, int invalidNamedFormulaCount)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+            };
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            Assert.Equal(validUDFCount, udfs.Count());
+            Assert.False(parseResult.NamedFormulas.Any());
+            Assert.True(errors.Any());
+            Assert.True(errors.Where(error => error.MessageKey == "ErrNamedFormulaColonEqualRequired").Count() >= invalidNamedFormulaCount);
+        }
+
+        [Theory]
 
         [InlineData("a = 10; b = a + c ; c = 20;", 3, false, new int[] { 0, 8, 20 })]
         [InlineData("a = 10; b = in(valid ; c = 20;", 3, true, new int[] { 0, 8, 23 })]
