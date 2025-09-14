@@ -704,18 +704,23 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("f(x:GUID):Boolean = x+1 And true;")] // PowerFXV1CompatibilityRules doesn't support GUID+1
+        [InlineData("f():Number = ShowColumns({a:1}, \"a\").a;")] // SupportColumnNamesAsIdentifiers
+        [InlineData("f():Number = First([{a:1}]).Value.a;")] // TableSyntaxDoesntWrapRecords
+        [InlineData("f():Number = First(Mod([1,2,3],1)).Result;")] // ConsistentOneColumnTableResult
         public void TestUDFBodyFeaturesSupport(string expression)
         {
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes);
+
             var checkResultV1 = new DefinitionsCheckResult(Features.PowerFxV1)
                                             .SetText(expression)
-                                            .SetBindingInfo(_primitiveTypes);
+                                            .SetBindingInfo(nameResolver);
             var errorsV1 = checkResultV1.ApplyErrors();
             Assert.True(errorsV1.Any());
 
             // test inverse, that there is no error if no features used, that in fact the features setting is having an impact
             var checkResultNone = new DefinitionsCheckResult(Features.None)
                                             .SetText(expression)
-                                            .SetBindingInfo(_primitiveTypes);
+                                            .SetBindingInfo(nameResolver);
             var errorsNone = checkResultNone.ApplyErrors();
             Assert.True(!errorsNone.Any());
         }
