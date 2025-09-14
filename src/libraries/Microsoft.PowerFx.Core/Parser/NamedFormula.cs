@@ -16,7 +16,10 @@ namespace Microsoft.PowerFx.Core.Parser
 
         internal PartialAttribute Attribute { get; }
 
-        public NamedFormula(IdentToken ident, Formula formula, int startingIndex, PartialAttribute attribute = null)
+        // used by the pretty printer to get the proper operator in the output
+        internal bool ColonEqual { get; }
+
+        public NamedFormula(IdentToken ident, Formula formula, int startingIndex, bool colonEqual, PartialAttribute attribute = null)
         {
             Contracts.AssertValue(ident);
             Contracts.AssertValue(formula);
@@ -24,6 +27,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Ident = ident;
             Formula = formula;
             StartingIndex = startingIndex;
+            ColonEqual = colonEqual;
             Attribute = attribute;
         }
     }

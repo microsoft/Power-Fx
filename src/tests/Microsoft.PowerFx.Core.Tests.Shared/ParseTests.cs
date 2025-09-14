@@ -809,6 +809,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData(" ")]
+
+        // without colon-equal
+        [InlineData(" ")]
         [InlineData("AFormula = 10;")]
         [InlineData("A_Formula = 10;")]
         [InlineData("'A Formula  ' = 10;")]
@@ -816,9 +819,34 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("   a    =  10    ;  ")]
         [InlineData("a = b = 10;")]
         [InlineData("a = 10; c = 20;")]
+
+        // with colon-equal
+        [InlineData("AFormula := 10;")]
+        [InlineData("A_Formula := 10;")]
+        [InlineData("'A Formula  ' := 10;")]
+        [InlineData("'Formul@  ^%' := 10;")]
+        [InlineData("   a    :=  10    ;  ")]
+        [InlineData("a := b = 10;")]
+        [InlineData("a := 10; c := 20;")]
         public void TestFormulasParse(string script)
         {
-            TestFormulasParseRoundtrip(script);
+            TestFormulasParseRoundtrip(script, true);
+        }
+
+        [Theory]
+        [InlineData(" ")]
+
+        // with colon-equal
+        [InlineData("AFormula := 10;")]
+        [InlineData("A_Formula := 10;")]
+        [InlineData("'A Formula  ' := 10;")]
+        [InlineData("'Formul@  ^%' := 10;")]
+        [InlineData("   a    :=  10    ;  ")]
+        [InlineData("a := b = 10;")]
+        [InlineData("a := 10; c := 20;")]
+        public void TestFormulasParse_ColonEqual(string script)
+        {
+            TestFormulasParseRoundtrip(script, false);
         }
 
         [Theory]
@@ -838,7 +866,27 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a.b = c")]
         public void TestFormulasParse_Negative(string script)
         {
-            TestFormulasParseError(script);
+            TestFormulasParseError(script, true);
+        }
+
+        [Theory]
+        [InlineData("a := 10")]
+        [InlineData("a := ;")]
+        [InlineData("b:=10;a := ;c:=3;")]
+        [InlineData("/*b:=10*/;a := ;c:=3;")]
+        [InlineData("Formul@ := 10; b := 20;")]
+        [InlineData("a;")]
+        [InlineData(";")]
+        [InlineData("a := 10;;")]
+        [InlineData("a := 10; b")]
+        [InlineData("A := If(true,1;);")]
+        [InlineData("A := If(true,1;2);")]
+        [InlineData("1 + 2);")]
+        [InlineData("1 := 10")]
+        [InlineData("a.b := c")]
+        public void TestFormulasParse_Negative_ColonEqual(string script)
+        {
+            TestFormulasParseError(script, false);
         }
 
         [Theory]
@@ -889,21 +937,23 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(errorMessage == null || result._errors.Any(err => err.ShortMessage == errorMessage));
         }
 
-        internal void TestFormulasParseRoundtrip(string script)
+        internal void TestFormulasParseRoundtrip(string script, bool allowEqualOnly)
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = false,
+                AllowEqualOnlyNamedFormulas = allowEqualOnly,
             };
             var parseResult = UserDefinitions.Parse(script, parserOptions);
             Assert.False(parseResult.HasErrors);
         }
 
-        private ParseUserDefinitionResult TestFormulasParseError(string script)
+        private ParseUserDefinitionResult TestFormulasParseError(string script, bool allowEqualOnly)
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = false,
+                AllowEqualOnlyNamedFormulas = allowEqualOnly,
             };
             var parseResult = UserDefinitions.Parse(script, parserOptions);
             Assert.True(parseResult.HasErrors);
@@ -912,6 +962,35 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("a := 10ads; b := 123; c := 20;", "c")]
+        [InlineData("a := (; b := 123; c := 20;", "c")]
+        [InlineData("a := (; b := 123; c := );", "b")]
+        [InlineData("a := 10; b := 123; c := 10);", "b")]
+        [InlineData("3r(09 := 10; b := 123; c := 10;", "b")]
+        [InlineData("a := 10; b := (123 ; c := 20;", "c")]
+        [InlineData("a := 10; b := in'valid ; c := 20;", "c")]
+        [InlineData("a := 10; b := in(valid ; c := 20;", "c")]
+        [InlineData("a := 10; b := in)valid ; c := 20;", "c")]
+        [InlineData("a := 10; b := in{valid ; c := 20;", "c")]
+        [InlineData("a := 10; b := in}valid ; c := 20;", "c")]
+        [InlineData("a := 10; b := in'valid", "a")]
+        [InlineData("a := 10; b := 3213d 123123asdf", "a")]
+        [InlineData("a := 10; b := 3213d 123123asdf; c := 23;", "c")]
+        [InlineData("a := 10; b := 3213d 123123asdf;; c := 23;", "c")]
+        [InlineData("a := 10; b := 321;3;d ;;;123123asdf;; c := 23;", "c")]
+        [InlineData("a := 10; b := in'valid ; c := 20; d := also(invalid; e := 44;", "e")]
+        [InlineData("a := 10; b := 30; c := in'valid ; d := (10; e := 42;", "e")]
+        public void TestFormulaParseRestart_ColonEqual(string script, string key)
+        {
+            var parseResult = TestFormulasParseError(script, false);
+
+            // Parser restarted, and found 'c' correctly
+            Assert.Contains(parseResult.NamedFormulas, kvp => kvp.Ident.Name.ToString() == key);
+        }
+
+        [Theory]
+
+        // no colon
         [InlineData("a = 10ads; b = 123; c = 20;", "c")]
         [InlineData("a = (; b = 123; c = 20;", "c")]
         [InlineData("a = (; b = 123; c = );", "b")]
@@ -930,9 +1009,49 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a = 10; b = 321;3;d ;;;123123asdf;; c = 23;", "c")]
         [InlineData("a = 10; b = in'valid ; c = 20; d = also(invalid; e = 44;", "e")]
         [InlineData("a = 10; b = 30; c = in'valid ; d = (10; e = 42;", "e")]
+
+        // just colon-equal
+        [InlineData("a := 10ads; b := 123; c := 20;", "c")]
+        [InlineData("a := (; b := 123; c := 20;", "c")]
+        [InlineData("a := (; b := 123; c := );", "b")]
+        [InlineData("a := 10; b := 123; c := 10);", "b")]
+        [InlineData("3r(09 := 10; b := 123; c := 10;", "b")]
+        [InlineData("a := 10; b := (123 ; c := 20;", "c")]
+        [InlineData("a := 10; b := in'valid ; c := 20;", "c")]
+        [InlineData("a := 10; b := in(valid ; c := 20;", "c")]
+        [InlineData("a := 10; b := in)valid ; c := 20;", "c")]
+        [InlineData("a := 10; b := in{valid ; c := 20;", "c")]
+        [InlineData("a := 10; b := in}valid ; c := 20;", "c")]
+        [InlineData("a := 10; b := in'valid", "a")]
+        [InlineData("a := 10; b := 3213d 123123asdf", "a")]
+        [InlineData("a := 10; b := 3213d 123123asdf; c := 23;", "c")]
+        [InlineData("a := 10; b := 3213d 123123asdf;; c := 23;", "c")]
+        [InlineData("a := 10; b := 321;3;d ;;;123123asdf;; c := 23;", "c")]
+        [InlineData("a := 10; b := in'valid ; c := 20; d := also(invalid; e := 44;", "e")]
+        [InlineData("a := 10; b := 30; c := in'valid ; d := (10; e := 42;", "e")]
+
+        // mixed equal and colon-equal
+        [InlineData("a := 10ads; b = 123; c := 20;", "c")]
+        [InlineData("a := (; b := 123; c = 20;", "c")]
+        [InlineData("a = (; b := 123; c := );", "b")]
+        [InlineData("a := 10; b = 123; c := 10);", "b")]
+        [InlineData("3r(09 = 10; b := 123; c = 10;", "b")]
+        [InlineData("a := 10; b = (123 ; c := 20;", "c")]
+        [InlineData("a = 10; b := in'valid ; c = 20;", "c")]
+        [InlineData("a := 10; b = in(valid ; c := 20;", "c")]
+        [InlineData("a = 10; b := in)valid ; c = 20;", "c")]
+        [InlineData("a := 10; b = in{valid ; c := 20;", "c")]
+        [InlineData("a = 10; b = in}valid ; c := 20;", "c")]
+        [InlineData("a := 10; b = in'valid", "a")]
+        [InlineData("a = 10; b := 3213d 123123asdf", "a")]
+        [InlineData("a := 10; b = 3213d 123123asdf; c := 23;", "c")]
+        [InlineData("a := 10; b := 3213d 123123asdf;; c = 23;", "c")]
+        [InlineData("a := 10; b = 321;3;d ;;;123123asdf;; c := 23;", "c")]
+        [InlineData("a = 10; b := in'valid ; c := 20; d := also(invalid; e := 44;", "e")]
+        [InlineData("a := 10; b := 30; c = in'valid ; d = (10; e := 42;", "e")]
         public void TestFormulaParseRestart(string script, string key)
         {
-            var parseResult = TestFormulasParseError(script);
+            var parseResult = TestFormulasParseError(script, true);
 
             // Parser restarted, and found 'c' correctly
             Assert.Contains(parseResult.NamedFormulas, kvp => kvp.Ident.Name.ToString() == key);
@@ -943,7 +1062,21 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a = 10;; b = in'valid ;; c = 20;; d = also(invalid;; e = 44;;", "e")]
         public void TestFormulaParseRestart2(string script, string key)
         {
-            var formulasResult = TexlParser.ParseFormulasScript(script, new CultureInfo("fr-FR"));
+            var parserOptions = new ParserOptions(new CultureInfo("fr-FR")) { AllowEqualOnlyNamedFormulas = true };
+            var formulasResult = TexlParser.ParseFormulasScript(script, parserOptions);
+            Assert.True(formulasResult.HasError);
+
+            // Parser restarted, and found 'c' correctly
+            Assert.Contains(formulasResult.NamedFormulas, kvp => kvp.Key.Name.Value == key);
+        }
+
+        [Theory]
+        [InlineData("a := 10;; b := in'valid ;; c := 20", "c")]
+        [InlineData("a := 10;; b := in'valid ;; c := 20;; d := also(invalid;; e := 44;;", "e")]
+        public void TestFormulaParseRestart2_ColonEqual(string script, string key)
+        {
+            var parserOptions = new ParserOptions(new CultureInfo("fr-FR"));
+            var formulasResult = TexlParser.ParseFormulasScript(script, parserOptions);
             Assert.True(formulasResult.HasError);
 
             // Parser restarted, and found 'c' correctly
@@ -967,7 +1100,39 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = false,
+                AllowEqualOnlyNamedFormulas = true,
+            };
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            Assert.Equal(udfCount, parseResult.UDFs.Count());
+            Assert.Equal(validUdfCount, udfs.Count());
+            Assert.Equal(namedFormulaCount, parseResult.NamedFormulas.Count());
+            Assert.Equal(expectErrors, errors.Any());
+        }
+
+        [Theory]
+        [InlineData("a := 10; b := in'valid ; c := 20;", 0, 0, 3, true)]
+        [InlineData("a := 10; b := in(valid ; c := 20;", 0, 0, 3, true)]
+        [InlineData("a := 10; b := in)valid ; c := 20;", 0, 0, 3, true)]
+        [InlineData("a := 10; b := in{valid ; c := 20;", 0, 0, 3, true)]
+        [InlineData("a := 10; b := in}valid ; c := 20;", 0, 0, 3, true)]
+        [InlineData("Foo(x: Number): Number = Abs(x);", 1, 1, 0, false)]
+        [InlineData("x := 1; Foo(x: Number): Number = Abs(x); y := 2;", 1, 1, 2, false)]
+        [InlineData("Add(x: Number, y:Number): Number = x + y; Foo(x: Number): Number = Abs(x); y := 2;", 2, 2, 1, false)]
+        [InlineData("Add(x: Number, y:Number): Number = x + y;;; Foo(x: Number): Number = Abs(x); y := 2;", 2, 2, 1, true)]
+        [InlineData(@"F2(b: Text): Text  = ""Test"";", 1, 1, 0, false)]
+        [InlineData(@"F2(b: Text): Text  = ""Test;", 1, 0, 0, true)]
+        [InlineData("Add(x: Number, y:Number): Number = (x + y;;; Foo(x: Number): Number = Abs(x); y := 2;", 2, 1, 1, true)]
+        public void TestUDFNamedFormulaCountsRestart_ColonEqual(string script, int udfCount, int validUdfCount, int namedFormulaCount, bool expectErrors)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+                AllowEqualOnlyNamedFormulas = true,
             };
 
             var parseResult = UserDefinitions.Parse(script, parserOptions);
@@ -988,7 +1153,33 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = false,
+                AllowEqualOnlyNamedFormulas = true,
+            };
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+
+            var nfs = parseResult.NamedFormulas;
+            Assert.Equal(namedFormulaCount, nfs.Count());
+            Assert.Equal(expectErrors, parseResult.Errors?.Any() ?? false);
+
+            int i = 0;
+            foreach (var nf in nfs)
+            {
+                Assert.Equal(expectedStartingIndex[i], nf.StartingIndex);
+                i++;
+            }
+        }
+
+        [Theory]
+
+        [InlineData("a := 10; b := a + c ; c := 20;", 3, false, new int[] { 0, 9, 22 })]
+        [InlineData("a := 10; b := in(valid ; c := 20;", 3, true, new int[] { 0, 9, 25 })]
+        public void TestNamedFormulaStarIndex_ColonEqual(string script, int namedFormulaCount, bool expectErrors, int[] expectedStartingIndex)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
             };
 
             var parseResult = UserDefinitions.Parse(script, parserOptions);
@@ -1054,6 +1245,18 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("A = Type(Number);", 0)]
         [InlineData("A = \"hello\";B = Type([Boolean]); C = 5;", 2)]
         public void TestTypeLiteralInNamedFormula(string script, int namedFormulaCount)
+        {
+            var parserOptions = new ParserOptions() { AllowEqualOnlyNamedFormulas = true };
+            var parseResult = UserDefinitions.Parse(script, parserOptions, Features.PowerFxV1);
+            Assert.True(parseResult.HasErrors);
+            Assert.Equal(namedFormulaCount, parseResult.NamedFormulas.Count());
+            Assert.Contains(parseResult.Errors, e => e.MessageKey.Contains("ErrUserDefinedTypeIncorrectSyntax"));
+        }
+
+        [Theory]
+        [InlineData("A = Type(Number);", 0)]
+        [InlineData("A := \"hello\";B = Type([Boolean]); C := 5;", 2)]
+        public void TestTypeLiteralInNamedFormula_ColonEquals(string script, int namedFormulaCount)
         {
             var parserOptions = new ParserOptions();
             var parseResult = UserDefinitions.Parse(script, parserOptions, Features.PowerFxV1);

@@ -76,20 +76,54 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("a = 3;", true)]
-        [InlineData("a := 3;", false)]
-        [InlineData("a = \"hello\"; b = \"world\"; c := \"colon is optional\";", true)]
-        [InlineData("a := \"hello\"; b = \"world\"; c := \"colon is optional\";", true)]
-        [InlineData("a := \"hello\"; b := \"world\"; c := \"colon is required\";", false)]
-        public void OptionalColonTests(string script, bool requiresEqualOnly)
+        [InlineData("a = 3;", false)]
+        [InlineData("a := 3;", true)]
+        [InlineData("a = \"hello\"; b = \"world\"; c := \"colon is optional\";", false)]
+        [InlineData("a := \"hello\"; b = \"world\"; c := \"colon is optional\";", false)]
+        [InlineData("a := \"hello\"; b := \"world\"; c := \"colon is required\";", true)]
+        public void OptionalColonTests(string script, bool validWithoutEqualOnly)
         {
-            var parserOptions = new ParserOptions()
+            // tests with AllowEqualOnlyNamedFormulas = true should always pass
+
+            var optionsEqual = new ParserOptions()
             {
                 AllowsSideEffects = false,
-                AllowEqualOnlyNamedFormulas = requiresEqualOnly
+                AllowEqualOnlyNamedFormulas = true
             };
-            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions, Features.PowerFxV1);
-            Assert.False(parsedNamedFormulasAndUDFs.HasErrors);
+
+            var resultEqual = UserDefinitions.Parse(script, optionsEqual, Features.PowerFxV1);
+            Assert.True(!resultEqual.HasErrors);
+
+            // tests with AllowEqualOnlyNamedFormulas = false will fail if = only syntax is used
+
+            var optionsNoEqual = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+                AllowEqualOnlyNamedFormulas = false
+            };
+
+            var resultNoEqual = UserDefinitions.Parse(script, optionsNoEqual, Features.PowerFxV1);
+            Assert.True(validWithoutEqualOnly ? !resultNoEqual.HasErrors : resultNoEqual.HasErrors);
+            if (!validWithoutEqualOnly)
+            {
+                Assert.Contains(resultNoEqual.Errors, e => e.MessageKey == "ErrNamedFormulaColonEqualRequired");
+            }
+
+            // tests with AllowEqualOnlyNamedFormulas = default (false) will fail if = only syntax is used
+
+            var optionsDefault = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+
+                // test AllowEqualOnlyNamedFormulas = false by default
+            };
+
+            var resultDefault = UserDefinitions.Parse(script, optionsDefault, Features.PowerFxV1);
+            Assert.True(validWithoutEqualOnly ? !resultDefault.HasErrors : resultDefault.HasErrors);
+            if (!validWithoutEqualOnly)
+            {
+                Assert.Contains(resultDefault.Errors, e => e.MessageKey == "ErrNamedFormulaColonEqualRequired");
+            }
         }
 
         // Even with EqualOnly for named formulas, Type definitions require the colon
@@ -191,7 +225,41 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = false,
+                AllowEqualOnlyNamedFormulas = true,
+            };
+
+            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
+
+            Assert.Equal(namedFormulaCount, parsedNamedFormulasAndUDFs.NamedFormulas.Count());
+            Assert.Equal(udfCount, parsedNamedFormulasAndUDFs.UDFs.Count(udf => udf.IsParseValid));
+            Assert.Equal(expectErrors, parsedNamedFormulasAndUDFs.HasErrors);
+        }
+
+        [Theory]
+        [InlineData("Foo(): Number {// comment \nSum(1, 1); Sum(2, 2); };Bar(): Number {Foo();};x:=1;y:=2;", 0, 0, true)]
+        [InlineData("Foo(x: /*comment\ncomment*/Number):/*comment*/Number = /*comment*/Abs(x);", 0, 1, false)]
+        [InlineData("x", 0, 0, true)]
+        [InlineData("x:", 0, 0, true)]
+        [InlineData("x:=", 0, 0, true)]
+        [InlineData("x:=1", 1, 0, true)]
+        [InlineData("x:=1;", 1, 0, false)]
+        [InlineData("x:=1;Foo(", 1, 0, true)]
+        [InlineData("x:=1;Foo(x", 1, 0, true)]
+        [InlineData("x:=1;Foo(x:", 1, 0, true)]
+        [InlineData("x:=1;Foo(x:Number", 1, 0, true)]
+        [InlineData("x:=1;Foo(x:Number)", 1, 0, true)]
+        [InlineData("x:=1;Foo(x:Number):", 1, 0, true)]
+        [InlineData("x:=1;Foo(x:Number):Number", 1, 0, true)]
+        [InlineData("x:=1;Foo(x:Number):Number = ", 1, 0, true)]
+        [InlineData("x:=1;Foo(x:Number):Number = 10 * x", 1, 0, true)]
+        [InlineData("x:=1;Foo(x:Number):Number = 10 * x;", 1, 1, false)]
+        [InlineData("x:=1;Foo(:Number):Number = 10 * x;", 1, 0, true)]
+        public void NamedFormulaAndUdfTestColonEqual(string script, int namedFormulaCount, int udfCount, bool expectErrors)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
             };
 
             var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
@@ -205,6 +273,18 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("x=1;y=2;")]
         public void NamedFormulaTest(string script)
         {
+            var parserOptions = new ParserOptions()
+            {
+                AllowEqualOnlyNamedFormulas = true,
+            };
+            var namedFormula = new NamedFormulas(script, parserOptions);
+            Assert.Equal(script, namedFormula.Script);
+        }
+
+        [Theory]
+        [InlineData("x:=1;y:=2;")]
+        public void NamedFormulaTestColonEqual(string script)
+        {
             var namedFormula = new NamedFormulas(script);
             Assert.Equal(script, namedFormula.Script);
         }
@@ -212,6 +292,20 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData("x=1;y=2;", 2)]
         public void EnsureParsedTest(string script, int count)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowEqualOnlyNamedFormulas = true,
+            };
+            var namedFormula = new NamedFormulas(script, parserOptions);
+            var formulas = namedFormula.EnsureParsed();
+            Assert.NotNull(formulas);
+            Assert.Equal(formulas.Count(), count);
+        }
+
+        [Theory]
+        [InlineData("x:=1;y:=2;", 2)]
+        public void EnsureParsedTestColonEqual(string script, int count)
         {
             var namedFormula = new NamedFormulas(script);
             var formulas = namedFormula.EnsureParsed();
@@ -229,8 +323,36 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("x:=")]
+        public void EnsureParsedWithErrorsTestColonEqual(string script)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowEqualOnlyNamedFormulas = true,
+            };
+            var namedFormula = new NamedFormulas(script, parserOptions);
+            var formulas = namedFormula.EnsureParsed();
+            Assert.Empty(formulas);
+        }
+
+        [Theory]
         [InlineData("x=")]
         public void GetParseErrorsTest(string script)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowEqualOnlyNamedFormulas = true,
+            };
+            var namedFormula = new NamedFormulas(script, parserOptions);
+            namedFormula.EnsureParsed();
+
+            var errors = namedFormula.GetParseErrors();
+            Assert.NotEmpty(errors);
+        }
+
+        [Theory]
+        [InlineData("x:=")]
+        public void GetParseErrorsTestColonEqual(string script)
         {
             var namedFormula = new NamedFormulas(script);
             namedFormula.EnsureParsed();
@@ -242,6 +364,21 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData("x=1;")]
         public void GetParseErrorsNoErrorsTest(string script)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowEqualOnlyNamedFormulas = true,
+            };
+            var namedFormula = new NamedFormulas(script, parserOptions);
+            namedFormula.EnsureParsed();
+
+            var errors = namedFormula.GetParseErrors();
+            Assert.Empty(errors);
+        }
+
+        [Theory]
+        [InlineData("x:=1;")]
+        public void GetParseErrorsNoErrorsTestColonEqual(string script)
         {
             var namedFormula = new NamedFormulas(script);
             namedFormula.EnsureParsed();
@@ -255,6 +392,32 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("x=1.00000000000000000000000001;y=2.00000000000000000000000001;", "1", "1.00000000000000000000000001", "2", "2.00000000000000000000000001")]
         [InlineData("x=1e-100;y=1e-100;", "1E-100", "1e-100", "1E-100", "1e-100")]
         public void GetNamedFormulasTest(string script, string expectedX, string scriptX, string expectedY, string scriptY)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowEqualOnlyNamedFormulas = true,
+            };
+            var namedFormula = new NamedFormulas(script, parserOptions);
+            var formulas = namedFormula.EnsureParsed(TexlParser.Flags.NumberIsFloat);
+            formulas.OrderBy(formula => formula.formula.Script);
+
+            Assert.NotNull(formulas);
+
+            Assert.Equal(expectedX, formulas.ElementAt(0).formula.ParseTree.ToString());
+            Assert.Equal(expectedY, formulas.ElementAt(1).formula.ParseTree.ToString());
+
+            Assert.Equal(NodeKind.NumLit, formulas.ElementAt(0).formula.ParseTree.Kind);
+            Assert.Equal(NodeKind.NumLit, formulas.ElementAt(1).formula.ParseTree.Kind);
+
+            Assert.Equal(scriptX, formulas.ElementAt(0).formula.Script);
+            Assert.Equal(scriptY, formulas.ElementAt(1).formula.Script);
+        }
+
+        [Theory]
+        [InlineData("x:=1;y:=2;", "1", "1", "2", "2")]
+        [InlineData("x:=1.00000000000000000000000001;y:=2.00000000000000000000000001;", "1", "1.00000000000000000000000001", "2", "2.00000000000000000000000001")]
+        [InlineData("x:=1e-100;y:=1e-100;", "1E-100", "1e-100", "1E-100", "1e-100")]
+        public void GetNamedFormulasTestColonEqual(string script, string expectedX, string scriptX, string expectedY, string scriptY)
         {
             var namedFormula = new NamedFormulas(script);
             var formulas = namedFormula.EnsureParsed(TexlParser.Flags.NumberIsFloat);
@@ -277,6 +440,32 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("x=1.00000000000000000000000001;y=2.00000000000000000000000001;", "1.00000000000000000000000001", "1.00000000000000000000000001", "2.00000000000000000000000001", "2.00000000000000000000000001")]
         [InlineData("x=1e-100;y=1e-100;", "0", "1e-100", "0", "1e-100")]
         public void GetNamedFormulasTest_Decimal(string script, string expectedX, string scriptX, string expectedY, string scriptY)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowEqualOnlyNamedFormulas = true,
+            };
+            var namedFormula = new NamedFormulas(script, parserOptions);
+            var formulas = namedFormula.EnsureParsed();
+            formulas.OrderBy(formula => formula.formula.Script);
+
+            Assert.NotNull(formulas);
+
+            Assert.Equal(expectedX, formulas.ElementAt(0).formula.ParseTree.ToString());
+            Assert.Equal(expectedY, formulas.ElementAt(1).formula.ParseTree.ToString());
+
+            Assert.Equal(NodeKind.DecLit, formulas.ElementAt(0).formula.ParseTree.Kind);
+            Assert.Equal(NodeKind.DecLit, formulas.ElementAt(1).formula.ParseTree.Kind);
+
+            Assert.Equal(scriptX, formulas.ElementAt(0).formula.Script);
+            Assert.Equal(scriptY, formulas.ElementAt(1).formula.Script);
+        }
+
+        [Theory]
+        [InlineData("x:=1;y:=2;", "1", "1", "2", "2")]
+        [InlineData("x:=1.00000000000000000000000001;y:=2.00000000000000000000000001;", "1.00000000000000000000000001", "1.00000000000000000000000001", "2.00000000000000000000000001", "2.00000000000000000000000001")]
+        [InlineData("x:=1e-100;y:=1e-100;", "0", "1e-100", "0", "1e-100")]
+        public void GetNamedFormulasTest_Decimal_ColonEqual(string script, string expectedX, string scriptX, string expectedY, string scriptY)
         {
             var namedFormula = new NamedFormulas(script);
             var formulas = namedFormula.EnsureParsed();

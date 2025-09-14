@@ -117,7 +117,7 @@ namespace Microsoft.PowerFx.Syntax
 
                     var newName = new IdentToken(name + _renamedFormulaGuid + id, formula.Ident.Span, isNonSourceIdentToken: true);
                     id++;
-                    updatedGroupFormulas.Add(new NamedFormula(newName, formula.Formula, formula.StartingIndex, formula.Attribute));
+                    updatedGroupFormulas.Add(new NamedFormula(newName, formula.Formula, formula.StartingIndex, formula.ColonEqual, formula.Attribute));
                 }
 
                 if (firstAttribute.AttributeOperation == PartialAttribute.AttributeOperationKind.Error)
@@ -141,6 +141,7 @@ namespace Microsoft.PowerFx.Syntax
                         new IdentToken(name, firstAttribute.AttributeName.Span, isNonSourceIdentToken: true),
                         GetPartialCombinedFormula(name, firstAttribute.AttributeOperation, updatedGroupFormulas),
                         0,
+                        colonEqual: true,
                         firstAttribute));
             }
 

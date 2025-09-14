@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.App.Controls;
@@ -23,11 +24,37 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {
         private static readonly ReadOnlySymbolTable _primitiveTypes = ReadOnlySymbolTable.PrimitiveTypesTableInstance;
 
+#if false
+        // TODO: Re-enable after we add parserOptions to TryAddUserDefinitions with https://github.com/microsoft/Power-Fx/pull/2962
+
         [Theory]
         [InlineData("x=1;y=2;z=x+y;", "Float(Abs(-(x+y+z)))", 6d)]
         [InlineData("x=1;y=2;Foo(x: Number): Number = Abs(x);", "Foo(-(y*y)+x)", 3d)]
         [InlineData("myvar=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Bar(1) + myvar", 2d)]
         public void NamedFormulaEntryTest(string script, string expression, double expected)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowEqualOnlyNamedFormulas = true
+            };
+            var engine = new RecalcEngine();
+
+            engine.TryAddUserDefinitions(script, out var errors, parserOptions);
+            Assert.True(!errors.Any());
+
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess);
+
+            var result = (NumberValue)check.GetEvaluator().Eval();
+            Assert.Equal(expected, result.Value);
+        }
+#endif
+
+        [Theory]
+        [InlineData("x:=1;y:=2;z:=x+y;", "Float(Abs(-(x+y+z)))", 6d)]
+        [InlineData("x:=1;y:=2;Foo(x: Number): Number = Abs(x);", "Foo(-(y*y)+x)", 3d)]
+        [InlineData("myvar:=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Bar(1) + myvar", 2d)]
+        public void NamedFormulaEntryTestColonEqual(string script, string expression, double expected)
         {
             var engine = new RecalcEngine();
 
@@ -45,6 +72,25 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(abc, { bcd: 1 }) };")]
         [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(abc, { bcd: 1 }) }; num = 3;")]
         public void ValidUDFBodyTest(string script)
+        {
+            var options = new ParserOptions()
+            {
+                AllowsSideEffects = true,
+                Culture = CultureInfo.InvariantCulture,
+                AllowEqualOnlyNamedFormulas = true
+            };
+            var parseResult = UserDefinitions.Parse(script, options);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            Assert.False(errors.Any());
+        }
+
+        [Theory]
+        [InlineData("test2(b: Boolean): Boolean = { Set(a, b); };")]
+        [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(abc, { bcd: 1 }) };")]
+        [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(abc, { bcd: 1 }) }; num := 3;")]
+        public void ValidUDFBodyTestColonEqual(string script)
         {
             var options = new ParserOptions()
             {
@@ -95,6 +141,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(,) ;}; num = 3;", 1, 0, 1)]
         [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(,) ;};;;;;;;; num = 3;", 1, 0, 1)]
         public void InvalidUDFBodyTest2(string script, int udfCount, int validUdfCount, int nfCount)
+        {
+            var options = new ParserOptions()
+            {
+                AllowsSideEffects = true,
+                Culture = CultureInfo.InvariantCulture,
+                AllowEqualOnlyNamedFormulas = true
+            };
+            var parseResult = UserDefinitions.Parse(script, options);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            Assert.True(errors.Any());
+            Assert.Equal(udfCount, parseResult.UDFs.Count());
+            Assert.Equal(validUdfCount, udfs.Count());
+            Assert.Equal(nfCount, parseResult.NamedFormulas.Count());
+        }
+
+        [Theory]
+        [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(,) ;}; num := 3;", 1, 0, 1)]
+        [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(,) ;};;;;;;;; num := 3;", 1, 0, 1)]
+        public void InvalidUDFBodyTest2ColonEqual(string script, int udfCount, int validUdfCount, int nfCount)
         {
             var options = new ParserOptions()
             {
@@ -169,7 +236,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void TestFormulaUsingUdfsOrNamedFormulaReferringControlAsAsync()
         {
             // Arrange
-            var script = "test(): Text = Button1InScreen2.Text;Nf=Button1InScreen2.Text;Test2(): Void={Set(x, Button1InScreen2.Text);};";
+            var script = "test(): Text = Button1InScreen2.Text;Nf:=Button1InScreen2.Text;Test2(): Void={Set(x, Button1InScreen2.Text);};";
             var parseResult = TexlParser.ParseUserDefinitionScript(script, new ParserOptions() { AllowsSideEffects = true });
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             var symbolTable = new MockSymbolTable();

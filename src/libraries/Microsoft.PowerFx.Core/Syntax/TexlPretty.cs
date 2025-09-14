@@ -526,7 +526,7 @@ namespace Microsoft.PowerFx.Syntax
                     case UserDefinitionType.NamedFormula:
                         var nf = result.NamedFormulas.First(nf => nf.Ident == name);
 
-                        definitions.Add(declaration + $" {TexlLexer.PunctuatorEqual} " + string.Concat(visitor.CommentsOf(before).With(nf.Formula.ParseTree.Accept(visitor, new Context(0)).With(visitor.CommentsOf(after)))));
+                        definitions.Add(declaration + $" {(nf.ColonEqual ? TexlLexer.PunctuatorColonEqual : TexlLexer.PunctuatorEqual)} " + string.Concat(visitor.CommentsOf(before).With(nf.Formula.ParseTree.Accept(visitor, new Context(0)).With(visitor.CommentsOf(after)))));
                         break;
                     case UserDefinitionType.UDF:
                         var udf = result.UDFs.First(udf => udf.Ident == name);

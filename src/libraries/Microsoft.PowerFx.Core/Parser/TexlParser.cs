@@ -346,7 +346,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         }
                         else
                         {
-                            namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex, attribute));
+                            namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex, colonEqual: true, attribute));
                             userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.NamedFormula, thisIdentifier.As<IdentToken>(), declaration, new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));
                             definitionBeforeTrivia = new List<ITexlSource>();
                         }
@@ -398,7 +398,13 @@ namespace Microsoft.PowerFx.Core.Parser
                             continue;
                         }
 
-                        namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex, attribute));
+                        if (!parserOptions.AllowEqualOnlyNamedFormulas)
+                        {
+                            CreateError(equalToken, TexlStrings.ErrNamedFormulaColonEqualRequired);
+                            continue;
+                        }
+
+                        namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex, colonEqual: false, attribute));
                         userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.NamedFormula, thisIdentifier.As<IdentToken>(), declaration, new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));
                         definitionBeforeTrivia = new List<ITexlSource>();
 
@@ -651,21 +657,26 @@ namespace Microsoft.PowerFx.Core.Parser
             return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after, script, culture);
         }
 
-        public static ParseFormulasResult ParseFormulasScript(string script, CultureInfo loc = null, Flags flags = Flags.None)
+        public static ParseFormulasResult ParseFormulasScript(string script, ParserOptions parserOptions, Flags flags = Flags.None)
         {
             Contracts.AssertValue(script);
-            Contracts.AssertValueOrNull(loc);
+            Contracts.AssertValueOrNull(parserOptions);
 
-            var formulaTokens = TokenizeScript(script, loc, flags | Flags.NamedFormulas);
+            var formulaTokens = TokenizeScript(script, parserOptions?.Culture, flags | Flags.NamedFormulas);
             var parser = new TexlParser(formulaTokens, flags | Flags.NamedFormulas);
 
-            return parser.ParseFormulas(script);
+            return parser.ParseFormulas(script, parserOptions);
         }
 
-        private ParseFormulasResult ParseFormulas(string script)
+        private ParseFormulasResult ParseFormulas(string script, ParserOptions parserOptions)
         {
             var namedFormulas = new List<KeyValuePair<IdentToken, TexlNode>>();
             ParseTrivia();
+
+            if (parserOptions == null)
+            {
+                parserOptions = new ParserOptions();
+            }
 
             while (_curs.TokCur.Kind != TokKind.Eof)
             {
@@ -675,10 +686,18 @@ namespace Microsoft.PowerFx.Core.Parser
                 {
                     ParseTrivia();
 
-                    // Verify "="
-                    var thisEq = TokEat(TokKind.Equ);
-                    if (thisEq != null)
+                    // Verify "=" is allowed if used
+                    if (_curs.TidCur == TokKind.Equ && !parserOptions.AllowEqualOnlyNamedFormulas)
                     {
+                        CreateError(thisIdentifier, TexlStrings.ErrNamedFormulaColonEqualRequired);
+                        _curs.TokMove();
+                        continue;
+                    }
+
+                    // Verify "=" or ":="
+                    if (_curs.TidCur == TokKind.Equ || _curs.TidCur == TokKind.ColonEqual)
+                    {
+                        _curs.TokMove();
                         ParseTrivia();
 
                         if (_curs.TidCur == TokKind.Semicolon)

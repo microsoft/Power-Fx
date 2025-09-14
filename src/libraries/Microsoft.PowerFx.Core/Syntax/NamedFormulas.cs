@@ -20,9 +20,9 @@ namespace Microsoft.PowerFx.Syntax
         /// </summary>
         public readonly string Script;
 
-        // The language settings used for parsing this script.
+        // The language and other settings used for parsing this script.
         // May be null if the script is to be parsed in the current locale.
-        public readonly CultureInfo Loc;
+        public readonly ParserOptions ParserOptions;
 
         public bool IsParsed => _formulasResult != null;
 
@@ -36,14 +36,14 @@ namespace Microsoft.PowerFx.Syntax
         /// Initializes a new instance of the <see cref="NamedFormulas"/> class.
         /// </summary>
         /// <param name="script"></param>
-        /// <param name="loc"></param>
-        public NamedFormulas(string script, CultureInfo loc = null)
+        /// <param name="parserOptions"></param>
+        public NamedFormulas(string script, ParserOptions parserOptions = null)
         {
             Contracts.AssertValue(script);
-            Contracts.AssertValueOrNull(loc);
+            Contracts.AssertValueOrNull(parserOptions);
 
             Script = script;
-            Loc = loc;
+            ParserOptions = parserOptions;
         }
 
         /// <summary>
@@ -55,8 +55,8 @@ namespace Microsoft.PowerFx.Syntax
             if (_formulasResult == null)
             {
                 Contracts.AssertValue(Script);
-                Contracts.AssertValueOrNull(Loc);
-                var result = TexlParser.ParseFormulasScript(Script, loc: Loc, flags);
+                Contracts.AssertValueOrNull(ParserOptions);
+                var result = TexlParser.ParseFormulasScript(Script, ParserOptions, flags);
                 _formulasResult = result.NamedFormulas;
                 _errors = result.Errors;
                 HasParseErrors = result.HasError;

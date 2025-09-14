@@ -382,7 +382,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             engine.UpdateVariable("A", 1m);
-            engine.AddUserDefinitions("B=A*2;C=A*B;", onUpdate: OnUpdate);
+            engine.AddUserDefinitions("B:=A*2;C:=A*B;", onUpdate: OnUpdate);
             AssertUpdate("B-->2;C-->2;");
 
             // Can't set formulas, they're read only 
