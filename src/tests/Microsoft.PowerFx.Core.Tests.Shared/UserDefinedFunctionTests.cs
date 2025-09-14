@@ -688,8 +688,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Count():Number = 1; Count():Number = 1;", true)]
         public void TestUDFHasErrorWhenDuplicateMultiple(string script, bool shadowWarning)
         {
-            // need to be added in two seperate calls to AddUserDefinedFunction
-            // a single call runs through a different path for duplicate checking, see next test
+            // need to be added in one call to AddUserDefinedFunction
+            // multiple calls run through a different path for duplicate checking, see previous test
 
             SymbolTable symbolTable = new SymbolTable();
 
