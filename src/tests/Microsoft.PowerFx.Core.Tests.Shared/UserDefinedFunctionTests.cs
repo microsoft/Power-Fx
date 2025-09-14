@@ -714,10 +714,13 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("F():Number = 5;   G():Number = {F()};", true)]
         [InlineData("F():Number = Behavior();", false)]
         [InlineData("F():Number = { Behavior() };", true)]
+        [InlineData("F():Number = Pi();", true)]
+        [InlineData("F():Number = { Pi() };", true)]
         public void TestBehaviorFuncsInNonBehaviorFuncs(string expression, bool valid)
         {
             var library = new TexlFunctionSet();
             library.Add(new BehaviorFunction());
+            library.Add(new Texl.Builtins.PiFunction());
             var nameResolver = ReadOnlySymbolTable.NewDefault(library, FormulaType.PrimitiveTypes);
 
             var parserOptions = new ParserOptions() { AllowsSideEffects = true };
