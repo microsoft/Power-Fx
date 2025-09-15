@@ -308,6 +308,16 @@ Notify(z)
 Error 16-24: Unknown type Currency.", error2);
         }
 
+        // ensure that the symbol table available to UDFs includes the built-in functions like Notify
+        [Fact]
+        public void UserDefinedFunctionsBuiltIn()
+        {
+            _repl.HandleLine("F(): Void = { Notify( \"hello\" ) };");
+            _repl.HandleLine("F()");
+            var log = _output.Get(OutputKind.Notify);
+            Assert.Equal("hello", log);
+        }
+
         // test that Exit() informs the host that an exit has been requested
         [Fact]
         public void Exit()
