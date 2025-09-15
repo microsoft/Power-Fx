@@ -12,8 +12,11 @@ using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -759,6 +762,57 @@ namespace Microsoft.PowerFx.Core.Tests
                                             .SetBindingInfo(_primitiveTypes);
             var errors = checkResult.ApplyErrors();
             Assert.Contains(errors, e => e.MessageKey.Contains("ErrUDF_NonImperativeVoidType"));
+        }
+
+        [Theory]
+        [InlineData("F():Number = 5;", true)]
+        [InlineData("F():Number = {5};", true)]
+        [InlineData("F():Number = {5}; G():Number = F();", false)]
+        [InlineData("F():Number = {5}; G():Number = {F()};", true)]
+        [InlineData("F():Number = 5;   G():Number = F();", true)]
+        [InlineData("F():Number = 5;   G():Number = {F()};", true)]
+        [InlineData("F():Number = Behavior();", false)]
+        [InlineData("F():Number = { Behavior() };", true)]
+        [InlineData("F():Number = Pi();", true)]
+        [InlineData("F():Number = { Pi() };", true)]
+        public void TestBehaviorFuncsInNonBehaviorFuncs(string expression, bool valid)
+        {
+            var library = new TexlFunctionSet();
+            library.Add(new BehaviorFunction());
+            library.Add(new Texl.Builtins.PiFunction());
+            var nameResolver = ReadOnlySymbolTable.NewDefault(library, FormulaType.PrimitiveTypes);
+
+            var parserOptions = new ParserOptions() { AllowsSideEffects = true };
+
+            var checkResult = new DefinitionsCheckResult()
+                                            .SetText(expression, parserOptions)
+                                            .SetBindingInfo(nameResolver);
+            var errors = checkResult.ApplyErrors();
+
+            if (valid)
+            {
+                Assert.False(errors.Any());
+            }
+            else
+            {
+                Assert.True(errors.Any());
+                Assert.Contains(errors, x => x.MessageKey == "ErrBehaviorFunctionInDataUDF");
+            }
+        }
+
+        private class BehaviorFunction : TexlFunction
+        {
+            public override bool IsSelfContained => false; // false == this function has side effects and is a behavior function
+
+            public BehaviorFunction()
+                : base(DPath.Root, "Behavior", "Behavior", null, FunctionCategories.Behavior, DType.Number, 0, 0, 0)
+            {
+            }
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                yield return new TexlStrings.StringGetter[] { };
+            }
         }
     }
 }
