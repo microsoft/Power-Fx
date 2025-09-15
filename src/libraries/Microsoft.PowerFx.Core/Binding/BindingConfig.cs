@@ -36,5 +36,16 @@ namespace Microsoft.PowerFx.Core.Binding
             MarkAsAsyncOnLazilyLoadedControlRef = markAsAsyncOnLazilyLoadedControlRef;
             UserDefinitionsMode = userDefinitionsMode;
         }
+
+        public BindingConfig Clone(bool allowsSideEffects)
+        {
+            return new BindingConfig(
+                allowsSideEffects: allowsSideEffects, // overrides value in object
+                useThisRecordForRuleScope: this.UseThisRecordForRuleScope,
+                numberIsFloat: this.NumberIsFloat,
+                analysisMode: this.AnalysisMode,
+                markAsAsyncOnLazilyLoadedControlRef: this.MarkAsAsyncOnLazilyLoadedControlRef,
+                userDefinitionsMode: this.UserDefinitionsMode);
+        }
     }
 }

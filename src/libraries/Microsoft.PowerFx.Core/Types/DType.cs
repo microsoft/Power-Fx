@@ -3354,9 +3354,10 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 foreach (var typedName in GetNames(DPath.Root))
                 {
-                    if (!typeDest.TryGetType(typedName.Name, out var diffType))
+                    if (!typeDest.TryGetType(typedName.Name, out var _))
                     {
-                        schemaDifference = new KeyValuePair<string, DType>(typedName.Name, diffType);
+                        // return DType.Unknown so that the caller knows it was a missing field
+                        schemaDifference = new KeyValuePair<string, DType>(typedName.Name, DType.Unknown);
                         return false;
                     }
                 }

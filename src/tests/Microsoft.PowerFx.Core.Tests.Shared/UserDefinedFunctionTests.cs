@@ -653,6 +653,64 @@ namespace Microsoft.PowerFx.Core.Tests
                 error.Severity == DocumentErrorSeverity.Warning));
         }
 
+        [Theory]
+        [InlineData("MyFunc():Number = 1;", false)]
+        [InlineData("Count():Number = 1;", true)]
+        public void TestUDFHasErrorWhenDuplicate(string script, bool shadowWarning)
+        {
+            // need to be added in two seperate calls to AddUserDefinedFunction
+            // a single call runs through a different path for duplicate checking, see next test
+
+            SymbolTable symbolTable = new SymbolTable();
+
+            var add1 = symbolTable.AddUserDefinedFunction(script, extraSymbolTable: ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            Assert.True(add1.IsSuccess);
+            if (shadowWarning)
+            {
+                Assert.True(add1.Errors.Count() == 1 &&
+                    add1.Errors.Any(error => error.MessageKey == "WrnUDF_ShadowingBuiltInFunction" &&
+                        error.Severity == ErrorSeverity.Warning));
+            }
+            else
+            {
+                Assert.True(!add1.Errors.Any());
+            }
+
+            var add2 = symbolTable.AddUserDefinedFunction(script, extraSymbolTable: ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            Assert.False(add2.IsSuccess);
+            Assert.True(add2.Errors.Count() == 1 &&
+                add2.Errors.Any(error => error.MessageKey == "ErrUDF_FunctionAlreadyDefined" &&
+                    error.Severity == ErrorSeverity.Severe));
+        }
+
+        [Theory]
+        [InlineData("MyFunc():Number = 1; MyFunc():Number = 1;", false)]
+        [InlineData("Count():Number = 1; Count():Number = 1;", true)]
+        public void TestUDFHasErrorWhenDuplicateMultiple(string script, bool shadowWarning)
+        {
+            // need to be added in one call to AddUserDefinedFunction
+            // multiple calls run through a different path for duplicate checking, see previous test
+
+            SymbolTable symbolTable = new SymbolTable();
+
+            var add1 = symbolTable.AddUserDefinedFunction(script, extraSymbolTable: ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            Assert.False(add1.IsSuccess);
+            if (shadowWarning)
+            {
+                Assert.True(add1.Errors.Count() == 2 &&
+                    add1.Errors.Any(error => error.MessageKey == "WrnUDF_ShadowingBuiltInFunction" &&
+                        error.Severity == ErrorSeverity.Warning));
+            }
+            else
+            {
+                Assert.True(add1.Errors.Count() == 1);
+            }
+
+            Assert.True(add1.Errors.Count() >= 1 && 
+                add1.Errors.Any(error => error.MessageKey == "ErrUDF_FunctionAlreadyDefined" &&
+                    error.Severity == ErrorSeverity.Severe));
+        }
+
         [Fact]
         public void TestUDFRestrictedTypes()
         {
@@ -745,6 +803,82 @@ namespace Microsoft.PowerFx.Core.Tests
                                  .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
             var errorsDotFail = checkResultDotFail.ApplyErrors();
             Assert.NotEmpty(errorsDotFail);
+        }
+
+        [Theory]
+
+        [InlineData("f(x:GUID):Boolean = x+1 And true;")] // PowerFXV1CompatibilityRules doesn't support GUID+1
+        [InlineData("f():Number = ShowColumns({a:1}, \"a\").a;")] // SupportColumnNamesAsIdentifiers
+        [InlineData("f():Number = First([{a:1}]).Value.a;")] // TableSyntaxDoesntWrapRecords
+        [InlineData("f():Number = First(Mod([1,2,3],1)).Result;")] // ConsistentOneColumnTableResult
+        public void TestUDFBodyFeaturesSupport(string expression)
+        {
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes);
+
+            var checkResultV1 = new DefinitionsCheckResult(Features.PowerFxV1)
+                                            .SetText(expression)
+                                            .SetBindingInfo(nameResolver);
+            var errorsV1 = checkResultV1.ApplyErrors();
+            Assert.NotEmpty(errorsV1);
+
+            // test inverse, that there is no error if no features used, that in fact the features setting is having an impact
+            var checkResultNone = new DefinitionsCheckResult(Features.None)
+                                            .SetText(expression)
+                                            .SetBindingInfo(nameResolver);
+            var errorsNone = checkResultNone.ApplyErrors();
+            Assert.Empty(errorsNone);
+        }
+        
+        [Theory]
+        
+        [InlineData("F():Number = 5;", true)]
+        [InlineData("F():Number = {5};", true)]
+        [InlineData("F():Number = {5}; G():Number = F();", false)]
+        [InlineData("F():Number = {5}; G():Number = {F()};", true)]
+        [InlineData("F():Number = 5;   G():Number = F();", true)]
+        [InlineData("F():Number = 5;   G():Number = {F()};", true)]
+        [InlineData("F():Number = Behavior();", false)]
+        [InlineData("F():Number = { Behavior() };", true)]
+        [InlineData("F():Number = Pi();", true)]
+        [InlineData("F():Number = { Pi() };", true)]
+        public void TestBehaviorFuncsInNonBehaviorFuncs(string expression, bool valid)
+        {
+            var library = new TexlFunctionSet();
+            library.Add(new BehaviorFunction());
+            library.Add(new Texl.Builtins.PiFunction());
+            var nameResolver = ReadOnlySymbolTable.NewDefault(library, FormulaType.PrimitiveTypes);
+
+            var parserOptions = new ParserOptions() { AllowsSideEffects = true };
+
+            var checkResult = new DefinitionsCheckResult()
+                                            .SetText(expression, parserOptions)
+                                            .SetBindingInfo(nameResolver);
+            var errors = checkResult.ApplyErrors();
+
+            if (valid)
+            {
+                Assert.False(errors.Any());
+            }
+            else
+            {
+                Assert.True(errors.Any());
+                Assert.Contains(errors, x => x.MessageKey == "ErrBehaviorFunctionInDataUDF");
+            }
+        }
+
+        private class BehaviorFunction : TexlFunction
+        {
+            public override bool IsSelfContained => false; // false == this function has side effects and is a behavior function
+
+            public BehaviorFunction()
+                : base(DPath.Root, "Behavior", "Behavior", null, FunctionCategories.Behavior, DType.Number, 0, 0, 0)
+            {
+            }
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                yield return new TexlStrings.StringGetter[] { };
+            }
         }
     }
 }
