@@ -642,7 +642,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var suggestions = SuggestStrings(expression, config, null, lazyInstance);
 
             // Just check that the execution didn't stack overflow.
-            Assert.True(suggestions.Any());
+            Assert.NotEmpty(suggestions);
         }
 
         [Theory]

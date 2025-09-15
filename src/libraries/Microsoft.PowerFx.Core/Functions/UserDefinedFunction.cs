@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -214,15 +213,15 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(binding);
 
             if (!ReturnType.Accepts(
-                actualBodyReturnType, 
+                actualBodyReturnType,
                 out var schemaDiff,
                 out var diffType,
-                exact: true, 
+                exact: true,
                 useLegacyDateTimeAccepts: false,
                 usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules,
                 restrictiveAggregateTypes: true))
             {
-                if (actualBodyReturnType.CoercesTo(ReturnType, true, false, context.Features, restrictiveAggregateTypes: true))
+                if (actualBodyReturnType.CoercesTo(ReturnType, out var _, out var _, out var coerceSchemaDiff, out var _, aggregateCoercion: true, isTopLevelCoercion: false, features: context.Features, restrictiveAggregateTypes: true))
                 {
                     _binding.SetCoercedType(binding.Top, ReturnType);
                 }
@@ -232,7 +231,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
                     if ((ReturnType.IsTable && actualBodyReturnType.IsTable) || (ReturnType.IsRecord && actualBodyReturnType.IsRecord))
                     {
-                        AddAggregateTypeErrors(binding.ErrorContainer, node, ReturnType, schemaDiff, diffType);
+                        AddAggregateTypeErrors(binding.ErrorContainer, node, ReturnType, schemaDiff, diffType, coerceSchemaDiff);
                         return;
                     }
 
@@ -241,13 +240,22 @@ namespace Microsoft.PowerFx.Core.Functions
             }
         }
 
-        private void AddAggregateTypeErrors(IErrorContainer errors, TexlNode node, DType nodeType, KeyValuePair<string, DType> schemaDifference, DType schemaDifferenceType)
+        private void AddAggregateTypeErrors(IErrorContainer errors, TexlNode node, DType nodeType, KeyValuePair<string, DType> schemaDifference, DType schemaDifferenceType, KeyValuePair<string, DType> coerceSchemaDifference)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValid(nodeType);
 
-            if (schemaDifferenceType.IsValid)
+            if (coerceSchemaDifference.Value == DType.Unknown)
             {
+                errors.EnsureError(
+                    DocumentErrorSeverity.Severe,
+                    node,
+                    TexlStrings.ErrUDF_ReturnTypeSchemaAdditionalFields,
+                    nodeType.GetKindString(),
+                    coerceSchemaDifference.Key);
+            }
+            else
+            { 
                 errors.EnsureError(
                     DocumentErrorSeverity.Severe,
                     node,
@@ -255,15 +263,6 @@ namespace Microsoft.PowerFx.Core.Functions
                     schemaDifference.Key,
                     schemaDifference.Value.GetKindString(),
                     schemaDifferenceType.GetKindString());
-            }
-            else
-            {
-                errors.EnsureError(
-                    DocumentErrorSeverity.Severe,
-                    node,
-                    TexlStrings.ErrUDF_ReturnTypeSchemaAdditionalFields,
-                    nodeType.GetKindString(),
-                    schemaDifference.Key);
             }
         }
 

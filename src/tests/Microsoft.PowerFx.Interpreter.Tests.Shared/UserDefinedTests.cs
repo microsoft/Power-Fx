@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
@@ -55,7 +56,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            Assert.False(errors.Any());
+            Assert.Empty(errors);
         }
 
         [Theory]
@@ -72,7 +73,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            Assert.False(errors.Any());
+            Assert.Empty(errors);
         }
 
         [Theory]
@@ -88,7 +89,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            Assert.True(errors.Any());
+            Assert.NotEmpty(errors);
         }
 
         [Theory]
@@ -105,7 +106,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            Assert.True(errors.Any());
+            Assert.NotEmpty(errors);
             Assert.Equal(udfCount, parseResult.UDFs.Count());
             Assert.Equal(validUdfCount, udfs.Count());
             Assert.Equal(nfCount, parseResult.NamedFormulas.Count());
@@ -125,7 +126,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            Assert.True(errors.Any());
+            Assert.NotEmpty(errors);
 
             options = new ParserOptions()
             {
@@ -136,7 +137,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            Assert.False(errors.Any());
+            Assert.Empty(errors);
         }
 
         [Fact]
@@ -226,6 +227,53 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 udf.BindBody(symbolTable, new MockGlue(), config);
                 Assert.False(udf.IsAsync);
             }
+        }
+
+        [Theory]
+        [InlineData("f():Number = First(ShowColumns([1,2,3], Value)).Value;", "f()", true, 1)] // SupportColumnNamesAsIdentifiers
+        [InlineData("f():Number = First(ShowColumns([1,2,3], \"Value\")).Value;", "f()", false, 1)] // SupportColumnNamesAsIdentifiers
+        [InlineData("f():Number = First([{a:1}]).a;", "f()", true, 1)] // TableSyntaxDoesntWrapRecords
+        [InlineData("f():Number = First([{a:1}]).Value.a;", "f()", false, 1)] // TableSyntaxDoesntWrapRecords
+        public void UDFBodyUsesFeatures(string script, string eval, bool powerFxV1, double expected)
+        {
+            // easy way
+
+            var configWorks = new PowerFxConfig(powerFxV1 ? Features.PowerFxV1 : Features.None);
+            var engineWorks = new RecalcEngine(configWorks);
+
+            engineWorks.AddUserDefinitions(script);
+
+            var checkEvalWorks = engineWorks.Check(eval);
+            Assert.True(checkEvalWorks.IsSuccess);
+
+            var resultWorks = (NumberValue)checkEvalWorks.GetEvaluator().Eval();
+            Assert.Equal(expected, resultWorks.Value);
+
+            // harder way, using DefinitionCheckResult, that passes through a different UDF body path than above
+
+            var configDCR = new PowerFxConfig(powerFxV1 ? Features.PowerFxV1 : Features.None);
+            var engineDCR = new RecalcEngine(configDCR);
+
+            var addDCR = engineDCR.AddUserDefinedFunction(script);
+            var errorsDCR = addDCR.ApplyErrors();
+
+            Assert.Empty(errorsDCR);
+
+            var checkEvalDCR = engineDCR.Check(eval);
+            Assert.True(checkEvalDCR.IsSuccess);
+
+            var resultDCR = (NumberValue)checkEvalDCR.GetEvaluator().Eval();
+            Assert.Equal(expected, resultDCR.Value);
+
+            // harder way, using DefinitionCheckResult, inverted Features setting
+
+            var configDCRNot = new PowerFxConfig(powerFxV1 ? Features.None : Features.PowerFxV1);
+            var engineDCRNot = new RecalcEngine(configDCRNot);
+
+            var addDCRNot = engineDCRNot.AddUserDefinedFunction(script);
+            var errorsDCRNot = addDCRNot.ApplyErrors();
+
+            Assert.NotEmpty(errorsDCRNot);
         }
     }
 }
