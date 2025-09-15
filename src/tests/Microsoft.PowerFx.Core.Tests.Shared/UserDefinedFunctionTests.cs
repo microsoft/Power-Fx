@@ -857,11 +857,11 @@ namespace Microsoft.PowerFx.Core.Tests
 
             if (valid)
             {
-                Assert.False(errors.Any());
+                Assert.Empty(errors);
             }
             else
             {
-                Assert.True(errors.Any());
+                Assert.NotEmpty(errors);
                 Assert.Contains(errors, x => x.MessageKey == "ErrBehaviorFunctionInDataUDF");
             }
         }
