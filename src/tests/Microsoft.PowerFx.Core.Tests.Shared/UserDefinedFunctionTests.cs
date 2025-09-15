@@ -715,14 +715,14 @@ namespace Microsoft.PowerFx.Core.Tests
                                             .SetText(expression)
                                             .SetBindingInfo(nameResolver);
             var errorsV1 = checkResultV1.ApplyErrors();
-            Assert.True(errorsV1.Any());
+            Assert.NotEmpty(errorsV1);
 
             // test inverse, that there is no error if no features used, that in fact the features setting is having an impact
             var checkResultNone = new DefinitionsCheckResult(Features.None)
                                             .SetText(expression)
                                             .SetBindingInfo(nameResolver);
             var errorsNone = checkResultNone.ApplyErrors();
-            Assert.True(!errorsNone.Any());
+            Assert.Empty(errorsNone);
         }
     }
 }

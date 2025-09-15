@@ -180,7 +180,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var errors = checkResult.ApplyErrors();
             if (expectedMessageKey == null)
             {
-                Assert.True(!errors.Any());
+                Assert.Empty(errors);
             }
             else
             {
@@ -196,7 +196,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var errorsDecimal = checkResultDecimal.ApplyErrors();
             if (expectedMessageKey == null)
             {
-                Assert.True(!errorsDecimal.Any());
+                Assert.Empty(errorsDecimal);
             }
             else
             {
