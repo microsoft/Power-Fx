@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var parserOptions = new ParserOptions() { NumberIsFloat = true }; 
 
             engine.TryAddUserDefinitions(script, out var errors, parserOptions);
-            Assert.True(!errors.Any());
+            Assert.Empty(errors);
 
             var check = engine.Check(expression);
             Assert.True(check.IsSuccess);
@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var parserOptions = new ParserOptions() { NumberIsFloat = false };
 
             engine.TryAddUserDefinitions(script, out var errors, parserOptions);
-            Assert.True(!errors.Any());
+            Assert.Empty(errors);
 
             var check = engine.Check(expression);
             Assert.True(check.IsSuccess);
@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var parserOptions = new ParserOptions() { NumberIsFloat = false, Culture = new CultureInfo("fr-fr") };
 
             engine.TryAddUserDefinitions(script, out var errors, parserOptions);
-            Assert.True(!errors.Any());
+            Assert.Empty(errors);
 
             var check = engine.Check(expression);
             Assert.True(check.IsSuccess);
@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            Assert.False(errors.Any());
+            Assert.Empty(errors);
         }
 
         [Theory]
@@ -115,7 +115,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            Assert.False(errors.Any());
+            Assert.Empty(errors);
         }
 
         [Theory]
@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            Assert.True(errors.Any());
+            Assert.NotEmpty(errors);
         }
 
         [Theory]
@@ -148,7 +148,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            Assert.True(errors.Any());
+            Assert.NotEmpty(errors);
             Assert.Equal(udfCount, parseResult.UDFs.Count());
             Assert.Equal(validUdfCount, udfs.Count());
             Assert.Equal(nfCount, parseResult.NamedFormulas.Count());
@@ -168,7 +168,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            Assert.True(errors.Any());
+            Assert.NotEmpty(errors);
 
             options = new ParserOptions()
             {
@@ -179,7 +179,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            Assert.False(errors.Any());
+            Assert.Empty(errors);
         }
 
         [Fact]

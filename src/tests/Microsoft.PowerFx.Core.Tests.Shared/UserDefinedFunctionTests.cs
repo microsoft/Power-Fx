@@ -726,25 +726,25 @@ namespace Microsoft.PowerFx.Core.Tests
                                .SetText(expressionDot, parserOptionsDot)
                                .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
             var errorsDot = checkResultDot.ApplyErrors();
-            Assert.False(errorsDot.Any());
+            Assert.Empty(errorsDot);
 
             var checkResultCommaFail = new DefinitionsCheckResult()
                                 .SetText(expressionDot, parserOptionsComma)
                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
             var errorsCommaFail = checkResultCommaFail.ApplyErrors();
-            Assert.True(errorsCommaFail.Any());
+            Assert.NotEmpty(errorsCommaFail);
 
             var checkResultComma = new DefinitionsCheckResult()
                                  .SetText(expressionComma, parserOptionsComma)
                                  .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
             var errorsComma = checkResultComma.ApplyErrors();
-            Assert.False(errorsComma.Any());
+            Assert.Empty(errorsComma);
 
             var checkResultDotFail = new DefinitionsCheckResult()
                                  .SetText(expressionComma, parserOptionsDot)
                                  .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
             var errorsDotFail = checkResultDotFail.ApplyErrors();
-            Assert.True(errorsDotFail.Any());
+            Assert.NotEmpty(errorsDotFail);
         }
     }
 }
