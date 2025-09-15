@@ -166,16 +166,45 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData("f():T = {x: true, y: 1}; T := Type({x: Boolean});", "ErrUDF_ReturnTypeSchemaAdditionalFields")]
         [InlineData("f(x:T):Number = x.n; T := Type({n: Number}); g(): Number = f({n: 5, m: 5});", "ErrBadSchema_AdditionalField")]
+        [InlineData("f():T = [{x: 5}]; T := Type([{x: Number}]);", null)]
+        [InlineData("f():T = [{x: 5}]; T := Type([{x: GUID}]);", "ErrUDF_ReturnTypeSchemaIncompatible")]
         [InlineData("f():T = [{x: 5, y: 5}]; T := Type([{x: Number}]);", "ErrUDF_ReturnTypeSchemaAdditionalFields")]
         [InlineData("f(x:T):T = x; T := Type([{n: Number}]); g(): T = f([{n: 5, m: 5}]);", "ErrBadSchema_AdditionalField")]
-        [InlineData("f(x:T):T = {n: \"Foo\"}; T := Type({n: GUID});", "ErrUDF_ReturnTypeSchemaIncompatible")]
+        [InlineData("f(x:T):T = {n: \"Foo\"}; T := Type({n: GUID});", null)] // returns an error with PreV1
+        [InlineData("f():GUID = \"Foo\";", null)] // returns an error with PreV1
         public void TestAggregateTypeErrors(string typeDefinition, string expectedMessageKey)
         {
-            var checkResult = new DefinitionsCheckResult()
-                                            .SetText(typeDefinition)
+            // with number is float
+
+            var parserOptions = new ParserOptions() { NumberIsFloat = true };
+            var checkResult = new DefinitionsCheckResult(Features.PowerFxV1)
+                                            .SetText(typeDefinition, parserOptions)
                                             .SetBindingInfo(_primitiveTypes);
             var errors = checkResult.ApplyErrors();
-            Assert.Contains(errors, e => e.MessageKey.Contains(expectedMessageKey));
+            if (expectedMessageKey == null)
+            {
+                Assert.Empty(errors);
+            }
+            else
+            {
+                Assert.Contains(errors, e => e.MessageKey.Contains(expectedMessageKey));
+            }
+
+            // without number is float, oddly this has given different results for some cases in the past
+
+            var parserOptionsDecimal = new ParserOptions() { NumberIsFloat = false };
+            var checkResultDecimal = new DefinitionsCheckResult(Features.PowerFxV1)
+                                            .SetText(typeDefinition, parserOptionsDecimal)
+                                            .SetBindingInfo(_primitiveTypes);
+            var errorsDecimal = checkResultDecimal.ApplyErrors();
+            if (expectedMessageKey == null)
+            {
+                Assert.Empty(errorsDecimal);
+            }
+            else
+            {
+                Assert.Contains(errorsDecimal, e => e.MessageKey.Contains(expectedMessageKey));
+            }
         }
 
         [Theory]
