@@ -566,13 +566,13 @@ namespace Microsoft.PowerFx
 
         public DefinitionsCheckResult AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, bool allowSideEffects = false)
         {
-            return Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, UDFDefaultBindingSymbols, symbolTable, allowSideEffects);
+            return Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, UDFDefaultBindingSymbols, symbolTable, allowSideEffects, Config.Features);
         }
 
         public ReadOnlySymbolTable GetUserDefinedFunctionSymbol(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, bool allowSideEffects = false)
         {
             var resultSymbols = new SymbolTable();
-            resultSymbols.AddUserDefinedFunction(script, parseCulture, UDFDefaultBindingSymbols, symbolTable, allowSideEffects);
+            resultSymbols.AddUserDefinedFunction(script, parseCulture, UDFDefaultBindingSymbols, symbolTable, allowSideEffects, Config.Features);
             return resultSymbols;
         }
     }

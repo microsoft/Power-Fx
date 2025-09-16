@@ -510,7 +510,7 @@ namespace Microsoft.PowerFx
 
                 if (this.AllowUserDefinedFunctions && definitionsCheckResult.IsSuccess && definitionsCheckResult.ContainsUDF)
                 {
-                    var defCheckResult = this.Engine.AddUserDefinedFunction(expression, this.ParserOptions.Culture, extraSymbolTable);
+                    var defCheckResult = this.Engine.AddUserDefinedFunction(expression, this.ParserOptions.Culture, extraSymbolTable, allowSideEffects: true);
 
                     if (!defCheckResult.IsSuccess)
                     {
