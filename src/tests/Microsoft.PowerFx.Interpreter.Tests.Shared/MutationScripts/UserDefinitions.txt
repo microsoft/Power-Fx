@@ -108,7 +108,7 @@ Errors: Error 11-15: Invalid argument type (Enum (Color)). Expecting a Number va
 1
 
 >> ReturnNumColor():Number = Color.Red;
-Errors: Error 31-35: The stated function return type 'Number' does not match the return type of the function body 'Color'.
+Errors: Error 31-35: The stated function return type 'Number' does not match the return type of the function body 'Enum (Color)'.
 
 >> MyNum := Type(Number);
 #no value
@@ -147,7 +147,7 @@ Errors: Error 16-21: Invalid argument type (Enum (Color)). Expecting a Number va
 1
 
 >> ReturnMyNumColor():MyNum = Color.Red;
-Errors: Error 32-36: The stated function return type 'Number' does not match the return type of the function body 'Color'.
+Errors: Error 32-36: The stated function return type 'Number' does not match the return type of the function body 'Enum (Color)'.
 
 >> MyNumRec := Type({Val:Number});
 #no value
@@ -186,7 +186,7 @@ Errors: Error 14-31: Incompatible type. The 'Val' column in the data source you'
 {Val:1}
 
 >> ReturnMyNumColor():MyNumRec = {Val:Color.Red};
-Errors: Error 30-45: Incompatible function body. The 'Val' column in the function return type expects a 'Number' type and you're returning a 'Color' type in function body.
+Errors: Error 30-45: Incompatible function body. The 'Val' column in the function return type expects a 'Number' type and you're returning a 'Enum (Color)' type in function body.
 
 >> MyNumTable := Type([{Val:Number}]);
 #no value
@@ -225,12 +225,11 @@ Table({Val:37257})
 Table({Val:1})
 
 >> ReturnMyNumTableColor():MyNumTable = Table({Val:Color.Red});
-Errors: Error 37-59: Incompatible function body. The 'Val' column in the function return type expects a 'Number' type and you're returning a 'Color' type in function body.
+Errors: Error 37-59: Incompatible function body. The 'Val' column in the function return type expects a 'Number' type and you're returning a 'Enum (Color)' type in function body.
 
 // Text parameter coercion
 
-// TODO: Result needs to be replaced with Value after fixing https://github.com/microsoft/Power-Fx/pull/2960
->> Vowels(s:Text):Text = Concat(ForAll(Split(s,""), If(Lower(Result) in ["a","e","i","o","u"], Result, "")), Value);
+>> Vowels(s:Text):Text = Concat(ForAll(Split(s,""), If(Lower(Value) in ["a","e","i","o","u"], Value, "")), Value);
 #no value
 
 >> Vowels("hello world")
@@ -248,7 +247,7 @@ Errors: Error 37-59: Incompatible function body. The 'Val' column in the functio
 >> TextRec := Type({Txt:Text});
 #no value
 
->> VowelsRec(s:TextRec):Text = Concat(ForAll(Split(s.Txt,""), If(Lower(Result) in ["a","e","i","o","u"], Result, "")), Value);
+>> VowelsRec(s:TextRec):Text = Concat(ForAll(Split(s.Txt,""), If(Lower(Value) in ["a","e","i","o","u"], Value, "")), Value);
 #no value
 
 >> VowelsRec({Txt:"hello world"})
@@ -266,7 +265,7 @@ Errors: Error 37-59: Incompatible function body. The 'Val' column in the functio
 >> TextTable := Type([{Txt:Text}]);
 #no value
 
->> VowelsTable(s:TextTable):Text = Concat(ForAll(Split(First(s).Txt,""), If(Lower(Result) in ["a","e","i","o","u"], Result, "")), Value);
+>> VowelsTable(s:TextTable):Text = Concat(ForAll(Split(First(s).Txt,""), If(Lower(Value) in ["a","e","i","o","u"], Value, "")), Value);
 #no value
 
 >> VowelsTable([{Txt:"hello world"}])
@@ -288,14 +287,16 @@ Errors: Error 37-59: Incompatible function body. The 'Val' column in the functio
 "hello world"
 
 >> ReturnTextColor():Text = Color.White;
-Errors: Error 30-36: The stated function return type 'Text' does not match the return type of the function body 'Color'.
+#no value
+
+>> ReturnTextColor()
+"White"
 
 >> ReturnTextGUID():Text = GUID("f81d4fae-7dec-11d0-a765-00a0c91e6bf6");
 #no value
 
-// TODO: https://github.com/microsoft/Power-Fx/issues/2972
 >> ReturnTextGUID()
-GUID("f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
+"f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
 
 >> ReturnTextDate():Text = Date(2002,1,1);
 #no value
@@ -322,14 +323,17 @@ GUID("f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
 {Txt:"1/1/2002"}
 
 >> ReturnTextRecColor():TextRec = {Txt:Color.Yellow};
-Errors: Error 31-49: Incompatible function body. The 'Txt' column in the function return type expects a 'Text' type and you're returning a 'Color' type in function body.
+#no value
+
+>> ReturnTextRecColor()
+{Txt:"Yellow"}
 
 >> ReturnTextRecGUID():TextRec = {Txt:GUID("f81d4fae-7dec-11d0-a765-00a0c91e6bf6")};
 #no value
 
 // TODO: https://github.com/microsoft/Power-Fx/issues/2972
 >> ReturnTextRecGUID()
-{Txt:GUID("f81d4fae-7dec-11d0-a765-00a0c91e6bf6")}
+{Txt:"f81d4fae-7dec-11d0-a765-00a0c91e6bf6"}
 
 >> ReturnTextTableText():TextTable = Table({Txt:"hello world"});
 #no value
@@ -350,13 +354,16 @@ Table({Txt:"1"})
 Table({Txt:"1/1/2002"})
 
 >> ReturnTextTableColor():TextTable = Table({Txt:Color.Yellow});
-Errors: Error 35-60: Incompatible function body. The 'Txt' column in the function return type expects a 'Text' type and you're returning a 'Color' type in function body.
+#no value
+
+>> ReturnTextTableColor()
+Table({Txt:"Yellow"})
 
 >> ReturnTextTableGUID():TextTable = Table({Txt:GUID("f81d4fae-7dec-11d0-a765-00a0c91e6bf6")});
 #no value
 
 >> ReturnTextTableGUID()
-Table({Txt:GUID("f81d4fae-7dec-11d0-a765-00a0c91e6bf6")})
+Table({Txt:"f81d4fae-7dec-11d0-a765-00a0c91e6bf6"})
 
 // REPL built in functions within a UDF
 
@@ -440,11 +447,11 @@ Errors: Error 13-74: Invalid argument type. Input Table value, contains an unexp
 >> OldestPerson([{Name:"john",Age:20,Address:"Main St"},{Name:"Jane",Age:21}])
 Errors: Error 13-74: Invalid argument type. Input Table value, contains an unexpected additional field 'Address'.
 
->> SortedPeople(list:People):People = SortByColumns(list, "Name", "Age");
+>> SortedPeople(list:People):People = SortByColumns(list, "Name", SortOrder.Ascending, "Age", SortOrder.Ascending);
 #no value
 
 >> SortedPeople([{Name:"John",Age:22},{Name:"Jane",Age:21},{Name:"John",Age:20}])
-Table({Age:21,Name:"Jane"},{Age:22,Name:"John"},{Age:20,Name:"John"})
+Table({Age:21,Name:"Jane"},{Age:20,Name:"John"},{Age:22,Name:"John"})
 
 >> SortedPeople([{Name:"John",Age:22},{Name:"Jane",Age:21,Address:"Main St"},{Name:"John",Age:20}])
 Errors: Error 13-95: Invalid argument type. Input Table value, contains an unexpected additional field 'Address'.
@@ -472,12 +479,20 @@ Errors: Error 56-120: Incompatible type. The item you are trying to put into a t
 >> OldestPerson( [ {Name: Text(Color.Red), Age: Value(Date(2001,1,1))}, {Name: GUID("f81d4fae-7dec-11d0-a765-00a0c91e6bf6"), Age: 40000} ] )
 {Age:40000,Name:"f81d4fae-7dec-11d0-a765-00a0c91e6bf6"}
 
-// TODO: Likely the inconsistency in the next three tests is due to https://github.com/microsoft/Power-Fx/pull/2960
->> FunnyPerson():Person = {Name: Color.Red, Age: Date(2001,1,1)};
-Errors: Error 23-61: Incompatible function body. The 'Age' column in the function return type expects a 'Number' type and you're returning a 'Date' type in function body.
-
->> FunnyPerson():Person = {Name: Color.Red};
-Errors: Error 23-40: Incompatible function body. The 'Name' column in the function return type expects a 'Text' type and you're returning a 'Color' type in function body.
-
->> FunnyPerson():Person = {Age: Date(2001,1,1)};
+>> FunnyPerson1():Person = {Name: Color.Red, Age: Date(2001,1,1)};
 #no value
+
+>> FunnyPerson1()
+{Age:36892,Name:"Red"}
+
+>> FunnyPerson2():Person = {Name: Color.Red};
+#no value
+
+>> FunnyPerson2()
+{Name:"Red"}
+
+>> FunnyPerson3():Person = {Age: Date(2001,1,1)};
+#no value
+
+>> FunnyPerson3()
+{Age:36892}
