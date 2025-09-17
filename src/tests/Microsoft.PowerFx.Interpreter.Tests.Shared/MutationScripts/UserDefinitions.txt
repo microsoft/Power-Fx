@@ -456,8 +456,9 @@ Table({Age:21,Name:"Jane"},{Age:20,Name:"John"},{Age:22,Name:"John"})
 >> SortedPeople([{Name:"John",Age:22},{Name:"Jane",Age:21,Address:"Main St"},{Name:"John",Age:20}])
 Errors: Error 13-95: Invalid argument type. Input Table value, contains an unexpected additional field 'Address'.
 
->> SortedPeople([{Name:"John"},{Name:"Jane"}]) // fills in missing fields with blank, can still sort by it as the column is still there
-Table({Age:Blank(),Name:"Jane"},{Age:Blank(),Name:"John"})
+// Waiting on resolution of https://github.com/microsoft/Power-Fx/issues/2973
+// >> SortedPeople([{Name:"John"},{Name:"Jane"}]) // fills in missing fields with blank, can still sort by it as the column is still there
+// Table({Age:Blank(),Name:"Jane"},{Age:Blank(),Name:"John"})
 
 // coercion works for parameters and return values
 

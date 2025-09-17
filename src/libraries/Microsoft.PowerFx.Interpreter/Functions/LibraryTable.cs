@@ -887,7 +887,6 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var arg0 = (TableValue)args[0];
-            var retTypeNames = ((TableType)irContext.ResultType).FieldNames;
 
             var columnNames = new List<string>();
             var ascendingSort = new List<bool>();
@@ -895,8 +894,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 var columnName = ((StringValue)args[i]).Value;
 
-                // We need to use the return type of the function, not the type of arg0, as arg0 may be missing fields that can be sorted on as Blank.
-                if (!retTypeNames.Contains(columnName))
+                if (!arg0.Type.FieldNames.Contains(columnName))
                 {
                     return CreateInvalidSortColumnError(irContext, runner.CultureInfo, columnName);
                 }
