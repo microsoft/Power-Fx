@@ -343,7 +343,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("N := 5; /*Type Dec*/ T := Type([{name: Text, age: Number}]);", "N := 5;\n/*Type Dec*/ T := Type([\n    {\n        name: Text,\n        age: Number\n    }\n]);")]
         [InlineData("T := Type/*com*/( /*com*/ Number /*com*/) /*com*/;", "T := Type/*com*/( /*com*/Number /*com*/)/*com*/;")]
         [InlineData("T := Type(/*RecordOf*/ RecordOf(Accounts));", "T := Type(/*RecordOf*/RecordOf(Accounts));")]
-        public void TestUserDefinitionsPrettyPrint_ColonEqual(string script, string expected)
+        public void TestUserDefinitionsPrettyPrint_ColonEqualRequired(string script, string expected)
         {
             var parserOptions = new ParserOptions()
             {

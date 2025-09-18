@@ -487,7 +487,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("x:=1;y:=2;", "1", "1", "2", "2")]
         [InlineData("x:=1.00000000000000000000000001;y:=2.00000000000000000000000001;", "1.00000000000000000000000001", "1.00000000000000000000000001", "2.00000000000000000000000001", "2.00000000000000000000000001")]
         [InlineData("x:=1e-100;y:=1e-100;", "0", "1e-100", "0", "1e-100")]
-        public void GetNamedFormulasTest_Decimal_ColonEqual(string script, string expectedX, string scriptX, string expectedY, string scriptY)
+        public void GetNamedFormulasTest_Decimal_ColonEqualRequired(string script, string expectedX, string scriptX, string expectedY, string scriptY)
         {
             var namedFormula = new NamedFormulas(script);
             var formulas = namedFormula.EnsureParsed();
@@ -562,7 +562,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a := First( Table( {x:1, y:2} ) );")]
         [InlineData("a := First( Table( {x:1, y:2} ) ).x;")]
         [InlineData("a := First( Table( {x:1, y:2} ) ); b := 4; c := \"hello\";")]
-        public void TestCulture_ColonEquals(string expressionDot)
+        public void TestCulture_ColonEqualRequired(string expressionDot)
         {
             var parserOptionsDot = new ParserOptions(new System.Globalization.CultureInfo("en-us")) { AllowsSideEffects = true, AllowEqualOnlyNamedFormulas = true };
             var parserOptionsComma = new ParserOptions(new System.Globalization.CultureInfo("es-es")) { AllowsSideEffects = true, AllowEqualOnlyNamedFormulas = true };

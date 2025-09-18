@@ -2151,7 +2151,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("a := Type(Number); a := 3;", true)]
         [InlineData("a := 3; a := Type(Number);", true)]
         [InlineData("a := 3;  a():Number = 4;", true)]
-        public void TestDuplicateUserDefinitions_ColonEquals(string definition, bool valid)
+        public void TestDuplicateUserDefinitions_ColonEqualRequired(string definition, bool valid)
         {
             var engine = new RecalcEngine(new PowerFxConfig());
 

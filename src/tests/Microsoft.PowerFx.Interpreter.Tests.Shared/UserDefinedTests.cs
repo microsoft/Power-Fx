@@ -87,9 +87,34 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
+
+        // without colon
         [InlineData("a=Max(2,1;4,2;-5,4);;b=Average(2,1;4,2;-5,4);;", "a+b", "4.5")]
         [InlineData("a=2,0000000000000000000001;;b=2,0000000000000000000001;;", "a+b", "4.0000000000000000000002")]
+
+        // with colon
+        [InlineData("a:=Max(2,1;4,2;-5,4);;b:=Average(2,1;4,2;-5,4);;", "a+b", "4.5")]
+        [InlineData("a:=2,0000000000000000000001;;b:=2,0000000000000000000001;;", "a+b", "4.0000000000000000000002")]
         public void NamedFormulaEntryTestCulture(string script, string expression, string expected)
+        {
+            var engine = new RecalcEngine();
+            var parserOptions = new ParserOptions() { NumberIsFloat = false, Culture = new CultureInfo("fr-fr"), AllowEqualOnlyNamedFormulas = true };
+
+            engine.TryAddUserDefinitions(script, out var errors, parserOptions);
+            Assert.Empty(errors);
+
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess);
+
+            var result = (DecimalValue)check.GetEvaluator().Eval();
+            Assert.True(decimal.TryParse(expected, out var expectedDecimal));
+            Assert.Equal(expectedDecimal, result.Value);
+        }
+
+        [Theory]
+        [InlineData("a:=Max(2,1;4,2;-5,4);;b:=Average(2,1;4,2;-5,4);;", "a+b", "4.5")]
+        [InlineData("a:=2,0000000000000000000001;;b:=2,0000000000000000000001;;", "a+b", "4.0000000000000000000002")]
+        public void NamedFormulaEntryTestCulture_ColonEqualRequired(string script, string expression, string expected)
         {
             var engine = new RecalcEngine();
             var parserOptions = new ParserOptions() { NumberIsFloat = false, Culture = new CultureInfo("fr-fr") };

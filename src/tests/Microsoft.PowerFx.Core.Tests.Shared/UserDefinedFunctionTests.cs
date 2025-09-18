@@ -120,7 +120,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData(@"F2(b: Number): Number  = F1(b*3); F1(a:Number): Number = a*2;", 2, 0, false)]
         [InlineData(@"F2(b: Text): Text  = ""Test"";", 1, 0, false)]
         [InlineData(@"F2(b: String): String  = ""Test"";", 0, 0, true)]
-        public void TestUDFNamedFormulaCounts_ColonEqual(string script, int udfCount, int namedFormulaCount, bool expectErrors)
+        public void TestUDFNamedFormulaCounts_ColonEqualRequired(string script, int udfCount, int namedFormulaCount, bool expectErrors)
         {
             var parserOptions = new ParserOptions()
             {
@@ -322,7 +322,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a := Abs(1.2);\nAdd(a: Number, b: Number):/* Number */Number", 1, 0, 1)]
         [InlineData("a := Abs(1.2);\nAdd(a: Number, b: Number):/* Number */Number = a + b;", 1, 1, 0)]
 
-        public void TestParseUserDefinitionsCountswithIncompleteUDFs_ColonEqual(string script, int nfCount, int validUDFCount, int inValidUDFCount)
+        public void TestParseUserDefinitionsCountswithIncompleteUDFs_ColonEqualRequired(string script, int nfCount, int validUDFCount, int inValidUDFCount)
         {
             var parserOptions = new ParserOptions()
             {
@@ -363,7 +363,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a := Abs(1.2);\n F1(a:):Number = a;", 1)]
         [InlineData("a := Abs(1.2);\n F1(a:Number): = a;", 1)]
         [InlineData("a := -;\n F1(a:):Number = 1;F2(a:Number): = 1;", 3)]
-        public void TestErrorCountsWithUDFs_ColonEqual(string script, int errorCount)
+        public void TestErrorCountsWithUDFs_ColonEqualRequired(string script, int errorCount)
         {
             var parserOptions = new ParserOptions()
             {
@@ -436,7 +436,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
-        public void TestUserDefinedFunctionValidity_ColonEqual()
+        public void TestUserDefinedFunctionValidity_ColonEqualRequired()
         {
             var parserOptions = new ParserOptions()
             {
@@ -707,7 +707,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("x := $\"{\"1$\"}.{\"}\";\r\nudf():Text = $\"{\"}\";\r\ny := 2;", 2, 1, 0)]
         [InlineData("x := $\"{$\"{$\"{$\"{.12e4}\"}}\"}\";\r\nudf():Text = $\"{\"}\";\r\ny := 2;", 2, 1, 0)]
         [InlineData("x := $\"{$\"{$\"{$\"{.12e4}\"}\"}\"}{$\"Another nested}\";\r\nudf():Text = $\"{\"}\";\r\ny := 2;", 2, 1, 0)]
-        public void TestUDF_ColonEqual(string formula, int nfCount, int udfCount, int validUdfCount)
+        public void TestUDF_ColonEqualRequired(string formula, int nfCount, int udfCount, int validUdfCount)
         {
             var parserOptions = new ParserOptions()
             {
