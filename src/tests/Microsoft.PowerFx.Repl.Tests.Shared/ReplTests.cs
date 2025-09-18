@@ -253,7 +253,7 @@ Notify(z)
         {
             _repl.HandleLine(
 "Set(x,1)",
-"NamedFormula1 = x*10;",
+"NamedFormula1 := x*10;",
 "Notify(NamedFormula1)",
 "Set(x,2);Notify(NamedFormula1)");
 
@@ -537,7 +537,7 @@ Error 16-24: Unknown type Currency.", error2);
 
             // compare but ignore trailing whitespace at the end of each line
             await _repl.HandleCommandAsync(
-"MyTable = Table({a:1},{b:2});");
+"MyTable := Table({a:1},{b:2});");
             var log2 = _output.Get(OutputKind.Repl, trim: false);
             var expected2 = @"MyTable:
   a   b  
@@ -566,7 +566,7 @@ Error 16-24: Unknown type Currency.", error2);
 >> ");
 
             await _repl.HandleCommandAsync(
-"MyTable = Table({a:1},{b:2});");
+"MyTable := Table({a:1},{b:2});");
             var log2 = _output.Get(OutputKind.Repl, trim: false);
             var expected2 = @"MyTable:
   a   b  

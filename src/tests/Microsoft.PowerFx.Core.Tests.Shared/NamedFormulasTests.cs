@@ -506,16 +506,66 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+
+        // no colon
         [InlineData("a = 1;")]
         [InlineData("a = 1.234;")]
         [InlineData("a = Mid( \"abc\", 2, 1 );")]
         [InlineData("a = First( Table( {x:1, y:2} ) );")]
         [InlineData("a = First( Table( {x:1, y:2} ) ).x;")]
         [InlineData("a = First( Table( {x:1, y:2} ) ); b = 4; c = \"hello\";")]
+
+        // colon
+        [InlineData("a := 1;")]
+        [InlineData("a := 1.234;")]
+        [InlineData("a := Mid( \"abc\", 2, 1 );")]
+        [InlineData("a := First( Table( {x:1, y:2} ) );")]
+        [InlineData("a := First( Table( {x:1, y:2} ) ).x;")]
+        [InlineData("a := First( Table( {x:1, y:2} ) ); b := 4; c := \"hello\";")]
         public void TestCulture(string expressionDot)
         {
-            var parserOptionsDot = new ParserOptions(new System.Globalization.CultureInfo("en-us")) { AllowsSideEffects = true };
-            var parserOptionsComma = new ParserOptions(new System.Globalization.CultureInfo("es-es")) { AllowsSideEffects = true };
+            var parserOptionsDot = new ParserOptions(new System.Globalization.CultureInfo("en-us")) { AllowsSideEffects = true, AllowEqualOnlyNamedFormulas = true };
+            var parserOptionsComma = new ParserOptions(new System.Globalization.CultureInfo("es-es")) { AllowsSideEffects = true, AllowEqualOnlyNamedFormulas = true };
+
+            // convert expressionDot into the comma decimal sepeartor version
+            var expressionComma = Regex.Replace(expressionDot.Replace(";", ";;").Replace(",", ";"), @"(?<=\d)\.(?=\d)", ",");
+
+            var checkResultDot = new DefinitionsCheckResult()
+                               .SetText(expressionDot, parserOptionsDot)
+                               .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            var errorsDot = checkResultDot.ApplyErrors();
+            Assert.Empty(errorsDot);
+
+            var checkResultCommaFail = new DefinitionsCheckResult()
+                                .SetText(expressionDot, parserOptionsComma)
+                                .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            var errorsCommaFail = checkResultCommaFail.ApplyErrors();
+            Assert.NotEmpty(errorsCommaFail);
+
+            var checkResultComma = new DefinitionsCheckResult()
+                                 .SetText(expressionComma, parserOptionsComma)
+                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            var errorsComma = checkResultComma.ApplyErrors();
+            Assert.Empty(errorsComma);
+
+            var checkResultDotFail = new DefinitionsCheckResult()
+                                 .SetText(expressionComma, parserOptionsDot)
+                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            var errorsDotFail = checkResultDotFail.ApplyErrors();
+            Assert.NotEmpty(errorsDotFail);
+        }
+
+        [Theory]
+        [InlineData("a := 1;")]
+        [InlineData("a := 1.234;")]
+        [InlineData("a := Mid( \"abc\", 2, 1 );")]
+        [InlineData("a := First( Table( {x:1, y:2} ) );")]
+        [InlineData("a := First( Table( {x:1, y:2} ) ).x;")]
+        [InlineData("a := First( Table( {x:1, y:2} ) ); b := 4; c := \"hello\";")]
+        public void TestCulture_ColonEquals(string expressionDot)
+        {
+            var parserOptionsDot = new ParserOptions(new System.Globalization.CultureInfo("en-us")) { AllowsSideEffects = true, AllowEqualOnlyNamedFormulas = true };
+            var parserOptionsComma = new ParserOptions(new System.Globalization.CultureInfo("es-es")) { AllowsSideEffects = true, AllowEqualOnlyNamedFormulas = true };
 
             // convert expressionDot into the comma decimal sepeartor version
             var expressionComma = Regex.Replace(expressionDot.Replace(";", ";;").Replace(",", ";"), @"(?<=\d)\.(?=\d)", ",");

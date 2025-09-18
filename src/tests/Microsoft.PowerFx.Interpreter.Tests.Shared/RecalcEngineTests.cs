@@ -2140,6 +2140,21 @@ namespace Microsoft.PowerFx.Tests
         {
             var engine = new RecalcEngine(new PowerFxConfig());
 
+            engine.TryAddUserDefinitions(definition, out var errors, new ParserOptions() { AllowEqualOnlyNamedFormulas = true });
+
+            Assert.True((valid && !errors.Any()) || (!valid && errors.Any()));
+        }
+
+        [Theory]
+        [InlineData("a := 3; a := 4;", false)]
+        [InlineData("T := Type(Number); T := Type(Boolean);", false)]
+        [InlineData("a := Type(Number); a := 3;", true)]
+        [InlineData("a := 3; a := Type(Number);", true)]
+        [InlineData("a := 3;  a():Number = 4;", true)]
+        public void TestDuplicateUserDefinitions_ColonEquals(string definition, bool valid)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig());
+
             engine.TryAddUserDefinitions(definition, out var errors, new ParserOptions());
 
             Assert.True((valid && !errors.Any()) || (!valid && errors.Any()));

@@ -12,8 +12,11 @@ using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -586,32 +589,57 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(func.IsParseValid);
         }
 
-        [Theory]
-        [InlineData("func():Void { Set(x, 123) };")]
-        [InlineData("func():Void { Set(x, 123); Set(y, 123) };")]
-        [InlineData("func():Void = { Set(x, 123) };")]
-        [InlineData("func():Void = { Set(x, 123); Set(y, 123) };")]
-        public void TestImperativeUDFParseWithoutSemicolon(string script)
+        // Show definitions directly on symbol tables
+        [Fact]
+        public void Basic()
         {
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = true,
-            };
+            var st1 = SymbolTable.WithPrimitiveTypes();
+            st1.AddUserDefinedFunction("Foo1(x: Number): Number = x*2;");
+            st1.AddUserDefinedFunction("Foo2(x: Number): Number = Foo1(x)+1;");
 
-            var parseResult = UserDefinitions.Parse(script, parserOptions);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
-            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+            var engine = new Engine();
+            var check = engine.Check("Foo2(3)", symbolTable: st1);
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.Number, check.ReturnType);
 
-            Assert.True(errors.Count() == 0);
+            // A different symbol table can have same function name with different type.  
+            var st2 = SymbolTable.WithPrimitiveTypes();
+            st2.AddUserDefinedFunction("Foo2(x: Number): Text = x;");
+            check = engine.Check("Foo2(3)", symbolTable: st2);
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.String, check.ReturnType);
         }
 
-        [Theory]
-        [InlineData("Count():Number = 1;")]
-        public void TestUDFHasWarningWhenShadowing(string script)
+        [Fact]
+        public void DefineEmpty()
+        {
+            // Empty symbol table doesn't get builtins. 
+            var st = SymbolTable.WithPrimitiveTypes();
+            st.AddUserDefinedFunction("Foo1(x: Number): Number = x;"); // ok 
+            Assert.False(st.AddUserDefinedFunction("Foo2(x: Number): Number = Abs(x);").IsSuccess);
+        }
+
+        // Show definitions on public symbol tables
+        [Fact]
+        public void BasicEngine()
+        {
+            var extra = new SymbolTable();
+            extra.AddVariable("K1", FormulaType.Number);
+
+            var engine = new Engine();
+            engine.AddUserDefinedFunction("Foo1(x: Number): Number = Abs(K1);", symbolTable: extra);
+
+            var check = engine.Check("Foo1(3)");
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.Number, check.ReturnType);
+        }
+
+        [Fact]
+        public void TestUserDefinedFunctionCloning()
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = true,
+                AllowsSideEffects = false
             };
 
             var script = "Add(a: Number, b: Number):Number = a + b;";
