@@ -829,7 +829,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a := 10; c := 20;")]
         public void TestFormulasParse(string script)
         {
-            TestFormulasParseRoundtrip(script, true);
+            TestFormulasParseRoundtrip(script, allowEqualOnly: true);
         }
 
         [Theory]
@@ -845,7 +845,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a := 10; c := 20;")]
         public void TestFormulasParse_ColonEqual(string script)
         {
-            TestFormulasParseRoundtrip(script, false);
+            TestFormulasParseRoundtrip(script, allowEqualOnly: false);
         }
 
         [Theory]
@@ -860,7 +860,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a = 10; c = 20;")]
         public void TestFormulasParse_ColonEqual_Negative(string script)
         {
-            TestFormulasParseError(script, false);
+            TestFormulasParseError(script, allowEqualOnly: false);
         }
 
         [Theory]
@@ -880,7 +880,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a.b = c")]
         public void TestFormulasParse_Negative(string script)
         {
-            TestFormulasParseError(script, true);
+            TestFormulasParseError(script, allowEqualOnly: true);
         }
 
         [Theory]
@@ -900,7 +900,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a.b := c")]
         public void TestFormulasParse_Negative_ColonEqual(string script)
         {
-            TestFormulasParseError(script, false);
+            TestFormulasParseError(script, allowEqualOnly: false);
         }
 
         [Theory]
@@ -996,7 +996,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a := 10; b := 30; c := in'valid ; d := (10; e := 42;", "e")]
         public void TestFormulaParseRestart_ColonEqual(string script, string key)
         {
-            var parseResult = TestFormulasParseError(script, false);
+            var parseResult = TestFormulasParseError(script, allowEqualOnly: false);
 
             // Parser restarted, and found 'c' correctly
             Assert.Contains(parseResult.NamedFormulas, kvp => kvp.Ident.Name.ToString() == key);
@@ -1065,7 +1065,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a := 10; b := 30; c = in'valid ; d = (10; e := 42;", "e")]
         public void TestFormulaParseRestart(string script, string key)
         {
-            var parseResult = TestFormulasParseError(script, true);
+            var parseResult = TestFormulasParseError(script, allowEqualOnly: true);
 
             // Parser restarted, and found 'c' correctly
             Assert.Contains(parseResult.NamedFormulas, kvp => kvp.Ident.Name.ToString() == key);
