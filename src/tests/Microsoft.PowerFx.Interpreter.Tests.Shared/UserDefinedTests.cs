@@ -25,23 +25,22 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {
         private static readonly ReadOnlySymbolTable _primitiveTypes = ReadOnlySymbolTable.PrimitiveTypesTableInstance;
 
-#if false
-        // TODO: Re-enable after we add parserOptions to TryAddUserDefinitions with https://github.com/microsoft/Power-Fx/pull/2962
-
         [Theory]
         [InlineData("x=1;y=2;z=x+y;", "Float(Abs(-(x+y+z)))", 6d)]
         [InlineData("x=1;y=2;Foo(x: Number): Number = Abs(x);", "Foo(-(y*y)+x)", 3d)]
         [InlineData("myvar=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Bar(1) + myvar", 2d)]
+        [InlineData("a=2e200;b=2e200;", "a+b", 4e200d)]
         public void NamedFormulaEntryTest(string script, string expression, double expected)
         {
             var parserOptions = new ParserOptions()
             {
-                AllowEqualOnlyNamedFormulas = true
+                AllowEqualOnlyNamedFormulas = true,
+                NumberIsFloat = true,
             };
             var engine = new RecalcEngine();
 
             engine.TryAddUserDefinitions(script, out var errors, parserOptions);
-            Assert.True(!errors.Any());
+            Assert.Empty(errors);
 
             var check = engine.Check(expression);
             Assert.True(check.IsSuccess);
@@ -49,7 +48,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result = (NumberValue)check.GetEvaluator().Eval();
             Assert.Equal(expected, result.Value);
         }
-#endif
 
         [Theory]
         [InlineData("x:=1;y:=2;z:=x+y;", "Float(Abs(-(x+y+z)))", 6d)]

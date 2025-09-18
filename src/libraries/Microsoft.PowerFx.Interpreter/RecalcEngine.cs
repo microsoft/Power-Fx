@@ -230,9 +230,9 @@ namespace Microsoft.PowerFx
         }
 
         // Invoke onUpdate() each time this formula is changed, passing in the new value. 
-        public void SetFormula(string name, string expr, Action<string, FormulaValue> onUpdate)
+        public void SetFormula(string name, string expr, Action<string, FormulaValue> onUpdate, ParserOptions parserOptions = null)
         {
-            SetFormula(name, new FormulaWithParameters(expr), onUpdate);
+            SetFormula(name, new FormulaWithParameters(expr), onUpdate, parserOptions);
         }
 
         /// <summary>
@@ -241,9 +241,13 @@ namespace Microsoft.PowerFx
         /// <param name="name">name of formula. This can be used in other formulas.</param>
         /// <param name="expr">expression.</param>
         /// <param name="onUpdate">Callback to fire when this value is updated.</param>
-        public void SetFormula(string name, FormulaWithParameters expr, Action<string, FormulaValue> onUpdate)
+        /// <param name="parserOptions">Parser options, including locale to interpret the formula.</param>
+        public void SetFormula(string name, FormulaWithParameters expr, Action<string, FormulaValue> onUpdate, ParserOptions parserOptions = null)
         {
-            var check = Check(expr._expression, expr._schema);
+            // remove AllowSideEffects, TextFirst, AllowAttributes, etc.
+            var scrubbedParserOptions = ParserOptions.ScrubForSetFormula(parserOptions);
+
+            var check = Check(expr._expression, expr._schema, scrubbedParserOptions);
             check.ThrowOnErrors();
             var binding = check.Binding;
 
@@ -388,118 +392,122 @@ namespace Microsoft.PowerFx
 
         /// <summary>
         /// Add a set of user-defined formulas and functions to the engine.
+        /// Throws an exception if there is a problem, used for testing.
+        /// Use TryAddUserDefinitions() for more robust error handling.
         /// </summary>
         /// <param name="script">Script containing user defined functions and/or named formulas.</param>
         /// <param name="parseCulture">Locale to parse user defined script.</param>
         /// <param name="onUpdate">Function to be called when update is triggered.</param>
+        /// <exception cref="InvalidOperationException">Thrown if there are errors in the user defined script.</exception>
         public void AddUserDefinitions(string script, CultureInfo parseCulture = null, Action<string, FormulaValue> onUpdate = null)
         {
-            var options = new ParserOptions()
+            var sb = new StringBuilder();
+
+            var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
                 Culture = parseCulture ?? CultureInfo.InvariantCulture
             };
 
-            var sb = new StringBuilder();
+            if (TryAddUserDefinitions(script, out var errors, parserOptions, onUpdate: onUpdate))
+            {
+                if (errors.Any(error => error.Severity > ErrorSeverity.Warning))
+                {
+                    sb.AppendLine("Something went wrong when parsing user definitions.");
 
+                    foreach (var error in errors)
+                    {
+                        sb.AppendLine(error.ToString());
+                    }
+
+                    throw new InvalidOperationException(sb.ToString());
+                }
+            }
+            else
+            {
+                sb.AppendLine("No user definitions found.");
+
+                throw new InvalidOperationException(sb.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Add a set of user-defined formulas and functions to the engine.
+        /// Returns true if it is likely that the script contains user definitions, even if it has errors.
+        /// </summary>
+        /// <param name="script">Script containing user defined functions and/or named formulas.</param>
+        /// <param name="errors">Errors if it is likely that the script contained user definitions.</param>
+        /// <param name="parserOptions">Parser options, especially culture, number-is-float, and side-effects.</param>
+        /// <param name="onUpdate">Function to be called when update is triggered.</param>
+        /// <param name="extraFunctions">Additional functions to be added to symbol table.</param>
+        public bool TryAddUserDefinitions(string script, out IEnumerable<ExpressionError> errors, ParserOptions parserOptions, ReadOnlySymbolTable extraFunctions = null, Action<string, FormulaValue> onUpdate = null)
+        {
             var checkResult = new DefinitionsCheckResult(this.Config.Features)
-                                    .SetText(script, options);
+                                    .SetText(script, parserOptions);
 
             var parseResult = checkResult.ApplyParse();
 
-            if (parseResult.HasErrors)
+            if (!parseResult.DefinitionsLikely)
             {
-                sb.AppendLine("Something went wrong when parsing user definitions.");
+                errors = new List<ExpressionError>();
+                return false;
+            }
 
-                foreach (var error in parseResult.Errors)
+            if (checkResult.IsSuccess)
+            {
+                // Compose will handle null symbols
+                var composedSymbols = SymbolTable.Compose(Config.ComposedConfigSymbols, SupportedFunctions, PrimitiveTypes, _symbolTable, extraFunctions);
+
+                checkResult
+                    .SetBindingInfo(composedSymbols)
+                    .ApplyResolveTypes();
+            }
+
+            if (checkResult.IsSuccess && checkResult.ResolvedTypes.Any())
+            {
+                _symbolTable.AddTypes(checkResult.ResolvedTypes);
+            }
+
+            if (checkResult.IsSuccess && parseResult.UDFs.Where(udf => udf.IsParseValid).Any())
+            {
+                var udfs = checkResult.ApplyCreateUserDefinedFunctions();
+
+                _symbolTable.AddFunctions(udfs);
+            }
+
+            if (checkResult.IsSuccess)
+            {
+                foreach (var namedFormula in parseResult.NamedFormulas)
                 {
-                    error.FormatCore(sb);
-                }
+                    CheckResult formulaCheck = this.Check(namedFormula.Formula.ToString(), options: parserOptions, symbolTable: _symbolTable);
 
-                throw new InvalidOperationException(sb.ToString());
-            }
+                    if (formulaCheck.IsSuccess)
+                    {
+                        try
+                        {
+                            SetFormula(namedFormula.Ident.Name, namedFormula.Formula.ToString(), onUpdate, parserOptions);
+                        }
+                        catch (Exception ex)
+                        {
+                            var error = new ExpressionError()
+                            {
+                                Message = ex.Message,
+                                Severity = ErrorSeverity.Critical,
+                                Span = namedFormula.Ident.Span
+                            };
 
-            // Compose will handle null symbols
-            var composedSymbols = SymbolTable.Compose(Config.ComposedConfigSymbols, SupportedFunctions, PrimitiveTypes, _symbolTable);
-
-            if (parseResult.DefinedTypes.Any())
-            {
-                AddUserDefinedTypes(checkResult, composedSymbols);
-            }
-
-            var validUDFs = parseResult.UDFs.Where(udf => udf.IsParseValid);
-            
-            if (validUDFs.Any())
-            {
-                AddUserDefinedFunctions(validUDFs, composedSymbols);
-            }
-
-            foreach (var namedFormula in parseResult.NamedFormulas)
-            {
-                SetFormula(namedFormula.Ident.Name, namedFormula.Formula.ToString(), onUpdate);
-            }
-        }
-
-        private void AddUserDefinedFunctions(IEnumerable<UDF> parsedUdfs, ReadOnlySymbolTable nameResolver)
-        {
-            var sb = new StringBuilder();
-            var udfs = UserDefinedFunction.CreateFunctions(parsedUdfs, nameResolver, out var errors);
-
-            if (errors.Any(error => error.Severity > DocumentErrorSeverity.Warning))
-            {
-                sb.AppendLine("Something went wrong when processing user defined functions.");
-
-                foreach (var error in errors)
-                {
-                    error.FormatCore(sb);
-                }
-
-                throw new InvalidOperationException(sb.ToString());
-            }
-
-            foreach (var udf in udfs)
-            {
-                var binding = udf.BindBody(nameResolver, new Glue2DocumentBinderGlue(), BindingConfig.Default, Config.Features);
-
-                List<TexlError> bindErrors = new List<TexlError>();
-
-                if (binding.ErrorContainer.GetErrors(ref bindErrors))
-                {
-                    sb.AppendLine(string.Join(", ", bindErrors.Select(err => err.ToString())));
-                }
-                else
-                {
-                    Config.SymbolTable.AddFunction(udf);
+                            checkResult.AddError(error);
+                        }
+                    }
+                    else
+                    {
+                        checkResult.AddErrors(formulaCheck.Errors);
+                    }
                 }
             }
 
-            if (sb.Length > 0)
-            {
-                throw new InvalidOperationException(sb.ToString());
-            }
-        }
-
-        private void AddUserDefinedTypes(DefinitionsCheckResult checkResult, ReadOnlySymbolTable nameResolver)
-        {
-            checkResult
-                .SetBindingInfo(nameResolver)
-                .ApplyResolveTypes();
-
-            if (!checkResult.IsSuccess)
-            {
-                var sb = new StringBuilder();
-
-                sb.AppendLine("Something went wrong when processing user defined types.");
-
-                foreach (var error in checkResult.Errors)
-                {
-                    sb.AppendLine(error.ToString());
-                }
-
-                throw new InvalidOperationException(sb.ToString());
-            }
-
-            _symbolTable.AddTypes(checkResult.ResolvedTypes);
+            errors = checkResult.Errors;
+            return true;
         }
     } // end class RecalcEngine
 }

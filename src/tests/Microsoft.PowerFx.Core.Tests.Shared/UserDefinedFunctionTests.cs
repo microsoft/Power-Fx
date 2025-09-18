@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
@@ -585,57 +586,32 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(func.IsParseValid);
         }
 
-        // Show definitions directly on symbol tables
-        [Fact]
-        public void Basic()
-        {
-            var st1 = SymbolTable.WithPrimitiveTypes();
-            st1.AddUserDefinedFunction("Foo1(x: Number): Number = x*2;");
-            st1.AddUserDefinedFunction("Foo2(x: Number): Number = Foo1(x)+1;");
-
-            var engine = new Engine();
-            var check = engine.Check("Foo2(3)", symbolTable: st1);
-            Assert.True(check.IsSuccess);
-            Assert.Equal(FormulaType.Number, check.ReturnType);
-
-            // A different symbol table can have same function name with different type.  
-            var st2 = SymbolTable.WithPrimitiveTypes();
-            st2.AddUserDefinedFunction("Foo2(x: Number): Text = x;");
-            check = engine.Check("Foo2(3)", symbolTable: st2);
-            Assert.True(check.IsSuccess);
-            Assert.Equal(FormulaType.String, check.ReturnType);
-        }
-
-        [Fact]
-        public void DefineEmpty()
-        {
-            // Empty symbol table doesn't get builtins. 
-            var st = SymbolTable.WithPrimitiveTypes();
-            st.AddUserDefinedFunction("Foo1(x: Number): Number = x;"); // ok 
-            Assert.False(st.AddUserDefinedFunction("Foo2(x: Number): Number = Abs(x);").IsSuccess);
-        }
-
-        // Show definitions on public symbol tables
-        [Fact]
-        public void BasicEngine()
-        {
-            var extra = new SymbolTable();
-            extra.AddVariable("K1", FormulaType.Number);
-
-            var engine = new Engine();
-            engine.AddUserDefinedFunction("Foo1(x: Number): Number = Abs(K1);", symbolTable: extra);
-
-            var check = engine.Check("Foo1(3)");
-            Assert.True(check.IsSuccess);
-            Assert.Equal(FormulaType.Number, check.ReturnType);
-        }
-
-        [Fact]
-        public void TestUserDefinedFunctionCloning()
+        [Theory]
+        [InlineData("func():Void { Set(x, 123) };")]
+        [InlineData("func():Void { Set(x, 123); Set(y, 123) };")]
+        [InlineData("func():Void = { Set(x, 123) };")]
+        [InlineData("func():Void = { Set(x, 123); Set(y, 123) };")]
+        public void TestImperativeUDFParseWithoutSemicolon(string script)
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = true,
+            };
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            Assert.True(errors.Count() == 0);
+        }
+
+        [Theory]
+        [InlineData("Count():Number = 1;")]
+        public void TestUDFHasWarningWhenShadowing(string script)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = true,
             };
 
             var script = "Add(a: Number, b: Number):Number = a + b;";
@@ -981,6 +957,50 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("F():Number = 5;")]
+        [InlineData("F():Number = 5.1234;")]
+        [InlineData("F():Number = Max(1,2,3);")]
+        [InlineData("F(x: Number):Number = x * 2;")]
+        [InlineData("F(x: Number, y:Number):Number = x * y;")]
+        [InlineData("F(x: Number, y:Number):Number = Average(x,y);")]
+        [InlineData("F(x: Number, y:Number):Number = { Average(x,y); 1+2 };")]
+        [InlineData("F(x: Number, y:Number):Number = First( Table({a:1, b:2}) ).a;")]
+        [InlineData("F(x: Number, y:Number):Number = { If( true, 1; x, 4; y ) };")]
+        [InlineData("F1():Number = 5;F2():Number = 5.1234;F3():Number = Max(1,2,3);")]
+        public void TestCulture(string expressionDot)
+        {
+            var parserOptionsDot = new ParserOptions(new System.Globalization.CultureInfo("en-us")) { AllowsSideEffects = true };
+            var parserOptionsComma = new ParserOptions(new System.Globalization.CultureInfo("es-es")) { AllowsSideEffects = true };
+
+            // convert expressionDot into the comma decimal sepeartor version
+            var expressionComma = Regex.Replace(expressionDot.Replace(";", ";;").Replace(",", ";"), @"(?<=\d)\.(?=\d)", ",");
+
+            var checkResultDot = new DefinitionsCheckResult()
+                               .SetText(expressionDot, parserOptionsDot)
+                               .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            var errorsDot = checkResultDot.ApplyErrors();
+            Assert.Empty(errorsDot);
+
+            var checkResultCommaFail = new DefinitionsCheckResult()
+                                .SetText(expressionDot, parserOptionsComma)
+                                .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            var errorsCommaFail = checkResultCommaFail.ApplyErrors();
+            Assert.NotEmpty(errorsCommaFail);
+
+            var checkResultComma = new DefinitionsCheckResult()
+                                 .SetText(expressionComma, parserOptionsComma)
+                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            var errorsComma = checkResultComma.ApplyErrors();
+            Assert.Empty(errorsComma);
+
+            var checkResultDotFail = new DefinitionsCheckResult()
+                                 .SetText(expressionComma, parserOptionsDot)
+                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            var errorsDotFail = checkResultDotFail.ApplyErrors();
+            Assert.NotEmpty(errorsDotFail);
+        }
+
+        [Theory]
 
         [InlineData("f(x:GUID):Boolean = x+1 And true;")] // PowerFXV1CompatibilityRules doesn't support GUID+1
         [InlineData("f():Number = ShowColumns({a:1}, \"a\").a;")] // SupportColumnNamesAsIdentifiers
@@ -1032,11 +1052,11 @@ namespace Microsoft.PowerFx.Core.Tests
 
             if (valid)
             {
-                Assert.False(errors.Any());
+                Assert.Empty(errors);
             }
             else
             {
-                Assert.True(errors.Any());
+                Assert.NotEmpty(errors);
                 Assert.Contains(errors, x => x.MessageKey == "ErrBehaviorFunctionInDataUDF");
             }
         }

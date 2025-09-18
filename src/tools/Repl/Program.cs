@@ -68,6 +68,8 @@ namespace Microsoft.PowerFx
 
         private static CultureInfo _cultureInfo = CultureInfo.CurrentCulture;
 
+        private static CultureInfo _cultureInfoUI = CultureInfo.CurrentCulture;
+
         private static bool _reset;
 
         private static RecalcEngine ReplRecalcEngine()
@@ -122,6 +124,7 @@ namespace Microsoft.PowerFx
             config.AddFunction(new Run1Function());
             config.AddFunction(new Run2Function());
             config.AddFunction(new Language1Function());
+            config.AddFunction(new Language2Function());
 
             var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(options));
 
@@ -192,7 +195,7 @@ namespace Microsoft.PowerFx
                 this.AddPseudoFunction(new CIRPseudoFunction());
                 this.AddPseudoFunction(new SuggestionsPseudoFunction());
 
-                this.ParserOptions = new ParserOptions() { AllowsSideEffects = _allowSideEffects, NumberIsFloat = _numberIsFloat, TextFirst = _textFirst };
+                this.ParserOptions = new ParserOptions(_cultureInfoUI) { AllowsSideEffects = _allowSideEffects, NumberIsFloat = _numberIsFloat, TextFirst = _textFirst };
             }
 
             public override async Task OnEvalExceptionAsync(Exception e, CancellationToken cancel)
@@ -517,9 +520,26 @@ namespace Microsoft.PowerFx
 
             public FormulaValue Execute(StringValue lang)
             {
-                var cultureInfo = new CultureInfo(lang.Value);
+                _cultureInfo = new CultureInfo(lang.Value);
 
-                _cultureInfo = cultureInfo;
+                _reset = true;
+
+                return FormulaValue.NewVoid();
+            }
+        }
+
+        private class Language2Function : ReflectionFunction
+        {
+            public Language2Function()
+                : base("Language", FormulaType.Void, new[] { FormulaType.String, FormulaType.String })
+            {
+            }
+
+            public FormulaValue Execute(StringValue lang, StringValue langUI)
+            {
+                _cultureInfo = new CultureInfo(lang.Value);
+
+                _cultureInfoUI = new CultureInfo(langUI.Value);
 
                 _reset = true;
 

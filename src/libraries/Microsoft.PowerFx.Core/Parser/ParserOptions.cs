@@ -103,5 +103,24 @@ namespace Microsoft.PowerFx
                         (DisableReservedKeywords ? TexlParser.Flags.DisableReservedKeywords : 0) |
                         (TextFirst ? TexlParser.Flags.TextFirst : 0);
         }
+
+        internal static ParserOptions ScrubForSetFormula(ParserOptions parserOptions)
+        {
+            if (parserOptions == null)
+            {
+                return null;
+            }
+            else
+            {
+                // remove AllowSideEffects, TextFirst, AllowAttributes, etc.
+                return new ParserOptions()
+                {
+                    Culture = parserOptions.Culture,
+                    NumberIsFloat = parserOptions.NumberIsFloat,
+                    DisableReservedKeywords = parserOptions.DisableReservedKeywords,
+                    MaxExpressionLength = parserOptions.MaxExpressionLength,
+                };
+            }
+        }
     }
 }

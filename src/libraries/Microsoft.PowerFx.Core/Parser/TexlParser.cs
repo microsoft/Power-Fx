@@ -277,6 +277,7 @@ namespace Microsoft.PowerFx.Core.Parser
             var udfs = new List<UDF>();
             var namedFormulas = new List<NamedFormula>();
             var definedTypes = new List<DefinedType>();
+            var definitionsLikely = false;
 
             var userDefinitionSourceInfos = new List<UserDefinitionSourceInfo>();
             var definitionBeforeTrivia = new List<ITexlSource>();
@@ -315,6 +316,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     var declaration = script.Substring(declarationStart, _curs.TokCur.Span.Min - declarationStart);
                     _curs.TokMove();
                     definitionBeforeTrivia.Add(ParseTrivia());
+                    definitionsLikely = true;
 
                     if (_curs.TidCur == TokKind.Semicolon)
                     {
@@ -403,6 +405,8 @@ namespace Microsoft.PowerFx.Core.Parser
                             CreateError(equalToken, TexlStrings.ErrNamedFormulaColonEqualRequired);
                             continue;
                         }
+                      
+                        definitionsLikely = true;                      
 
                         namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex, colonEqual: false, attribute));
                         userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.NamedFormula, thisIdentifier.As<IdentToken>(), declaration, new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));
@@ -447,6 +451,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     }
 
                     ParseTrivia();
+                    definitionsLikely = true;
 
                     var returnType = TokEat(TokKind.Ident, addError: false);
                     if (returnType == null)
@@ -559,7 +564,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
             }
 
-            return new ParseUserDefinitionResult(namedFormulas, udfs, definedTypes, _errors, _comments, userDefinitionSourceInfos: userDefinitionSourceInfos);
+            return new ParseUserDefinitionResult(namedFormulas, udfs, definedTypes, _errors, _comments, userDefinitionSourceInfos: userDefinitionSourceInfos, definitionsLikely);
         }
 
         private SourceList GetExtraTriviaSourceList()

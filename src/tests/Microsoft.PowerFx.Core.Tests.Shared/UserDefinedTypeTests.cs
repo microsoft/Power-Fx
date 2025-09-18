@@ -5,12 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Tests.Helpers;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -229,6 +232,44 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var validatorErrors = parseResult.Errors.Where(e => e.MessageKey.Contains("ErrTypeFunction_InvalidTypeExpression"));
             Assert.Equal(expectedErrorCount, validatorErrors.Count());
+        }
+
+        [Theory]
+        [InlineData("T := Type(Number);")]
+        [InlineData("T := Type({ x: Number, y: Text });")]
+        [InlineData("T := Type({ x: Number, rec: {y: Text, z: GUID } });")]
+        [InlineData("T := Type({ x: Number, rec: {y: Text, z: GUID } }); S := Type( { a: GUID, b: DateTime } );")]
+        public void TestCulture(string expressionDot)
+        {
+            var parserOptionsDot = new ParserOptions(new System.Globalization.CultureInfo("en-us")) { AllowsSideEffects = true };
+            var parserOptionsComma = new ParserOptions(new System.Globalization.CultureInfo("es-es")) { AllowsSideEffects = true };
+
+            // convert expressionDot into the comma decimal sepeartor version
+            var expressionComma = Regex.Replace(expressionDot.Replace(";", ";;").Replace(",", ";"), @"(?<=\d)\.(?=\d)", ",");
+
+            var checkResultDot = new DefinitionsCheckResult()
+                               .SetText(expressionDot, parserOptionsDot)
+                               .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            var errorsDot = checkResultDot.ApplyErrors();
+            Assert.Empty(errorsDot);
+
+            var checkResultCommaFail = new DefinitionsCheckResult()
+                                .SetText(expressionDot, parserOptionsComma)
+                                .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            var errorsCommaFail = checkResultCommaFail.ApplyErrors();
+            Assert.NotEmpty(errorsCommaFail);
+
+            var checkResultComma = new DefinitionsCheckResult()
+                                 .SetText(expressionComma, parserOptionsComma)
+                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            var errorsComma = checkResultComma.ApplyErrors();
+            Assert.Empty(errorsComma);
+
+            var checkResultDotFail = new DefinitionsCheckResult()
+                                 .SetText(expressionComma, parserOptionsDot)
+                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            var errorsDotFail = checkResultDotFail.ApplyErrors();
+            Assert.NotEmpty(errorsDotFail);
         }
     }
 }
