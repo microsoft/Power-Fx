@@ -17,8 +17,8 @@ false
 >> NewRecord.Field4 = Not( OldRecord.Field4 )
 true
 
->> NewRecord = OldRecord; NewRecord // can't compare records, "; NewRecord" avoid the REPL from thinking it is named formula
-Errors: Error 10-11: Incompatible types for comparison. These types can't be compared: Record, Record.
+>> Boolean(NewRecord = OldRecord) // Boolean wrapping prevents the REPL from seeing this as a named formula
+Errors: Error 18-19: Incompatible types for comparison. These types can't be compared: Record, Record.
 
 // NewRecord can be mutated but not set
 

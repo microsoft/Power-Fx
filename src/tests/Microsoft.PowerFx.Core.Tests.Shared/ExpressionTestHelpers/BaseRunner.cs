@@ -261,14 +261,26 @@ namespace Microsoft.PowerFx.Core.Tests
             // If the actual result is not an error, we'll fail with a mismatch below
             if (result == null)
             {
-                var msg = "Did not return a value";
+                StringBuilder msg = new StringBuilder();
 
                 if (runResult.Errors != null && runResult.Errors.Any())
                 {
-                    msg += string.Join(string.Empty, runResult.Errors.Select(err => "\r\n" + err));
+                    msg.Append(string.Join(string.Empty, runResult.Errors.Select(err => "\r\n" + err)));
                 }
 
-                return (TestResult.Fail, msg);
+                if (Regex.Match(expected, "^\\s*\\#no\\s*value", RegexOptions.IgnoreCase).Success)
+                {
+                    if (msg.Length == 0)
+                    {
+                        return (TestResult.Pass, null);
+                    }
+                    else
+                    {
+                        return (TestResult.Fail, "No value, but did return errors" + msg.ToString());
+                    }
+                }
+
+                return (TestResult.Fail, "Did not return a value" + msg.ToString());
             }
             else
             {

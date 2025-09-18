@@ -252,6 +252,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 TableSyntaxDoesntWrapRecords = true,
                 ConsistentOneColumnTableResult = true,
+                IsUserDefinedTypesEnabled = true,
             };
 
             // disable:PowerFxV1CompatibilityRules will force the tests specifically for those behaviors to be excluded from this run.
