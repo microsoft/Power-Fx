@@ -49,11 +49,40 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
+
+        // no colon
         [InlineData("x=1;y=2;z=x+y;", "Decimal(Abs(-(x+y+z)))", "6")]
         [InlineData("x=1;y=2;Foo(x: Number): Number = Abs(x);", "Decimal(Foo(-(y*y)+x))", "3")]
         [InlineData("myvar=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Decimal(Bar(1) + myvar)", "2")]
         [InlineData("a=2.0000000000000000000001;b=2.0000000000000000000001;", "a+b", "4.0000000000000000000002")]
+
+        // colon
+        [InlineData("x:=1;y:=2;z:=x+y;", "Decimal(Abs(-(x+y+z)))", "6")]
+        [InlineData("x:=1;y:=2;Foo(x: Number): Number = Abs(x);", "Decimal(Foo(-(y*y)+x))", "3")]
+        [InlineData("myvar:=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Decimal(Bar(1) + myvar)", "2")]
+        [InlineData("a:=2.0000000000000000000001;b:=2.0000000000000000000001;", "a+b", "4.0000000000000000000002")]
         public void NamedFormulaEntryTestDecimal(string script, string expression, string expected)
+        {
+            var engine = new RecalcEngine();
+            var parserOptions = new ParserOptions() { NumberIsFloat = false, AllowEqualOnlyNamedFormulas = true };
+
+            engine.TryAddUserDefinitions(script, out var errors, parserOptions);
+            Assert.Empty(errors);
+
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess);
+
+            var result = (DecimalValue)check.GetEvaluator().Eval();
+            Assert.True(decimal.TryParse(expected, out var expectedDecimal));
+            Assert.Equal(expectedDecimal, result.Value);
+        }
+
+        [Theory]
+        [InlineData("x:=1;y:=2;z:=x+y;", "Decimal(Abs(-(x+y+z)))", "6")]
+        [InlineData("x:=1;y:=2;Foo(x: Number): Number = Abs(x);", "Decimal(Foo(-(y*y)+x))", "3")]
+        [InlineData("myvar:=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Decimal(Bar(1) + myvar)", "2")]
+        [InlineData("a:=2.0000000000000000000001;b:=2.0000000000000000000001;", "a+b", "4.0000000000000000000002")]
+        public void NamedFormulaEntryTestDecimal_ColonEqualRequired(string script, string expression, string expected)
         {
             var engine = new RecalcEngine();
             var parserOptions = new ParserOptions() { NumberIsFloat = false };
@@ -73,7 +102,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("x:=1;y:=2;z:=x+y;", "Float(Abs(-(x+y+z)))", 6d)]
         [InlineData("x:=1;y:=2;Foo(x: Number): Number = Abs(x);", "Foo(-(y*y)+x)", 3d)]
         [InlineData("myvar:=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Bar(1) + myvar", 2d)]
-        public void NamedFormulaEntryTestColonEqual(string script, string expression, double expected)
+        public void NamedFormulaEntryTest_ColonEqualRequired(string script, string expression, double expected)
         {
             var engine = new RecalcEngine();
 
