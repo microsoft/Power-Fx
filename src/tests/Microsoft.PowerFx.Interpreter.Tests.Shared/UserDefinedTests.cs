@@ -321,12 +321,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [Theory]
         [InlineData("a = 3", true)]
+        [InlineData("a = 3\n", true)]
         [InlineData("a = 3;", true)]
         [InlineData("a = 3;;", false)]
         [InlineData("a = 3,", false)]
         [InlineData("a = 3.", true)] // decimal seperator
         [InlineData("a = 3:", false)]
         [InlineData("a = 3  b = 4", false)]
+        [InlineData("a = 3\nb = 4", false)]
+        [InlineData("a = 3\nb = 4\n", false)]
         [InlineData("a = 3. b = 4", false)]
         [InlineData("a = 3; b = 4", true)]
         [InlineData("a = 3; b = 4;", true)]
@@ -353,12 +356,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [Theory]
         [InlineData("a = 3", true)]
+        [InlineData("a = 3\n", true)]
         [InlineData("a = 3;", false)]
         [InlineData("a = 3;;", true)]
         [InlineData("a = 3,", true)] // equivalent of 3. in invariant (decimal seperator)
         [InlineData("a = 3.", false)] 
         [InlineData("a = 3:", false)]
         [InlineData("a = 3  b = 4", false)]
+        [InlineData("a = 3\nb = 4", false)]
+        [InlineData("a = 3\nb = 4\n", false)]
         [InlineData("a = 3. b = 4", false)]
         [InlineData("a = 3; b = 4", false)]
         [InlineData("a = 3; b = 4;", false)]
