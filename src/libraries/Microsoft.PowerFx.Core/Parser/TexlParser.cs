@@ -514,14 +514,10 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     ParseTrivia();
 
-                    if (_curs.TidCur == TokKind.Eof)
+                    if (_curs.TidCur == TokKind.Eof || TokEat(TokKind.Semicolon) == null)
                     {
-                        break;
-                    }
-
-                    if (TokEat(TokKind.Semicolon) == null)
-                    {
-                        // TokEat will add an error if the semicolon was not seen
+                        // If we aren't at the end of the buffer (checked first),
+                        // TokEat will check for a semicolon, and add an error (as a side effect) if it isn't found.
                         break;
                     }
 
