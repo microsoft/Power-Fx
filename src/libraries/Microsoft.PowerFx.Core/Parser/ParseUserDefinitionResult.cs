@@ -25,13 +25,19 @@ namespace Microsoft.PowerFx.Core.Parser
 
         internal bool HasErrors { get; }
 
-        public ParseUserDefinitionResult(IEnumerable<NamedFormula> namedFormulas, IEnumerable<UDF> uDFs, IEnumerable<DefinedType> definedTypes, IEnumerable<TexlError> errors, IEnumerable<CommentToken> comments, IEnumerable<UserDefinitionSourceInfo> userDefinitionSourceInfos)
+        // There is a good chance that the script contained user definitions.
+        // This looks for :=, f(a:type), and other parse structures that are unique to user definitions.
+        // This determination is not definitive, but if true, user definition errors should be returned instead of standard parse errors.
+        internal bool DefinitionsLikely { get; }
+
+        public ParseUserDefinitionResult(IEnumerable<NamedFormula> namedFormulas, IEnumerable<UDF> uDFs, IEnumerable<DefinedType> definedTypes, IEnumerable<TexlError> errors, IEnumerable<CommentToken> comments, IEnumerable<UserDefinitionSourceInfo> userDefinitionSourceInfos, bool definitionsLikely)
         {
             NamedFormulas = namedFormulas;
             UDFs = uDFs;
             DefinedTypes = definedTypes;
             Comments = comments;
             UserDefinitionSourceInfos = userDefinitionSourceInfos;
+            DefinitionsLikely = definitionsLikely;
 
             if (errors?.Any() ?? false)
             {

@@ -1,0 +1,499 @@
+#SETUP: PowerFxV1CompatibilityRules
+
+// UDF without side effects
+
+>> Reverse(x: Text): Text = Concat(ForAll(Sequence(Len(x), Len(x), -1), Mid(x, Value, 1)), Value);
+#no value
+
+>> Reverse("Hello, World")
+"dlroW ,olleH"
+
+// UDF with side effects
+
+>> Set(offset, 0);
+0
+
+>> Inc(): Number = { Set(offset, offset + 1); offset };
+#no value
+
+>> Inc() // 1
+1
+
+>> Inc() // 2
+2
+
+>> Dec(): Number { Set(offset, offset - 1); offset };
+#no value
+
+>> Dec() // 1
+1
+
+>> Dec() // 0
+0
+
+// UDT
+
+>> T := Type({a:Text, b:Number});
+#no value
+
+>> Set(offset, 10)
+10
+
+>> F(x:T):Text = x.a & ": " & (x.b+offset);
+#no value
+
+>> F({a:"Start at", b:1})
+"Start at: 11"
+
+// Named formula
+// Prefixed "placeholder" type definition is needed until we have := named formula support https://github.com/microsoft/Power-Fx/pull/2966, otherwise it would be interpreted as a comparison
+
+>> PlaceholderNFT1 := Type(Boolean); NF1 = 10 * offset;
+#no value
+
+>> PlaceholderNFT2 := Type(Boolean); NF2 = 20 * offset;
+#no value
+
+>> NF1 * NF2 // offset = 10
+20000
+
+>> Set(offset, 5)
+5
+
+>> NF1 * NF2 // offset = 5
+5000
+
+// Coercion of parameters and return values
+
+>> IsOdd(x:Number):Boolean = Mod(x,2) = 1;
+#no value
+
+>> IsOdd(3)
+true
+
+>> IsOdd(4)
+false
+
+>> IsOdd(Date(2002,1,1))
+true
+
+>> IsOdd(Date(2002,1,2))
+false
+
+>> IsOdd(true)
+true
+
+>> IsOdd(false)
+false
+
+>> IsOdd(Color.Red)
+Errors: Error 11-15: Invalid argument type (Enum (Color)). Expecting a Number value instead.
+
+>> ReturnNum():Number = 10;
+#no value
+
+>> ReturnNum()
+10
+
+>> ReturnNumDate():Number = Date(2002,1,1);
+#no value
+
+>> ReturnNumDate()
+37257
+
+>> ReturnNumBoolean():Number = true;
+#no value
+
+>> ReturnNumBoolean()
+1
+
+>> ReturnNumColor():Number = Color.Red;
+Errors: Error 31-35: The stated function return type 'Number' does not match the return type of the function body 'Enum (Color)'.
+
+>> MyNum := Type(Number);
+#no value
+
+>> IsOddMyNum(x:Number):Boolean = Mod(x,2) = 1;
+#no value
+
+>> IsOddMyNum(12)
+false
+
+>> IsOddMyNum(Date(2002,1,1))
+true
+
+>> IsOddMyNum(false)
+false
+
+>> IsOddMyNum(Color.Blue)
+Errors: Error 16-21: Invalid argument type (Enum (Color)). Expecting a Number value instead.
+
+>> ReturnMyNum():MyNum = 10;
+#no value
+
+>> ReturnMyNum()
+10
+
+>> ReturnMyNumDate():MyNum = Date(2002,1,1);
+#no value
+
+>> ReturnMyNumDate()
+37257
+
+>> ReturnMyNumBoolean():MyNum = true;
+#no value
+
+>> ReturnMyNumBoolean()
+1
+
+>> ReturnMyNumColor():MyNum = Color.Red;
+Errors: Error 32-36: The stated function return type 'Number' does not match the return type of the function body 'Enum (Color)'.
+
+>> MyNumRec := Type({Val:Number});
+#no value
+
+>> IsOddMyNumRec(x:MyNumRec):Boolean = Mod(x.Val,2) = 1;
+#no value
+
+>> IsOddMyNumRec({Val:21})
+true
+
+>> IsOddMyNumRec({Val:Date(2002,1,1)})
+true
+
+>> IsOddMyNumRec({Val:false})
+false
+
+>> IsOddMyNumRec({Val:Color.Green})
+Errors: Error 14-31: Incompatible type. The 'Val' column in the data source you're updating expects a 'Number' type and you're using a 'Enum (Color)' type.
+
+>> ReturnMyNumRec():MyNum = 10;
+#no value
+
+>> ReturnMyNumRec()
+10
+
+>> ReturnMyNumRecDate():MyNumRec = {Val:Date(2002,1,1)};
+#no value
+
+>> ReturnMyNumRecDate()
+{Val:37257}
+
+>> ReturnMyNumRecBoolean():MyNumRec = {Val:true};
+#no value
+
+>> ReturnMyNumRecBoolean()
+{Val:1}
+
+>> ReturnMyNumColor():MyNumRec = {Val:Color.Red};
+Errors: Error 30-45: Incompatible function body. The 'Val' column in the function return type expects a 'Number' type and you're returning a 'Enum (Color)' type in function body.
+
+>> MyNumTable := Type([{Val:Number}]);
+#no value
+
+>> IsOddMyNumTable(x:MyNumTable):Boolean = Mod(First(x).Val,2) = 1;
+#no value
+
+>> IsOddMyNumTable([{Val:-2}])
+false
+
+>> IsOddMyNumTable([{Val:Date(2002,1,1)}])
+true
+
+>> IsOddMyNumTable([{Val:true}])
+true
+
+>> IsOddMyNumTable([{Val:Color.White}])
+Errors: Error 16-35: Incompatible type. The 'Val' column in the data source you're updating expects a 'Number' type and you're using a 'Enum (Color)' type.
+
+>> ReturnMyNumTable():MyNumTable = Table({Val:10});
+#no value
+
+>> ReturnMyNumTable()
+Table({Val:10})
+
+>> ReturnMyNumTableDate():MyNumTable = Table({Val:Date(2002,1,1)});
+#no value
+
+>> ReturnMyNumTableDate()
+Table({Val:37257})
+
+>> ReturnMyNumTableBoolean():MyNumTable = Table({Val:true});
+#no value
+
+>> ReturnMyNumTableBoolean()
+Table({Val:1})
+
+>> ReturnMyNumTableColor():MyNumTable = Table({Val:Color.Red});
+Errors: Error 37-59: Incompatible function body. The 'Val' column in the function return type expects a 'Number' type and you're returning a 'Enum (Color)' type in function body.
+
+// Text parameter coercion
+
+>> Vowels(s:Text):Text = Concat(ForAll(Split(s,""), If(Lower(Value) in ["a","e","i","o","u"], Value, "")), Value);
+#no value
+
+>> Vowels("hello world")
+"eoo"
+
+>> Vowels(Color.White)
+"ie"
+
+>> Vowels(12)
+""
+
+>> Vowels(GUID("f81d4fae-7dec-11d0-a765-00a0c91e6bf6"))
+"aeeaae"
+
+>> TextRec := Type({Txt:Text});
+#no value
+
+>> VowelsRec(s:TextRec):Text = Concat(ForAll(Split(s.Txt,""), If(Lower(Value) in ["a","e","i","o","u"], Value, "")), Value);
+#no value
+
+>> VowelsRec({Txt:"hello world"})
+"eoo"
+
+>> VowelsRec({Txt:Color.Red})
+"e"
+
+>> VowelsRec({Txt:12})
+""
+
+>> VowelsRec({Txt:GUID("f81d4fae-7dec-11d0-a765-00a0c91e6bf6")})
+"aeeaae"
+
+>> TextTable := Type([{Txt:Text}]);
+#no value
+
+>> VowelsTable(s:TextTable):Text = Concat(ForAll(Split(First(s).Txt,""), If(Lower(Value) in ["a","e","i","o","u"], Value, "")), Value);
+#no value
+
+>> VowelsTable([{Txt:"hello world"}])
+"eoo"
+
+>> VowelsTable([{Txt:Color.Red}])
+"e"
+
+>> VowelsTable([{Txt:12}])
+""
+
+>> VowelsTable([{Txt:GUID("f81d4fae-7dec-11d0-a765-00a0c91e6bf6")}])
+"aeeaae"
+
+>> ReturnTextText():Text = "hello world";
+#no value
+
+>> ReturnTextText()
+"hello world"
+
+>> ReturnTextColor():Text = Color.White;
+#no value
+
+>> ReturnTextColor()
+"White"
+
+>> ReturnTextGUID():Text = GUID("f81d4fae-7dec-11d0-a765-00a0c91e6bf6");
+#no value
+
+>> ReturnTextGUID()
+"f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+
+>> ReturnTextDate():Text = Date(2002,1,1);
+#no value
+
+>> ReturnTextDate()
+"1/1/2002"
+
+>> ReturnTextRecText():TextRec = {Txt:"hello world"};
+#no value
+
+>> ReturnTextRecText()
+{Txt:"hello world"}
+
+>> ReturnTextRecNumber():TextRec = {Txt:1};
+#no value
+
+>> ReturnTextRecNumber()
+{Txt:"1"}
+
+>> ReturnTextRecDate():TextRec = {Txt:Date(2002,1,1)};
+#no value
+
+>> ReturnTextRecDate()
+{Txt:"1/1/2002"}
+
+>> ReturnTextRecColor():TextRec = {Txt:Color.Yellow};
+#no value
+
+>> ReturnTextRecColor()
+{Txt:"Yellow"}
+
+>> ReturnTextRecGUID():TextRec = {Txt:GUID("f81d4fae-7dec-11d0-a765-00a0c91e6bf6")};
+#no value
+
+// TODO: https://github.com/microsoft/Power-Fx/issues/2972
+>> ReturnTextRecGUID()
+{Txt:"f81d4fae-7dec-11d0-a765-00a0c91e6bf6"}
+
+>> ReturnTextTableText():TextTable = Table({Txt:"hello world"});
+#no value
+
+>> ReturnTextTableText()
+Table({Txt:"hello world"})
+
+>> ReturnTextTableNumber():TextTable = Table({Txt:1});
+#no value
+
+>> ReturnTextTableNumber()
+Table({Txt:"1"})
+
+>> ReturnTextTableDate():TextTable = Table({Txt:Date(2002,1,1)});
+#no value
+
+>> ReturnTextTableDate()
+Table({Txt:"1/1/2002"})
+
+>> ReturnTextTableColor():TextTable = Table({Txt:Color.Yellow});
+#no value
+
+>> ReturnTextTableColor()
+Table({Txt:"Yellow"})
+
+>> ReturnTextTableGUID():TextTable = Table({Txt:GUID("f81d4fae-7dec-11d0-a765-00a0c91e6bf6")});
+#no value
+
+>> ReturnTextTableGUID()
+Table({Txt:"f81d4fae-7dec-11d0-a765-00a0c91e6bf6"})
+
+// REPL built in functions within a UDF
+
+>> Broadcast1():Number = { Set( offset, offset * 10 ); Notify("Broadcast called"); offset };
+#no value
+
+>> Broadcast1() // 50
+50
+
+>> Broadcast2():Number { Set( offset, offset / 10 ); Notify("Broadcast called"); offset };
+#no value
+
+>> Broadcast2() // 5
+5
+
+// Can't include additional fields in parameters
+// Need to use shaping functions if needed
+// More strongly types the parameter than we usually do, avoids someone making a mistake and mispelling a field name
+
+>> Person := Type( { Name: Text, Age: Number } );
+#no value
+
+>> AddressOf( p: Person ):Text = p.Address;
+Errors: Error 31-39: Name isn't valid. 'Address' isn't recognized.
+
+>> AddressOf( p: Person ):Text = p.Name;
+#no value
+
+>> AddressOf( { Name: "Jill", Age: 30 } )
+"Jill"
+
+>> AddressOf( { Name: "Jill", Age: 30, Address: "Main St" } )
+Errors: Error 11-56: Invalid argument type. Input Record value, contains an unexpected additional field 'Address'.
+
+>> AddressOf( DropColumns( { Name: "Jill", Age: 30, Address: "Main St" }, Address ) )
+"Jill"
+
+>> AddressOf( DropColumns( { Age: 30, Address: "Main St" }, Address ) )
+Blank()
+
+>> AddressOf( { Age: 30 } )
+Blank()
+
+>> AddressOf( ShowColumns( { Name: "Jill", Age: 30, Address: "Main St" }, Name ) )
+"Jill"
+
+// can't include additional fields in return 
+
+>> Person(name:Text, age:Number):Person = {Name:name, Age:age}; // Person constructor
+#no value
+
+>> Person("bill", 40)
+{Age:40,Name:"bill"}
+
+>> PersonMore(name:Text, age:Number, address:Text):Person = {Name:name, Age:age, Address:address}; // invalid, added Address field isn't in Person
+Errors: Error 57-94: Invalid function body. Returned Record value, contains an unexpected additional field 'Address'.
+
+>> PersonLower(name:Text, age:Number):Person = {name:name, Age:age}; // invalid, name is lower case in record
+Errors: Error 44-64: Invalid function body. Returned Record value, contains an unexpected additional field 'name'.
+
+// table with more or less field tests
+
+>> People := Type( [ Person ] );
+#no value
+
+>> OldestPerson(people:People):Person = First(Sort(people, Age, SortOrder.Descending));
+#no value
+
+>> OldestPerson([{Name:"john",Age:20}, {Name:"Jane",Age:21}])
+{Age:21,Name:"Jane"}
+
+>> OldestPerson([{Age:20},{Age:21}])
+{Age:21,Name:Blank()}
+
+>> OldestPerson([])
+Blank()
+
+>> OldestPerson([{Name:"john",Age:20},{Name:"Jane",Age:21,Address:"Main St"}])
+Errors: Error 13-74: Invalid argument type. Input Table value, contains an unexpected additional field 'Address'.
+
+>> OldestPerson([{Name:"john",Age:20,Address:"Main St"},{Name:"Jane",Age:21}])
+Errors: Error 13-74: Invalid argument type. Input Table value, contains an unexpected additional field 'Address'.
+
+>> SortedPeople(list:People):People = SortByColumns(list, "Name", SortOrder.Ascending, "Age", SortOrder.Ascending);
+#no value
+
+>> SortedPeople([{Name:"John",Age:22},{Name:"Jane",Age:21},{Name:"John",Age:20}])
+Table({Age:21,Name:"Jane"},{Age:20,Name:"John"},{Age:22,Name:"John"})
+
+>> SortedPeople([{Name:"John",Age:22},{Name:"Jane",Age:21,Address:"Main St"},{Name:"John",Age:20}])
+Errors: Error 13-95: Invalid argument type. Input Table value, contains an unexpected additional field 'Address'.
+
+// Waiting on resolution of https://github.com/microsoft/Power-Fx/issues/2973
+// >> SortedPeople([{Name:"John"},{Name:"Jane"}]) // fills in missing fields with blank, can still sort by it as the column is still there
+// Table({Age:Blank(),Name:"Jane"},{Age:Blank(),Name:"John"})
+
+// coercion works for parameters and return values
+
+>> Person(1, Date(2000,1,1))
+{Age:36526,Name:"1"}
+
+>> OldestPerson( [ {Name: "Steve", Age: 12 }, {Name: Color.Red, Age: Date(2001,1,1)}, {Name: GUID("f81d4fae-7dec-11d0-a765-00a0c91e6bf6"), Age: 40000} ] ) // later records are coerced to first record
+{Age:40000,Name:"f81d4fae-7dec-11d0-a765-00a0c91e6bf6"}
+
+>> OldestPerson( [ {Name: Color.Red, Age: Date(2001,1,1)} ] )
+{Age:36892,Name:"Red"}
+
+>> OldestPerson( [ {Name: GUID("f81d4fae-7dec-11d0-a765-00a0c91e6bf6"), Age: 40000} ] )
+{Age:40000,Name:"f81d4fae-7dec-11d0-a765-00a0c91e6bf6"}
+
+>> OldestPerson( [ {Name: Color.Red, Age: Date(2001,1,1)}, {Name: GUID("f81d4fae-7dec-11d0-a765-00a0c91e6bf6"), Age: 40000} ] ) // can't coerce GUID to Color, although both can be coerced to Text
+Errors: Error 56-120: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
+
+>> OldestPerson( [ {Name: Text(Color.Red), Age: Value(Date(2001,1,1))}, {Name: GUID("f81d4fae-7dec-11d0-a765-00a0c91e6bf6"), Age: 40000} ] )
+{Age:40000,Name:"f81d4fae-7dec-11d0-a765-00a0c91e6bf6"}
+
+>> FunnyPerson1():Person = {Name: Color.Red, Age: Date(2001,1,1)};
+#no value
+
+>> FunnyPerson1()
+{Age:36892,Name:"Red"}
+
+>> FunnyPerson2():Person = {Name: Color.Red};
+#no value
+
+>> FunnyPerson2()
+{Name:"Red"}
+
+>> FunnyPerson3():Person = {Age: Date(2001,1,1)};
+#no value
+
+>> FunnyPerson3()
+{Age:36892}
