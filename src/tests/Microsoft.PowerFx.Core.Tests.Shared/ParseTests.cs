@@ -831,6 +831,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("   a    :=  10    ;  ")]
         [InlineData("a := b = 10;")]
         [InlineData("a := 10; c := 20;")]
+        [InlineData("a := 10")]
         public void TestFormulasParse(string script)
         {
             TestFormulasParseRoundtrip(script, allowEqualOnly: true);
@@ -847,6 +848,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("   a    :=  10    ;  ")]
         [InlineData("a := b = 10;")]
         [InlineData("a := 10; c := 20;")]
+        [InlineData("a := 10")]
         public void TestFormulasParse_ColonEqualRequired(string script)
         {
             TestFormulasParseRoundtrip(script, allowEqualOnly: false);
@@ -887,7 +889,6 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("a := 10")]
         [InlineData("a := ;")]
         [InlineData("b:=10;a := ;c:=3;")]
         [InlineData("/*b:=10*/;a := ;c:=3;")]
