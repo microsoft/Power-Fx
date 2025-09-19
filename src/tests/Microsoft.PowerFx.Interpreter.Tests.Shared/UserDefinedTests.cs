@@ -435,6 +435,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
+
+        // no colon
         [InlineData("a = 3", true)]
         [InlineData("a = 3\n", true)]
         [InlineData("a = 3;", true)]
@@ -452,10 +454,30 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("a = 3;; b = 4", false)]
         [InlineData("a = 3;; b = 4;;", false)]
         [InlineData("a = 3;; b = 4;", false)]
+
+        // colon
+        [InlineData("a := 3", true)]
+        [InlineData("a := 3\n", true)]
+        [InlineData("a := 3;", true)]
+        [InlineData("a := 3;;", false)]
+        [InlineData("a := 3,", false)]
+        [InlineData("a := 3.", true)] // decimal seperator
+        [InlineData("a := 3:", false)]
+        [InlineData("a := 3  b := 4", false)]
+        [InlineData("a := 3\nb := 4", false)]
+        [InlineData("a := 3\nb := 4\n", false)]
+        [InlineData("a := 3. b := 4", false)]
+        [InlineData("a := 3; b := 4", true)]
+        [InlineData("a := 3; b := 4;", true)]
+        [InlineData("a := 3, b := 4", false)]
+        [InlineData("a := 3;; b := 4", false)]
+        [InlineData("a := 3;; b := 4;;", false)]
+        [InlineData("a := 3;; b := 4;", false)]
+
         public void BadOtherNFSeperatorsDot(string expression, bool isValid)
         {
             var engine = new RecalcEngine();
-            var parserOptions = new ParserOptions() { NumberIsFloat = false, Culture = CultureInfo.InvariantCulture };
+            var parserOptions = new ParserOptions() { NumberIsFloat = false, Culture = CultureInfo.InvariantCulture, AllowEqualOnlyNamedFormulas = true };
 
             engine.TryAddUserDefinitions(expression, out var errors, parserOptions);
 
@@ -470,6 +492,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
+
+        // no colon
         [InlineData("a = 3", true)]
         [InlineData("a = 3\n", true)]
         [InlineData("a = 3;", false)]
@@ -487,10 +511,29 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("a = 3;; b = 4", true)]
         [InlineData("a = 3;; b = 4;;", true)]
         [InlineData("a = 3;; b = 4;", false)]
+
+        // colon
+        [InlineData("a := 3", true)]
+        [InlineData("a := 3\n", true)]
+        [InlineData("a := 3;", false)]
+        [InlineData("a := 3;;", true)]
+        [InlineData("a := 3,", true)] // equivalent of 3. in invariant (decimal seperator)
+        [InlineData("a := 3.", false)]
+        [InlineData("a := 3:", false)]
+        [InlineData("a := 3  b := 4", false)]
+        [InlineData("a := 3\nb := 4", false)]
+        [InlineData("a := 3\nb := 4\n", false)]
+        [InlineData("a := 3. b := 4", false)]
+        [InlineData("a := 3; b := 4", false)]
+        [InlineData("a := 3; b := 4;", false)]
+        [InlineData("a := 3, b := 4", false)]
+        [InlineData("a := 3;; b := 4", true)]
+        [InlineData("a := 3;; b := 4;;", true)]
+        [InlineData("a := 3;; b := 4;", false)]
         public void BadOtherNFSeperatorsComma(string expression, bool isValid)
         {
             var engine = new RecalcEngine();
-            var parserOptions = new ParserOptions() { NumberIsFloat = false, Culture = new CultureInfo("fr-fr") };
+            var parserOptions = new ParserOptions() { NumberIsFloat = false, Culture = new CultureInfo("fr-fr"), AllowEqualOnlyNamedFormulas = true };
 
             engine.TryAddUserDefinitions(expression, out var errors, parserOptions);
 
