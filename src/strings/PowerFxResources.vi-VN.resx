@@ -3749,14 +3749,14 @@
     <comment>Error message when the user attempts to check equality between two values that don't make sense together. {0} and {1} will be canonical type representations like "Number" or "Boolean".</comment>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
-    <value>Chúng tôi không thể đánh giá công thức của bạn vì các giá trị được so sánh trong công thức không thuộc cùng loại.</value>
+    <value>We can't evaluate your formula because the values being compared in the formula aren't the same type.</value>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Có thể bạn cần chuyển đổi giá trị đó thành cùng loại, chẳng hạn như chuyển đổi một chuỗi ngày (ví dụ: "31/12/2018") thành giá trị ngày.</value>
     <comment>1 How to fix the error. </comment>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_2" xml:space="preserve">
-    <value>Nếu bạn đang so sánh các bản ghi hoặc các bảng, các loại trường hoặc cột phải khớp chính xác nhau.</value>
+    <value>If you're comparing records or tables, the field or column types must match exactly.</value>
     <comment>2 How to fix the error.</comment>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1" xml:space="preserve">
@@ -3792,7 +3792,7 @@
     <comment>{Locked}</comment>
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
-    <value>Loại không tương thích. Cột '{0}' trong nguồn dữ liệu bạn đang cập nhật dự kiến có loại '{1}' mà bạn lại đang sử dụng loại '{2}'.</value>
+    <value>Incompatible type. The '{0}' column in the data source you're updating expects a '{1}' type and you're using a '{2}' type.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
@@ -4250,8 +4250,8 @@
     <comment>This error message shows up when expected return type does not match with actual return type. The arguments '{0}' and '{1}' will be replaced with data types. For example, "The stated function return type 'Number' does not match the return type of the function body 'Table'"</comment>
   </data>
   <data name="ErrUDF_ReturnTypeSchemaIncompatible" xml:space="preserve">
-    <value>Nội dung hàm không tương thích. Cột “{0}” trong kiểu trả về của hàm được dự kiến là kiểu “{1}” và bạn đang trả về kiểu “{2}” trong nội dung hàm.</value>
-    <comment>This error message shows up when expected return type schema is incompatible with actual return type. The argument '{0}' will be replaced with column name with incompatible type, '{1}' and '{2}' are replaced with expected and actual type. For example, "Incompatible function body. The 'A' column in the function return type expects a 'Text' type and you’re returning a 'GUID' type in function body."</comment>
+    <value>Incompatible function body. The '{0}' column in the function return type expects a '{1}' type and you're returning a '{2}' type in function body.</value>
+    <comment>This error message shows up when expected return type schema is incompatible with actual return type. The argument '{0}' will be replaced with column name with incompatible type, '{1}' and '{2}' are replaced with expected and actual type. For example, "Incompatible function body. The 'A' column in the function return type expects a 'Text' type and you're returning a 'GUID' type in function body."</comment>
   </data>
   <data name="ErrUDF_ReturnTypeSchemaAdditionalFields" xml:space="preserve">
     <value>Nội dung hàm không hợp lệ. Giá trị {0} trả về, chứa trường bổ sung ngoài dự kiến “{1}”.</value>
@@ -5155,6 +5155,13 @@
     <comment>
       Error message returned when user uses '=' syntax to define User-defined type.
       Some examples for valid named type declarations - "Point := Type({x: Number, y: Number});" , "T1 := Type(Number);" , "T2 := Type([Boolean]);".
+    </comment>
+  </data>
+  <data name="ErrNamedFormulaColonEqualRequired" xml:space="preserve">
+    <value>Incorrect syntax: '=' cannot be used to declare named formulas. Use ':=' instead.</value>
+    <comment>
+      Error message returned when user uses '=' syntax to define a named formula.
+      Some examples for valid named formulas - "x := 3; y := 5;".
     </comment>
   </data>
   <data name="ErrJoinCantAddRename" xml:space="preserve">
