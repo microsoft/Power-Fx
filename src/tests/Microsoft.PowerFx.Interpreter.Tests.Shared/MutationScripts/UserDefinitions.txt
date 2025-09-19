@@ -33,7 +33,7 @@
 
 // named formula
 
->> NamedFormula = Reverse("Good bye");
+>> NamedFormula := Reverse("Good bye");
 #no value
 
 >> NamedFormula
@@ -76,7 +76,7 @@
 >> DecNoSemi() // 0
 0
 
->> NamedFormulaNoSemi = ReverseNoSemi("Good bye")
+>> NamedFormulaNoSemi := ReverseNoSemi("Good bye")
 #no value
 
 >> NamedFormulaNoSemi
