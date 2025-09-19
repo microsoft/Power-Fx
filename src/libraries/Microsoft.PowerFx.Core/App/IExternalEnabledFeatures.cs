@@ -18,10 +18,6 @@ namespace Microsoft.PowerFx.Core.App
         bool IsUseDisplayNameMetadataEnabled { get; }
 
         bool IsDynamicSchemaEnabled { get; }
-
-        bool IsEnhancedComponentFunctionPropertyEnabled { get; }
-
-        bool IsComponentFunctionPropertyDataflowEnabled { get; }
     }
 
     internal sealed class DefaultEnabledFeatures : IExternalEnabledFeatures
@@ -33,9 +29,5 @@ namespace Microsoft.PowerFx.Core.App
         public bool IsUseDisplayNameMetadataEnabled => true;
 
         public bool IsDynamicSchemaEnabled => true;
-
-        public bool IsEnhancedComponentFunctionPropertyEnabled => true;
-
-        public bool IsComponentFunctionPropertyDataflowEnabled => true;
     }
 }
