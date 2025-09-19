@@ -318,21 +318,14 @@ namespace Microsoft.PowerFx.Core.Parser
                     definitionBeforeTrivia.Add(ParseTrivia());
                     definitionsLikely = true;
 
-                    if (_curs.TidCur == TokKind.Semicolon)
+                    if (_curs.TidCur == TokKind.Semicolon || _curs.TidCur == TokKind.Eof)
                     {
                         CreateError(thisIdentifier, TexlStrings.ErrNamedType_MissingTypeExpression);
                     }
 
                     // Extract expression
-                    while (_curs.TidCur != TokKind.Semicolon)
+                    while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
                     {
-                        // Check if we're at EOF before a semicolon is found
-                        if (_curs.TidCur == TokKind.Eof)
-                        {
-                            CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
-                            break;
-                        }
-
                         // Parse expression
                         definitionBeforeTrivia.Add(ParseTrivia());
                         var result = ParseExpr(Precedence.None);
@@ -375,21 +368,14 @@ namespace Microsoft.PowerFx.Core.Parser
                     _curs.TokMove();
                     definitionBeforeTrivia.Add(ParseTrivia());
 
-                    if (_curs.TidCur == TokKind.Semicolon)
+                    if (_curs.TidCur == TokKind.Semicolon || _curs.TidCur == TokKind.Eof)
                     {
                         CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
                     }
 
                     // Extract expression
-                    while (_curs.TidCur != TokKind.Semicolon)
+                    while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
                     {
-                        // Check if we're at EOF before a semicolon is found
-                        if (_curs.TidCur == TokKind.Eof)
-                        {
-                            CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
-                            break;
-                        }
-
                         // Parse expression
                         definitionBeforeTrivia.Add(ParseTrivia());
                         var result = ParseExpr(Precedence.None);
@@ -518,16 +504,6 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         var result = isImperative ? ParseUDFBody(ref definitionBeforeTrivia) : ParseExpr(Precedence.None);
 
-                        // Check if we're at EOF before a semicolon is found
-                        if (_curs.TidCur == TokKind.Eof)
-                        {
-                            // Add incomplete UDF as they are needed for intellisense 
-                            udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, isImperative: isImperative, parserOptions.NumberIsFloat, isValid: false));
-                            userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.UDF, thisIdentifier.As<IdentToken>(), declaration, new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));
-                            CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
-                            break;
-                        }
-
                         var bodyParseValid = _errors?.Count == errorCount;
 
                         udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, isImperative: isImperative, parserOptions.NumberIsFloat, isValid: bodyParseValid));
@@ -546,8 +522,10 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     ParseTrivia();
 
-                    if (TokEat(TokKind.Semicolon) == null)
+                    if (_curs.TidCur == TokKind.Eof || TokEat(TokKind.Semicolon) == null)
                     {
+                        // If we aren't at the end of the buffer (checked first),
+                        // TokEat will check for a semicolon, and add an error (as a side effect) if it isn't found.
                         break;
                     }
 

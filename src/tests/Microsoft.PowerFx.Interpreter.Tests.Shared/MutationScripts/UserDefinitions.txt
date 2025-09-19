@@ -31,6 +31,66 @@
 >> Dec() // 0
 0
 
+// named formula
+
+>> NamedFormula = Reverse("Good bye");
+#no value
+
+>> NamedFormula
+"eyb dooG"
+
+// UDT
+
+>> Integer := Type(Number);
+#no value
+
+>> MyInt(x:Number):Integer = Int(x);
+#no value
+
+>> MyInt(12.34)
+12
+
+// no semicolons
+
+>> ReverseNoSemi(x: Text): Text = Concat(ForAll(Sequence(Len(x), Len(x), -1), Mid(x, Value, 1)), Value)
+#no value
+
+>> ReverseNoSemi("Hello, World")
+"dlroW ,olleH"
+
+>> IncNoSemi(): Number = { Set(offset, offset + 1); offset }
+#no value
+
+>> IncNoSemi() // 1
+1
+
+>> IncNoSemi() // 2
+2
+
+>> DecNoSemi(): Number = { Set(offset, offset - 1); offset }
+#no value
+
+>> DecNoSemi() // 1
+1
+
+>> DecNoSemi() // 0
+0
+
+>> NamedFormulaNoSemi = ReverseNoSemi("Good bye")
+#no value
+
+>> NamedFormulaNoSemi
+"eyb dooG"
+
+>> IntegerNoSemi := Type(Number)
+#no value
+
+>> MyIntNoSemi(x:Number):IntegerNoSemi = Int(x)
+#no value
+
+>> MyIntNoSemi(12.34)
+12
+
 // UDT
 
 >> T := Type({a:Text, b:Number});

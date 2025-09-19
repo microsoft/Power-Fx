@@ -815,9 +815,13 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("A_Formula = 10;")]
         [InlineData("'A Formula  ' = 10;")]
         [InlineData("'Formul@  ^%' = 10;")]
+        [InlineData("'Formul@  ^%' = 10")]
+        [InlineData("'Formul@  ^%' = 10    ")]
         [InlineData("   a    =  10    ;  ")]
         [InlineData("a = b = 10;")]
         [InlineData("a = 10; c = 20;")]
+        [InlineData("a = 10; c = 20")]
+        [InlineData("a = 10")]
 
         // with colon-equal
         [InlineData("AFormula := 10;")]
@@ -864,7 +868,6 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("a = 10")]
         [InlineData("a = ;")]
         [InlineData("b=10;a = ;c=3;")]
         [InlineData("/*b=10*/;a = ;c=3;")]
@@ -1242,8 +1245,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Add(x: Number, y:Number): Number = ;", 1, 0, true)]
         [InlineData("Valid(x: Number): Number = x; Invalid(x: Text): Text = {;};", 2, 1, true)]
         [InlineData("Invalid(x: Text): Text = ({); A(): Text = \"Hello\";", 2, 1, true)]
-        [InlineData("F(): Number = App", 1, 0, true)]
-        [InlineData("F1(): Number = A; F2(a: Boolean): Number = Some", 2, 1, true)]
+        [InlineData("F(): Number = App", 1, 1, false)]
+        [InlineData("F1(): Number = A; F2(a: Boolean): Number = Some", 2, 2, false)]
         [InlineData("F(): Number { Text; T", 1, 0, true)]
         [InlineData("F1(): Number { Text; T }; F2(): Number = { Ap", 2, 1, true)]
         public void TestUDFInvalidBody(string script, int udfCount, int validUdfCount, bool expectErrors)
