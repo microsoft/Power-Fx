@@ -382,7 +382,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             engine.UpdateVariable("A", 1m);
-            engine.AddUserDefinitions("B=A*2;C=A*B;", onUpdate: OnUpdate);
+            engine.AddUserDefinitions("B:=A*2;C:=A*B;", onUpdate: OnUpdate);
             AssertUpdate("B-->2;C-->2;");
 
             // Can't set formulas, they're read only 
@@ -2137,6 +2137,21 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("a := Type(Number); a():Number = 3;", true)]
         [InlineData("a = 3;  a():Number = 4;", true)]
         public void TestDuplicateUserDefinitions(string definition, bool valid)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig());
+
+            engine.TryAddUserDefinitions(definition, out var errors, new ParserOptions() { AllowEqualOnlyNamedFormulas = true });
+
+            Assert.True((valid && !errors.Any()) || (!valid && errors.Any()));
+        }
+
+        [Theory]
+        [InlineData("a := 3; a := 4;", false)]
+        [InlineData("T := Type(Number); T := Type(Boolean);", false)]
+        [InlineData("a := Type(Number); a := 3;", true)]
+        [InlineData("a := 3; a := Type(Number);", true)]
+        [InlineData("a := 3;  a():Number = 4;", true)]
+        public void TestDuplicateUserDefinitions_ColonEqualRequired(string definition, bool valid)
         {
             var engine = new RecalcEngine(new PowerFxConfig());
 

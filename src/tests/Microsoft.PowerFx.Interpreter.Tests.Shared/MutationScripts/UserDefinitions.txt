@@ -33,7 +33,7 @@
 
 // named formula
 
->> NamedFormula = Reverse("Good bye");
+>> NamedFormula := Reverse("Good bye");
 #no value
 
 >> NamedFormula
@@ -76,7 +76,7 @@
 >> DecNoSemi() // 0
 0
 
->> NamedFormulaNoSemi = ReverseNoSemi("Good bye")
+>> NamedFormulaNoSemi := ReverseNoSemi("Good bye")
 #no value
 
 >> NamedFormulaNoSemi
@@ -106,12 +106,11 @@
 "Start at: 11"
 
 // Named formula
-// Prefixed "placeholder" type definition is needed until we have := named formula support https://github.com/microsoft/Power-Fx/pull/2966, otherwise it would be interpreted as a comparison
 
->> PlaceholderNFT1 := Type(Boolean); NF1 = 10 * offset;
+>> NF1 := 10 * offset;
 #no value
 
->> PlaceholderNFT2 := Type(Boolean); NF2 = 20 * offset;
+>> NF2 := 20 * offset;
 #no value
 
 >> NF1 * NF2 // offset = 10

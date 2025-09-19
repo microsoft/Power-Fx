@@ -31,8 +31,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("a=2e200;b=2e200;", "a+b", 4e200d)]
         public void NamedFormulaEntryTest(string script, string expression, double expected)
         {
+            var parserOptions = new ParserOptions()
+            {
+                AllowEqualOnlyNamedFormulas = true,
+                NumberIsFloat = true,
+            };
             var engine = new RecalcEngine();
-            var parserOptions = new ParserOptions() { NumberIsFloat = true }; 
 
             engine.TryAddUserDefinitions(script, out var errors, parserOptions);
             Assert.Empty(errors);
@@ -45,11 +49,40 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
+
+        // no colon
         [InlineData("x=1;y=2;z=x+y;", "Decimal(Abs(-(x+y+z)))", "6")]
         [InlineData("x=1;y=2;Foo(x: Number): Number = Abs(x);", "Decimal(Foo(-(y*y)+x))", "3")]
         [InlineData("myvar=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Decimal(Bar(1) + myvar)", "2")]
         [InlineData("a=2.0000000000000000000001;b=2.0000000000000000000001;", "a+b", "4.0000000000000000000002")]
+
+        // colon
+        [InlineData("x:=1;y:=2;z:=x+y;", "Decimal(Abs(-(x+y+z)))", "6")]
+        [InlineData("x:=1;y:=2;Foo(x: Number): Number = Abs(x);", "Decimal(Foo(-(y*y)+x))", "3")]
+        [InlineData("myvar:=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Decimal(Bar(1) + myvar)", "2")]
+        [InlineData("a:=2.0000000000000000000001;b:=2.0000000000000000000001;", "a+b", "4.0000000000000000000002")]
         public void NamedFormulaEntryTestDecimal(string script, string expression, string expected)
+        {
+            var engine = new RecalcEngine();
+            var parserOptions = new ParserOptions() { NumberIsFloat = false, AllowEqualOnlyNamedFormulas = true };
+
+            engine.TryAddUserDefinitions(script, out var errors, parserOptions);
+            Assert.Empty(errors);
+
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess);
+
+            var result = (DecimalValue)check.GetEvaluator().Eval();
+            Assert.True(decimal.TryParse(expected, out var expectedDecimal));
+            Assert.Equal(expectedDecimal, result.Value);
+        }
+
+        [Theory]
+        [InlineData("x:=1;y:=2;z:=x+y;", "Decimal(Abs(-(x+y+z)))", "6")]
+        [InlineData("x:=1;y:=2;Foo(x: Number): Number = Abs(x);", "Decimal(Foo(-(y*y)+x))", "3")]
+        [InlineData("myvar:=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Decimal(Bar(1) + myvar)", "2")]
+        [InlineData("a:=2.0000000000000000000001;b:=2.0000000000000000000001;", "a+b", "4.0000000000000000000002")]
+        public void NamedFormulaEntryTestDecimal_ColonEqualRequired(string script, string expression, string expected)
         {
             var engine = new RecalcEngine();
             var parserOptions = new ParserOptions() { NumberIsFloat = false };
@@ -66,9 +99,51 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
+        [InlineData("x:=1;y:=2;z:=x+y;", "Float(Abs(-(x+y+z)))", 6d)]
+        [InlineData("x:=1;y:=2;Foo(x: Number): Number = Abs(x);", "Foo(-(y*y)+x)", 3d)]
+        [InlineData("myvar:=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Bar(1) + myvar", 2d)]
+        public void NamedFormulaEntryTest_ColonEqualRequired(string script, string expression, double expected)
+        {
+            var engine = new RecalcEngine();
+
+            engine.AddUserDefinitions(script);
+
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess);
+
+            var result = (NumberValue)check.GetEvaluator().Eval();
+            Assert.Equal(expected, result.Value);
+        }
+
+        [Theory]
+
+        // without colon
         [InlineData("a=Max(2,1;4,2;-5,4);;b=Average(2,1;4,2;-5,4);;", "a+b", "4.5")]
         [InlineData("a=2,0000000000000000000001;;b=2,0000000000000000000001;;", "a+b", "4.0000000000000000000002")]
+
+        // with colon
+        [InlineData("a:=Max(2,1;4,2;-5,4);;b:=Average(2,1;4,2;-5,4);;", "a+b", "4.5")]
+        [InlineData("a:=2,0000000000000000000001;;b:=2,0000000000000000000001;;", "a+b", "4.0000000000000000000002")]
         public void NamedFormulaEntryTestCulture(string script, string expression, string expected)
+        {
+            var engine = new RecalcEngine();
+            var parserOptions = new ParserOptions() { NumberIsFloat = false, Culture = new CultureInfo("fr-fr"), AllowEqualOnlyNamedFormulas = true };
+
+            engine.TryAddUserDefinitions(script, out var errors, parserOptions);
+            Assert.Empty(errors);
+
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess);
+
+            var result = (DecimalValue)check.GetEvaluator().Eval();
+            Assert.True(decimal.TryParse(expected, out var expectedDecimal));
+            Assert.Equal(expectedDecimal, result.Value);
+        }
+
+        [Theory]
+        [InlineData("a:=Max(2,1;4,2;-5,4);;b:=Average(2,1;4,2;-5,4);;", "a+b", "4.5")]
+        [InlineData("a:=2,0000000000000000000001;;b:=2,0000000000000000000001;;", "a+b", "4.0000000000000000000002")]
+        public void NamedFormulaEntryTestCulture_ColonEqualRequired(string script, string expression, string expected)
         {
             var engine = new RecalcEngine();
             var parserOptions = new ParserOptions() { NumberIsFloat = false, Culture = new CultureInfo("fr-fr") };
@@ -89,6 +164,25 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(abc, { bcd: 1 }) };")]
         [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(abc, { bcd: 1 }) }; num = 3;")]
         public void ValidUDFBodyTest(string script)
+        {
+            var options = new ParserOptions()
+            {
+                AllowsSideEffects = true,
+                Culture = CultureInfo.InvariantCulture,
+                AllowEqualOnlyNamedFormulas = true
+            };
+            var parseResult = UserDefinitions.Parse(script, options);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            Assert.False(errors.Any());
+        }
+
+        [Theory]
+        [InlineData("test2(b: Boolean): Boolean = { Set(a, b); };")]
+        [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(abc, { bcd: 1 }) };")]
+        [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(abc, { bcd: 1 }) }; num := 3;")]
+        public void ValidUDFBodyTestColonEqual(string script)
         {
             var options = new ParserOptions()
             {
@@ -139,6 +233,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(,) ;}; num = 3;", 1, 0, 1)]
         [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(,) ;};;;;;;;; num = 3;", 1, 0, 1)]
         public void InvalidUDFBodyTest2(string script, int udfCount, int validUdfCount, int nfCount)
+        {
+            var options = new ParserOptions()
+            {
+                AllowsSideEffects = true,
+                Culture = CultureInfo.InvariantCulture,
+                AllowEqualOnlyNamedFormulas = true
+            };
+            var parseResult = UserDefinitions.Parse(script, options);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            Assert.True(errors.Any());
+            Assert.Equal(udfCount, parseResult.UDFs.Count());
+            Assert.Equal(validUdfCount, udfs.Count());
+            Assert.Equal(nfCount, parseResult.NamedFormulas.Count());
+        }
+
+        [Theory]
+        [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(,) ;}; num := 3;", 1, 0, 1)]
+        [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(,) ;};;;;;;;; num := 3;", 1, 0, 1)]
+        public void InvalidUDFBodyTest2ColonEqual(string script, int udfCount, int validUdfCount, int nfCount)
         {
             var options = new ParserOptions()
             {
@@ -213,7 +328,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void TestFormulaUsingUdfsOrNamedFormulaReferringControlAsAsync()
         {
             // Arrange
-            var script = "test(): Text = Button1InScreen2.Text;Nf=Button1InScreen2.Text;Test2(): Void={Set(x, Button1InScreen2.Text);};";
+            var script = "test(): Text = Button1InScreen2.Text;Nf:=Button1InScreen2.Text;Test2(): Void={Set(x, Button1InScreen2.Text);};";
             var parseResult = TexlParser.ParseUserDefinitionScript(script, new ParserOptions() { AllowsSideEffects = true });
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             var symbolTable = new MockSymbolTable();
@@ -320,6 +435,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
+
+        // no colon
         [InlineData("a = 3", true)]
         [InlineData("a = 3\n", true)]
         [InlineData("a = 3;", true)]
@@ -337,10 +454,30 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("a = 3;; b = 4", false)]
         [InlineData("a = 3;; b = 4;;", false)]
         [InlineData("a = 3;; b = 4;", false)]
+
+        // colon
+        [InlineData("a := 3", true)]
+        [InlineData("a := 3\n", true)]
+        [InlineData("a := 3;", true)]
+        [InlineData("a := 3;;", false)]
+        [InlineData("a := 3,", false)]
+        [InlineData("a := 3.", true)] // decimal seperator
+        [InlineData("a := 3:", false)]
+        [InlineData("a := 3  b := 4", false)]
+        [InlineData("a := 3\nb := 4", false)]
+        [InlineData("a := 3\nb := 4\n", false)]
+        [InlineData("a := 3. b := 4", false)]
+        [InlineData("a := 3; b := 4", true)]
+        [InlineData("a := 3; b := 4;", true)]
+        [InlineData("a := 3, b := 4", false)]
+        [InlineData("a := 3;; b := 4", false)]
+        [InlineData("a := 3;; b := 4;;", false)]
+        [InlineData("a := 3;; b := 4;", false)]
+
         public void BadOtherNFSeperatorsDot(string expression, bool isValid)
         {
             var engine = new RecalcEngine();
-            var parserOptions = new ParserOptions() { NumberIsFloat = false, Culture = CultureInfo.InvariantCulture };
+            var parserOptions = new ParserOptions() { NumberIsFloat = false, Culture = CultureInfo.InvariantCulture, AllowEqualOnlyNamedFormulas = true };
 
             engine.TryAddUserDefinitions(expression, out var errors, parserOptions);
 
@@ -355,6 +492,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
+
+        // no colon
         [InlineData("a = 3", true)]
         [InlineData("a = 3\n", true)]
         [InlineData("a = 3;", false)]
@@ -372,10 +511,29 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("a = 3;; b = 4", true)]
         [InlineData("a = 3;; b = 4;;", true)]
         [InlineData("a = 3;; b = 4;", false)]
+
+        // colon
+        [InlineData("a := 3", true)]
+        [InlineData("a := 3\n", true)]
+        [InlineData("a := 3;", false)]
+        [InlineData("a := 3;;", true)]
+        [InlineData("a := 3,", true)] // equivalent of 3. in invariant (decimal seperator)
+        [InlineData("a := 3.", false)]
+        [InlineData("a := 3:", false)]
+        [InlineData("a := 3  b := 4", false)]
+        [InlineData("a := 3\nb := 4", false)]
+        [InlineData("a := 3\nb := 4\n", false)]
+        [InlineData("a := 3. b := 4", false)]
+        [InlineData("a := 3; b := 4", false)]
+        [InlineData("a := 3; b := 4;", false)]
+        [InlineData("a := 3, b := 4", false)]
+        [InlineData("a := 3;; b := 4", true)]
+        [InlineData("a := 3;; b := 4;;", true)]
+        [InlineData("a := 3;; b := 4;", false)]
         public void BadOtherNFSeperatorsComma(string expression, bool isValid)
         {
             var engine = new RecalcEngine();
-            var parserOptions = new ParserOptions() { NumberIsFloat = false, Culture = new CultureInfo("fr-fr") };
+            var parserOptions = new ParserOptions() { NumberIsFloat = false, Culture = new CultureInfo("fr-fr"), AllowEqualOnlyNamedFormulas = true };
 
             engine.TryAddUserDefinitions(expression, out var errors, parserOptions);
 

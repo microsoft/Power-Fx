@@ -28,6 +28,8 @@ namespace Microsoft.PowerFx.Core.Tests
         private static readonly ReadOnlySymbolTable _primitiveTypes = ReadOnlySymbolTable.PrimitiveTypesTableInstance;
 
         [Theory]
+
+        // without colon
         [InlineData("Foo(x: Number): Number = Abs(x);", 1, 0, false)]
         [InlineData("IsType(x: Number): Number = Abs(x);", 0, 0, true)]
         [InlineData("AsType(x: Number): Number = Abs(x);", 0, 0, true)]
@@ -54,7 +56,71 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData(@"F2(b: Number): Number  = F1(b*3); F1(a:Number): Number = a*2;", 2, 0, false)]
         [InlineData(@"F2(b: Text): Text  = ""Test"";", 1, 0, false)]
         [InlineData(@"F2(b: String): String  = ""Test"";", 0, 0, true)]
+
+        // with colon
+        [InlineData("x := 1; Foo(x: Number): Number = Abs(x);", 1, 1, false)]
+        [InlineData("x := 1; Foo(x: Number): Number = Abs(x); y := 2;", 1, 2, false)]
+        [InlineData("Add(x: Number, y:Number): Number = x + y; Foo(x: Number): Number = Abs(x); y := 2;", 2, 1, false)]
+        [InlineData("Foo(x: Number): Number = /*this is a test*/ Abs(x); y := 2;", 1, 1, false)]
+        [InlineData("Add(x: Number, y:Number): Number = b + b; Foo(x: Number): Number = Abs(x); y := 2;", 2, 1, true)]
+        [InlineData("x := 1; Add(x: Number, y:Number): Number = x + y", 1, 1, false)]
         public void TestUDFNamedFormulaCounts(string script, int udfCount, int namedFormulaCount, bool expectErrors)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+                AllowEqualOnlyNamedFormulas = true
+            };
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes);
+
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), nameResolver, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            var glue = new Glue2DocumentBinderGlue();
+            var hasBinderErrors = false;
+
+            foreach (var udf in udfs)
+            {
+                var binding = udf.BindBody(ReadOnlySymbolTable.Compose(nameResolver, ReadOnlySymbolTable.NewDefault(udfs)), glue, BindingConfig.Default);
+                hasBinderErrors |= binding.ErrorContainer.HasErrors();
+            }
+
+            Assert.Equal(udfCount, udfs.Count());
+            Assert.Equal(namedFormulaCount, parseResult.NamedFormulas.Count());
+            Assert.Equal(expectErrors, (errors?.Any() ?? false) || hasBinderErrors);
+        }
+
+        [Theory]
+        [InlineData("Foo(x: Number): Number = Abs(x);", 1, 0, false)]
+        [InlineData("IsType(x: Number): Number = Abs(x);", 0, 0, true)]
+        [InlineData("AsType(x: Number): Number = Abs(x);", 0, 0, true)]
+        [InlineData("Type(x: Number): Number = Abs(x);", 0, 0, true)]
+        [InlineData("Foo(x: Number): Number = Abs(x); x := 1;", 1, 1, false)]
+        [InlineData("x := 1; Foo(x: Number): Number = Abs(x);", 1, 1, false)]
+        [InlineData("/*this is a test*/ x := 1; Foo(x: Number): Number = Abs(x);", 1, 1, false)]
+        [InlineData("x := 1; Foo(x: Number): Number = Abs(x); y := 2;", 1, 2, false)]
+        [InlineData("Add(x: Number, y:Number): Number = x + y; Foo(x: Number): Number = Abs(x); y := 2;", 2, 1, false)]
+        [InlineData("Foo(x: Number): Number = /*this is a test*/ Abs(x); y := 2;", 1, 1, false)]
+        [InlineData("Add(x: Number, y:Number): Number = b + b; Foo(x: Number): Number = Abs(x); y := 2;", 2, 1, true)]
+        [InlineData("Add(x: Number, y:Number): Boolean = x + y;", 1, 0, false)]
+        [InlineData("Add(x: Number, y:Number): SomeType = x + y;", 0, 0, true)]
+        [InlineData("Add(x: SomeType, y:Number): Number = x + y;", 0, 0, true)]
+        [InlineData("Add(x: Number, y:Number): Number = x + y", 1, 0, false)]
+        [InlineData("x := 1; Add(x: Number, y:Number): Number = x + y", 1, 1, false)]
+        [InlineData("Add(x: Number, y:Number) = x + y;", 0, 0, true)]
+        [InlineData("Add(x): Number = x + 2;", 0, 0, true)]
+        [InlineData("Add(a:Number, b:Number): Number { a + b + 1; \n a + b; };", 0, 0, true)]
+        [InlineData("Add(a:Number, b:Number): Number { a + b; };", 0, 0, true)]
+        [InlineData("Add(a:Number, b:Number): Number { /*this is a test*/ a + b; };", 0, 0, true)]
+        [InlineData("Add(a:Number, b:Number): Number { /*this is a test*/ a + b; ;", 0, 0, true)]
+        [InlineData("Add(a:Number, a:Number): Number { a; };", 0, 0, true)]
+        [InlineData(@"F2(b: Number): Number  = F1(b*3); F1(a:Number): Number = a*2;", 2, 0, false)]
+        [InlineData(@"F2(b: Text): Text  = ""Test"";", 1, 0, false)]
+        [InlineData(@"F2(b: String): String  = ""Test"";", 0, 0, true)]
+        public void TestUDFNamedFormulaCounts_ColonEqualRequired(string script, int udfCount, int namedFormulaCount, bool expectErrors)
         {
             var parserOptions = new ParserOptions()
             {
@@ -199,6 +265,8 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+
+        // without colon
         [InlineData("a = Abs(1.2);\nAdd(a: Number, b: Number):Number = a + b;\nb = Add(1, 2);", 2, 1, 0)]
         [InlineData("a = Abs(1.2);\nAdd(a: Number, b:):Number = a + b;\nb = Add(1, 2); ", 2, 0, 1)]
         [InlineData("a = Abs(1.2);\nAdd(a: Number, b:/*comment*/):Number = a + b;\nb = Add(1, 2); ", 2, 0, 1)]
@@ -212,11 +280,53 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a = Abs(1.2);\nAdd(a: Number, b: Number):/* Number */Number", 1, 0, 1)]
         [InlineData("a = Abs(1.2);\nAdd(a: Number, b: Number):/* Number */Number = a + b;", 1, 1, 0)]
 
+        // with colon
+        [InlineData("a := Abs(1.2);\nAdd(a: Number, b: Number):Number = a + b;\nb := Add(1, 2);", 2, 1, 0)]
+        [InlineData("a := Abs(1.2);\nAdd(a: Number, b:):Number = a + b;\nb := Add(1, 2); ", 2, 0, 1)]
+        [InlineData("a := Abs(1.2);\nAdd(a: Number, b:/*comment*/):Number = a + b;\nb := Add(1, 2); ", 2, 0, 1)]
+        [InlineData("a := Abs(1.2);\nAdd(a: Number, b:/*comment*/Number):Number = a + b;\nb := Add(1, 2); ", 2, 1, 0)]
+        [InlineData("a := Abs(1.2);\nF1(a: Number):Number = a;\nb = F1(1, 2); F2(", 2, 1, 1)]
+        [InlineData("a := Abs(1.2);\nF1(a: Number):Number = a;\nb = F1(1, 2); F2(a):Number = 1;", 2, 1, 1)]
+        [InlineData("a := Abs(1.2);\nF1(a: Number):Number = a;\nb = F1(1, 2); F2(a):Number = ;", 2, 1, 1)]
+        [InlineData("a := Abs(1.2);\nF1(a: Number):Number = a;\nb = F1(1, 2); F2(a:Number): = 1;", 2, 1, 1)]
+        [InlineData(@"A(a:Number, b:/*comment*/Number):Number = 12;b(a:Number): = 1;c(a:Number):Number = 100;x := 10;", 1, 2, 1)]
+        [InlineData("a := Abs(1.2);\nAdd(a: Number, b: Number):/* Number */Number", 1, 0, 1)]
+        [InlineData("a := Abs(1.2);\nAdd(a: Number, b: Number):/* Number */Number = a + b;", 1, 1, 0)]
+
         public void TestParseUserDefinitionsCountswithIncompleteUDFs(string script, int nfCount, int validUDFCount, int inValidUDFCount)
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = false,
+                AllowEqualOnlyNamedFormulas = true
+            };
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+
+            Assert.Equal(nfCount, parseResult.NamedFormulas.Count());
+            Assert.Equal(validUDFCount, parseResult.UDFs.Count(udf => udf.IsParseValid));
+            Assert.Equal(inValidUDFCount, parseResult.UDFs.Count(udf => !udf.IsParseValid));
+        }
+
+        [Theory]
+        [InlineData("a := Abs(1.2);\nAdd(a: Number, b: Number):Number = a + b;\nb := Add(1, 2);", 2, 1, 0)]
+        [InlineData("a := Abs(1.2);\nAdd(a: Number, b:):Number = a + b;\nb := Add(1, 2); ", 2, 0, 1)]
+        [InlineData("a := Abs(1.2);\nAdd(a: Number, b:/*comment*/):Number = a + b;\nb := Add(1, 2); ", 2, 0, 1)]
+        [InlineData("a := Abs(1.2);\nAdd(a: Number, b:/*comment*/Number):Number = a + b;\nb := Add(1, 2); ", 2, 1, 0)]
+        [InlineData("a := Abs(1.2);\nF1(a: Number):Number = a;\nb := F1(1, 2); F2(", 2, 1, 1)]
+        [InlineData("a := Abs(1.2);\nF1(a: Number):Number = a;\nb := F1(1, 2); F2(a):Number = 1;", 2, 1, 1)]
+        [InlineData("a := Abs(1.2);\nF1(a: Number):Number = a;\nb := F1(1, 2); F2(a):Number = ;", 2, 1, 1)]
+        [InlineData("a := Abs(1.2);\nF1(a: Number):Number = a;\nb := F1(1, 2); F2(a:Number): = 1;", 2, 1, 1)]
+        [InlineData(@"A(a:Number, b:/*comment*/Number):Number = 12;b(a:Number): = 1;c(a:Number):Number = 100;x := 10;", 1, 2, 1)]
+        [InlineData(@"A(a:Number, b:/*comment*/Number):Number = 12;b(a:):Number = 1;c(a:Number):Number = 100;", 0, 2, 1)]
+        [InlineData("a := Abs(1.2);\nAdd(a: Number, b: Number):/* Number */Number", 1, 0, 1)]
+        [InlineData("a := Abs(1.2);\nAdd(a: Number, b: Number):/* Number */Number = a + b;", 1, 1, 0)]
+
+        public void TestParseUserDefinitionsCountswithIncompleteUDFs_ColonEqualRequired(string script, int nfCount, int validUDFCount, int inValidUDFCount)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
             };
 
             var parseResult = UserDefinitions.Parse(script, parserOptions);
@@ -237,7 +347,27 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = false,
+                AllowEqualOnlyNamedFormulas = true
+            };
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+
+            Assert.Equal(errorCount, parseResult.Errors?.Count() ?? 0);
+        }
+
+        [Theory]
+
+        [InlineData("a := Abs(1.2);\n F1(a:Number):Number = a;", 0)]
+        [InlineData("a := Abs(1.2);\n F1(a):Number = a;", 1)]
+        [InlineData("a := Abs(1.2);\n F1(a:):Number = a;", 1)]
+        [InlineData("a := Abs(1.2);\n F1(a:Number): = a;", 1)]
+        [InlineData("a := -;\n F1(a:):Number = 1;F2(a:Number): = 1;", 3)]
+        public void TestErrorCountsWithUDFs_ColonEqualRequired(string script, int errorCount)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
             };
 
             var parseResult = UserDefinitions.Parse(script, parserOptions);
@@ -253,7 +383,8 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = false,
+                AllowEqualOnlyNamedFormulas = true
             };
 
             var script = @" a = Abs(1.2);
@@ -261,6 +392,62 @@ namespace Microsoft.PowerFx.Core.Tests
                             F2(a:Number, b):Number = a + b;
                             F3(a:Number, b:):Number = a + b;
                             b = ""test"";
+                            F4(";
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            Assert.Equal(2, parseResult.NamedFormulas.Count());
+            Assert.Equal(1, parseResult.UDFs.Count(udf => udf.IsParseValid));
+            Assert.Equal(3, parseResult.UDFs.Count(udf => !udf.IsParseValid));
+
+            foreach (var udf in parseResult.UDFs)
+            {
+                if (udf.Ident.Name == "F1")
+                {
+                    // Verify return type colon token span
+                    Assert.Equal(67, udf.ReturnTypeColonToken.Span.Min);
+                    Assert.Equal(68, udf.ReturnTypeColonToken.Span.Lim);
+                }
+                else if (udf.Ident.Name == "F2")
+                {
+                    Assert.Equal(2, udf.Args.Count());
+                    var firstArg = udf.Args.ElementAt(0);
+                    var secondArg = udf.Args.ElementAt(1);
+                    Assert.NotNull(firstArg.ColonToken);
+
+                    // Verify first arg colon token span
+                    Assert.Equal(129, firstArg.ColonToken.Span.Min);
+                    Assert.Equal(130, firstArg.ColonToken.Span.Lim);
+
+                    Assert.Null(secondArg.ColonToken);
+                    Assert.Null(secondArg.TypeIdent);
+                }
+                else if (udf.Ident.Name == "F3")
+                {
+                    Assert.Equal(2, udf.Args.Count());
+                    Assert.Null(udf.Args.ElementAt(1).TypeIdent);
+                }
+                else if (udf.Ident.Name == "F4")
+                {
+                    Assert.Empty(udf.Args);
+                    Assert.Null(udf.ReturnTypeColonToken);
+                    Assert.Null(udf.ReturnType);
+                    Assert.Null(udf.Body);
+                }
+            }
+        }
+
+        [Fact]
+        public void TestUserDefinedFunctionValidity_ColonEqualRequired()
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            var script = @" a:= Abs(1.2);
+                            F1(a:Number, b: Number):Number = a + b /*comment*/;
+                            F2(a:Number, b):Number = a + b;
+                            F3(a:Number, b:):Number = a + b;
+                            b:= ""test"";
                             F4(";
             var parseResult = UserDefinitions.Parse(script, parserOptions);
             Assert.Equal(2, parseResult.NamedFormulas.Count());
@@ -482,12 +669,45 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+
+        // without colon
         [InlineData("x = $\"{\"}\";", 1, 0, 0)]
         [InlineData("x = First([$\"{ {a:1,b:2,c:3}.a }]).Value;", 1, 0, 0)]
         [InlineData("x = $\"{\"1$\"}.{\"}\";\r\nudf():Text = $\"{\"}\";\r\ny = 2;", 2, 1, 0)]
         [InlineData("x = $\"{$\"{$\"{$\"{.12e4}\"}}\"}\";\r\nudf():Text = $\"{\"}\";\r\ny = 2;", 2, 1, 0)]
         [InlineData("x = $\"{$\"{$\"{$\"{.12e4}\"}\"}\"}{$\"Another nested}\";\r\nudf():Text = $\"{\"}\";\r\ny = 2;", 2, 1, 0)]
+
+        // with colon
+        [InlineData("x := $\"{\"}\";", 1, 0, 0)]
+        [InlineData("x := First([$\"{ {a:1,b:2,c:3}.a }]).Value;", 1, 0, 0)]
+        [InlineData("x := $\"{\"1$\"}.{\"}\";\r\nudf():Text = $\"{\"}\";\r\ny := 2;", 2, 1, 0)]
+        [InlineData("x := $\"{$\"{$\"{$\"{.12e4}\"}}\"}\";\r\nudf():Text = $\"{\"}\";\r\ny := 2;", 2, 1, 0)]
+        [InlineData("x := $\"{$\"{$\"{$\"{.12e4}\"}\"}\"}{$\"Another nested}\";\r\nudf():Text = $\"{\"}\";\r\ny := 2;", 2, 1, 0)]
         public void TestUDF(string formula, int nfCount, int udfCount, int validUdfCount)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+                AllowEqualOnlyNamedFormulas = true
+            };
+
+            var parseResult = UserDefinitions.Parse(formula, parserOptions);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            Assert.Equal(nfCount, parseResult.NamedFormulas.Count());
+            Assert.Equal(udfCount, parseResult.UDFs.Count());
+            Assert.Equal(validUdfCount, udfs.Count());
+            Assert.Contains(errors, e => e.MessageKey == "ErrBadToken");
+        }
+
+        [Theory]
+        [InlineData("x := $\"{\"}\";", 1, 0, 0)]
+        [InlineData("x := First([$\"{ {a:1,b:2,c:3}.a }]).Value;", 1, 0, 0)]
+        [InlineData("x := $\"{\"1$\"}.{\"}\";\r\nudf():Text = $\"{\"}\";\r\ny := 2;", 2, 1, 0)]
+        [InlineData("x := $\"{$\"{$\"{$\"{.12e4}\"}}\"}\";\r\nudf():Text = $\"{\"}\";\r\ny := 2;", 2, 1, 0)]
+        [InlineData("x := $\"{$\"{$\"{$\"{.12e4}\"}\"}\"}{$\"Another nested}\";\r\nudf():Text = $\"{\"}\";\r\ny := 2;", 2, 1, 0)]
+        public void TestUDF_ColonEqualRequired(string formula, int nfCount, int udfCount, int validUdfCount)
         {
             var parserOptions = new ParserOptions()
             {

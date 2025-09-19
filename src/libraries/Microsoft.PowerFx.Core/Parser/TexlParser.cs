@@ -311,7 +311,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     continue;
                 }
 
-                if (_curs.TidCur == TokKind.ColonEqual && _features.IsUserDefinedTypesEnabled)
+                if (_curs.TidCur == TokKind.ColonEqual)
                 {
                     var declaration = script.Substring(declarationStart, _curs.TokCur.Span.Min - declarationStart);
                     _curs.TokMove();
@@ -330,7 +330,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         definitionBeforeTrivia.Add(ParseTrivia());
                         var result = ParseExpr(Precedence.None);
 
-                        if (result is TypeLiteralNode typeLiteralNode)
+                        if (result is TypeLiteralNode typeLiteralNode && _features.IsUserDefinedTypesEnabled)
                         {
                             definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode, typeLiteralNode.IsValid(out var _)));
                             userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.DefinedType, thisIdentifier.As<IdentToken>(), declaration, new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));
@@ -341,7 +341,9 @@ namespace Microsoft.PowerFx.Core.Parser
                         }
                         else
                         {
-                            CreateError(_curs.TokCur, TexlStrings.ErrNamedType_MissingTypeExpression);
+                            namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex, colonEqual: true, attribute));
+                            userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.NamedFormula, thisIdentifier.As<IdentToken>(), declaration, new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));
+                            definitionBeforeTrivia = new List<ITexlSource>();
                         }
 
                         // If the result was an error, keep moving cursor until end of named type expression
@@ -384,9 +386,15 @@ namespace Microsoft.PowerFx.Core.Parser
                             continue;
                         }
 
-                        definitionsLikely = true;
+                        if (!parserOptions.AllowEqualOnlyNamedFormulas)
+                        {
+                            CreateError(equalToken, TexlStrings.ErrNamedFormulaColonEqualRequired);
+                            continue;
+                        }
+                      
+                        definitionsLikely = true;                      
 
-                        namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex, attribute));
+                        namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex, colonEqual: false, attribute));
                         userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.NamedFormula, thisIdentifier.As<IdentToken>(), declaration, new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));
                         definitionBeforeTrivia = new List<ITexlSource>();
 
@@ -637,16 +645,29 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
-            var formulaTokens = TokenizeScript(script, loc, flags | Flags.NamedFormulas);
-            var parser = new TexlParser(formulaTokens, flags | Flags.NamedFormulas);
-
-            return parser.ParseFormulas(script);
+            return ParseFormulasScript(script, new ParserOptions() { Culture = loc }, flags);
         }
 
-        private ParseFormulasResult ParseFormulas(string script)
+        public static ParseFormulasResult ParseFormulasScript(string script, ParserOptions parserOptions, Flags flags = Flags.None)
+        {
+            Contracts.AssertValue(script);
+            Contracts.AssertValueOrNull(parserOptions);
+
+            var formulaTokens = TokenizeScript(script, parserOptions?.Culture, flags | Flags.NamedFormulas);
+            var parser = new TexlParser(formulaTokens, flags | Flags.NamedFormulas);
+
+            return parser.ParseFormulas(script, parserOptions);
+        }
+
+        private ParseFormulasResult ParseFormulas(string script, ParserOptions parserOptions)
         {
             var namedFormulas = new List<KeyValuePair<IdentToken, TexlNode>>();
             ParseTrivia();
+
+            if (parserOptions == null)
+            {
+                parserOptions = new ParserOptions();
+            }
 
             while (_curs.TokCur.Kind != TokKind.Eof)
             {
@@ -656,10 +677,18 @@ namespace Microsoft.PowerFx.Core.Parser
                 {
                     ParseTrivia();
 
-                    // Verify "="
-                    var thisEq = TokEat(TokKind.Equ);
-                    if (thisEq != null)
+                    // Verify "=" is allowed if used
+                    if (_curs.TidCur == TokKind.Equ && !parserOptions.AllowEqualOnlyNamedFormulas)
                     {
+                        CreateError(thisIdentifier, TexlStrings.ErrNamedFormulaColonEqualRequired);
+                        _curs.TokMove();
+                        continue;
+                    }
+
+                    // Verify "=" or ":="
+                    if (_curs.TidCur == TokKind.Equ || _curs.TidCur == TokKind.ColonEqual)
+                    {
+                        _curs.TokMove();
                         ParseTrivia();
 
                         if (_curs.TidCur == TokKind.Semicolon)

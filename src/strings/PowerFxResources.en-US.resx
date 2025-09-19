@@ -5157,6 +5157,13 @@
       Some examples for valid named type declarations - "Point := Type({x: Number, y: Number});" , "T1 := Type(Number);" , "T2 := Type([Boolean]);".
     </comment>
   </data>
+  <data name="ErrNamedFormulaColonEqualRequired" xml:space="preserve">
+    <value>Incorrect syntax: '=' cannot be used to declare named formulas. Use ':=' instead.</value>
+    <comment>
+      Error message returned when user uses '=' syntax to define a named formula.
+      Some examples for valid named formulas - "x := 3; y := 5;".
+    </comment>
+  </data>
   <data name="ErrJoinCantAddRename" xml:space="preserve">
     <value>'{0}' can not be added/renamed due to colission with another column with same name.</value>
     <comment>Error message returned when user tries to join two data sources with duplicated columns between them.</comment>

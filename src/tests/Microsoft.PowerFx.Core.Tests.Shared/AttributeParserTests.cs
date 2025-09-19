@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class AttributeParserTests
     {
-        private readonly ParserOptions _parseOptions = new ParserOptions() { AllowAttributes = true };
+        private readonly ParserOptions _parseOptions = new ParserOptions() { AllowAttributes = true, AllowEqualOnlyNamedFormulas = true };
 
         [Fact]
         public void TestNamedFormulaAttributes()
