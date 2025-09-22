@@ -3749,14 +3749,14 @@
     <comment>Error message when the user attempts to check equality between two values that don't make sense together. {0} and {1} will be canonical type representations like "Number" or "Boolean".</comment>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
-    <value>We can't evaluate your formula because the values being compared in the formula aren't the same type.</value>
+    <value>수식에서 비교되는 값이 동일한 형식이 아니므로 수식을 평가할 수 없습니다.</value>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>날짜 문자열(예: "12/31/2018")을 날짜 값으로 변환하는 것과 같이 값을 동일한 형식으로 변환해야 할 수도 있습니다.</value>
     <comment>1 How to fix the error. </comment>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_2" xml:space="preserve">
-    <value>If you're comparing records or tables, the field or column types must match exactly.</value>
+    <value>레코드 또는 테이블을 비교하는 경우 필드 또는 열 유형이 정확히 일치해야 합니다.</value>
     <comment>2 How to fix the error.</comment>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1" xml:space="preserve">
@@ -3792,7 +3792,7 @@
     <comment>{Locked}</comment>
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
-    <value>Incompatible type. The '{0}' column in the data source you're updating expects a '{1}' type and you're using a '{2}' type.</value>
+    <value>호환되지 않는 형식입니다. 업데이트하려는 데이터 원본의 '{0}' 열은 '{1}' 형식이어야 하는데 '{2}' 형식을 사용 중입니다.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
@@ -4250,7 +4250,7 @@
     <comment>This error message shows up when expected return type does not match with actual return type. The arguments '{0}' and '{1}' will be replaced with data types. For example, "The stated function return type 'Number' does not match the return type of the function body 'Table'"</comment>
   </data>
   <data name="ErrUDF_ReturnTypeSchemaIncompatible" xml:space="preserve">
-    <value>Incompatible function body. The '{0}' column in the function return type expects a '{1}' type and you're returning a '{2}' type in function body.</value>
+    <value>호환되지 않는 함수 본문입니다. 함수 반환 형식의 '{0}' 열에는 '{1}' 형식이 필요한데 함수 본문에서 '{2}' 형식을 반환합니다.</value>
     <comment>This error message shows up when expected return type schema is incompatible with actual return type. The argument '{0}' will be replaced with column name with incompatible type, '{1}' and '{2}' are replaced with expected and actual type. For example, "Incompatible function body. The 'A' column in the function return type expects a 'Text' type and you're returning a 'GUID' type in function body."</comment>
   </data>
   <data name="ErrUDF_ReturnTypeSchemaAdditionalFields" xml:space="preserve">
@@ -5158,7 +5158,7 @@
     </comment>
   </data>
   <data name="ErrNamedFormulaColonEqualRequired" xml:space="preserve">
-    <value>Incorrect syntax: '=' cannot be used to declare named formulas. Use ':=' instead.</value>
+    <value>잘못된 구문: '='는 이름이 지정된 수식을 선언하는 데 사용할 수 없습니다. 대신 ':='를 사용하세요.</value>
     <comment>
       Error message returned when user uses '=' syntax to define a named formula.
       Some examples for valid named formulas - "x := 3; y := 5;".

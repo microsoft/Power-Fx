@@ -3749,14 +3749,14 @@
     <comment>Error message when the user attempts to check equality between two values that don't make sense together. {0} and {1} will be canonical type representations like "Number" or "Boolean".</comment>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
-    <value>We can't evaluate your formula because the values being compared in the formula aren't the same type.</value>
+    <value>因為在公式中比較的值屬於不同類型，所以無法評估您的公式。</value>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>您可能需要將值轉換為相同類型，例如將日期字串 (例如 "12/31/2018") 轉換至日期值。</value>
     <comment>1 How to fix the error. </comment>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_2" xml:space="preserve">
-    <value>If you're comparing records or tables, the field or column types must match exactly.</value>
+    <value>若您要比較記錄或資料表，則欄位或資料行類型必須完全相符。</value>
     <comment>2 How to fix the error.</comment>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1" xml:space="preserve">
@@ -3792,7 +3792,7 @@
     <comment>{Locked}</comment>
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
-    <value>Incompatible type. The '{0}' column in the data source you're updating expects a '{1}' type and you're using a '{2}' type.</value>
+    <value>類型不相容。您正在更新之資料來源中的 '{0}' 資料行應為 '{1}' 類型，而您使用了 '{2}' 類型。</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
@@ -4250,7 +4250,7 @@
     <comment>This error message shows up when expected return type does not match with actual return type. The arguments '{0}' and '{1}' will be replaced with data types. For example, "The stated function return type 'Number' does not match the return type of the function body 'Table'"</comment>
   </data>
   <data name="ErrUDF_ReturnTypeSchemaIncompatible" xml:space="preserve">
-    <value>Incompatible function body. The '{0}' column in the function return type expects a '{1}' type and you're returning a '{2}' type in function body.</value>
+    <value>函式主體不相容。函式傳回類型中的 '{0}' 資料行預期為 '{1}' 類型，而您在函式主體中傳回的是 '{2}' 類型。</value>
     <comment>This error message shows up when expected return type schema is incompatible with actual return type. The argument '{0}' will be replaced with column name with incompatible type, '{1}' and '{2}' are replaced with expected and actual type. For example, "Incompatible function body. The 'A' column in the function return type expects a 'Text' type and you're returning a 'GUID' type in function body."</comment>
   </data>
   <data name="ErrUDF_ReturnTypeSchemaAdditionalFields" xml:space="preserve">
@@ -5158,7 +5158,7 @@
     </comment>
   </data>
   <data name="ErrNamedFormulaColonEqualRequired" xml:space="preserve">
-    <value>Incorrect syntax: '=' cannot be used to declare named formulas. Use ':=' instead.</value>
+    <value>語法不正確: '=' 無法用於宣告具名公式。請使用 ':=' 代替。</value>
     <comment>
       Error message returned when user uses '=' syntax to define a named formula.
       Some examples for valid named formulas - "x := 3; y := 5;".
