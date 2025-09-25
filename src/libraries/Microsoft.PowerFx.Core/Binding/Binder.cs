@@ -4435,6 +4435,14 @@ namespace Microsoft.PowerFx.Core.Binding
                             return false;
                         }
 
+                        if (functionWithTypeArg.ArgIsType(node.Args.Count - 1))
+                        {
+                            // Other functions where the type argument is the last one
+                            PreVisitTypeArgAndProccesCallNode(node, functionWithTypeArg);
+                            FinalizeCall(node);
+                            return false;
+                        }
+
                         startArg++;
                     }
 
@@ -5151,6 +5159,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(func);
                 Contracts.Assert(func.HasTypeArgs);
+                Contracts.Assert(node.Args.Count != func.MaxArity || func.ArgIsType(node.Args.Count - 1)); // Type argument must be the last one for valid invocations
 
                 var args = node.Args.Children.ToArray();
                 var argCount = args.Count();
@@ -5174,9 +5183,10 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 Contracts.Assert(argCount > 1);
-                Contracts.AssertValue(args[1]);
+                var typeArg = args[args.Length - 1];
+                Contracts.AssertValue(typeArg);
 
-                if (args[1] is FirstNameNode typeName)
+                if (typeArg is FirstNameNode typeName)
                 {
                     if (_nameResolver.LookupType(typeName.Ident.Name, out var typeArgType))
                     {
@@ -5185,8 +5195,8 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        _txb.ErrorContainer.Error(args[1], TexlStrings.ErrInvalidName, typeName.Ident.Name.Value);
-                        _txb.SetType(args[1], DType.Error);
+                        _txb.ErrorContainer.Error(typeArg, TexlStrings.ErrInvalidName, typeName.Ident.Name.Value);
+                        _txb.SetType(typeArg, DType.Error);
                         _txb.SetInfo(typeName, FirstNameInfo.Create(typeName, new NameLookupInfo(BindKind.NamedType, DType.Error, DPath.Root, 0)));
 
                         _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidArgumentExpectedType, typeName.Ident.Name.Value);
@@ -5194,14 +5204,20 @@ namespace Microsoft.PowerFx.Core.Binding
                         _txb.SetType(node, DType.Error);
                     }
                 }
-                else if (args[1] is TypeLiteralNode typeLiteral)
+                else if (typeArg is TypeLiteralNode typeLiteral)
                 {
                     VisitType(typeLiteral);
                 }
                 else
                 {
-                    _txb.ErrorContainer.Error(args[1], TexlStrings.ErrInvalidArgumentExpectedType, args[1]);
-                    _txb.SetType(args[1], DType.Error);
+                    _txb.ErrorContainer.Error(typeArg, TexlStrings.ErrInvalidArgumentExpectedType, typeArg);
+                    _txb.SetType(typeArg, DType.Error);
+                }
+
+                // Process other non-type arguments
+                for (var i = 1; i < args.Length - 1; i++)
+                {
+                    args[i].Accept(this);
                 }
 
                 PostVisit(node.Args);
