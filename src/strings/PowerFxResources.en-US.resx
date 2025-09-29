@@ -4771,6 +4771,17 @@
     <value>The value passed to the '{0}' function cannot be changed.</value>
     <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
   </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraint_ShortMessage" xml:space="preserve">
+    <value>This is too complex to be used in this property</value>
+    <comment>Error Message </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraint_LongMessage" xml:space="preserve">
+    <value>This property requires expressions be simple, meaining ....</value>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintHowToFix_1" xml:space="preserve">
+    <value>Remove or replace the unexpected characters.</value>
+    <comment>1 How to fix the error. </comment>
+  </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
     <value>The capture name '{0}' is hiding a predefined property that returns match information. Consider renaming it if you want to access the match information.</value>
     <comment>Information message indicating that the maker used a group name that will hide the property 'FullMatch' in the function result.</comment>
