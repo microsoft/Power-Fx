@@ -766,9 +766,7 @@ namespace Microsoft.PowerFx.Connectors
                     else if (schema.Enum.All(e => e is OpenApiInteger))
                     {
                         var enumName = openApiParameter.Name;
-#pragma warning disable CA1305 // Specify IFormatProvider
-                        Dictionary<DName, DName> dic = schema.Enum.Select(e => new DName((e as OpenApiInteger).Value.ToString())).ToDictionary(k => k, e => e);
-#pragma warning restore CA1305 // Specify IFormatProvider
+                        Dictionary<DName, DName> dic = schema.Enum.Select(e => new DName((e as OpenApiInteger).Value.ToString(CultureInfo.InvariantCulture))).ToDictionary(k => k, e => e);
 
                         if (settings.Settings.ReturnEnumsAsPrimitive)
                         {
