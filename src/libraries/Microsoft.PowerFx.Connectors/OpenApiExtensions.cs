@@ -746,7 +746,6 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         (string enumName, bool modelAsString) = schema.GetEnumName();
                         enumName ??= openApiParameter.Name;
-
                         Dictionary<DName, DName> dic = schema.Enum.Select(e => new DName((e as OpenApiString).Value)).ToDictionary(k => k, e => e);
                         string optionSetName = settings.GetOptionSetName(enumName);
                         OptionSet optionSet = new OptionSet(optionSetName, dic.ToImmutableDictionary());
@@ -766,8 +765,19 @@ namespace Microsoft.PowerFx.Connectors
                     }
                     else if (schema.Enum.All(e => e is OpenApiInteger))
                     {
-                        // $$$ Not supported yet
-                        return new ConnectorType("Unsupported enum type (int)", openApiParameter.Name, FormulaType.BindingError);
+                        var enumName = openApiParameter.Name;
+                        Dictionary<DName, DName> dic = schema.Enum.Select(e => new DName((e as OpenApiInteger).Value.ToString(CultureInfo.InvariantCulture))).ToDictionary(k => k, e => e);
+
+                        if (settings.Settings.ReturnEnumsAsPrimitive)
+                        {
+                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal, list: list, isNumber: true);
+                        }
+
+                        string optionSetName = settings.GetOptionSetName(enumName);
+                        OptionSet optionSet = new OptionSet(optionSetName, dic.ToImmutableDictionary());
+                        optionSet = settings.OptionSets.TryAddOptionSet(optionSet);
+
+                        return new ConnectorType(schema, openApiParameter, optionSet.FormulaType);
                     }
                     else
                     {

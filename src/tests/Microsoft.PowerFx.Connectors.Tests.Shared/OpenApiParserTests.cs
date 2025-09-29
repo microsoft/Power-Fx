@@ -52,6 +52,53 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         [Fact]
+        public void EnumTypeInteger()
+        {
+            var doc = Helpers.ReadSwagger(@"Swagger\enum-integer.json", _output);
+
+            var settings1 = new ConnectorSettings("helloworld")
+            {
+                Compatibility = ConnectorCompatibility.SwaggerCompatibility,
+                ReturnUnknownRecordFieldsAsUntypedObjects = true,
+                IncludeWebhookFunctions = true,
+                AllowSuggestionMappingFallback = true,
+                UseItemDynamicPropertiesSpecialHandling = true,
+                SupportXMsEnumValues = true,
+                ReturnEnumsAsPrimitive = true,
+            };
+
+            var functions = OpenApiParser.GetFunctions(
+                settings1,
+                doc, 
+                new ConsoleLogger(_output)).ToList();
+            var function = functions[0];
+
+            Assert.True(function.IsSupported, function.NotSupportedReason);
+            Assert.Equal(DKind.Decimal, function.ParameterTypes[1].Kind);
+
+            var settings2 = new ConnectorSettings("helloworld")
+            {
+                Compatibility = ConnectorCompatibility.SwaggerCompatibility,
+                ReturnUnknownRecordFieldsAsUntypedObjects = true,
+                IncludeWebhookFunctions = true,
+                AllowSuggestionMappingFallback = true,
+                UseItemDynamicPropertiesSpecialHandling = true,
+                SupportXMsEnumValues = true,
+
+                //ReturnEnumsAsPrimitive = true,
+            };
+
+            functions = OpenApiParser.GetFunctions(
+                settings2,
+                doc,
+                new ConsoleLogger(_output)).ToList();
+            function = functions[0];
+
+            Assert.True(function.IsSupported, function.NotSupportedReason);
+            Assert.Equal(DKind.OptionSetValue, function.ParameterTypes[1].Kind);
+        }
+
+        [Fact]
         public void ACSL_GetFunctionNames22()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language v2.2.json", _output);
