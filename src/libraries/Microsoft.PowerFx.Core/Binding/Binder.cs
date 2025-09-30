@@ -4855,7 +4855,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrTestPropertyExpected);
                 }
-                else if (!func.IsAllowedInSimpleExpressions && _txb.BindingConfig.EnforceSimpleExpressionConstraint)
+                else if ((!func.IsAllowedInSimpleExpressions ||_txb.IsAsync(node)) && _txb.BindingConfig.EnforceSimpleExpressionConstraint)
                 {
                     // Functions that are not allowed in simple expressions cannot be used when the binding config restricts to simple expressions.
                     _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrViolatedSimpleConstraintFunction, func.Name);
