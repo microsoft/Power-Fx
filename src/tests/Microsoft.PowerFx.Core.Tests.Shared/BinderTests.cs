@@ -163,5 +163,27 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.True(binding.ErrorContainer.HasErrorsInTree(binding.Top));
         }
+
+        public class SimpleExpressionEngine : Engine
+        {
+            public SimpleExpressionEngine()
+                : base(new PowerFxConfig())
+            { 
+            }
+
+            private protected override BindingConfig GetDefaultBindingConfig(ParserOptions options, RecordType ruleScope = null)
+            {
+                return new BindingConfig(allowsSideEffects: options.AllowsSideEffects, numberIsFloat: options.NumberIsFloat, enforceSimpleExpressions: true);
+            }
+        }
+
+        [Theory]
+        [InlineData("123")]
+        public void TestExpressionSimpleConstraintValid(string expr)
+        {
+            var engine = new SimpleExpressionEngine();
+            var checkResult = engine.Check(expr);
+            Assert.True(checkResult.IsSuccess);
+        }
     }
 }

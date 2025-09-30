@@ -2899,6 +2899,11 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
+                if (_txb.BindingConfig.EnforceSimpleExpressionConstraint && !lookupInfo.Kind.IsValidInSimpleExpression())
+                {
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrViolatedSimpleConstraintAccess, node.Ident.Name.Value);
+                }
+
                 var isConstantNamedFormula = false;
                 if (lookupInfo.Kind == BindKind.PowerFxResolvedObject)
                 {
@@ -4849,6 +4854,11 @@ namespace Microsoft.PowerFx.Core.Binding
                 else if (func.IsTestOnly && _txb.Property != null && !_txb.Property.IsTestCaseProperty)
                 {
                     _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrTestPropertyExpected);
+                }
+                else if (!func.IsAllowedInSimpleExpressions && _txb.BindingConfig.EnforceSimpleExpressionConstraint)
+                {
+                    // Functions that are not allowed in simple expressions cannot be used when the binding config restricts to simple expressions.
+                    _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrViolatedSimpleConstraintFunction, func.Name);
                 }
 
                 // Auto-refreshable functions cannot be used in behavior rules.

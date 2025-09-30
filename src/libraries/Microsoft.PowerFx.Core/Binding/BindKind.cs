@@ -85,4 +85,15 @@ namespace Microsoft.PowerFx.Core.Binding
 
         Lim,
     }
+
+    public static class BindKindExtensions
+    {
+        internal static bool IsValidInSimpleExpression(this BindKind kind)
+        {
+            return kind == BindKind.ThisItem ||
+                kind == BindKind.Enum ||
+                kind == BindKind.LambdaField ||
+                kind == BindKind.LambdaFullRecord;
+        }
+    }
 }
