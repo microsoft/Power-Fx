@@ -100,9 +100,26 @@ namespace Microsoft.PowerFx.Types
         /// Returns OData query string which has all parameter like $filter, $apply, etc.
         /// </summary>
         /// <returns></returns>
-        public abstract string GetODataQueryString();
+        public abstract string GetODataQueryString(QueryMarshallerSettings queryMarshallerSettings);
 
         public int? Top { get; set; }
+    }
+
+    public class QueryMarshallerSettings
+    {
+        /// <summary>
+        /// OData boolean values are true/false. Sharepoint needs 1/0.
+        /// </summary>
+        public bool EncodeBooleanAsInteger { get; init; } = false;
+
+        /// <summary>
+        /// Gets a value indicating whether dates should be encoded as strings. Sharepoint needs this.
+        /// </summary>
+        public bool EncodeDateAsString { get; init; } = false;
+
+        public QueryMarshallerSettings()
+        {
+        }
     }
 
     /// <summary>

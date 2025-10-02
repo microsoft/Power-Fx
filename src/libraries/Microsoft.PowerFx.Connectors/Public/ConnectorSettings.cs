@@ -4,6 +4,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
@@ -26,7 +27,14 @@ namespace Microsoft.PowerFx.Connectors
         /// </summary>
         internal const int DefaultConnectorTop = 1000;
 
-        public static ConnectorSettings NewCDPConnectorSettings(bool extractSensitivityLabel = false, string purviewAccountName = null, int maxRows = DefaultConnectorTop)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="extractSensitivityLabel"></param>
+        /// <param name="purviewAccountName"></param>
+        /// <param name="maxRows"></param>
+        /// <param name="queryMarshallerSettings"> Must be passed for SalesForce.</param>
+        public static ConnectorSettings NewCDPConnectorSettings(bool extractSensitivityLabel = false, string purviewAccountName = null, int maxRows = DefaultConnectorTop, QueryMarshallerSettings queryMarshallerSettings = null)
         {
             var connectorSettings = new ConnectorSettings(null)
             {
@@ -35,7 +43,8 @@ namespace Microsoft.PowerFx.Connectors
                 ReturnEnumsAsPrimitive = false,
                 MaxRows = maxRows,
                 ExtractSensitivityLabel = extractSensitivityLabel,
-                PurviewAccountName = purviewAccountName
+                PurviewAccountName = purviewAccountName,
+                QueryMarshallerSettings = queryMarshallerSettings ?? new QueryMarshallerSettings()
             };
 
             return connectorSettings;
@@ -134,6 +143,8 @@ namespace Microsoft.PowerFx.Connectors
         public bool UseItemDynamicPropertiesSpecialHandling { get; init; } = false;
         
         public ConnectorCompatibility Compatibility { get; init; } = ConnectorCompatibility.Default;
+
+        public QueryMarshallerSettings QueryMarshallerSettings { get; init; } = new QueryMarshallerSettings();
     }
 
     public enum ConnectorCompatibility
