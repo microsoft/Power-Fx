@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular
             return string.Empty;
         }
 
-        public override string GetODataQueryString()
+        public override string GetODataQueryString(QueryMarshallerSettings queryMarshallerSettings)
         {
             var sb = new StringBuilder();
             sb.Append($"$top={_maxRows}");

@@ -152,6 +152,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.OptionSetValueType",
                 "Microsoft.PowerFx.Types.PrimitiveValue`1",
                 "Microsoft.PowerFx.Types.PrimitiveValueConversions",
+                "Microsoft.PowerFx.Types.QueryMarshallerSettings",
                 "Microsoft.PowerFx.Types.RecordType",
                 "Microsoft.PowerFx.Types.RecordValue",
                 "Microsoft.PowerFx.Types.SpecialFieldKind",
