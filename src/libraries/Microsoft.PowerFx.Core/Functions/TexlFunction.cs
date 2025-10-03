@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Allowlist for functions that can be used in "simple" expressions.
         /// </summary>
-        public bool IsAllowedInSimpleExpressions => IsPure && !IsAsync;
+        public virtual bool IsAllowedInSimpleExpressions => false;
 
         // Return true if the function is stateless (same result for same input), or false otherwise.
         public virtual bool IsStateless => true;

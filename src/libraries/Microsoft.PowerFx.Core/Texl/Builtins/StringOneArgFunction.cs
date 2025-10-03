@@ -23,6 +23,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
+        public override bool IsAllowedInSimpleExpressions => true;
+
         public StringOneArgFunction(string name, TexlStrings.StringGetter description, FunctionCategories functionCategories)
             : base(name, description, functionCategories, DType.String, 0, 1, 1, DType.String)
         {

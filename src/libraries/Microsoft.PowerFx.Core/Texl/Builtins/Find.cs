@@ -22,6 +22,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
+        public override bool IsAllowedInSimpleExpressions => true;
+
         public FindFunction()
             : base("Find", TexlStrings.AboutFind, FunctionCategories.Text, DType.Number, 0, 2, 3, DType.String, DType.String, DType.Number)
         {

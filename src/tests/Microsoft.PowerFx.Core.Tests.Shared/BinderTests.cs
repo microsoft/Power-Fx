@@ -180,10 +180,14 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData("123")]
         [InlineData("\"abc\"")]
+        [InlineData("Lower(\"abc\")")]
+        [InlineData("Trim(\"abc\")")]
+        [InlineData("Len(\"abc\")")]
+        [InlineData("Text(Value(\"abc\"))")]
         [InlineData("If(true, 1, 2)")]
         [InlineData("If(1=2, Color.Red, Color.Blue)")]
-        [InlineData("Filter([1234], Value > 1)")]
-        [InlineData("Filter([1234], ThisRecord.Value > 1)")]
+        [InlineData("With({Value:1234}, Value > 1)")]
+        [InlineData("With({Value:1234}, ThisRecord.Value > 1)")]
         public void TestExpressionSimpleConstraintValid(string expr)
         {
             var engine = new SimpleExpressionEngine();
@@ -195,11 +199,14 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("IfError(1/0, 1)")] // Note, IfError is always Async (consider changing that/adding a sync version)
         [InlineData("Filter(tableVar, Value > 1)")]
         [InlineData("Filter(tableVar, ThisRecord.Value > 1)")]
+        [InlineData("With(recordVar, Value > 1)")]
+        [InlineData("With(recordVar, ThisRecord.Value > 1)")]
         [InlineData("AsType(ParseJson(\"Foo\"), Type(Text))")]
         public void TestExpressionSimpleConstraintError(string expr)
         {
             var engine = new SimpleExpressionEngine();
             engine.Config.SymbolTable.AddVariable("tableVar", new TableType(TestUtils.DT("*[Value:n]")));
+            engine.Config.SymbolTable.AddVariable("recordVar", new KnownRecordType(TestUtils.DT("![Value:n]")));
             var checkResult = engine.Check(expr);
             Assert.False(checkResult.IsSuccess);
         }

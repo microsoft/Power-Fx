@@ -21,6 +21,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
+        public override bool IsAllowedInSimpleExpressions => true;
+
         private readonly DType _returnType;
 
         public ValueBaseFunction(string functionName, TexlStrings.StringGetter functionAbout, DType functionReturn)

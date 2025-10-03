@@ -15,6 +15,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Abstract base class for all 1-arg math functions that return numeric values.
     internal abstract class MathOneArgFunction : BuiltinFunction
     {
+        public override bool IsAllowedInSimpleExpressions => true;
         public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
             return _nativeDecimal ? ArgPreprocessor.ReplaceBlankWithCallZero_Scalar : ArgPreprocessor.ReplaceBlankWithFloatZero;
@@ -131,6 +132,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         public override bool IsSelfContained => true;
+        public override bool IsAllowedInSimpleExpressions => true;
 
         // The number of arguments required for the output to be decimal.
         // 0 = All args are coerced to float and the result of the function is always float.  Effectively turning off native decimal for this function.  Examples: Power.
