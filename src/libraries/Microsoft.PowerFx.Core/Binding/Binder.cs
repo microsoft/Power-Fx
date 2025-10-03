@@ -1061,8 +1061,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     return dataSourceInfo != null;
 
                 case NodeKind.DottedName:
-                    IExpandInfo info;
-                    if (TryGetEntityInfo(node.AsDottedName(), out info))
+                    if (TryGetEntityInfo(node.AsDottedName(), out IExpandInfo info))
                     {
                         dataSourceInfo = info.ParentDataSource;
                         return dataSourceInfo != null;
@@ -2899,7 +2898,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
-                if (_txb.BindingConfig.EnforceSimpleExpressionConstraint && !lookupInfo.Kind.IsValidInSimpleExpression())
+                // We have an allowlist of kinds permitted in simple expressions, all of which should be Sync. 
+                // The IsAsync check is just to be sure we're not introducing async
+                // if things are added to the set of valid kinds in the future.
+                // As the main point of the "Simple Expression" constraint is to ensure certain expressions are sync
+                // but that's harder to communicate to low-code users.
+                if (_txb.BindingConfig.EnforceSimpleExpressionConstraint && (!lookupInfo.Kind.IsValidInSimpleExpression() || lookupInfo.IsAsync))
                 {
                     _txb.ErrorContainer.Error(node, TexlStrings.ErrViolatedSimpleConstraintAccess, node.Ident.Name.Value);
                 }
@@ -4855,7 +4859,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrTestPropertyExpected);
                 }
-                else if ((!func.IsAllowedInSimpleExpressions ||_txb.IsAsync(node)) && _txb.BindingConfig.EnforceSimpleExpressionConstraint)
+                else if ((!func.IsAllowedInSimpleExpressions || _txb.IsAsync(node)) && _txb.BindingConfig.EnforceSimpleExpressionConstraint)
                 {
                     // Functions that are not allowed in simple expressions cannot be used when the binding config restricts to simple expressions.
                     _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrViolatedSimpleConstraintFunction, func.Name);

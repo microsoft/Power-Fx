@@ -4773,19 +4773,19 @@
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_ShortMessage" xml:space="preserve">
     <value>{0} cannot be accessed in expressions on this property.</value>
-    <comment>Error Message </comment>
+    <comment>Error Message. This property restricts the set of values that can be referenced to just  </comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_LongMessage" xml:space="preserve">
-    <value>This property restricts access to values outside of it's scope. {0} is not a value that can be accessed here.</value>
+    <value>This property restricts access to values outside of ThisItem to ensure good performance. {0} is not a value that can be accessed here.</value>
     <comment>Error Message </comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_ShortMessage" xml:space="preserve">
     <value>The {0} function cannot be used in expressions on this property.</value>
-    <comment>Error Message </comment>
+    <comment>Error Message: Properties marked with a Simple Constraint cannot use certain functions that would be slow. </comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_LongMessage" xml:space="preserve">
-    <value>This property restricts functions to a set of simple, fast functions to ensure good performance.</value>
-    <comment>Error Message </comment>
+    <value>This property restricts the functions that can be used to a set of simple functions that run quickly to ensure good performance.</value>
+    <comment>Longer informative error message, describing why a function would be erroneous on this property.</comment>
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
     <value>The capture name '{0}' is hiding a predefined property that returns match information. Consider renaming it if you want to access the match information.</value>

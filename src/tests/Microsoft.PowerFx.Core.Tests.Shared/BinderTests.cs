@@ -179,11 +179,29 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("123")]
+        [InlineData("\"abc\"")]
+        [InlineData("If(true, 1, 2)")]
+        [InlineData("If(1=2, Color.Red, Color.Blue)")]
+        [InlineData("Filter([1234], Value > 1)")]
+        [InlineData("Filter([1234], ThisRecord.Value > 1)")]
         public void TestExpressionSimpleConstraintValid(string expr)
         {
             var engine = new SimpleExpressionEngine();
             var checkResult = engine.Check(expr);
             Assert.True(checkResult.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("IfError(1/0, 1)")] // Note, IfError is always Async (consider changing that/adding a sync version)
+        [InlineData("Filter(tableVar, Value > 1)")]
+        [InlineData("Filter(tableVar, ThisRecord.Value > 1)")]
+        [InlineData("AsType(ParseJson(\"Foo\"), Type(Text))")]
+        public void TestExpressionSimpleConstraintError(string expr)
+        {
+            var engine = new SimpleExpressionEngine();
+            engine.Config.SymbolTable.AddVariable("tableVar", new TableType(TestUtils.DT("*[Value:n]")));
+            var checkResult = engine.Check(expr);
+            Assert.False(checkResult.IsSuccess);
         }
     }
 }

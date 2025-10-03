@@ -90,6 +90,7 @@ namespace Microsoft.PowerFx.Core.Binding
     {
         internal static bool IsValidInSimpleExpression(this BindKind kind)
         {
+            // Starting simple, we could expand this set over time. 
             return kind == BindKind.ThisItem ||
                 kind == BindKind.Enum ||
                 kind == BindKind.LambdaField ||
