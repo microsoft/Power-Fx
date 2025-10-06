@@ -60,7 +60,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 numberIsFloat: this.NumberIsFloat,
                 analysisMode: this.AnalysisMode,
                 markAsAsyncOnLazilyLoadedControlRef: this.MarkAsAsyncOnLazilyLoadedControlRef,
-                userDefinitionsMode: this.UserDefinitionsMode);
+                userDefinitionsMode: this.UserDefinitionsMode,
+                enforceSimpleExpressions: this.EnforceSimpleExpressionConstraint);
         }
     }
 }
