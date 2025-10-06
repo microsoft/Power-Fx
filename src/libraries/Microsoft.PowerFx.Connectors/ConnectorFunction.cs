@@ -152,6 +152,10 @@ namespace Microsoft.PowerFx.Connectors
         /// </summary>
         public bool RequiresUserConfirmation => Operation.GetRequiresUserConfirmation();
 
+        public string LlmName => Operation.GetLlmName();
+
+        public string LlmDescription => Operation.GetLlmDescription();
+
         /// <summary>
         /// Return type of the function.
         /// </summary>
@@ -301,7 +305,7 @@ namespace Microsoft.PowerFx.Connectors
         // Those properties are only used by HttpFunctionInvoker
         internal ConnectorParameterInternals _internals = null;
 
-        private readonly ConnectorLogger _configurationLogger = null;        
+        private readonly ConnectorLogger _configurationLogger = null;
 
         internal ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, ConnectorSettings connectorSettings, List<ConnectorFunction> functionList,
                                    ConnectorLogger configurationLogger, IReadOnlyDictionary<string, FormulaValue> globalValues)
@@ -310,7 +314,7 @@ namespace Microsoft.PowerFx.Connectors
             Name = name;
             OperationPath = operationPath;
             HttpMethod = httpMethod;
-            ConnectorSettings = connectorSettings;            
+            ConnectorSettings = connectorSettings;
             GlobalContext = new ConnectorGlobalContext(functionList ?? throw new ArgumentNullException(nameof(functionList)), globalValues);
 
             _configurationLogger = configurationLogger;
@@ -858,7 +862,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 return ev;
             }
-            
+
             BaseRuntimeConnectorContext context = (ReturnParameterType.Binary && outputTypeOverride == null) ? runtimeContext.WithRawResults() : runtimeContext;
             ScopedHttpFunctionInvoker invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(Namespace, out _)), Name, Namespace, new HttpFunctionInvoker(this, context), context.ThrowOnError);
             FormulaValue result = await invoker.InvokeAsync(arguments, context, outputTypeOverride, cancellationToken).ConfigureAwait(false);
@@ -1028,7 +1032,7 @@ namespace Microsoft.PowerFx.Connectors
             ConnectorPermission tablePermission = tableSchema.GetPermission();
 
             JsonElement jsonElement = ExtractFromJson(stringValue, valuePath, out string name, out string displayName);
-            bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;            
+            bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;
 
             SymbolTable symbolTable = new SymbolTable();
             ConnectorType connectorType = new ConnectorType(jsonElement, tableName, symbolTable, settings, datasetName, name, displayName, connectorName, tableResolver, serviceCapabilities, isTableReadOnly);
@@ -1036,7 +1040,7 @@ namespace Microsoft.PowerFx.Connectors
             optionSets = symbolTable.OptionSets.Select(kvp => kvp.Value);
 
             List<ExpressionError> issues = new List<ExpressionError>();
-            HashSet<string> fieldNames = new HashSet<string>(connectorType.Fields.Select(ct => ct.Name));            
+            HashSet<string> fieldNames = new HashSet<string>(connectorType.Fields.Select(ct => ct.Name));
 
             // Table level validation
             ValidatePropertyExist(serviceCapabilities?.FilterRestriction?.RequiredProperties, fieldNames, issues, "x-ms-capabilities/filterRestrictions/requiredProperties");
@@ -1047,38 +1051,38 @@ namespace Microsoft.PowerFx.Connectors
             ValidateServerPaging(serviceCapabilities?.PagingCapabilities?.ServerPagingOptions, issues, "x-ms-capabilities/serverPagingOptions");
             ValidatePropertyExist(serviceCapabilities?.SortRestriction?.UnsortableProperties, fieldNames, issues, "x-ms-capabilities/sortRestrictions/unsortableProperties");
             ValidatePropertyExist(serviceCapabilities?.SortRestriction?.AscendingOnlyProperties, fieldNames, issues, "x-ms-capabilities/sortRestrictions/ascendingOnlyProperties");
-           
+
             // Column level validation
             foreach (ConnectorType field in connectorType.Fields)
             {
                 ColumnCapabilities columnCapabilities = field.Capabilities;
-                ValidateFunctionExist(columnCapabilities?.Capabilities?.FilterFunctions, issues, $"schema/item/properties/{Display(field.Name)}/x-ms-capabilities/filterFunctions");                
+                ValidateFunctionExist(columnCapabilities?.Capabilities?.FilterFunctions, issues, $"schema/item/properties/{Display(field.Name)}/x-ms-capabilities/filterFunctions");
             }
-           
+
             foreach (ExpressionError err in issues)
             {
                 // Salesforce will generate warnings here as we do not manage compound properties
                 // ex: in Accounts table, BillingAddress consists of (BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude, BillingGeocodeAccuracy)
                 connectorType.AddWarning(err);
             }
-            
+
             return connectorType;
         }
 
-        private static void ValidatePropertyExist(IEnumerable<string> propertyList, ISet<string> fields, List<ExpressionError> issues, string location)        
+        private static void ValidatePropertyExist(IEnumerable<string> propertyList, ISet<string> fields, List<ExpressionError> issues, string location)
         {
             if (propertyList != null)
             {
                 foreach (string requiredProperty in propertyList)
                 {
                     if (!fields.Contains(requiredProperty))
-                    {                        
+                    {
                         issues.Add(new ExpressionError()
                         {
                             Kind = ErrorKind.AnalysisError,
                             ResourceKey = ConnectorStringResources.WarnInvalidProperty,
                             MessageArgs = new[] { Display(requiredProperty), location }
-                        });                                                  
+                        });
                     }
                 }
             }
@@ -1088,7 +1092,7 @@ namespace Microsoft.PowerFx.Connectors
         private static readonly IEnumerable<string> _validFunctions = new HashSet<string>(new[]
         {
             // From Power Apps - https://msazure.visualstudio.com/OneAgile/_git/PowerApps-Client?path=/src/Cloud/DocumentServer.Core/XrmDataProvider/CdsPatchDatasourceHelper.cs&version=GBmaster&line=1055&lineEnd=1055&lineStartColumn=23&lineEndColumn=47&lineStyle=plain&_a=contents
-            "add", "and", "average", "ceiling", "concat", "contains", "countdistinct", "date", "day", "div", "endswith", "eq", "floor", "ge", "gt", "hour", "indexof", "le", "length", "lt", "max", "min", "minute", "mod", "month", "mul", "ne", 
+            "add", "and", "average", "ceiling", "concat", "contains", "countdistinct", "date", "day", "div", "endswith", "eq", "floor", "ge", "gt", "hour", "indexof", "le", "length", "lt", "max", "min", "minute", "mod", "month", "mul", "ne",
             "negate", "not", "now", "null", "or", "replace", "round", "second", "startswith", "sub", "substring", "substringof", "sum", "time", "tolower", "totaloffsetminutes", "totalseconds", "toupper", "trim", "year",
 
             // Fx additions (from DelegationOperator)
@@ -1102,7 +1106,7 @@ namespace Microsoft.PowerFx.Connectors
                 foreach (string requiredProperty in propertyList)
                 {
                     if (!_validFunctions.Contains(requiredProperty))
-                    {                       
+                    {
                         issues.Add(new ExpressionError()
                         {
                             Kind = ErrorKind.AnalysisError,
@@ -1117,7 +1121,7 @@ namespace Microsoft.PowerFx.Connectors
         private static void ValidateOdataVersion(int? version, List<ExpressionError> issues, string location)
         {
             if (version != 3 && version != 4)
-            {               
+            {
                 issues.Add(new ExpressionError()
                 {
                     Kind = ErrorKind.AnalysisError,
@@ -1125,7 +1129,7 @@ namespace Microsoft.PowerFx.Connectors
                     MessageArgs = new[] { Display(version), location }
                 });
             }
-        }        
+        }
 
         private static void ValidateServerPaging(IEnumerable<string> pagingOptions, List<ExpressionError> issues, string location)
         {
@@ -1140,7 +1144,7 @@ namespace Microsoft.PowerFx.Connectors
                             Kind = ErrorKind.AnalysisError,
                             ResourceKey = ConnectorStringResources.WarnInvalidPagingOption,
                             MessageArgs = new[] { Display(po), location }
-                        });                        
+                        });
                     }
                 }
             }
@@ -1226,7 +1230,7 @@ namespace Microsoft.PowerFx.Connectors
             OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(je.ToString(), OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
 
             return new ConnectorType(SwaggerSchema.New(schema), settings);
-        }      
+        }
 
         private async Task<ConnectorType> GetConnectorSuggestionsFromDynamicPropertyAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, ConnectorDynamicProperty cdp, CancellationToken cancellationToken)
         {
@@ -1502,18 +1506,18 @@ namespace Microsoft.PowerFx.Connectors
             // 1. required parameter
             // 2. has default value
             // 3. is marked "internal" in schema extension named "x-ms-visibility"
-            List<ConnectorParameter> requiredParameters = new ();
-            List<ConnectorParameter> hiddenRequiredParameters = new ();
-            List<ConnectorParameter> optionalParameters = new ();
+            List<ConnectorParameter> requiredParameters = new();
+            List<ConnectorParameter> hiddenRequiredParameters = new();
+            List<ConnectorParameter> optionalParameters = new();
 
             // parameters used in ConnectorParameterInternals
-            Dictionary<string, (bool, FormulaValue, DType)> parameterDefaultValues = new ();
-            Dictionary<ConnectorParameter, FormulaValue> openApiBodyParameters = new ();
+            Dictionary<string, (bool, FormulaValue, DType)> parameterDefaultValues = new();
+            Dictionary<ConnectorParameter, FormulaValue> openApiBodyParameters = new();
             string bodySchemaReferenceId = null;
             bool schemaLessBody = false;
-            bool fatalError = false;            
+            bool fatalError = false;
             string contentType = OpenApiExtensions.ContentType_ApplicationJson;
-            ConnectorErrors errorsAndWarnings = new ConnectorErrors();            
+            ConnectorErrors errorsAndWarnings = new ConnectorErrors();
 
             foreach (OpenApiParameter parameter in Operation.Parameters)
             {
@@ -1597,12 +1601,12 @@ namespace Microsoft.PowerFx.Connectors
                                 foreach (KeyValuePair<string, OpenApiSchema> bodyProperty in bodySchema.Properties)
                                 {
                                     OpenApiSchema bodyPropertySchema = bodyProperty.Value;
-                                    string bodyPropertyName = bodyProperty.Key;                              
-                                    bool bodyPropertyHiddenRequired = false;                                    
-                                    
+                                    string bodyPropertyName = bodyProperty.Key;
+                                    bool bodyPropertyHiddenRequired = false;
+
                                     // Power Apps has a special handling for the body in this case
                                     // where it doesn't follow the swagger file
-                                    if (ConnectorSettings.UseItemDynamicPropertiesSpecialHandling && 
+                                    if (ConnectorSettings.UseItemDynamicPropertiesSpecialHandling &&
                                         bodyName == "item" &&
                                         bodyPropertyName == "dynamicProperties" &&
                                         bodySchema.Properties.Count == 1)
@@ -1610,8 +1614,8 @@ namespace Microsoft.PowerFx.Connectors
                                         bodyPropertyName = bodyName;
                                         _specialBodyHandling = true;
                                     }
-                                    
-                                    bool bodyPropertyRequired = bodySchema.Required.Contains(bodyPropertyName) || (_specialBodyHandling && requestBody.Required); 
+
+                                    bool bodyPropertyRequired = bodySchema.Required.Contains(bodyPropertyName) || (_specialBodyHandling && requestBody.Required);
 
                                     if (bodyPropertySchema.IsInternal())
                                     {
@@ -1726,7 +1730,7 @@ namespace Microsoft.PowerFx.Connectors
             if (IsDeprecated)
             {
                 ExpressionError ee = new ExpressionError() { ResourceKey = ConnectorStringResources.WarnDeprecatedFunction, MessageArgs = new[] { Name, Namespace } };
-                _warnings.Add(ee);                
+                _warnings.Add(ee);
                 _configurationLogger?.LogWarning($"{ee.Message}");
             }
 

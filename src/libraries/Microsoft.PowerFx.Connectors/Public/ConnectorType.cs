@@ -82,6 +82,12 @@ namespace Microsoft.PowerFx.Connectors
         // Supports x-ms-property-entity-type
         public string PropertyEntityType { get; }
 
+        // Supports x-ms-llm-name
+        public string LlmName { get; private set; }
+
+        // Supports x-ms-llm-description
+        public string LlmDescription { get; private set; }
+
         internal RecordType HiddenRecordType { get; }
 
         // Supports x-ms-dynamic-values or -list locally
@@ -221,12 +227,15 @@ namespace Microsoft.PowerFx.Connectors
                 EnumValues = Array.Empty<FormulaValue>();
                 EnumDisplayNames = Array.Empty<string>();
             }
-            
-            AddWarning(warning);            
+
+            AddWarning(warning);
             DynamicSchema = AggregateErrorsAndWarnings(openApiParameter.GetDynamicSchema());
             DynamicProperty = AggregateErrorsAndWarnings(openApiParameter.GetDynamicProperty());
             DynamicValues = AggregateErrorsAndWarnings(openApiParameter.GetDynamicValue());
             DynamicList = AggregateErrorsAndWarnings(openApiParameter.GetDynamicList());
+
+            LlmName = schema.GetLlmName();
+            LlmDescription = schema.GetLlmDescription();
         }
 
         internal static readonly FormulaType DefaultType = FormulaType.UntypedObject;

@@ -340,7 +340,7 @@ namespace Microsoft.PowerFx.Connectors
             }
             else if (openApiAny is IDictionary<string, IOpenApiAny> o)
             {
-                Dictionary<string, FormulaValue> dvParams = new ();
+                Dictionary<string, FormulaValue> dvParams = new();
 
                 foreach (KeyValuePair<string, IOpenApiAny> kvp in o)
                 {
@@ -372,6 +372,10 @@ namespace Microsoft.PowerFx.Connectors
         internal static bool IsInternal(this ISwaggerExtensions schema) => string.Equals(schema.GetVisibility(), "internal", StringComparison.OrdinalIgnoreCase);
 
         internal static string GetVisibility(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsVisibility, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
+
+        internal static string GetLlmName(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsLlmName, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
+
+        internal static string GetLlmDescription(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsLlmDescription, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
 
         internal static (string name, bool modelAsString) GetEnumName(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsEnum, out IOpenApiExtension openApiExt) &&
                                                                                                          openApiExt is IDictionary<string, IOpenApiAny> jsonObject &&
@@ -962,6 +966,16 @@ namespace Microsoft.PowerFx.Connectors
             return new ConnectorType($"Unsupported return type - found '{string.Join(", ", response.Content.Select(kv4 => kv4.Key))}'", "response", FormulaType.UntypedObject);
         }
 
+        public static string GetLlmName(this OpenApiOperation op)
+        {
+            return op.Extensions.TryGetValue(XMsLlmName, out IOpenApiExtension ext) && ext is OpenApiString apiStr ? apiStr.Value : null;
+        }
+
+        public static string GetLlmDescription(this OpenApiOperation op)
+        {
+            return op.Extensions.TryGetValue(XMsLlmDescription, out IOpenApiExtension ext) && ext is OpenApiString apiStr ? apiStr.Value : null;
+        }
+
         /// <summary>
         /// Identifies which ContentType and Schema to use.
         /// </summary>
@@ -970,7 +984,7 @@ namespace Microsoft.PowerFx.Connectors
         /// <exception cref="NotImplementedException">When we cannot determine the content type to use.</exception>
         public static (string ContentType, OpenApiMediaType MediaType) GetContentTypeAndSchema(this IDictionary<string, OpenApiMediaType> content)
         {
-            Dictionary<string, OpenApiMediaType> list = new ();
+            Dictionary<string, OpenApiMediaType> list = new();
 
             foreach (var ct in _knownContentTypes)
             {
@@ -1144,7 +1158,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 // Parameters is required in the spec but there are examples where it's not specified and we'll support this condition with an empty list
                 IDictionary<string, IOpenApiAny> op_prms = apiObj.TryGetValue("parameters", out IOpenApiAny openApiAny) && openApiAny is IDictionary<string, IOpenApiAny> apiString ? apiString : null;
-                ConnectorDynamicValue cdv = new (op_prms);
+                ConnectorDynamicValue cdv = new(op_prms);
 
                 // Mandatory operationId for connectors, except when capibility or builtInOperation are defined
                 apiObj.WhenPresent("operationId", (opId) => cdv.OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId));
@@ -1173,7 +1187,7 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     // Parameters is required in the spec but there are examples where it's not specified and we'll support this condition with an empty list
                     IDictionary<string, IOpenApiAny> op_prms = apiObj.TryGetValue("parameters", out IOpenApiAny openApiAny) && openApiAny is IDictionary<string, IOpenApiAny> apiString ? apiString : null;
-                    ConnectorDynamicList cdl = new (op_prms)
+                    ConnectorDynamicList cdl = new(op_prms)
                     {
                         OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId.Value),
                     };
@@ -1206,7 +1220,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static Dictionary<string, IConnectorExtensionValue> GetParameterMap(this IDictionary<string, IOpenApiAny> opPrms, SupportsConnectorErrors errors)
         {
-            Dictionary<string, IConnectorExtensionValue> dvParams = new ();
+            Dictionary<string, IConnectorExtensionValue> dvParams = new();
 
             if (opPrms == null)
             {
@@ -1303,7 +1317,7 @@ namespace Microsoft.PowerFx.Connectors
                     // Parameters is required in the spec but there are examples where it's not specified and we'll support this condition with an empty list
                     IDictionary<string, IOpenApiAny> op_prms = apiObj.TryGetValue("parameters", out IOpenApiAny openApiAny) && openApiAny is IDictionary<string, IOpenApiAny> apiString ? apiString : null;
 
-                    ConnectorDynamicSchema cds = new (op_prms)
+                    ConnectorDynamicSchema cds = new(op_prms)
                     {
                         OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId.Value),
                     };
@@ -1335,7 +1349,7 @@ namespace Microsoft.PowerFx.Connectors
                     // Parameters is required in the spec but there are examples where it's not specified and we'll support this condition with an empty list
                     IDictionary<string, IOpenApiAny> op_prms = apiObj.TryGetValue("parameters", out IOpenApiAny openApiAny) && openApiAny is IDictionary<string, IOpenApiAny> apiString ? apiString : null;
 
-                    ConnectorDynamicProperty cdp = new (op_prms)
+                    ConnectorDynamicProperty cdp = new(op_prms)
                     {
                         OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId.Value),
                     };
