@@ -26,6 +26,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsStateless => true;
 
+        public override bool IsAllowedInSimpleExpressions => true;
+
         public UniCharFunction()
             : base("UniChar", TexlStrings.AboutUniChar, FunctionCategories.Text, DType.String, 0, 1, 1, DType.Number)
         {

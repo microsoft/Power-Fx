@@ -188,6 +188,58 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("If(1=2, Color.Red, Color.Blue)")]
         [InlineData("With({Value:1234}, Value > 1)")]
         [InlineData("With({Value:1234}, ThisRecord.Value > 1)")]
+
+        // Boolean functions
+        [InlineData("Boolean(1)")]
+        [InlineData("Boolean(\"true\")")]
+        [InlineData("And(true, false)")]
+        [InlineData("Or(true, false)")]
+        [InlineData("Not(true)")]
+
+        // Char / UniChar
+        [InlineData("Char(65)")]
+        [InlineData("UniChar(65)")]
+
+        // Concatenate and string interpolation
+        [InlineData("Concatenate(\"Hello\", \" \", \"World\")")]
+        [InlineData("\"Hello \" & \"World\"")]
+
+        // DateTime functions
+        [InlineData("Date(2023, 1, 1)")]
+        [InlineData("Time(12, 30, 45)")]
+        [InlineData("DateTime(2023, 1, 1, 12, 30, 45)")]
+        [InlineData("Year(Date(2023, 1, 1))")]
+        [InlineData("Month(Date(2023, 1, 1))")]
+        [InlineData("Day(Date(2023, 1, 1))")]
+        [InlineData("Hour(Time(12, 30, 45))")]
+        [InlineData("Minute(Time(12, 30, 45))")]
+        [InlineData("Second(Time(12, 30, 45))")]
+        [InlineData("Weekday(Date(2023, 1, 1))")]
+        [InlineData("WeekNum(Date(2023, 1, 1))")]
+        [InlineData("DateValue(\"2023-01-01\")")]
+        [InlineData("TimeValue(\"12:30:45\")")]
+        [InlineData("DateTimeValue(\"2023-01-01T12:30:45\")")]
+
+        // Hex conversion
+        [InlineData("Dec2Hex(255)")]
+        [InlineData("Hex2Dec(\"FF\")")]
+
+        // Logical
+        [InlineData("And(true, true, true)")]
+        [InlineData("Or(false, false, true)")]
+
+        // Math functions
+        [InlineData("Pi()")]
+
+        // String manipulation
+        [InlineData("Replace(\"abcdef\", 1, 2, \"cd\")")]
+        [InlineData("Substitute(\"abcabc\", \"a\", \"x\")")]
+
+        // More complex simple expressions
+        [InlineData("If(And(true, Not(false)), Concatenate(\"Hello\", \" \", \"World\"), \"Goodbye\")")]
+        [InlineData("Text(DateValue(\"2023-01-01\"), \"yyyy-MM-dd\")")]
+        [InlineData("Lower(Substitute(\"Hello World\", \" \", \"-\"))")]
+        [InlineData("Switch(1, 1, \"One\", 2, \"Two\", \"Other\")")]
         public void TestExpressionSimpleConstraintValid(string expr)
         {
             var engine = new SimpleExpressionEngine();
@@ -202,6 +254,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("With(recordVar, Value > 1)")]
         [InlineData("With(recordVar, ThisRecord.Value > 1)")]
         [InlineData("AsType(ParseJson(\"Foo\"), Type(Text))")]
+        [InlineData("Split(\"foo\", \"f\")")]
         public void TestExpressionSimpleConstraintError(string expr)
         {
             var engine = new SimpleExpressionEngine();

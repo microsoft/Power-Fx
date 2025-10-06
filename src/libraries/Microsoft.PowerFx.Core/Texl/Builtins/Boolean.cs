@@ -90,6 +90,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
+        public override bool IsAllowedInSimpleExpressions => true;
+
         public BooleanNFunction()
             : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanN, FunctionCategories.Text, DType.Boolean, 0, 1, 1, DType.Number)
         {
@@ -156,6 +158,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => false;
+
+        public override bool IsAllowedInSimpleExpressions => true;
 
         // Reusing BooleanN strings as they are generic for numbers
         public BooleanWFunction()
@@ -228,6 +232,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => false;
+
+        public override bool IsAllowedInSimpleExpressions => true;
 
         public BooleanBFunction()
             : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanB, FunctionCategories.Text, DType.Boolean, 0, 1, 1, DType.Boolean)
@@ -330,6 +336,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
+        public override bool IsAllowedInSimpleExpressions => true;
+
         public BooleanLFunction()
             : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanL, FunctionCategories.Text, DType.Boolean, 0, 1, 1, DType.OptionSetValue)
         {
@@ -414,6 +422,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => false;
+
+        public override bool IsAllowedInSimpleExpressions => true;
 
         public BooleanFunction_UO()
             : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBoolean, FunctionCategories.Text, DType.Boolean, 0, 1, 1, DType.UntypedObject)

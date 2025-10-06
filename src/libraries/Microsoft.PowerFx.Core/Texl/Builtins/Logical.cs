@@ -23,6 +23,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
+        public override bool IsAllowedInSimpleExpressions => true;
+
         internal readonly bool _isAnd;
 
         public VariadicLogicalFunction(bool isAnd)

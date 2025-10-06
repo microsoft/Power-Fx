@@ -14,6 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
+        public override bool IsAllowedInSimpleExpressions => true;
+
         public PiFunction()
             : base(
                 "Pi",

@@ -18,6 +18,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
+        public override bool IsAllowedInSimpleExpressions => true;
+
         public ReplaceFunction()
             : base("Replace", TexlStrings.AboutReplace, FunctionCategories.Text, DType.String, 0, 4, 4, DType.String, DType.Number, DType.Number, DType.String)
         {
