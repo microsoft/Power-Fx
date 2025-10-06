@@ -17,6 +17,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class MidFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
         public override bool IsAllowedInSimpleExpressions => true;
 
         public MidFunction()

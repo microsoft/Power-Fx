@@ -16,6 +16,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class MathOneArgFunction : BuiltinFunction
     {
         public override bool IsAllowedInSimpleExpressions => true;
+
         public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
             return _nativeDecimal ? ArgPreprocessor.ReplaceBlankWithCallZero_Scalar : ArgPreprocessor.ReplaceBlankWithFloatZero;
@@ -132,6 +133,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         public override bool IsSelfContained => true;
+
         public override bool IsAllowedInSimpleExpressions => true;
 
         // The number of arguments required for the output to be decimal.
