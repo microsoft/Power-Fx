@@ -1512,13 +1512,13 @@ namespace Microsoft.PowerFx.Connectors
             // 1. required parameter
             // 2. has default value
             // 3. is marked "internal" in schema extension named "x-ms-visibility"
-            List<ConnectorParameter> requiredParameters = new();
-            List<ConnectorParameter> hiddenRequiredParameters = new();
-            List<ConnectorParameter> optionalParameters = new();
+            List<ConnectorParameter> requiredParameters = new ();
+            List<ConnectorParameter> hiddenRequiredParameters = new ();
+            List<ConnectorParameter> optionalParameters = new ();
 
             // parameters used in ConnectorParameterInternals
-            Dictionary<string, (bool, FormulaValue, DType)> parameterDefaultValues = new();
-            Dictionary<ConnectorParameter, FormulaValue> openApiBodyParameters = new();
+            Dictionary<string, (bool, FormulaValue, DType)> parameterDefaultValues = new ();
+            Dictionary<ConnectorParameter, FormulaValue> openApiBodyParameters = new ();
             string bodySchemaReferenceId = null;
             bool schemaLessBody = false;
             bool fatalError = false;
