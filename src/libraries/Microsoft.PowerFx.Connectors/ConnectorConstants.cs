@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Connectors
         public const string XMsTrigger = "x-ms-trigger";
         public const string XMsUrlEncoding = "x-ms-url-encoding";
         public const string XMsVisibility = "x-ms-visibility";
-        public const string XMsLlmName = "x-ms-llm-name";
-        public const string XMsLlmDescription = "x-ms-llm-description";
+        public const string XMsModelName = "x-ms-name-for-model";
+        public const string XMsModelDescription = "x-ms-description-for-model";
     }
 }

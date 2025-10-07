@@ -82,11 +82,11 @@ namespace Microsoft.PowerFx.Connectors
         // Supports x-ms-property-entity-type
         public string PropertyEntityType { get; }
 
-        // Supports x-ms-llm-name
-        public string LlmName { get; private set; }
+        // Supports x-ms-name-for-model
+        public string ModelName { get; private set; }
 
-        // Supports x-ms-llm-description
-        public string LlmDescription { get; private set; }
+        // Supports x-ms-description-for-model
+        public string ModelDescription { get; private set; }
 
         internal RecordType HiddenRecordType { get; }
 
@@ -234,8 +234,8 @@ namespace Microsoft.PowerFx.Connectors
             DynamicValues = AggregateErrorsAndWarnings(openApiParameter.GetDynamicValue());
             DynamicList = AggregateErrorsAndWarnings(openApiParameter.GetDynamicList());
 
-            LlmName = openApiParameter?.GetLlmName();
-            LlmDescription = openApiParameter?.GetLlmDescription();
+            ModelName = openApiParameter?.GetModelName();
+            ModelDescription = openApiParameter?.GetModelDescription();
         }
 
         internal static readonly FormulaType DefaultType = FormulaType.UntypedObject;

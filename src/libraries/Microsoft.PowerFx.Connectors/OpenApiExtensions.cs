@@ -373,9 +373,9 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static string GetVisibility(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsVisibility, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
 
-        internal static string GetLlmName(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsLlmName, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
+        internal static string GetModelName(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsModelName, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
 
-        internal static string GetLlmDescription(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsLlmDescription, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
+        internal static string GetModelDescription(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsModelDescription, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
 
         internal static (string name, bool modelAsString) GetEnumName(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsEnum, out IOpenApiExtension openApiExt) &&
                                                                                                          openApiExt is IDictionary<string, IOpenApiAny> jsonObject &&
@@ -966,14 +966,14 @@ namespace Microsoft.PowerFx.Connectors
             return new ConnectorType($"Unsupported return type - found '{string.Join(", ", response.Content.Select(kv4 => kv4.Key))}'", "response", FormulaType.UntypedObject);
         }
 
-        public static string GetLlmName(this OpenApiOperation op)
+        public static string GetModelName(this OpenApiOperation op)
         {
-            return op.Extensions.TryGetValue(XMsLlmName, out IOpenApiExtension ext) && ext is OpenApiString apiStr ? apiStr.Value : null;
+            return op.Extensions.TryGetValue(XMsModelName, out IOpenApiExtension ext) && ext is OpenApiString apiStr ? apiStr.Value : null;
         }
 
-        public static string GetLlmDescription(this OpenApiOperation op)
+        public static string GetModelDescription(this OpenApiOperation op)
         {
-            return op.Extensions.TryGetValue(XMsLlmDescription, out IOpenApiExtension ext) && ext is OpenApiString apiStr ? apiStr.Value : null;
+            return op.Extensions.TryGetValue(XMsModelDescription, out IOpenApiExtension ext) && ext is OpenApiString apiStr ? apiStr.Value : null;
         }
 
         /// <summary>

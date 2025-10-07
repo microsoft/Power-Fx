@@ -278,8 +278,8 @@
         "operationId": "RequestForInformation",
         "summary": "Request for information (preview)",
         "description": "Sends a request with specified inputs to assigned humans. When the assignee responds, the responses can be used in the remaining workflow steps.",
-        "x-ms-llm-name": "request_for_information_human_in_the_loop",
-        "x-ms-llm-description": "This action sends a request to assigned humans for information. The request is send to outlook",
+        "x-ms-name-for-model": "request_for_information_human_in_the_loop",
+        "x-ms-description-for-model": "This action sends a request to assigned humans for information. The request is send to outlook",
         "parameters": [
           {
             "name": "RequestForInformationInput",
@@ -496,9 +496,9 @@
           "format": "email"
         },
         "input": {
-          "x-ms-llm-name": "request_for_information_human_in_the_loop_input",
+          "x-ms-name-for-model": "request_for_information_human_in_the_loop_input",
           "description": "Input definition.",
-          "x-ms-llm-description": "This is the input definition for the request for information operation. The schema can be dynamically defined based on the context in which the operation is used. For example, if the operation is used in a workflow that requires specific information from a user, the input schema can be tailored to capture that information effectively. Here's an input schema where the user is asked to provide a text input, a boolean choice, and an email address - { \"type\": \"object\", \"properties\": { \"text\": { \"description\": \"Please enter your input\", \"title\": \"Text\", \"type\": \"string\", \"x-ms-content-hint\": \"TEXT\", \"x-ms-dynamically-added\": true }, \"boolean\": { \"description\": \"Please select yes or no\", \"title\": \"Yes/No\", \"type\": \"boolean\", \"x-ms-content-hint\": \"BOOLEAN\", \"x-ms-dynamically-added\": true }, \"email\": { \"description\": \"Enter an email address.\", \"format\": \"email\", \"title\": \"Email\", \"type\": \"string\", \"x-ms-content-hint\": \"EMAIL\", \"x-ms-dynamically-added\": true } }, \"required\": [ \"text\", \"boolean\", \"email\" ] }",
+          "x-ms-description-for-model": "This is the input definition for the request for information operation. The schema can be dynamically defined based on the context in which the operation is used. For example, if the operation is used in a workflow that requires specific information from a user, the input schema can be tailored to capture that information effectively. Here's an input schema where the user is asked to provide a text input, a boolean choice, and an email address - { \"type\": \"object\", \"properties\": { \"text\": { \"description\": \"Please enter your input\", \"title\": \"Text\", \"type\": \"string\", \"x-ms-content-hint\": \"TEXT\", \"x-ms-dynamically-added\": true }, \"boolean\": { \"description\": \"Please select yes or no\", \"title\": \"Yes/No\", \"type\": \"boolean\", \"x-ms-content-hint\": \"BOOLEAN\", \"x-ms-dynamically-added\": true }, \"email\": { \"description\": \"Enter an email address.\", \"format\": \"email\", \"title\": \"Email\", \"type\": \"string\", \"x-ms-content-hint\": \"EMAIL\", \"x-ms-dynamically-added\": true } }, \"required\": [ \"text\", \"boolean\", \"email\" ] }",
           "x-ms-summary": "Input",
           "x-ms-visibility": "important",
           "type": "object",

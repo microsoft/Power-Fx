@@ -153,14 +153,14 @@ namespace Microsoft.PowerFx.Connectors
         public bool RequiresUserConfirmation => Operation.GetRequiresUserConfirmation();
 
         /// <summary>
-        /// Model name defined as "x-ms-llm-name" string content.
+        /// Model name defined as "x-ms-name-for-model" string content.
         /// </summary>
-        public string LlmName => Operation.GetLlmName();
+        public string ModelName => Operation.GetModelName();
 
         /// <summary>
-        /// Model description defined as "x-ms-llm-description" string content.
+        /// Model description defined as "x-ms-description-for-model" string content.
         /// </summary>
-        public string LlmDescription => Operation.GetLlmDescription();
+        public string ModelDescription => Operation.GetModelDescription();
 
         /// <summary>
         /// Return type of the function.

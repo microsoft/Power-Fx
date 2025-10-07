@@ -1566,18 +1566,18 @@ POST https://tip1-shared.azure-apim.net/invoke
             Assert.NotNull(requestForInfoFunction);
             Assert.True(requestForInfoFunction.IsSupported, requestForInfoFunction.NotSupportedReason);
 
-            // Validate x-ms-llm-name and x-ms-llm-description on the operation/function
-            Assert.Equal("request_for_information_human_in_the_loop", requestForInfoFunction.LlmName);
-            Assert.Equal("This action sends a request to assigned humans for information. The request is send to outlook", requestForInfoFunction.LlmDescription);
+            // Validate x-ms-name-for-model and x-ms-description-for-model on the operation/function
+            Assert.Equal("request_for_information_human_in_the_loop", requestForInfoFunction.ModelName);
+            Assert.Equal("This action sends a request to assigned humans for information. The request is send to outlook", requestForInfoFunction.ModelDescription);
 
-            // Validate x-ms-llm-name and x-ms-llm-description on the input parameter
+            // Validate x-ms-name-for-model and x-ms-description-for-model on the input parameter
             var inputParameter = requestForInfoFunction.RequiredParameters.FirstOrDefault(p => p.Name == "input");
             Assert.NotNull(inputParameter);
             Assert.NotNull(inputParameter.ConnectorType);
-            Assert.Equal("request_for_information_human_in_the_loop_input", inputParameter.ConnectorType.LlmName);
-            Assert.NotNull(inputParameter.ConnectorType.LlmDescription);
-            Assert.Contains("input definition for the request for information operation", inputParameter.ConnectorType.LlmDescription);
-            Assert.Contains("schema can be dynamically defined", inputParameter.ConnectorType.LlmDescription);
+            Assert.Equal("request_for_information_human_in_the_loop_input", inputParameter.ConnectorType.ModelName);
+            Assert.NotNull(inputParameter.ConnectorType.ModelDescription);
+            Assert.Contains("input definition for the request for information operation", inputParameter.ConnectorType.ModelDescription);
+            Assert.Contains("schema can be dynamically defined", inputParameter.ConnectorType.ModelDescription);
         }
     }
 

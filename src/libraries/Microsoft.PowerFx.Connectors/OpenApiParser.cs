@@ -426,8 +426,8 @@ namespace Microsoft.PowerFx.Connectors
                 opExtensions.Remove(XMsUrlEncoding);
                 opExtensions.Remove("x-ms-openai-data");
 
-                opExtensions.Remove(XMsLlmName);
-                opExtensions.Remove(XMsLlmDescription);
+                opExtensions.Remove(XMsModelName);
+                opExtensions.Remove(XMsModelDescription);
 
                 // Not supported x-ms-no-generic-test - Present in https://github.com/microsoft/PowerPlatformConnectors but not documented
                 // Other not supported extensions:
