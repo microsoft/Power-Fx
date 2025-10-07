@@ -30,6 +30,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
+        public override bool IsAllowedInSimpleExpressions => true;
+
         public DateFunction()
             : base("Date", TexlStrings.AboutDate, FunctionCategories.DateTime, DType.Date, 0, 3, 3, DType.Number, DType.Number, DType.Number)
         {
@@ -47,6 +49,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool HasPreciseErrors => true;
 
         public override bool IsSelfContained => true;
+
+        public override bool IsAllowedInSimpleExpressions => true;
 
         public ExtractDateTimeFunctionBase(string name, TexlStrings.StringGetter description)
             : base(name, description, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
@@ -88,6 +92,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
+        public override bool IsAllowedInSimpleExpressions => true;
+
         public TimeFunction()
             : base("Time", TexlStrings.AboutTime, FunctionCategories.DateTime, DType.Time, 0, 3, 4, DType.Number, DType.Number, DType.Number, DType.Number)
         {
@@ -111,6 +117,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public override bool HasPreciseErrors => true;
+
+        public override bool IsAllowedInSimpleExpressions => true;
 
         public DateTimeFunction()
             : base("DateTime", TexlStrings.AboutDateTime, FunctionCategories.DateTime, DType.DateTime, 0, 6, 7, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number)
@@ -234,6 +242,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
+        public override bool IsAllowedInSimpleExpressions => true;
+
         public WeekdayFunction()
             : base("Weekday", TexlStrings.AboutWeekday, FunctionCategories.DateTime, DType.Number, 0, 1, 2, DType.DateTime, BuiltInEnums.StartOfWeekEnum.FormulaType._type)
         {
@@ -270,6 +280,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public override bool HasPreciseErrors => true;
+
+        public override bool IsAllowedInSimpleExpressions => true;
 
         public WeekNumFunction()
             : base("WeekNum", TexlStrings.AboutWeekNum, FunctionCategories.DateTime, DType.Number, 0, 1, 2, DType.DateTime, BuiltInEnums.StartOfWeekEnum.FormulaType._type)
@@ -369,6 +381,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
+        public override bool IsAllowedInSimpleExpressions => true;
+
         protected DateTimeGenericFunction(string name, TexlStrings.StringGetter description, DType returnType)
             : base(name, description, FunctionCategories.DateTime, returnType, 0, 1, 2, DType.String, DType.String)
         {
@@ -446,6 +460,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class DateAddFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
+        public override bool IsAllowedInSimpleExpressions => true;
 
         public DateAddFunction()
             : base("DateAdd", TexlStrings.AboutDateAdd, FunctionCategories.DateTime, DType.DateTime, 0, 2, 3, DType.DateTime, DType.Number, BuiltInEnums.TimeUnitEnum.FormulaType._type)
@@ -629,6 +645,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
+        public override bool IsAllowedInSimpleExpressions => true;
+
         public DateDiffFunction()
             : base("DateDiff", TexlStrings.AboutDateDiff, FunctionCategories.DateTime, DType.Number, 0, 2, 3, DType.DateTime, DType.DateTime, BuiltInEnums.TimeUnitEnum.FormulaType._type)
         {
@@ -786,6 +804,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
+        public override bool IsAllowedInSimpleExpressions => true;
+
         public DateValueFunction_UO()
             : base(DateValueFunction.DateValueInvariantFunctionName, TexlStrings.AboutDateValue, FunctionCategories.DateTime, DType.Date, 0, 1, 1, DType.UntypedObject)
         {
@@ -804,6 +824,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
+        public override bool IsAllowedInSimpleExpressions => true;
+
         public TimeValueFunction_UO()
             : base(TimeValueFunction.TimeValueFunctionInvariantName, TexlStrings.AboutTimeValue, FunctionCategories.DateTime, DType.Time, 0, 1, 1, DType.UntypedObject)
         {
@@ -821,6 +843,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool HasPreciseErrors => true;
 
         public override bool IsSelfContained => true;
+
+        public override bool IsAllowedInSimpleExpressions => true;
 
         public DateTimeValueFunction_UO()
             : base(DateTimeValueFunction.DateTimeValueInvariantFunctionName, TexlStrings.AboutDateTimeValue, FunctionCategories.DateTime, DType.DateTime, 0, 1, 1, DType.UntypedObject)

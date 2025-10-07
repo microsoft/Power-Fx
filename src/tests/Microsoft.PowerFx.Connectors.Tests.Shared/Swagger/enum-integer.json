@@ -1,0 +1,53 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Hello World",
+    "description": "Testing a hello world swagger definition",
+    "version": "1.0"
+  },
+  "host": "example.com",
+  "basePath": "/api",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [],
+  "produces": [],
+  "paths": {
+    "/helloWorld": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "default",
+            "schema": {}
+          }
+        },
+        "summary": "Testing a hello world swagger definition",
+        "description": "Testing a hello world swagger definition",
+        "operationId": "helloWorld",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "Some testing query parameter"
+          },
+          {
+            "name": "isUser",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "default": 0,
+            "description": "Some testing isUser parameter",
+            "enum": [1, 0]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {},
+  "parameters": {},
+  "responses": {},
+  "security": [],
+  "tags": []
+}

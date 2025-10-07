@@ -766,8 +766,8 @@ namespace Microsoft.PowerFx
     // for error reporting. 
     internal interface IOperationStatus
     {
-        public IEnumerable<ExpressionError> Errors { get; }
+        IEnumerable<ExpressionError> Errors { get; }
 
-        public bool IsSuccess { get; }
+        bool IsSuccess { get; }
     }
 }

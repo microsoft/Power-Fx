@@ -27,6 +27,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
+        public override bool IsAllowedInSimpleExpressions => true;
+
         public const string TextInvariantFunctionName = "Text";
 
         public TextFunction()

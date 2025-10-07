@@ -115,6 +115,11 @@ namespace Microsoft.PowerFx.Core.Functions
         // abstract will force them to do so.
         public abstract bool IsSelfContained { get; }
 
+        /// <summary>
+        /// Allowlist for functions that can be used in "simple" expressions.
+        /// </summary>
+        public virtual bool IsAllowedInSimpleExpressions => false;
+
         // Return true if the function is stateless (same result for same input), or false otherwise.
         public virtual bool IsStateless => true;
 
