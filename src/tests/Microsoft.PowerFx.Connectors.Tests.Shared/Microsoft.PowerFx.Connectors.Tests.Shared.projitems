@@ -332,7 +332,6 @@
     <Content Include="$(MSBuildThisFileDirectory)Mask.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="$(MSBuildThisFileDirectory)swagger\AdvancedApprovals.json" />
     <Content Include="$(MSBuildThisFileDirectory)Swagger\testSwagger.json" />
   </ItemGroup>
 </Project>
