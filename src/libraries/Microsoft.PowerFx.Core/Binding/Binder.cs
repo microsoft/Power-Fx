@@ -4421,23 +4421,15 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     if (overloadsWithTypeArgs.Any() && node.Args.Count > 1)
                     {
-                        var nodeInp = node.Args.Children[0];
-                        nodeInp.Accept(this);
-
                         Contracts.Assert(overloadsWithTypeArgs.Count() == 1);
 
                         var functionWithTypeArg = overloadsWithTypeArgs.First();
 
-                        if (MatchOverloadWithUntypedOrJSONConversionFunctions(node, functionWithTypeArg))
+                        // Either one of the untyped JSON conversion functions,
+                        // or other functions where the last argument is a type
+                        if (MatchOverloadWithUntypedOrJSONConversionFunctions(node, functionWithTypeArg) ||
+                            functionWithTypeArg.ArgIsType(node.Args.Count - 1))
                         {
-                            PreVisitTypeArgAndProccesCallNode(node, functionWithTypeArg);
-                            FinalizeCall(node);
-                            return false;
-                        }
-
-                        if (functionWithTypeArg.ArgIsType(node.Args.Count - 1))
-                        {
-                            // Other functions where the type argument is the last one
                             PreVisitTypeArgAndProccesCallNode(node, functionWithTypeArg);
                             FinalizeCall(node);
                             return false;
@@ -5215,7 +5207,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Process other non-type arguments
-                for (var i = 1; i < args.Length - 1; i++)
+                for (var i = 0; i < args.Length - 1; i++)
                 {
                     args[i].Accept(this);
                 }
