@@ -228,8 +228,11 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("And(true, true, true)")]
         [InlineData("Or(false, false, true)")]
 
-        // Math functions
+        // Math
         [InlineData("Pi()")]
+        [InlineData("1+2")]
+        [InlineData("1/2")]
+        [InlineData("With({Value:1234}, Value * 100)")]
 
         // String manipulation
         [InlineData("Replace(\"abcdef\", 1, 2, \"cd\")")]
