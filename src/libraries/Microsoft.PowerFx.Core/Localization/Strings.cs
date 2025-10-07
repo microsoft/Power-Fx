@@ -931,5 +931,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrJoinArgIsNotAsNode = new ErrorResourceKey("ErrJoinArgIsNotAsNode");
         public static ErrorResourceKey ErrJoinAtLeastOneRigthRecordField = new ErrorResourceKey("ErrJoinAtLeastOneRigthRecordField");
         public static ErrorResourceKey ErrJoinDottedNameleft = new ErrorResourceKey("ErrJoinDottedNameleft");
+        public static ErrorResourceKey ErrViolatedSimpleConstraintAccess = new ErrorResourceKey("ErrViolatedSimpleConstraintAccess");
+        public static ErrorResourceKey ErrViolatedSimpleConstraintFunction = new ErrorResourceKey("ErrViolatedSimpleConstraintFunction");
     }
 }

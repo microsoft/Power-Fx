@@ -27,6 +27,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
+        public override bool IsAllowedInSimpleExpressions => true;
+
         public Dec2HexFunction()
             : base("Dec2Hex", TexlStrings.AboutDec2Hex, FunctionCategories.MathAndStat, DType.String, 0, 1, 2, DType.Number, DType.Number)
         {

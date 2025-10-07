@@ -18,6 +18,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
+        public override bool IsAllowedInSimpleExpressions => true;
+
         public MidFunction()
             : base("Mid", TexlStrings.AboutMid, FunctionCategories.Text, DType.String, 0, 2, 3, DType.String, DType.Number, DType.Number)
         {
