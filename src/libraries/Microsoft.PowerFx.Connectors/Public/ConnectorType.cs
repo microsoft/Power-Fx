@@ -234,8 +234,8 @@ namespace Microsoft.PowerFx.Connectors
             DynamicValues = AggregateErrorsAndWarnings(openApiParameter.GetDynamicValue());
             DynamicList = AggregateErrorsAndWarnings(openApiParameter.GetDynamicList());
 
-            LlmName = schema.GetLlmName();
-            LlmDescription = schema.GetLlmDescription();
+            LlmName = openApiParameter?.GetLlmName();
+            LlmDescription = openApiParameter?.GetLlmDescription();
         }
 
         internal static readonly FormulaType DefaultType = FormulaType.UntypedObject;

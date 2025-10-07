@@ -326,11 +326,13 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\shared_sendmail.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\enum-integer.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\FileDownloadConnector.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\AdvancedApprovals.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Mask.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="$(MSBuildThisFileDirectory)swagger\AdvancedApprovals.json" />
     <Content Include="$(MSBuildThisFileDirectory)Swagger\testSwagger.json" />
   </ItemGroup>
 </Project>

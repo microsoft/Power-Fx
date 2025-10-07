@@ -1539,6 +1539,46 @@ POST https://tip1-shared.azure-apim.net/invoke
             Assert.Equal(HttpMethod.Get, onUpdatedFilesTrigger.HttpMethod);
             Assert.Equal("/apim/azureblob/{connectionId}/datasets/default/triggers/batch/onupdatedfile", onUpdatedFilesTrigger.OperationPath);
         }
+
+        [Fact]
+        public void AdvancedApprovalsWithLlmProperties()
+        {
+            var doc = Helpers.ReadSwagger(@"Swagger\AdvancedApprovals.json", _output);
+
+            var settings = new ConnectorSettings("helloworld")
+            {
+                Compatibility = ConnectorCompatibility.SwaggerCompatibility,
+                ReturnUnknownRecordFieldsAsUntypedObjects = true,
+                IncludeWebhookFunctions = true,
+                AllowSuggestionMappingFallback = true,
+                UseItemDynamicPropertiesSpecialHandling = true,
+                SupportXMsEnumValues = true,
+                ReturnEnumsAsPrimitive = true,
+            };
+
+            var functions = OpenApiParser.GetFunctions(
+                settings,
+                doc,
+                new ConsoleLogger(_output)).ToList();
+            
+            // Find the RequestForInformation function
+            var requestForInfoFunction = functions.FirstOrDefault(f => f.Name == "RequestForInformation");
+            Assert.NotNull(requestForInfoFunction);
+            Assert.True(requestForInfoFunction.IsSupported, requestForInfoFunction.NotSupportedReason);
+
+            // Validate x-ms-llm-name and x-ms-llm-description on the operation/function
+            Assert.Equal("request_for_information_human_in_the_loop", requestForInfoFunction.LlmName);
+            Assert.Equal("This action sends a request to assigned humans for information. The request is send to outlook", requestForInfoFunction.LlmDescription);
+
+            // Validate x-ms-llm-name and x-ms-llm-description on the input parameter
+            var inputParameter = requestForInfoFunction.RequiredParameters.FirstOrDefault(p => p.Name == "input");
+            Assert.NotNull(inputParameter);
+            Assert.NotNull(inputParameter.ConnectorType);
+            Assert.Equal("request_for_information_human_in_the_loop_input", inputParameter.ConnectorType.LlmName);
+            Assert.NotNull(inputParameter.ConnectorType.LlmDescription);
+            Assert.Contains("input definition for the request for information operation", inputParameter.ConnectorType.LlmDescription);
+            Assert.Contains("schema can be dynamically defined", inputParameter.ConnectorType.LlmDescription);
+        }
     }
 
     public static class Extensions
