@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Reflection.Metadata;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App.Controls;
+using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
@@ -27,6 +28,7 @@ using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -265,6 +267,66 @@ namespace Microsoft.PowerFx.Core.Tests
             engine.Config.SymbolTable.AddVariable("recordVar", new KnownRecordType(TestUtils.DT("![Value:n]")));
             var checkResult = engine.Check(expr);
             Assert.False(checkResult.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("MyFunctionWithTypeArg(\"abc\", Number)", "n")]
+        [InlineData("MyFunctionWithTypeArg(\"abc\", Text)", "s")]
+        [InlineData("MyFunctionWithTypeArg(\"abc\", Type({a:Number,b:Text}))", "![a:n,b:s]")]
+        [InlineData("MyFunctionWithTypeArg(\"abc\", Type([{a:Number,b:Text}]))", "*[a:n,b:s]")]
+        public void TestFunctionWithTypeArg(string expr, string expectedType)
+        {
+            var config = new PowerFxConfig();
+            config.SymbolTable.AddFunction(new MyFunctionWithTypeArg());
+            var engine = new Engine(config);
+
+            var checkResult = engine.Check(expr);
+            Assert.True(checkResult.IsSuccess);
+            Assert.Equal(TestUtils.DT(expectedType), checkResult.ReturnType._type);
+        }
+
+        private class MyFunctionWithTypeArg : BuiltinFunction
+        {
+            private static readonly TexlStrings.StringGetter FunctionDescription = new TexlStrings.StringGetter(_ => "My function with type argument");
+
+            public override bool HasTypeArgs => true;
+
+            public override bool ArgIsType(int argIndex)
+            {
+                return argIndex == 1;
+            }
+
+            public MyFunctionWithTypeArg()
+                : base("MyFunctionWithTypeArg", FunctionDescription, FunctionCategories.Text, DType.String, 0, 2, int.MaxValue, DType.String)
+            {
+            }
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                yield return new TexlStrings.StringGetter[0];
+            }
+
+            public override bool IsSelfContained => true;
+
+            public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+            {
+
+                if (args.Length < 2)
+                {
+                    return base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+                }
+
+                nodeToCoercedTypeMap = null;
+                returnType = ReturnType;
+
+                if (!base.CheckType(context, args[0], argTypes[0], DType.String, errors, ref nodeToCoercedTypeMap))
+                {
+                    return false;
+                }
+
+                returnType = argTypes[1];
+                return true;
+            }
         }
     }
 }
