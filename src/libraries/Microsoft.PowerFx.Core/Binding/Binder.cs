@@ -4432,6 +4432,11 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         Contracts.Assert(overloadsWithTypeArgs.Count() == 1);
 
+                        // Evaluates the first argument; required for the call to
+                        // MatchOverloadWithUntypedOrJSONConversionFunctions
+                        var firstArg = node.Args.Children[0];
+                        firstArg.Accept(this);
+
                         var functionWithTypeArg = overloadsWithTypeArgs.First();
 
                         // Either one of the untyped JSON conversion functions,
@@ -5221,7 +5226,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Process other non-type arguments
-                for (var i = 0; i < args.Length - 1; i++)
+                for (var i = 1; i < args.Length - 1; i++)
                 {
                     args[i].Accept(this);
                 }
