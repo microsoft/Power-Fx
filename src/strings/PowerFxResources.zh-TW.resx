@@ -4771,6 +4771,22 @@
     <value>無法變更傳遞至 '{0}' 函式的值。</value>
     <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
   </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_ShortMessage" xml:space="preserve">
+    <value>{0} cannot be accessed in expressions on this property.</value>
+    <comment>Error Message. This property restricts the set of values that can be referenced to just  </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_LongMessage" xml:space="preserve">
+    <value>This property restricts access to values outside of ThisItem to ensure good performance. {0} is not a value that can be accessed here.</value>
+    <comment>Error Message </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_ShortMessage" xml:space="preserve">
+    <value>The {0} function cannot be used in expressions on this property.</value>
+    <comment>Error Message: Properties marked with a Simple Constraint cannot use certain functions that would be slow. </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_LongMessage" xml:space="preserve">
+    <value>This property restricts the functions that can be used to a set of simple functions that run quickly to ensure good performance.</value>
+    <comment>Longer informative error message, describing why a function would be erroneous on this property.</comment>
+  </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
     <value>擷取名稱「{0}」隱藏了回傳比對資訊的預定義屬性。若要存取比對資訊，請考慮重新命名。</value>
     <comment>Information message indicating that the maker used a group name that will hide the property 'FullMatch' in the function result.</comment>
