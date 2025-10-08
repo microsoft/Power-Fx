@@ -27,7 +27,21 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public bool UserDefinitionsMode { get; }
 
-        public BindingConfig(bool allowsSideEffects = false, bool useThisRecordForRuleScope = false, bool numberIsFloat = false, bool analysisMode = false, bool markAsAsyncOnLazilyLoadedControlRef = false, bool userDefinitionsMode = false)
+        /// <summary>
+        /// Enforces the expression must be "Simple", i.e. no async, no global access, no impure functions
+        /// This is mainly used for controls like combobox where the expression is used to populate a dropdown
+        /// and must be FAST to run on large datasets.
+        /// </summary>
+        internal bool EnforceSimpleExpressionConstraint { get; }
+
+        public BindingConfig(
+            bool allowsSideEffects = false,
+            bool useThisRecordForRuleScope = false,
+            bool numberIsFloat = false,
+            bool analysisMode = false,
+            bool markAsAsyncOnLazilyLoadedControlRef = false,
+            bool userDefinitionsMode = false,
+            bool enforceSimpleExpressions = false)
         {
             AllowsSideEffects = allowsSideEffects;
             UseThisRecordForRuleScope = useThisRecordForRuleScope;
@@ -35,6 +49,7 @@ namespace Microsoft.PowerFx.Core.Binding
             AnalysisMode = analysisMode;
             MarkAsAsyncOnLazilyLoadedControlRef = markAsAsyncOnLazilyLoadedControlRef;
             UserDefinitionsMode = userDefinitionsMode;
+            EnforceSimpleExpressionConstraint = enforceSimpleExpressions;
         }
 
         public BindingConfig Clone(bool allowsSideEffects)
@@ -45,7 +60,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 numberIsFloat: this.NumberIsFloat,
                 analysisMode: this.AnalysisMode,
                 markAsAsyncOnLazilyLoadedControlRef: this.MarkAsAsyncOnLazilyLoadedControlRef,
-                userDefinitionsMode: this.UserDefinitionsMode);
+                userDefinitionsMode: this.UserDefinitionsMode,
+                enforceSimpleExpressions: this.EnforceSimpleExpressionConstraint);
         }
     }
 }

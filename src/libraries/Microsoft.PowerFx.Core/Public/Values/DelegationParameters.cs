@@ -120,6 +120,12 @@ namespace Microsoft.PowerFx.Types
         public QueryMarshallerSettings()
         {
         }
+
+        public QueryMarshallerSettings(bool encodeDateAsString = false, bool encodeBooleanAsInteger = false)
+        {
+            EncodeDateAsString = encodeDateAsString;
+            EncodeBooleanAsInteger = encodeBooleanAsInteger;
+        }
     }
 
     /// <summary>
