@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
+using Microsoft.AppMagic.Authoring.Texl;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
@@ -4437,6 +4438,24 @@ namespace Microsoft.PowerFx.Core.Tests
             var result = engine.Check(expression.Replace('\'', '\"'));
 
             Assert.False(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("Copilot(\"a prompt\")", "s")]
+        [InlineData("Copilot(\"a prompt\", {a:\"context\"})", "s")]
+        [InlineData("Copilot(\"a prompt\", {a:\"context\"}, Number)", "n")]
+        [InlineData("Copilot(\"a prompt\", {a:\"context\"}, Text)", "s")]
+        [InlineData("Copilot(\"a prompt\", {a:\"context\"}, Type({a:Number,b:Boolean,c:Text}))", "![a:n,b:b,c:s]")]
+        [InlineData("Copilot(\"a prompt\", {a:\"context\"}, Type([{a:Number,b:Boolean,c:Text}]))", "*[a:n,b:b,c:s]")]
+        public void TestFunctionTypeSemanticsCopilot(string script, string expectedSchema)
+        {
+            var symbolTable = new SymbolTable();
+            symbolTable.AddFunction(new CopilotFunction());
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT(expectedSchema),
+                symbolTable,
+                features: new Features { IsUserDefinedTypesEnabled = true });
         }
 
         [Theory]
