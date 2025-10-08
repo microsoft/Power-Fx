@@ -373,6 +373,10 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static string GetVisibility(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsVisibility, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
 
+        internal static string GetModelName(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsModelName, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
+
+        internal static string GetModelDescription(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsModelDescription, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
+
         internal static (string name, bool modelAsString) GetEnumName(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsEnum, out IOpenApiExtension openApiExt) &&
                                                                                                          openApiExt is IDictionary<string, IOpenApiAny> jsonObject &&
                                                                                                          jsonObject.TryGetValue("name", out IOpenApiAny enumName) &&
@@ -960,6 +964,16 @@ namespace Microsoft.PowerFx.Connectors
 
             // $$$ Blob? (application/pdf, audio/mp3, application/zip, application/gzip, application/x-bzip2, image/gif, image/png, image/jpeg, image/bmp...)
             return new ConnectorType($"Unsupported return type - found '{string.Join(", ", response.Content.Select(kv4 => kv4.Key))}'", "response", FormulaType.UntypedObject);
+        }
+
+        public static string GetModelName(this OpenApiOperation op)
+        {
+            return op.Extensions.TryGetValue(XMsModelName, out IOpenApiExtension ext) && ext is OpenApiString apiStr ? apiStr.Value : null;
+        }
+
+        public static string GetModelDescription(this OpenApiOperation op)
+        {
+            return op.Extensions.TryGetValue(XMsModelDescription, out IOpenApiExtension ext) && ext is OpenApiString apiStr ? apiStr.Value : null;
         }
 
         /// <summary>

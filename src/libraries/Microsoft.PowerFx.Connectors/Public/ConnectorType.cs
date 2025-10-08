@@ -82,6 +82,12 @@ namespace Microsoft.PowerFx.Connectors
         // Supports x-ms-property-entity-type
         public string PropertyEntityType { get; }
 
+        // Supports x-ms-name-for-model
+        public string ModelName { get; private set; }
+
+        // Supports x-ms-description-for-model
+        public string ModelDescription { get; private set; }
+
         internal RecordType HiddenRecordType { get; }
 
         // Supports x-ms-dynamic-values or -list locally
@@ -221,12 +227,15 @@ namespace Microsoft.PowerFx.Connectors
                 EnumValues = Array.Empty<FormulaValue>();
                 EnumDisplayNames = Array.Empty<string>();
             }
-            
-            AddWarning(warning);            
+
+            AddWarning(warning);
             DynamicSchema = AggregateErrorsAndWarnings(openApiParameter.GetDynamicSchema());
             DynamicProperty = AggregateErrorsAndWarnings(openApiParameter.GetDynamicProperty());
             DynamicValues = AggregateErrorsAndWarnings(openApiParameter.GetDynamicValue());
             DynamicList = AggregateErrorsAndWarnings(openApiParameter.GetDynamicList());
+
+            ModelName = openApiParameter?.GetModelName();
+            ModelDescription = openApiParameter?.GetModelDescription();
         }
 
         internal static readonly FormulaType DefaultType = FormulaType.UntypedObject;

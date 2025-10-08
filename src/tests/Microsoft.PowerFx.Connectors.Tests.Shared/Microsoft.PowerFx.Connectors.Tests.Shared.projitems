@@ -326,6 +326,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\shared_sendmail.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\enum-integer.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\FileDownloadConnector.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\AdvancedApprovals.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Mask.png">
