@@ -310,7 +310,6 @@ namespace Microsoft.PowerFx.Core.Tests
 
             public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
             {
-
                 if (args.Length < 2)
                 {
                     return base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
