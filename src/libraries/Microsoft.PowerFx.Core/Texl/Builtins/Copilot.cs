@@ -13,7 +13,7 @@ namespace Microsoft.AppMagic.Authoring.Texl
 {
     // Copilot(Prompt:Text): Text
     // Copilot(Prompt:Text, Input:Any): Text
-    // Copilot(Prompt:Text, Input:Any, ReturnType:AnyType): AnyType
+    // Copilot(Prompt:Text, Input:Any, ReturnType:Type): ReturnType
     internal class CopilotFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
