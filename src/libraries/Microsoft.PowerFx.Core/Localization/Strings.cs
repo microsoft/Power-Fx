@@ -462,6 +462,11 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter ColumnArg1 = (b) => StringResources.Get("ColumnArg1", b);
         public static StringGetter ColumnArg2 = (b) => StringResources.Get("ColumnArg2", b);
 
+        public static StringGetter AboutCopilot = (b) => StringResources.Get("AboutCopilot", b);
+        public static StringGetter CopilotArg1 = (b) => StringResources.Get("CopilotArg1", b);
+        public static StringGetter CopilotArg2 = (b) => StringResources.Get("CopilotArg2", b);
+        public static StringGetter CopilotArg3 = (b) => StringResources.Get("CopilotArg3", b);
+
         public static StringGetter AboutIsType = (b) => StringResources.Get("AboutIsType", b);
         public static StringGetter IsTypeArg1 = (b) => StringResources.Get("IsTypeArg1", b);
         public static StringGetter IsTypeArg2 = (b) => StringResources.Get("IsTypeArg2", b);
@@ -743,6 +748,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrSetVariableWithRelationshipNotAllowTable = new ErrorResourceKey("ErrSetVariableWithRelationshipNotAllowTable");
         public static ErrorResourceKey ErrSetVariableWithRelationshipNotAllowRecord = new ErrorResourceKey("ErrSetVariableWithRelationshipNotAllowRecord");
         public static ErrorResourceKey ErrDecimalRequiresPowerFxV1 = new ErrorResourceKey("ErrDecimalNeedsPowerFxV1");
+        public static ErrorResourceKey ErrCopilotContextArgumentInvalidType = new ErrorResourceKey("ErrCopilotContextArgumentInvalidType");
+        public static ErrorResourceKey ErrCopilotTypeArgumentInvalidType = new ErrorResourceKey("ErrCopilotTypeArgumentInvalidType");
 
         public static ErrorResourceKey ErrInvalidRegEx = new ErrorResourceKey("ErrInvalidRegEx");
         public static ErrorResourceKey ErrInvalidRegExWithContext = new ErrorResourceKey("ErrInvalidRegExWithContext");

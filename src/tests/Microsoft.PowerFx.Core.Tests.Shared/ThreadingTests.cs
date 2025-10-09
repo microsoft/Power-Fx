@@ -46,6 +46,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "IntellisenseProvider.SuggestionHandlers",
                 "JsonFunction._unsupportedTopLevelTypes",
                 "JsonFunction._unsupportedTypes",
+                "CopilotFunction._primitiveKinds",
                 "LazyList`1.Empty",
                 "ODataFunctionMappings.BinaryOpToOperatorMap",
                 "ODataFunctionMappings.UnaryOpToOperatorMap",
