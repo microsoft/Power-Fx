@@ -9,7 +9,9 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Syntax;
 
-namespace Microsoft.AppMagic.Authoring.Texl
+#pragma warning disable SA1649 // File name should match first type name
+
+namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Copilot(Prompt:Text): Text
     // Copilot(Prompt:Text, Input:Any): Text
@@ -92,3 +94,5 @@ namespace Microsoft.AppMagic.Authoring.Texl
         };
     }
 }
+
+#pragma warning restore SA1649 // File name should match first type name
