@@ -77,7 +77,7 @@ namespace Microsoft.AppMagic.Authoring.Texl
             return true;
         }
 
-        protected static readonly HashSet<DType> _primitiveKinds = new ()
+        private static readonly ISet<DType> _primitiveKinds = new HashSet<DType>()
         {
             DType.Boolean,
             DType.Date,
