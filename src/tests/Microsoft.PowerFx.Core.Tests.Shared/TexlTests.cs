@@ -7,7 +7,6 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
-using Microsoft.AppMagic.Authoring.Texl;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
