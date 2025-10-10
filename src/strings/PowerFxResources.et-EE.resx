@@ -5098,6 +5098,42 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Eemaldatav allikas.</value>
   </data>
+  <data name="AboutCopilot" xml:space="preserve">
+    <value>Makes a call to Copilot and returns the result to the app. The result can be text or a typed value.</value>
+    <comment>{Locked=Copilot} Description of 'Copilot' function.</comment>
+  </data>
+  <data name="CopilotArg1" xml:space="preserve">
+    <value>prompt</value>
+    <comment>function_parameter - First argument to the Copilot function - the prompt to be passed to the LLM (large language model).</comment>
+  </data>
+  <data name="CopilotArg2" xml:space="preserve">
+    <value>context</value>
+    <comment>function_parameter - Second argument to the Copilot function - optional context that will be passed to the LLM (large language model) together with the prompt. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="CopilotArg3" xml:space="preserve">
+    <value>type</value>
+    <comment>function_parameter - Third argument to the Copilot function - optional type value that will determine the type for the output of the function.</comment>
+  </data>
+  <data name="AboutCopilot_prompt" xml:space="preserve">
+    <value>The prompt to be passed to Copilot.</value>
+    <comment>{Locked=Copilot} Description of the first argument to the Copilot function, a prompt to be executed.</comment>
+  </data>
+  <data name="AboutCopilot_context" xml:space="preserve">
+    <value>The context to be passed to the Copilot function in addition to the prompt.</value>
+    <comment>{Locked=Copilot} Description of the (optional) second argument to the Copilot function.</comment>
+  </data>
+  <data name="AboutCopilot_type" xml:space="preserve">
+    <value>The type of the data to be returned by the Copilot function.</value>
+    <comment>{Locked=Copilot} Description of the (optional) third argument to the Copilot function.</comment>
+  </data>
+  <data name="ErrCopilotContextArgumentInvalidType" xml:space="preserve">
+    <value>The context argument to the Copilot function has some invalid types.</value>
+    <comment>{Locked=Copilot} Error message shown to the user when they try to use a context argument with invalid types.</comment>
+  </data>
+  <data name="ErrCopilotTypeArgumentInvalidType" xml:space="preserve">
+    <value>The type argument to the Copilot function has some invalid types.</value>
+    <comment>{Locked=Copilot} Error message shown to the user when they try to use a type argument with invalid types.</comment>
+  </data>
   <data name="AboutJoin" xml:space="preserve">
     <value>Toob andmed, mis hõlmavad mitut seoseid sisaldavat tabelit.</value>
     <comment>Description of 'Join' function.</comment>
