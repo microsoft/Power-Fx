@@ -4772,19 +4772,19 @@
     <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_ShortMessage" xml:space="preserve">
-    <value>{0} cannot be accessed in expressions on this property.</value>
+    <value>{0} is niet toegankelijk in expressies voor deze eigenschap.</value>
     <comment>Error Message. This property restricts the set of values that can be referenced to just  </comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_LongMessage" xml:space="preserve">
-    <value>This property restricts access to values outside of ThisItem to ensure good performance. {0} is not a value that can be accessed here.</value>
+    <value>Deze eigenschap beperkt de toegang tot waarden buiten ThisItem om goede prestaties te waarborgen. {0} is hier geen toegankelijke waarde.</value>
     <comment>Error Message </comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_ShortMessage" xml:space="preserve">
-    <value>The {0} function cannot be used in expressions on this property.</value>
+    <value>De functie {0} kan niet worden gebruikt in expressies voor deze eigenschap.</value>
     <comment>Error Message: Properties marked with a Simple Constraint cannot use certain functions that would be slow. </comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_LongMessage" xml:space="preserve">
-    <value>This property restricts the functions that can be used to a set of simple functions that run quickly to ensure good performance.</value>
+    <value>De functies die je kunt gebruiken, worden door deze eigenschap beperkt tot een set eenvoudige functies die snel worden uitgevoerd om goede prestaties te waarborgen.</value>
     <comment>Longer informative error message, describing why a function would be erroneous on this property.</comment>
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">

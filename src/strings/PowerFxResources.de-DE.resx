@@ -4772,19 +4772,19 @@
     <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_ShortMessage" xml:space="preserve">
-    <value>{0} cannot be accessed in expressions on this property.</value>
+    <value>{0} kann in Ausdrücken für diese Eigenschaft nicht aufgerufen werden.</value>
     <comment>Error Message. This property restricts the set of values that can be referenced to just  </comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_LongMessage" xml:space="preserve">
-    <value>This property restricts access to values outside of ThisItem to ensure good performance. {0} is not a value that can be accessed here.</value>
+    <value>Diese Eigenschaft schränkt den Zugriff auf Werte außerhalb von ThisItem ein, um eine gute Leistung sicherzustellen. {0} ist kein Wert, auf den hier zugegriffen werden kann.</value>
     <comment>Error Message </comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_ShortMessage" xml:space="preserve">
-    <value>The {0} function cannot be used in expressions on this property.</value>
+    <value>Die {0}-Funktion kann nicht in Ausdrücken für diese Eigenschaft verwendet werden.</value>
     <comment>Error Message: Properties marked with a Simple Constraint cannot use certain functions that would be slow. </comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_LongMessage" xml:space="preserve">
-    <value>This property restricts the functions that can be used to a set of simple functions that run quickly to ensure good performance.</value>
+    <value>Diese Eigenschaft schränkt die Funktionen ein, die auf eine Reihe einfacher Funktionen verwendet werden können, die schnell ausgeführt werden, um eine gute Leistung sicherzustellen.</value>
     <comment>Longer informative error message, describing why a function would be erroneous on this property.</comment>
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">

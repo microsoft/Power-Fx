@@ -4772,19 +4772,19 @@
     <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_ShortMessage" xml:space="preserve">
-    <value>{0} cannot be accessed in expressions on this property.</value>
+    <value>No es pot accedir a {0} en les expressions d'aquesta propietat.</value>
     <comment>Error Message. This property restricts the set of values that can be referenced to just  </comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_LongMessage" xml:space="preserve">
-    <value>This property restricts access to values outside of ThisItem to ensure good performance. {0} is not a value that can be accessed here.</value>
+    <value>Aquesta propietat restringeix l'accés a valors fora de ThisItem per garantir un bon rendiment. {0} no és un valor al qual es pugui accedir aquí.</value>
     <comment>Error Message </comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_ShortMessage" xml:space="preserve">
-    <value>The {0} function cannot be used in expressions on this property.</value>
+    <value>La funció {0} no es pot utilitzar en expressions d'aquesta propietat.</value>
     <comment>Error Message: Properties marked with a Simple Constraint cannot use certain functions that would be slow. </comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_LongMessage" xml:space="preserve">
-    <value>This property restricts the functions that can be used to a set of simple functions that run quickly to ensure good performance.</value>
+    <value>Aquesta propietat restringeix les funcions que es poden utilitzar a un conjunt de funcions simples que s'executen ràpidament per garantir un bon rendiment.</value>
     <comment>Longer informative error message, describing why a function would be erroneous on this property.</comment>
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">

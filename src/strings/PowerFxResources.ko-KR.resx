@@ -4772,19 +4772,19 @@
     <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_ShortMessage" xml:space="preserve">
-    <value>{0} cannot be accessed in expressions on this property.</value>
+    <value>{0}은(는) 이 속성의 식에서 액세스할 수 없습니다.</value>
     <comment>Error Message. This property restricts the set of values that can be referenced to just  </comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_LongMessage" xml:space="preserve">
-    <value>This property restricts access to values outside of ThisItem to ensure good performance. {0} is not a value that can be accessed here.</value>
+    <value>이 속성은 좋은 성능을 보장하기 위해 ThisItem 외부 값에 대한 액세스를 제한합니다. {0}은(는) 여기에서 액세스할 수 있는 값이 아닙니다.</value>
     <comment>Error Message </comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_ShortMessage" xml:space="preserve">
-    <value>The {0} function cannot be used in expressions on this property.</value>
+    <value>{0} 함수는 이 속성의 식에서 사용할 수 없습니다.</value>
     <comment>Error Message: Properties marked with a Simple Constraint cannot use certain functions that would be slow. </comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_LongMessage" xml:space="preserve">
-    <value>This property restricts the functions that can be used to a set of simple functions that run quickly to ensure good performance.</value>
+    <value>이 속성은 좋은 성능을 보장하기 위해 빠르게 실행되는 단순한 함수 집합으로 사용할 수 있는 함수들을 제한합니다.</value>
     <comment>Longer informative error message, describing why a function would be erroneous on this property.</comment>
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
@@ -5099,39 +5099,39 @@
     <value>삭제할 원본입니다.</value>
   </data>
   <data name="AboutCopilot" xml:space="preserve">
-    <value>Makes a call to Copilot and returns the result to the app. The result can be text or a typed value.</value>
+    <value>Copilot을 호출하고 결과를 앱에 반환합니다. 결과는 텍스트나 입력된 값일 수 있습니다.</value>
     <comment>{Locked=Copilot} Description of 'Copilot' function.</comment>
   </data>
   <data name="CopilotArg1" xml:space="preserve">
-    <value>prompt</value>
+    <value>프롬프트</value>
     <comment>function_parameter - First argument to the Copilot function - the prompt to be passed to the LLM (large language model).</comment>
   </data>
   <data name="CopilotArg2" xml:space="preserve">
-    <value>context</value>
+    <value>컨텍스트</value>
     <comment>function_parameter - Second argument to the Copilot function - optional context that will be passed to the LLM (large language model) together with the prompt. Translate this string. Maintain as a single word (do not add spaces).</comment>
   </data>
   <data name="CopilotArg3" xml:space="preserve">
-    <value>type</value>
+    <value>함수 매개변수 - Copilot 함수의 세 번째 인수로, 함수 출력의 유형을 결정하는 선택적 유형 값입니다.</value>
     <comment>function_parameter - Third argument to the Copilot function - optional type value that will determine the type for the output of the function.</comment>
   </data>
   <data name="AboutCopilot_prompt" xml:space="preserve">
-    <value>The prompt to be passed to Copilot.</value>
+    <value>Copilot에 전달할 프롬프트입니다.</value>
     <comment>{Locked=Copilot} Description of the first argument to the Copilot function, a prompt to be executed.</comment>
   </data>
   <data name="AboutCopilot_context" xml:space="preserve">
-    <value>The context to be passed to the Copilot function in addition to the prompt.</value>
+    <value>프롬프트와 더불어 Copilot 함수에 전달할 컨텍스트입니다.</value>
     <comment>{Locked=Copilot} Description of the (optional) second argument to the Copilot function.</comment>
   </data>
   <data name="AboutCopilot_type" xml:space="preserve">
-    <value>The type of the data to be returned by the Copilot function.</value>
+    <value>Copilot 함수에서 반환할 데이터의 형식입니다.</value>
     <comment>{Locked=Copilot} Description of the (optional) third argument to the Copilot function.</comment>
   </data>
   <data name="ErrCopilotContextArgumentInvalidType" xml:space="preserve">
-    <value>The context argument to the Copilot function has some invalid types.</value>
+    <value>Copilot 함수의 컨텍스트 인수에 잘못된 형식이 있습니다.</value>
     <comment>{Locked=Copilot} Error message shown to the user when they try to use a context argument with invalid types.</comment>
   </data>
   <data name="ErrCopilotTypeArgumentInvalidType" xml:space="preserve">
-    <value>The type argument to the Copilot function has some invalid types.</value>
+    <value>Copilot 함수의 형식 인수에 잘못된 형식이 있습니다.</value>
     <comment>{Locked=Copilot} Error message shown to the user when they try to use a type argument with invalid types.</comment>
   </data>
   <data name="AboutJoin" xml:space="preserve">

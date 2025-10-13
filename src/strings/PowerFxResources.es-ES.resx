@@ -4772,19 +4772,19 @@
     <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_ShortMessage" xml:space="preserve">
-    <value>{0} cannot be accessed in expressions on this property.</value>
+    <value>No se puede acceder a {0} en expresiones sobre esta propiedad.</value>
     <comment>Error Message. This property restricts the set of values that can be referenced to just  </comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_LongMessage" xml:space="preserve">
-    <value>This property restricts access to values outside of ThisItem to ensure good performance. {0} is not a value that can be accessed here.</value>
+    <value>Esta propiedad restringe el acceso a valores fuera de ThisItem para garantizar un buen rendimiento. {0} no es un valor al que se pueda acceder aquí.</value>
     <comment>Error Message </comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_ShortMessage" xml:space="preserve">
-    <value>The {0} function cannot be used in expressions on this property.</value>
+    <value>La función {0} no se puede utilizar en expresiones en esta propiedad.</value>
     <comment>Error Message: Properties marked with a Simple Constraint cannot use certain functions that would be slow. </comment>
   </data>
   <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_LongMessage" xml:space="preserve">
-    <value>This property restricts the functions that can be used to a set of simple functions that run quickly to ensure good performance.</value>
+    <value>Esta propiedad restringe las funciones que se pueden utilizar a un conjunto de funciones sencillas que se ejecutan rápidamente para garantizar un buen rendimiento.</value>
     <comment>Longer informative error message, describing why a function would be erroneous on this property.</comment>
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
@@ -5099,39 +5099,39 @@
     <value>El origen que se borrará.</value>
   </data>
   <data name="AboutCopilot" xml:space="preserve">
-    <value>Makes a call to Copilot and returns the result to the app. The result can be text or a typed value.</value>
+    <value>Realiza una llamada a Copilot y devuelve el resultado a la aplicación. El resultado puede ser texto o un valor escrito.</value>
     <comment>{Locked=Copilot} Description of 'Copilot' function.</comment>
   </data>
   <data name="CopilotArg1" xml:space="preserve">
-    <value>prompt</value>
+    <value>indicación</value>
     <comment>function_parameter - First argument to the Copilot function - the prompt to be passed to the LLM (large language model).</comment>
   </data>
   <data name="CopilotArg2" xml:space="preserve">
-    <value>context</value>
+    <value>contexto</value>
     <comment>function_parameter - Second argument to the Copilot function - optional context that will be passed to the LLM (large language model) together with the prompt. Translate this string. Maintain as a single word (do not add spaces).</comment>
   </data>
   <data name="CopilotArg3" xml:space="preserve">
-    <value>type</value>
+    <value>tipo</value>
     <comment>function_parameter - Third argument to the Copilot function - optional type value that will determine the type for the output of the function.</comment>
   </data>
   <data name="AboutCopilot_prompt" xml:space="preserve">
-    <value>The prompt to be passed to Copilot.</value>
+    <value>La indicación que se pasará a Copilot.</value>
     <comment>{Locked=Copilot} Description of the first argument to the Copilot function, a prompt to be executed.</comment>
   </data>
   <data name="AboutCopilot_context" xml:space="preserve">
-    <value>The context to be passed to the Copilot function in addition to the prompt.</value>
+    <value>Contexto que se va a pasar a la función de Copilot además de la indicación.</value>
     <comment>{Locked=Copilot} Description of the (optional) second argument to the Copilot function.</comment>
   </data>
   <data name="AboutCopilot_type" xml:space="preserve">
-    <value>The type of the data to be returned by the Copilot function.</value>
+    <value>Tipo de datos que va a devolver la función de Copilot.</value>
     <comment>{Locked=Copilot} Description of the (optional) third argument to the Copilot function.</comment>
   </data>
   <data name="ErrCopilotContextArgumentInvalidType" xml:space="preserve">
-    <value>The context argument to the Copilot function has some invalid types.</value>
+    <value>El argumento de contexto para la función de Copilot tiene algunos tipos no válidos.</value>
     <comment>{Locked=Copilot} Error message shown to the user when they try to use a context argument with invalid types.</comment>
   </data>
   <data name="ErrCopilotTypeArgumentInvalidType" xml:space="preserve">
-    <value>The type argument to the Copilot function has some invalid types.</value>
+    <value>El argumento de tipo para la función de Copilot tiene algunos tipos no válidos.</value>
     <comment>{Locked=Copilot} Error message shown to the user when they try to use a type argument with invalid types.</comment>
   </data>
   <data name="AboutJoin" xml:space="preserve">
