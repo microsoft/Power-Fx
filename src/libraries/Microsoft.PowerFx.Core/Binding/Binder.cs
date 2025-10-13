@@ -4342,6 +4342,21 @@ namespace Microsoft.PowerFx.Core.Binding
                 return false;
             }
 
+            // checks if the call node best matches function overloads with UntypedObject/JSON
+            private bool MatchTypedCopilotOverload(CallNode node, TexlFunction maybeFunc)
+            {
+                Contracts.AssertValue(node);
+                Contracts.AssertValue(maybeFunc);
+                Contracts.Assert(maybeFunc.HasTypeArgs);
+
+                if (maybeFunc is CopilotFunction && node.Args.Count > 2)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
             public override bool PreVisit(CallNode node)
             {
                 AssertValid();
@@ -4442,7 +4457,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         // Either one of the untyped JSON conversion functions,
                         // or other functions where the last argument is a type
                         if (MatchOverloadWithUntypedOrJSONConversionFunctions(node, functionWithTypeArg) ||
-                            functionWithTypeArg.ArgIsType(node.Args.Count - 1))
+                            MatchTypedCopilotOverload(node, functionWithTypeArg))
                         {
                             PreVisitTypeArgAndProccesCallNode(node, functionWithTypeArg);
                             FinalizeCall(node);

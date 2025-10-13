@@ -13,12 +13,14 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Texl.Builtins;
@@ -267,6 +269,78 @@ namespace Microsoft.PowerFx.Core.Tests
             engine.Config.SymbolTable.AddVariable("recordVar", new KnownRecordType(TestUtils.DT("![Value:n]")));
             var checkResult = engine.Check(expr);
             Assert.False(checkResult.IsSuccess);
+        }
+
+        [Fact]
+        public void TestBindIsTypeOverload()
+        {
+            var config = new PowerFxConfig();
+            config.SymbolTable.AddVariable("CDS", new TableType(TestUtils.DT("*[Name:s,Poly:P]")));
+            config.SymbolTable.AddEntity(new AccountsEntity());
+            config.SymbolTable.AddFunction(new IsTypeTestFunction());
+            var engine = new Engine(config);
+            var checkResult = engine.Check("IsType(First(CDS).Poly, Accounts)");
+            Assert.True(checkResult.IsSuccess);
+        }
+
+        private class IsTypeTestFunction : BuiltinFunction
+        {
+            public const string IsTypeInvariantFunctionName = "IsType";
+
+            public override bool IsAsync => true;
+
+            public override bool IsSelfContained => true;
+
+            public override bool SupportsParamCoercion => false;
+
+            public override bool IsRestrictedUDFName => true;
+
+            public IsTypeTestFunction()
+                : base(IsTypeInvariantFunctionName, (x) => "IsTypeTest", FunctionCategories.Table, DType.Boolean, 0, 2, 2, DType.Error /* Polymorphic type is checked in override */, DType.EmptyTable)
+            {
+            }
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                yield return new[] { TexlStrings.IsTypeArg1, TexlStrings.IsTypeArg2 };
+            }
+
+            public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+            {
+                Contracts.AssertValue(args);
+                Contracts.AssertAllValues(args);
+                Contracts.AssertValue(argTypes);
+                Contracts.Assert(args.Length == 2);
+                Contracts.Assert(argTypes.Length == 2);
+                Contracts.AssertValue(errors);
+
+                // Check if first argument is poly type or an activity pointer
+                if (!argTypes[0].IsPolymorphic && !argTypes[0].IsActivityPointer)
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrBadType_ExpectedType_ProvidedType, nameof(DKind.Polymorphic), argTypes[0].GetKindString());
+                    return;
+                }
+
+                //// Check if table arg referrs to a connected data source.
+                //TexlNode tableArg = args[1];
+                //DataSourceInfo tableDsInfo;
+                //if (!binding.TryGetFirstNameInfo(tableArg.Id, out FirstNameInfo tableInfo) ||
+                //    (tableDsInfo = (tableInfo.Data as DataSourceInfo)) == null ||
+                //    tableDsInfo is not TabularDataSourceInfo)
+                //{
+                //    errors.EnsureError(tableArg, TexlStrings.ErrAsTypeAndIsTypeExpectConnectedDataSource);
+                //}
+            }
+        }
+
+        private class MyExternalEntity : IExternalEntity
+        {
+            public DName EntityName => new DName("MyExternalEntity");
+
+            public DType Type => DType.CreateRecord(
+                new TypedName(DType.Number, new DName("ID")),
+                new TypedName(DType.String, new DName("Name")),
+                new TypedName(DType.Polymorphic, new DName("Poly")));
         }
 
         [Theory]
