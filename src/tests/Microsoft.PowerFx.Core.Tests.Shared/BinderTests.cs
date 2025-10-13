@@ -344,62 +344,22 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("MyFunctionWithTypeArg(\"abc\", Number)", "n")]
-        [InlineData("MyFunctionWithTypeArg(\"abc\", Text)", "s")]
-        [InlineData("MyFunctionWithTypeArg(\"abc\", Type({a:Number,b:Text}))", "![a:n,b:s]")]
-        [InlineData("MyFunctionWithTypeArg(\"abc\", Type([{a:Number,b:Text}]))", "*[a:n,b:s]")]
-        public void TestFunctionWithTypeArg(string expr, string expectedType)
+        [InlineData("Copilot(\"abc\")", "s")]
+        [InlineData("Copilot(\"abc\", \"def\")", "s")]
+        [InlineData("Copilot(\"abc\", {a:\"def\"})", "s")]
+        [InlineData("Copilot(\"abc\", \"context\", Number)", "n")]
+        [InlineData("Copilot(\"abc\", \"context\", Text)", "s")]
+        [InlineData("Copilot(\"abc\", \"context\", Type({a:Number,b:Text}))", "![a:n,b:s]")]
+        [InlineData("Copilot(\"abc\", \"context\", Type([{a:Number,b:Text}]))", "*[a:n,b:s]")]
+        public void TestCopilotFunction(string expr, string expectedType)
         {
             var config = new PowerFxConfig();
-            config.SymbolTable.AddFunction(new MyFunctionWithTypeArg());
+            config.SymbolTable.AddFunction(new CopilotFunction());
             var engine = new Engine(config);
 
             var checkResult = engine.Check(expr);
             Assert.True(checkResult.IsSuccess);
             Assert.Equal(TestUtils.DT(expectedType), checkResult.ReturnType._type);
-        }
-
-        private class MyFunctionWithTypeArg : BuiltinFunction
-        {
-            private static readonly TexlStrings.StringGetter FunctionDescription = new TexlStrings.StringGetter(_ => "My function with type argument");
-
-            public override bool HasTypeArgs => true;
-
-            public override bool ArgIsType(int argIndex)
-            {
-                return argIndex == 1;
-            }
-
-            public MyFunctionWithTypeArg()
-                : base("MyFunctionWithTypeArg", FunctionDescription, FunctionCategories.Text, DType.String, 0, 2, int.MaxValue, DType.String)
-            {
-            }
-
-            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
-            {
-                yield return new TexlStrings.StringGetter[0];
-            }
-
-            public override bool IsSelfContained => true;
-
-            public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-            {
-                if (args.Length < 2)
-                {
-                    return base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-                }
-
-                nodeToCoercedTypeMap = null;
-                returnType = ReturnType;
-
-                if (!base.CheckType(context, args[0], argTypes[0], DType.String, errors, ref nodeToCoercedTypeMap))
-                {
-                    return false;
-                }
-
-                returnType = argTypes[1];
-                return true;
-            }
         }
     }
 }
