@@ -4314,7 +4314,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetType(node, maybeFunc.ReturnType);
             }
 
-            // checks if the call node best matches function overloads with UntypedObject/JSON
+            // Checks if the call node best matches function overloads with UntypedObject/JSON
             private bool MatchOverloadWithUntypedOrJSONConversionFunctions(CallNode node, TexlFunction maybeFunc)
             {
                 Contracts.AssertValue(node);
