@@ -1,36 +1,21 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection.Metadata;
-using Microsoft.CodeAnalysis;
-using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.Delegation;
-using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
-using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests;
 using Microsoft.PowerFx.Core.Tests.Helpers;
-using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -320,27 +305,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrBadType_ExpectedType_ProvidedType, nameof(DKind.Polymorphic), argTypes[0].GetKindString());
                     return;
                 }
-
-                //// Check if table arg referrs to a connected data source.
-                //TexlNode tableArg = args[1];
-                //DataSourceInfo tableDsInfo;
-                //if (!binding.TryGetFirstNameInfo(tableArg.Id, out FirstNameInfo tableInfo) ||
-                //    (tableDsInfo = (tableInfo.Data as DataSourceInfo)) == null ||
-                //    tableDsInfo is not TabularDataSourceInfo)
-                //{
-                //    errors.EnsureError(tableArg, TexlStrings.ErrAsTypeAndIsTypeExpectConnectedDataSource);
-                //}
             }
-        }
-
-        private class MyExternalEntity : IExternalEntity
-        {
-            public DName EntityName => new DName("MyExternalEntity");
-
-            public DType Type => DType.CreateRecord(
-                new TypedName(DType.Number, new DName("ID")),
-                new TypedName(DType.String, new DName("Name")),
-                new TypedName(DType.Polymorphic, new DName("Poly")));
         }
 
         [Theory]
