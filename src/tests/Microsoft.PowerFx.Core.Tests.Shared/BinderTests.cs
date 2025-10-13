@@ -1,34 +1,21 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection.Metadata;
-using Microsoft.CodeAnalysis;
-using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
-using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.Delegation;
-using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
-using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests;
 using Microsoft.PowerFx.Core.Tests.Helpers;
-using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -269,63 +256,75 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(checkResult.IsSuccess);
         }
 
-        [Theory]
-        [InlineData("MyFunctionWithTypeArg(\"abc\", Number)", "n")]
-        [InlineData("MyFunctionWithTypeArg(\"abc\", Text)", "s")]
-        [InlineData("MyFunctionWithTypeArg(\"abc\", Type({a:Number,b:Text}))", "![a:n,b:s]")]
-        [InlineData("MyFunctionWithTypeArg(\"abc\", Type([{a:Number,b:Text}]))", "*[a:n,b:s]")]
-        public void TestFunctionWithTypeArg(string expr, string expectedType)
+        [Fact]
+        public void TestBindIsTypeOverload()
         {
             var config = new PowerFxConfig();
-            config.SymbolTable.AddFunction(new MyFunctionWithTypeArg());
+            config.SymbolTable.AddVariable("CDS", new TableType(TestUtils.DT("*[Name:s,Poly:P]")));
+            config.SymbolTable.AddEntity(new AccountsEntity());
+            config.SymbolTable.AddFunction(new IsTypeTestFunction());
             var engine = new Engine(config);
-
-            var checkResult = engine.Check(expr);
+            var checkResult = engine.Check("IsType(First(CDS).Poly, Accounts)");
             Assert.True(checkResult.IsSuccess);
-            Assert.Equal(TestUtils.DT(expectedType), checkResult.ReturnType._type);
         }
 
-        private class MyFunctionWithTypeArg : BuiltinFunction
+        private class IsTypeTestFunction : BuiltinFunction
         {
-            private static readonly TexlStrings.StringGetter FunctionDescription = new TexlStrings.StringGetter(_ => "My function with type argument");
+            public const string IsTypeInvariantFunctionName = "IsType";
 
-            public override bool HasTypeArgs => true;
+            public override bool IsAsync => true;
 
-            public override bool ArgIsType(int argIndex)
-            {
-                return argIndex == 1;
-            }
+            public override bool IsSelfContained => true;
 
-            public MyFunctionWithTypeArg()
-                : base("MyFunctionWithTypeArg", FunctionDescription, FunctionCategories.Text, DType.String, 0, 2, int.MaxValue, DType.String)
+            public override bool SupportsParamCoercion => false;
+
+            public override bool IsRestrictedUDFName => true;
+
+            public IsTypeTestFunction()
+                : base(IsTypeInvariantFunctionName, (x) => "IsTypeTest", FunctionCategories.Table, DType.Boolean, 0, 2, 2, DType.Error /* Polymorphic type is checked in override */, DType.EmptyTable)
             {
             }
 
             public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
             {
-                yield return new TexlStrings.StringGetter[0];
+                yield return new[] { TexlStrings.IsTypeArg1, TexlStrings.IsTypeArg2 };
             }
 
-            public override bool IsSelfContained => true;
-
-            public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+            public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
             {
-                if (args.Length < 2)
+                Contracts.AssertValue(args);
+                Contracts.AssertAllValues(args);
+                Contracts.AssertValue(argTypes);
+                Contracts.Assert(args.Length == 2);
+                Contracts.Assert(argTypes.Length == 2);
+                Contracts.AssertValue(errors);
+
+                // Check if first argument is poly type or an activity pointer
+                if (!argTypes[0].IsPolymorphic && !argTypes[0].IsActivityPointer)
                 {
-                    return base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrBadType_ExpectedType_ProvidedType, nameof(DKind.Polymorphic), argTypes[0].GetKindString());
+                    return;
                 }
-
-                nodeToCoercedTypeMap = null;
-                returnType = ReturnType;
-
-                if (!base.CheckType(context, args[0], argTypes[0], DType.String, errors, ref nodeToCoercedTypeMap))
-                {
-                    return false;
-                }
-
-                returnType = argTypes[1];
-                return true;
             }
+        }
+
+        [Theory]
+        [InlineData("Copilot(\"abc\")", "s")]
+        [InlineData("Copilot(\"abc\", \"def\")", "s")]
+        [InlineData("Copilot(\"abc\", {a:\"def\"})", "s")]
+        [InlineData("Copilot(\"abc\", \"context\", Number)", "n")]
+        [InlineData("Copilot(\"abc\", \"context\", Text)", "s")]
+        [InlineData("Copilot(\"abc\", \"context\", Type({a:Number,b:Text}))", "![a:n,b:s]")]
+        [InlineData("Copilot(\"abc\", \"context\", Type([{a:Number,b:Text}]))", "*[a:n,b:s]")]
+        public void TestCopilotFunction(string expr, string expectedType)
+        {
+            var config = new PowerFxConfig();
+            config.SymbolTable.AddFunction(new CopilotFunction());
+            var engine = new Engine(config);
+
+            var checkResult = engine.Check(expr);
+            Assert.True(checkResult.IsSuccess);
+            Assert.Equal(TestUtils.DT(expectedType), checkResult.ReturnType._type);
         }
     }
 }

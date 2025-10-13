@@ -4314,8 +4314,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetType(node, maybeFunc.ReturnType);
             }
 
-            // checks if the call node best matches function overloads with UntypedObject/JSON
-            private bool MatchOverloadWithUntypedOrJSONConversionFunctions(CallNode node, TexlFunction maybeFunc)
+            // Checks if the call node best matches function overloads with UntypedObject/JSON,
+            // or the typed overload for the Copilot function
+            private bool MatchOverloadWithUntypedOrJSONConversionOrCopilotFunctions(CallNode node, TexlFunction maybeFunc)
             {
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(maybeFunc);
@@ -4335,6 +4336,11 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (maybeFunc.Name == ParseJSONFunction.ParseJSONInvariantFunctionName &&
                     node.Args.Count > 1)
+                {
+                    return true;
+                }
+
+                if (maybeFunc is CopilotFunction && node.Args.Count > 2)
                 {
                     return true;
                 }
@@ -4439,10 +4445,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                         var functionWithTypeArg = overloadsWithTypeArgs.First();
 
-                        // Either one of the untyped JSON conversion functions,
-                        // or other functions where the last argument is a type
-                        if (MatchOverloadWithUntypedOrJSONConversionFunctions(node, functionWithTypeArg) ||
-                            functionWithTypeArg.ArgIsType(node.Args.Count - 1))
+                        // Either one of the untyped JSON conversion functions, or the overload
+                        // for the Copilot function that takes type args
+                        if (MatchOverloadWithUntypedOrJSONConversionOrCopilotFunctions(node, functionWithTypeArg))
                         {
                             PreVisitTypeArgAndProccesCallNode(node, functionWithTypeArg);
                             FinalizeCall(node);

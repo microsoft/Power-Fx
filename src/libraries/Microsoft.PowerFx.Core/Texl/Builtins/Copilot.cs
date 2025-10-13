@@ -18,6 +18,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Copilot(Prompt:Text, Input:Any, ReturnType:Type): ReturnType
     internal class CopilotFunction : BuiltinFunction
     {
+        public const string FunctionName = "Copilot";
+
         public override bool IsSelfContained => true;
 
         public override bool IsAsync => true;
