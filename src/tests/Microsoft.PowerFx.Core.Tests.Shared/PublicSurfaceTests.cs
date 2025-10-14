@@ -130,6 +130,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.DeferredType",
                 "Microsoft.PowerFx.Types.DelegationParameters",
                 "Microsoft.PowerFx.Types.DelegationParameterFeatures",
+                "Microsoft.PowerFx.Types.DelegationRuntimeConfig",
                 "Microsoft.PowerFx.Types.DValue`1",
                 "Microsoft.PowerFx.Types.ErrorValue",
                 "Microsoft.PowerFx.Types.ExternalType",

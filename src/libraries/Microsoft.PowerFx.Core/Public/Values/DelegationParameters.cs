@@ -100,7 +100,7 @@ namespace Microsoft.PowerFx.Types
         /// Returns OData query string which has all parameter like $filter, $apply, etc.
         /// </summary>
         /// <returns></returns>
-        public abstract string GetODataQueryString(QueryMarshallerSettings queryMarshallerSettings);
+        public abstract string GetODataQueryString(DelegationRuntimeConfig delegationRuntimeConfig);
 
         public int? Top { get; set; }
     }
@@ -110,14 +110,15 @@ namespace Microsoft.PowerFx.Types
         /// <summary>
         /// OData boolean values are true/false. Sharepoint needs 1/0.
         /// </summary>
-        public bool EncodeBooleanAsInteger { get; init; } = false;
+        public bool EncodeBooleanAsInteger { get; init; }
 
         /// <summary>
         /// Gets a value indicating whether dates should be encoded as strings. Sharepoint needs this.
         /// </summary>
-        public bool EncodeDateAsString { get; init; } = false;
+        public bool EncodeDateAsString { get; init; }
 
         public QueryMarshallerSettings()
+            : this(false, false)
         {
         }
 
@@ -125,6 +126,22 @@ namespace Microsoft.PowerFx.Types
         {
             EncodeDateAsString = encodeDateAsString;
             EncodeBooleanAsInteger = encodeBooleanAsInteger;
+        }
+    }
+
+    /// <summary>
+    /// Represents the configuration settings required for delegation runtime operations.
+    /// </summary>
+    public class DelegationRuntimeConfig
+    {
+        public QueryMarshallerSettings QueryMarshallerSettings { get; init; }
+
+        public IServiceProvider ServiceProvider { get; init; }
+
+        public DelegationRuntimeConfig(QueryMarshallerSettings queryMarshallerSettings, IServiceProvider serviceProvider)
+        {
+            QueryMarshallerSettings = queryMarshallerSettings;
+            ServiceProvider = serviceProvider;
         }
     }
 

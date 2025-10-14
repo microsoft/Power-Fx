@@ -174,7 +174,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 throw new NotImplementedException();
             }
 
-            public override string GetODataQueryString(QueryMarshallerSettings queryMarshallerOptions)
+            public override string GetODataQueryString(DelegationRuntimeConfig delegationRuntimeConfig)
             {
                 if (string.IsNullOrEmpty(_odata))
                 {

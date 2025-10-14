@@ -139,7 +139,8 @@ namespace Microsoft.PowerFx.Connectors
             cancellationToken.ThrowIfCancellationRequested();
             ConnectorLogger executionLogger = serviceProvider?.GetService<ConnectorLogger>();
             parameters ??= new DefaultCDPDelegationParameter(ConnnectorType.FormulaType, _connectorSettings.MaxRows);
-            string queryParams = parameters.GetODataQueryString(_connectorSettings.QueryMarshallerSettings);
+            var delegationRuntimeConfig = new DelegationRuntimeConfig(_connectorSettings.QueryMarshallerSettings, serviceProvider);
+            string queryParams = parameters.GetODataQueryString(delegationRuntimeConfig);
             if (!string.IsNullOrEmpty(queryParams))
             {
                 queryParams = "&" + queryParams;
