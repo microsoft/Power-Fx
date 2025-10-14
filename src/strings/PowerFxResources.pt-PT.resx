@@ -4771,6 +4771,22 @@
     <value>Não é possível alterar o valor transmitido para a função "{0}".</value>
     <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
   </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_ShortMessage" xml:space="preserve">
+    <value>{0} não pode ser acedido em expressões nesta propriedade.</value>
+    <comment>Error Message. This property restricts the set of values that can be referenced to just  </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_LongMessage" xml:space="preserve">
+    <value>Esta propriedade restringe o acesso a valores fora de ThisItem para garantir um bom desempenho. {0} não é um valor que pode ser acedido aqui.</value>
+    <comment>Error Message </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_ShortMessage" xml:space="preserve">
+    <value>A função {0} não pode ser utilizada em expressões nesta propriedade.</value>
+    <comment>Error Message: Properties marked with a Simple Constraint cannot use certain functions that would be slow. </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_LongMessage" xml:space="preserve">
+    <value>Esta propriedade restringe as funções que podem ser utilizadas num conjunto de funções simples que são rapidamente executadas para garantir um bom desempenho.</value>
+    <comment>Longer informative error message, describing why a function would be erroneous on this property.</comment>
+  </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
     <value>O nome de captura "{0}" está a ocultar uma propriedade predefinida que devolve informações de correspondência. Considere mudar o nome desta se quiser aceder às informações da correspondência.</value>
     <comment>Information message indicating that the maker used a group name that will hide the property 'FullMatch' in the function result.</comment>
@@ -5081,6 +5097,42 @@
   </data>
   <data name="AboutClear_source" xml:space="preserve">
     <value>A origem a limpar.</value>
+  </data>
+  <data name="AboutCopilot" xml:space="preserve">
+    <value>Faz uma chamada ao Copilot e devolve o resultado à aplicação. O resultado pode ser texto ou um valor escrito.</value>
+    <comment>{Locked=Copilot} Description of 'Copilot' function.</comment>
+  </data>
+  <data name="CopilotArg1" xml:space="preserve">
+    <value>pedido</value>
+    <comment>function_parameter - First argument to the Copilot function - the prompt to be passed to the LLM (large language model).</comment>
+  </data>
+  <data name="CopilotArg2" xml:space="preserve">
+    <value>contexto</value>
+    <comment>function_parameter - Second argument to the Copilot function - optional context that will be passed to the LLM (large language model) together with the prompt. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="CopilotArg3" xml:space="preserve">
+    <value>tipo</value>
+    <comment>function_parameter - Third argument to the Copilot function - optional type value that will determine the type for the output of the function.</comment>
+  </data>
+  <data name="AboutCopilot_prompt" xml:space="preserve">
+    <value>O pedido a ser passado ao Copilot.</value>
+    <comment>{Locked=Copilot} Description of the first argument to the Copilot function, a prompt to be executed.</comment>
+  </data>
+  <data name="AboutCopilot_context" xml:space="preserve">
+    <value>O contexto a ser passado para a função do Copilot além do pedido.</value>
+    <comment>{Locked=Copilot} Description of the (optional) second argument to the Copilot function.</comment>
+  </data>
+  <data name="AboutCopilot_type" xml:space="preserve">
+    <value>O tipo de dados a devolver pela função do Copilot.</value>
+    <comment>{Locked=Copilot} Description of the (optional) third argument to the Copilot function.</comment>
+  </data>
+  <data name="ErrCopilotContextArgumentInvalidType" xml:space="preserve">
+    <value>O argumento de contexto para a função do Copilot tem alguns tipos inválidos.</value>
+    <comment>{Locked=Copilot} Error message shown to the user when they try to use a context argument with invalid types.</comment>
+  </data>
+  <data name="ErrCopilotTypeArgumentInvalidType" xml:space="preserve">
+    <value>O argumento de tipo para a função do Copilot tem alguns tipos inválidos.</value>
+    <comment>{Locked=Copilot} Error message shown to the user when they try to use a type argument with invalid types.</comment>
   </data>
   <data name="AboutJoin" xml:space="preserve">
     <value>Obtém dados que abrangem várias tabelas com relações.</value>

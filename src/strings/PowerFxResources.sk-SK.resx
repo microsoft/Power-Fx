@@ -3749,14 +3749,14 @@
     <comment>Error message when the user attempts to check equality between two values that don't make sense together. {0} and {1} will be canonical type representations like "Number" or "Boolean".</comment>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
-    <value>We can't evaluate your formula because the values being compared in the formula aren't the same type.</value>
+    <value>Vzorec sa nedá vyhodnotiť, pretože hodnoty, ktoré sa porovnávajú vo vzorci, nie sú rovnakého typu.</value>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Pravdepodobne budete musieť skonvertovať hodnotu tak, aby bola rovnakého typu, napríklad skonvertovať reťazec dátumu (napríklad 31/12/2018) na hodnotu dátumu.</value>
     <comment>1 How to fix the error. </comment>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_2" xml:space="preserve">
-    <value>If you're comparing records or tables, the field or column types must match exactly.</value>
+    <value>Ak porovnávate záznamy alebo tabuľky, typy polí alebo stĺpcov sa musia presne zhodovať.</value>
     <comment>2 How to fix the error.</comment>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1" xml:space="preserve">
@@ -3792,7 +3792,7 @@
     <comment>{Locked}</comment>
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
-    <value>Incompatible type. The '{0}' column in the data source you're updating expects a '{1}' type and you're using a '{2}' type.</value>
+    <value>Nekompatibilný typ. Stĺpec {0} v zdroji údajov, ktorý aktualizujete, očakáva typ {1} a vy používate typ {2}.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
@@ -4250,7 +4250,7 @@
     <comment>This error message shows up when expected return type does not match with actual return type. The arguments '{0}' and '{1}' will be replaced with data types. For example, "The stated function return type 'Number' does not match the return type of the function body 'Table'"</comment>
   </data>
   <data name="ErrUDF_ReturnTypeSchemaIncompatible" xml:space="preserve">
-    <value>Incompatible function body. The '{0}' column in the function return type expects a '{1}' type and you're returning a '{2}' type in function body.</value>
+    <value>Nekompatibilné telo funkcie. Stĺpec „{0}“ vo vrátenom type funkcie očakáva typ „{1}“ a v tele funkcie je vrátený typ „{2}“.</value>
     <comment>This error message shows up when expected return type schema is incompatible with actual return type. The argument '{0}' will be replaced with column name with incompatible type, '{1}' and '{2}' are replaced with expected and actual type. For example, "Incompatible function body. The 'A' column in the function return type expects a 'Text' type and you're returning a 'GUID' type in function body."</comment>
   </data>
   <data name="ErrUDF_ReturnTypeSchemaAdditionalFields" xml:space="preserve">
@@ -4771,6 +4771,22 @@
     <value>Hodnotu odovzdanú funkcii {0} nemožno zmeniť.</value>
     <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
   </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_ShortMessage" xml:space="preserve">
+    <value>Vo výrazoch v tejto vlastnosti nemožno získať prístup k funkcii {0}.</value>
+    <comment>Error Message. This property restricts the set of values that can be referenced to just  </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_LongMessage" xml:space="preserve">
+    <value>Táto vlastnosť obmedzuje prístup k hodnotám mimo ThisItem, aby sa zabezpečil dobrý výkon. {0} nie je hodnota, ku ktorej je tu možné získať prístup.</value>
+    <comment>Error Message </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_ShortMessage" xml:space="preserve">
+    <value>Funkciu {0} nemožno použiť vo výrazoch v tejto vlastnosti.</value>
+    <comment>Error Message: Properties marked with a Simple Constraint cannot use certain functions that would be slow. </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_LongMessage" xml:space="preserve">
+    <value>Táto vlastnosť obmedzuje funkcie, ktoré možno použiť, na množinu jednoduchých funkcií, ktoré sa vykonávajú rýchlo, aby sa zabezpečil dobrý výkon.</value>
+    <comment>Longer informative error message, describing why a function would be erroneous on this property.</comment>
+  </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
     <value>Názov záznamu {0} skrýva preddefinovanú vlastnosť, ktorá vracia informácie o zhode. Ak chcete získať prístup k informáciám o zhode, zvážte jeho premenovanie.</value>
     <comment>Information message indicating that the maker used a group name that will hide the property 'FullMatch' in the function result.</comment>
@@ -5082,6 +5098,42 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Zdroj, ktorý sa má vyčistiť.</value>
   </data>
+  <data name="AboutCopilot" xml:space="preserve">
+    <value>Vyvolá Copilota a vráti výsledok do aplikácie. Výsledkom môže byť text alebo hodnota určitého typu.</value>
+    <comment>{Locked=Copilot} Description of 'Copilot' function.</comment>
+  </data>
+  <data name="CopilotArg1" xml:space="preserve">
+    <value>výzva</value>
+    <comment>function_parameter - First argument to the Copilot function - the prompt to be passed to the LLM (large language model).</comment>
+  </data>
+  <data name="CopilotArg2" xml:space="preserve">
+    <value>kontext</value>
+    <comment>function_parameter - Second argument to the Copilot function - optional context that will be passed to the LLM (large language model) together with the prompt. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="CopilotArg3" xml:space="preserve">
+    <value>typ</value>
+    <comment>function_parameter - Third argument to the Copilot function - optional type value that will determine the type for the output of the function.</comment>
+  </data>
+  <data name="AboutCopilot_prompt" xml:space="preserve">
+    <value>Výzva, ktorá sa má odovzdať Copilotu.</value>
+    <comment>{Locked=Copilot} Description of the first argument to the Copilot function, a prompt to be executed.</comment>
+  </data>
+  <data name="AboutCopilot_context" xml:space="preserve">
+    <value>Kontext, ktorý sa má odovzdať funkcii Copilota okrem výzvy.</value>
+    <comment>{Locked=Copilot} Description of the (optional) second argument to the Copilot function.</comment>
+  </data>
+  <data name="AboutCopilot_type" xml:space="preserve">
+    <value>Typ údajov, ktoré má funkcia Copilota vrátiť.</value>
+    <comment>{Locked=Copilot} Description of the (optional) third argument to the Copilot function.</comment>
+  </data>
+  <data name="ErrCopilotContextArgumentInvalidType" xml:space="preserve">
+    <value>Kontextový argument funkcie Copilota obsahuje niektoré neplatné typy.</value>
+    <comment>{Locked=Copilot} Error message shown to the user when they try to use a context argument with invalid types.</comment>
+  </data>
+  <data name="ErrCopilotTypeArgumentInvalidType" xml:space="preserve">
+    <value>Argument typu funkcie Copilota obsahuje niektoré neplatné typy.</value>
+    <comment>{Locked=Copilot} Error message shown to the user when they try to use a type argument with invalid types.</comment>
+  </data>
   <data name="AboutJoin" xml:space="preserve">
     <value>Načíta údaje z viacerých tabuliek so vzťahmi.</value>
     <comment>Description of 'Join' function.</comment>
@@ -5158,7 +5210,7 @@
     </comment>
   </data>
   <data name="ErrNamedFormulaColonEqualRequired" xml:space="preserve">
-    <value>Incorrect syntax: '=' cannot be used to declare named formulas. Use ':=' instead.</value>
+    <value>Nesprávna syntax: „=“ nemožno použiť na deklarovanie pomenovaných vzorcov. Namiesto toho použite „:=“.</value>
     <comment>
       Error message returned when user uses '=' syntax to define a named formula.
       Some examples for valid named formulas - "x := 3; y := 5;".

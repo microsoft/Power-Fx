@@ -4771,6 +4771,22 @@
     <value>Không thể thay đổi giá trị được truyền đến hàm "{0}".</value>
     <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
   </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_ShortMessage" xml:space="preserve">
+    <value>Không thể truy nhập được {0} trong các biểu thức trên thuộc tính này.</value>
+    <comment>Error Message. This property restricts the set of values that can be referenced to just  </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_LongMessage" xml:space="preserve">
+    <value>Thuộc tính này hạn chế quyền truy nhập vào các giá trị bên ngoài ThisItem để đảm bảo có được hiệu suất tốt. {0} không phải là giá trị có thể truy nhập tại đây.</value>
+    <comment>Error Message </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_ShortMessage" xml:space="preserve">
+    <value>Không thể sử dụng hàm {0} trong biểu thức trên thuộc tính này.</value>
+    <comment>Error Message: Properties marked with a Simple Constraint cannot use certain functions that would be slow. </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_LongMessage" xml:space="preserve">
+    <value>Thuộc tính này giới hạn các hàm có thể được sử dụng thành một tập hợp các hàm đơn giản chạy nhanh để đảm bảo hiệu suất tốt.</value>
+    <comment>Longer informative error message, describing why a function would be erroneous on this property.</comment>
+  </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
     <value>Tên nhóm chiếm giữ "{0}" đang che giấu thuộc tính được định nghĩa sẵn trả về thông tin khớp. Hãy cân nhắc đổi tên nhóm nếu bạn muốn truy cập thông tin khớp.</value>
     <comment>Information message indicating that the maker used a group name that will hide the property 'FullMatch' in the function result.</comment>
@@ -5081,6 +5097,42 @@
   </data>
   <data name="AboutClear_source" xml:space="preserve">
     <value>Nguồn cần xóa.</value>
+  </data>
+  <data name="AboutCopilot" xml:space="preserve">
+    <value>Thực hiện lệnh gọi đến Copilot và trả kết quả về ứng dụng. Kết quả có thể là văn bản hoặc một giá trị có kiểu dữ liệu xác định.</value>
+    <comment>{Locked=Copilot} Description of 'Copilot' function.</comment>
+  </data>
+  <data name="CopilotArg1" xml:space="preserve">
+    <value>câu lệnh</value>
+    <comment>function_parameter - First argument to the Copilot function - the prompt to be passed to the LLM (large language model).</comment>
+  </data>
+  <data name="CopilotArg2" xml:space="preserve">
+    <value>ngữ cảnh</value>
+    <comment>function_parameter - Second argument to the Copilot function - optional context that will be passed to the LLM (large language model) together with the prompt. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="CopilotArg3" xml:space="preserve">
+    <value>kiểu</value>
+    <comment>function_parameter - Third argument to the Copilot function - optional type value that will determine the type for the output of the function.</comment>
+  </data>
+  <data name="AboutCopilot_prompt" xml:space="preserve">
+    <value>Câu lệnh được gửi đến Copilot.</value>
+    <comment>{Locked=Copilot} Description of the first argument to the Copilot function, a prompt to be executed.</comment>
+  </data>
+  <data name="AboutCopilot_context" xml:space="preserve">
+    <value>Ngữ cảnh cần được truyền vào hàm Copilot bên cạnh câu lệnh.</value>
+    <comment>{Locked=Copilot} Description of the (optional) second argument to the Copilot function.</comment>
+  </data>
+  <data name="AboutCopilot_type" xml:space="preserve">
+    <value>Kiểu dữ liệu được hàm Copilot trả về.</value>
+    <comment>{Locked=Copilot} Description of the (optional) third argument to the Copilot function.</comment>
+  </data>
+  <data name="ErrCopilotContextArgumentInvalidType" xml:space="preserve">
+    <value>Đối số ngữ cảnh truyền vào hàm Copilot chứa một số kiểu dữ liệu không hợp lệ.</value>
+    <comment>{Locked=Copilot} Error message shown to the user when they try to use a context argument with invalid types.</comment>
+  </data>
+  <data name="ErrCopilotTypeArgumentInvalidType" xml:space="preserve">
+    <value>Đối số kiểu dữ liệu truyền vào hàm Copilot chứa một số kiểu không hợp lệ.</value>
+    <comment>{Locked=Copilot} Error message shown to the user when they try to use a type argument with invalid types.</comment>
   </data>
   <data name="AboutJoin" xml:space="preserve">
     <value>Truy xuất dữ liệu trải dài trên nhiều bảng có mối quan hệ.</value>

@@ -4771,6 +4771,22 @@
     <value>Nilai yang dihantar kepada fungsi '{0}' tidak boleh diubah.</value>
     <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
   </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_ShortMessage" xml:space="preserve">
+    <value>{0} tidak boleh dicapai dalam ungkapan pada sifat ini.</value>
+    <comment>Error Message. This property restricts the set of values that can be referenced to just  </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_LongMessage" xml:space="preserve">
+    <value>Sifat ini mengehadkan capaian kepada nilai di luar ThisItem untuk memastikan prestasi yang baik. {0} bukan nilai yang boleh dicapai di sini.</value>
+    <comment>Error Message </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_ShortMessage" xml:space="preserve">
+    <value>Fungsi {0} tidak dapat digunakan dalam ungkapan sifat ini.</value>
+    <comment>Error Message: Properties marked with a Simple Constraint cannot use certain functions that would be slow. </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_LongMessage" xml:space="preserve">
+    <value>Sifat ini mengehadkan fungsi yang boleh digunakan pada set fungsi mudah yang berjalan dengan pantas untuk memastikan prestasi yang baik.</value>
+    <comment>Longer informative error message, describing why a function would be erroneous on this property.</comment>
+  </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
     <value>Nama penawanan '{0}' menyembunyikan sifat yang ditakrifkan terlebih dahulu yang mengembalikan maklumat padanan. Pertimbangkan untuk menamakan semula jika anda mahu mengakses maklumat padanan.</value>
     <comment>Information message indicating that the maker used a group name that will hide the property 'FullMatch' in the function result.</comment>
@@ -5081,6 +5097,42 @@
   </data>
   <data name="AboutClear_source" xml:space="preserve">
     <value>Sumber untuk dikosongkan.</value>
+  </data>
+  <data name="AboutCopilot" xml:space="preserve">
+    <value>Membuat panggilan kepada Copilot dan mengembalikan hasil kepada aplikasi. Hasilnya boleh berupa teks atau nilai yang ditaip.</value>
+    <comment>{Locked=Copilot} Description of 'Copilot' function.</comment>
+  </data>
+  <data name="CopilotArg1" xml:space="preserve">
+    <value>prom</value>
+    <comment>function_parameter - First argument to the Copilot function - the prompt to be passed to the LLM (large language model).</comment>
+  </data>
+  <data name="CopilotArg2" xml:space="preserve">
+    <value>konteks</value>
+    <comment>function_parameter - Second argument to the Copilot function - optional context that will be passed to the LLM (large language model) together with the prompt. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="CopilotArg3" xml:space="preserve">
+    <value>jenis</value>
+    <comment>function_parameter - Third argument to the Copilot function - optional type value that will determine the type for the output of the function.</comment>
+  </data>
+  <data name="AboutCopilot_prompt" xml:space="preserve">
+    <value>Prom untuk disampaikan kepada Copilot.</value>
+    <comment>{Locked=Copilot} Description of the first argument to the Copilot function, a prompt to be executed.</comment>
+  </data>
+  <data name="AboutCopilot_context" xml:space="preserve">
+    <value>Konteks yang akan diserahkan kepada fungsi Copilot sebagai tambahan kepada prom.</value>
+    <comment>{Locked=Copilot} Description of the (optional) second argument to the Copilot function.</comment>
+  </data>
+  <data name="AboutCopilot_type" xml:space="preserve">
+    <value>Jenis data yang akan dikembalikan oleh fungsi Copilot.</value>
+    <comment>{Locked=Copilot} Description of the (optional) third argument to the Copilot function.</comment>
+  </data>
+  <data name="ErrCopilotContextArgumentInvalidType" xml:space="preserve">
+    <value>Argumen konteks kepada fungsi Copilot mengandungi beberapa jenis yang tidak sah.</value>
+    <comment>{Locked=Copilot} Error message shown to the user when they try to use a context argument with invalid types.</comment>
+  </data>
+  <data name="ErrCopilotTypeArgumentInvalidType" xml:space="preserve">
+    <value>Argumen jenis kepada fungsi Copilot mengandungi beberapa jenis yang tidak sah.</value>
+    <comment>{Locked=Copilot} Error message shown to the user when they try to use a type argument with invalid types.</comment>
   </data>
   <data name="AboutJoin" xml:space="preserve">
     <value>Mengambil data yang menjangkau berbilang jadual dengan perhubungan.</value>

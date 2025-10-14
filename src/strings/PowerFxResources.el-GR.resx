@@ -4771,6 +4771,22 @@
     <value>Η τιμή που μεταβιβάστηκε στη συνάρτηση '{0}' δεν είναι δυνατό να αλλάξει.</value>
     <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
   </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_ShortMessage" xml:space="preserve">
+    <value>Δεν είναι δυνατή η πρόσβαση στο {0} σε παραστάσεις αυτής της ιδιότητας.</value>
+    <comment>Error Message. This property restricts the set of values that can be referenced to just  </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_LongMessage" xml:space="preserve">
+    <value>Αυτή η ιδιότητα περιορίζει την πρόσβαση σε τιμές εκτός του ThisItem για να εξασφαλίσει καλές επιδόσεις. Το {0} δεν είναι τιμή στην οποία μπορεί να γίνει πρόσβαση εδώ.</value>
+    <comment>Error Message </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_ShortMessage" xml:space="preserve">
+    <value>Η συνάρτηση {0} δεν μπορεί να χρησιμοποιηθεί σε παραστάσεις σε αυτήν την ιδιότητα.</value>
+    <comment>Error Message: Properties marked with a Simple Constraint cannot use certain functions that would be slow. </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_LongMessage" xml:space="preserve">
+    <value>Αυτή η ιδιότητα περιορίζει τις συναρτήσεις που μπορούν να χρησιμοποιηθούν σε ένα σύνολο απλών συναρτήσεων που εκτελούνται γρήγορα, ώστε να εξασφαλίζονται καλές επιδόσεις.</value>
+    <comment>Longer informative error message, describing why a function would be erroneous on this property.</comment>
+  </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
     <value>Το όνομα καταγραφής '{0}' κρύβει μια προκαθορισμένη ιδιότητα που επιστρέφει πληροφορίες αντιστοίχισης. Εξετάστε το ενδεχόμενο να τη μετονομάσετε, αν θέλετε να αποκτήσετε πρόσβαση στις πληροφορίες αντιστοίχισης.</value>
     <comment>Information message indicating that the maker used a group name that will hide the property 'FullMatch' in the function result.</comment>
@@ -5081,6 +5097,42 @@
   </data>
   <data name="AboutClear_source" xml:space="preserve">
     <value>Η προέλευση για απαλοιφή.</value>
+  </data>
+  <data name="AboutCopilot" xml:space="preserve">
+    <value>Κάνει κλήση στο Copilot και επιστρέφει το αποτέλεσμα στην εφαρμογή. Το αποτέλεσμα μπορεί να είναι κείμενο ή μια πληκτρολογημένη τιμή.</value>
+    <comment>{Locked=Copilot} Description of 'Copilot' function.</comment>
+  </data>
+  <data name="CopilotArg1" xml:space="preserve">
+    <value>προτροπή</value>
+    <comment>function_parameter - First argument to the Copilot function - the prompt to be passed to the LLM (large language model).</comment>
+  </data>
+  <data name="CopilotArg2" xml:space="preserve">
+    <value>περιβάλλον</value>
+    <comment>function_parameter - Second argument to the Copilot function - optional context that will be passed to the LLM (large language model) together with the prompt. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="CopilotArg3" xml:space="preserve">
+    <value>τύπος</value>
+    <comment>function_parameter - Third argument to the Copilot function - optional type value that will determine the type for the output of the function.</comment>
+  </data>
+  <data name="AboutCopilot_prompt" xml:space="preserve">
+    <value>Η προτροπή που πρέπει να διαβιβαστεί στο Copilot.</value>
+    <comment>{Locked=Copilot} Description of the first argument to the Copilot function, a prompt to be executed.</comment>
+  </data>
+  <data name="AboutCopilot_context" xml:space="preserve">
+    <value>Το περιβάλλον που θα διαβιβαστεί στη συνάρτηση Copilot επιπλέον της προτροπής.</value>
+    <comment>{Locked=Copilot} Description of the (optional) second argument to the Copilot function.</comment>
+  </data>
+  <data name="AboutCopilot_type" xml:space="preserve">
+    <value>Ο τύπος δεδομένων που θα επιστραφεί από τη συνάρτηση Copilot.</value>
+    <comment>{Locked=Copilot} Description of the (optional) third argument to the Copilot function.</comment>
+  </data>
+  <data name="ErrCopilotContextArgumentInvalidType" xml:space="preserve">
+    <value>Το όρισμα περιβάλλοντος στη συνάρτηση Copilot περιέχει μη έγκυρους τύπους.</value>
+    <comment>{Locked=Copilot} Error message shown to the user when they try to use a context argument with invalid types.</comment>
+  </data>
+  <data name="ErrCopilotTypeArgumentInvalidType" xml:space="preserve">
+    <value>Το όρισμα τύπου στη συνάρτηση Copilot περιέχει μη έγκυρους τύπους.</value>
+    <comment>{Locked=Copilot} Error message shown to the user when they try to use a type argument with invalid types.</comment>
   </data>
   <data name="AboutJoin" xml:space="preserve">
     <value>Ανακτά δεδομένα που εκτείνονται σε πολλούς πίνακες με σχέσεις.</value>

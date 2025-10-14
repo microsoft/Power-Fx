@@ -4771,6 +4771,22 @@
     <value>Vrednosti, ki je bila posredovana za funkcijo »{0}«, ni mogoče spremeniti.</value>
     <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
   </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_ShortMessage" xml:space="preserve">
+    <value>{0} ni mogoče uporabiti v izrazih v tej lastnosti.</value>
+    <comment>Error Message. This property restricts the set of values that can be referenced to just  </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_LongMessage" xml:space="preserve">
+    <value>Ta lastnost omejuje dostop do vrednosti zunaj elementa ThisItem, da zagotovi dobro učinkovitost delovanja. {0} ni vrednost, do katere je mogoče dostopati tukaj.</value>
+    <comment>Error Message </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_ShortMessage" xml:space="preserve">
+    <value>Funkcije {0} ni mogoče uporabiti v izrazih za to lastnost.</value>
+    <comment>Error Message: Properties marked with a Simple Constraint cannot use certain functions that would be slow. </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_LongMessage" xml:space="preserve">
+    <value>Ta lastnost omejuje funkcije, ki jih je mogoče uporabiti, na nabor preprostih funkcij, ki se hitro izvajajo, da zagotovijo dobro učinkovitost delovanja.</value>
+    <comment>Longer informative error message, describing why a function would be erroneous on this property.</comment>
+  </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
     <value>Ime zajema»{0}« skriva vnaprej določeno lastnost, ki vrne podatke o ujemanju. Razmislite o tem, da bi ga preimenovali, če želite dostopati do podatkov o ujemanju.</value>
     <comment>Information message indicating that the maker used a group name that will hide the property 'FullMatch' in the function result.</comment>
@@ -5081,6 +5097,42 @@
   </data>
   <data name="AboutClear_source" xml:space="preserve">
     <value>Vir za čiščenje.</value>
+  </data>
+  <data name="AboutCopilot" xml:space="preserve">
+    <value>Pokliče storitev Copilot in vrne rezultat v aplikacijo. Rezultat je lahko besedilo ali vnesena vrednost.</value>
+    <comment>{Locked=Copilot} Description of 'Copilot' function.</comment>
+  </data>
+  <data name="CopilotArg1" xml:space="preserve">
+    <value>poziv</value>
+    <comment>function_parameter - First argument to the Copilot function - the prompt to be passed to the LLM (large language model).</comment>
+  </data>
+  <data name="CopilotArg2" xml:space="preserve">
+    <value>kontekst</value>
+    <comment>function_parameter - Second argument to the Copilot function - optional context that will be passed to the LLM (large language model) together with the prompt. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="CopilotArg3" xml:space="preserve">
+    <value>vrsta</value>
+    <comment>function_parameter - Third argument to the Copilot function - optional type value that will determine the type for the output of the function.</comment>
+  </data>
+  <data name="AboutCopilot_prompt" xml:space="preserve">
+    <value>Poziv, ki bo posredovan storitvi Copilot.</value>
+    <comment>{Locked=Copilot} Description of the first argument to the Copilot function, a prompt to be executed.</comment>
+  </data>
+  <data name="AboutCopilot_context" xml:space="preserve">
+    <value>Kontekst, ki bo poleg poziva posredovan funkciji Copilot.</value>
+    <comment>{Locked=Copilot} Description of the (optional) second argument to the Copilot function.</comment>
+  </data>
+  <data name="AboutCopilot_type" xml:space="preserve">
+    <value>Vrsta podatkov, ki jih bo vrnila funkcija Copilot.</value>
+    <comment>{Locked=Copilot} Description of the (optional) third argument to the Copilot function.</comment>
+  </data>
+  <data name="ErrCopilotContextArgumentInvalidType" xml:space="preserve">
+    <value>Argument konteksta za funkcijo Copilot vsebuje nekaj neveljavnih vrst.</value>
+    <comment>{Locked=Copilot} Error message shown to the user when they try to use a context argument with invalid types.</comment>
+  </data>
+  <data name="ErrCopilotTypeArgumentInvalidType" xml:space="preserve">
+    <value>Argument vrste za funkcijo Copilot vsebuje nekaj neveljavnih vrst.</value>
+    <comment>{Locked=Copilot} Error message shown to the user when they try to use a type argument with invalid types.</comment>
   </data>
   <data name="AboutJoin" xml:space="preserve">
     <value>Pridobi podatke, ki zajemajo več tabel z odnosi.</value>

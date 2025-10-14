@@ -3749,14 +3749,14 @@
     <comment>Error message when the user attempts to check equality between two values that don't make sense together. {0} and {1} will be canonical type representations like "Number" or "Boolean".</comment>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
-    <value>We can't evaluate your formula because the values being compared in the formula aren't the same type.</value>
+    <value>Ihre Formel kann nicht ausgewertet werden, weil die in der Formel verglichenen Werte nicht denselben Typ aufweisen.</value>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Möglicherweise müssen Sie den Wert in denselben Typ konvertieren, z. B. eine Datumszeichenfolge (z. B. "12/31/2018") in einen Datumswert.</value>
     <comment>1 How to fix the error. </comment>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_2" xml:space="preserve">
-    <value>If you're comparing records or tables, the field or column types must match exactly.</value>
+    <value>Wenn Sie Datensätze oder Tabellen vergleichen, müssen die Feld- oder Spaltentypen genau übereinstimmen.</value>
     <comment>2 How to fix the error.</comment>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1" xml:space="preserve">
@@ -3792,7 +3792,7 @@
     <comment>{Locked}</comment>
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
-    <value>Incompatible type. The '{0}' column in the data source you're updating expects a '{1}' type and you're using a '{2}' type.</value>
+    <value>Typ nicht kompatibel. Die Spalte „{0}“ in der zu aktualisierenden Datenquelle erwartet den Typ „{1}“, aber Sie verwenden den Typ „{2}“.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
@@ -4250,7 +4250,7 @@
     <comment>This error message shows up when expected return type does not match with actual return type. The arguments '{0}' and '{1}' will be replaced with data types. For example, "The stated function return type 'Number' does not match the return type of the function body 'Table'"</comment>
   </data>
   <data name="ErrUDF_ReturnTypeSchemaIncompatible" xml:space="preserve">
-    <value>Incompatible function body. The '{0}' column in the function return type expects a '{1}' type and you're returning a '{2}' type in function body.</value>
+    <value>Nicht kompatibler Funktionstext. Die Spalte „{0}“ im Rückgabetyp der Funktion erwartet den Typ „{1}“. Sie geben aber den Typ „{2}“ im Funktionstext zurück.</value>
     <comment>This error message shows up when expected return type schema is incompatible with actual return type. The argument '{0}' will be replaced with column name with incompatible type, '{1}' and '{2}' are replaced with expected and actual type. For example, "Incompatible function body. The 'A' column in the function return type expects a 'Text' type and you're returning a 'GUID' type in function body."</comment>
   </data>
   <data name="ErrUDF_ReturnTypeSchemaAdditionalFields" xml:space="preserve">
@@ -4771,6 +4771,22 @@
     <value>Der Wert, der an die Funktion „{0}“ übergeben wurde, kann nicht geändert werden.</value>
     <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
   </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_ShortMessage" xml:space="preserve">
+    <value>{0} kann in Ausdrücken für diese Eigenschaft nicht aufgerufen werden.</value>
+    <comment>Error Message. This property restricts the set of values that can be referenced to just  </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_LongMessage" xml:space="preserve">
+    <value>Diese Eigenschaft schränkt den Zugriff auf Werte außerhalb von ThisItem ein, um eine gute Leistung sicherzustellen. {0} ist kein Wert, auf den hier zugegriffen werden kann.</value>
+    <comment>Error Message </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_ShortMessage" xml:space="preserve">
+    <value>Die {0}-Funktion kann nicht in Ausdrücken für diese Eigenschaft verwendet werden.</value>
+    <comment>Error Message: Properties marked with a Simple Constraint cannot use certain functions that would be slow. </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_LongMessage" xml:space="preserve">
+    <value>Diese Eigenschaft schränkt die Funktionen ein, die auf eine Reihe einfacher Funktionen verwendet werden können, die schnell ausgeführt werden, um eine gute Leistung sicherzustellen.</value>
+    <comment>Longer informative error message, describing why a function would be erroneous on this property.</comment>
+  </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
     <value>Der Erfassungsname „{0}“ verbirgt eine vordefinierte Eigenschaft, die Übereinstimmungsinformationen zurückgibt. Benennen Sie diesen um, wenn Sie auf die Übereinstimmungsinformationen zugreifen möchten.</value>
     <comment>Information message indicating that the maker used a group name that will hide the property 'FullMatch' in the function result.</comment>
@@ -5082,6 +5098,42 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Die zu löschende Quelle.</value>
   </data>
+  <data name="AboutCopilot" xml:space="preserve">
+    <value>Ruft Copilot auf und gibt das Ergebnis an die App zurück. Das Ergebnis kann Text oder ein typisierter Wert sein.</value>
+    <comment>{Locked=Copilot} Description of 'Copilot' function.</comment>
+  </data>
+  <data name="CopilotArg1" xml:space="preserve">
+    <value>Prompt</value>
+    <comment>function_parameter - First argument to the Copilot function - the prompt to be passed to the LLM (large language model).</comment>
+  </data>
+  <data name="CopilotArg2" xml:space="preserve">
+    <value>Kontext</value>
+    <comment>function_parameter - Second argument to the Copilot function - optional context that will be passed to the LLM (large language model) together with the prompt. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="CopilotArg3" xml:space="preserve">
+    <value>Typ</value>
+    <comment>function_parameter - Third argument to the Copilot function - optional type value that will determine the type for the output of the function.</comment>
+  </data>
+  <data name="AboutCopilot_prompt" xml:space="preserve">
+    <value>Der Prompt, der an Copilot übergeben wird.</value>
+    <comment>{Locked=Copilot} Description of the first argument to the Copilot function, a prompt to be executed.</comment>
+  </data>
+  <data name="AboutCopilot_context" xml:space="preserve">
+    <value>Der Kontext, der zusätzlich zum Prompt an die Copilot-Funktion übergeben wird.</value>
+    <comment>{Locked=Copilot} Description of the (optional) second argument to the Copilot function.</comment>
+  </data>
+  <data name="AboutCopilot_type" xml:space="preserve">
+    <value>Der Typ der Daten, die von der Copilot-Funktion zurückgegeben werden sollen.</value>
+    <comment>{Locked=Copilot} Description of the (optional) third argument to the Copilot function.</comment>
+  </data>
+  <data name="ErrCopilotContextArgumentInvalidType" xml:space="preserve">
+    <value>Das Kontextargument für die Copilot-Funktion enthält einige ungültige Typen.</value>
+    <comment>{Locked=Copilot} Error message shown to the user when they try to use a context argument with invalid types.</comment>
+  </data>
+  <data name="ErrCopilotTypeArgumentInvalidType" xml:space="preserve">
+    <value>Das Typargument für die Copilot-Funktion enthält einige ungültige Typen.</value>
+    <comment>{Locked=Copilot} Error message shown to the user when they try to use a type argument with invalid types.</comment>
+  </data>
   <data name="AboutJoin" xml:space="preserve">
     <value>Ruft Daten ab, die sich über mehrere Tabellen mit Beziehungen erstrecken.</value>
     <comment>Description of 'Join' function.</comment>
@@ -5158,7 +5210,7 @@
     </comment>
   </data>
   <data name="ErrNamedFormulaColonEqualRequired" xml:space="preserve">
-    <value>Incorrect syntax: '=' cannot be used to declare named formulas. Use ':=' instead.</value>
+    <value>Falsche Syntax: „=“ darf nicht zum Deklarieren benannter Formeln verwendet werden. Verwenden Sie stattdessen „:=“.</value>
     <comment>
       Error message returned when user uses '=' syntax to define a named formula.
       Some examples for valid named formulas - "x := 3; y := 5;".

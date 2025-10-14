@@ -4771,6 +4771,22 @@
     <value>Reikšmės, perduotos funkcijai „{0}“, pakeisti negalima.</value>
     <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
   </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_ShortMessage" xml:space="preserve">
+    <value>{0} negali būti pasiekiama išraiškose šioje ypatybėje.</value>
+    <comment>Error Message. This property restricts the set of values that can be referenced to just  </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintAccess_LongMessage" xml:space="preserve">
+    <value>Ši ypatybė apriboja prieigą prie reikšmių už „ThisItem“ ribų, kad būtų užtikrintas geras efektyvumas. {0} nėra reikšmė, prieinama čia.</value>
+    <comment>Error Message </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_ShortMessage" xml:space="preserve">
+    <value>Funkcijos {0} negalima naudoti išraiškose šioje ypatybėje.</value>
+    <comment>Error Message: Properties marked with a Simple Constraint cannot use certain functions that would be slow. </comment>
+  </data>
+  <data name="ErrorResource_ErrViolatedSimpleConstraintFunction_LongMessage" xml:space="preserve">
+    <value>Ši ypatybė apriboja naudojamas funkcijas iki paprastų, greitai veikiančių funkcijų, kad būtų užtikrintas geras efektyvumas.</value>
+    <comment>Longer informative error message, describing why a function would be erroneous on this property.</comment>
+  </data>
   <data name="InfoRegExCaptureNameHidesPredefinedSingular" xml:space="preserve">
     <value>Rinkinyje „{0}“ esančio užfiksavimo pavadinimas slepia iš anksto apibrėžtą ypatybę, kuri pateikia atitikmenų informaciją. Apsvarstykite galimybę jį pervardyti, jei norite pasiekti atitikmenų informaciją.</value>
     <comment>Information message indicating that the maker used a group name that will hide the property 'FullMatch' in the function result.</comment>
@@ -5081,6 +5097,42 @@
   </data>
   <data name="AboutClear_source" xml:space="preserve">
     <value>Šaltinis, kurį reikia išvalyti.</value>
+  </data>
+  <data name="AboutCopilot" xml:space="preserve">
+    <value>Iškviečia „Copilot“ ir pateikia rezultatą programai. Rezultatas gali būti tekstas arba įvesta reikšmė.</value>
+    <comment>{Locked=Copilot} Description of 'Copilot' function.</comment>
+  </data>
+  <data name="CopilotArg1" xml:space="preserve">
+    <value>raginimas</value>
+    <comment>function_parameter - First argument to the Copilot function - the prompt to be passed to the LLM (large language model).</comment>
+  </data>
+  <data name="CopilotArg2" xml:space="preserve">
+    <value>kontekstas</value>
+    <comment>function_parameter - Second argument to the Copilot function - optional context that will be passed to the LLM (large language model) together with the prompt. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="CopilotArg3" xml:space="preserve">
+    <value>tipas</value>
+    <comment>function_parameter - Third argument to the Copilot function - optional type value that will determine the type for the output of the function.</comment>
+  </data>
+  <data name="AboutCopilot_prompt" xml:space="preserve">
+    <value>Raginimas, perduodamas „Copilot“.</value>
+    <comment>{Locked=Copilot} Description of the first argument to the Copilot function, a prompt to be executed.</comment>
+  </data>
+  <data name="AboutCopilot_context" xml:space="preserve">
+    <value>Kontekstas, perduodamas „Copilot“ kartu su raginimu.</value>
+    <comment>{Locked=Copilot} Description of the (optional) second argument to the Copilot function.</comment>
+  </data>
+  <data name="AboutCopilot_type" xml:space="preserve">
+    <value>„Copilot“ funkcijos pateikiamų duomenų tipas.</value>
+    <comment>{Locked=Copilot} Description of the (optional) third argument to the Copilot function.</comment>
+  </data>
+  <data name="ErrCopilotContextArgumentInvalidType" xml:space="preserve">
+    <value>„Copilot“ funkcijai pateiktame konteksto argumente yra neleistinų tipų.</value>
+    <comment>{Locked=Copilot} Error message shown to the user when they try to use a context argument with invalid types.</comment>
+  </data>
+  <data name="ErrCopilotTypeArgumentInvalidType" xml:space="preserve">
+    <value>„Copilot“ funkcijai pateiktame tipo argumente yra neleistinų tipų.</value>
+    <comment>{Locked=Copilot} Error message shown to the user when they try to use a type argument with invalid types.</comment>
   </data>
   <data name="AboutJoin" xml:space="preserve">
     <value>Nuskaito duomenis, kurie naudojami keliose lentelėse su ryšiais.</value>
