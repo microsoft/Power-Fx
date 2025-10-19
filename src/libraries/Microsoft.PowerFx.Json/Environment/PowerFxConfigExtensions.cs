@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 
 namespace Microsoft.PowerFx
@@ -20,6 +21,16 @@ namespace Microsoft.PowerFx
             config.AddFunction(new AsTypeFunction_UOImpl());
             config.AddFunction(new IsTypeFunction_UOImpl());
             config.AddFunction(new TypedParseJSONFunctionImpl());
+        }
+
+        /// <summary>
+        /// Adds Copilot function: Copilot().
+        /// </summary>
+        /// <param name="config"></param>
+        [Obsolete("preview")]
+        public static void EnableCopilotFunction(this PowerFxConfig config)
+        {
+            config.AddFunction(new CopilotFunctionImpl());
         }
     }
 }
