@@ -42,6 +42,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             private readonly bool _supportsLazyTypes;
 
+            // $$$ What is FormulaType used for here?
             internal JsonProcessing(TimeZoneInfo timezoneInfo, FormulaType type, FormulaValue[] args, bool supportsLazyTypes)
             {
                 _arguments = args;

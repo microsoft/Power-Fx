@@ -114,6 +114,7 @@ namespace Microsoft.PowerFx
             config.EnableJsonFunctions();
             config.EnableOptionSetInfo();
             config.EnableJoinFunction();
+            config.EnableCopilotFunction();
 
             config.AddFunction(new AssertFunction());
 
