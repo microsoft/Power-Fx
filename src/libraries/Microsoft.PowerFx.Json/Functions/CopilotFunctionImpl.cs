@@ -199,7 +199,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // 2) If we have a schema, add strict "pure JSON" instruction (match the JS behavior)
             if (TryParseSchemaToDType(schemaStr, out var formulaType))
-            {`
+            {
                 var jsonstr = DTypeToJsonSchema(formulaType._type);
                 var sb = new StringBuilder();
                 sb.Append(finalPrompt);
