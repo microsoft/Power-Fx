@@ -6,8 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq; // added for LINQ operations on response output
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
@@ -22,7 +27,12 @@ namespace Microsoft.PowerFx
 #pragma warning disable CS0618 // Type or member is obsolete
 
     public static class ConsoleRepl
-    { 
+    {
+        private const bool EnableCopilotFunction = false;
+
+        // Path to the file containing ChatGPT API credentials
+        private const string CredentialsPathToChatGPT = "update your path\\chatgpt-credentials.json.template";
+        
         private const string OptionFormatTable = "FormatTable";
 
         private const string OptionNumberIsFloat = "NumberIsFloat";
@@ -114,7 +124,9 @@ namespace Microsoft.PowerFx
             config.EnableJsonFunctions();
             config.EnableOptionSetInfo();
             config.EnableJoinFunction();
+#if EnableCopilotFunction
             config.EnableCopilotFunction();
+#endif
 
             config.AddFunction(new AssertFunction());
 
@@ -169,9 +181,11 @@ namespace Microsoft.PowerFx
 #pragma warning disable CS0618
 
         // Hook repl engine with customizations.
-        private class MyRepl : PowerFxREPL
+        private class MyRepl : PowerFxREPL, IDisposable
         {
             public int _promptNumber = 1;
+            private readonly ICopilotService _copilotService;
+            private bool _disposed;
 
             public override string Prompt => _numberedPrompts ? $"\n{_promptNumber++}>> " : "\n>> ";
 
@@ -185,6 +199,37 @@ namespace Microsoft.PowerFx
 
                 var bsp = new BasicServiceProvider();
                 bsp.AddService(_cultureInfo);
+                
+                // Try to load and add ChatGPT Copilot service if credentials file exists
+                try
+                {
+                    if (File.Exists(CredentialsPathToChatGPT))
+                    {
+                        var credentials = ChatGptCopilotService.LoadCredentials(CredentialsPathToChatGPT);
+                        _copilotService = new ChatGptCopilotService(credentials);
+                        bsp.AddService<ICopilotService>(_copilotService);
+#pragma warning disable CA1303 // Do not pass literals as localized parameters
+                        Console.WriteLine($"Copilot service enabled using model: {credentials.Model}");
+#pragma warning restore CA1303 // Do not pass literals as localized parameters
+                    }
+                    else
+                    {
+#pragma warning disable CA1303 // Do not pass literals as localized parameters
+                        Console.WriteLine($"Copilot service not available. Create '{CredentialsPathToChatGPT}' with your OpenAI API key to enable it.");
+#pragma warning restore CA1303 // Do not pass literals as localized parameters
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _copilotService?.Dispose();
+                    _copilotService = null;
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+#pragma warning disable CA1303 // Do not pass literals as localized parameters
+                    Console.WriteLine($"Warning: Failed to initialize Copilot service: {ex.Message}");
+#pragma warning restore CA1303 // Do not pass literals as localized parameters
+                    Console.ResetColor();
+                }
+                
                 this.InnerServices = bsp;
 
                 this.AllowSetDefinitions = true;
@@ -211,35 +256,55 @@ namespace Microsoft.PowerFx
 
                 Console.ResetColor();
             }
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!_disposed)
+                {
+                    if (disposing)
+                    {
+                        _copilotService?.Dispose();
+                    }
+
+                    _disposed = true;
+                }
+            }
+
+            public void Dispose()
+            {
+                Dispose(disposing: true);
+                GC.SuppressFinalize(this);
+            }
         }
 
         public static void REPL(TextReader input, bool prompt, bool echo, bool printResult, uint? lineNumber)
         {
             while (true)
             {
-                var repl = new MyRepl() { Echo = echo, PrintResult = printResult };
-
-                while (!_reset)
+                using (var repl = new MyRepl() { Echo = echo, PrintResult = printResult })
                 {
-                    if (prompt)
+                    while (!_reset)
                     {
-                        repl.WritePromptAsync().Wait();
-                    }
+                        if (prompt)
+                        {
+                            repl.WritePromptAsync().Wait();
+                        }
 
-                    var line = input.ReadLine();
+                        var line = input.ReadLine();
 
-                    // End of file
-                    if (line == null)
-                    {
-                        return;
-                    }
+                        // End of file
+                        if (line == null)
+                        {
+                            return;
+                        }
 
-                    repl.HandleLineAsync(line, lineNumber: lineNumber++).Wait();
+                        repl.HandleLineAsync(line, lineNumber: lineNumber++).Wait();
 
-                    // Exit() function called
-                    if (repl.ExitRequested)
-                    {
-                        return;
+                        // Exit() function called
+                        if (repl.ExitRequested)
+                        {
+                            return;
+                        }
                     }
                 }
 
@@ -281,9 +346,10 @@ namespace Microsoft.PowerFx
             {
                 try
                 {
-                    var reader = new StreamReader(file.Value);
-                    REPL(reader, prompt: false, echo: echo.Value, printResult: echo.Value, lineNumber: 1);
-                    reader.Dispose();
+                    using (var reader = new StreamReader(file.Value))
+                    {
+                        REPL(reader, prompt: false, echo: echo.Value, printResult: echo.Value, lineNumber: 1);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -668,6 +734,230 @@ Use Reset() to clear all formulas and variables.
                 await WriteAsync(repl, post, cancel)
                     .ConfigureAwait(false);
             }
+        }
+    }
+
+    // ChatGPT credentials configuration
+    internal class ChatGptCredentials
+    {
+        [JsonPropertyName("apiKey")]
+        public string ApiKey { get; set; }
+
+        [JsonPropertyName("model")]
+        public string Model { get; set; } = "gpt-5-nano";
+
+        [JsonPropertyName("endpoint")]
+        public string Endpoint { get; set; } = "https://api.openai.com/v1/responses";
+    }
+
+    // OpenAI Responses API request/response models
+    internal class ChatGptRequest
+    {
+        [JsonPropertyName("model")]
+        public string Model { get; set; }
+
+        [JsonPropertyName("input")]
+        public string Input { get; set; }
+
+        [JsonPropertyName("max_output_tokens")]
+        public int? MaxOutputTokens { get; set; }
+    }
+
+    internal class ChatGptResponse
+    {
+        [JsonPropertyName("output")]
+        public List<ChatOutputItem> Output { get; set; }
+
+        [JsonPropertyName("error")]
+        public ChatGptError Error { get; set; }
+    }
+
+    internal class ChatOutputItem
+    {
+        [JsonPropertyName("type")]
+        public string Type { get; set; }
+
+        [JsonPropertyName("role")]
+        public string Role { get; set; }
+
+        [JsonPropertyName("content")]
+        public List<ChatOutputContent> Content { get; set; }
+    }
+
+    internal class ChatOutputContent
+    {
+        [JsonPropertyName("type")]
+        public string Type { get; set; }
+
+        [JsonPropertyName("text")]
+        public string Text { get; set; }
+    }
+
+    internal class ChatGptError
+    {
+        [JsonPropertyName("message")]
+        public string Message { get; set; }
+
+        [JsonPropertyName("type")]
+        public string Type { get; set; }
+    }
+
+    // Implementation of ICopilotService using OpenAI Responses API
+    internal class ChatGptCopilotService : ICopilotService
+    {
+        private readonly HttpClient _httpClient;
+        private readonly ChatGptCredentials _credentials;
+        private bool _disposed;
+
+        public ChatGptCopilotService(ChatGptCredentials credentials)
+        {
+            _credentials = credentials ?? throw new ArgumentNullException(nameof(credentials));
+            
+            if (string.IsNullOrWhiteSpace(_credentials.ApiKey))
+            {
+                throw new ArgumentException("API key is required", nameof(credentials));
+            }
+
+            _httpClient = new HttpClient();
+            _httpClient.DefaultRequestHeaders.Authorization = 
+                new AuthenticationHeaderValue("Bearer", _credentials.ApiKey);
+        }
+
+        public async Task<string> AskTextAsync(string prompt, CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(prompt))
+            {
+                throw new ArgumentException("Prompt cannot be empty", nameof(prompt));
+            }
+
+            var request = new ChatGptRequest
+            {
+                Model = _credentials.Model,
+                Input = prompt
+            };
+
+            var jsonRequest = JsonSerializer.Serialize(request);
+            
+            using (var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json"))
+            {
+                try
+                {
+                    var response = await _httpClient.PostAsync(
+                        new Uri(_credentials.Endpoint), 
+                        content, 
+                        cancellationToken).ConfigureAwait(false);
+
+                    var jsonResponse = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        ChatGptResponse errorResponse = null;
+                        try
+                        {
+                            errorResponse = JsonSerializer.Deserialize<ChatGptResponse>(jsonResponse);
+                        }
+                        catch
+                        {
+                        }
+
+                        var errorMessage = errorResponse?.Error?.Message ?? $"HTTP {(int)response.StatusCode}: {response.ReasonPhrase}";
+                        throw new HttpRequestException($"OpenAI Responses API error: {errorMessage}");
+                    }
+
+                    var chatResponse = JsonSerializer.Deserialize<ChatGptResponse>(jsonResponse);
+
+                    if (chatResponse?.Output == null || chatResponse.Output.Count == 0)
+                    {
+                        throw new InvalidOperationException("OpenAI Responses API returned no output");
+                    }
+
+                    // Prefer items of type "message" and aggregate their textual content.
+                    var messageItems = chatResponse.Output
+                        .Where(o => string.Equals(o.Type, "message", StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+
+                    var sb = new StringBuilder();
+
+                    if (messageItems.Count > 0)
+                    {
+                        foreach (var item in messageItems)
+                        {
+                            if (item.Content == null)
+                            {
+                                continue;
+                            }
+
+                            foreach (var c in item.Content)
+                            {
+                                if (string.Equals(c.Type, "output_text", StringComparison.OrdinalIgnoreCase) ||
+                                    string.Equals(c.Type, "text", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    sb.Append(c.Text);
+                                }
+                            }
+
+                            if (item != messageItems.Last())
+                            {
+                                sb.AppendLine();
+                            }
+                        }
+
+                        return sb.ToString();
+                    }
+
+                    // Fallback: use first output item as before.
+                    var first = chatResponse.Output[0];
+                    if (first?.Content == null || first.Content.Count == 0)
+                    {
+                        return string.Empty;
+                    }
+
+                    foreach (var c in first.Content)
+                    {
+                        if (string.Equals(c.Type, "output_text", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(c.Type, "text", StringComparison.OrdinalIgnoreCase))
+                        {
+                            sb.Append(c.Text);
+                        }
+                    }
+
+                    return sb.ToString();
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception ex) when (ex is not HttpRequestException && ex is not InvalidOperationException)
+                {
+                    throw new InvalidOperationException($"Failed to call OpenAI Responses API: {ex.Message}", ex);
+                }
+            }
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                _httpClient?.Dispose();
+                _disposed = true;
+            }
+        }
+
+        public static ChatGptCredentials LoadCredentials(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException(
+                    $"ChatGPT credentials file not found at: {filePath}. " +
+                    "Please create a JSON file with your OpenAI API key in the format: " +
+                    "{ \"apiKey\": \"sk-...\", \"model\": \"gpt-5-nano\" }",
+                    filePath);
+            }
+
+            var jsonContent = File.ReadAllText(filePath);
+            var credentials = JsonSerializer.Deserialize<ChatGptCredentials>(jsonContent);
+
+            return credentials ?? throw new InvalidOperationException($"Failed to parse credentials from {filePath}");
         }
     }
 }
