@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Types;
@@ -24,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public async Task<FormulaValue> InvokeAsync(
             IServiceProvider runtimeServiceProvider,
-            FormulaType irContext,
+            FormulaType returnType,
             FormulaValue[] args,
             CancellationToken cancellationToken)
         {
@@ -96,12 +97,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             catch (Exception ex)
             {
-                return CreateError(irContext, $"Copilot call failed: {ex.GetType().Name} {ex.Message}", ErrorKind.Internal);
+                return CreateError(returnType, $"Copilot call failed: {ex.GetType().Name} {ex.Message}", ErrorKind.Internal);
             }
 
             if (string.IsNullOrWhiteSpace(raw))
             {
-                return CreateError(irContext, "Copilot returned an empty response.", ErrorKind.InvalidArgument);
+                return CreateError(returnType, "Copilot returned an empty response.", ErrorKind.InvalidArgument);
             }
 
             // If schema provided: parse JSON -> FormulaValue; else return string
@@ -110,8 +111,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var cleaned = StripCodeFences(raw);
 
                 // Use your helper to produce a FormulaValue; it already reports JSON issues as ErrorValue
-                var fv = FormulaValueJSON.FromJson(cleaned, formulaType: irContext, numberIsFloat: false);
-                return fv;
+                var result = FormulaValueJSON.FromJson(cleaned, formulaType: returnType, numberIsFloat: false);
+
+                if (!(result.IRContext.ResultType._type == returnType._type || result is ErrorValue || result.IRContext.ResultType is BlankType))
+                {
+                    var error = CreateError(returnType, $"Copilot response could not be converted to the expected type {returnType}. Actual type: {result.Type}.", ErrorKind.InvalidArgument);
+                    return error;
+                }
+
+                return result;
             }
 
             return FormulaValue.New(raw);
@@ -198,9 +206,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // 2) If we have a schema, add strict "pure JSON" instruction (match the JS behavior)
-            if (TryParseSchemaToDType(schemaStr, out var formulaType))
+            if (TryParseSchemaToDType(schemaStr, out var dType))
             {
-                var jsonstr = DTypeToJsonSchema(formulaType._type);
+                var jsonstr = DTypeToJsonSchema(dType);
                 var sb = new StringBuilder();
                 sb.Append(finalPrompt);
                 sb.AppendLine();
@@ -240,21 +248,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         private static bool TryParseSchemaToDType(
             string schemaJson, 
-            out FormulaType formulaType)
+            out DType dType)
         {
-            formulaType = null;
-
             if (string.IsNullOrWhiteSpace(schemaJson))
             {
+                dType = DType.Invalid;
                 return false;
             }
 
             // Use the internal DType.TryParse method
-            if (DType.TryParse(schemaJson, out var dType) && dType.IsValid)
+            if (DType.TryParse(schemaJson, out dType) && dType.IsValid)
             {
                 return true;
             }
 
+            dType = DType.Invalid;
             return false;
         }
 

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.PowerFx.Core.Texl.Builtins
+namespace Microsoft.PowerFx.Core
 {
     [ThreadSafeImmutable]
     public interface ICopilotService : IDisposable

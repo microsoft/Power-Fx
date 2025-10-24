@@ -27,6 +27,7 @@ namespace Microsoft.PowerFx.Json.Tests
                 "Microsoft.PowerFx.ConfigExtensions",
                 "Microsoft.PowerFx.Core.FormulaTypeJsonConverter",
                 "Microsoft.PowerFx.Core.FormulaTypeSerializerSettings",
+                "Microsoft.PowerFx.Core.ICopilotService",
                 "Microsoft.PowerFx.JsonConfigExtensions",
                 "Microsoft.PowerFx.Types.FormulaValueJSON",
                 "Microsoft.PowerFx.Types.FormulaValueJsonSerializerSettings"
