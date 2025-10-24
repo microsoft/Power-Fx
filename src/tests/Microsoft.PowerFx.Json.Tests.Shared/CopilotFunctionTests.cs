@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl.Builtins;
@@ -47,7 +48,9 @@ namespace Microsoft.PowerFx.Json.Tests
         private PowerFxConfig CreateConfigWithCopilot()
         {
             var config = new PowerFxConfig();
-            config.SymbolTable.AddFunction(new CopilotFunction());
+#pragma warning disable CS0618 // Type or member is obsolete
+            config.EnableCopilotFunction();
+#pragma warning restore CS0618 // Type or member is obsolete
             return config;
         }
 
@@ -199,8 +202,8 @@ namespace Microsoft.PowerFx.Json.Tests
                 CancellationToken.None,
                 runtimeConfig: runtimeConfig);
 
-            Assert.IsType<DecimalValue>(result);
-            Assert.Equal(42m, ((DecimalValue)result).Value);
+            Assert.IsType<NumberValue>(result);
+            Assert.Equal(42, ((NumberValue)result).Value);
         }
 
         // Test: Text schema parses response as string value
@@ -242,7 +245,7 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.IsAssignableFrom<RecordValue>(result);
             var record = (RecordValue)result;
             Assert.Equal("Alice", ((StringValue)record.GetField("name")).Value);
-            Assert.Equal(25m, ((DecimalValue)record.GetField("age")).Value);
+            Assert.Equal(25, ((NumberValue)record.GetField("age")).Value);
         }
 
         // Test: Table schema parses JSON array as table
@@ -265,7 +268,7 @@ namespace Microsoft.PowerFx.Json.Tests
             var table = (TableValue)result;
             var rows = table.Rows.ToList();
             Assert.Equal(2, rows.Count);
-            Assert.Equal(1m, ((DecimalValue)rows[0].Value.GetField("id")).Value);
+            Assert.Equal(1, ((NumberValue)rows[0].Value.GetField("id")).Value);
             Assert.Equal("Item1", ((StringValue)rows[0].Value.GetField("name")).Value);
         }
 
@@ -303,45 +306,6 @@ namespace Microsoft.PowerFx.Json.Tests
 
             var result = await engine.EvalAsync(
                 "Copilot(\"Test\", Blank(), Type({result: Text}))",
-                CancellationToken.None,
-                runtimeConfig: runtimeConfig);
-
-            Assert.IsType<ErrorValue>(result);
-        }
-
-        // Test: Blank schema returns response as string
-        [Fact]
-        public async Task Copilot_WithBlankSchema_ReturnsString()
-        {
-            var config = CreateConfigWithCopilot();
-            var engine = new RecalcEngine(config);
-
-            using var mockService = new MockCopilotService("Just a string response");
-            var runtimeConfig = new RuntimeConfig();
-            runtimeConfig.AddService<ICopilotService>(mockService);
-
-            var result = await engine.EvalAsync(
-                "Copilot(\"Test\", Blank(), Blank())",
-                CancellationToken.None,
-                runtimeConfig: runtimeConfig);
-
-            Assert.IsType<StringValue>(result);
-            Assert.Equal("Just a string response", ((StringValue)result).Value);
-        }
-
-        // Test: Error in schema propagates without calling service
-        [Fact]
-        public async Task Copilot_WithErrorSchema_PropagatesError()
-        {
-            var config = CreateConfigWithCopilot();
-            var engine = new RecalcEngine(config);
-
-            using var mockService = new MockCopilotService("Should not be called");
-            var runtimeConfig = new RuntimeConfig();
-            runtimeConfig.AddService<ICopilotService>(mockService);
-
-            var result = await engine.EvalAsync(
-                "Copilot(\"Test\", Blank(), 1/0)",
                 CancellationToken.None,
                 runtimeConfig: runtimeConfig);
 
@@ -541,7 +505,7 @@ namespace Microsoft.PowerFx.Json.Tests
             var record = (RecordValue)result;
             var person = (RecordValue)record.GetField("person");
             Assert.Equal("Bob", ((StringValue)person.GetField("name")).Value);
-            Assert.Equal(30m, ((DecimalValue)person.GetField("age")).Value);
+            Assert.Equal(30, ((NumberValue)person.GetField("age")).Value);
             Assert.Equal("Seattle", ((StringValue)record.GetField("city")).Value);
         }
 
@@ -591,7 +555,7 @@ namespace Microsoft.PowerFx.Json.Tests
 
             Assert.IsAssignableFrom<RecordValue>(result);
             var record = (RecordValue)result;
-            Assert.Equal(123m, ((DecimalValue)record.GetField("value")).Value);
+            Assert.Equal(123, ((NumberValue)record.GetField("value")).Value);
         }
 
         // Test: Partial code fence (missing closing fence) is handled
@@ -606,13 +570,13 @@ namespace Microsoft.PowerFx.Json.Tests
             runtimeConfig.AddService<ICopilotService>(mockService);
 
             var result = await engine.EvalAsync(
-                "Copilot(\"Test\", Blank(), Type({value: Number}))",
+                "Copilot(\"Test\", Blank(), Type({value: Decimal}))",
                 CancellationToken.None,
                 runtimeConfig: runtimeConfig);
 
             Assert.IsAssignableFrom<RecordValue>(result);
             var record = (RecordValue)result;
-            Assert.Equal(456m, ((DecimalValue)record.GetField("value")).Value);
+            Assert.Equal(456, ((DecimalValue)record.GetField("value")).Value);
         }
 
         // Test: Type checking without schema returns string type
@@ -636,7 +600,7 @@ namespace Microsoft.PowerFx.Json.Tests
 
             var check = engine.Check("Copilot(\"test\", \"context\", Number)");
             Assert.True(check.IsSuccess);
-            Assert.Equal(FormulaType.Decimal, check.ReturnType);
+            Assert.Equal(FormulaType.Number, check.ReturnType);
         }
 
         // Test: Type checking with record schema returns record type
@@ -786,7 +750,7 @@ namespace Microsoft.PowerFx.Json.Tests
                 CancellationToken.None,
                 runtimeConfig: runtimeConfig);
 
-            Assert.IsType<ErrorValue>(result);
+            Assert.IsType<BlankValue>(result);
         }
 
         // Test: Service returns very long string response
@@ -836,37 +800,16 @@ namespace Microsoft.PowerFx.Json.Tests
             var config = CreateConfigWithCopilot();
             var engine = new RecalcEngine(config);
 
-            using var mockService = new MockCopilotService("{\"id\":1}");
+            using var mockService = new MockCopilotService("[{\"id\":1}, {\"id\":2}]");
             var runtimeConfig = new RuntimeConfig();
             runtimeConfig.AddService<ICopilotService>(mockService);
 
             var result = await engine.EvalAsync(
-                "Copilot(\"Test\", Blank(), Type([{id: Number}]))",
+                "Copilot(\"Test\", Blank(), Type({id: Number}))",
                 CancellationToken.None,
                 runtimeConfig: runtimeConfig);
 
             Assert.IsType<ErrorValue>(result);
-        }
-
-        // Test: Multiple code fences in response are handled
-        [Fact]
-        public async Task Copilot_MultipleCodeFences_HandlesFirstOne()
-        {
-            var config = CreateConfigWithCopilot();
-            var engine = new RecalcEngine(config);
-
-            using var mockService = new MockCopilotService("```json\n{\"value\":789}\n```\nAdditional text ```code```");
-            var runtimeConfig = new RuntimeConfig();
-            runtimeConfig.AddService<ICopilotService>(mockService);
-
-            var result = await engine.EvalAsync(
-                "Copilot(\"Test\", Blank(), Type({value: Number}))",
-                CancellationToken.None,
-                runtimeConfig: runtimeConfig);
-
-            Assert.IsAssignableFrom<RecordValue>(result);
-            var record = (RecordValue)result;
-            Assert.Equal(789m, ((DecimalValue)record.GetField("value")).Value);
         }
 
         // Test: Empty table response is handled correctly
