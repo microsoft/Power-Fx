@@ -1145,6 +1145,21 @@ namespace Microsoft.PowerFx.Core.Binding
             }
         }
 
+        public void CheckPredicateUsage(CallNode node, TexlFunction func)
+        {
+            Contracts.AssertValue(node);
+            Contracts.AssertValue(func);
+
+            if (func.ScopeInfo != null &&
+                func.ScopeInfo.CheckPredicateUsage &&
+                !node.Args.ChildNodes.Any(child => child is ErrorNode) &&
+                TryGetCall(node.Id, out var callInfo))
+            {
+                //func.ScopeInfo.CheckPredicateFields(GetUsedScopeFields(callInfo), node, GetLambdaParamNames(callInfo.ScopeNest + 1), ErrorContainer);
+                func.ScopeInfo.CheckPredicateFields(this, callInfo);
+            }
+        }
+
         public void CheckAndMarkAsPageable(FirstNameNode node)
         {
             Contracts.AssertValue(node);
@@ -2070,9 +2085,17 @@ namespace Microsoft.PowerFx.Core.Binding
             foreach (var name in GetLambdaParamNames(call.ScopeNest + 1))
             {
                 var fError = false;
+                var fieldName = name.Name;
+                var foundLogicalName = call.CursorType.TryGetLogicalName(name.Name, out var logicalName);
+
+                if (foundLogicalName)
+                {
+                    fieldName = logicalName;
+                }
+
                 if (!name.Node.InTree(arg0) &&
                     name.Node.InTree(call.Node) &&
-                    call.CursorType.TryGetType(name.Name, out var lambdaParamType))
+                    call.CursorType.TryGetType(fieldName, out var lambdaParamType))
                 {
                     if (name.Node.Parent is DottedNameNode dotted)
                     {
@@ -3173,12 +3196,11 @@ namespace Microsoft.PowerFx.Core.Binding
                         // Attempt to get the logical name to use for type checking.
                         // If this is executed amidst a metadata refresh then the reference may refer to an old
                         // display name, so we need to check the old mapping as well as the current mapping.
-                        var usesDisplayName =
-                            DType.TryGetConvertedDisplayNameAndLogicalNameForColumn(scope.Type, nodeName.Value, out var maybeLogicalName, out _) ||
-                            DType.TryGetLogicalNameForColumn(scope.Type, nodeName.Value, out maybeLogicalName);
-                        if (usesDisplayName)
+                        var foundLoficalName = scope.Type.TryGetLogicalName(node.Ident.Name, out var logicalName);
+
+                        if (foundLoficalName)
                         {
-                            nodeName = new DName(maybeLogicalName);
+                            nodeName = logicalName;
                         }
 
                         if (scope.Type.TryGetType(nodeName, out var typeTmp))
@@ -4913,6 +4935,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 _txb.CheckAndMarkAsDelegatable(node);
                 _txb.CheckAndMarkAsPageable(node, func);
+                _txb.CheckPredicateUsage(node, func);
 
                 // A function will produce a constant output (and have no side-effects, which is important for
                 // caching/precomputing the result) iff the function is pure and its arguments are constant.
