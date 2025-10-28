@@ -45,7 +45,7 @@ Older Chat Completions-only models (e.g. `gpt-3.5-turbo`, `gpt-4o`) should be re
 Use the `Copilot()` function in formulas:
 
 ### Basic Usage
-```powerf
+```powerfxx
 // Simple question
 Copilot("What is the capital of France?")
 
@@ -66,18 +66,18 @@ The structured overload requests a response that you can parse/interpret into th
 ## Examples
 
 ### Example 1: Simple Query
-```powerf
+```powerfxx
 Copilot("Explain what Power Fx is in one sentence")
 ```
 
 ### Example 2: With Context
-```powerf
+```powerfx
 Set(salesData, {Product: "Widget", Sales: 1000, Target: 1200});
 Copilot("Is this product meeting its sales target?", salesData)
 ```
 
 ### Example 3: Structured Response
-```powerf
+```powerfx
 Copilot(
     "Generate a sample customer record", 
     {},
@@ -91,7 +91,7 @@ Copilot(
 ```
 
 ### Example 4: Working with Tables
-```powerf
+```powerfx
 Set(employees, Table(
     {Name: "Alice", Dept: "Engineering"},
     {Name: "Bob", Dept: "Sales"}
