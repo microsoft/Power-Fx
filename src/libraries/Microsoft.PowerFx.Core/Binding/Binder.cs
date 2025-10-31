@@ -3509,15 +3509,14 @@ namespace Microsoft.PowerFx.Core.Binding
                     // TODO remove feature gate when ECS flag is completely rolled out
                     if (template.IsComponent &&
                         (property.IsScopeVariable ||
-                        ((_txb.Document?.Properties?.EnabledFeatures?.IsEnhancedComponentFunctionPropertyEnabled ?? false) && property.IsScopedProperty)))
+                        property.IsScopedProperty))
                     {
                         SetDottedNameError(node, TexlStrings.ErrInvalidPropertyReference);
                         return;
                     }
 
                     // Binding function property and its parameters should not allow DottedNameNode
-                    bool isBindingPropertyFunctionPropertyOrParameter = template.IsComponent &&
-                        (_txb.Document?.Properties?.EnabledFeatures?.IsEnhancedComponentFunctionPropertyEnabled ?? false) &&
+                    bool isBindingPropertyFunctionPropertyOrParameter = template.IsComponent &&                        
                         !(_txb.Document?.Properties?.EnabledFeatures?.IsComponentFunctionPropertyDataflowEnabled ?? false) &&
                         _txb.Property?.PropertyCategory == PropertyRuleCategory.Data &&
                         ((_txb.Property?.IsScopeVariable ?? false) || (_txb.Property?.IsScopedProperty ?? false));
