@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
@@ -923,6 +924,81 @@ namespace Microsoft.PowerFx.Functions
             else
             {
                 throw CommonExceptions.RuntimeMisMatch;
+            }
+        }
+
+        public static FormulaValue Workday(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var timeZoneInfo = runner.TimeZoneInfo;
+
+            DateTime startDate = runner.GetNormalizedDateTime(args[0]);
+
+            if (args[1] is not NumberValue daysValue)
+            {
+                throw CommonExceptions.RuntimeMisMatch;
+            }
+
+            int days = (int)daysValue.Value;
+
+            // Collect holidays if provided
+            var holidays = new HashSet<DateTime>();
+            if (args.Length > 2 && args[2] is not BlankValue)
+            {
+                if (args[2] is TableValue holidayTable)
+                {
+                    foreach (var row in holidayTable.Rows)
+                    {
+                        if (row.IsValue)
+                        {
+                            var fields = row.Value.Fields.ToArray();
+                            if (fields.Length > 0)
+                            {
+                                var field = fields[0];
+                                if (field.Value is DateValue dateValue)
+                                {
+                                    holidays.Add(dateValue.GetConvertedValue(timeZoneInfo).Date);
+                                }
+                                else if (field.Value is DateTimeValue dateTimeValue)
+                                {
+                                    holidays.Add(dateTimeValue.GetConvertedValue(timeZoneInfo).Date);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            try
+            {
+                DateTime currentDate = startDate.Date;
+                int direction = days > 0 ? 1 : -1;
+                int remainingDays = Math.Abs(days);
+
+                while (remainingDays > 0)
+                {
+                    currentDate = currentDate.AddDays(direction);
+
+                    // Check if it's a weekend (Saturday or Sunday)
+                    if (currentDate.DayOfWeek == DayOfWeek.Saturday || currentDate.DayOfWeek == DayOfWeek.Sunday)
+                    {
+                        continue;
+                    }
+
+                    // Check if it's a holiday
+                    if (holidays.Contains(currentDate))
+                    {
+                        continue;
+                    }
+
+                    remainingDays--;
+                }
+
+                DateTime newDate = MakeValidDateTime(runner, currentDate, timeZoneInfo);
+                return new DateValue(irContext, newDate);
+            }
+            catch
+            {
+                return CommonErrors.ArgumentOutOfRange(irContext);
             }
         }
 
