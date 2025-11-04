@@ -938,7 +938,8 @@ namespace Microsoft.PowerFx.Functions
                 throw CommonExceptions.RuntimeMisMatch;
             }
 
-            int days = (int)daysValue.Value;
+            // Truncate toward zero for Excel compatibility
+            int days = (int)Math.Truncate(daysValue.Value);
 
             // Collect holidays if provided
             var holidays = new HashSet<DateTime>();
@@ -971,6 +972,14 @@ namespace Microsoft.PowerFx.Functions
             try
             {
                 DateTime currentDate = startDate.Date;
+                
+                // Early return for zero days
+                if (days == 0)
+                {
+                    DateTime resultDate = MakeValidDateTime(runner, currentDate, timeZoneInfo);
+                    return new DateValue(irContext, resultDate);
+                }
+
                 int direction = days > 0 ? 1 : -1;
                 int remainingDays = Math.Abs(days);
 
