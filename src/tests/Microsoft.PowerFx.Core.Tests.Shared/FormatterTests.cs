@@ -319,6 +319,47 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(
             "// Math\nAdd(x:Number,y:Number):Number=x+y;\n// Trig\nCosine(x:Number):Number=Cos(x);\n",
             "// Math\nAdd(x:Number,y:Number):Number = x + y;\n// Trig\nCosine(x:Number):Number = Cos(x);\n")]
+
+        // Test _extraTrivia handling: Comments between definitions
+        [InlineData("x := 1; /* comment */ y := 2;", "x := 1;\n/* comment */ y := 2;")]
+        [InlineData("x := 1; /* comment1 */ /* comment2 */ y := 2;", "x := 1;\n/* comment1 */ /* comment2 */ y := 2;")]
+        
+        // Test _extraTrivia handling: Comments after UDF
+        [InlineData("F(x: Number): Number = x + 1; /* after UDF */ y := 2;", "F(x: Number): Number = x + 1;\n/* after UDF */ y := 2;")]
+        
+        // Test _extraTrivia handling: Comments after Type
+        [InlineData("T := Type(Number); /* after type */ x := 1;", "T := Type(Number);\n/* after type */ x := 1;")]
+        
+        // Test _extraTrivia handling: Multiple definitions with interspersed comments
+        [InlineData("a := 1; /* c1 */ b := 2; /* c2 */ F(x: Number): Number = x;", "a := 1;\n/* c1 */ b := 2;\n/* c2 */ F(x: Number): Number = x;")]
+        
+        // Test _extraTrivia handling: UDF with curly braces
+        [InlineData("F(x: Number): Number = { x + 1 }; /* after */ y := 2;", "F(x: Number): Number = \n{\n\tx + 1\n};\n/* after */ y := 2;")]
+        
+        // Test _extraTrivia handling: Nested comments in complex scenarios
+        [InlineData("/* start */ x := 1; /* mid */ F(a: Number): Number = a; /* end */ y := 2;", "/* start */ x := 1;\n/* mid */ F(a: Number): Number = a;\n/* end */ y := 2;")]
+        
+        // Test _extraTrivia handling: Comments with line breaks
+        [InlineData("x := 1;\n/* comment */\ny := 2;", "x := 1;\n/* comment */\ny := 2;")]
+        
+        // Test _extraTrivia handling: Multiple comments in a row
+        [InlineData("x := 1; /* c1 */\n/* c2 */\n/* c3 */ y := 2;", "x := 1;\n/* c1 */\n/* c2 */\n/* c3 */ y := 2;")]
+        
+        // Test _extraTrivia handling: Comments after error cases
+        [InlineData("x := 1; InvalidSyntax /* comment */ y := 2;", "x := 1;\nInvalidSyntax/* comment */ y := 2;")]
+        
+        // Test _extraTrivia handling: Comments between Type definitions
+        [InlineData("T1 := Type(Number); /* between */ T2 := Type(Text);", "T1 := Type(Number);\n/* between */ T2 := Type(Text);")]
+        
+        // Test _extraTrivia handling: Mixed definitions with comments
+        [InlineData("x := 1; /* c1 */ F(n: Number): Number = n; /* c2 */ T := Type(Number); /* c3 */ y := 2;", "x := 1;\n/* c1 */ F(n: Number): Number = n;\n/* c2 */ T := Type(Number);\n/* c3 */ y := 2;")]
+        
+        // Test _extraTrivia handling: Comments after imperative UDF
+        [InlineData("F(x: Number): Number { Notify(\"test\"); x }; /* after */ y := 2;", "F(x: Number): Number \n{\n\tNotify(\"test\");\n    x\n};\n/* after */ y := 2;")]
+        
+        // Test _extraTrivia handling: Line comments
+        [InlineData("x := 1; // line comment\ny := 2;", "x := 1;// line comment\ny := 2;")]
+        [InlineData("F(x: Number): Number = x; // after UDF\ny := 2;", "F(x: Number): Number = x;// after UDF\ny := 2;")]
         public void TestUserDefinitionsPrettyPrint(string script, string expected)
         {
             var parserOptions = new ParserOptions()
