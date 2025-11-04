@@ -315,7 +315,6 @@ namespace Microsoft.PowerFx.Core.Parser
                 {
                     var declaration = script.Substring(declarationStart, _curs.TokCur.Span.Min - declarationStart);
                     _curs.TokMove();
-                    _extraTrivia = null;
                     definitionBeforeTrivia.Add(ParseTrivia());
                     definitionsLikely = true;
 
@@ -367,7 +366,6 @@ namespace Microsoft.PowerFx.Core.Parser
                     
                     var declaration = script.Substring(declarationStart, _curs.TokCur.Span.Min - declarationStart);
                     _curs.TokMove();
-                    _extraTrivia = null;
                     definitionBeforeTrivia.Add(ParseTrivia());
 
                     if (_curs.TidCur == TokKind.Semicolon || _curs.TidCur == TokKind.Eof)
@@ -531,10 +529,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         break;
                     }
 
-                    definitionBeforeTrivia = new List<ITexlSource>
-                    {
-                        ParseTrivia()
-                    };
+                    ParseTrivia();
                 }
                 else
                 {
