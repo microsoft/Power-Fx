@@ -313,7 +313,12 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("N := 5; /*Type Dec*/ T := Type([{name: Text, age: Number}]);", "N := 5;\n/*Type Dec*/ T := Type([\n    {\n        name: Text,\n        age: Number\n    }\n]);")]
 
         // mixed := and =
-        [InlineData("x:=5;y=3;z:=8;a=9;T:=Type(Number);", "x := 5;\ny = 3;\nz := 8;\na = 9;\nT := Type(Number);")] 
+        [InlineData("x:=5;y=3;z:=8;a=9;T:=Type(Number);", "x := 5;\ny = 3;\nz := 8;\na = 9;\nT := Type(Number);")]
+
+        // Issue: Comment duplication test
+        [InlineData(
+            "// Math\nAdd(x:Number,y:Number):Number=x+y;\n// Trig\nCosine(x:Number):Number=Cos(x);\n",
+            "// Math\nAdd(x:Number,y:Number):Number = x + y;\n// Trig\nCosine(x:Number):Number = Cos(x);\n")]
         public void TestUserDefinitionsPrettyPrint(string script, string expected)
         {
             var parserOptions = new ParserOptions()
