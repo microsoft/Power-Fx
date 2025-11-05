@@ -529,10 +529,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         break;
                     }
 
-                    definitionBeforeTrivia = new List<ITexlSource>
-                    {
-                        ParseTrivia()
-                    };
+                    ParseTrivia();
                 }
                 else
                 {
