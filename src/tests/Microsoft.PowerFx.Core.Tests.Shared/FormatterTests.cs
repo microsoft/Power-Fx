@@ -317,7 +317,7 @@ namespace Microsoft.PowerFx.Tests
 
         [InlineData(
             "// Math\nAdd(x:Number,y:Number):Number= /*c1*/ x+y;\n// Trig\nCosine(x:Number):Number=Cos(x);\n",
-            "// Math\nAdd(x:Number,y:Number):Number = /*c1*/x + y;\n// Trig\nCosine(x:Number):Number = Cos(x);\n")]
+            "// Math\nAdd(x:Number,y:Number):Number = /*c1*/x + y;\n// Trig\nCosine(x:Number):Number = Cos(x);")]
         public void TestUserDefinitionsPrettyPrint(string script, string expected)
         {
             var parserOptions = new ParserOptions()
