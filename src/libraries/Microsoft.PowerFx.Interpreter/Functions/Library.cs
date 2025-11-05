@@ -661,10 +661,7 @@ namespace Microsoft.PowerFx.Functions
                     replaceBlankValues: ReplaceBlankWith(
                         new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
                         new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
-                    checkRuntimeTypes: ExactSequence(
-                        DateOrDateTime,
-                        ExactValueType<NumberValue>,
-                        ExactValueTypeOrBlank<TableValue>),
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Workday)

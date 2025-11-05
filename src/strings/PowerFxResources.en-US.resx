@@ -1141,7 +1141,7 @@
   </data>
   <data name="WorkdayArg3" xml:space="preserve">
     <value>holidays</value>
-    <comment>function_parameter - Third parameter for the Workday function - optional table of holiday dates to exclude.</comment>
+    <comment>function_parameter - Third and subsequent parameters for the Workday function - optional holiday dates to exclude.</comment>
   </data>
   <data name="AboutWorkday_start_date" xml:space="preserve">
     <value>A date value that represents the start date.</value>
@@ -1152,8 +1152,8 @@
     <comment>Description of the second argument to the 'Workday' function.</comment>
   </data>
   <data name="AboutWorkday_holidays" xml:space="preserve">
-    <value>An optional table of one or more dates to exclude from the working calendar, such as state and federal holidays and floating holidays.</value>
-    <comment>Description of the third argument to the 'Workday' function.</comment>
+    <value>Optional date values to exclude from the working calendar, such as state and federal holidays and floating holidays. Can also be a table of dates.</value>
+    <comment>Description of the third and subsequent arguments to the 'Workday' function.</comment>
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Truncates 'number' by rounding toward negative infinity.</value>

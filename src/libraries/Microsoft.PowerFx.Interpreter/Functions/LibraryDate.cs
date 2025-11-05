@@ -929,6 +929,15 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Workday(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
+            // Check for ErrorValue in any argument and return it immediately
+            foreach (var arg in args)
+            {
+                if (arg is ErrorValue)
+                {
+                    return arg;
+                }
+            }
+
             var timeZoneInfo = runner.TimeZoneInfo;
 
             DateTime startDate = runner.GetNormalizedDateTime(args[0]);
@@ -941,27 +950,39 @@ namespace Microsoft.PowerFx.Functions
             // Truncate toward zero for Excel compatibility
             int days = (int)Math.Truncate(daysValue.Value);
 
-            // Collect holidays if provided
+            // Collect holidays from individual date arguments (args[2] onwards)
             var holidays = new HashSet<DateTime>();
-            if (args.Length > 2 && args[2] is not BlankValue)
+            for (int i = 2; i < args.Length; i++)
             {
-                if (args[2] is TableValue holidayTable)
+                if (args[i] is not BlankValue)
                 {
-                    foreach (var row in holidayTable.Rows)
+                    if (args[i] is DateValue dateValue)
                     {
-                        if (row.IsValue)
+                        holidays.Add(dateValue.GetConvertedValue(timeZoneInfo).Date);
+                    }
+                    else if (args[i] is DateTimeValue dateTimeValue)
+                    {
+                        holidays.Add(dateTimeValue.GetConvertedValue(timeZoneInfo).Date);
+                    }
+                    else if (args[i] is TableValue holidayTable)
+                    {
+                        // Also support table for backward compatibility
+                        foreach (var row in holidayTable.Rows)
                         {
-                            var fields = row.Value.Fields.ToArray();
-                            if (fields.Length > 0)
+                            if (row.IsValue)
                             {
-                                var field = fields[0];
-                                if (field.Value is DateValue dateValue)
+                                var fields = row.Value.Fields.ToArray();
+                                if (fields.Length > 0)
                                 {
-                                    holidays.Add(dateValue.GetConvertedValue(timeZoneInfo).Date);
-                                }
-                                else if (field.Value is DateTimeValue dateTimeValue)
-                                {
-                                    holidays.Add(dateTimeValue.GetConvertedValue(timeZoneInfo).Date);
+                                    var field = fields[0];
+                                    if (field.Value is DateValue dateVal)
+                                    {
+                                        holidays.Add(dateVal.GetConvertedValue(timeZoneInfo).Date);
+                                    }
+                                    else if (field.Value is DateTimeValue dateTimeVal)
+                                    {
+                                        holidays.Add(dateTimeVal.GetConvertedValue(timeZoneInfo).Date);
+                                    }
                                 }
                             }
                         }

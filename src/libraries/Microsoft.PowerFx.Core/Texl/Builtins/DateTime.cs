@@ -382,7 +382,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public WorkdayFunction()
-            : base("Workday", TexlStrings.AboutWorkday, FunctionCategories.DateTime, DType.Date, 0, 2, 3, DType.DateTime, DType.Number, DType.EmptyTable)
+            : base("Workday", TexlStrings.AboutWorkday, FunctionCategories.DateTime, DType.Date, 0, 2, int.MaxValue, DType.DateTime, DType.Number)
         {
         }
 
@@ -390,6 +390,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             yield return new[] { TexlStrings.WorkdayArg1, TexlStrings.WorkdayArg2 };
             yield return new[] { TexlStrings.WorkdayArg1, TexlStrings.WorkdayArg2, TexlStrings.WorkdayArg3 };
+            yield return new[] { TexlStrings.WorkdayArg1, TexlStrings.WorkdayArg2, TexlStrings.WorkdayArg3, TexlStrings.WorkdayArg3 };
+            yield return new[] { TexlStrings.WorkdayArg1, TexlStrings.WorkdayArg2, TexlStrings.WorkdayArg3, TexlStrings.WorkdayArg3, TexlStrings.WorkdayArg3 };
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
+        {
+            if (arity > 2)
+            {
+                return GetGenericSignatures(arity, TexlStrings.WorkdayArg1, TexlStrings.WorkdayArg2, TexlStrings.WorkdayArg3);
+            }
+
+            return base.GetSignatures(arity);
         }
     }
 

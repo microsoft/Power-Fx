@@ -56,27 +56,35 @@ Date(2024,8,19)
 // WORKDAY with holidays
 
 // Single holiday
+>> Workday(Date(2024,8,24),5,Date(2024,8,28))
+Date(2024,9,2)
+
+// Single holiday as table (backward compatibility)
 >> Workday(Date(2024,8,24),5,Table({Date:Date(2024,8,28)}))
 Date(2024,9,2)
 
 // Multiple holidays
+>> Workday(Date(2024,8,24),10,Date(2024,8,28),Date(2024,9,2))
+Date(2024,9,6)
+
+// Multiple holidays as table (backward compatibility)
 >> Workday(Date(2024,8,24),10,Table({Date:Date(2024,8,28)},{Date:Date(2024,9,2)}))
 Date(2024,9,6)
 
 // Holiday on weekend should not affect result
->> Workday(Date(2024,8,24),5,Table({Date:Date(2024,8,25)}))
+>> Workday(Date(2024,8,24),5,Date(2024,8,25))
 Date(2024,8,30)
 
 // Backward with holidays
->> Workday(Date(2024,8,30),-5,Table({Date:Date(2024,8,26)}))
+>> Workday(Date(2024,8,30),-5,Date(2024,8,26))
 Date(2024,8,21)
 
 // Holiday that is the start date
->> Workday(Date(2024,8,26),5,Table({Date:Date(2024,8,26)}))
+>> Workday(Date(2024,8,26),5,Date(2024,8,26))
 Date(2024,9,2)
 
 // Multiple holidays in range
->> Workday(Date(2024,12,20),10,Table({Date:Date(2024,12,25)},{Date:Date(2025,1,1)}))
+>> Workday(Date(2024,12,20),10,Date(2024,12,25),Date(2025,1,1))
 Date(2025,1,7)
 
 // WORKDAY with DateTime inputs
