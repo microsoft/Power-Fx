@@ -18,6 +18,7 @@ using Conditional = System.Diagnostics.ConditionalAttribute;
 namespace Microsoft.PowerFx.Core.Types
 {
     [ThreadSafeImmutable]
+    [System.Diagnostics.DebuggerDisplay("{DebuggerDisplayString}")]
     internal class DType : ICheckable
     {
         public const char EnumPrefix = '%';
@@ -140,6 +141,57 @@ namespace Microsoft.PowerFx.Core.Types
         // Sealed is NOT checked at internal .Add of fields to a record. This allows an empty, sealed record to be built up, as is done with the ShowColumns function and
         // the User object in the interpreter.
         public bool IsSealed { get; }
+
+        /// <summary>
+        /// Gets the string to display in the debugger for this DType.
+        /// For primitive types, returns the Kind property name.
+        /// For aggregate types (Table/Record), returns a formatted string showing columns.
+        /// </summary>
+        private string DebuggerDisplayString
+        {
+            get
+            {
+                // For primitive types, just return the Kind name
+                if (!IsAggregate)
+                {
+                    return Kind.ToString();
+                }
+
+                // For aggregate types (Record/Table), format as prefix[column1: Kind1, column2: Kind2, ...]
+                var sb = new StringBuilder();
+                
+                // Add prefix: ! for Record, * for Table
+                if (Kind == DKind.Record || Kind == DKind.LazyRecord)
+                {
+                    sb.Append("!");
+                }
+                else if (Kind == DKind.Table || Kind == DKind.LazyTable)
+                {
+                    sb.Append("*");
+                }
+
+                sb.Append("[");
+
+                // Add columns
+                var first = true;
+                foreach (var kvp in TypeTree.GetPairs())
+                {
+                    if (!first)
+                    {
+                        sb.Append(", ");
+                    }
+
+                    first = false;
+
+                    sb.Append(kvp.Key);
+                    sb.Append(": ");
+                    sb.Append(kvp.Value.Kind.ToString());
+                }
+
+                sb.Append("]");
+                return sb.ToString();
+            }
+        }
 
         #endregion 
 
