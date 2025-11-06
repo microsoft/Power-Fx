@@ -3204,23 +3204,22 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        // Helper method to access the private DebuggerDisplayString property via reflection
+        private static string GetDebuggerDisplayString(DType type)
+        {
+            var property = typeof(DType).GetProperty("DebuggerDisplayString", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            Assert.NotNull(property);
+            return property.GetValue(type) as string;
+        }
+
         [Fact]
         public void DebuggerDisplayString_PrimitiveTypes()
         {
             // Test primitive types show their Kind
-            var boolType = DType.Boolean;
-            var numType = DType.Number;
-            var strType = DType.String;
-            var dateType = DType.Date;
-            
-            // Use reflection to access the private DebuggerDisplayString property
-            var property = typeof(DType).GetProperty("DebuggerDisplayString", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            Assert.NotNull(property);
-            
-            Assert.Equal("Boolean", property.GetValue(boolType));
-            Assert.Equal("Number", property.GetValue(numType));
-            Assert.Equal("String", property.GetValue(strType));
-            Assert.Equal("Date", property.GetValue(dateType));
+            Assert.Equal("Boolean", GetDebuggerDisplayString(DType.Boolean));
+            Assert.Equal("Number", GetDebuggerDisplayString(DType.Number));
+            Assert.Equal("String", GetDebuggerDisplayString(DType.String));
+            Assert.Equal("Date", GetDebuggerDisplayString(DType.Date));
         }
 
         [Fact]
@@ -3231,10 +3230,7 @@ namespace Microsoft.PowerFx.Tests
                 new TypedName(DType.Number, new DName("Age")),
                 new TypedName(DType.String, new DName("Name")));
             
-            var property = typeof(DType).GetProperty("DebuggerDisplayString", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            Assert.NotNull(property);
-            
-            var debugStr = property.GetValue(recordType) as string;
+            var debugStr = GetDebuggerDisplayString(recordType);
             Assert.NotNull(debugStr);
             
             // Should start with ! and have brackets
@@ -3257,10 +3253,7 @@ namespace Microsoft.PowerFx.Tests
                 new TypedName(DType.Number, new DName("Id")),
                 new TypedName(DType.String, new DName("Title")));
             
-            var property = typeof(DType).GetProperty("DebuggerDisplayString", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            Assert.NotNull(property);
-            
-            var debugStr = property.GetValue(tableType) as string;
+            var debugStr = GetDebuggerDisplayString(tableType);
             Assert.NotNull(debugStr);
             
             // Should start with * and have brackets
@@ -3279,15 +3272,10 @@ namespace Microsoft.PowerFx.Tests
         public void DebuggerDisplayString_EmptyRecord()
         {
             // Test empty record
-            var emptyRecord = DType.EmptyRecord;
-            
-            var property = typeof(DType).GetProperty("DebuggerDisplayString", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            Assert.NotNull(property);
-            
-            var debugStr = property.GetValue(emptyRecord) as string;
+            var debugStr = GetDebuggerDisplayString(DType.EmptyRecord);
             Assert.NotNull(debugStr);
             
-            // Should be ![
+            // Should be ![]
             Assert.Equal("![]", debugStr);
         }
 
@@ -3295,12 +3283,7 @@ namespace Microsoft.PowerFx.Tests
         public void DebuggerDisplayString_EmptyTable()
         {
             // Test empty table
-            var emptyTable = DType.EmptyTable;
-            
-            var property = typeof(DType).GetProperty("DebuggerDisplayString", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            Assert.NotNull(property);
-            
-            var debugStr = property.GetValue(emptyTable) as string;
+            var debugStr = GetDebuggerDisplayString(DType.EmptyTable);
             Assert.NotNull(debugStr);
             
             // Should be *[]
