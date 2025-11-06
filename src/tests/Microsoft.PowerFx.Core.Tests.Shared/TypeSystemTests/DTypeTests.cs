@@ -3204,12 +3204,15 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        // Cached PropertyInfo for DebuggerDisplayString to avoid repeated reflection
+        private static readonly System.Reflection.PropertyInfo _debuggerDisplayStringProperty = 
+            typeof(DType).GetProperty("DebuggerDisplayString", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
         // Helper method to access the private DebuggerDisplayString property via reflection
         private static string GetDebuggerDisplayString(DType type)
         {
-            var property = typeof(DType).GetProperty("DebuggerDisplayString", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            Assert.NotNull(property);
-            return property.GetValue(type) as string;
+            Assert.NotNull(_debuggerDisplayStringProperty);
+            return _debuggerDisplayStringProperty.GetValue(type) as string;
         }
 
         [Fact]
