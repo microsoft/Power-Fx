@@ -77,6 +77,11 @@ namespace Microsoft.PowerFx
         /// </summary>
         internal bool IsUserDefinedTypesEnabled { get; init; } = false;
 
+        /// <summary>
+        /// Enables Remove All delegation.
+        /// </summary>
+        internal bool IsRemoveAllDelegationEnabled { get; init; }
+
         internal static readonly Features None = new Features();
 
         /// <summary>
@@ -97,7 +102,8 @@ namespace Microsoft.PowerFx
             PrimaryOutputPropertyCoercionDeprecated = true,
             AsTypeLegacyCheck = false,
             JsonFunctionAcceptsLazyTypes = true,
-            IsUserDefinedTypesEnabled = true
+            IsUserDefinedTypesEnabled = true,
+            IsRemoveAllDelegationEnabled = true
         };
 
         internal Features()
@@ -118,6 +124,7 @@ namespace Microsoft.PowerFx
             IsUserDefinedTypesEnabled = other.IsUserDefinedTypesEnabled;
             AsTypeLegacyCheck = other.AsTypeLegacyCheck;
             JsonFunctionAcceptsLazyTypes = other.JsonFunctionAcceptsLazyTypes;
+            IsRemoveAllDelegationEnabled = other.IsRemoveAllDelegationEnabled;
         }
     }
 }

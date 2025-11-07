@@ -298,5 +298,15 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "Right", "right" },
                 { "Full", "full" },
             });
+
+        public static readonly EnumSymbol RemoveFlagsEnum = new EnumSymbol(
+            new DName(LanguageConstants.RemoveFlagsEnumString),
+            DType.String,
+            new Dictionary<string, object>()
+            {
+                { "First", "first" },
+                { "All", "all" },
+            },
+            canCoerceFromBackingKind: true);
     }
 }
