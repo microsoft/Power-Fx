@@ -1,0 +1,12 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dotnet/Nerdbank.GitVersioning/main/src/NerdBank.GitVersioning/version.schema.json",
+  "version": "1.5",
+  "publicReleaseRefSpec": [
+    "^refs/tags/v\\d+\\.\\d+\\.\\d+$",
+    "^refs/heads/release/\\d+\\.\\d+$"
+  ],
+  "cloudBuild": {
+    "setVersionVariables": true,
+    "setBuildNumber": true
+  }
+}

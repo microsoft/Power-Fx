@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "nbgv": {
+      "version": "3.6.146",
+      "commands": [
+        "nbgv"
+      ],
+      "rollForward": false
+    }
+  }
+}
