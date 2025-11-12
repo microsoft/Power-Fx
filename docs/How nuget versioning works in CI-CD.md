@@ -17,7 +17,7 @@ Power Fx uses **Git-driven semantic versioning** to ensure:
 
 ```json
 {
-  "version": "1.5",
+  "version": "1.6",
   "publicReleaseRefSpec": [
     "^refs/tags/v\\d+\\.\\d+\\.\\d+$",
     "^refs/heads/release/\\d+\\.\\d+$"
@@ -46,8 +46,8 @@ Power Fx uses **Git-driven semantic versioning** to ensure:
 
 | Example Branch | Resulting Package Version |
 |-----------------|---------------------------|
-| `release/1.5` | `1.5.0` |
-| `main` | `1.5.0-CI-20251112` |
+| `release/1.6` | `1.6.0` |
+| `main` | `1.6.0-CI-20251112` |
 
 ---
 
@@ -74,7 +74,7 @@ Power Fx uses **Git-driven semantic versioning** to ensure:
 ## Optional Tagging
 
 If the pipeline parameter `tags=true`, the build:
-- Creates a git tag (e.g., `1.5.0`)  
+- Creates a git tag (e.g., `1.6.0`)  
 - Pushes it to origin and tags the Azure DevOps build  
 
 ---
