@@ -47,7 +47,7 @@ Power Fx uses **Git-driven semantic versioning** to ensure:
 | Example Branch | Resulting Package Version |
 |-----------------|---------------------------|
 | `release/1.6` | `1.6.0` |
-| `main` | `1.6.0-CI-20251112` |
+| `main` | `1.6.0-commithash-CI-20251112` |
 
 ---
 
@@ -76,16 +76,6 @@ Power Fx uses **Git-driven semantic versioning** to ensure:
 If the pipeline parameter `tags=true`, the build:
 - Creates a git tag (e.g., `1.6.0`)  
 - Pushes it to origin and tags the Azure DevOps build  
-
----
-
-## Common Issues
-
-| Problem | Cause | Fix |
-|----------|--------|-----|
-| Wrong version source | `nbgv cloud` used | Use `nbgv get-version` |
-| `-CI` suffix on release branch | Branch name doesn’t match regex | Update `publicReleaseRefSpec` |
-| NuGet push failed | Missing token | Verify `PFX_ADO_NUGET_ORG_CONNECTION_API_KEY` |
 
 ---
 
