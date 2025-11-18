@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Diagnostics;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
@@ -15,5 +16,8 @@ namespace Microsoft.PowerFx
         public string Description { get; init; }
 
         // More fields, like optional? default value?, etc.
+
+        // Could be null if not available.
+        public FormulaType ParameterType { get; init; }
     }
 }

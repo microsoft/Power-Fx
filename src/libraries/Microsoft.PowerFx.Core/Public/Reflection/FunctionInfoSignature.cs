@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
@@ -52,6 +53,7 @@ namespace Microsoft.PowerFx
 
             List<ParameterInfoSignature> result = new List<ParameterInfoSignature>();
 
+            int idx = 0;
             foreach (var p in _paramNames)
             {
                 string unalterableName = p(localeName);
@@ -60,15 +62,27 @@ namespace Microsoft.PowerFx
 
                 _parent._fnc.TryGetParamDescription(invariantParamName, out var description, localeName);
 
+                FormulaType paramType = null;
+                if (_parent._fnc.TryGetTypeForArgSuggestionAt(idx, out var paramDType))
+                {
+                    paramType = FormulaType.Build(paramDType);
+                }
+                                
                 result.Add(new ParameterInfoSignature
                 {
                     Name = unalterableName,
-                    Description = description
+                    Description = description,
+                    ParameterType = paramType
                 });
+
+                idx++;
             }
 
             return result.ToArray();
         }
+
+        // Return type of this. 
+        public FormulaType ReturnType => FormulaType.Build(_parent._fnc.ReturnType);
 
         // Keep this debug-only, since there are too many possible formats to pick just one. 
         internal string DebugToString(CultureInfo culture = null)
@@ -78,14 +92,28 @@ namespace Microsoft.PowerFx
             sb.Append('(');
 
             var sep = string.Empty;
-            foreach (var param in GetParameterNames(culture))
+            foreach (var param in GetParameters(culture))
             {
                 sb.Append(sep);
-                sb.Append(param);
+                sb.Append(param.Name);
+
+                if (param.ParameterType != null)
+                {
+                    sb.Append(": ");
+                    sb.Append(param.ParameterType);
+                }
+
                 sep = ", ";
             }
 
             sb.Append(')');
+
+            var retType = this.ReturnType;
+            if (retType != null)
+            {
+                sb.Append(": ");
+                sb.Append(retType);
+            }
 
             return sb.ToString();
         }

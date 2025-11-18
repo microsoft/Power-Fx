@@ -25,5 +25,6 @@
     <None Include="$(MSBuildThisFileDirectory)modules\*.fx.yml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="$(MSBuildThisFileDirectory)modules\table1.fx.yml" />
   </ItemGroup>
 </Project>

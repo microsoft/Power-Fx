@@ -49,6 +49,12 @@ namespace Microsoft.PowerFx.Repl
                 .Build();
             var modulePoco = deserializer.Deserialize<ModulePoco>(txt);
 
+            if (modulePoco == null)
+            {
+                // This can happen on an empty file. 
+                throw new InvalidOperationException($"Can't parse ModulePoco");
+            }
+
             modulePoco.Src_Filename = fullPath;
 
             return (modulePoco, this);

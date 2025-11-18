@@ -1,0 +1,8 @@
+# Show example using a table. 
+Formulas: |
+    Point := Type({x:Number, y: Number});
+    Dist(pt : Point) : Number = Sqrt(pt.x * pt.x + pt.y * pt.y);
+
+    PointList := Type([Point]);
+    ToStr(t: PointList) : Text = Concat(t, $"({x},{y})", ",");
+    D2(t: PointList) : Number = Sqrt(Sum(t, ThisRecord.x* ThisRecord.x + ThisRecord.y * ThisRecord.y));

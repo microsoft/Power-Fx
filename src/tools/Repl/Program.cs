@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Logging;
 using Microsoft.PowerFx.Repl;
 using Microsoft.PowerFx.Repl.Functions;
 using Microsoft.PowerFx.Repl.Services;
@@ -165,7 +166,7 @@ namespace Microsoft.PowerFx
 #pragma warning disable CS0618
 
         // Hook repl engine with customizations.
-        private class MyRepl : PowerFxREPL
+        private class MyRepl : PowerFxREPL, ITracer
         {
             public int _promptNumber = 1;
 
@@ -181,6 +182,7 @@ namespace Microsoft.PowerFx
 
                 var bsp = new BasicServiceProvider();
                 bsp.AddService(_cultureInfo);
+                bsp.AddService<ITracer>(this);
                 this.InnerServices = bsp;
 
                 this.AllowSetDefinitions = true;
@@ -205,6 +207,13 @@ namespace Microsoft.PowerFx
                     Console.WriteLine(e.ToString());
                 }
 
+                Console.ResetColor();
+            }
+                        
+            async Task ITracer.LogAsync(string message, TraceSeverity serv, RecordValue customRecord, CancellationToken ct)
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine($"{serv}: {message}");
                 Console.ResetColor();
             }
         }

@@ -2,10 +2,12 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.PowerFx.Repl
 {
-    internal class Module
+    public class Module
     {
         /// <summary>
         /// Public symbols exported by this module. 
@@ -15,7 +17,7 @@ namespace Microsoft.PowerFx.Repl
         /// <summary>
         /// Identity of the module. We should never have two different modules with the same identity.
         /// </summary>
-        public ModuleIdentity Identity { get; init; }
+        internal ModuleIdentity Identity { get; init; }
 
         /// <summary>
         /// Optional Full path that this module was loaded from. Null if not loaded from a file.
@@ -27,6 +29,19 @@ namespace Microsoft.PowerFx.Repl
         {
             this.Identity = identity;
             this.Symbols = exports ?? throw new ArgumentNullException(nameof(exports));
-        }        
+        }
+
+        public IEnumerable<FunctionInfo> PublicFunctions
+        {
+            get
+            {
+                // No other way to enumeraet them all 
+#pragma warning disable CS0618 // Type or member is obsolete
+                IEnumerable<Core.Functions.TexlFunction> funcs = this.Symbols.Functions.Functions;
+#pragma warning restore CS0618 // Type or member is obsolete
+
+                return funcs.Select(func => new FunctionInfo(func));
+            }
+        }
     }
 }

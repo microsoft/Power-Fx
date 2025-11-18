@@ -2763,7 +2763,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (tracer == null)
             {
-                return FormulaValue.New(false);
+                return irContext.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(false) : FormulaValue.NewVoid();                
             }
 
             // the null case here handles Blanks
