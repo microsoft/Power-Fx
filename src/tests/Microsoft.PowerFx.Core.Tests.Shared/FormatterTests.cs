@@ -283,6 +283,9 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(
             "If(\n  true,\n  1;\n  // Comment in the middle of a chain\n  2\n)",
             "If(\n    true,\n    1;\n    // Comment in the middle of a chain\n    2\n)")]
+        [InlineData(
+            "If(\n  true,\n  1;\n  /* Block comment in the middle of a chain */\n  2\n)",
+            "If(\n    true,\n    1;\n    /* Block comment in the middle of a chain */2\n)")]
         public void TestPrettyPrint(string script, string expected)
         {
             // Act & Assert

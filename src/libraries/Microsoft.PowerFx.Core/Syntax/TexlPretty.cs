@@ -751,13 +751,16 @@ namespace Microsoft.PowerFx.Syntax
                         previousWasNewLine = true;
                     }
                     else if (source is TokenSource tokenSource2 &&
-                        tokenSource2.Token is CommentToken commentToken &&
-                        commentToken.Value.Trim().StartsWith("//", StringComparison.Ordinal))
+                        tokenSource2.Token is CommentToken commentToken)
                     {
+                        var singleLineComment = commentToken.Value.Trim().StartsWith("//", StringComparison.Ordinal);
                         result = result
-                            .With(GetScriptForToken(commentToken).Trim())
-                            .With(GetNewLine(context.IndentDepth + 1));
-                        previousWasNewLine = true;
+                            .With(GetScriptForToken(commentToken).Trim());
+                        if (singleLineComment)
+                        {
+                            result = result.With(GetNewLine(context.IndentDepth + 1));
+                            previousWasNewLine = true;
+                        }
                     }
                     else
                     {
