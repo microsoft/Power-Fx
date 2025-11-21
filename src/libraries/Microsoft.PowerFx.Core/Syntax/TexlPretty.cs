@@ -750,6 +750,15 @@ namespace Microsoft.PowerFx.Syntax
                             .With(GetNewLine(context.IndentDepth + 1));
                         previousWasNewLine = true;
                     }
+                    else if (source is TokenSource tokenSource2 &&
+                        tokenSource2.Token is CommentToken commentToken &&
+                        commentToken.Value.Trim().StartsWith("//", StringComparison.Ordinal))
+                    {
+                        result = result
+                            .With(GetScriptForToken(commentToken).Trim())
+                            .With(GetNewLine(context.IndentDepth + 1));
+                        previousWasNewLine = true;
+                    }
                     else
                     {
                         result = previousWasNewLine ? result.With(string.Concat(source.Tokens.Select(GetScriptForToken)).TrimStart()) : result.With(source.Tokens.Select(GetScriptForToken));

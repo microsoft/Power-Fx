@@ -240,6 +240,7 @@ namespace Microsoft.PowerFx
                 this.AddPseudoFunction(new IRPseudoFunction());
                 this.AddPseudoFunction(new CIRPseudoFunction());
                 this.AddPseudoFunction(new SuggestionsPseudoFunction());
+                this.AddPseudoFunction(new PrettyPrintPseudoFunction());
 
                 this.ParserOptions = new ParserOptions(_cultureInfoUI) { AllowsSideEffects = _allowSideEffects, NumberIsFloat = _numberIsFloat, TextFirst = _textFirst };
             }
