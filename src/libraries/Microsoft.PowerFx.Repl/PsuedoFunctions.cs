@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Syntax;
 
 #pragma warning disable CS0618 // Type or member is obsolete
 
@@ -61,6 +62,19 @@ namespace Microsoft.PowerFx.Repl
         }
 
         public string Name => "CIR";
+    }
+
+    public class PrettyPrintPseudoFunction : IPseudoFunction
+    {
+        public async Task ExecuteAsync(CheckResult checkResult, PowerFxREPL repl, CancellationToken cancel)
+        {
+            var parseResult = checkResult.Parse;
+            var prettyText = PrettyPrintVisitor.Format(parseResult.Root, parseResult.Before, parseResult.After, parseResult.Text);
+            await repl.Output.WriteLineAsync(prettyText, OutputKind.Repl, cancel)
+                .ConfigureAwait(false);
+        }
+
+        public string Name => "PrettyPrint";
     }
 
     /// <summary>

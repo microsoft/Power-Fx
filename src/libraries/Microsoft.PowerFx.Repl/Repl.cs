@@ -387,8 +387,9 @@ namespace Microsoft.PowerFx
                 {
                     // Foo(expr)
                     // where Foo() is a pseudo function, get CheckResult for just 'expr' and pass in. 
-                    // Inner expr doesn't get access to meta functions. 
-                    var innerExpr = cn.Args.ToString();
+                    // Inner expr doesn't get access to meta functions.
+                    var innerSpan = cn.Args.GetCompleteSpan();
+                    var innerExpr = innerSpan.GetFragment(expression);
                     CheckResult pseudoCheck = this.Engine.Check(innerExpr, options: this.ParserOptions, symbolTable: extraSymbolTable);
 
                     try

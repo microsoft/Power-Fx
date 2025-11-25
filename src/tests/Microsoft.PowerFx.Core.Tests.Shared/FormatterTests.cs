@@ -280,6 +280,12 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("ParseJSON(\"[]\", Type([{Age: Number}]))", "ParseJSON(\n    \"[]\",\n    Type([{Age: Number}])\n)")]
         [InlineData("Type([{Age: Number, Name: Text}])", "Type(\n    [\n        {\n            Age: Number,\n            Name: Text\n        }\n    ]\n)")]
         [InlineData("Type(RecordOf(Accounts))", "Type(RecordOf(Accounts))")]
+        [InlineData(
+            "If(\n  true,\n  1;\n  // Comment in the middle of a chain\n  2\n)",
+            "If(\n    true,\n    1;\n    // Comment in the middle of a chain\n    2\n)")]
+        [InlineData(
+            "If(\n  true,\n  1;\n  /* Block comment in the middle of a chain */\n  2\n)",
+            "If(\n    true,\n    1;\n    /* Block comment in the middle of a chain */2\n)")]
         public void TestPrettyPrint(string script, string expected)
         {
             // Act & Assert
