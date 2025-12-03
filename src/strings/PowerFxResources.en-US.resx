@@ -1127,6 +1127,34 @@
     <value>Number of months by which to change the date. A positive value yields a future date, a negative value a past date, and zero will not change the month.</value>
     <comment>Description of the second argument to the 'EOMonth' function.</comment>
   </data>
+  <data name="AboutWorkday" xml:space="preserve">
+    <value>Returns a date that represents a specified number of working days before or after a starting date. Working days exclude weekends and any specified holidays.</value>
+    <comment>Description of 'Workday' function.</comment>
+  </data>
+  <data name="WorkdayArg1" xml:space="preserve">
+    <value>start_date</value>
+    <comment>function_parameter - First parameter for the Workday function - the starting date.</comment>
+  </data>
+  <data name="WorkdayArg2" xml:space="preserve">
+    <value>days</value>
+    <comment>function_parameter - Second parameter for the Workday function - the number of working days to add or subtract.</comment>
+  </data>
+  <data name="WorkdayArg3" xml:space="preserve">
+    <value>holidays</value>
+    <comment>function_parameter - Third and subsequent parameters for the Workday function - optional holiday dates to exclude.</comment>
+  </data>
+  <data name="AboutWorkday_start_date" xml:space="preserve">
+    <value>A date value that represents the start date.</value>
+    <comment>Description of the first argument to the 'Workday' function.</comment>
+  </data>
+  <data name="AboutWorkday_days" xml:space="preserve">
+    <value>The number of nonweekend and nonholiday days before or after start_date. A positive value for days yields a future date; a negative value yields a past date.</value>
+    <comment>Description of the second argument to the 'Workday' function.</comment>
+  </data>
+  <data name="AboutWorkday_holidays" xml:space="preserve">
+    <value>Optional date values to exclude from the working calendar, such as state and federal holidays and floating holidays. Can also be a table of dates.</value>
+    <comment>Description of the third and subsequent arguments to the 'Workday' function.</comment>
+  </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Truncates 'number' by rounding toward negative infinity.</value>
     <comment>Description of 'Int' function.</comment>
