@@ -20,7 +20,7 @@ Errors: Error 200-206: The function 'Remove' has some invalid arguments.|Error 2
   Collect(t1, {Field1:4,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
   Remove(t1, {Field4:false}, RemoveFlags.All);
   t1
-Error({Kind:ErrorKind.NotFound})
+Errors: Error 200-206: The function 'Remove' has some invalid arguments.|Error 211-225: Missing column. Your formula is missing a column 'Field1' with a type of 'Decimal'.
 
 >> Collect(t1, r2);
   Collect(t1, {Field1:1/0,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
@@ -34,7 +34,7 @@ Error({Kind:ErrorKind.NotFound})
   Collect(t1, {Field1:1/0,Field2:"moon",Field3:DateTime(2030,2,1,0,0,0,0),Field4:true});
   Remove(t1, {Field2:"earth"}, {Field2:"moon"}, RemoveFlags.All);
   t1
-Error(Table({Kind:ErrorKind.NotFound},{Kind:ErrorKind.NotFound}))
+Errors: Error 274-280: The function 'Remove' has some invalid arguments.|Error 285-301: Missing column. Your formula is missing a column 'Field1' with a type of 'Decimal'.|Error 303-318: Missing column. Your formula is missing a column 'Field1' with a type of 'Decimal'.
 
 >> Collect(t1, r2);
   Collect(t1, {Field1:3,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
@@ -76,7 +76,7 @@ Errors: Error 0-6: The function 'Remove' has some invalid arguments.|Error 11-95
 Errors: Error 0-6: The function 'Remove' has some invalid arguments.|Error 11-52: Missing column. Your formula is missing a column 'Field1' with a type of 'Decimal'.|Error 54-59: If provided, last argument must be 'RemoveFlags.All'. Is there a typo?
 
 >> Remove(t2, {Field1:5}, RemoveFlags.All)
-Error({Kind:ErrorKind.NotFound})
+Errors: Error 0-6: The function 'Remove' has some invalid arguments.|Error 11-21: Missing column. Your formula is missing a column 'Field2' with a type of 'Record'.
 
 >> Remove(t2, {Field2:{Field2_1:321}});t2
 Errors: Error 0-6: The function 'Remove' has some invalid arguments.|Error 11-34: Missing column. Your formula is missing a column 'Field1' with a type of 'Decimal'.
@@ -85,7 +85,7 @@ Errors: Error 0-6: The function 'Remove' has some invalid arguments.|Error 11-34
 Errors: Error 0-6: The function 'Remove' has some invalid arguments.|Error 11-48: Missing column. Your formula is missing a column 'Field1' with a type of 'Decimal'.
 
 >> Remove(t2, {Field2:{Field2_1:321,Field2_2:"2_2",Field2_3:{Field2_3_1:5555,Field2_3_2:"common"}}}, RemoveFlags.All);t2
-Error({Kind:ErrorKind.NotFound})
+Errors: Error 0-6: The function 'Remove' has some invalid arguments.|Error 11-96: Missing column. Your formula is missing a column 'Field1' with a type of 'Decimal'.
 
 // Wrong arguments
 >> Remove(t1, r1,"Al");

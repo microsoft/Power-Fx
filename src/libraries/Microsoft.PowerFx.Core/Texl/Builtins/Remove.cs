@@ -69,7 +69,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(args[0], TexlStrings.ErrNeedCollection_Func, Name);
             }
 
-            // !!!TODO New stuff. In case this doesnt work, delete from here to the end of the function
             var argCount = argTypes.Count();
 
             for (int i = 1; i < argCount; i++)
@@ -81,11 +80,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     if (argCount >= 3 && i == argCount - 1)
                     {
-                        fValid = (context.Features.StronglyTypedBuiltinEnums && BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules)) ||
+                        var isLastArgValid = (context.Features.StronglyTypedBuiltinEnums && BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules)) ||
                                         (!context.Features.StronglyTypedBuiltinEnums && DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules));
 
-                        if (!fValid)
+                        if (!isLastArgValid)
                         {
+                            fValid = false;
                             errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrRemoveAllArg);
                         }
                     }
