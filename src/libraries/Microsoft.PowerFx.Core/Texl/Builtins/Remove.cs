@@ -50,77 +50,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
         }
 
-        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            Contracts.AssertValue(args);
-            Contracts.AssertAllValues(args);
-            Contracts.AssertValue(argTypes);
-            Contracts.Assert(args.Length == argTypes.Length);
-            Contracts.AssertValue(errors);
-            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
-
-            bool fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            Contracts.Assert(returnType.IsTable);
-
-            DType collectionType = argTypes[0];
-            if (!collectionType.IsTable)
-            {
-                fValid = false;
-                errors.EnsureError(args[0], TexlStrings.ErrNeedCollection_Func, Name);
-            }
-
-            var argCount = argTypes.Count();
-
-            for (int i = 1; i < argCount; i++)
-            {
-                var argType = argTypes[i];
-                var arg = args[i];
-
-                if (!argType.IsAggregate)
-                {
-                    if (argCount >= 3 && i == argCount - 1)
-                    {
-                        var isLastArgValid = (context.Features.StronglyTypedBuiltinEnums && BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules)) ||
-                                        (!context.Features.StronglyTypedBuiltinEnums && DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules));
-
-                        if (!isLastArgValid)
-                        {
-                            fValid = false;
-                            errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrRemoveAllArg);
-                        }
-                    }
-                    else
-                    {
-                        fValid = false;
-                        errors.EnsureError(args[i], TexlStrings.ErrNeedRecord_Arg, args[i]);
-                    }
-
-                    continue;
-                }
-
-                var collectionAcceptsRecord = collectionType.Accepts(argType.ToTable(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
-                var recordAcceptsCollection = argType.ToTable().Accepts(collectionType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
-
-                // PFxV1 is more restrictive than PA in terms of column matching. If the collection does not accept the record or vice versa, it is an error.
-                if ((context.Features.PowerFxV1CompatibilityRules && (!collectionAcceptsRecord || !recordAcceptsCollection)) ||
-                    (!context.Features.PowerFxV1CompatibilityRules && (!collectionAcceptsRecord && !recordAcceptsCollection)))
-                {
-                    fValid = false;
-                    SetErrorForMismatchedColumns(collectionType, argType, arg, errors, context.Features);
-                }
-
-                // Only warn about no-op record inputs if there are no data sources that would use reference identity for comparison.
-                else if (!collectionType.AssociatedDataSources.Any() && !recordAcceptsCollection)
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Warning, args[i], TexlStrings.ErrCollectionDoesNotAcceptThisType);
-                }
-            }
-
-            returnType = context.Features.PowerFxV1CompatibilityRules ? DType.Void : collectionType;
-
-            return fValid;
-        }
-
         public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
             base.CheckSemantics(binding, args, argTypes, errors);
@@ -234,6 +163,76 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return base.GetSignatures(arity);
+        }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.Assert(args.Length == argTypes.Length);
+            Contracts.AssertValue(errors);
+            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
+
+            bool fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+
+            DType collectionType = argTypes[0];
+            if (!collectionType.IsTable)
+            {
+                fValid = false;
+                errors.EnsureError(args[0], TexlStrings.ErrNeedCollection_Func, Name);
+            }
+
+            var argCount = argTypes.Count();
+
+            for (int i = 1; i < argCount; i++)
+            {
+                var argType = argTypes[i];
+                var arg = args[i];
+
+                if (!argType.IsAggregate)
+                {
+                    if (argCount >= 3 && i == argCount - 1)
+                    {
+                        var isLastArgValid = (context.Features.StronglyTypedBuiltinEnums && BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules)) ||
+                                        (!context.Features.StronglyTypedBuiltinEnums && DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules));
+
+                        if (!isLastArgValid)
+                        {
+                            fValid = false;
+                            errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrRemoveAllArg);
+                        }
+                    }
+                    else
+                    {
+                        fValid = false;
+                        errors.EnsureError(args[i], TexlStrings.ErrNeedRecord_Arg, args[i]);
+                    }
+
+                    continue;
+                }
+
+                var collectionAcceptsRecord = collectionType.Accepts(argType.ToTable(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
+                var recordAcceptsCollection = argType.ToTable().Accepts(collectionType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
+
+                // PFxV1 is more restrictive than PA in terms of column matching. If the collection does not accept the record or vice versa, it is an error.
+                if ((context.Features.PowerFxV1CompatibilityRules && (!collectionAcceptsRecord || !recordAcceptsCollection)) ||
+                    (!context.Features.PowerFxV1CompatibilityRules && (!collectionAcceptsRecord && !recordAcceptsCollection)))
+                {
+                    fValid = false;
+                    SetErrorForMismatchedColumns(collectionType, argType, arg, errors, context.Features);
+                }
+
+                // Only warn about no-op record inputs if there are no data sources that would use reference identity for comparison.
+                else if (!collectionType.AssociatedDataSources.Any() && !recordAcceptsCollection)
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Warning, args[i], TexlStrings.ErrCollectionDoesNotAcceptThisType);
+                }
+            }
+
+            returnType = context.Features.PowerFxV1CompatibilityRules ? DType.Void : collectionType;
+
+            return fValid;
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
@@ -361,6 +360,59 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             yield return new[] { TexlStrings.RemoveArg1, TexlStrings.RemoveAllArg2 };
             yield return new[] { TexlStrings.RemoveArg1, TexlStrings.RemoveAllArg2, TexlStrings.RemoveArg3 };
+        }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            // PA original behavior (non-PFxV1).
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.Assert(args.Length == argTypes.Length);
+            Contracts.AssertValue(errors);
+            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
+
+            bool fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+
+            // The source to be collected must be a table.
+            DType collectionType = argTypes[0];
+            DType sourceType = argTypes[1];
+
+            if (!sourceType.IsTable)
+            {
+                fValid = false;
+                errors.EnsureError(args[1], TexlStrings.ErrNeedTable_Arg, args[1]);
+            }
+
+            // The source schema should be compatible with the collection schema.
+            else if (!collectionType.Accepts(sourceType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) && !sourceType.Accepts(collectionType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+            {
+                fValid = false;
+                if (!SetErrorForMismatchedColumns(collectionType, sourceType, args[1], errors, context.Features))
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrCollectionDoesNotAcceptThisType);
+                }
+            }
+
+            if (args.Length == 3 && 
+                ((context.Features.StronglyTypedBuiltinEnums && BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules)) ||
+                (!context.Features.StronglyTypedBuiltinEnums && DType.String.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))))
+            {
+                fValid = false;
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrNeedAll);
+            }
+
+            if (context.Features.PowerFxV1CompatibilityRules)
+            {
+                returnType = DType.Void;
+            }
+            else
+            {
+                // Legacy behavior, Remove returns the new collection, so the return schema is the same as the collection schema.
+                returnType = collectionType;
+            }
+
+            return fValid;
         }
 
         public override bool IsLazyEvalParam(TexlNode node, int index, Features features)
