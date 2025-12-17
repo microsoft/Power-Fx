@@ -190,7 +190,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var argType = argTypes[i];
                 var arg = args[i];
 
-                if (!argType.IsAggregate)
+                if (!argType.IsRecord)
                 {
                     if (argCount >= 3 && i == argCount - 1)
                     {
