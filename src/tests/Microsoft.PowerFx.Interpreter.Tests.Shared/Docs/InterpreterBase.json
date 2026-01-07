@@ -45,6 +45,7 @@
     "Degrees",
     "Distinct",
     "DropColumns",
+    "DoubleIt",
     "EDate",
     "EncodeHTML",
     "EncodeUrl",

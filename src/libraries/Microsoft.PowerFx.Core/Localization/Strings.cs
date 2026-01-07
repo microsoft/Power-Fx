@@ -63,6 +63,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter DropColumnsArg1 = (b) => StringResources.Get("DropColumnsArg1", b);
         public static StringGetter DropColumnsArg2 = (b) => StringResources.Get("DropColumnsArg2", b);
 
+        public static StringGetter AboutDoubleIt = (b) => StringResources.Get("AboutDoubleIt", b);
+
         public static StringGetter AboutShowColumns = (b) => StringResources.Get("AboutShowColumns", b);
         public static StringGetter ShowColumnsArg1 = (b) => StringResources.Get("ShowColumnsArg1", b);
         public static StringGetter ShowColumnsArg2 = (b) => StringResources.Get("ShowColumnsArg2", b);

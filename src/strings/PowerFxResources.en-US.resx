@@ -376,6 +376,10 @@
   <data name="AboutDropColumns_column_name" xml:space="preserve">
     <value>The name of a column to remove.</value>
   </data>
+  <data name="AboutDoubleIt" xml:space="preserve">
+    <value>Returns twice the value of a number.</value>
+    <comment>Description of 'DoubleIt' function.</comment>
+  </data>
   <data name="AboutRenameColumns" xml:space="preserve">
     <value>Returns a copy of the specified 'source' table, with the 'old_column' column renamed to 'new_column'.</value>
     <comment>Description of RenameColumns function.</comment>

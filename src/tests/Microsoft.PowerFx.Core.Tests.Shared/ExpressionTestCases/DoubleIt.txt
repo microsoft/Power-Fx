@@ -1,0 +1,44 @@
+// ******** INTEGER PARAMETERS ********
+// Positive Integer Parameters
+
+>> DoubleIt(0)
+0
+
+>> DoubleIt(2)
+4
+
+>> DoubleIt(5)
+10
+
+// Negative Integer Parameters
+
+>> DoubleIt(-0)
+0
+
+>> DoubleIt(-2)
+-4
+
+>> DoubleIt(-10)
+-20
+
+// ******** DECIMAL PARAMETERS ********
+>> DoubleIt(2.5)
+5
+
+>> DoubleIt(-2.5)
+-5
+
+>> DoubleIt(123.456)
+246.912
+
+>> DoubleIt(-123.456)
+-246.912
+
+// ******** EDGE CASES ********
+// Blanks
+>> DoubleIt(Blank())
+0
+
+// Errors
+>> DoubleIt(1/0)
+Error({Kind:ErrorKind.Div0})

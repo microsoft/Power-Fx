@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(git log:*)",
+      "Bash(dotnet build:*)",
+      "Bash(dotnet test:*)",
+      "Bash(dotnet run:*)",
+      "Bash(start cmd /k \"cd /d C:\\\\dev\\\\power-fx && dotnet run --project src\\\\tools\\\\Repl\\\\Repl.csproj\")"
+    ]
+  }
+}

@@ -916,6 +916,46 @@ namespace Microsoft.PowerFx.Functions
             return new DecimalValue(irContext, val);
         }
 
+        public static FormulaValue DoubleIt(IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = args[0];
+
+            return arg0 switch
+            {
+                NumberValue num => DoubleItFloat(irContext, num),
+                DecimalValue dec => DoubleItDecimal(irContext, dec),
+                _ => CommonErrors.UnreachableCodeError(irContext)
+            };
+        }
+
+        public static FormulaValue DoubleItFloat(IRContext irContext, NumberValue arg)
+        {
+            double x = arg.Value;
+            double val = 2 * x;
+
+            if (double.IsInfinity(val))
+            {
+                return CommonErrors.OverflowError(irContext);
+            }
+
+            return new NumberValue(irContext, val);
+        }
+
+        public static FormulaValue DoubleItDecimal(IRContext irContext, DecimalValue arg)
+        {
+            decimal x = arg.Value;
+
+            try
+            {
+                decimal val = 2 * x;
+                return new DecimalValue(irContext, val);
+            }
+            catch (OverflowException)
+            {
+                return CommonErrors.OverflowError(irContext);
+            }
+        }
+
         public static FormulaValue Round(IRContext irContext, FormulaValue[] args)
         {
             double digits;

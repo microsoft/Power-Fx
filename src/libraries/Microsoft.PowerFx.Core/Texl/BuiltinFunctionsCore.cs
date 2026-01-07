@@ -104,6 +104,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Degrees = _library.Add(new DegreesFunction());
         public static readonly TexlFunction DegreesT = _library.Add(new DegreesTableFunction());
         public static readonly TexlFunction DropColumns = _library.Add(new DropColumnsFunction());
+        public static readonly TexlFunction DoubleIt = _library.Add(new DoubleItFunction());
         public static readonly TexlFunction EDate = _library.Add(new EDateFunction());
         public static readonly TexlFunction EOMonth = _library.Add(new EOMonthFunction());
         public static readonly TexlFunction EncodeHTML = _library.Add(new EncodeHTMLFunction());

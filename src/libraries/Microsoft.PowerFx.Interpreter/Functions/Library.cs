@@ -624,6 +624,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: DropColumns)
             },
             {
+                BuiltinFunctionsCore.DoubleIt,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.DoubleIt.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
+                    checkRuntimeTypes: NumberOrDecimal,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: DoubleIt)
+            },
+            {
                 BuiltinFunctionsCore.EDate,
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.EDate.Name,
