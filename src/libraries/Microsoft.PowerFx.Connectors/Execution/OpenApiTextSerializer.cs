@@ -15,8 +15,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
         private readonly StringBuilder _writer;
         private readonly CancellationToken _cancellationToken;
 
-        public OpenApiTextSerializer(IConvertToUTC utcConverter, bool schemaLessBody, CancellationToken cancellationToken)
-            : base(utcConverter, schemaLessBody)
+        public OpenApiTextSerializer(IConvertToUTC utcConverter, bool schemaLessBody, CancellationToken cancellationToken, bool supportPrimitiveValueForObjectTypeSerialization = false)
+            : base(utcConverter, schemaLessBody, supportPrimitiveValueForObjectTypeSerialization)
         {
             _writer = new StringBuilder(1024);
             _cancellationToken = cancellationToken;

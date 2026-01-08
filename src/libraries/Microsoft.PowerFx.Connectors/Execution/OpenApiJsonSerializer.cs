@@ -22,8 +22,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
         private bool _wasDisposed;
         private readonly CancellationToken _cancellationToken;
 
-        public OpenApiJsonSerializer(IConvertToUTC utcConverter, bool schemaLessBody, CancellationToken cancellationToken)
-            : base(utcConverter, schemaLessBody)
+        public OpenApiJsonSerializer(IConvertToUTC utcConverter, bool schemaLessBody, CancellationToken cancellationToken, bool supportPrimitiveValueForObjectTypeSerialization = false)
+            : base(utcConverter, schemaLessBody, supportPrimitiveValueForObjectTypeSerialization)
         {
             _stream = new MemoryStream();
             _writer = new Utf8JsonWriter(_stream, new JsonWriterOptions() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });

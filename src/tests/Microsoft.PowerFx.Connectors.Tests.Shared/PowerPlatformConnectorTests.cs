@@ -2120,7 +2120,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 
             IEnumerable<ConnectorFunction> funcInfos = config.AddActionConnector(connectorSettings, apiDoc, new ConsoleLogger(_output, true));
             RecalcEngine engine = new RecalcEngine(config);
-            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("exob", ppClient, null, _output, true));
+            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("exob", ppClient, null, null, _output, true));
             RuntimeConfig runtimeConfig = new RuntimeConfig() { ServiceProvider = serviceProvider };
 
             CheckResult checkResult = engine.Check("exob.", symbolTable: null);

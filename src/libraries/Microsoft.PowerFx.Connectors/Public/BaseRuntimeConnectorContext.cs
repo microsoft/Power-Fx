@@ -12,7 +12,9 @@ namespace Microsoft.PowerFx.Connectors
 
         public abstract TimeZoneInfo TimeZoneInfo { get; }
 
-        public virtual bool ThrowOnError { get; } = false;        
+        public virtual bool ThrowOnError { get; } = false;
+
+        public virtual bool AllowPrimitiveValuesForObjectTypes { get; } = false;
 
         internal virtual bool ReturnRawResults { get; } = false;        
 
