@@ -3132,43 +3132,26 @@ namespace Microsoft.PowerFx.Core.Types
 
         public override int GetHashCode()
         {
-            return Hashing.CombineHash(
-                Hashing.HashInt((int)Kind),
-                Hashing.HashInt((int)EnumSuperkind),
-                TypeTree.GetHashCode(),
-                ValueTree.GetHashCode(),
-                LazyTypeProvider?.GetHashCode() ?? 0);
+            var hashCode = Hashing.CombineHash(
+                    Hashing.HashInt((int)Kind),
+                    Hashing.HashInt((int)EnumSuperkind),
+                    TypeTree.GetHashCode(),
+                    ValueTree.GetHashCode(),
+                    LazyTypeProvider?.GetHashCode() ?? 0);
+            return (AssociatedDataSources?.Count ?? 0) > 0 ? Hashing.CombineHash(hashCode, AssociatedDataSources.Aggregate(0, (acc, ds) => Hashing.CombineHash(acc, ds.GetHashCode()))) : hashCode;
         }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is DType other))
-            {
-                return false;
-            }
-
-            if (Kind != other.Kind ||
-                TypeTree != other.TypeTree ||
-                EnumSuperkind != other.EnumSuperkind ||
-                ValueTree != other.ValueTree ||
-                HasExpandInfo != other.HasExpandInfo ||
-                NamedValueKind != other.NamedValueKind)
-            {
-                return false;
-            }
-
-            if (!(LazyTypeProvider?.BackingFormulaType.Equals(other.LazyTypeProvider?.BackingFormulaType) ?? other.LazyTypeProvider == null))
-            {
-                return false;
-            }
-
-            // Compare AssociatedDataSources
-            if (!AssociatedDataSourcesEqual(AssociatedDataSources, other.AssociatedDataSources))
-            {
-                return false;
-            }
-
-            return true;
+            return obj is DType other &&
+                   Kind == other.Kind &&
+                   TypeTree == other.TypeTree &&
+                   EnumSuperkind == other.EnumSuperkind &&
+                   ValueTree == other.ValueTree &&
+                   HasExpandInfo == other.HasExpandInfo &&
+                   NamedValueKind == other.NamedValueKind &&
+                   (LazyTypeProvider?.BackingFormulaType.Equals(other.LazyTypeProvider?.BackingFormulaType) ?? other.LazyTypeProvider == null) &&
+                   AssociatedDataSourcesEqual(AssociatedDataSources, other.AssociatedDataSources);
         }
 
         private static bool AssociatedDataSourcesEqual(HashSet<IExternalTabularDataSource> set1, HashSet<IExternalTabularDataSource> set2)
