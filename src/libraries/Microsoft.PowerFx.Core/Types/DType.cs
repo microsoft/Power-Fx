@@ -3139,8 +3139,7 @@ namespace Microsoft.PowerFx.Core.Types
                     ValueTree.GetHashCode(),
                     LazyTypeProvider?.GetHashCode() ?? 0);
             return (AssociatedDataSources?.Count ?? 0) > 0 ? 
-                    Hashing.CombineHash(hashCode, 
-                        AssociatedDataSources.Aggregate(0, (a, b) => a ^ b.GetHashCode())) : 
+                    Hashing.CombineHash(hashCode, AssociatedDataSources.Aggregate(0, (a, b) => a ^ b.GetHashCode())) : 
                     hashCode;
         }
 
