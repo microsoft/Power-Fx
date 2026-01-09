@@ -31,8 +31,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         private bool _arrayStarted;        
 
-        public OpenApiMultipart(IConvertToUTC utcConverter, bool schemaLessBody, CancellationToken cancellationToken)
-            : base(utcConverter, schemaLessBody)
+        public OpenApiMultipart(IConvertToUTC utcConverter, bool schemaLessBody, CancellationToken cancellationToken, bool supportPrimitiveValueForObjectTypeSerialization = false)
+            : base(utcConverter, schemaLessBody, supportPrimitiveValueForObjectTypeSerialization)
         {
             _formData = new MultipartFormDataContent(Boundary);
 

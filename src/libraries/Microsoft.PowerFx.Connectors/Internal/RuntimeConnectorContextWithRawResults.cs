@@ -21,6 +21,8 @@ namespace Microsoft.PowerFx.Connectors
 
         public override bool ThrowOnError => _baseRuntimeConnectorContext.ThrowOnError;
 
+        public override bool AllowPrimitiveValuesForObjectTypes => _baseRuntimeConnectorContext.AllowPrimitiveValuesForObjectTypes;
+
         internal override bool ReturnRawResults => true;        
 
         public override ConnectorLogger ExecutionLogger => _baseRuntimeConnectorContext.ExecutionLogger;

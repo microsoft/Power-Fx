@@ -13,13 +13,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
     {
         private readonly Dictionary<string, HttpMessageInvoker> _clients = new ();
         private readonly bool _throwOnError;
+        private readonly bool _allowPrimitiveValuesForObjectTypes;
         private readonly ConnectorLogger _logger;
         private readonly TimeZoneInfo _tzi;
 
-        public TestConnectorRuntimeContext(string @namespace, HttpMessageInvoker client, bool? throwOnError = null, ITestOutputHelper console = null, bool includeDebug = false, TimeZoneInfo tzi = null)
+        public TestConnectorRuntimeContext(string @namespace, HttpMessageInvoker client, bool? throwOnError = null, bool? allowPrimitiveValuesForObjectTypes = null, ITestOutputHelper console = null, bool includeDebug = false, TimeZoneInfo tzi = null)
         {
             Add(@namespace, client);
             _throwOnError = throwOnError ?? base.ThrowOnError;
+            _allowPrimitiveValuesForObjectTypes = allowPrimitiveValuesForObjectTypes ?? base.AllowPrimitiveValuesForObjectTypes;
             _logger = console == null ? null : new ConsoleLogger(console, includeDebug);
             _tzi = tzi ?? TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
         }
@@ -43,6 +45,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         public override bool ThrowOnError => _throwOnError;
+
+        public override bool AllowPrimitiveValuesForObjectTypes => _allowPrimitiveValuesForObjectTypes;
 
         public override ConnectorLogger ExecutionLogger => _logger;
     }

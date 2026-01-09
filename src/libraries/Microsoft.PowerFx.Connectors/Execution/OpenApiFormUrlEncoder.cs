@@ -20,8 +20,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
         private readonly CancellationToken _cancellationToken;
         private bool _wrotePropertyName;
 
-        public OpenApiFormUrlEncoder(IConvertToUTC utcConverter, bool schemaLessBody, CancellationToken cancellationToken)
-            : base(utcConverter, schemaLessBody)
+        public OpenApiFormUrlEncoder(IConvertToUTC utcConverter, bool schemaLessBody, CancellationToken cancellationToken, bool supportPrimitiveValueForObjectTypeSerialization = false)
+            : base(utcConverter, schemaLessBody, supportPrimitiveValueForObjectTypeSerialization)
         {
             _writer = new StringBuilder(1024);
             _stack = new Stack<(string, int)>();

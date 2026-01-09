@@ -64,10 +64,13 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected readonly IConvertToUTC _utcConverter;
 
-        internal FormulaValueSerializer(IConvertToUTC utcConverter, bool schemaLessBody)
+        protected readonly bool _allowPrimitiveValuesForObjectTypes;
+
+        internal FormulaValueSerializer(IConvertToUTC utcConverter, bool schemaLessBody, bool allowPrimitiveValuesForObjectTypes)
         {
             _schemaLessBody = schemaLessBody;
             _utcConverter = utcConverter;
+            _allowPrimitiveValuesForObjectTypes = allowPrimitiveValuesForObjectTypes;
         }
 
         internal async Task SerializeValueAsync(string paramName, ISwaggerSchema schema, FormulaValue value)
@@ -327,6 +330,14 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     if (fv is RecordValue recordValue)
                     {
                         await WriteObjectAsync(propertyName, propertySchema, recordValue.Fields).ConfigureAwait(false);
+                    }
+
+                    // when the function swagger doesn't support oneOf (v2.0) so it
+                    // defines property as object type even though the value is primitive
+                    else if (_allowPrimitiveValuesForObjectTypes && fv.Type._type.IsPrimitive)
+                    {
+                        WritePropertyName(propertyName);
+                        WriteValue(fv);
                     }
                     else
                     {

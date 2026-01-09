@@ -27,6 +27,7 @@ namespace Microsoft.PowerFx.Connectors
         private readonly HttpMessageInvoker _httpClient;
         private readonly ConnectorFunction _function;
         private readonly bool _returnRawResults;
+        private readonly bool _allowPrimitiveValuesForObjectTypes;
         private readonly ConnectorLogger _logger;
 
         public HttpFunctionInvoker(ConnectorFunction function, BaseRuntimeConnectorContext runtimeContext)
@@ -35,6 +36,7 @@ namespace Microsoft.PowerFx.Connectors
             _httpClient = runtimeContext.GetInvoker(function.Namespace);
             _returnRawResults = runtimeContext.ReturnRawResults;
             _logger = runtimeContext.ExecutionLogger;
+            _allowPrimitiveValuesForObjectTypes = runtimeContext.AllowPrimitiveValuesForObjectTypes;
         }
 
         [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
@@ -366,10 +368,10 @@ namespace Microsoft.PowerFx.Connectors
 
                 serializer = ct switch
                 {
-                    OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(utcConverter, schemaLessBody, cancellationToken),
-                    OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(utcConverter, schemaLessBody, cancellationToken),
-                    OpenApiExtensions.ContentType_Multipart => new OpenApiMultipart(utcConverter, schemaLessBody, cancellationToken),
-                    _ => new OpenApiJsonSerializer(utcConverter, schemaLessBody, cancellationToken)
+                    OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(utcConverter, schemaLessBody, cancellationToken, _allowPrimitiveValuesForObjectTypes),
+                    OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(utcConverter, schemaLessBody, cancellationToken, _allowPrimitiveValuesForObjectTypes),
+                    OpenApiExtensions.ContentType_Multipart => new OpenApiMultipart(utcConverter, schemaLessBody, cancellationToken, _allowPrimitiveValuesForObjectTypes),
+                    _ => new OpenApiJsonSerializer(utcConverter, schemaLessBody, cancellationToken, _allowPrimitiveValuesForObjectTypes)
                 };
 
                 serializer.StartSerialization(referenceId);

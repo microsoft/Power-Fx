@@ -378,6 +378,34 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(date, obj.A);
         }
 
+        [Fact]
+        public async Task JsonSerializer_PrimitiveValuesForObjectType()
+        {
+            var str = await SerializeJsonAsync(
+                new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+                {
+                    ["a"] = (SchemaObjectToSupportOneOf, FormulaValue.New("abc")),
+                    ["b"] = (SchemaObjectToSupportOneOf, FormulaValue.New(1)),
+                    ["c"] = (SchemaObjectToSupportOneOf, FormulaValue.New(true))
+                }, 
+                serializePrimitiveValueForObjectType: true);
+
+            Assert.Equal(@"{""a"":""abc"",""b"":1,""c"":true}", str);
+        }
+
+        [Fact]
+        public async Task JsonSerializer_ObjectString_Mismatch_WhenPrimitiveValuesForObjectTypeIsNotSupported()
+        {
+            var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeJsonAsync(
+                new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+                {
+                    ["a"] = (SchemaObjectToSupportOneOf, FormulaValue.New("abc"))
+                }, 
+                serializePrimitiveValueForObjectType: false));
+
+            Assert.Equal("Expected to get object for property a but got StringValue", ex.Message);
+        }
+
         private class DateTimeType
         {
             public DateTime A { get; set; }
