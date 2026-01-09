@@ -3138,7 +3138,10 @@ namespace Microsoft.PowerFx.Core.Types
                     TypeTree.GetHashCode(),
                     ValueTree.GetHashCode(),
                     LazyTypeProvider?.GetHashCode() ?? 0);
-            return (AssociatedDataSources?.Count ?? 0) > 0 ? Hashing.CombineHash(hashCode, AssociatedDataSources.Aggregate(0, (a, b) => a ^ b.GetHashCode())) : hashCode;
+            return (AssociatedDataSources?.Count ?? 0) > 0 ? 
+                    Hashing.CombineHash(hashCode, 
+                        AssociatedDataSources.Aggregate(0, (a, b) => a ^ b.GetHashCode())) : 
+                    hashCode;
         }
 
         public override bool Equals(object obj)
