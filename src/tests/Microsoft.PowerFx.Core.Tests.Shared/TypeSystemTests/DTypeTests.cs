@@ -3203,5 +3203,62 @@ namespace Microsoft.PowerFx.Tests
                 return type;
             }
         }
+
+        [Fact]
+        public void TestDTypeEqualsConsidersAssociatedDataSources_NestedTypes()
+        {
+            // Create a nested field type with an associated data source
+            var nestedRecordType = DType.CreateRecord(
+                new TypedName(DType.String, new DName("Field1")),
+                new TypedName(DType.Number, new DName("Field2")),
+                new TypedName(DType.Boolean, new DName("Field3")),
+                new TypedName(DType.DateTime, new DName("Field4")));
+
+            var dataSource1 = new TestDataSource("DataSource1", nestedRecordType);
+            var nestedRecordTypeWithDS = DType.AttachDataSourceInfo(nestedRecordType, dataSource1, attachToNestedType: false);
+
+            // Create another nested field type without the associated data source (same structure)
+            var nestedRecordTypeWithoutDS = DType.CreateRecord(
+                new TypedName(DType.String, new DName("Field1")),
+                new TypedName(DType.Number, new DName("Field2")),
+                new TypedName(DType.Boolean, new DName("Field3")),
+                new TypedName(DType.DateTime, new DName("Field4")));
+
+            // Create the outer type with 5 fields, the 4th being the nested type with data source
+            var outerType1 = DType.CreateRecord(
+                new TypedName(DType.String, new DName("A")),
+                new TypedName(DType.Number, new DName("B")),
+                new TypedName(DType.Boolean, new DName("C")),
+                new TypedName(nestedRecordTypeWithDS, new DName("D")),
+                new TypedName(DType.String, new DName("E")));
+
+            // Create the outer type with the 4th field having no data source
+            var outerType2 = DType.CreateRecord(
+                new TypedName(DType.String, new DName("A")),
+                new TypedName(DType.Number, new DName("B")),
+                new TypedName(DType.Boolean, new DName("C")),
+                new TypedName(nestedRecordTypeWithoutDS, new DName("D")),
+                new TypedName(DType.String, new DName("E")));
+
+            // Verify that the nested types have different AssociatedDataSources
+            Assert.Single(nestedRecordTypeWithDS.AssociatedDataSources);
+            Assert.Empty(nestedRecordTypeWithoutDS.AssociatedDataSources);
+
+            // Equals now considers AssociatedDataSources, so types with different data sources are not equal
+            Assert.False(outerType1.Equals(outerType2));
+
+            // Same type should be equal to itself
+            Assert.True(outerType1.Equals(outerType1));
+
+            // Types with same data source references should be equal
+            var outerType1Clone = DType.CreateRecord(
+                new TypedName(DType.String, new DName("A")),
+                new TypedName(DType.Number, new DName("B")),
+                new TypedName(DType.Boolean, new DName("C")),
+                new TypedName(nestedRecordTypeWithDS, new DName("D")),
+                new TypedName(DType.String, new DName("E")));
+
+            Assert.True(outerType1.Equals(outerType1Clone));
+        }
     }
 }
