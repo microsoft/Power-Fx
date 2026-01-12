@@ -3132,15 +3132,12 @@ namespace Microsoft.PowerFx.Core.Types
 
         public override int GetHashCode()
         {
-            var hashCode = Hashing.CombineHash(
+            return Hashing.CombineHash(
                     Hashing.HashInt((int)Kind),
                     Hashing.HashInt((int)EnumSuperkind),
                     TypeTree.GetHashCode(),
                     ValueTree.GetHashCode(),
                     LazyTypeProvider?.GetHashCode() ?? 0);
-            return (AssociatedDataSources?.Count ?? 0) > 0 ? 
-                    Hashing.CombineHash(hashCode, AssociatedDataSources.Aggregate(0, (a, b) => a ^ b.GetHashCode())) : 
-                    hashCode;
         }
 
         public override bool Equals(object obj)
@@ -3152,38 +3149,12 @@ namespace Microsoft.PowerFx.Core.Types
                    ValueTree == other.ValueTree &&
                    HasExpandInfo == other.HasExpandInfo &&
                    NamedValueKind == other.NamedValueKind &&
-                   (LazyTypeProvider?.BackingFormulaType.Equals(other.LazyTypeProvider?.BackingFormulaType) ?? other.LazyTypeProvider == null) &&
-                   AssociatedDataSourcesEqual(AssociatedDataSources, other.AssociatedDataSources);
+                   (LazyTypeProvider?.BackingFormulaType.Equals(other.LazyTypeProvider?.BackingFormulaType) ?? other.LazyTypeProvider == null);
         }
 
-        private static bool AssociatedDataSourcesEqual(HashSet<IExternalTabularDataSource> set1, HashSet<IExternalTabularDataSource> set2)
+        public static bool Equals(DType type1, DType type2, IEqualityComparer<DType> comparer = null)
         {
-            // Reference equality check first
-            if (ReferenceEquals(set1, set2))
-            {
-                return true;
-            }
-
-            // Handle null cases
-            if (set1 == null || set2 == null)
-            {
-                return (set1 == null || set1.Count == 0) && (set2 == null || set2.Count == 0);
-            }
-
-            // Compare counts
-            if (set1.Count != set2.Count)
-            {
-                return false;
-            }
-
-            // Empty sets are equal
-            if (set1.Count == 0)
-            {
-                return true;
-            }
-
-            // Use SetEquals for content comparison
-            return set1.SetEquals(set2);
+            return comparer?.Equals(type1, type2) ?? Equals(type1, type2);
         }
 
         // Viewing DType.Invalid in the debugger should be allowed
