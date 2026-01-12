@@ -22,6 +22,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         internal static OpenApiSchema SchemaBoolean => new () { Type = "boolean" };
 
+        internal static OpenApiSchema SchemaObjectToSupportOneOf => new () { Type = "object" };
+
         internal static OpenApiSchema SchemaArrayInteger => new () { Type = "array", Format = "int" };
 
         internal static OpenApiSchema SchemaArrayString => new () { Type = "array", Format = "string" };
@@ -54,16 +56,16 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         internal static TableValue GetTable(RecordValue recordValue) => FormulaValue.NewTable(recordValue.Type, recordValue);
 
-        internal static async Task<string> SerializeJsonAsync(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, IConvertToUTC utcConverter = null, CancellationToken cancellationToken = default)
-            => await SerializeAsync<OpenApiJsonSerializer>(parameters, false, utcConverter, cancellationToken);
+        internal static async Task<string> SerializeJsonAsync(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, IConvertToUTC utcConverter = null, CancellationToken cancellationToken = default, bool serializePrimitiveValueForObjectType = false)
+            => await SerializeAsync<OpenApiJsonSerializer>(parameters, false, utcConverter, cancellationToken, serializePrimitiveValueForObjectType);
 
-        internal static async Task<string> SerializeUrlEncoderAsync(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, IConvertToUTC utcConverter = null, CancellationToken cancellationToken = default)
-            => await SerializeAsync<OpenApiFormUrlEncoder>(parameters, false, utcConverter, cancellationToken);
+        internal static async Task<string> SerializeUrlEncoderAsync(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, IConvertToUTC utcConverter = null, CancellationToken cancellationToken = default, bool serializePrimitiveValueForObjectType = false)
+            => await SerializeAsync<OpenApiFormUrlEncoder>(parameters, false, utcConverter, cancellationToken, serializePrimitiveValueForObjectType);
 
-        internal static async Task<string> SerializeAsync<T>(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, bool schemaLessBody, IConvertToUTC utcConverter = null, CancellationToken cancellationToken = default)
+        internal static async Task<string> SerializeAsync<T>(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, bool schemaLessBody, IConvertToUTC utcConverter = null, CancellationToken cancellationToken = default, bool serializePrimitiveValueForObjectType = false)
             where T : FormulaValueSerializer
         {
-            var jsonSerializer = (FormulaValueSerializer)Activator.CreateInstance(typeof(T), new object[] { utcConverter, schemaLessBody, cancellationToken });
+            var jsonSerializer = (FormulaValueSerializer)Activator.CreateInstance(typeof(T), new object[] { utcConverter, schemaLessBody, cancellationToken, serializePrimitiveValueForObjectType });
             jsonSerializer.StartSerialization(null);
 
             if (parameters != null)

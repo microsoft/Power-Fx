@@ -341,6 +341,34 @@ namespace Microsoft.PowerFx.Connectors.Tests
             string dateStr = str.Substring(2);            
             date = date.AddTicks(-(date.Ticks % 10000));
             Assert.Equal(date, DateTime.Parse(HttpUtility.UrlDecode(dateStr)));            
-        }       
+        }
+
+        [Fact]
+        public async Task UrlEncoderSerializer_PrimitiveValuesForObjectType()
+        {
+            var str = await SerializeUrlEncoderAsync(
+                new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+                {
+                    ["a"] = (SchemaObjectToSupportOneOf, FormulaValue.New("abc")),
+                    ["b"] = (SchemaObjectToSupportOneOf, FormulaValue.New(1)),
+                    ["c"] = (SchemaObjectToSupportOneOf, FormulaValue.New(true))
+                },
+                serializePrimitiveValueForObjectType: true);
+
+            Assert.Equal("a=abc&b=1&c=true", str);
+        }
+
+        [Fact]
+        public async Task JsonSerializer_ObjectString_Mismatch_WhenPrimitiveValuesForObjectTypeIsNotSupported()
+        {
+            var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(
+                new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+                {
+                    ["a"] = (SchemaObjectToSupportOneOf, FormulaValue.New("abc"))
+                },
+                serializePrimitiveValueForObjectType: false));
+
+            Assert.Equal("Expected to get object for property a but got StringValue", ex.Message);
+        }
     }
 }
