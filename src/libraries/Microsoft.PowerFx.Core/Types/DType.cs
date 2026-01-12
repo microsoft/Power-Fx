@@ -3133,23 +3133,28 @@ namespace Microsoft.PowerFx.Core.Types
         public override int GetHashCode()
         {
             return Hashing.CombineHash(
-                Hashing.HashInt((int)Kind),
-                Hashing.HashInt((int)EnumSuperkind),
-                TypeTree.GetHashCode(),
-                ValueTree.GetHashCode(),
-                LazyTypeProvider?.GetHashCode() ?? 0);
+                    Hashing.HashInt((int)Kind),
+                    Hashing.HashInt((int)EnumSuperkind),
+                    TypeTree.GetHashCode(),
+                    ValueTree.GetHashCode(),
+                    LazyTypeProvider?.GetHashCode() ?? 0);
         }
 
         public override bool Equals(object obj)
         {
             return obj is DType other &&
-               Kind == other.Kind &&
-               TypeTree == other.TypeTree &&
-               EnumSuperkind == other.EnumSuperkind &&
-               ValueTree == other.ValueTree &&
-               HasExpandInfo == other.HasExpandInfo &&
-               NamedValueKind == other.NamedValueKind &&
-               (LazyTypeProvider?.BackingFormulaType.Equals(other.LazyTypeProvider?.BackingFormulaType) ?? other.LazyTypeProvider == null);
+                   Kind == other.Kind &&
+                   TypeTree == other.TypeTree &&
+                   EnumSuperkind == other.EnumSuperkind &&
+                   ValueTree == other.ValueTree &&
+                   HasExpandInfo == other.HasExpandInfo &&
+                   NamedValueKind == other.NamedValueKind &&
+                   (LazyTypeProvider?.BackingFormulaType.Equals(other.LazyTypeProvider?.BackingFormulaType) ?? other.LazyTypeProvider == null);
+        }
+
+        public static bool Equals(DType type1, DType type2, IEqualityComparer<DType> comparer = null)
+        {
+            return comparer?.Equals(type1, type2) ?? Equals(type1, type2);
         }
 
         // Viewing DType.Invalid in the debugger should be allowed

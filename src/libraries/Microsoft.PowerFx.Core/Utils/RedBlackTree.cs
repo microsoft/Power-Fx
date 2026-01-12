@@ -156,7 +156,7 @@ LYieldSelf:
 
         // Note that we DON'T implement == and !=, so those operators indicate
         // reference equality.
-        public static bool Equals(RedBlackNode<T> root1, RedBlackNode<T> root2)
+        public static bool Equals(RedBlackNode<T> root1, RedBlackNode<T> root2, IEqualityComparer<T> comparer = null)
         {
             Contracts.AssertValueOrNull(root1);
             Contracts.AssertValueOrNull(root2);
@@ -176,6 +176,8 @@ LYieldSelf:
                 return false;
             }
 
+            comparer ??= EqualityComparer<T>.Default;
+
             using (var ator1 = GetPairs(root1).GetEnumerator())
             using (var ator2 = GetPairs(root2).GetEnumerator())
             {
@@ -189,7 +191,7 @@ LYieldSelf:
                         return false;
                     }
 
-                    if (!ator1.Current.Value.Equals(ator2.Current.Value))
+                    if (!comparer.Equals(ator1.Current.Value, ator2.Current.Value))
                     {
                         return false;
                     }

@@ -2785,6 +2785,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.True(DType.TryParse(expectedType, out DType type));
             Assert.True(type.IsValid);
+
             TestSimpleBindingSuccess(
                 script,
                 type,
@@ -4540,12 +4541,14 @@ namespace Microsoft.PowerFx.Core.Tests
                             new DelegationCapability(DelegationCapability.Equal),
                             null)),
                     true));
-
+            
             symbol.AddVariable("T1", new TableType(TestUtils.DT("*[a:n, b:s]")));
+            Assert.True(DType.TryParse(expectedSchema, out DType type));
+            Assert.True(type.IsValid);
 
             TestBindingWarning(
                 script,
-                TestUtils.DT(expectedSchema),
+                type,
                 errorCount,
                 symbol,
                 features: Features.PowerFxV1);

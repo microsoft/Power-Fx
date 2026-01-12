@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core;
@@ -3202,6 +3203,118 @@ namespace Microsoft.PowerFx.Tests
             {
                 return type;
             }
+        }
+
+        private class ComparerWithAssociatedDataSources : IEqualityComparer<DType>
+        {
+            public bool Equals(DType x, DType y)
+            {
+                if (ReferenceEquals(x, y))
+                {
+                    return true;
+                }
+
+                return x.Kind == y.Kind &&
+                   TypeTree.Equals(x.TypeTree, y.TypeTree, this) &&
+                   x.EnumSuperkind == y.EnumSuperkind &&
+                   x.ValueTree == y.ValueTree &&
+                   x.HasExpandInfo == y.HasExpandInfo &&
+                   x.NamedValueKind == y.NamedValueKind &&
+                   (x.LazyTypeProvider?.BackingFormulaType.Equals(y.LazyTypeProvider?.BackingFormulaType) ?? y.LazyTypeProvider == null) 
+                   && AssociatedDataSourcesEqual(x.AssociatedDataSources, y.AssociatedDataSources);
+            }
+
+            public int GetHashCode(DType obj)
+            {
+                return obj.GetHashCode();
+            }
+
+            private static bool AssociatedDataSourcesEqual(HashSet<IExternalTabularDataSource> set1, HashSet<IExternalTabularDataSource> set2)
+            {
+                // Reference equality check first
+                if (ReferenceEquals(set1, set2))
+                {
+                    return true;
+                }
+
+                // Handle null cases
+                if (set1 == null || set2 == null)
+                {
+                    return (set1 == null || set1.Count == 0) && (set2 == null || set2.Count == 0);
+                }
+
+                // Compare counts
+                if (set1.Count != set2.Count)
+                {
+                    return false;
+                }
+
+                // Empty sets are equal
+                if (set1.Count == 0)
+                {
+                    return true;
+                }
+
+                // Use SetEquals for content comparison
+                return set1.SetEquals(set2);
+            }
+        }
+
+        [Fact]
+        public void TestDTypeEqualsConsidersAssociatedDataSources_NestedTypes()
+        {
+            // Create a nested field type with an associated data source
+            var nestedRecordType = DType.CreateRecord(
+                new TypedName(DType.String, new DName("Field1")),
+                new TypedName(DType.Number, new DName("Field2")),
+                new TypedName(DType.Boolean, new DName("Field3")),
+                new TypedName(DType.DateTime, new DName("Field4")));
+
+            var dataSource1 = new TestDataSource("DataSource1", nestedRecordType);
+            var nestedRecordTypeWithDS = DType.AttachDataSourceInfo(nestedRecordType, dataSource1, attachToNestedType: false);
+
+            // Create another nested field type without the associated data source (same structure)
+            var nestedRecordTypeWithoutDS = DType.CreateRecord(
+                new TypedName(DType.String, new DName("Field1")),
+                new TypedName(DType.Number, new DName("Field2")),
+                new TypedName(DType.Boolean, new DName("Field3")),
+                new TypedName(DType.DateTime, new DName("Field4")));
+
+            // Create the outer type with 5 fields, the 4th being the nested type with data source
+            var outerType1 = DType.CreateRecord(
+                new TypedName(DType.String, new DName("A")),
+                new TypedName(DType.Number, new DName("B")),
+                new TypedName(DType.Boolean, new DName("C")),
+                new TypedName(nestedRecordTypeWithDS, new DName("D")),
+                new TypedName(DType.String, new DName("E")));
+
+            // Create the outer type with the 4th field having no data source
+            var outerType2 = DType.CreateRecord(
+                new TypedName(DType.String, new DName("A")),
+                new TypedName(DType.Number, new DName("B")),
+                new TypedName(DType.Boolean, new DName("C")),
+                new TypedName(nestedRecordTypeWithoutDS, new DName("D")),
+                new TypedName(DType.String, new DName("E")));
+
+            // Verify that the nested types have different AssociatedDataSources
+            Assert.Single(nestedRecordTypeWithDS.AssociatedDataSources);
+            Assert.Empty(nestedRecordTypeWithoutDS.AssociatedDataSources);
+
+            // Equals now considers AssociatedDataSources, so types with different data sources are not equal
+            Assert.False(DType.Equals(outerType1, outerType2, new ComparerWithAssociatedDataSources()));
+
+            // Same type should be equal to itself
+            Assert.True(DType.Equals(outerType1, outerType1, new ComparerWithAssociatedDataSources()));
+
+            // Types with same data source references should be equal
+            var outerType1Clone = DType.CreateRecord(
+                new TypedName(DType.String, new DName("A")),
+                new TypedName(DType.Number, new DName("B")),
+                new TypedName(DType.Boolean, new DName("C")),
+                new TypedName(nestedRecordTypeWithDS, new DName("D")),
+                new TypedName(DType.String, new DName("E")));
+
+            Assert.True(DType.Equals(outerType1, outerType1Clone, new ComparerWithAssociatedDataSources()));
         }
     }
 }

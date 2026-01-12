@@ -27,6 +27,11 @@ namespace Microsoft.PowerFx.Core.Types
 
         public static bool operator ==(TypeTree tree1, TypeTree tree2) => RedBlackNode<DType>.Equals(tree1._root, tree2._root);
 
+        public static bool Equals(TypeTree tree1, TypeTree tree2, IEqualityComparer<DType> comparer = null)
+        {
+            return RedBlackNode<DType>.Equals(tree1._root, tree2._root, comparer);
+        }
+
         public static bool operator !=(TypeTree tree1, TypeTree tree2) => !(tree1 == tree2);
 
         [Conditional("PARANOID_VALIDATION")]
