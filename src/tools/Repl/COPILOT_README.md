@@ -117,9 +117,42 @@ If the raw JSON from the Responses API looks like:
 The REPL returns `"Answer text here"`.
 
 ## Security Notes
+
+### API Key Security
 - Never commit `chatgpt-credentials.json` (should be in `.gitignore`).
 - Rotate API keys regularly.
 - Monitor usage to avoid unexpected costs.
+
+### Prompt Injection Protection
+The Copilot function implements multiple layers of protection against prompt injection attacks:
+
+1. **User Input Sanitization**: All user-provided prompts are automatically sanitized to prevent injection attempts. Common attack patterns like "Ignore previous instructions", "System:", "Assistant:", etc. are detected and sanitized.
+
+2. **Security Boundaries**: User prompts are wrapped with `[USER_PROMPT_START]` and `[USER_PROMPT_END]` markers to clearly separate user content from system instructions.
+
+3. **Length Limits**: User prompts are limited to 10,000 characters by default to prevent abuse.
+
+4. **Control Character Escaping**: Dangerous control characters are automatically escaped to prevent manipulation.
+
+5. **External Prompt Templates**: All system prompts (context instructions, schema instructions) are stored in an external file (`CopilotSystemPrompts.txt`) separate from the code, making them easy to audit and verify.
+
+### Auditing System Prompts
+System prompts used by the Copilot function are stored in:
+- **Location**: `src/libraries/Microsoft.PowerFx.Json/Functions/CopilotSystemPrompts.txt`
+- **Format**: Plain text with clearly marked sections
+- **Review**: Any changes to this file should be carefully reviewed for security implications
+
+To verify what prompts are being sent to the LLM:
+1. Check the `CopilotSystemPrompts.txt` file for template text
+2. Review `CopilotPromptManager.cs` for sanitization logic
+3. Run the test suite in `CopilotPromptManagerTests.cs` to verify protection mechanisms
+
+### Security Best Practices
+- **Do not** include sensitive information in prompts
+- **Do** validate and sanitize any user input before passing to Copilot()
+- **Do** review the external prompt file after updates
+- **Do** run security tests regularly to ensure protection mechanisms are working
+- **Consider** additional application-level rate limiting for production use
 
 ## Troubleshooting
 

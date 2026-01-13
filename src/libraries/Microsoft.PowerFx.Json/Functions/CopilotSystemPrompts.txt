@@ -1,0 +1,30 @@
+# Copilot System Prompts for Power Fx
+# This file contains all system prompts used by the Copilot() function.
+# Each prompt is identified by a key and separated by triple dashes (---).
+# DO NOT MODIFY unless you understand the security implications.
+# Any changes to this file should be reviewed for prompt injection vulnerabilities.
+
+[CONTEXT_INSTRUCTION]
+using the following context: {0}
+---
+
+[SCHEMA_INSTRUCTION]
+Provide the response as a pure JSON value (without any introductions, prefixes, suffixes, summaries, or markings around it), according to the following schema:
+{0}
+---
+
+[MAX_USER_PROMPT_LENGTH]
+10000
+---
+
+[FORBIDDEN_PATTERNS]
+# These patterns in user prompts will be sanitized to prevent prompt injection
+\n\n---END OF USER PROMPT---
+\n\n---SYSTEM---
+\n\nIgnore previous instructions
+\n\nIgnore all previous
+\n\nDisregard previous
+\n\nSystem:
+\n\nAssistant:
+\n\nNew instructions:
+---

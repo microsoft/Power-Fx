@@ -35,4 +35,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Functions\CopilotSystemPrompts.txt" />
+  </ItemGroup>
 </Project>

@@ -170,12 +170,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         /// <summary>
         /// Builds the full prompt:
-        ///   prompt
-        ///   + " using the following context: {contextJson}" (if context provided)
-        ///   + JSON-only instruction with schema (if schema provided)
-        /// 
+        ///   sanitized user prompt
+        ///   + context instruction with {contextJson} (if context provided)
+        ///   + JSON schema instruction (if schema provided)
+        ///
         /// Context is converted via the same visitor used by the JSON() function,
         /// honoring timezone, cancellation, and size/depth limits.
+        ///
+        /// SECURITY: User prompts are sanitized via CopilotPromptManager to prevent prompt injection.
+        /// All system prompts are loaded from external CopilotSystemPrompts.txt file for auditability.
         /// </summary>
         private static FormulaValue GeneratePrompt(
             IServiceProvider sp,
@@ -184,7 +187,22 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             string schemaStr,
             CancellationToken ct)
         {
-            string finalPrompt = prompt;
+            // SECURITY: Sanitize user prompt to prevent prompt injection attacks
+            string sanitizedPrompt;
+            try
+            {
+                sanitizedPrompt = CopilotPromptManager.SanitizeUserPrompt(prompt);
+            }
+            catch (ArgumentException ex)
+            {
+                return FormulaValue.NewError(new ExpressionError()
+                {
+                    Message = $"Invalid user prompt: {ex.Message}",
+                    Kind = ErrorKind.InvalidArgument
+                });
+            }
+
+            string finalPrompt = sanitizedPrompt;
 
             // 1) If we have context, stringify it using the existing JSON writer pipeline
             if (context != null && context is not BlankValue)
@@ -192,7 +210,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var ctxJson = FormulaValueToJsonString(sp, context, ct);
                 if (ctxJson is StringValue ctxJsonString)
                 {
-                    finalPrompt = $"{prompt} using the following context: {ctxJsonString.Value}";
+                    // Use externalized context instruction template
+                    var contextInstruction = CopilotPromptManager.FormatSystemPrompt(
+                        CopilotPromptManager.ContextInstruction,
+                        ctxJsonString.Value);
+
+                    finalPrompt = $"{sanitizedPrompt} {contextInstruction}";
                 }
                 else if (ctxJson is ErrorValue ev)
                 {
@@ -205,18 +228,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            // 2) If we have a schema, add strict "pure JSON" instruction (match the JS behavior)
+            // 2) If we have a schema, add strict "pure JSON" instruction loaded from external file
             if (TryParseSchemaToDType(schemaStr, out var dType))
             {
                 var jsonstr = DTypeToJsonSchema(dType);
+
+                // Use externalized schema instruction template
+                var schemaInstruction = CopilotPromptManager.FormatSystemPrompt(
+                    CopilotPromptManager.SchemaInstruction,
+                    jsonstr);
+
                 var sb = new StringBuilder();
                 sb.Append(finalPrompt);
                 sb.AppendLine();
-                sb.Append("Provide the response as a pure JSON value ");
-                sb.Append("(without any introductions, prefixes, suffixes, summaries, or markings around it), ");
-                sb.Append("according to the following schema:");
-                sb.AppendLine();
-                sb.Append(jsonstr);
+                sb.Append(schemaInstruction);
                 finalPrompt = sb.ToString();
             }
 
