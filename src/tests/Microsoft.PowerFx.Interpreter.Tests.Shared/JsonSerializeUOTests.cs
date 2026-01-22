@@ -148,6 +148,7 @@ namespace Microsoft.PowerFx.Tests
             FormulaValue fv5 = await engine.EvalAsync("JSON(obj, JSONFormat.FlattenValueTables)", CancellationToken.None, runtimeConfig: runtimeConfig4);
             Assert.IsNotType<ErrorValue>(fv5);
             string str5 = fv5.ToExpression().ToString();
+
             // Should flatten only the single-property Value objects, keep the multi-property object as-is
             Assert.Equal(@"""[{""""Value"""":2,""""Value2"""":22},1,3]""", str5);
         }
