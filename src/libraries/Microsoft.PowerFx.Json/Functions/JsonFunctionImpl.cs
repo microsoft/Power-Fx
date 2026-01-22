@@ -414,12 +414,46 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         {
                             _writer.WriteStartArray();
 
+                            // Check if this is a single-column "Value" table that should be flattened
+                            var shouldFlatten = false;
+                            if (_flattenValueTables && untypedObject.GetArrayLength() > 0)
+                            {
+                                // Check if the first element is an object with only one property named "Value"
+                                for (var i = 0; i < untypedObject.GetArrayLength(); i++)
+                                {
+                                    var element = untypedObject[i];
+                                    if (element.Type is ExternalType firstExternalType &&
+                                        (firstExternalType.Kind == ExternalTypeKind.Object || firstExternalType.Kind == ExternalTypeKind.ArrayAndObject) &&
+                                        element.TryGetPropertyNames(out IEnumerable<string> propertyNames))
+                                    {
+                                        var propList = propertyNames.ToList();
+                                        if (propList.Count == 1 && propList[0] == TexlFunction.ColumnName_ValueStr)
+                                        {
+                                            shouldFlatten = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
                             for (var i = 0; i < untypedObject.GetArrayLength(); i++)
                             {
                                 CheckLimitsAndCancellation(depth);
 
                                 IUntypedObject row = untypedObject[i];
-                                Visit(row, depth + 1);
+
+                                if (shouldFlatten 
+                                    && row.TryGetProperty(TexlFunction.ColumnName_ValueStr, out IUntypedObject value)
+                                    && row.TryGetPropertyNames(out var propNames)
+                                    && propNames.Count() == 1)
+                                {
+                                    // Flatten by visiting just the value
+                                    Visit(value, depth + 1);
+                                }
+                                else
+                                {
+                                    Visit(row, depth + 1);
+                                }
                             }
 
                             _writer.WriteEndArray();
