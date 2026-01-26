@@ -418,7 +418,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             var shouldFlatten = false;
                             if (_flattenValueTables && untypedObject.GetArrayLength() > 0)
                             {
-                                // Check if the first element is an object with only one property named "Value"
+                                // Check if all elements are objects with only one property named "Value"
                                 for (var i = 0; i < untypedObject.GetArrayLength(); i++)
                                 {
                                     var element = untypedObject[i];
@@ -430,8 +430,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                         if (propList.Count == 1 && propList[0] == TexlFunction.ColumnName_ValueStr)
                                         {
                                             shouldFlatten = true;
+                                        }
+                                        else
+                                        {
+                                            shouldFlatten = false;
                                             break;
                                         }
+                                    }
+                                    else
+                                    {
+                                        shouldFlatten = false;
+                                        break;
                                     }
                                 }
                             }
