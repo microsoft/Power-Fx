@@ -150,7 +150,7 @@ namespace Microsoft.PowerFx.Tests
             string str5 = fv5.ToExpression().ToString();
 
             // Should flatten only the single-property Value objects, keep the multi-property object as-is
-            Assert.Equal(@"""[{""""Value"""":2,""""Value2"""":22},1,3]""", str5);
+            Assert.Equal(@"""[{""""Value"""":2,""""Value2"""":22},{""""Value"""":1},{""""Value"""":3}]""", str5);
         }
 
         public class TestUO : IUntypedObject
