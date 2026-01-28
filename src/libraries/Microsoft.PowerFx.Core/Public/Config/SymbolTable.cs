@@ -469,14 +469,14 @@ namespace Microsoft.PowerFx
         /// Helper to create a symbol table with primitive types.
         /// </summary>
         /// <returns>SymbolTable with primitive types.</returns>
-        public static SymbolTable WithPrimitiveTypes()
+        internal static SymbolTable WithPrimitiveTypes(Dictionary<DName, FormulaType> primitiveTypes)
         {
             var s = new SymbolTable
             {
                 DebugName = $"SymbolTable with PrimitiveTypes"
             };
 
-            s.AddTypes(FormulaType.PrimitiveTypes);
+            s.AddTypes(primitiveTypes);
             return s;
         }
 

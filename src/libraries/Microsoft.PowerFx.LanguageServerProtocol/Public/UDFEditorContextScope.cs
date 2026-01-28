@@ -9,6 +9,7 @@ using System.Text;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Intellisense.IntellisenseData;
@@ -82,9 +83,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                             continue;
                         }
 
-                        var suggestions = BuildTypeSuggestionList(
-                            nameResolver.NamedTypes,
-                            t => !UserDefinitions.RestrictedParameterTypes.Contains(t._type));
+                        var suggestions = BuildTypeSuggestionList(nameResolver.NamedTypes, includeVoid: false);
 
                         // start right at the type ident if present, otherwise just after the colon
                         var startIndex = arg.TypeIdent?.Span.Min ?? (arg.ColonToken.Span.Lim + 1);
@@ -101,9 +100,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     // Return type position: Foo(...): |
                     if (IsUDFReturnTypePosition(cursorPosition, parsedUdf))
                     {
-                        var suggestions = BuildTypeSuggestionList(
-                            nameResolver.NamedTypes,
-                            t => !UserDefinitions.RestrictedTypes.Contains(t._type));
+                        var suggestions = BuildTypeSuggestionList(nameResolver.NamedTypes, includeVoid: true);
 
                         // If a return type ident already exists, replace from its start; else from after the ':' of return type.
                         var rtStart = parsedUdf.ReturnType?.Span.Min
@@ -154,8 +151,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         }
 
         private static IntellisenseSuggestionList BuildTypeSuggestionList(
-            IEnumerable<KeyValuePair<DName, FormulaType>> namedTypes,
-            Func<FormulaType, bool> includePredicate)
+            IEnumerable<KeyValuePair<DName, FormulaType>> namedTypes, bool includeVoid)
         {
             var list = new IntellisenseSuggestionList();
 
@@ -164,20 +160,28 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 var typeName = kvp.Key.Value;
                 var val = kvp.Value;
 
-                if (!includePredicate(val))
-                {
-                    continue;
-                }
-
                 list.Add(new IntellisenseSuggestion(
                     new UIString(typeName),         // UI text
-                    SuggestionKind.Type,             // Kind
-                    SuggestionIconKind.Other,        // Icon
-                    val._type,                       // DType
+                    SuggestionKind.Type,            // Kind
+                    SuggestionIconKind.Other,       // Icon
+                    val._type,                      // DType
                     typeName,                       // exact match
-                    -1,                              // argCount (N/A for types)
-                    string.Empty,                    // description
-                    string.Empty));                  // help
+                    -1,                             // argCount (N/A for types)
+                    string.Empty,                   // description
+                    string.Empty));                 // help
+            }
+
+            if (includeVoid)
+            {
+                list.Add(new IntellisenseSuggestion(
+                    new UIString(FormulaType.Void.Name.Value),         // UI text
+                    SuggestionKind.Type,                               // Kind
+                    SuggestionIconKind.Other,                          // Icon
+                    FormulaType.Void._type,                            // DType
+                    FormulaType.Void.Name,                             // exact match
+                    -1,                                                // argCount (N/A for types)
+                    string.Empty,                                      // description
+                    string.Empty));                                    // help
             }
 
             return list;

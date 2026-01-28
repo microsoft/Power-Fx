@@ -3,11 +3,14 @@
 
 using System.Text;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
     public class DecimalType : FormulaType
     {
+        public override DName Name => new DName("Decimal");
+
         internal DecimalType()
             : base(DType.Decimal)
         {

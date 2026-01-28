@@ -202,6 +202,25 @@ namespace Microsoft.PowerFx.Json.Tests
                 CancellationToken.None,
                 runtimeConfig: runtimeConfig);
 
+            Assert.IsType<DecimalValue>(result);
+            Assert.Equal(42, ((DecimalValue)result).Value);
+        }
+
+        [Fact]
+        public async Task Copilot_WithNumberSchema_ReturnsNumber_Float()
+        {
+            var config = CreateConfigWithCopilot();
+            var engine = new RecalcEngine(config, numberTypeIsFloat: true);
+
+            using var mockService = new MockCopilotService("42");
+            var runtimeConfig = new RuntimeConfig();
+            runtimeConfig.AddService<ICopilotService>(mockService);
+
+            var result = await engine.EvalAsync(
+                "Copilot(\"What is the answer?\", \"Some context\", Number)",
+                CancellationToken.None,
+                runtimeConfig: runtimeConfig);
+
             Assert.IsType<NumberValue>(result);
             Assert.Equal(42, ((NumberValue)result).Value);
         }
@@ -245,6 +264,27 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.IsAssignableFrom<RecordValue>(result);
             var record = (RecordValue)result;
             Assert.Equal("Alice", ((StringValue)record.GetField("name")).Value);
+            Assert.Equal(25, ((DecimalValue)record.GetField("age")).Value);
+        }
+
+        [Fact]
+        public async Task Copilot_WithRecordSchema_ReturnsRecord_Float()
+        {
+            var config = CreateConfigWithCopilot();
+            var engine = new RecalcEngine(config, numberTypeIsFloat: true);
+
+            using var mockService = new MockCopilotService("{\"name\":\"Alice\",\"age\":25}");
+            var runtimeConfig = new RuntimeConfig();
+            runtimeConfig.AddService<ICopilotService>(mockService);
+
+            var result = await engine.EvalAsync(
+                "Copilot(\"Generate person\", Blank(), Type({name: Text, age: Number}))",
+                CancellationToken.None,
+                runtimeConfig: runtimeConfig);
+
+            Assert.IsAssignableFrom<RecordValue>(result);
+            var record = (RecordValue)result;
+            Assert.Equal("Alice", ((StringValue)record.GetField("name")).Value);
             Assert.Equal(25, ((NumberValue)record.GetField("age")).Value);
         }
 
@@ -254,6 +294,29 @@ namespace Microsoft.PowerFx.Json.Tests
         {
             var config = CreateConfigWithCopilot();
             var engine = new RecalcEngine(config);
+
+            using var mockService = new MockCopilotService("[{\"id\":1,\"name\":\"Item1\"},{\"id\":2,\"name\":\"Item2\"}]");
+            var runtimeConfig = new RuntimeConfig();
+            runtimeConfig.AddService<ICopilotService>(mockService);
+
+            var result = await engine.EvalAsync(
+                "Copilot(\"Generate items\", Blank(), Type([{id: Number, name: Text}]))",
+                CancellationToken.None,
+                runtimeConfig: runtimeConfig);
+
+            Assert.IsAssignableFrom<TableValue>(result);
+            var table = (TableValue)result;
+            var rows = table.Rows.ToList();
+            Assert.Equal(2, rows.Count);
+            Assert.Equal(1, ((DecimalValue)rows[0].Value.GetField("id")).Value);
+            Assert.Equal("Item1", ((StringValue)rows[0].Value.GetField("name")).Value);
+        }
+
+        [Fact]
+        public async Task Copilot_WithTableSchema_ReturnsTable_Float()
+        {
+            var config = CreateConfigWithCopilot();
+            var engine = new RecalcEngine(config, numberTypeIsFloat: true);
 
             using var mockService = new MockCopilotService("[{\"id\":1,\"name\":\"Item1\"},{\"id\":2,\"name\":\"Item2\"}]");
             var runtimeConfig = new RuntimeConfig();
@@ -505,6 +568,31 @@ namespace Microsoft.PowerFx.Json.Tests
             var record = (RecordValue)result;
             var person = (RecordValue)record.GetField("person");
             Assert.Equal("Bob", ((StringValue)person.GetField("name")).Value);
+            Assert.Equal(30, ((DecimalValue)person.GetField("age")).Value);
+            Assert.Equal("Seattle", ((StringValue)record.GetField("city")).Value);
+        }
+
+        [Fact]
+        public async Task Copilot_NestedRecordSchema_WorksCorrectly_Float()
+        {
+            var config = CreateConfigWithCopilot();
+            var engine = new RecalcEngine(config, numberTypeIsFloat: true);
+
+            using var mockService = new MockCopilotService(
+                "{\"person\":{\"name\":\"Bob\",\"age\":30},\"city\":\"Seattle\"}");
+
+            var runtimeConfig = new RuntimeConfig();
+            runtimeConfig.AddService<ICopilotService>(mockService);
+
+            var result = await engine.EvalAsync(
+                "Copilot(\"Generate\", Blank(), Type({person: {name: Text, age: Number}, city: Text}))",
+                CancellationToken.None,
+                runtimeConfig: runtimeConfig);
+
+            Assert.IsAssignableFrom<RecordValue>(result);
+            var record = (RecordValue)result;
+            var person = (RecordValue)record.GetField("person");
+            Assert.Equal("Bob", ((StringValue)person.GetField("name")).Value);
             Assert.Equal(30, ((NumberValue)person.GetField("age")).Value);
             Assert.Equal("Seattle", ((StringValue)record.GetField("city")).Value);
         }
@@ -543,6 +631,26 @@ namespace Microsoft.PowerFx.Json.Tests
         {
             var config = CreateConfigWithCopilot();
             var engine = new RecalcEngine(config);
+
+            using var mockService = new MockCopilotService("```json\n{\"value\":123}\n```");
+            var runtimeConfig = new RuntimeConfig();
+            runtimeConfig.AddService<ICopilotService>(mockService);
+
+            var result = await engine.EvalAsync(
+                "Copilot(\"Test\", Blank(), Type({value: Number}))",
+                CancellationToken.None,
+                runtimeConfig: runtimeConfig);
+
+            Assert.IsAssignableFrom<RecordValue>(result);
+            var record = (RecordValue)result;
+            Assert.Equal(123, ((DecimalValue)record.GetField("value")).Value);
+        }
+
+        [Fact]
+        public async Task Copilot_CodeFenceWithLanguage_StripsCorrectly_Float()
+        {
+            var config = CreateConfigWithCopilot();
+            var engine = new RecalcEngine(config, numberTypeIsFloat: true);
 
             using var mockService = new MockCopilotService("```json\n{\"value\":123}\n```");
             var runtimeConfig = new RuntimeConfig();
@@ -597,6 +705,17 @@ namespace Microsoft.PowerFx.Json.Tests
         {
             var config = CreateConfigWithCopilot();
             var engine = new RecalcEngine(config);
+
+            var check = engine.Check("Copilot(\"test\", \"context\", Number)");
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.Decimal, check.ReturnType);
+        }
+
+        [Fact]
+        public void Copilot_CheckResultType_WithNumberSchema_Float()
+        {
+            var config = CreateConfigWithCopilot();
+            var engine = new RecalcEngine(config, numberTypeIsFloat: true);
 
             var check = engine.Check("Copilot(\"test\", \"context\", Number)");
             Assert.True(check.IsSuccess);

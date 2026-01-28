@@ -3,11 +3,14 @@
 
 using System.Text;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
     public class BooleanType : FormulaType
     {
+        public override DName Name => new DName("Boolean");
+
         internal BooleanType()
             : base(DType.Boolean)
         {

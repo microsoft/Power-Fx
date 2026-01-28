@@ -16,6 +16,7 @@ using System.Xml.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests;
 using Microsoft.PowerFx.Core.Tests.Helpers;
@@ -932,16 +933,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                         if (k.configureEngine != null)
                         {
-                            engine ??= new RecalcEngine(config);
+                            engine ??= new RecalcEngine(config, numberTypeIsFloat: NumberIsFloat);
                             k.configureEngine(engine, NumberIsFloat);
                         }                                                     
                     }
 
-                    engine ??= new RecalcEngine(config);
+                    engine ??= new RecalcEngine(config, numberTypeIsFloat: NumberIsFloat);
                 }
                 else
                 {
-                    engine = new RecalcEngine(config);
+                    engine = new RecalcEngine(config, numberTypeIsFloat: NumberIsFloat);
                     parameters = null;
                 }
 

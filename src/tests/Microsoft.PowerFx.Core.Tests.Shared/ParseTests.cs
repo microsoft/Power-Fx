@@ -2,6 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -12,15 +15,47 @@ using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
+    public static class UDTTestUtils
+    {
+        // Notable missing types:
+        // - Void
+        // - None
+        // - Number
+        public static readonly Dictionary<DName, FormulaType> TestTypesDictionaryWithNoNumberType =
+            new Dictionary<DName, FormulaType>()
+            {
+                { FormulaType.Boolean.Name, FormulaType.Boolean },
+                { FormulaType.Color.Name, FormulaType.Color },
+                { FormulaType.Date.Name, FormulaType.Date },
+                { FormulaType.Time.Name, FormulaType.Time },
+                { FormulaType.DateTime.Name, FormulaType.DateTime },
+                { FormulaType.DateTimeNoTimeZone.Name, FormulaType.DateTimeNoTimeZone },
+                { FormulaType.Guid.Name, FormulaType.Guid },
+                { FormulaType.Number.Name, FormulaType.Number }, // Float
+                { FormulaType.Decimal.Name, FormulaType.Decimal },
+                { FormulaType.String.Name, FormulaType.String }, // Text
+                { FormulaType.Hyperlink.Name, FormulaType.Hyperlink },
+                { FormulaType.UntypedObject.Name, FormulaType.UntypedObject }, // Dynamic
+            };
+
+        public static readonly Dictionary<DName, FormulaType> TestTypesDictionaryWithNumberTypeIsFloat = 
+            new Dictionary<DName, FormulaType>(TestTypesDictionaryWithNoNumberType)
+                { { FormulaType.NumberAliasName, FormulaType.Number } };
+
+        public static readonly ReadOnlySymbolTable TestTypesWithNoNumberType = ReadOnlySymbolTable.NewDefaultTypes(TestTypesDictionaryWithNoNumberType);
+
+        public static readonly ReadOnlySymbolTable TestTypesWithNumberTypeIsFloat = ReadOnlySymbolTable.NewDefaultTypes(TestTypesDictionaryWithNumberTypeIsFloat);
+    }
+
     public class ParseTests : PowerFxTest
     {
-        private static readonly ReadOnlySymbolTable _primitiveTypes = ReadOnlySymbolTable.PrimitiveTypesTableInstance;
-
         [Theory]
         [InlineData("0")]
         [InlineData("-0")]
@@ -1123,7 +1158,7 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             var parseResult = UserDefinitions.Parse(script, parserOptions);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), UDTTestUtils.TestTypesWithNumberTypeIsFloat, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.Equal(udfCount, parseResult.UDFs.Count());
@@ -1154,7 +1189,7 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             var parseResult = UserDefinitions.Parse(script, parserOptions);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), UDTTestUtils.TestTypesWithNumberTypeIsFloat, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.Equal(udfCount, parseResult.UDFs.Count());
@@ -1181,7 +1216,7 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             var parseResult = UserDefinitions.Parse(script, parserOptions);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), UDTTestUtils.TestTypesWithNumberTypeIsFloat, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.Equal(validUDFCount, udfs.Count());

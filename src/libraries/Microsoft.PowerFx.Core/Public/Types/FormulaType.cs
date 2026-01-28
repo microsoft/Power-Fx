@@ -25,6 +25,10 @@ namespace Microsoft.PowerFx.Types
         internal DType _type { get; private protected init; }
 #pragma warning restore SA1300 // Element should begin with upper-case letter
 
+        public virtual DName Name { get; }
+
+        public static readonly DName NumberAliasName = new DName("Number");
+
         public static FormulaType Blank { get; } = new BlankType();
 
         // Well-known types 
@@ -73,24 +77,6 @@ namespace Microsoft.PowerFx.Types
         {
             _type = type;
         }
-
-        internal static readonly IReadOnlyDictionary<DName, FormulaType> PrimitiveTypes = ImmutableDictionary.CreateRange(new Dictionary<DName, FormulaType>()
-        {
-            { new DName("Boolean"), Boolean },
-            { new DName("Color"), Color },
-            { new DName("Date"), Date },
-            { new DName("Time"), Time },
-            { new DName("DateTime"), DateTime },
-            { new DName("DateTimeTZInd"), DateTimeNoTimeZone },
-            { new DName("GUID"), Guid },
-            { new DName("Number"), Number },
-            { new DName("Decimal"), Decimal },
-            { new DName("Text"), String },
-            { new DName("Hyperlink"), Hyperlink },
-            { new DName("None"), Blank },
-            { new DName("Dynamic"), UntypedObject },
-            { new DName("Void"), Void },
-        });
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FormulaType"/> class.

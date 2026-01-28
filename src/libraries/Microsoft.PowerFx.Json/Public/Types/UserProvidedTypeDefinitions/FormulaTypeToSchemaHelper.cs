@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Core
 
         private static bool TryLookupTypeName(FormulaType type, INameResolver definedTypeSymbols, out string typeName)
         {
-            var lookupOrder = new List<INameResolver>() { definedTypeSymbols, ReadOnlySymbolTable.PrimitiveTypesTableInstance };
+            var lookupOrder = new List<INameResolver>() { definedTypeSymbols, JSONPrimitiveTypes.PrimitiveTypesTable };
             foreach (var table in lookupOrder)
             {
                 var typeNames = table.NamedTypes.Where(kvp => kvp.Value.Equals(type));

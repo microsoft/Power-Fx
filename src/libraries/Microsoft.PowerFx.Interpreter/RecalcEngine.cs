@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -34,6 +35,24 @@ namespace Microsoft.PowerFx
         internal readonly SymbolTable _symbolTable;
         internal readonly SymbolValues _symbolValues;
 
+        // Number is added as an alias for Float or Decimal before calling the binder
+        // DateTimeNoTimeZone is not supported in RecalcEngine
+        internal static readonly IReadOnlyDictionary<DName, FormulaType> _builtInNamedTypesDictionary = 
+            new Dictionary<DName, FormulaType>()
+            {
+                { FormulaType.Boolean.Name, FormulaType.Boolean },
+                { FormulaType.Color.Name, FormulaType.Color },
+                { FormulaType.Date.Name, FormulaType.Date },
+                { FormulaType.Time.Name, FormulaType.Time },
+                { FormulaType.DateTime.Name, FormulaType.DateTime },
+                { FormulaType.Guid.Name, FormulaType.Guid },
+                { FormulaType.Number.Name, FormulaType.Number }, // Float, this is not "Number" which is added later as an alias for either Float or Decimal
+                { FormulaType.Decimal.Name, FormulaType.Decimal },
+                { FormulaType.String.Name, FormulaType.String }, // Text
+                { FormulaType.Hyperlink.Name, FormulaType.Hyperlink },
+                { FormulaType.UntypedObject.Name, FormulaType.UntypedObject }, // Dynamic
+            };
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
         /// Create a new power fx engine. 
@@ -44,6 +63,16 @@ namespace Microsoft.PowerFx
         }
 
         public RecalcEngine(PowerFxConfig powerFxConfig)
+            : this(powerFxConfig, numberTypeIsFloat: false)
+        {
+        }
+
+        public RecalcEngine(bool numberTypeIsFloat)
+            : this(new PowerFxConfig(), numberTypeIsFloat: numberTypeIsFloat)
+        {
+        }
+
+        public RecalcEngine(PowerFxConfig powerFxConfig, bool numberTypeIsFloat)
             : base(powerFxConfig)
         {
             _symbolTable = new SymbolTable { DebugName = "Globals" };
@@ -51,6 +80,8 @@ namespace Microsoft.PowerFx
             _symbolValues.OnUpdate += OnSymbolValuesOnUpdate;
 
             base.EngineSymbols = _symbolTable;
+
+            BuiltInNamedTypes = SymbolTable.NewDefaultTypes(_builtInNamedTypesDictionary, numberTypeIsFloat ? FormulaType.Number : FormulaType.Decimal);
 
             // Add Builtin functions that aren't yet in the shared library. 
             SupportedFunctions = _interpreterSupportedFunctions;
@@ -456,7 +487,7 @@ namespace Microsoft.PowerFx
             if (checkResult.IsSuccess)
             {
                 // Compose will handle null symbols
-                var composedSymbols = SymbolTable.Compose(Config.ComposedConfigSymbols, SupportedFunctions, PrimitiveTypes, _symbolTable, extraFunctions);
+                var composedSymbols = SymbolTable.Compose(Config.ComposedConfigSymbols, SupportedFunctions, BuiltInNamedTypes, _symbolTable, extraFunctions);
 
                 checkResult
                     .SetBindingInfo(composedSymbols)

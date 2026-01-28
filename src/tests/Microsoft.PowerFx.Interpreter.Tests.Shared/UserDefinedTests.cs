@@ -22,8 +22,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class UserDefinedTests
     {
-        private static readonly ReadOnlySymbolTable _primitiveTypes = ReadOnlySymbolTable.PrimitiveTypesTableInstance;
-
         [Theory]
         [InlineData("x=1;y=2;z=x+y;", "Float(Abs(-(x+y+z)))", 6d)]
         [InlineData("x=1;y=2;Foo(x: Number): Number = Abs(x);", "Foo(-(y*y)+x)", 3d)]
@@ -36,7 +34,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 AllowEqualOnlyNamedFormulas = true,
                 NumberIsFloat = true,
             };
-            var engine = new RecalcEngine();
+            var engine = new RecalcEngine(numberTypeIsFloat: true);
 
             engine.TryAddUserDefinitions(script, out var errors, parserOptions);
             Assert.Empty(errors);
@@ -104,7 +102,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("myvar:=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Bar(1) + myvar", 2d)]
         public void NamedFormulaEntryTest_ColonEqualRequired(string script, string expression, double expected)
         {
-            var engine = new RecalcEngine();
+            var engine = new RecalcEngine(numberTypeIsFloat: true);
 
             engine.AddUserDefinitions(script);
 
@@ -172,7 +170,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 AllowEqualOnlyNamedFormulas = true
             };
             var parseResult = UserDefinitions.Parse(script, options);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var builtInTypes = SymbolTable.NewDefaultTypes(RecalcEngine._builtInNamedTypesDictionary, numberTypeIs: FormulaType.Number);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), builtInTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.False(errors.Any());
@@ -190,7 +189,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Culture = CultureInfo.InvariantCulture
             };
             var parseResult = UserDefinitions.Parse(script, options);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var builtInTypes = SymbolTable.NewDefaultTypes(RecalcEngine._builtInNamedTypesDictionary, numberTypeIs: FormulaType.Number);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), builtInTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.Empty(errors);
@@ -207,7 +207,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Culture = CultureInfo.InvariantCulture
             };
             var parseResult = UserDefinitions.Parse(script, options);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var builtInTypes = SymbolTable.NewDefaultTypes(RecalcEngine._builtInNamedTypesDictionary, numberTypeIs: FormulaType.Number);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), builtInTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.Empty(errors);
@@ -223,7 +224,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Culture = CultureInfo.InvariantCulture
             };
             var parseResult = UserDefinitions.Parse(script, options);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var builtInTypes = SymbolTable.NewDefaultTypes(RecalcEngine._builtInNamedTypesDictionary, numberTypeIs: FormulaType.Number);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), builtInTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.NotEmpty(errors);
@@ -241,7 +243,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 AllowEqualOnlyNamedFormulas = true
             };
             var parseResult = UserDefinitions.Parse(script, options);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var builtInTypes = SymbolTable.NewDefaultTypes(RecalcEngine._builtInNamedTypesDictionary, numberTypeIs: FormulaType.Number);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), builtInTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.True(errors.Any());
@@ -261,7 +264,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Culture = CultureInfo.InvariantCulture
             };
             var parseResult = UserDefinitions.Parse(script, options);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var builtInTypes = SymbolTable.NewDefaultTypes(RecalcEngine._builtInNamedTypesDictionary, numberTypeIs: FormulaType.Number);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), builtInTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.NotEmpty(errors);
@@ -281,7 +285,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             };
 
             var parseResult = UserDefinitions.Parse(script, options);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var builtInTypes = SymbolTable.NewDefaultTypes(RecalcEngine._builtInNamedTypesDictionary, numberTypeIs: FormulaType.Number);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), builtInTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.NotEmpty(errors);
@@ -292,7 +297,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Culture = CultureInfo.InvariantCulture
             };
             parseResult = UserDefinitions.Parse(script, options);
-            udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out errors);
+            udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), builtInTypes, out errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.Empty(errors);
@@ -304,7 +309,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Arrange
             var script = "test(): Text = Button1InScreen2.Text;Nf=Button1InScreen2.Text;Test2(): Void={Set(x, Button1InScreen2.Text);};";
             var parseResult = TexlParser.ParseUserDefinitionScript(script, new ParserOptions() { AllowsSideEffects = true });
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var builtInTypes = SymbolTable.NewDefaultTypes(RecalcEngine._builtInNamedTypesDictionary, numberTypeIs: FormulaType.Number);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), builtInTypes, out var errors);
             var symbolTable = new MockSymbolTable();
             var dummyContol = new DummyExternalControl() { DisplayName = "Button1InScreen2" };
             symbolTable.AddControl("Button1InScreen2", dummyContol, TypeTree.Create(Enumerable.Empty<KeyValuePair<string, DType>>()).SetItem("Text", DType.String, true));
@@ -330,7 +336,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Arrange
             var script = "test(): Text = Button1InScreen2.Text;Nf:=Button1InScreen2.Text;Test2(): Void={Set(x, Button1InScreen2.Text);};";
             var parseResult = TexlParser.ParseUserDefinitionScript(script, new ParserOptions() { AllowsSideEffects = true });
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var builtInTypes = SymbolTable.NewDefaultTypes(RecalcEngine._builtInNamedTypesDictionary, numberTypeIs: FormulaType.Number);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), builtInTypes, out var errors);
             var symbolTable = new MockSymbolTable();
             var dummyContol = new DummyExternalControl() { DisplayName = "Button1InScreen2" };
             symbolTable.AddControl("Button1InScreen2", dummyContol, TypeTree.Create(Enumerable.Empty<KeyValuePair<string, DType>>()).SetItem("Text", DType.String, true));
@@ -373,7 +380,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Arrange
             var script = "test(): Text = App.Text;";
             var parseResult = TexlParser.ParseUserDefinitionScript(script, new ParserOptions() { AllowsSideEffects = true });
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var builtInTypes = SymbolTable.NewDefaultTypes(RecalcEngine._builtInNamedTypesDictionary, numberTypeIs: FormulaType.Number);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), builtInTypes, out var errors);
             var symbolTable = new MockSymbolTable();
             var dummyContol = new DummyExternalControl() { DisplayName = "App", IsAppInfoControl = true };
             symbolTable.AddControl("App", dummyContol, TypeTree.Create(Enumerable.Empty<KeyValuePair<string, DType>>()).SetItem("Text", DType.String, true));
@@ -397,7 +405,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // easy way
 
             var configWorks = new PowerFxConfig(powerFxV1 ? Features.PowerFxV1 : Features.None);
-            var engineWorks = new RecalcEngine(configWorks);
+            var engineWorks = new RecalcEngine(configWorks, numberTypeIsFloat: true);
 
             engineWorks.AddUserDefinitions(script);
 
@@ -410,7 +418,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // harder way, using DefinitionCheckResult, that passes through a different UDF body path than above
 
             var configDCR = new PowerFxConfig(powerFxV1 ? Features.PowerFxV1 : Features.None);
-            var engineDCR = new RecalcEngine(configDCR);
+            var engineDCR = new RecalcEngine(configDCR, numberTypeIsFloat: true);
 
             var addDCR = engineDCR.AddUserDefinedFunction(script);
             var errorsDCR = addDCR.ApplyErrors();
@@ -426,7 +434,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // harder way, using DefinitionCheckResult, inverted Features setting
 
             var configDCRNot = new PowerFxConfig(powerFxV1 ? Features.None : Features.PowerFxV1);
-            var engineDCRNot = new RecalcEngine(configDCRNot);
+            var engineDCRNot = new RecalcEngine(configDCRNot, numberTypeIsFloat: true);
 
             var addDCRNot = engineDCRNot.AddUserDefinedFunction(script);
             var errorsDCRNot = addDCRNot.ApplyErrors();

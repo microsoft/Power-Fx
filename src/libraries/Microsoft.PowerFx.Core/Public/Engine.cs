@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Builtin Types supported by this engine. 
         /// </summary>
-        public ReadOnlySymbolTable PrimitiveTypes { get; protected internal set; } = ReadOnlySymbolTable.PrimitiveTypesTableInstance;
+        public ReadOnlySymbolTable BuiltInNamedTypes { get; protected internal set; }
 
         // By default, we pull the core functions. 
         // These can be overridden. 
@@ -126,7 +126,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Binding symbols used for UDFs.
         /// </summary>
-        internal ReadOnlySymbolTable UDFDefaultBindingSymbols => ReadOnlySymbolTable.Compose(PrimitiveTypes, SupportedFunctions, Config.InternalConfigSymbols);
+        internal ReadOnlySymbolTable UDFDefaultBindingSymbols => ReadOnlySymbolTable.Compose(BuiltInNamedTypes, SupportedFunctions, Config.InternalConfigSymbols);
 
         internal int FunctionCount => Functions.Count();
 
@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx
             // That will cache unifying into a single TexlFunctionSet - which is the most expensive part. 
             var functionList = _functionListCache.GetComposedCached(SupportedFunctions, Config.ComposedConfigSymbols);
 
-            var symbols = ReadOnlySymbolTable.Compose(EngineSymbols, functionList, PrimitiveTypes);
+            var symbols = ReadOnlySymbolTable.Compose(EngineSymbols, functionList, BuiltInNamedTypes);
 
             return symbols;
         }

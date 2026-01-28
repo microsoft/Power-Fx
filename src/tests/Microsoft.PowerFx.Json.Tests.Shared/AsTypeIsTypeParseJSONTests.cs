@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Json.Tests
             };
             var config = new PowerFxConfig(features);
             config.EnableJsonFunctions();
-            return new RecalcEngine(config);
+            return new RecalcEngine(config, numberTypeIsFloat: true);
         }
 
         [Fact]
@@ -38,11 +38,15 @@ namespace Microsoft.PowerFx.Json.Tests
             var engine = SetupEngine();
 
             // custom-type type alias
-            engine.AddUserDefinitions("T := Type(Number);");
+            engine.AddUserDefinitions("T := Type(Number);"); // set to Float in SetupEngine
+            engine.AddUserDefinitions("D := Type(Decimal);");
+            engine.AddUserDefinitions("F := Type(Float);");
 
             // Positive tests
             CheckIsTypeAsTypeParseJSON(engine, "\"42\"", "Number", 42D);
             CheckIsTypeAsTypeParseJSON(engine, "\"17.29\"", "Number", 17.29D);
+            CheckIsTypeAsTypeParseJSON(engine, "\"42\"", "Float", 42D);
+            CheckIsTypeAsTypeParseJSON(engine, "\"17.29\"", "Float", 17.29D);
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"HelloWorld\"\"\"", "Text", "HelloWorld");
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"2000-01-01\"\"\"", "Date", new DateTime(2000, 1, 1));
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"2000-01-01T00:00:01.100\"\"\"", "DateTime", new DateTime(2000, 1, 1, 0, 0, 1, 100));
@@ -50,8 +54,9 @@ namespace Microsoft.PowerFx.Json.Tests
             CheckIsTypeAsTypeParseJSON(engine, "\"false\"", "Boolean", false);
             CheckIsTypeAsTypeParseJSON(engine, "\"1234.56789\"", "Decimal", 1234.56789m);
             CheckIsTypeAsTypeParseJSON(engine, "\"42\"", "T", 42D);
+            CheckIsTypeAsTypeParseJSON(engine, "\"42\"", "D", 42m);
+            CheckIsTypeAsTypeParseJSON(engine, "\"42\"", "F", 42D);
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"Power Fx\"\"\"", "Type(Text)", "Power Fx");
-            CheckIsTypeAsTypeParseJSON(engine, "\"\"\"2000-01-01T00:00:01.100Z\"\"\"", "DateTimeTZInd", new DateTime(2000, 1, 1, 0, 0, 1, 100));
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"11:59:59\"\"\"", "Time", new TimeSpan(11, 59, 59));
 
             // Negative tests - Coercions not allowed
@@ -62,7 +67,8 @@ namespace Microsoft.PowerFx.Json.Tests
             CheckIsTypeAsTypeParseJSON(engine, "\"true\"", "Number", false, false);
 
             // Negative tests - types not supported in FromJSON converter
-            CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"42\"", "None", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key);
+            CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"\"\"2000-01-01T00:00:01.100Z\"\"\"", "DateTimeTZInd", TexlStrings.ErrInvalidName.Key);
+            CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"42\"", "None", TexlStrings.ErrInvalidName.Key);
             CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"\"\"RED\"\"\"", "Color", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key);
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"abcd-efgh-1234-ijkl\"\"\"", "GUID", string.Empty, false);
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"foo/bar/uri\"\"\"", "Hyperlink", string.Empty, false);
@@ -184,6 +190,11 @@ namespace Microsoft.PowerFx.Json.Tests
 
         private void CheckIsTypeAsTypeParseJSON(RecalcEngine engine, string json, string type, object expectedValue, bool isValid = true, ParserOptions options = null)
         {
+            if (options == null)
+            {
+                options = new ParserOptions { NumberIsFloat = true };
+            }
+
             var result = engine.Eval($"AsType(ParseJSON({json}), {type})", options: options);
             CheckResult(expectedValue, result, isValid);
 
@@ -208,6 +219,11 @@ namespace Microsoft.PowerFx.Json.Tests
 
         private void CheckIsTypeAsTypeParseJSONCompileErrors(RecalcEngine engine, string json, string type, string expectedError, ParserOptions options = null)
         {
+            if (options == null)
+            {
+                options = new ParserOptions { NumberIsFloat = true };
+            }
+
             var result = engine.Check($"AsType(ParseJSON({json}), {type})", options: options);
             Assert.False(result.IsSuccess);
             Assert.Contains(result.Errors, e => e.MessageKey == expectedError);

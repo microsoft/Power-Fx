@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Types
         private readonly List<TexlError> _errors;
 
         // TODO: Add more future type names
-        private static readonly ISet<string> _restrictedTypeNames = new HashSet<string> { "Record", "Table", "Currency" };
+        private static readonly ISet<string> _restrictedTypeNames = new HashSet<string> { "Record", "Table", "Currency", "Number", "Object", "Null", "None", "Blank", "Void", "Array", "Untyped", "UnTyped", "Int", "Integer" };
 
         private DefinedTypeResolver(IEnumerable<DefinedType> definedTypes, ReadOnlySymbolTable globalSymbols)
         {

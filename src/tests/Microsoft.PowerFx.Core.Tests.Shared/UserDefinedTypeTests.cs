@@ -20,8 +20,6 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class UserDefinedTypeTests : PowerFxTest
     {
-        private static readonly ReadOnlySymbolTable _primitiveTypes = ReadOnlySymbolTable.PrimitiveTypesTableInstance;
-
         [Theory]
 
         // Check record, table types with primitive types
@@ -31,10 +29,6 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("People := Type([{ name: Text, isReady: Boolean }])", "*[name:s,isReady:b]", true)]
         [InlineData("Heights := Type([Number])", "*[Value:n]", true)]
         [InlineData("Palette := Type([Color])", "*[Value:c]", true)]
-
-        // Type alias
-        [InlineData("DTNZ := Type(DateTimeTZInd)", "Z", true)]
-        [InlineData("MyVoid := Type(Void)", "-", true)]
 
         // Nested record types
         [InlineData("Nested := Type({a: {b: DateTime, c: {d: GUID, e: Hyperlink}}, x: Time})", "![a:![b:d, c:![d:g, e:h]], x:T]", true)]
@@ -48,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var checkResult = new DefinitionsCheckResult()
                                             .SetText(typeDefinition)
-                                            .SetBindingInfo(_primitiveTypes);
+                                            .SetBindingInfo(UDTTestUtils.TestTypesWithNumberTypeIsFloat);
             checkResult.ApplyResolveTypes();
 
             if (isValid)
@@ -88,12 +82,18 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("B := Type({ x: A }); A := Type(B);", 0)]
         [InlineData("B := Type(B);", 0)]
 
+        // Type alias
+        [InlineData("DTNZ := Type(DateTimeTZInd)", 1)]
+        [InlineData("MyVoid := Type(Void)", 0)] // Should not be able to use Void in a type definition, even as an alias
+        [InlineData("MyBlank := Type(None)", 0)] // Should not be able to use Blank/None in a type definition, even as an alias
+        [InlineData("MyBlank := Type(Blank)", 0)] // Should not be able to use Blank/None in a type definition, even as an alias
+
         // Complex resolutions
         [InlineData("C := Type({x: Boolean, y: Date, f: B});B := Type({ x: A }); A := Type(Number);", 3)]
         [InlineData("D := Type({nArray: [Number]}), C := Type({x: Boolean, y: Date, f: B});B := Type({ x: A }); A := Type([C]);", 1)]
 
         // With Invalid types
-        [InlineData("A := Type(Blob); B := Type({x: Currency}); C := Type([DateTime]); D := Type(None)", 2)]
+        [InlineData("A := Type(Blob); B := Type({x: Currency}); C := Type([DateTime]); D := Type(None)", 1)] // None should not be supported as a type
 
         // Have named formulas and udf in the script
         [InlineData("NAlias := Type(Number);X := 5; ADDX(n:Number): Number = n + X; SomeType := Type(Dynamic)", 2)]
@@ -110,7 +110,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var checkResult = new DefinitionsCheckResult()
                                             .SetText(typeDefinition)
-                                            .SetBindingInfo(_primitiveTypes);
+                                            .SetBindingInfo(UDTTestUtils.TestTypesWithNumberTypeIsFloat);
             checkResult.ApplyResolveTypes();
 
             var resolvedTypes = checkResult.ResolvedTypes;
@@ -125,7 +125,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("X:= Type({ f:Number, f:Number});", 1, "ErrNamedType_InvalidTypeDeclaration")]
         [InlineData("B := Type({ x: A }); A := Type(B);", 2, "ErrNamedType_InvalidCycles")]
         [InlineData("B := Type(B);", 1, "ErrNamedType_InvalidCycles")]
-        [InlineData("Currency := Type({x: Text}); Record := Type([DateTime]); D := Type(None);", 2, "ErrNamedType_InvalidTypeName")]
+        [InlineData("Currency := Type({x: Text}); Record := Type([DateTime]);", 2, "ErrNamedType_InvalidTypeName")]
+        [InlineData("D := Type(None); E := Type(Void);", 2, "ErrNamedType_InvalidTypeDeclaration")]
         [InlineData("A := 5;C :=; B := Type(Number);", 1, "ErrNamedType_MissingTypeExpression")]
         [InlineData("T := Type([{a: {b: Void}}]);", 1, "ErrNamedType_InvalidTypeDeclaration")]
         [InlineData("T := Type([Void]);", 1, "ErrNamedType_InvalidTypeDeclaration")]
@@ -134,7 +135,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var checkResult = new DefinitionsCheckResult()
                                             .SetText(typeDefinition)
-                                            .SetBindingInfo(_primitiveTypes);
+                                            .SetBindingInfo(UDTTestUtils.TestTypesWithNumberTypeIsFloat);
             var errors = checkResult.ApplyErrors();
 
             Assert.Equal(expectedErrorCount, errors.Count());
@@ -157,7 +158,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var checkResult = new DefinitionsCheckResult()
                                             .SetText(typeDefinition)
-                                            .SetBindingInfo(_primitiveTypes);
+                                            .SetBindingInfo(UDTTestUtils.TestTypesWithNumberTypeIsFloat);
             var errors = checkResult.ApplyErrors();
             Assert.Contains(errors, e => e.MessageKey.Contains(expectedMessageKey));
         }
@@ -178,7 +179,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var parserOptions = new ParserOptions() { NumberIsFloat = true };
             var checkResult = new DefinitionsCheckResult(Features.PowerFxV1)
                                             .SetText(typeDefinition, parserOptions)
-                                            .SetBindingInfo(_primitiveTypes);
+                                            .SetBindingInfo(UDTTestUtils.TestTypesWithNumberTypeIsFloat);
             var errors = checkResult.ApplyErrors();
             if (expectedMessageKey == null)
             {
@@ -194,7 +195,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var parserOptionsDecimal = new ParserOptions() { NumberIsFloat = false };
             var checkResultDecimal = new DefinitionsCheckResult(Features.PowerFxV1)
                                             .SetText(typeDefinition, parserOptionsDecimal)
-                                            .SetBindingInfo(_primitiveTypes);
+                                            .SetBindingInfo(UDTTestUtils.TestTypesWithNumberTypeIsFloat);
             var errorsDecimal = checkResultDecimal.ApplyErrors();
             if (expectedMessageKey == null)
             {
@@ -249,25 +250,25 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var checkResultDot = new DefinitionsCheckResult()
                                .SetText(expressionDot, parserOptionsDot)
-                               .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+                               .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat));
             var errorsDot = checkResultDot.ApplyErrors();
             Assert.Empty(errorsDot);
 
             var checkResultCommaFail = new DefinitionsCheckResult()
                                 .SetText(expressionDot, parserOptionsComma)
-                                .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+                                .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat));
             var errorsCommaFail = checkResultCommaFail.ApplyErrors();
             Assert.NotEmpty(errorsCommaFail);
 
             var checkResultComma = new DefinitionsCheckResult()
                                  .SetText(expressionComma, parserOptionsComma)
-                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat));
             var errorsComma = checkResultComma.ApplyErrors();
             Assert.Empty(errorsComma);
 
             var checkResultDotFail = new DefinitionsCheckResult()
                                  .SetText(expressionComma, parserOptionsDot)
-                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat));
             var errorsDotFail = checkResultDotFail.ApplyErrors();
             Assert.NotEmpty(errorsDotFail);
         }

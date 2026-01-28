@@ -41,10 +41,10 @@
 
 // UDT
 
->> Integer := Type(Number);
+>> MyInteger := Type(Number);
 #no value
 
->> MyInt(x:Number):Integer = Int(x);
+>> MyInt(x:Number):MyInteger = Int(x);
 #no value
 
 >> MyInt(12.34)

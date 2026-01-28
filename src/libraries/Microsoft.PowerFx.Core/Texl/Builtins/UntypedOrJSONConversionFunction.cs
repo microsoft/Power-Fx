@@ -37,6 +37,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argIndex == 1;
         }
 
+        // This list is intersected with Engine.PrimitiveTypes, with outliers generating errors before this list is checked.
+        // In other words, just because a type is listed here, does not mean it is supported unless it is also in Engine.PrimitiveTypes.
+        // Notably this list excludes ObjNull and Void, which make no sense to use in JSON or UDFs (except for UDF return type for Void).
+        // It also excludes Color, as we have not implemented the coversion of "Red" and other color names. We could convert # hex colors but this has not been done yet.
         internal static readonly ISet<DType> SupportedJSONTypes = new HashSet<DType> { DType.Boolean, DType.Number, DType.Decimal, DType.Date, DType.DateTime, DType.DateTimeNoTimeZone, DType.Time, DType.String, DType.Guid, DType.Hyperlink, DType.UntypedObject };
 
         public UntypedOrJSONConversionFunction(string name, TexlStrings.StringGetter description, DType returnType, int arityMax, params DType[] paramTypes)

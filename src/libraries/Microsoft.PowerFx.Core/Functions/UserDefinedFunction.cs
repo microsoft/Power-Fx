@@ -460,11 +460,6 @@ namespace Microsoft.PowerFx.Core.Functions
                             errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
                             isParamCheckSuccessful = false;
                         }
-                        else if (IsRestrictedType(parameterType, UserDefinitions.RestrictedParameterTypes))
-                        {
-                            errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_InvalidParamType, arg.TypeIdent.Name));
-                            isParamCheckSuccessful = false;
-                        }
                         else
                         {
                             Contracts.Assert(arg.ArgIndex >= 0);
@@ -484,29 +479,29 @@ namespace Microsoft.PowerFx.Core.Functions
 
         private static bool CheckReturnType(IdentToken returnTypeToken, List<TexlError> errors, INameResolver nameResolver, bool isImperative, out DType returnType)
         {
+            FormulaType returnTypeFormulaType;
+
             if (returnTypeToken == null)
             {
                 returnType = DType.Unknown;
                 return false;
             }
 
-            if (!nameResolver.LookupType(returnTypeToken.Name, out var returnTypeFormulaType))
+            // only the return type from a UDF can be a void type, it is not valid in other type contexts
+            if (returnTypeToken.Name == FormulaType.Void.Name)
+            {
+                returnTypeFormulaType = FormulaType.Void;
+
+                if (!isImperative)
+                {
+                    errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_NonImperativeVoidType));
+                    returnType = DType.Invalid;
+                    return false;
+                }
+            }
+            else if (!nameResolver.LookupType(returnTypeToken.Name, out returnTypeFormulaType))
             {
                 errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnTypeToken.Name));
-                returnType = DType.Invalid;
-                return false;
-            }
-
-            if (!isImperative && returnTypeFormulaType._type.IsVoid)
-            {
-                errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_NonImperativeVoidType));
-                returnType = DType.Invalid;
-                return false;
-            }
-
-            if (IsRestrictedType(returnTypeFormulaType, UserDefinitions.RestrictedTypes))
-            {
-                errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_InvalidReturnType, returnTypeToken.Name));
                 returnType = DType.Invalid;
                 return false;
             }

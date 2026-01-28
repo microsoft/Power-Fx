@@ -10,6 +10,8 @@ namespace Microsoft.PowerFx.Types
 {
     public class GuidType : FormulaType
     {
+        public override DName Name => new DName("GUID");
+
         internal GuidType()
             : base(DType.Guid)
         {

@@ -15,8 +15,6 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class UDFHasSameDefinitionTests : PowerFxTest
     {
-        private static readonly ReadOnlySymbolTable _primitiveTypes = ReadOnlySymbolTable.PrimitiveTypesTableInstance;
-
         [Theory]
         [InlineData("Foo(x: Number): Number = Abs(x);", "Foo(x: Number): Number = Abs(x);", true)]
         [InlineData("Foo(x: Number): Void = { Notify(\"Hello\"); };", "Foo(x: Number): Void = { Notify(\"Hello\"); };", true)]
@@ -55,7 +53,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowsSideEffects = true
             };
 
-            var types = FormulaType.PrimitiveTypes.Union(new Dictionary<DName, FormulaType>() 
+            var types = UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat.Union(new Dictionary<DName, FormulaType>() 
             {
                 // Adds type aliases for testing
                 { new DName("Num"), FormulaType.Number },
@@ -98,7 +96,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var complexType3 = TestUtils.DT("*[a: n, b:s, c: b]");
             var complexType4 = TestUtils.DT("*[a: n, b:s]");
 
-            var types = FormulaType.PrimitiveTypes.Union(new Dictionary<DName, FormulaType>()
+            var types = UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat.Union(new Dictionary<DName, FormulaType>()
             {
                 { new DName("DS1"), FormulaType.Build(ds1.Type) },
                 { new DName("DS2"), FormulaType.Build(ds2.Type) },

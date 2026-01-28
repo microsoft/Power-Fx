@@ -23,12 +23,13 @@ using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
 using static Microsoft.PowerFx.Core.Tests.LazyTypeTests;
 
-namespace Microsoft.PowerFx.Tests
+namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class RecalcEngineTests : PowerFxTest
     {
@@ -545,7 +546,7 @@ namespace Microsoft.PowerFx.Tests
             {
                 MaxCallDepth = 100
             };
-            var recalcEngine = new RecalcEngine(config);
+            var recalcEngine = new RecalcEngine(config, numberTypeIsFloat: true);
 
             try
             {
@@ -571,12 +572,12 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("foo(x: Number, y:Number):Number = x - Abs(y);", "foo(myArg,1)", 9.0)]
         public void UserDefinedFunctionSymbolTableTest(string script, string expression, double expected)
         {
-            var engine = new RecalcEngine();
+            var engine = new RecalcEngine(numberTypeIsFloat: true);
             var symbolTable = new SymbolTable();
 
             engine.UpdateVariable("myArg", FormulaValue.New(10));
 
-            symbolTable.AddUserDefinedFunction(script, CultureInfo.InvariantCulture, engine.SupportedFunctions, engine.PrimitiveTypes);
+            symbolTable.AddUserDefinedFunction(script, CultureInfo.InvariantCulture, engine.SupportedFunctions, engine.BuiltInNamedTypes);
 
             var check = engine.Check(expression, symbolTable: symbolTable);
             var result = check.GetEvaluator().Eval();
@@ -603,9 +604,9 @@ namespace Microsoft.PowerFx.Tests
         public void FunctionPrecedenceTest(string script, double expected)
         {
             SymbolTable st = new SymbolTable { DebugName = "Extras" };
-            st.AddConstant("K1", FormulaValue.New(9999));            
+            st.AddConstant("K1", FormulaValue.New(9999));
 
-            var engine = new RecalcEngine();
+            var engine = new RecalcEngine(numberTypeIsFloat: true);
             engine.AddUserDefinedFunction(script, symbolTable: st);
 
             var check = engine.Check("foo(1)");
@@ -619,7 +620,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void ShadowingFunctionPrecedenceTest()
         {
-            var engine = new RecalcEngine();
+            var engine = new RecalcEngine(numberTypeIsFloat: true);
             engine.AddUserDefinedFunction("Concat(x:Text):Text = \"xyz\"; Average(x:Number):Number = 11111;");
 
             var check = engine.Check("Concat(\"abc\")");
@@ -708,7 +709,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig();
             config.EnableSetFunction();
-            var recalcEngine = new RecalcEngine(config);
+            var recalcEngine = new RecalcEngine(config, numberTypeIsFloat: true);
             recalcEngine.UpdateVariable("a", 1m);
 
             var definitionsCheckResult = recalcEngine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
@@ -748,7 +749,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig();
             config.EnableSetFunction();
-            var engine = new RecalcEngine(config);
+            var engine = new RecalcEngine(config, numberTypeIsFloat: true);
             engine.UpdateVariable("x", 1m);
 
             var result = engine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: allowSideEffects);
@@ -853,6 +854,7 @@ namespace Microsoft.PowerFx.Tests
                             null)),
                 true));
             symbolTable.AddType(new DName("MyDataSourceTableType"), FormulaType.Build(schema));
+            symbolTable.AddType(new DName("Number"), FormulaType.Decimal);
             var config = new PowerFxConfig()
             {
                 SymbolTable = symbolTable
@@ -937,11 +939,17 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task FunctionInner()
         {
+            Dictionary<DName, FormulaType> textPrimitiveType =
+                new Dictionary<DName, FormulaType>() 
+                {
+                    { FormulaType.String.Name, FormulaType.String }, // Text
+                };
+
             // Inner table 
-            SymbolTable stInner = SymbolTable.WithPrimitiveTypes();
+            SymbolTable stInner = SymbolTable.WithPrimitiveTypes(textPrimitiveType);
             stInner.AddUserDefinedFunction("Func1() : Text = \"inner\";");
 
-            SymbolTable st = SymbolTable.WithPrimitiveTypes();
+            SymbolTable st = SymbolTable.WithPrimitiveTypes(textPrimitiveType);
             st.AddUserDefinedFunction("Func2() : Text = Func1() & \"2\";", symbolTable: stInner);
 
             var engine = new RecalcEngine();
@@ -1967,29 +1975,13 @@ namespace Microsoft.PowerFx.Tests
             true,
             1.0)]
 
-        // Types with UDF restricted primitive types resolve successfully 
-        [InlineData(
-            @"Patient := Type({DOB: DateTimeTZInd, Weight: Decimal, Dummy: None}); 
-              Patients := Type([Patient]);
-              Dummy():Number = CountRows([]);",
-            "Dummy()",
-            true,
-            true,
-            0.0)]
-
-        // Aggregate types with restricted types are not allowed in UDF
-        [InlineData(
-            @"Patient := Type({DOB: DateTimeTZInd, Weight: Decimal, Dummy: None}); 
-              Patients := Type([Patient]);
-              getAnomaly(p: Patients): Patients = Filter(p, Weight < 0);",
-            "",
-            false)]
-
         [InlineData(
             @"Patient := Type({Name: Text, Details: {h: Number, w:Decimal}}); 
               getPatient(): Patient = {Name:""Alice"", Details: {h: 1, w: 2}};",
-            "",
-            false)]
+            "getPatient().Details.h",
+            true,
+            true,
+            1)]
 
         // Cycles not allowed
         [InlineData(
@@ -2088,13 +2080,13 @@ namespace Microsoft.PowerFx.Tests
         public void UserDefinedTypeTest(string userDefinitions, string evalExpression, bool isValidDefinition, bool isValidEval = false, double expectedResult = 0)
         {
             var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
+            var recalcEngine = new RecalcEngine(config, numberTypeIsFloat: true);
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
             };
 
-            var entityType = new Interpreter.Tests.DatabaseSimulationTests.TestEntityType(new Tests.BindingEngineTests.LazyRecursiveRecordType().ToTable()._type);
+            var entityType = new Interpreter.Tests.DatabaseSimulationTests.TestEntityType(new BindingEngineTests.LazyRecursiveRecordType().ToTable()._type);
             var entityValue = new Interpreter.Tests.DatabaseSimulationTests.TestEntityValue(IRContext.NotInSource(entityType));
             recalcEngine._symbolTable.AddType(new DName("TestEntity"), entityType);
             recalcEngine._symbolValues.Add("Entity", entityValue);
@@ -2183,7 +2175,7 @@ namespace Microsoft.PowerFx.Tests
         public void UDFImperativeVsRecordAmbiguityTest(string udf, string evalExpression, bool isValid, double expectedResult = 0)
         {
             var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
+            var recalcEngine = new RecalcEngine(config, numberTypeIsFloat: true);
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = true,
@@ -2191,6 +2183,7 @@ namespace Microsoft.PowerFx.Tests
 
             var extraSymbols = new SymbolTable();
             extraSymbols.AddType(new DName("Point"), FormulaType.Build(TestUtils.DT("![x:n, y:n]")));
+            extraSymbols.AddType(new DName("Number"), FormulaType.Number);
 
             if (isValid)
             {
@@ -2308,7 +2301,7 @@ namespace Microsoft.PowerFx.Tests
         public void RecordOfTests(string userDefinitions, string evalExpression, bool isValid, double expectedResult = 0)
         {
             var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
+            var recalcEngine = new RecalcEngine(config, numberTypeIsFloat: true);
             var parserOptions = new ParserOptions();
 
             recalcEngine.Config.SymbolTable.AddType(new DName("Accounts"), FormulaType.Build(TestUtils.DT("*[id: n, name:s, address:s]")));
