@@ -29,8 +29,69 @@ namespace Microsoft.PowerFx.Core.Types
 
         private readonly List<TexlError> _errors;
 
-        // TODO: Add more future type names
-        private static readonly ISet<string> _restrictedTypeNames = new HashSet<string> { "Record", "Table", "Currency", "Number", "Object", "Null", "None", "Blank", "Void", "Array", "Untyped", "UnTyped", "Int", "Integer" };
+        // Reserved type names that can't be used for a UDT.
+        // We shouldn't introduce any data type names that aren't on this list.
+        internal static readonly ISet<string> _restrictedTypeNames = new HashSet<string> 
+        { 
+            // existing type names across all hosts
+            "Boolean", "Color", 
+            "DateTimeTZInd", "DateTime", "Date", "Time", 
+            "Number", "Float", "Decimal", 
+            "GUID", 
+            "Text", "Hyperlink",
+            "Dynamic",
+
+            // strucutural type names
+            "Record", "Table", "Array",
+            "List", "Tuple", "Dictionary", "Range", "Hash", "HashSet",
+            "Enum", "Enumeration", "OptionSet", "Optionset", "Choice", "Choices",
+            "Reference", "RecordReference", "TableReference",
+            "Row", "Column", "Matrix",
+
+            // generic types
+            "Null", "None", "Blank", "Void", "Nothing",
+            "Object", "Delegate", "Pointer", "Reference", "Unknown", "Unsupported",
+
+            // old name for dynamic
+            "Untyped", "UnTyped", 
+
+            // possible numeric data types
+            "Currency", "Money", 
+            "Double", "Single", "Bit", "Complex", "Real",
+            "Int", "Integer", "Byte", "Long", "Short", 
+            "Unisgned", "UnsignedInt", "UnisgnedInteger", "UnsignedByte", "UnisgnedLong", "UnsignedShort", 
+            "BigInt", "UnisgnedBigInt",
+            "WholeNumber",
+            "Numeric",
+
+            // possible date/time data types
+            "DateTimeZone", "TimeZone",
+            "Duration", "Timespan", "TimeSpan",
+            "DateTimeNoTZ", "DateTimeNoTimeZone", "DateTimeNoTimeZoneInformation",  
+
+            // possible text data types
+            "String", "HTML", "JSON", "XML", "Char", "Character", "URI", "URL", "RichText",
+            "Email", "Phone", "Address", 
+            "Language", "Locale",
+            "MultilineText", "MultiLineText", "TextArea",
+            "SingleineText", "SingleLineText",
+
+            // possible GUID data types
+            "UniqueIdentifier", "PrimaryKey", "Identifier",
+
+            // possible Booelan data types
+            "YesNo", "TrueFalse", "OnOff",
+
+            // possible location data types
+            "Geography", "Geolocation", "Location", "Coordinates", "GeoCoordinates", "GPS",
+
+            // first class code
+            "Function", "Action", "Subroutine", "Method", "Procedure",
+
+            // possible binary data types
+            "Blob", "Binary", "File", "Attachment", "Document", 
+            "Image", "Media", "Audio", "Video",
+        };
 
         private DefinedTypeResolver(IEnumerable<DefinedType> definedTypes, ReadOnlySymbolTable globalSymbols)
         {

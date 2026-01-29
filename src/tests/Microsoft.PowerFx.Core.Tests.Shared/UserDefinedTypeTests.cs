@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Tests.Helpers;
@@ -271,6 +273,22 @@ namespace Microsoft.PowerFx.Core.Tests
                                  .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat));
             var errorsDotFail = checkResultDotFail.ApplyErrors();
             Assert.NotEmpty(errorsDotFail);
+        }
+
+        [Fact]
+        public void TestRestrictedUDTName()
+        {
+            var parserOptions = new ParserOptions();
+
+            foreach (var type in DefinedTypeResolver._restrictedTypeNames)
+            {
+                var script = $"{type} := Type(Text);";
+                var checkResult = new DefinitionsCheckResult()
+                                     .SetText(script, parserOptions)
+                                     .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat));
+                var errors = checkResult.ApplyErrors();
+                Assert.Contains(errors, x => x.MessageKey == "ErrNamedType_InvalidTypeName");
+            }
         }
     }
 }

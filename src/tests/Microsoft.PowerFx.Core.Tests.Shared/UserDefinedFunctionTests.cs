@@ -591,7 +591,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void Basic()
         {
-            var st1 = SymbolTable.WithPrimitiveTypes(UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat);
+            var st1 = SymbolTable.WithBuiltInNamedTypes(UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat);
             st1.AddUserDefinedFunction("Foo1(x: Number): Number = x*2;");
             st1.AddUserDefinedFunction("Foo2(x: Number): Number = Foo1(x)+1;");
 
@@ -601,7 +601,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(FormulaType.Number, check.ReturnType);
 
             // A different symbol table can have same function name with different type.  
-            var st2 = SymbolTable.WithPrimitiveTypes(UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat);
+            var st2 = SymbolTable.WithBuiltInNamedTypes(UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat);
             st2.AddUserDefinedFunction("Foo2(x: Number): Text = x;");
             check = engine.Check("Foo2(3)", symbolTable: st2);
             Assert.True(check.IsSuccess);
@@ -612,7 +612,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void DefineEmpty()
         {
             // Empty symbol table doesn't get builtin functions. 
-            var st = SymbolTable.WithPrimitiveTypes(UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat);
+            var st = SymbolTable.WithBuiltInNamedTypes(UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat);
             st.AddUserDefinedFunction("Foo1(x: Number): Number = x;"); // ok 
             Assert.False(st.AddUserDefinedFunction("Foo2(x: Number): Number = Abs(x);").IsSuccess);
         }
@@ -929,6 +929,99 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(add1.Errors.Count() >= 1 && 
                 add1.Errors.Any(error => error.MessageKey == "ErrUDF_FunctionAlreadyDefined" &&
                     error.Severity == ErrorSeverity.Severe));
+        }
+
+        [Fact]
+        public void TestUDFRestrictedReturnTypesNonImperative()
+        {
+            var parserOptions = new ParserOptions();
+
+            List<string> typeNames = UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat.Select(kv => kv.Key.Value).ToList();
+
+            foreach (var type in DefinedTypeResolver._restrictedTypeNames)
+            {
+                var script = $"func():{type} = Blank();"; 
+                var parseResult = UserDefinitions.Parse(script, parserOptions);
+                var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), UDTTestUtils.TestTypesWithNumberTypeIsFloat, out var errors);
+                errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+                if (typeNames.Contains(type))
+                {
+                    Assert.Empty(errors);
+                }
+                else if (type == "Void")
+                {
+                    Assert.Contains(errors, x => x.MessageKey == "ErrUDF_NonImperativeVoidType");
+                }
+                else
+                {
+                    Assert.Contains(errors, x => x.MessageKey == "ErrUDF_UnknownType");
+                }
+            }
+        }
+
+        [Fact]
+        public void TestUDFRestrictedTypeNamesCoverBuiltInNames()
+        {
+            List<string> typeNames = UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat.Select(kv => kv.Key.Value).ToList();
+            typeNames.Add("Void");
+            typeNames.Add("None");
+            typeNames.Add("Blank");
+
+            foreach (var type in typeNames)
+            {
+                Assert.Contains(type, DefinedTypeResolver._restrictedTypeNames);
+            }
+        }
+
+        [Fact]
+        public void TestUDFRestrictedReturnTypesImperative()
+        {
+            var parserOptions = new ParserOptions() { AllowsSideEffects = true };
+
+            List<string> typeNames = UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat.Select(kv => kv.Key.Value).ToList();
+
+            foreach (var type in DefinedTypeResolver._restrictedTypeNames)
+            {
+                var script = $"func():{type} = {{ Blank() }};";
+                var parseResult = UserDefinitions.Parse(script, parserOptions);
+                var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), UDTTestUtils.TestTypesWithNumberTypeIsFloat, out var errors);
+                errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+                if (typeNames.Contains(type) || type == "Void")
+                {
+                    Assert.Empty(errors);
+                }
+                else
+                {
+                    Assert.Contains(errors, x => x.MessageKey == "ErrUDF_UnknownType");
+                }
+            }
+        }
+
+        [Fact]
+        public void TestUDFRestrictedParamTypes()
+        {
+            var parserOptions = new ParserOptions();
+
+            List<string> typeNames = UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat.Select(kv => kv.Key.Value).ToList();
+
+            foreach (var type in DefinedTypeResolver._restrictedTypeNames)
+            {
+                var script = $"func(x:{type}):Boolean = Blank();";
+                var parseResult = UserDefinitions.Parse(script, parserOptions);
+                var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), UDTTestUtils.TestTypesWithNumberTypeIsFloat, out var errors);
+                errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+                if (typeNames.Contains(type))
+                {
+                    Assert.Empty(errors);
+                }
+                else
+                {
+                    Assert.Contains(errors, x => x.MessageKey == "ErrUDF_UnknownType");
+                }
+            }
         }
 
         [Theory]

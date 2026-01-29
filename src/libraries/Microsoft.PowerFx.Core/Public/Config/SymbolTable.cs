@@ -469,15 +469,21 @@ namespace Microsoft.PowerFx
         /// Helper to create a symbol table with primitive types.
         /// </summary>
         /// <returns>SymbolTable with primitive types.</returns>
-        internal static SymbolTable WithPrimitiveTypes(Dictionary<DName, FormulaType> primitiveTypes)
+        public static SymbolTable WithBuiltInNamedTypes(Dictionary<DName, FormulaType> namedTypes)
         {
             var s = new SymbolTable
             {
-                DebugName = $"SymbolTable with PrimitiveTypes"
+                DebugName = $"SymbolTable with BuiltInNamedTypes"
             };
 
-            s.AddTypes(primitiveTypes);
+            s.AddTypes(namedTypes);
             return s;
+        }
+
+        [Obsolete("Use WithBuiltInNamedTypes instead and pass in the list of named types.")]
+        public static SymbolTable WithBPrimitiveTypes()
+        {
+            throw new System.NotImplementedException("Deprecated, use WithBuiltInNamedTypes instead and pass in the list of named types.");
         }
 
         bool INameResolver.LookupType(DName name, out FormulaType fType)

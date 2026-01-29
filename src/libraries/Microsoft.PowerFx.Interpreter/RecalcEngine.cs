@@ -35,8 +35,9 @@ namespace Microsoft.PowerFx
         internal readonly SymbolTable _symbolTable;
         internal readonly SymbolValues _symbolValues;
 
-        // Number is added as an alias for Float or Decimal before calling the binder
-        // DateTimeNoTimeZone is not supported in RecalcEngine
+        // Number is added as an alias for Float or Decimal in the RecalcEngine constructor.
+        // Notable missing types that are inappropriate for UDFs and UDTs: None, Void, Unknown, Deferred, Error.
+        // Note that the intepreter has not implemented DateTimeNoTimeZone and so it is not included here.
         internal static readonly IReadOnlyDictionary<DName, FormulaType> _builtInNamedTypesDictionary = 
             new Dictionary<DName, FormulaType>()
             {
@@ -46,7 +47,7 @@ namespace Microsoft.PowerFx
                 { FormulaType.Time.Name, FormulaType.Time },
                 { FormulaType.DateTime.Name, FormulaType.DateTime },
                 { FormulaType.Guid.Name, FormulaType.Guid },
-                { FormulaType.Number.Name, FormulaType.Number }, // Float, this is not "Number" which is added later as an alias for either Float or Decimal
+                { FormulaType.Number.Name, FormulaType.Number }, // Float, this is not Number which is added later in the constructor
                 { FormulaType.Decimal.Name, FormulaType.Decimal },
                 { FormulaType.String.Name, FormulaType.String }, // Text
                 { FormulaType.Hyperlink.Name, FormulaType.Hyperlink },
@@ -81,6 +82,12 @@ namespace Microsoft.PowerFx
 
             base.EngineSymbols = _symbolTable;
 
+            // Note that there are two NumberIsFloat flags that are completely independent:
+            // - numberTypeIsFloat paramter here, which only impacts the symbol table and deciding what type
+            //   Number should alias to (Float or Decimal) for use by UDFs and UDTs.
+            // - ParserOptions NumberIsFloat, which impacts parsing of literals only.
+            // To put Power Fx into "Float" mode, for example for Canvas apps, both must be used together.
+            // By default, Power Fx uses "Decimal" mode.
             BuiltInNamedTypes = SymbolTable.NewDefaultTypes(_builtInNamedTypesDictionary, numberTypeIsFloat ? FormulaType.Number : FormulaType.Decimal);
 
             // Add Builtin functions that aren't yet in the shared library. 

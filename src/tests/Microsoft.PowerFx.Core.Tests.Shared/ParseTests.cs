@@ -24,10 +24,8 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public static class UDTTestUtils
     {
-        // Notable missing types:
-        // - Void
-        // - None
-        // - Number
+        // Notable missing types that are inappropriate for UDFs and UDTs: None, Void, Unknown, Deferred, Error
+        // DateTimeNoTimeZone is included for Core testing since at least one host uses it.
         public static readonly Dictionary<DName, FormulaType> TestTypesDictionaryWithNoNumberType =
             new Dictionary<DName, FormulaType>()
             {
@@ -45,6 +43,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 { FormulaType.UntypedObject.Name, FormulaType.UntypedObject }, // Dynamic
             };
 
+        // For historical reasons, we do most of our testing with Number type as Float.
+        // Some tests are specifically designed without any Number type present.
         public static readonly Dictionary<DName, FormulaType> TestTypesDictionaryWithNumberTypeIsFloat = 
             new Dictionary<DName, FormulaType>(TestTypesDictionaryWithNoNumberType)
                 { { FormulaType.NumberAliasName, FormulaType.Number } };

@@ -84,9 +84,11 @@ namespace Microsoft.PowerFx
         public ReadOnlySymbolTable SupportedFunctions { get; protected internal set; } = _allBuiltinCoreFunctions;
 
         /// <summary>
-        /// Builtin Types supported by this engine. 
+        /// Builtin Types supported by this engine. This must be supplied in order for UDF/UDTs to find the existing 
+        /// primitive types, such as Text, Decimal, Date, etc. If UDF/UDTs are not supported, this can be skipped.
+        /// If a Number alias is desired, it should be added explicitly here as well, mapped to Float or Decimal as appropriate.
         /// </summary>
-        public ReadOnlySymbolTable BuiltInNamedTypes { get; protected internal set; }
+        public ReadOnlySymbolTable BuiltInNamedTypes { get; init; }
 
         // By default, we pull the core functions. 
         // These can be overridden. 

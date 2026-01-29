@@ -11,7 +11,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -31,8 +30,6 @@ namespace Microsoft.PowerFx.Repl.Tests
         {
             var config = new PowerFxConfig();
             config.SymbolTable.EnableMutationFunctions();
-
-//            config.SymbolTable.AddNumberType(numberIsFloat: false);
 
             // config.EnableSetFunction();
             var engine = new RecalcEngine(config);

@@ -16,7 +16,6 @@ using System.Xml.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests;
 using Microsoft.PowerFx.Core.Tests.Helpers;
