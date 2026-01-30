@@ -30,7 +30,8 @@ namespace Microsoft.PowerFx.Json.Tests
                 "Microsoft.PowerFx.Core.ICopilotService",
                 "Microsoft.PowerFx.JsonConfigExtensions",
                 "Microsoft.PowerFx.Types.FormulaValueJSON",
-                "Microsoft.PowerFx.Types.FormulaValueJsonSerializerSettings"
+                "Microsoft.PowerFx.Types.FormulaValueJsonSerializerSettings",
+                "Microsoft.PowerFx.Functions.JsonUntypedObject"
             };
 
             var sb = new StringBuilder();
