@@ -616,13 +616,11 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                 case "object":
-                case null: // xml
 
                     // Dictionary - https://swagger.io/docs/specification/data-models/dictionaries/
                     // Key is always a string, Value is in AdditionalProperties
                     if ((schema.AdditionalProperties != null && schema.AdditionalProperties.Properties.Any())
-                        || schema.Discriminator != null
-                        || (schema.Type == null && !schema.Properties.Any()))
+                        || schema.Discriminator != null)
                     {
                         return new ConnectorType(schema, openApiParameter, ConnectorType.DefaultType);
                     }
@@ -707,6 +705,10 @@ namespace Microsoft.PowerFx.Connectors
 
                 case "file":
                     return new ConnectorType(schema, openApiParameter, FormulaType.Blob);
+
+                case null: // xml
+                    // Specifying no type means untyped, not object
+                    return new ConnectorType(schema, openApiParameter, ConnectorType.DefaultType);
 
                 default:
                     // ex: type = "null" or "decimal"
