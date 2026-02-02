@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Single(createFileWithTable.RequiredParameters);
             Assert.Equal("rows", createFileWithTable.RequiredParameters[0].Name);
-            Assert.Equal("*[Value:*[]]", createFileWithTable.RequiredParameters[0].FormulaType.ToStringWithDisplayNames());
+            Assert.Equal("*[Value:*[Value:O]]", createFileWithTable.RequiredParameters[0].FormulaType.ToStringWithDisplayNames());
         }
 
         [Fact]

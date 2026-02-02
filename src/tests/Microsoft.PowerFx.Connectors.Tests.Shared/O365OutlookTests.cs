@@ -612,7 +612,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         [InlineData(
             @"Office365Outlook.HttpRequest(""https://graph.microsoft.com/v1.0/me/calendar"", ""GET"")",
-            "RECORD",
+            "UNTYPED",
             "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/httprequest",
             @"",
             "Response_O365Outlook_HttpRequest.json",
