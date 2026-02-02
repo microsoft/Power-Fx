@@ -172,6 +172,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
                 Assert.Equal(DateTime.Parse(expectedResult.Substring(9)).ToUniversalTime(), new ConvertToUTC(GetTimeZoneInfo()).ToUTC(dtv));
             }
+            else if (expectedResult.StartsWith("UNTYPED"))
+            {
+                Assert.IsType<UntypedObjectValue>(fv);
+            }
             else
             {
                 Assert.True(fv is not ErrorValue, fv is ErrorValue ev ? $"EvalAsync Error: {string.Join(", ", ev.Errors.Select(er => er.Message))}" : null);
