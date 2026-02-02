@@ -942,7 +942,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Dictionary<DName, FormulaType> textPrimitiveType =
                 new Dictionary<DName, FormulaType>() 
                 {
-                    { FormulaType.String.Name, FormulaType.String }, // Text
+                    { BuiltInTypeNames.String_Text, FormulaType.String }, // Text
                 };
 
             // Inner table 
@@ -1816,7 +1816,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 ExpressionError firstError = cr.Errors.First();
 
                 Assert.Equal(es, firstError.Severity);
-                Assert.Equal("Incompatible types for comparison. These types can't be compared: Decimal, Text.", firstError.Message);
+                Assert.Equal("Incompatible types for comparison. These types can't be compared: Number, Text.", firstError.Message);
             }
         }
 

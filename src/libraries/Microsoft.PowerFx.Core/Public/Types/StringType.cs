@@ -9,8 +9,6 @@ namespace Microsoft.PowerFx.Types
 {
     public class StringType : FormulaType
     {
-        public override DName Name => new DName("Text");
-
         public StringType()
             : base(DType.String)
         {

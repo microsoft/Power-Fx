@@ -12,6 +12,25 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
+    public static class BuiltInTypeNames
+    {
+        public static readonly DName Blank_None = new DName("None");
+        public static readonly DName Boolean = new DName("Boolean");
+        public static readonly DName Number_Float = new DName("Float");
+        public static readonly DName Number_Alias = new DName("Number");
+        public static readonly DName Decimal = new DName("Decimal");
+        public static readonly DName Date = new DName("Date");
+        public static readonly DName Time = new DName("Time");
+        public static readonly DName DateTime = new DName("DateTime");
+        public static readonly DName DateTimeNoTimeZone_DateTimeTZInd = new DName("DateTimeTZInd");
+        public static readonly DName String_Text = new DName("Text");
+        public static readonly DName Guid = new DName("GUID");
+        public static readonly DName Hyperlink = new DName("Hyperlink");
+        public static readonly DName Color = new DName("Color");
+        public static readonly DName UntypedObject_Dynamic = new DName("Dynamic");
+        public static readonly DName Void = new DName("Void");
+    }
+
     /// <summary>
     /// Base class for type of a Formula. 
     /// Formula Types are a class hiearchy.
@@ -24,10 +43,6 @@ namespace Microsoft.PowerFx.Types
         // Uses init to allow setting from derived constructors. Otherwise, is immutable.
         internal DType _type { get; private protected init; }
 #pragma warning restore SA1300 // Element should begin with upper-case letter
-
-        public virtual DName Name { get; }
-
-        public static readonly DName NumberAliasName = new DName("Number");
 
         public static FormulaType Blank { get; } = new BlankType();
 

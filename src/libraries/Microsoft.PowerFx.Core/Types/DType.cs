@@ -1057,6 +1057,11 @@ namespace Microsoft.PowerFx.Core.Types
                 return "Blank";
             }
 
+            if (Kind == DKind.Number || Kind == DKind.Decimal)
+            {
+                return "Number";
+            }
+
             if (IsLazyType)
             {
                 Contracts.AssertValue(LazyTypeProvider);

@@ -27,25 +27,25 @@ namespace Microsoft.PowerFx.Core.Tests
         public static readonly Dictionary<DName, FormulaType> TestTypesDictionaryWithNoNumberType =
             new Dictionary<DName, FormulaType>()
             {
-                { FormulaType.Boolean.Name, FormulaType.Boolean },
-                { FormulaType.Color.Name, FormulaType.Color },
-                { FormulaType.Date.Name, FormulaType.Date },
-                { FormulaType.Time.Name, FormulaType.Time },
-                { FormulaType.DateTime.Name, FormulaType.DateTime },
-                { FormulaType.DateTimeNoTimeZone.Name, FormulaType.DateTimeNoTimeZone },
-                { FormulaType.Guid.Name, FormulaType.Guid },
-                { FormulaType.Number.Name, FormulaType.Number }, // Float
-                { FormulaType.Decimal.Name, FormulaType.Decimal },
-                { FormulaType.String.Name, FormulaType.String }, // Text
-                { FormulaType.Hyperlink.Name, FormulaType.Hyperlink },
-                { FormulaType.UntypedObject.Name, FormulaType.UntypedObject }, // Dynamic
+                { BuiltInTypeNames.Boolean, FormulaType.Boolean },
+                { BuiltInTypeNames.Color, FormulaType.Color },
+                { BuiltInTypeNames.Date, FormulaType.Date },
+                { BuiltInTypeNames.Time, FormulaType.Time },
+                { BuiltInTypeNames.DateTime, FormulaType.DateTime },
+                { BuiltInTypeNames.DateTimeNoTimeZone_DateTimeTZInd, FormulaType.DateTimeNoTimeZone },
+                { BuiltInTypeNames.Guid, FormulaType.Guid },
+                { BuiltInTypeNames.Number_Float, FormulaType.Number }, // Float
+                { BuiltInTypeNames.Decimal, FormulaType.Decimal },
+                { BuiltInTypeNames.String_Text, FormulaType.String }, // Text
+                { BuiltInTypeNames.Hyperlink, FormulaType.Hyperlink },
+                { BuiltInTypeNames.UntypedObject_Dynamic, FormulaType.UntypedObject }, // Dynamic
             };
 
         // For historical reasons, we do most of our testing with Number type as Float.
         // Some tests are specifically designed without any Number type present.
         public static readonly Dictionary<DName, FormulaType> TestTypesDictionaryWithNumberTypeIsFloat = 
             new Dictionary<DName, FormulaType>(TestTypesDictionaryWithNoNumberType)
-                { { FormulaType.NumberAliasName, FormulaType.Number } };
+                { { BuiltInTypeNames.Number_Alias, FormulaType.Number } };
 
         public static readonly ReadOnlySymbolTable TestTypesWithNoNumberType = ReadOnlySymbolTable.NewDefaultTypes(TestTypesDictionaryWithNoNumberType);
 

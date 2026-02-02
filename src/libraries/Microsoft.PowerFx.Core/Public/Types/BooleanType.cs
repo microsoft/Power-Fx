@@ -9,8 +9,6 @@ namespace Microsoft.PowerFx.Types
 {
     public class BooleanType : FormulaType
     {
-        public override DName Name => new DName("Boolean");
-
         internal BooleanType()
             : base(DType.Boolean)
         {

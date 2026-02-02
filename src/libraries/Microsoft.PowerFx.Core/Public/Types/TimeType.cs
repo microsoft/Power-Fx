@@ -10,8 +10,6 @@ namespace Microsoft.PowerFx.Types
 {
     public class TimeType : FormulaType
     {
-        public override DName Name => new DName("Time");
-
         internal TimeType()
             : base(DType.Time)
         {

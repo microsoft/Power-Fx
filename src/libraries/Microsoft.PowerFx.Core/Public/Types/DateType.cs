@@ -9,8 +9,6 @@ namespace Microsoft.PowerFx.Types
 {
     public class DateType : FormulaType
     {
-        public override DName Name => new DName("Date");
-
         internal DateType()
             : base(DType.Date)
         {

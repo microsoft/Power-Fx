@@ -481,7 +481,7 @@ namespace Microsoft.PowerFx
         }
 
         [Obsolete("Use WithBuiltInNamedTypes instead and pass in the list of named types.")]
-        public static SymbolTable WithBPrimitiveTypes()
+        public static SymbolTable WithPrimitiveTypes()
         {
             throw new System.NotImplementedException("Deprecated, use WithBuiltInNamedTypes instead and pass in the list of named types.");
         }

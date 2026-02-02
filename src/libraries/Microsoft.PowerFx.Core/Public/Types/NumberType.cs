@@ -9,8 +9,6 @@ namespace Microsoft.PowerFx.Types
 {
     public class NumberType : FormulaType
     {
-        public override DName Name => new DName("Float");
-
         internal NumberType()
             : base(DType.Number)
         {

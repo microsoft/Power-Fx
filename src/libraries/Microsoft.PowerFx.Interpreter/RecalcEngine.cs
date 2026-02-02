@@ -41,17 +41,17 @@ namespace Microsoft.PowerFx
         internal static readonly IReadOnlyDictionary<DName, FormulaType> _builtInNamedTypesDictionary = 
             new Dictionary<DName, FormulaType>()
             {
-                { FormulaType.Boolean.Name, FormulaType.Boolean },
-                { FormulaType.Color.Name, FormulaType.Color },
-                { FormulaType.Date.Name, FormulaType.Date },
-                { FormulaType.Time.Name, FormulaType.Time },
-                { FormulaType.DateTime.Name, FormulaType.DateTime },
-                { FormulaType.Guid.Name, FormulaType.Guid },
-                { FormulaType.Number.Name, FormulaType.Number }, // Float, this is not Number which is added later in the constructor
-                { FormulaType.Decimal.Name, FormulaType.Decimal },
-                { FormulaType.String.Name, FormulaType.String }, // Text
-                { FormulaType.Hyperlink.Name, FormulaType.Hyperlink },
-                { FormulaType.UntypedObject.Name, FormulaType.UntypedObject }, // Dynamic
+                { BuiltInTypeNames.Boolean, FormulaType.Boolean },
+                { BuiltInTypeNames.Color, FormulaType.Color },
+                { BuiltInTypeNames.Date, FormulaType.Date },
+                { BuiltInTypeNames.Time, FormulaType.Time },
+                { BuiltInTypeNames.DateTime, FormulaType.DateTime },
+                { BuiltInTypeNames.Guid, FormulaType.Guid },
+                { BuiltInTypeNames.Number_Float, FormulaType.Number }, // Float, this is not Number which is added later in the constructor
+                { BuiltInTypeNames.Decimal, FormulaType.Decimal },
+                { BuiltInTypeNames.String_Text, FormulaType.String }, // Text
+                { BuiltInTypeNames.Hyperlink, FormulaType.Hyperlink },
+                { BuiltInTypeNames.UntypedObject_Dynamic, FormulaType.UntypedObject }, // Dynamic
             };
 
         /// <summary>
@@ -73,22 +73,26 @@ namespace Microsoft.PowerFx
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
+        /// Create a new power fx engine with control over which type is Number. 
+        /// </summary>
+        /// <param name="powerFxConfig"></param>
+        /// <param name="numberTypeIsFloat">
+        /// Note that there are two NumberIsFloat flags that are completely independent:
+        /// - numberTypeIsFloat paramter here, which only impacts the symbol table and deciding what type Number should alias to (Float or Decimal) for use by UDFs and UDTs.
+        /// - ParserOptions NumberIsFloat, which impacts parsing of literals only.
+        /// To put Power Fx into "Float" mode, for example for Canvas apps, both must be used together.
+        /// By default, Power Fx uses "Decimal" mode.
+        /// </param>
         public RecalcEngine(PowerFxConfig powerFxConfig, bool numberTypeIsFloat)
-            : base(powerFxConfig)
+            : base(powerFxConfig, SymbolTable.NewDefaultTypes(_builtInNamedTypesDictionary, numberTypeIsFloat ? FormulaType.Number : FormulaType.Decimal))
         {
             _symbolTable = new SymbolTable { DebugName = "Globals" };
             _symbolValues = new SymbolValues(_symbolTable);
             _symbolValues.OnUpdate += OnSymbolValuesOnUpdate;
 
             base.EngineSymbols = _symbolTable;
-
-            // Note that there are two NumberIsFloat flags that are completely independent:
-            // - numberTypeIsFloat paramter here, which only impacts the symbol table and deciding what type
-            //   Number should alias to (Float or Decimal) for use by UDFs and UDTs.
-            // - ParserOptions NumberIsFloat, which impacts parsing of literals only.
-            // To put Power Fx into "Float" mode, for example for Canvas apps, both must be used together.
-            // By default, Power Fx uses "Decimal" mode.
-            BuiltInNamedTypes = SymbolTable.NewDefaultTypes(_builtInNamedTypesDictionary, numberTypeIsFloat ? FormulaType.Number : FormulaType.Decimal);
 
             // Add Builtin functions that aren't yet in the shared library. 
             SupportedFunctions = _interpreterSupportedFunctions;

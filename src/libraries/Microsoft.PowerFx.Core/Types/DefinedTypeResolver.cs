@@ -51,6 +51,7 @@ namespace Microsoft.PowerFx.Core.Types
             // generic types
             "Null", "None", "Blank", "Void", "Nothing",
             "Object", "Delegate", "Pointer", "Reference", "Unknown", "Unsupported",
+            "Control", "Component", "View",
 
             // old name for dynamic
             "Untyped", "UnTyped", 
@@ -63,6 +64,7 @@ namespace Microsoft.PowerFx.Core.Types
             "BigInt", "UnisgnedBigInt",
             "WholeNumber",
             "Numeric",
+            "UShort", "ULong", "UInt", "UInteger", "SByte",
 
             // possible date/time data types
             "DateTimeZone", "TimeZone",
@@ -74,7 +76,7 @@ namespace Microsoft.PowerFx.Core.Types
             "Email", "Phone", "Address", 
             "Language", "Locale",
             "MultilineText", "MultiLineText", "TextArea",
-            "SingleineText", "SingleLineText",
+            "SinglelineText", "SingleLineText",
 
             // possible GUID data types
             "UniqueIdentifier", "PrimaryKey", "Identifier",

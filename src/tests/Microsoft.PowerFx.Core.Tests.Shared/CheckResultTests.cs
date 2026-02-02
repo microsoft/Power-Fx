@@ -355,7 +355,7 @@ namespace Microsoft.PowerFx.Core.Tests
         // extra field
         [InlineData("{a:Decimal(12), b:Decimal(15)}", false, false, "![a:w]", "Type mismatch between source and target record types. Given type has extra fields: b.")]
         [InlineData("{a:12, b:15}", false, false, "*[a:w,b:w]", "Type mismatch between source and target types. Expected Table; Found Record.")]
-        [InlineData("{a:12, b:15}", false, false, "![a:w,b:s]", "Type mismatch between source and target record types. Field name: b Expected Text; Found Decimal.")]
+        [InlineData("{a:12, b:15}", false, false, "![a:w,b:s]", "Type mismatch between source and target record types. Field name: b Expected Text; Found Number.")]
 
         // ****When Coercion is allowed****
         [InlineData("\"test string\"", true, true, "s", "")]

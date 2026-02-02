@@ -10,8 +10,6 @@ namespace Microsoft.PowerFx.Types
     [DebuggerDisplay("{_type}:tzi")]
     public class DateTimeNoTimeZoneType : FormulaType
     {
-        public override DName Name => new DName("DateTimeTZInd");
-
         internal DateTimeNoTimeZoneType()
             : base(DType.DateTimeNoTimeZone)
         {

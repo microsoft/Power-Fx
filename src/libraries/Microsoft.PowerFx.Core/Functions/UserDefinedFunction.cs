@@ -39,6 +39,7 @@ namespace Microsoft.PowerFx.Core.Functions
         private readonly bool _isImperative;
         private readonly IEnumerable<UDFArg> _args;
         private TexlBinding _binding;
+        private readonly IdentToken _returnTypeName;
 
         public override bool IsAsync => _binding.IsAsync(UdfBody);
 
@@ -133,6 +134,22 @@ namespace Microsoft.PowerFx.Core.Functions
             this._isImperative = isImperative;
 
             this.UdfBody = body;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserDefinedFunction"/> class. Includes the return type name for better error messages.
+        /// </summary>
+        /// <param name="functionName">Name of the function.</param>
+        /// <param name="returnType">Return type of the function.</param>
+        /// <param name="body">TexlNode for user defined function body.</param>
+        /// <param name="isImperative"></param>
+        /// <param name="args"></param>
+        /// <param name="argTypes">Array of argTypes in order.</param>
+        /// <param name="returnTypeName">Name of the type in the decleration, used by error messages.</param>
+        public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args, DType[] argTypes, IdentToken returnTypeName)
+        : this(functionName, returnType, body, isImperative, args, argTypes)
+        {
+            this._returnTypeName = returnTypeName;
         }
 
         /// <summary>
@@ -235,7 +252,7 @@ namespace Microsoft.PowerFx.Core.Functions
                         return;
                     }
 
-                    binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch, ReturnType.GetKindString(), actualBodyReturnType.GetKindString());
+                    binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch, _returnTypeName?.Name ?? ReturnType.GetKindString(), actualBodyReturnType.GetKindString());
                 }
             }
         }
@@ -366,7 +383,7 @@ namespace Microsoft.PowerFx.Core.Functions
                     errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Warning, TexlStrings.WrnUDF_ShadowingBuiltInFunction, udfName));
                 }
 
-                var func = new UserDefinedFunction(udfName.Value, returnType, udf.Body, udf.IsImperative, udf.Args, parameterTypes);
+                var func = new UserDefinedFunction(udfName.Value, returnType, udf.Body, udf.IsImperative, udf.Args, parameterTypes, udf.ReturnType);
 
                 texlFunctionSet.Add(func);
                 userDefinedFunctions.Add(func);
@@ -424,7 +441,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             var dummyref = 0;
             var udfBody = udf.Body ?? new PowerFx.Syntax.ErrorNode(ref dummyref, new CommentToken("dummy token", new Span(0, 0)), "dummy error");
-            var func = new UserDefinedFunction(udfName.Value, returnType, udfBody, udf.IsImperative, udf.Args, parameterTypes);
+            var func = new UserDefinedFunction(udfName.Value, returnType, udfBody, udf.IsImperative, udf.Args, parameterTypes, udf.ReturnType);
 
             return func;
         }
@@ -488,7 +505,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             // only the return type from a UDF can be a void type, it is not valid in other type contexts
-            if (returnTypeToken.Name == FormulaType.Void.Name)
+            if (returnTypeToken.Name == BuiltInTypeNames.Void)
             {
                 returnTypeFormulaType = FormulaType.Void;
 

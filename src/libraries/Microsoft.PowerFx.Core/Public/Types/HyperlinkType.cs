@@ -9,8 +9,6 @@ namespace Microsoft.PowerFx.Types
 {
     public class HyperlinkType : FormulaType
     {
-        public override DName Name => new DName("Hyperlink");
-
         internal HyperlinkType()
             : base(DType.Hyperlink)
         {

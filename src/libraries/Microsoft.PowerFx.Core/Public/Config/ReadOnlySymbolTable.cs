@@ -307,7 +307,7 @@ namespace Microsoft.PowerFx
 
             if (numberTypeIs != null)
             {
-                s.AddType(FormulaType.NumberAliasName, numberTypeIs);
+                s.AddType(BuiltInTypeNames.Number_Alias, numberTypeIs);
             }
 
             return s;

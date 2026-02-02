@@ -14,30 +14,6 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core
 {
-    internal class JSONPrimitiveTypes
-    {
-        // TODO: Should we keep Number fixed to Float? Or not support Number at all?
-        public static readonly Dictionary<DName, FormulaType> PrimitiveTypesDictionary =
-            new Dictionary<DName, FormulaType>()
-            {
-                { FormulaType.Boolean.Name, FormulaType.Boolean },
-                { FormulaType.Color.Name, FormulaType.Color },
-                { FormulaType.Date.Name, FormulaType.Date },
-                { FormulaType.Time.Name, FormulaType.Time },
-                { FormulaType.DateTime.Name, FormulaType.DateTime },
-                { FormulaType.Guid.Name, FormulaType.Guid },
-                { FormulaType.Number.Name, FormulaType.Number }, // Float
-                { FormulaType.NumberAliasName, FormulaType.Number }, // Float
-                { FormulaType.Decimal.Name, FormulaType.Decimal },
-                { FormulaType.String.Name, FormulaType.String }, // Text
-                { FormulaType.Hyperlink.Name, FormulaType.Hyperlink },
-                { FormulaType.UntypedObject.Name, FormulaType.UntypedObject }, // Dynamic
-                { FormulaType.Void.Name, FormulaType.Void },
-            };
-
-        public static readonly ReadOnlySymbolTable PrimitiveTypesTable = ReadOnlySymbolTable.NewDefaultTypes(PrimitiveTypesDictionary);
-    }
-
     internal sealed class FormulaTypeSchema
     {
         /// <summary>
@@ -112,7 +88,7 @@ namespace Microsoft.PowerFx.Core
 
         private static bool TryLookupType(string typeName, INameResolver definedTypeSymbols, out FormulaType type)
         {
-            var lookupOrder = new List<INameResolver>() { definedTypeSymbols, JSONPrimitiveTypes.PrimitiveTypesTable };
+            var lookupOrder = new List<INameResolver>() { definedTypeSymbols, FormulaTypeToSchemaHelper.JSONPrimitiveTypesTable };
             foreach (var table in lookupOrder)
             {
                 if (table.LookupType(new DName(typeName), out var ft))

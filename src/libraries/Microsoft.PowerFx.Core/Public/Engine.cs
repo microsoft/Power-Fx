@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -73,6 +74,40 @@ namespace Microsoft.PowerFx
             Config = powerFxConfig ?? throw new ArgumentNullException(nameof(powerFxConfig));
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Engine"/> class with built in UDT and UDF primitive names.
+        /// </summary>
+        /// <param name="builtInNamedTypes">ReadOnlySymbolTable with primitive type names supported. The "Number" type must be included in the builtInNamedTypes.</param>
+        public Engine(ReadOnlySymbolTable builtInNamedTypes)
+            : this(new PowerFxConfig(), builtInNamedTypes)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Engine"/> class with built in UDT and UDF primitive names.
+        /// </summary>
+        /// <param name="powerFxConfig"></param>
+        /// <param name="builtInNamedTypes">ReadOnlySymbolTable with primitive type names supported. The "Number" type must be included in the builtInNamedTypes.</param>
+        public Engine(PowerFxConfig powerFxConfig, ReadOnlySymbolTable builtInNamedTypes)
+            : this(powerFxConfig)
+        {
+            INameResolver resolver = builtInNamedTypes;
+            if (!resolver.LookupType(BuiltInTypeNames.Number_Alias, out _))
+            {
+                throw new ArgumentException($"Engine BuiltInNamedTypes must contain a definition for the {BuiltInTypeNames.Number_Alias} type.");
+            }
+            else if (resolver.LookupType(BuiltInTypeNames.Void, out _))
+            {
+                throw new ArgumentException($"Engine BuiltInNamedTypes must not contain {BuiltInTypeNames.Void} type.");
+            }
+            else if (resolver.LookupType(BuiltInTypeNames.Blank_None, out _))
+            {
+                throw new ArgumentException($"Engine BuiltInNamedTypes must not contain {BuiltInTypeNames.Blank_None} type.");
+            }
+
+            BuiltInNamedTypes = builtInNamedTypes;
+        }
+
         // All functions that powerfx core knows about. 
         // Derived engines may only support a subset of these builtins, 
         // and they may add their own custom ones. 
@@ -84,11 +119,15 @@ namespace Microsoft.PowerFx
         public ReadOnlySymbolTable SupportedFunctions { get; protected internal set; } = _allBuiltinCoreFunctions;
 
         /// <summary>
-        /// Builtin Types supported by this engine. This must be supplied in order for UDF/UDTs to find the existing 
-        /// primitive types, such as Text, Decimal, Date, etc. If UDF/UDTs are not supported, this can be skipped.
-        /// If a Number alias is desired, it should be added explicitly here as well, mapped to Float or Decimal as appropriate.
+        /// Builtin Type names supported by this engine for makers to reference in UDT and UDF definitions. 
+        /// This must be supplied in order for UDF/UDTs to find the existing primitive types, such as Text, Decimal, Date, etc. 
+        /// If UDF/UDTs are not supported, this can be skipped and left null as there is no way to reference a type.
+        /// If this list is used, it must include a definition for the 'Number' type, enforced in the Engine constructor.
         /// </summary>
-        public ReadOnlySymbolTable BuiltInNamedTypes { get; init; }
+        public ReadOnlySymbolTable BuiltInNamedTypes { get; }
+
+        [Obsolete("Use BuiltInNamedTypes instead and pass the list of types to the Engine constructor. PrimitiveTypes will always be null.")]
+        public ReadOnlySymbolTable PrimitiveTypes { get; protected internal set; }
 
         // By default, we pull the core functions. 
         // These can be overridden. 

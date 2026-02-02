@@ -174,11 +174,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             if (includeVoid)
             {
                 list.Add(new IntellisenseSuggestion(
-                    new UIString(FormulaType.Void.Name.Value),         // UI text
+                    new UIString(BuiltInTypeNames.Void.Value),         // UI text
                     SuggestionKind.Type,                               // Kind
                     SuggestionIconKind.Other,                          // Icon
                     FormulaType.Void._type,                            // DType
-                    FormulaType.Void.Name,                             // exact match
+                    BuiltInTypeNames.Void,                             // exact match
                     -1,                                                // argCount (N/A for types)
                     string.Empty,                                      // description
                     string.Empty));                                    // help

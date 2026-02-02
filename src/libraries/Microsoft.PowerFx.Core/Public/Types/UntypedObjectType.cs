@@ -11,8 +11,6 @@ namespace Microsoft.PowerFx.Types
 {
     public class UntypedObjectType : FormulaType
     {
-        public override DName Name => new DName("Dynamic");
-
         public UntypedObjectType()
             : base(DType.UntypedObject)
         {

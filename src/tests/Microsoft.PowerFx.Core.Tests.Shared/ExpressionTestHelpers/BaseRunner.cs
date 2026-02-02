@@ -223,8 +223,13 @@ namespace Microsoft.PowerFx.Core.Tests
                         foreach (var exp in expectedStrArr)
                         {
                             if (!actualStrArr.Contains(exp) &&
+                                !actualStrArr.Contains(Regex.Replace(exp, "( Decimal, Number, | Number, Decimal, | Decimal, (?!Number))", " Number, ")) &&
+                                !actualStrArr.Contains(Regex.Replace(exp, @"(['\(])Decimal(['\)])", "$1Number$2")) &&
+                                !actualStrArr.Contains(Regex.Replace(exp, @" Decimal( value|\.)", " Number$1")))
+#if false
                                 !(NumberIsFloat && actualStrArr.Contains(Regex.Replace(exp, "(?<!Number,)(\\s|'|\\()Decimal(\\s|'|,|\\.|\\))", "$1Number$2"))) &&
                                 !(NumberIsFloat && actualStrArr.Contains(Regex.Replace(exp, " Decimal, Number, ", " Number, Decimal, "))))
+#endif
                             {
                                 isValid = false;
                                 break;

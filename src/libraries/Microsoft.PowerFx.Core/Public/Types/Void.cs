@@ -12,8 +12,6 @@ namespace Microsoft.PowerFx.Types
     /// </summary>
     public sealed class Void : FormulaType
     {
-        public override DName Name => new DName("Void");
-
         internal Void()
             : base(DType.Void)
         {

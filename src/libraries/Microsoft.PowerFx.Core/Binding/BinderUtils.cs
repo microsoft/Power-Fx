@@ -321,7 +321,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
             }
 
-            errorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrBadType_ExpectedTypesCSV, string.Join(", ", alternateTypes.Select(t => t.GetKindString())));
+            errorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrBadType_ExpectedTypesCSV, string.Join(", ", alternateTypes.Select(t => t.GetKindString()).Distinct()));
             return new BinderCheckTypeResult();
         }
 
@@ -402,7 +402,7 @@ namespace Microsoft.PowerFx.Core.Binding
             }
 
             var messageKey = alternateTypes.Length == 0 ? TexlStrings.ErrBadType_ExpectedType : TexlStrings.ErrBadType_ExpectedTypesCSV;
-            var messageArg = alternateTypes.Length == 0 ? typeWant.GetKindString() : string.Join(", ", new[] { typeWant }.Concat(alternateTypes).Select(t => t.GetKindString()));
+            var messageArg = alternateTypes.Length == 0 ? typeWant.GetKindString() : string.Join(", ", new[] { typeWant }.Concat(alternateTypes).Select(t => t.GetKindString()).Distinct());
 
             errorContainer.EnsureError(DocumentErrorSeverity.Severe, node, messageKey, messageArg);
             return new BinderCheckTypeResult() { Coercions = coercions };

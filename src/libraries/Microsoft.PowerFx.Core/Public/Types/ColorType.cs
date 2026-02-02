@@ -10,8 +10,6 @@ namespace Microsoft.PowerFx.Types
 {
     public class ColorType : FormulaType
     {
-        public override DName Name => new DName("Color");
-
         internal ColorType()
             : base(DType.Color)
         {

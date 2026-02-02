@@ -624,7 +624,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var extra = new SymbolTable();
             extra.AddVariable("K1", FormulaType.Number);
 
-            var engine = new Engine() { BuiltInNamedTypes = UDTTestUtils.TestTypesWithNumberTypeIsFloat };
+            var engine = new Engine(UDTTestUtils.TestTypesWithNumberTypeIsFloat);
             engine.AddUserDefinedFunction("Foo1(x: Number): Number = Abs(K1);", symbolTable: extra);
 
             var check = engine.Check("Foo1(3)");
@@ -1105,7 +1105,24 @@ namespace Microsoft.PowerFx.Core.Tests
             var errorsNone = checkResultNone.ApplyErrors();
             Assert.Empty(errorsNone);
         }
-        
+
+        // Ensures that we don't just show "Number" for any mismatch with a numeric type that was declared as the UDF return type.
+        [Theory]
+        [InlineData("F():Number = GUID();", "Number")]
+        [InlineData("F():Decimal = GUID();", "Decimal")]
+        [InlineData("F():Float = GUID();", "Float")]
+        public void TestUDFReturnTypeErrorMessages(string expression, string declaredType)
+        {
+            var parserOptions = new ParserOptions() { AllowsSideEffects = true };
+            var checkResult = new DefinitionsCheckResult()
+                                            .SetText(expression, parserOptions)
+                                            .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat));
+            var errors = checkResult.ApplyErrors();
+            Assert.NotEmpty(errors);
+            Assert.Contains(errors, x => x.MessageKey == "ErrUDF_ReturnTypeDoesNotMatch" &&
+                                         x.Message == $"The stated function return type '{declaredType}' does not match the return type of the function body 'Guid'.");
+        }
+
         [Theory]
         
         [InlineData("F():Number = 5;", true)]

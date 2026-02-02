@@ -206,7 +206,7 @@ Errors: Error 16-21: Invalid argument type (Enum (Color)). Expecting a Number va
 1
 
 >> ReturnMyNumColor():MyNum = Color.Red;
-Errors: Error 32-36: The stated function return type 'Number' does not match the return type of the function body 'Enum (Color)'.
+Errors: Error 32-36: The stated function return type 'MyNum' does not match the return type of the function body 'Enum (Color)'.
 
 >> MyNumRec := Type({Val:Number});
 #no value
