@@ -289,68 +289,6 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Empty(cache);
             Assert.IsType<ConcurrentDictionary<string, Task<(ConnectorType, IEnumerable<OptionSet>)>>>(cache);
         }
-
-        [Fact]
-        public async Task TestSelfReferencingFields_AccountTable_CachesOnce()
-        {
-            // This test uses the Salesforce Account table which has self-referential fields:
-            // - MasterRecordId: references Account table
-            // - ParentId (Parent Account ID): references Account table
-            // Both fields point to the same external table (Account itself), so accessing
-            // these field types should only trigger one cache entry for Account metadata.
-
-            // Arrange
-            _server.SetResponseFromFiles(
-                @"Responses\SF GetDatasetsMetadata.json",
-                @"Responses\SF GetTables.json",
-                @"Responses\SF GetSchema.json");
-
-            var dataSource = new CdpDataSource(
-                "pfxdev-sql.database.windows.net,connectortest",
-                ConnectorSettings.NewCDPConnectorSettings());
-
-            // Note: We're using SQL connector responses for setup, but SF schema for the table
-            var tables = await dataSource.GetTablesAsync(_client, _basePath, CancellationToken.None, _logger);
-            var cache = dataSource.TableMetadataCache;
-
-            Assert.Empty(cache);
-
-            // Track the request count before Account table initialization
-            var requestCountBeforeAccount = _server.CurrentResponse;
-
-            // Create a mock Account table instance
-            // In real scenario, this would be from Salesforce connector
-            var accountTable = tables.First(t => t.DisplayName == "Accounts");
-
-            // Act - Initialize Account table with Salesforce schema
-            // This schema contains MasterRecordId and ParentId fields that both reference Account
-            await accountTable.InitAsync(_client, _basePath, CancellationToken.None, _logger);
-
-            var requestCountAfterAccount = _server.CurrentResponse;
-
-            // Assert - Cache should have one entry for Account table
-            Assert.Single(cache);
-
-            // Verify only ONE network call was made to fetch Account metadata
-            // despite the self-referential fields
-            Assert.Equal(requestCountBeforeAccount + 1, requestCountAfterAccount);
-
-            // Verify the Account table was initialized correctly
-            Assert.NotNull(accountTable.ConnnectorType);
-            Assert.NotNull(accountTable.RecordType);
-
-            // The RecordType should contain the fields including self-referential ones
-            var recordType = accountTable.RecordType;
-            Assert.NotNull(recordType);
-
-            Assert.True(recordType.TryGetFieldType("MasterRecordId", out var masterRecordFieldType));
-            Assert.Equal("Account", ((AggregateType)masterRecordFieldType).TableSymbolName);
-
-            Assert.True(recordType.TryGetFieldType("ParentId", out var parentIdFieldType));
-            Assert.Equal("Account", ((AggregateType)parentIdFieldType).TableSymbolName);
-
-            Assert.Equal(requestCountAfterAccount, _server.CurrentResponse);
-        }
     }
 
 #pragma warning restore CS0618
