@@ -40,6 +40,7 @@ namespace Microsoft.PowerFx.Core.Types
             "GUID", 
             "Text", "Hyperlink",
             "Dynamic",
+            "Null", "None", "Blank", "Void", "Nothing",
 
             // strucutural type names
             "Record", "Table", "Array",
@@ -49,12 +50,11 @@ namespace Microsoft.PowerFx.Core.Types
             "Row", "Column", "Matrix",
 
             // generic types
-            "Null", "None", "Blank", "Void", "Nothing",
             "Object", "Delegate", "Pointer", "Reference", "Unknown", "Unsupported",
             "Control", "Component", "View",
 
             // old name for dynamic
-            "Untyped", "UnTyped", 
+            "Untyped", "UnTyped",
 
             // possible numeric data types
             "Currency", "Money", 
@@ -67,22 +67,28 @@ namespace Microsoft.PowerFx.Core.Types
             "UShort", "ULong", "UInt", "UInteger", "SByte",
 
             // possible date/time data types
-            "DateTimeZone", "TimeZone", "Timezone",
-            "Duration", "Timespan", "TimeSpan",
-            "DateTimeNoTZ", "DateTimeNoTimeZone", "DateTimeNoTimeZoneInformation",  
+            "DateTimeZone", "TimeZone", "Timezone", // Dataverse number format
+            "Duration", // Dataverse number format
+            "Timespan", "TimeSpan", 
+            "DateTimeNoTZ", "DateTimeNoTimeZone", "DateTimeNoTimeZoneInformation",
 
             // possible text data types
-            "String", "HTML", "JSON", "XML", "Char", "Character", "URI", "URL", "RichText", "UChar",
-            "Email", "TickerSymbol",
-            "Language", "Locale",
-            "MultilineText", "MultiLineText", "TextArea",
-            "SinglelineText", "SingleLineText",
+            "String", 
+            "HTML", "JSON", "XML", 
+            "Char", "Character", "UChar",
+            "URI", "URL",
+            "RichText", // Dataverse text formats
+            "LanguageCode", // Dataverse numeric format
+            "EmailAddress", "TickerSymbol", "PhoneNumber", // Dataverse text formats
+            "LanguageTag", "Language", "Locale", // Power Fx usage
+            "MultilineText", "MultiLineText", "TextArea", // Dataverse text formats
+            "SinglelineText", "SingleLineText", // Dataverse text formats
 
             // possible GUID data types
             "UniqueIdentifier", "PrimaryKey", "Identifier",
 
             // possible Booelan data types
-            "YesNo", "TrueFalse", "OnOff",
+            "YesNo", "TrueFalse", "OnOff", // Dataverse choice
 
             // possible location data types
             "Geography", "Geolocation", "Location", "Coordinates", "GeoCoordinates", "GPS",
