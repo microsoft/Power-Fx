@@ -649,10 +649,48 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             check = engine.Check("CountRows(ShowColumns([{A: 123}, {A: 124}, {A:125}, {A:126}, {A: 127}]))");
             Assert.True(check.IsSuccess);
-            Assert.Equal(FormulaType.Decimal, check.ReturnType);
+            Assert.Equal(FormulaType.Number, check.ReturnType);
 
             result = check.GetEvaluator().Eval();
             Assert.Equal(3, result.AsDouble());
+        }
+
+        [Fact]
+        public void ShadowingFunctionPrecedenceTest_Decimal()
+        {
+            var engine = new RecalcEngine(numberTypeIsFloat: false);
+            engine.AddUserDefinedFunction("Concat(x:Text):Text = \"xyz\"; Average(x:Number):Number = 11111;");
+
+            var check = engine.Check("Concat(\"abc\")");
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.String, check.ReturnType);
+
+            var result = check.GetEvaluator().Eval();
+            Assert.Equal("xyz", ((StringValue)result).Value);
+
+            check = engine.Check("Average(123)");
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.Decimal, check.ReturnType);
+
+            result = check.GetEvaluator().Eval();
+            Assert.Equal(11111, result.AsDecimal());
+
+            engine.AddUserDefinitions("Test := Type({A: Number}); TestTable := Type([{A: Number}]);" +
+                "Filter(X: TestTable):Test = First(X); ShowColumns(X: TestTable):TestTable = FirstN(X, 3);");
+
+            check = engine.Check("Filter([{A: 123}]).A");
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.Decimal, check.ReturnType);
+
+            result = check.GetEvaluator().Eval();
+            Assert.Equal(123, result.AsDecimal());
+
+            check = engine.Check("CountRows(ShowColumns([{A: 123}, {A: 124}, {A:125}, {A:126}, {A: 127}]))");
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.Decimal, check.ReturnType);
+
+            result = check.GetEvaluator().Eval();
+            Assert.Equal(3, result.AsDecimal());
         }
 
         [Theory]

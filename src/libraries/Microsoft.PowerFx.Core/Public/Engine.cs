@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx
             : this(powerFxConfig)
         {
             INameResolver resolver = builtInNamedTypes;
-            if (!resolver.LookupType(BuiltInTypeNames.Number_Alias, out _))
+            if (!resolver.LookupType(BuiltInTypeNames.Number_Alias, out var numberType))
             {
                 throw new ArgumentException($"Engine BuiltInNamedTypes must contain a definition for the {BuiltInTypeNames.Number_Alias} type.");
             }
@@ -106,6 +106,7 @@ namespace Microsoft.PowerFx
             }
 
             BuiltInNamedTypes = builtInNamedTypes;
+            NumberIsFloat = numberType == FormulaType.Number;
         }
 
         // All functions that powerfx core knows about. 
@@ -125,6 +126,14 @@ namespace Microsoft.PowerFx
         /// If this list is used, it must include a definition for the 'Number' type, enforced in the Engine constructor.
         /// </summary>
         public ReadOnlySymbolTable BuiltInNamedTypes { get; }
+
+        /// <summary>
+        /// Indicates whether the generic 'Number' type is represented as Float (double) or Decimal, 
+        /// after looking at BuiltInNamedTypes passed into the Engine constructor.
+        /// This is used to create the default ParserOptions that are generated with GetDefaultParserOptionsCopy().
+        /// Default is false if BuiltInNamedTypes is not provided.
+        /// </summary>
+        public bool NumberIsFloat { get; }
 
         [Obsolete("Use BuiltInNamedTypes instead and pass the list of types to the Engine constructor. PrimitiveTypes will always be null.")]
         public ReadOnlySymbolTable PrimitiveTypes { get; protected internal set; }
@@ -254,6 +263,7 @@ namespace Microsoft.PowerFx
                 Culture = null,
                 AllowsSideEffects = false,
                 MaxExpressionLength = Config.MaximumExpressionLength,
+                NumberIsFloat = this.NumberIsFloat,
             };
         }
 
