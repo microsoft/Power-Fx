@@ -9,7 +9,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {
-    internal class JsonUntypedObject : UntypedObjectBase
+    public class JsonUntypedObject : UntypedObjectBase
     {
         internal readonly JsonElement _element;
 
@@ -17,6 +17,8 @@ namespace Microsoft.PowerFx.Functions
         {
             _element = element;
         }
+
+        public JsonElement JsonElement => _element;
 
         public override FormulaType Type
         {

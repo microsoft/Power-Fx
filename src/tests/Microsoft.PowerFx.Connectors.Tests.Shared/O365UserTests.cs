@@ -232,7 +232,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         // In PA, a 3rd param is required for Body even though it is "required":false in swagger file
         [InlineData(
             @"Office365Users.HttpRequest(""https://graph.microsoft.com/v1.0/me"", ""GET"")",
-            "RECORD",
+            "UNTYPED",
             "POST:/apim/office365users/1870991d56b04959a52f6704949eccad/codeless/httprequest",
             "",
             "Response_O365Users_HttpRequest.json")]
