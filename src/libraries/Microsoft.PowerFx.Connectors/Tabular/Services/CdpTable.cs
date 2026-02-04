@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -51,18 +52,21 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly ConnectorSettings _connectorSettings;
 
+        private readonly ConcurrentDictionary<string, Task<(ConnectorType, IEnumerable<OptionSet>)>> _tableMetadataCache;
+
         public override ConnectorSettings ConnectorSettings => _connectorSettings;
 
-        internal CdpTable(string dataset, string table, IReadOnlyCollection<RawTable> tables, ConnectorSettings connectorSettings)
+        internal CdpTable(string dataset, string table, IReadOnlyCollection<RawTable> tables, ConnectorSettings connectorSettings, ConcurrentDictionary<string, Task<(ConnectorType, IEnumerable<OptionSet>)>> tableMetadataCache = null)
         {
             DatasetName = dataset ?? throw new ArgumentNullException(nameof(dataset));
             TableName = table ?? throw new ArgumentNullException(nameof(table));
             Tables = tables;
             _connectorSettings = connectorSettings ?? ConnectorSettings.NewCDPConnectorSettings();
+            _tableMetadataCache = tableMetadataCache ?? new ConcurrentDictionary<string, Task<(ConnectorType, IEnumerable<OptionSet>)>>();
         }
 
-        internal CdpTable(string dataset, string table, DatasetMetadata datasetMetadata, IReadOnlyCollection<RawTable> tables, ConnectorSettings connectorSettings)
-            : this(dataset, table, tables, connectorSettings)
+        internal CdpTable(string dataset, string table, DatasetMetadata datasetMetadata, IReadOnlyCollection<RawTable> tables, ConnectorSettings connectorSettings, ConcurrentDictionary<string, Task<(ConnectorType, IEnumerable<OptionSet>)>> tableMetadataCache = null)
+            : this(dataset, table, tables, connectorSettings, tableMetadataCache)
         {
             DatasetMetadata = datasetMetadata;
         }
@@ -88,7 +92,7 @@ namespace Microsoft.PowerFx.Connectors
 
             _uriPrefix = uriPrefix;
 
-            CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, _connectorSettings, logger);
+            CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, _connectorSettings, _tableMetadataCache, logger);
             TabularTableDescriptor = await tableResolver.ResolveTableAsync(TableName, cancellationToken).ConfigureAwait(false);
             
             if (TabularTableDescriptor.HasErrors)

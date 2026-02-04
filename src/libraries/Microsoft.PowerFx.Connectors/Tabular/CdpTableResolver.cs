@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -30,34 +31,49 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly ConnectorSettings _connectorSettings;
 
+        private readonly ConcurrentDictionary<string, Task<(ConnectorType, IEnumerable<OptionSet>)>> _tableMetadataCache;
+
+        private const int MaxCacheSize = 1000;
+
         public ConnectorSettings ConnectorSettings => _connectorSettings;
 
-        public CdpTableResolver(CdpTable tabularTable, HttpClient httpClient, string uriPrefix, bool doubleEncoding, ConnectorSettings connectorSettings, ConnectorLogger logger = null)
+        public CdpTableResolver(CdpTable tabularTable, HttpClient httpClient, string uriPrefix, bool doubleEncoding, ConnectorSettings connectorSettings, ConcurrentDictionary<string, Task<(ConnectorType, IEnumerable<OptionSet>)>> tableMetadataCache, ConnectorLogger logger = null)
         {
             _tabularTable = tabularTable;
             _httpClient = httpClient;
             _uriPrefix = uriPrefix;
             _doubleEncoding = doubleEncoding;
             _connectorSettings = connectorSettings;
+            _tableMetadataCache = tableMetadataCache ?? new ConcurrentDictionary<string, Task<(ConnectorType, IEnumerable<OptionSet>)>>();
             Logger = logger;
         }
 
         public async Task<ConnectorType> ResolveTableAsync(string logicalName, CancellationToken cancellationToken)
         {
-            // out string name, out string displayName, out ServiceCapabilities tableCapabilities            
             cancellationToken.ThrowIfCancellationRequested();
 
-            // if we have the list of table, we can convert from display name to logical name
+            // Convert display name to logical name if needed
             if (_tabularTable.Tables != null)
             {
                 RawTable t = _tabularTable.Tables.FirstOrDefault(tbl => tbl.DisplayName == logicalName);
                 if (t != null)
                 {
-                    // Use logical name
                     logicalName = t.Name;
                 }
             }
 
+            // Build the URI that will be used for both caching and fetching
+            string cacheKey = BuildTableMetadataUri(logicalName);
+
+            // Try to get from cache using URI as key (async deduplication pattern)
+            var cachedTask = _tableMetadataCache.GetOrAdd(cacheKey, _ => FetchAndCacheTableMetadataAsync(cacheKey, cancellationToken));
+            var (connectorType, optionSets) = await cachedTask.ConfigureAwait(false);
+            OptionSets = optionSets;
+            return connectorType;
+        }
+
+        private string BuildTableMetadataUri(string logicalName)
+        {
             string dataset = _doubleEncoding ? CdpServiceBase.DoubleEncode(_tabularTable.DatasetName) : CdpServiceBase.SingleEncode(_tabularTable.DatasetName);
             string uri = (_uriPrefix ?? string.Empty) + (UseV2(_uriPrefix) ? "/v2" : string.Empty) + $"/$metadata.json/datasets/{dataset}/tables/{CdpServiceBase.DoubleEncode(logicalName)}?api-version=2015-09-01";
 
@@ -70,13 +86,29 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
+            return uri;
+        }
+
+        private async Task<(ConnectorType, IEnumerable<OptionSet>)> FetchAndCacheTableMetadataAsync(string uri, CancellationToken cancellationToken)
+        {
+            // Check cache size and clear if needed (before fetching)
+            if (_tableMetadataCache.Count >= MaxCacheSize)
+            {
+                _tableMetadataCache.Clear();
+            }
+
+            return await FetchTableMetadataAsync(uri, cancellationToken).ConfigureAwait(false);
+        }
+
+        private async Task<(ConnectorType, IEnumerable<OptionSet>)> FetchTableMetadataAsync(string uri, CancellationToken cancellationToken)
+        {
             string text = await CdpServiceBase.GetObject(_httpClient, $"Get table metadata", uri, null, cancellationToken, Logger).ConfigureAwait(false);
 
             if (string.IsNullOrWhiteSpace(text))
             {
                 throw new InvalidOperationException($"{nameof(ResolveTableAsync)} didn't receive any response");
             }
-            
+
             // We don't need SQL relationships as those are not equivalent as those we find in Dataverse or ServiceNow
             // Foreign Key constrainsts are not enough and equivalent.
             // Only keeping code for future use, if we'd need to get those relationships.
@@ -113,9 +145,7 @@ namespace Microsoft.PowerFx.Connectors
             ConnectorType connectorType = ConnectorFunction.GetCdpTableType(this, connectorName, _tabularTable.TableName, "Schema/Items", FormulaValue.New(text), _connectorSettings, _tabularTable.DatasetName,
                                                                             out TableDelegationInfo delegationInfo, out IEnumerable<OptionSet> optionSets);
 
-            OptionSets = optionSets;
-
-            return connectorType;
+            return (connectorType, optionSets);
         }
 
         internal static bool IsSql(string uriPrefix) => uriPrefix.Contains("/sql/");

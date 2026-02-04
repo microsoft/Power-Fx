@@ -2,11 +2,13 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Entities;
 
 namespace Microsoft.PowerFx.Connectors
 {
@@ -20,11 +22,26 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly ConnectorSettings _connectorSettings;
 
+        // Cache for table metadata to prevent redundant network calls
+        // Key: uri for fetching metadata, Value: Task of (ConnectorType, OptionSets)
+        private readonly ConcurrentDictionary<string, Task<(ConnectorType, IEnumerable<OptionSet>)>> _tableMetadataCache
+            = new ConcurrentDictionary<string, Task<(ConnectorType, IEnumerable<OptionSet>)>>();
+
+        private const int MaxCacheSize = 1000;
+
+        // Provide cache access to CdpTable instances
+        internal ConcurrentDictionary<string, Task<(ConnectorType, IEnumerable<OptionSet>)>> TableMetadataCache => _tableMetadataCache;
+
         public CdpDataSource(string dataset, ConnectorSettings connectorSettings = null)
         {
             DatasetName = dataset ?? throw new ArgumentNullException(nameof(dataset));
             _connectorSettings = connectorSettings ?? ConnectorSettings.NewCDPConnectorSettings();
         }
+
+        /// <summary>
+        /// Clears the table metadata cache, forcing fresh retrieval on next access.
+        /// </summary>
+        public void ClearTableMetadataCache() => _tableMetadataCache.Clear();
 
         public static async Task<DatasetMetadata> GetDatasetsMetadataAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {
@@ -51,7 +68,7 @@ namespace Microsoft.PowerFx.Connectors
 
             GetTables tables = await GetObject<GetTables>(httpClient, "Get tables", uri, null, cancellationToken, logger).ConfigureAwait(false);
 
-            return tables?.Value?.Select((RawTable rawTable) => new CdpTable(DatasetName, rawTable.Name, DatasetMetadata, tables?.Value, _connectorSettings) { DisplayName = rawTable.DisplayName });
+            return tables?.Value?.Select((RawTable rawTable) => new CdpTable(DatasetName, rawTable.Name, DatasetMetadata, tables?.Value, _connectorSettings, _tableMetadataCache) { DisplayName = rawTable.DisplayName });
         }
 
         /// <summary>
@@ -98,7 +115,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             cancellation.ThrowIfCancellationRequested();
 
-            CdpTable table = new CdpTable(DatasetName, logicalTableName, null, _connectorSettings);
+            CdpTable table = new CdpTable(DatasetName, logicalTableName, null, _connectorSettings, _tableMetadataCache);
             await table.InitAsync(httpClient, uriPrefix, cancellation, logger).ConfigureAwait(false);
 
             return table;
