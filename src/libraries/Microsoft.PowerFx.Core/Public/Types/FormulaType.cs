@@ -12,12 +12,14 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
+    // Names used for types in UDTs and UDFs.
+    // Every host will not support all of these, the host passes what they support into the Engine constructor.
     public static class BuiltInTypeNames
     {
-        public static readonly DName Blank_None = new DName("None");
+        public static readonly DName Blank_None = new DName("None"); // can't be used, here to validate it isn't present in the symbol table
         public static readonly DName Boolean = new DName("Boolean");
         public static readonly DName Number_Float = new DName("Float");
-        public static readonly DName Number_Alias = new DName("Number");
+        public static readonly DName Number_Alias = new DName("Number"); // alias for either Decimal or Float, every Engine needs one
         public static readonly DName Decimal = new DName("Decimal");
         public static readonly DName Date = new DName("Date");
         public static readonly DName Time = new DName("Time");
@@ -28,7 +30,7 @@ namespace Microsoft.PowerFx.Types
         public static readonly DName Hyperlink = new DName("Hyperlink");
         public static readonly DName Color = new DName("Color");
         public static readonly DName UntypedObject_Dynamic = new DName("Dynamic");
-        public static readonly DName Void = new DName("Void");
+        public static readonly DName Void = new DName("Void"); // can't be used except for the return type of a UDF, here to validate it isn't present in the symbol table
     }
 
     /// <summary>
@@ -98,7 +100,7 @@ namespace Microsoft.PowerFx.Types
         /// Used for subclasses that must set DType themselves.
         /// </summary>
         private protected FormulaType()
-        { 
+        {
         }
 
         // Entites may be recursive and their Dytype is tagged with additional schema metadata. 

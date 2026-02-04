@@ -320,7 +320,8 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                 }
             }
-
+            
+            // .Distict() folds different forms of Number into one
             errorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrBadType_ExpectedTypesCSV, string.Join(", ", alternateTypes.Select(t => t.GetKindString()).Distinct()));
             return new BinderCheckTypeResult();
         }
@@ -402,6 +403,8 @@ namespace Microsoft.PowerFx.Core.Binding
             }
 
             var messageKey = alternateTypes.Length == 0 ? TexlStrings.ErrBadType_ExpectedType : TexlStrings.ErrBadType_ExpectedTypesCSV;
+
+            // .Distict() folds different forms of Number into one
             var messageArg = alternateTypes.Length == 0 ? typeWant.GetKindString() : string.Join(", ", new[] { typeWant }.Concat(alternateTypes).Select(t => t.GetKindString()).Distinct());
 
             errorContainer.EnsureError(DocumentErrorSeverity.Severe, node, messageKey, messageArg);

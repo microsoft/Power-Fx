@@ -67,13 +67,13 @@ namespace Microsoft.PowerFx.Core.Types
             "UShort", "ULong", "UInt", "UInteger", "SByte",
 
             // possible date/time data types
-            "DateTimeZone", "TimeZone",
+            "DateTimeZone", "TimeZone", "Timezone",
             "Duration", "Timespan", "TimeSpan",
             "DateTimeNoTZ", "DateTimeNoTimeZone", "DateTimeNoTimeZoneInformation",  
 
             // possible text data types
-            "String", "HTML", "JSON", "XML", "Char", "Character", "URI", "URL", "RichText",
-            "Email", "Phone", "Address", 
+            "String", "HTML", "JSON", "XML", "Char", "Character", "URI", "URL", "RichText", "UChar",
+            "Email", "TickerSymbol",
             "Language", "Locale",
             "MultilineText", "MultiLineText", "TextArea",
             "SinglelineText", "SingleLineText",

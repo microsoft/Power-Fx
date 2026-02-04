@@ -161,13 +161,13 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
                 list.Add(new IntellisenseSuggestion(
                     new UIString(typeName),         // UI text
-                    SuggestionKind.Type,            // Kind
-                    SuggestionIconKind.Other,       // Icon
-                    val._type,                      // DType
+                    SuggestionKind.Type,             // Kind
+                    SuggestionIconKind.Other,        // Icon
+                    val._type,                       // DType
                     typeName,                       // exact match
-                    -1,                             // argCount (N/A for types)
-                    string.Empty,                   // description
-                    string.Empty));                 // help
+                    -1,                              // argCount (N/A for types)
+                    string.Empty,                    // description
+                    string.Empty));                  // help
             }
 
             if (includeVoid)
