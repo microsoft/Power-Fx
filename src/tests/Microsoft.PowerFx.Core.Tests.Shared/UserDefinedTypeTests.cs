@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var checkResult = new DefinitionsCheckResult()
                                             .SetText(typeDefinition)
-                                            .SetBindingInfo(UDTTestUtils.TestTypesWithNumberTypeIsFloat);
+                                            .SetBindingInfo(UDTTestHelper.TestTypesWithNumberTypeIsFloat);
             checkResult.ApplyResolveTypes();
 
             if (isValid)
@@ -110,7 +110,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var checkResult = new DefinitionsCheckResult()
                                             .SetText(typeDefinition)
-                                            .SetBindingInfo(UDTTestUtils.TestTypesWithNumberTypeIsFloat);
+                                            .SetBindingInfo(UDTTestHelper.TestTypesWithNumberTypeIsFloat);
             checkResult.ApplyResolveTypes();
 
             var resolvedTypes = checkResult.ResolvedTypes;
@@ -135,7 +135,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var checkResult = new DefinitionsCheckResult()
                                             .SetText(typeDefinition)
-                                            .SetBindingInfo(UDTTestUtils.TestTypesWithNumberTypeIsFloat);
+                                            .SetBindingInfo(UDTTestHelper.TestTypesWithNumberTypeIsFloat);
             var errors = checkResult.ApplyErrors();
 
             Assert.Equal(expectedErrorCount, errors.Count());
@@ -158,7 +158,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var checkResult = new DefinitionsCheckResult()
                                             .SetText(typeDefinition)
-                                            .SetBindingInfo(UDTTestUtils.TestTypesWithNumberTypeIsFloat);
+                                            .SetBindingInfo(UDTTestHelper.TestTypesWithNumberTypeIsFloat);
             var errors = checkResult.ApplyErrors();
             Assert.Contains(errors, e => e.MessageKey.Contains(expectedMessageKey));
         }
@@ -179,7 +179,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var parserOptions = new ParserOptions() { NumberIsFloat = true };
             var checkResult = new DefinitionsCheckResult(Features.PowerFxV1)
                                             .SetText(typeDefinition, parserOptions)
-                                            .SetBindingInfo(UDTTestUtils.TestTypesWithNumberTypeIsFloat);
+                                            .SetBindingInfo(UDTTestHelper.TestTypesWithNumberTypeIsFloat);
             var errors = checkResult.ApplyErrors();
             if (expectedMessageKey == null)
             {
@@ -195,7 +195,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var parserOptionsDecimal = new ParserOptions() { NumberIsFloat = false };
             var checkResultDecimal = new DefinitionsCheckResult(Features.PowerFxV1)
                                             .SetText(typeDefinition, parserOptionsDecimal)
-                                            .SetBindingInfo(UDTTestUtils.TestTypesWithNumberTypeIsFloat);
+                                            .SetBindingInfo(UDTTestHelper.TestTypesWithNumberTypeIsFloat);
             var errorsDecimal = checkResultDecimal.ApplyErrors();
             if (expectedMessageKey == null)
             {
@@ -250,25 +250,25 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var checkResultDot = new DefinitionsCheckResult()
                                .SetText(expressionDot, parserOptionsDot)
-                               .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat));
+                               .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat));
             var errorsDot = checkResultDot.ApplyErrors();
             Assert.Empty(errorsDot);
 
             var checkResultCommaFail = new DefinitionsCheckResult()
                                 .SetText(expressionDot, parserOptionsComma)
-                                .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat));
+                                .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat));
             var errorsCommaFail = checkResultCommaFail.ApplyErrors();
             Assert.NotEmpty(errorsCommaFail);
 
             var checkResultComma = new DefinitionsCheckResult()
                                  .SetText(expressionComma, parserOptionsComma)
-                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat));
+                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat));
             var errorsComma = checkResultComma.ApplyErrors();
             Assert.Empty(errorsComma);
 
             var checkResultDotFail = new DefinitionsCheckResult()
                                  .SetText(expressionComma, parserOptionsDot)
-                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat));
+                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat));
             var errorsDotFail = checkResultDotFail.ApplyErrors();
             Assert.NotEmpty(errorsDotFail);
         }
@@ -283,7 +283,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 var script = $"{type} := Type(Text);";
                 var checkResult = new DefinitionsCheckResult()
                                      .SetText(script, parserOptions)
-                                     .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat));
+                                     .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat));
                 var errors = checkResult.ApplyErrors();
                 Assert.Contains(errors, x => x.MessageKey == "ErrNamedType_InvalidTypeName");
             }

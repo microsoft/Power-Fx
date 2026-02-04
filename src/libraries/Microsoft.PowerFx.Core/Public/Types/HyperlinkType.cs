@@ -3,7 +3,6 @@
 
 using System;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {

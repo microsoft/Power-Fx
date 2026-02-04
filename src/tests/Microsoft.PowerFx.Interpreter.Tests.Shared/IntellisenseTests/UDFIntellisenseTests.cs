@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Tests.Shared.IntellisenseTests
         public void UDFSuggestionTest(string expression, string expected)
         {
             var config = new PowerFxConfig();
-            var engine = new Engine(config, UDTTestUtils.TestTypesWithNumberTypeIsFloat);
+            var engine = new Engine(config, UDTTestHelper.TestTypesWithNumberTypeIsFloat);
             var scope = engine.CreateUDFEditorScope();
 
             // engine.AddUserDefinedFunction(expression);

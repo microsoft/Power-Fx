@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Types
         /// Used for subclasses that must set DType themselves.
         /// </summary>
         private protected FormulaType()
-        {            
+        { 
         }
 
         // Entites may be recursive and their Dytype is tagged with additional schema metadata. 

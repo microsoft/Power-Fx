@@ -656,7 +656,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("ParseJSON(\"42\", So|", "'Some \" DQuote'")]
         public void TypeArgumentsTest(string expression, params string[] expected)
         {
-            var symbolTable = SymbolTable.WithBuiltInNamedTypes(UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat);
+            var symbolTable = SymbolTable.WithBuiltInNamedTypes(UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat);
 
             symbolTable.AddType(new DName("MyNewType"), FormulaType.String);
             symbolTable.AddType(new DName("My Type With Space"), FormulaType.String);

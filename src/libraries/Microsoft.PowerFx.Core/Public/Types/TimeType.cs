@@ -4,7 +4,6 @@
 using System;
 using System.Text;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {

@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowsSideEffects = true
             };
 
-            var types = UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat.Union(new Dictionary<DName, FormulaType>() 
+            var types = UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat.Union(new Dictionary<DName, FormulaType>() 
             {
                 // Adds type aliases for testing
                 { new DName("Num"), FormulaType.Number },
@@ -96,7 +96,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var complexType3 = TestUtils.DT("*[a: n, b:s, c: b]");
             var complexType4 = TestUtils.DT("*[a: n, b:s]");
 
-            var types = UDTTestUtils.TestTypesDictionaryWithNumberTypeIsFloat.Union(new Dictionary<DName, FormulaType>()
+            var types = UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat.Union(new Dictionary<DName, FormulaType>()
             {
                 { new DName("DS1"), FormulaType.Build(ds1.Type) },
                 { new DName("DS2"), FormulaType.Build(ds2.Type) },

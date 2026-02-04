@@ -320,7 +320,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var config = new PowerFxConfig();
             config.SymbolTable.AddFunction(new CopilotFunction());
-            var engine = new Engine(config, UDTTestUtils.TestTypesWithNumberTypeIsFloat);
+            var engine = new Engine(config, UDTTestHelper.TestTypesWithNumberTypeIsFloat);
 
             var checkResult = engine.Check(expr);
             Assert.True(checkResult.IsSuccess);
