@@ -225,5 +225,64 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(expectError, connectorType.HasErrors);
             Assert.IsType(expectedType, connectorType.FormulaType);
         }
+
+        [Fact]
+        public void GetConnectorType_NullTypeWithNoProperties_ReturnsUntypedObject()
+        {
+            // Test the case where schema.Type is null and schema.Properties is empty
+            // This should return DefaultType (UntypedObject) as per the fix
+            var schema = new OpenApiSchema
+            {
+                Type = null,
+                Properties = new Dictionary<string, OpenApiSchema>()
+            };
+
+            var swaggerParam = new SwaggerParameter("testParam", true, SwaggerSchema.New(schema), null);
+            var settings = new ConnectorSettings(null);
+            var connectorType = swaggerParam.GetConnectorType(settings);
+
+            Assert.IsType<UntypedObjectType>(connectorType.FormulaType);
+            Assert.False(connectorType.HasErrors);
+        }
+
+        [Fact]
+        public void GetConnectorType_NullTypeWithProperties_ReturnsRecordType()
+        {
+            // Test that when Type is null but Properties exist, it still creates a RecordType
+            var schema = new OpenApiSchema
+            {
+                Type = null,
+                Properties = new Dictionary<string, OpenApiSchema>
+                {
+                    ["name"] = new OpenApiSchema { Type = "string" },
+                    ["age"] = new OpenApiSchema { Type = "integer" }
+                }
+            };
+
+            var swaggerParam = new SwaggerParameter("testParam", true, SwaggerSchema.New(schema), null);
+            var settings = new ConnectorSettings(null);
+            var connectorType = swaggerParam.GetConnectorType(settings);
+
+            Assert.IsAssignableFrom<RecordType>(connectorType.FormulaType);
+            Assert.False(connectorType.HasErrors);
+        }
+
+        [Fact]
+        public void GetConnectorType_ObjectTypeWithoutProperties_ReturnsRecordType()
+        {
+            // Test that when Type is null but Properties exist, it still creates a RecordType
+            var schema = new OpenApiSchema
+            {
+                Type = "object",
+                Properties = new Dictionary<string, OpenApiSchema>()
+            };
+
+            var swaggerParam = new SwaggerParameter("testParam", true, SwaggerSchema.New(schema), null);
+            var settings = new ConnectorSettings(null);
+            var connectorType = swaggerParam.GetConnectorType(settings);
+
+            Assert.IsAssignableFrom<RecordType>(connectorType.FormulaType);
+            Assert.False(connectorType.HasErrors);
+        }
     }
 }

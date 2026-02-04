@@ -143,7 +143,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         // In PA, a 3rd param is required for Body even though it is "required":false in swagger file
         [InlineData(
             @"Office365Groups.HttpRequest(""https://graph.microsoft.com/v1.0/groups/202a2963-7e7d-4dc6-8aca-a58a2f3a9d53/events"", ""GET"")",
-            "RECORD",
+            "UNTYPED",
             "POST:/apim/office365groups/380cef7ddacd49d2bdb5b747184c7d8a/httprequest",
             "",
             "Response_O365Groups_HttpRequest.json")]
@@ -151,7 +151,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         // In PA, a 3rd param is required for Body even though it is "required":false in swagger file
         [InlineData(
             @"Office365Groups.HttpRequestV2(""https://graph.microsoft.com/v1.0/groups/202a2963-7e7d-4dc6-8aca-a58a2f3a9d53/events"", ""GET"")",
-            "RECORD",
+            "UNTYPED",
             "POST:/apim/office365groups/380cef7ddacd49d2bdb5b747184c7d8a/v2/httprequest",
             "",
             "Response_O365Groups_HttpRequestV2.json")]
