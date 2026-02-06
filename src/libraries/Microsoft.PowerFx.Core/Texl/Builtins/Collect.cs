@@ -571,6 +571,5 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             return base.CreateIRCallNode(node, context, CreateIRCallNodeCollect(node, context, args, scope), scope);
         }
-
     }
 }
