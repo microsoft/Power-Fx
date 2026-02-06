@@ -418,8 +418,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // Wait for results
             var results = await Task.WhenAll(
                 task1.ContinueWith(t => new { Success = t.Status == TaskStatus.RanToCompletion, Table = (CdpTable)null }, TaskScheduler.Default),
-                task2.ContinueWith(t => new { Success = t.Status == TaskStatus.RanToCompletion, Table = t.IsCompletedSuccessfully ? custTable2 : null }, TaskScheduler.Default),
-                task3.ContinueWith(t => new { Success = t.Status == TaskStatus.RanToCompletion, Table = t.IsCompletedSuccessfully ? custTable3 : null }, TaskScheduler.Default));
+                task2.ContinueWith(t => new { Success = t.Status == TaskStatus.RanToCompletion, Table = t.Status == TaskStatus.RanToCompletion ? custTable2 : null }, TaskScheduler.Default),
+                task3.ContinueWith(t => new { Success = t.Status == TaskStatus.RanToCompletion, Table = t.Status == TaskStatus.RanToCompletion ? custTable3 : null }, TaskScheduler.Default));
 
             // Assert
             // Task1 should have been cancelled
