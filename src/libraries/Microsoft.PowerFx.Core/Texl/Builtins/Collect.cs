@@ -532,8 +532,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // ClearCollect(collection:*[...], item1:![...]|*[...], ...)
     internal class ClearCollectFunction : CollectFunction
     {
-        public override bool AllowedWithinNondeterministicOperationOrder => false;
-
         public ClearCollectFunction()
             : base("ClearCollect", TexlStrings.AboutClearCollect)
         {
@@ -573,5 +571,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             return base.CreateIRCallNode(node, context, CreateIRCallNodeCollect(node, context, args, scope), scope);
         }
+
     }
 }
