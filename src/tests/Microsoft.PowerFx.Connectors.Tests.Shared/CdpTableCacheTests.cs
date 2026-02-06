@@ -339,7 +339,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             _server.SetResponseFromFiles(
                 @"Responses\SQL GetDatasetsMetadata.json",
                 @"Responses\SQL GetTables.json",
-                null, // Empty/null response will cause a failure
+                @"Responses\EmptyResponse.json", // Empty response will cause a failure
                 @"Responses\SQL Server Load Customers DB.json");
 
             var dataSource = new CdpDataSource(
