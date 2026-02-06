@@ -22,8 +22,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => false;
 
-        public override bool AllowedWithinNondeterministicOperationOrder => false;
-
         public override bool SupportsParamCoercion => false;
 
         public override bool MutatesArg(int argIndex, TexlNode arg) => argIndex == 0;
