@@ -22,8 +22,19 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly ConnectorSettings _connectorSettings;
 
-        // Cache for table metadata to prevent redundant network calls
-        // Key: uri for fetching metadata, Value: Task of (ConnectorType, OptionSets)
+        /// <summary>
+        /// Cache for table metadata to prevent redundant network calls.
+        /// </summary>
+        /// <remarks>
+        /// Key format: Full metadata fetch URI including dataset encoding, table name, api-version, and optional settings.
+        /// Example: /v2/$metadata.json/datasets/{encoded-dataset}/tables/{encoded-table}?api-version=2015-09-01[&amp;extractSensitivityLabel=True][&amp;purviewAccountName={account}]
+        ///
+        /// Value: Task that returns tuple of (ConnectorType, OptionSets). Task is cached with CancellationToken.None to allow multiple callers to share the same fetch operation.
+        ///
+        /// URI construction varies based on settings - keys are unique per (dataset, table, settings configuration).
+        ///
+        /// Cache is bounded to 1000 entries and cleared completely when limit is reached. Failed tasks are automatically removed to allow retry.
+        /// </remarks>
         private readonly ConcurrentDictionary<string, Task<(ConnectorType, IEnumerable<OptionSet>)>> _tableMetadataCache
             = new ConcurrentDictionary<string, Task<(ConnectorType, IEnumerable<OptionSet>)>>();
 

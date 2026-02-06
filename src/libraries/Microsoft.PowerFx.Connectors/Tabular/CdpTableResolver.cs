@@ -31,7 +31,21 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly ConnectorSettings _connectorSettings;
 
+        /// <summary>
+        /// Reference to shared metadata cache for async deduplication of table metadata fetches.
+        /// </summary>
+        /// <remarks>
+        /// Key format: {uriPrefix}/v2/$metadata.json/datasets/{encoded-dataset}/tables/{encoded-table}?api-version=2015-09-01[&amp;extractSensitivityLabel=True][&amp;purviewAccountName={account}]
+        ///
+        /// Caching strategy: Multiple concurrent requests for the same URI share a single task to prevent duplicate network calls.
+        ///
+        /// Tasks are cached with CancellationToken.None - individual callers can cancel their wait independently.
+        /// Failed tasks are automatically removed from cache to allow retry.
+        /// Cache is cleared when it reaches MaxCacheSize (1000 entries).
+        /// </remarks>
         private readonly ConcurrentDictionary<string, Task<(ConnectorType, IEnumerable<OptionSet>)>> _tableMetadataCache;
+
+        private int _clearInProgress = 0;
 
         private const int MaxCacheSize = 1000;
 
@@ -66,10 +80,40 @@ namespace Microsoft.PowerFx.Connectors
             string cacheKey = BuildTableMetadataUri(logicalName);
 
             // Try to get from cache using URI as key (async deduplication pattern)
-            var cachedTask = _tableMetadataCache.GetOrAdd(cacheKey, _ => FetchAndCacheTableMetadataAsync(cacheKey, cancellationToken));
-            var (connectorType, optionSets) = await cachedTask.ConfigureAwait(false);
+            // Use CancellationToken.None for cached task to allow multiple callers to share
+            var cachedTask = _tableMetadataCache.GetOrAdd(cacheKey, _ => FetchAndCacheTableMetadataAsync(cacheKey, CancellationToken.None));
+            var (connectorType, optionSets) = await AwaitWithCancellation(cachedTask, cancellationToken).ConfigureAwait(false);
             OptionSets = optionSets;
             return connectorType;
+        }
+
+        /// <summary>
+        /// Awaits a cached task while respecting a caller-specific cancellation token.
+        /// This allows multiple callers to share a cached task while maintaining independent cancellation.
+        /// </summary>
+        /// <typeparam name="T">The task result type.</typeparam>
+        /// <param name="task">The cached task to await.</param>
+        /// <param name="cancellationToken">The caller's cancellation token.</param>
+        /// <returns>The task result.</returns>
+        /// <exception cref="OperationCanceledException">Thrown if the caller's token is cancelled.</exception>
+        private static async Task<T> AwaitWithCancellation<T>(Task<T> task, CancellationToken cancellationToken)
+        {
+            // If token is already cancelled, throw immediately
+            cancellationToken.ThrowIfCancellationRequested();
+
+            // If task is already completed, return result directly
+            if (task.IsCompleted)
+            {
+                return await task.ConfigureAwait(false);
+            }
+
+            // Race the cached task against cancellation
+            var tcs = new TaskCompletionSource<T>();
+            using (cancellationToken.Register(() => tcs.TrySetCanceled()))
+            {
+                var completedTask = await Task.WhenAny(task, tcs.Task).ConfigureAwait(false);
+                return await completedTask.ConfigureAwait(false);
+            }
         }
 
         private string BuildTableMetadataUri(string logicalName)
@@ -91,13 +135,34 @@ namespace Microsoft.PowerFx.Connectors
 
         private async Task<(ConnectorType, IEnumerable<OptionSet>)> FetchAndCacheTableMetadataAsync(string uri, CancellationToken cancellationToken)
         {
-            // Check cache size and clear if needed (before fetching)
-            if (_tableMetadataCache.Count >= MaxCacheSize)
+            try
             {
-                _tableMetadataCache.Clear();
-            }
+                // Atomic check and clear - only one thread will clear
+                if (_tableMetadataCache.Count >= MaxCacheSize)
+                {
+                    // CompareExchange returns 0 only if _clearInProgress was 0 (not in progress)
+                    if (Interlocked.CompareExchange(ref _clearInProgress, 1, 0) == 0)
+                    {
+                        try
+                        {
+                            _tableMetadataCache.Clear();
+                        }
+                        finally
+                        {
+                            // Reset flag to allow future clears
+                            Interlocked.Exchange(ref _clearInProgress, 0);
+                        }
+                    }
+                }
 
-            return await FetchTableMetadataAsync(uri, cancellationToken).ConfigureAwait(false);
+                return await FetchTableMetadataAsync(uri, cancellationToken).ConfigureAwait(false);
+            }
+            catch
+            {
+                // Remove failed task from cache to allow retry on next call
+                _tableMetadataCache.TryRemove(uri, out _);
+                throw;
+            }
         }
 
         private async Task<(ConnectorType, IEnumerable<OptionSet>)> FetchTableMetadataAsync(string uri, CancellationToken cancellationToken)

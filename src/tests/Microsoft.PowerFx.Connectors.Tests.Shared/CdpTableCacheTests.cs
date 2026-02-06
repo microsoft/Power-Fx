@@ -289,6 +289,156 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Empty(cache);
             Assert.IsType<ConcurrentDictionary<string, Task<(ConnectorType, IEnumerable<OptionSet>)>>>(cache);
         }
+
+        /// <summary>
+        /// Verifies that different callers can cancel independently without affecting each other.
+        /// </summary>
+        [Fact]
+        public async Task TestCancellationIndependence_OneCallerCancels_OtherCallerSucceeds()
+        {
+            // Arrange
+            _server.SetResponseFromFiles(
+                @"Responses\SQL GetDatasetsMetadata.json",
+                @"Responses\SQL GetTables.json",
+                @"Responses\SQL Server Load Customers DB.json");
+
+            var dataSource = new CdpDataSource(
+                "pfxdev-sql.database.windows.net,connectortest",
+                ConnectorSettings.NewCDPConnectorSettings());
+
+            var tables = await dataSource.GetTablesAsync(_client, _basePath, CancellationToken.None, _logger);
+            var custTable1 = tables.First(t => t.DisplayName == "Customers");
+            var custTable2 = tables.First(t => t.DisplayName == "Customers");
+
+            // Create a cancellation token that's already cancelled
+            using var cts1 = new CancellationTokenSource();
+            cts1.Cancel();
+
+            // Act - First caller with cancelled token should fail
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(async () =>
+                await custTable1.InitAsync(_client, _basePath, cts1.Token, _logger));
+
+            // Second caller with valid token should succeed (uses cached result)
+            await custTable2.InitAsync(_client, _basePath, CancellationToken.None, _logger);
+
+            // Assert
+            Assert.NotNull(custTable2.ConnnectorType);
+            Assert.NotNull(custTable2.RecordType);
+        }
+
+        /// <summary>
+        /// Verifies that failed fetches don't stay in cache permanently.
+        /// </summary>
+        [Fact]
+        public async Task TestFailedFetchRetry_FirstFetchFails_SecondFetchSucceeds()
+        {
+            // Arrange - Set up responses: success, success, failure, success
+            // First two: GetDatasetsMetadata and GetTables
+            // Third: Failed table metadata fetch (empty response)
+            // Fourth: Successful retry
+            _server.SetResponseFromFiles(
+                @"Responses\SQL GetDatasetsMetadata.json",
+                @"Responses\SQL GetTables.json",
+                null, // Empty/null response will cause a failure
+                @"Responses\SQL Server Load Customers DB.json");
+
+            var dataSource = new CdpDataSource(
+                "pfxdev-sql.database.windows.net,connectortest",
+                ConnectorSettings.NewCDPConnectorSettings());
+
+            var tables = await dataSource.GetTablesAsync(_client, _basePath, CancellationToken.None, _logger);
+            var custTable1 = tables.First(t => t.DisplayName == "Customers");
+            var custTable2 = tables.First(t => t.DisplayName == "Customers");
+
+            var cache = dataSource.TableMetadataCache;
+            var initialRequestCount = _server.CurrentResponse;
+
+            // Act - First init should fail (gets empty response)
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+                await custTable1.InitAsync(_client, _basePath, CancellationToken.None, _logger));
+
+            Assert.Contains("didn't receive any response", exception.Message);
+
+            // Verify network call was made
+            var requestCountAfterFail = _server.CurrentResponse;
+            Assert.Equal(initialRequestCount + 1, requestCountAfterFail);
+
+            // Cache should be empty (failed task removed)
+            Assert.Empty(cache);
+
+            // Act - Second init should succeed (retry with next response)
+            await custTable2.InitAsync(_client, _basePath, CancellationToken.None, _logger);
+
+            // Verify another network call was made (not cached failure)
+            var requestCountAfterRetry = _server.CurrentResponse;
+            Assert.Equal(requestCountAfterFail + 1, requestCountAfterRetry);
+
+            // Cache should now have successful result
+            Assert.Single(cache);
+            Assert.NotNull(custTable2.ConnnectorType);
+            Assert.NotNull(custTable2.RecordType);
+        }
+
+        /// <summary>
+        /// Verifies that concurrent access with different cancellation tokens works correctly.
+        /// </summary>
+        [Fact]
+        public async Task TestConcurrentAccessWithCancellation_DifferentTokens_IndependentCancellation()
+        {
+            // Arrange
+            _server.SetResponseFromFiles(
+                @"Responses\SQL GetDatasetsMetadata.json",
+                @"Responses\SQL GetTables.json",
+                @"Responses\SQL Server Load Customers DB.json");
+
+            var dataSource = new CdpDataSource(
+                "pfxdev-sql.database.windows.net,connectortest",
+                ConnectorSettings.NewCDPConnectorSettings());
+
+            var tables = await dataSource.GetTablesAsync(_client, _basePath, CancellationToken.None, _logger);
+
+            var initialRequestCount = _server.CurrentResponse;
+
+            // Create multiple table instances for same table
+            var custTable1 = tables.First(t => t.DisplayName == "Customers");
+            var custTable2 = tables.First(t => t.DisplayName == "Customers");
+            var custTable3 = tables.First(t => t.DisplayName == "Customers");
+
+            // Create cancellation tokens
+            using var cts1 = new CancellationTokenSource();
+            using var cts2 = new CancellationTokenSource();
+
+            cts1.Cancel(); // Cancel first immediately
+
+            // Act - Start all initializations concurrently
+            var task1 = custTable1.InitAsync(_client, _basePath, cts1.Token, _logger);
+            var task2 = custTable2.InitAsync(_client, _basePath, cts2.Token, _logger);
+            var task3 = custTable3.InitAsync(_client, _basePath, CancellationToken.None, _logger);
+
+            // Wait for results
+            var results = await Task.WhenAll(
+                task1.ContinueWith(t => new { Success = t.Status == TaskStatus.RanToCompletion, Table = (CdpTable)null }, TaskScheduler.Default),
+                task2.ContinueWith(t => new { Success = t.Status == TaskStatus.RanToCompletion, Table = t.IsCompletedSuccessfully ? custTable2 : null }, TaskScheduler.Default),
+                task3.ContinueWith(t => new { Success = t.Status == TaskStatus.RanToCompletion, Table = t.IsCompletedSuccessfully ? custTable3 : null }, TaskScheduler.Default));
+
+            // Assert
+            // Task1 should have been cancelled
+            Assert.False(results[0].Success);
+
+            // Task2 and Task3 should succeed
+            Assert.True(results[1].Success);
+            Assert.True(results[2].Success);
+
+            Assert.NotNull(results[1].Table?.ConnnectorType);
+            Assert.NotNull(results[2].Table?.ConnnectorType);
+
+            // Only one network call should have been made (async deduplication)
+            var finalRequestCount = _server.CurrentResponse;
+            Assert.Equal(initialRequestCount + 1, finalRequestCount);
+
+            // Cache should have one entry
+            Assert.Single(dataSource.TableMetadataCache);
+        }
     }
 
 #pragma warning restore CS0618

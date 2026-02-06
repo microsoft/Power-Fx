@@ -52,6 +52,10 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly ConnectorSettings _connectorSettings;
 
+        /// <summary>
+        /// Reference to shared metadata cache from CdpDataSource.
+        /// See <see cref="CdpDataSource"/> for cache key format and caching behavior.
+        /// </summary>
         private readonly ConcurrentDictionary<string, Task<(ConnectorType, IEnumerable<OptionSet>)>> _tableMetadataCache;
 
         public override ConnectorSettings ConnectorSettings => _connectorSettings;
