@@ -357,7 +357,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(async () =>
                 await custTable1.InitAsync(_client, _basePath, CancellationToken.None, _logger));
 
-            Assert.Contains("didn't receive any response", exception.Message);
+            Assert.Contains("ResolveTableAsync didn't receive any response", exception.Message);
 
             // Verify network call was made
             var requestCountAfterFail = _server.CurrentResponse;

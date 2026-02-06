@@ -82,9 +82,18 @@ namespace Microsoft.PowerFx.Connectors
             // Try to get from cache using URI as key (async deduplication pattern)
             // Use CancellationToken.None for cached task to allow multiple callers to share
             var cachedTask = _tableMetadataCache.GetOrAdd(cacheKey, _ => FetchAndCacheTableMetadataAsync(cacheKey, CancellationToken.None));
-            var (connectorType, optionSets) = await AwaitWithCancellation(cachedTask, cancellationToken).ConfigureAwait(false);
-            OptionSets = optionSets;
-            return connectorType;
+            try
+            {
+                var (connectorType, optionSets) = await AwaitWithCancellation(cachedTask, cancellationToken).ConfigureAwait(false);
+                OptionSets = optionSets;
+                return connectorType;
+            }
+            catch (Exception)
+            {
+                // Remove failed task from cache to allow retry on next call
+                _tableMetadataCache.TryRemove(cacheKey, out _);
+                throw;
+            }
         }
 
         /// <summary>
@@ -135,34 +144,25 @@ namespace Microsoft.PowerFx.Connectors
 
         private async Task<(ConnectorType, IEnumerable<OptionSet>)> FetchAndCacheTableMetadataAsync(string uri, CancellationToken cancellationToken)
         {
-            try
+            // Atomic check and clear - only one thread will clear
+            if (_tableMetadataCache.Count >= MaxCacheSize)
             {
-                // Atomic check and clear - only one thread will clear
-                if (_tableMetadataCache.Count >= MaxCacheSize)
+                // CompareExchange returns 0 only if _clearInProgress was 0 (not in progress)
+                if (Interlocked.CompareExchange(ref _clearInProgress, 1, 0) == 0)
                 {
-                    // CompareExchange returns 0 only if _clearInProgress was 0 (not in progress)
-                    if (Interlocked.CompareExchange(ref _clearInProgress, 1, 0) == 0)
+                    try
                     {
-                        try
-                        {
-                            _tableMetadataCache.Clear();
-                        }
-                        finally
-                        {
-                            // Reset flag to allow future clears
-                            Interlocked.Exchange(ref _clearInProgress, 0);
-                        }
+                        _tableMetadataCache.Clear();
+                    }
+                    finally
+                    {
+                        // Reset flag to allow future clears
+                        Interlocked.Exchange(ref _clearInProgress, 0);
                     }
                 }
+            }
 
-                return await FetchTableMetadataAsync(uri, cancellationToken).ConfigureAwait(false);
-            }
-            catch
-            {
-                // Remove failed task from cache to allow retry on next call
-                _tableMetadataCache.TryRemove(uri, out _);
-                throw;
-            }
+            return await FetchTableMetadataAsync(uri, cancellationToken).ConfigureAwait(false);
         }
 
         private async Task<(ConnectorType, IEnumerable<OptionSet>)> FetchTableMetadataAsync(string uri, CancellationToken cancellationToken)
