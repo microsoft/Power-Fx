@@ -1,0 +1,528 @@
+// Map is a pure functional programming map operation
+// It transforms each element of a table using a formula
+// Unlike ForAll, Map does not allow side effects (behavior functions)
+
+// ****************** Basic Map functionality (same as ForAll) ******************
+
+>> Map([1,2,3], ThisRecord)
+Table({Value:1},{Value:2},{Value:3})
+
+>> Map([1,2,3], ThisRecord.Value)
+Table({Value:1},{Value:2},{Value:3})
+
+>> Map([1,2,3] As X, X)
+Table({Value:1},{Value:2},{Value:3})
+
+>> Map([1,2,3] As X, X.Value)
+Table({Value:1},{Value:2},{Value:3})
+
+// Squaring each element - classic map operation
+>> Map([1,2,3],Value*Value)
+Table({Value:1},{Value:4},{Value:9})
+
+// As renames
+>> First(Map([1,2,3] As X, X)).Value
+1
+
+>> First(Map([1,2,3] As X, X.Value)).Value
+1
+
+// Transform and sort
+>> Map(Sort([60, 61, 62, 63, 64], 1/Value), Char(Value))
+Table({Value:"@"},{Value:"?"},{Value:">"},{Value:"="},{Value:"<"})
+
+// Map with empty table
+>> Map(FirstN([60, 61, 62, 63, 64], Blank()), Char(Value))
+Table()
+
+// ****************** Pure expressions work with both ******************
+
+// Simple transformation - works with both ForAll and Map
+>> ForAll([1,2,3], Value * 2)
+Table({Value:2},{Value:4},{Value:6})
+
+>> Map([1,2,3], Value * 2)
+Table({Value:2},{Value:4},{Value:6})
+
+// Record transformation - works with both
+>> ForAll([1,2,3], {Doubled: Value * 2})
+Table({Doubled:2},{Doubled:4},{Doubled:6})
+
+>> Map([1,2,3], {Doubled: Value * 2})
+Table({Doubled:2},{Doubled:4},{Doubled:6})
+
+// String operations - works with both
+>> ForAll(["hello", "world"], Upper(Value))
+Table({Value:"HELLO"},{Value:"WORLD"})
+
+>> Map(["hello", "world"], Upper(Value))
+Table({Value:"HELLO"},{Value:"WORLD"})
+
+// Math operations - works with both
+>> ForAll([1,2,3,4], Value * Value)
+Table({Value:1},{Value:4},{Value:9},{Value:16})
+
+>> Map([1,2,3,4], Value * Value)
+Table({Value:1},{Value:4},{Value:9},{Value:16})
+
+// Conditional logic (no side effects) - works with both
+>> ForAll([1,2,3,4,5], If(Mod(Value, 2) = 0, "even", "odd"))
+Table({Value:"odd"},{Value:"even"},{Value:"odd"},{Value:"even"},{Value:"odd"})
+
+>> Map([1,2,3,4,5], If(Mod(Value, 2) = 0, "even", "odd"))
+Table({Value:"odd"},{Value:"even"},{Value:"odd"},{Value:"even"},{Value:"odd"})
+
+// Chaining Map calls (functional composition pattern)
+>> Map(Map([1,2,3], Value * 2), Value + 10)
+Table({Value:12},{Value:14},{Value:16})
+
+// Creating new records with computed fields
+>> Map([1,2,3], {Original: Value, Squared: Value * Value})
+Table({Original:1,Squared:1},{Original:2,Squared:4},{Original:3,Squared:9})
+
+// ****************** Error handling in Map vs ForAll ******************
+// Key difference: Map keeps errors in individual rows, ForAll combines all errors
+
+// Sort fails before Map processes - error in input
+>> Map(Sort([60, 61, 0, 63, 64], 1/Value), Char(Value))
+Error({Kind:ErrorKind.Div0})
+
+// Map keeps errors in individual rows where they occur
+>> Map(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value)
+Table({Value:1},{Value:Error({Kind:ErrorKind.Div0})},{Value:0.5})
+
+// Classic example: division by zero at specific rows
+// Map returns table with errors at positions where Value=2
+>> Map([1,2,3], 1/(Value-2))
+Table({Value:-1},{Value:Error({Kind:ErrorKind.Div0})},{Value:1})
+
+// ForAll would return a combined error for the same expression
+>> ForAll([1,2,3], 1/(Value-2))
+Error({Kind:ErrorKind.Div0})
+
+// Map with Sqrt of negative - errors in specific rows
+>> Map([-1, 4, -9, 16], Sqrt(Value))
+Table({Value:Error({Kind:ErrorKind.Numeric})},{Value:2},{Value:Error({Kind:ErrorKind.Numeric})},{Value:4})
+
+// ForAll combines all the Sqrt errors (2 errors = table of errors)
+>> ForAll([-1, 4, -9, 16], Sqrt(Value))
+Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Numeric}))
+
+// ****************** Functional programming patterns ******************
+
+// Double all elements
+>> Map([1,2,3,4,5], Value * 2)
+Table({Value:2},{Value:4},{Value:6},{Value:8},{Value:10})
+
+// Add constant to all elements
+>> Map([10,20,30], Value + 5)
+Table({Value:15},{Value:25},{Value:35})
+
+// Creating new record structure
+>> Map([1,2,3], {C:1})
+Table({C:1},{C:1},{C:1})
+
+>> Map([1,2,3], {V:Value})
+Table({V:1},{V:2},{V:3})
+
+>> Map([1,2,3], {V:Value, C:1})
+Table({C:1,V:1},{C:1,V:2},{C:1,V:3})
+
+// Calculate derived values
+>> Map([1,2,3,4], {Original: Value, Squared: Value * Value, Cubed: Value * Value * Value})
+Table({Cubed:1,Original:1,Squared:1},{Cubed:8,Original:2,Squared:4},{Cubed:27,Original:3,Squared:9},{Cubed:64,Original:4,Squared:16})
+
+// ****************** Handling Blank rows ******************
+
+>> Map(Table({a:1},If(1<0,{a:2}),{a:3},If(1<0,{a:4}),{a:5}), {b:Coalesce(a, 100)})
+Table({b:1},{b:100},{b:3},{b:100},{b:5})
+
+>> Map([true,false], If(ThisRecord.Value, {x:1,y:2}, Blank()))
+Table({x:1,y:2},Blank())
+
+>> Last(Map([true,false], If(ThisRecord.Value, {x:1,y:2}, Blank()))).x
+Blank()
+
+>> Map([1,2,Blank()], If(IsBlank(ThisRecord), 999, ThisRecord.Value + 1))
+Table({Value:2},{Value:3},{Value:1})
+
+>> Map(Table({a:1},{a:2},Blank()), If(IsBlank(ThisRecord), 999, ThisRecord.a + 1))
+Table({Value:2},{Value:3},{Value:999})
+
+>> Map(Table(Blank()),IsBlank(ThisRecord))
+Table({Value:true})
+
+>> Map([Blank()],IsBlank(ThisRecord))
+Table({Value:false})
+
+// ****************** Error handling in pure expressions ******************
+
+>> Map(Table({a:1},If(1/0<2,{a:2})),{b:IfError(a,-FirstError.Kind)})
+Table({b:1},{b:-13})
+
+>> Map(Table({a:1},If(1/0<2,{a:2}),{a:3},If(Sqrt(-1)<0,{a:4}),{a:5}),{b:IfError(a,-FirstError.Kind)})
+Table({b:1},{b:-13},{b:3},{b:-24},{b:5})
+
+>> Map([1, 1/0, 3, Sqrt(-1), 5],{b:IfError(Value,-FirstError.Kind)})
+Table({b:1},{b:-13},{b:3},{b:-24},{b:5})
+
+// ****************** Chaining and nesting ******************
+
+// Nested table mapping - table blank values are wrapped
+>> Map([1,2,3], If(Value = 1 Or Value = 3, Sequence(Value), Blank()))
+Table({Value:Table({Value:1})},{Value:Blank()},{Value:Table({Value:1},{Value:2},{Value:3})})
+
+// Blank records are not wrapped
+>> Map([1,2,3,4,5], If(Value = 1 Or Value = 3 Or Value = 5, {a:Value}, Value = 4, {a:Blank()}, Blank()))
+Table({a:1},Blank(),{a:3},{a:Blank()},{a:5})
+
+// ****************** Untyped Objects / Dynamic Data (ParseJSON) ******************
+
+// Basic numeric array transformation
+>> Map(ParseJSON("[5, 6, 7]"), Value(ThisRecord))
+Table({Value:5},{Value:6},{Value:7})
+
+// Double values from JSON array
+>> Map(ParseJSON("[1, 2, 3, 4, 5]"), Value(ThisRecord) * 2)
+Table({Value:2},{Value:4},{Value:6},{Value:8},{Value:10})
+
+// Square values from JSON array
+>> Map(ParseJSON("[1, 2, 3]"), Value(ThisRecord) * Value(ThisRecord))
+Table({Value:1},{Value:4},{Value:9})
+
+// JSON array with null values
+>> Map(ParseJSON("[5, null, 7]"), Value(ThisRecord))
+Table({Value:5},{Value:Blank()},{Value:7})
+
+>> Map(ParseJSON("[null, null, null]"), Value(ThisRecord))
+Table({Value:Blank()},{Value:Blank()},{Value:Blank()})
+
+// String array transformation
+>> Map(ParseJSON("[""hello"", ""world""]"), Upper(Text(ThisRecord)))
+Table({Value:"HELLO"},{Value:"WORLD"})
+
+>> Map(ParseJSON("[""hi"", null, ""hello""]"), Text(ThisRecord))
+Table({Value:"hi"},{Value:Blank()},{Value:"hello"})
+
+// Boolean array transformation
+>> Map(ParseJSON("[true, null, false]"), Boolean(ThisRecord))
+Table({Value:true},{Value:Blank()},{Value:false})
+
+// Boolean to number coercion
+>> Map(ParseJSON("[true, false, true]"), Value(ThisRecord))
+Table({Value:1},{Value:0},{Value:1})
+
+// GUID array transformation
+>> Map(ParseJSON("[""5cc45615-f759-4a53-b225-d3a2497f60ad"", null]"), GUID(ThisRecord))
+Table({Value:GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")},{Value:Blank()})
+
+// Error when parsing non-array as table
+>> Map(ParseJSON("5"), Value(ThisRecord))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Map(ParseJSON("null"), Value(ThisRecord))
+Blank()
+
+// Division error in transformation - error is kept in the row
+>> Map(ParseJSON("[1]"), Value(ThisRecord) / 0)
+Table({Value:Error({Kind:ErrorKind.Div0})})
+
+// Count and aggregate on Map results
+>> CountRows(Map(ParseJSON("[1,2,3]"), Value(ThisRecord)))
+3
+
+>> Sum(Map(ParseJSON("[5, 6, 7]"), Value(ThisRecord)), Value)
+18
+
+// Creating records from JSON values
+>> Map(ParseJSON("[1, 2, 3]"), {Original: Value(ThisRecord), Doubled: Value(ThisRecord) * 2})
+Table({Doubled:2,Original:1},{Doubled:4,Original:2},{Doubled:6,Original:3})
+
+// Conditional transformation on JSON
+>> Map(ParseJSON("[1, 2, 3, 4, 5]"), If(Value(ThisRecord) > 2, Value(ThisRecord), 0))
+Table({Value:0},{Value:0},{Value:3},{Value:4},{Value:5})
+
+// Mixed type handling - convert all to text
+>> Map(ParseJSON("[1,{""a"":false},""hello""]"), IfError(Text(ThisRecord), IfError(Text(Value(ThisRecord)), Text(Boolean(ThisRecord.a)))))
+Table({Value:"1"},{Value:"false"},{Value:"hello"})
+
+// Chaining Map on JSON data
+>> Map(Map(ParseJSON("[1, 2, 3]"), Value(ThisRecord) * 10), Value + 5)
+Table({Value:15},{Value:25},{Value:35})
+
+// JSON objects in array - extract field
+>> Map(ParseJSON("[{""name"":""Alice""},{""name"":""Bob""}]"), Text(ThisRecord.name))
+Table({Value:"Alice"},{Value:"Bob"})
+
+// JSON objects - create new structure
+>> Map(ParseJSON("[{""x"":1,""y"":2},{""x"":3,""y"":4}]"), {Sum: Value(ThisRecord.x) + Value(ThisRecord.y)})
+Table({Sum:3},{Sum:7})
+
+// Conditional based on JSON field
+>> Map(ParseJSON("[{""active"":true},{""active"":false},{""active"":true}]"), If(Boolean(ThisRecord.active), "Yes", "No"))
+Table({Value:"Yes"},{Value:"No"},{Value:"Yes"})
+
+// Error type mismatch tests (same as ForAll)
+>> Map(ParseJSON("[1,2]"), If(Value(ThisRecord) = 1, Value(ThisRecord) * 2, {Result: Value(ThisRecord)}))
+Errors: Error 0-3: The function 'Map' has some invalid arguments.|Error 24-101: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
+
+>> Map(ParseJSON("[1,2,3]"), Switch(Value(ThisRecord), 1, {a:1}, 2, [{a:2}], 3, "Hello"))
+Errors: Error 0-3: The function 'Map' has some invalid arguments.|Error 26-85: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
+
+// ThisItem not valid in Map (same as ForAll)
+>> Map(ParseJSON("[1,2,3]"), ThisItem)
+Errors: Error 26-34: Name isn't valid. 'ThisItem' isn't recognized.|Error 0-3: The function 'Map' has some invalid arguments.
+
+// Test that demonstrates the difference between Map and ForAll
+// ForAll allows behavior functions (mutations), Map does not
+
+// ****************** Pure functional operations work with both ******************
+
+// Complex transformations
+>> Map([1,2,3], {Original: Value, Doubled: Value * 2, Squared: Value * Value})
+Table({Doubled:2,Original:1,Squared:1},{Doubled:4,Original:2,Squared:4},{Doubled:6,Original:3,Squared:9})
+
+>> ForAll([1,2,3], {Original: Value, Doubled: Value * 2, Squared: Value * Value})
+Table({Doubled:2,Original:1,Squared:1},{Doubled:4,Original:2,Squared:4},{Doubled:6,Original:3,Squared:9})
+
+// ****************** Functional programming patterns with Map ******************
+
+// Chaining Maps (functional composition)
+>> Map(Map([1,2,3,4,5], Value * 2), Value + 100)
+Table({Value:102},{Value:104},{Value:106},{Value:108},{Value:110})
+
+// Filter-like pattern using If
+>> Map([1,2,3,4,5], If(Value > 2, Value, Blank()))
+Table({Value:Blank()},{Value:Blank()},{Value:3},{Value:4},{Value:5})
+
+// Conditional transformation
+>> Map([1,2,3,4,5,6], {Original: Value, Category: If(Mod(Value, 2) = 0, "even", "odd")})
+Table({Category:"odd",Original:1},{Category:"even",Original:2},{Category:"odd",Original:3},{Category:"even",Original:4},{Category:"odd",Original:5},{Category:"even",Original:6})
+
+// ****************** Error handling differences ******************
+
+// Key difference: Map keeps errors in individual rows, ForAll combines all errors
+
+// Sqrt of negative numbers - Map keeps errors in rows
+>> Map([-4, 1, -9, 4], Sqrt(Value))
+Table({Value:Error({Kind:ErrorKind.Numeric})},{Value:1},{Value:Error({Kind:ErrorKind.Numeric})},{Value:2})
+
+// ForAll combines all errors (2 errors = table of errors)
+>> ForAll([-4, 1, -9, 4], Sqrt(Value))
+Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Numeric}))
+
+>> IfError(ForAll([1,2,3,2,4,2,5],1/(Value-2)),[CountRows(AllErrors)])
+Table({Value:3})
+
+>> IfError(Map([1,2,4,2,10,2,18],1/(Value-2)),[CountRows(AllErrors)])
+Table({Value:-1},{Value:Error({Kind:ErrorKind.Div0})},{Value:0.5},{Value:Error({Kind:ErrorKind.Div0})},{Value:0.125},{Value:Error({Kind:ErrorKind.Div0})},{Value:0.0625})
+
+// ****************** Excel MAP function examples (adapted to Power Fx) ******************
+// Excel's MAP function uses explicit LAMBDA syntax: =MAP(array, LAMBDA(x, expr))
+// Power Fx uses implicit lambda with row scope (Value, ThisRecord)
+
+// Example 1: Add 1 to each element
+// Excel: =MAP(A1:A5, LAMBDA(x, x+1))
+>> Map([1,2,3,4,5], Value + 1)
+Table({Value:2},{Value:3},{Value:4},{Value:5},{Value:6})
+
+// Example 2: Conditional transformation - square if greater than 4
+// Excel: =MAP(array, LAMBDA(a, IF(a>4, a*a, a)))
+>> Map([1,2,3,4,5,6,7,8,9], If(Value > 4, Value * Value, Value))
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:25},{Value:36},{Value:49},{Value:64},{Value:81})
+
+// Example 3: Price increase by 100%
+// Excel: =MAP(prices, LAMBDA(price, price*2))
+>> Map([100, 200, 150, 300], Value * 2)
+Table({Value:200},{Value:400},{Value:300},{Value:600})
+
+// Example 4: Price increase with named column
+>> Map(Table({Price:100},{Price:200},{Price:150},{Price:300}), {NewPrice: Price * 2})
+Table({NewPrice:200},{NewPrice:400},{NewPrice:300},{NewPrice:600})
+
+// Example 5: Tiered discount - 15% off for prices > 100, 5% off otherwise
+// Excel: =MAP(prices, LAMBDA(price, IF(price > 100, price * 0.85, price * 0.95)))
+>> Map([80, 100, 150, 200], If(Value > 100, Value * 0.85, Value * 0.95))
+Table({Value:76},{Value:95},{Value:127.5},{Value:170})
+
+// Example 6: Sales commission calculation based on eligibility
+// Excel: =MAP(sales, eligible, LAMBDA(s, e, IF(e="Yes", s * 0.08, 0)))
+// Note: Power Fx Map takes one table, so we use records with multiple fields
+>> Map(Table({Sales:1000, Eligible:true}, {Sales:500, Eligible:false}, {Sales:2000, Eligible:true}), {Commission: If(Eligible, Sales * 0.08, 0)})
+Table({Commission:80},{Commission:0},{Commission:160})
+
+// Example 7: Convert temperatures from Celsius to Fahrenheit
+// Excel: =MAP(temps, LAMBDA(c, c * 9/5 + 32))
+>> Map([0, 20, 37, 100], Value * 9/5 + 32)
+Table({Value:32},{Value:68},{Value:98.6},{Value:212})
+
+// Example 8: Calculate area from radius values
+// Excel: =MAP(radii, LAMBDA(r, PI() * r^2))
+>> Map([1, 2, 10, 20], Text(Pi() * Value^2,"##.##"))
+Table({Value:"3.14"},{Value:"12.57"},{Value:"314.16"},{Value:"1256.64"})
+
+// Example 9: Grade classification based on score
+// Excel: =MAP(scores, LAMBDA(s, IF(s>=90,"A",IF(s>=80,"B",IF(s>=70,"C",IF(s>=60,"D","F"))))))
+>> Map([95, 82, 76, 65, 45], If(Value >= 90, "A", If(Value >= 80, "B", If(Value >= 70, "C", If(Value >= 60, "D", "F")))))
+Table({Value:"A"},{Value:"B"},{Value:"C"},{Value:"D"},{Value:"F"})
+
+// Example 10: Calculate years until retirement (assuming age 65)
+// Excel: =MAP(ages, LAMBDA(age, MAX(0, 65 - age)))
+>> Map([30, 45, 60, 70], Max(0, 65 - Value))
+Table({Value:35},{Value:20},{Value:5},{Value:0})
+
+// Example 11: Apply tax rate to prices
+// Excel: =MAP(prices, LAMBDA(p, p * 1.0825)) -- 8.25% tax
+>> Map([10, 25, 50, 100], Value * 1.0825)
+Table({Value:10.825},{Value:27.0625},{Value:54.125},{Value:108.25})
+
+// Example 12: Calculate shipping cost based on weight tiers
+// Excel: =MAP(weights, LAMBDA(w, IF(w<=1, 5, IF(w<=5, 10, IF(w<=10, 15, 20)))))
+>> Map([0.5, 1, 3, 7, 15], If(Value <= 1, 5, If(Value <= 5, 10, If(Value <= 10, 15, 20))))
+Table({Value:5},{Value:5},{Value:10},{Value:15},{Value:20})
+
+// Example 13: Create records with original and transformed values
+// Excel approach: Return both original and calculated values
+>> Map([10, 20, 30, 40], {Original: Value, WithTax: Value * 1.1, Discount: Value * 0.9})
+Table({Discount:9,Original:10,WithTax:11},{Discount:18,Original:20,WithTax:22},{Discount:27,Original:30,WithTax:33},{Discount:36,Original:40,WithTax:44})
+
+// Example 14: String formatting - pad numbers with leading zeros
+// Excel: =MAP(nums, LAMBDA(n, TEXT(n, "0000")))
+>> Map([1, 12, 123, 1234], Text(Value, "0000"))
+Table({Value:"0001"},{Value:"0012"},{Value:"0123"},{Value:"1234"})
+
+// Example 15: Calculate compound interest for different principal amounts
+// Formula: A = P(1 + r)^t where r=5%, t=10 years
+>> Map([1000, 5000, 10000], Text(Value * Power(1.05, 10),"####.##"))
+Table({Value:"1628.89"},{Value:"8144.47"},{Value:"16288.95"})
+
+// ****************** Multi-array Excel MAP patterns ******************
+// Excel MAP can take multiple arrays: =MAP(arr1, arr2, LAMBDA(a, b, expr))
+// Power Fx Map takes a single table, so use records with multiple columns
+
+// Example 16: Add corresponding values from two columns
+// Excel: =MAP({1,2,3},{10,20,30},LAMBDA(a,b,a+b))
+>> Map(Table({a:1,b:10},{a:2,b:20},{a:3,b:30}), a + b)
+Table({Value:11},{Value:22},{Value:33})
+
+// Example 17: Maximum across three columns
+// Excel: =MAP(rng1,rng2,rng3,LAMBDA(a,b,c,MAX(a,b,c)))
+>> Map(Table({a:5,b:3,c:8},{a:1,b:9,c:2},{a:7,b:4,c:6}), Max(a, b, c))
+Table({Value:8},{Value:9},{Value:7})
+
+// Example 18: Minimum across two columns
+// Excel: =MAP(rng1,rng2,LAMBDA(a,b,MIN(a,b)))
+>> Map(Table({a:10,b:20},{a:30,b:5},{a:15,b:15}), Min(a, b))
+Table({Value:10},{Value:5},{Value:15})
+
+// Example 19: Logical AND across two boolean columns
+// Excel: =MAP(TableA[Col1],TableA[Col2],LAMBDA(a,b,AND(a,b)))
+>> Map(Table({Col1:true,Col2:true},{Col1:true,Col2:false},{Col1:false,Col2:true},{Col1:false,Col2:false}), And(Col1, Col2))
+Table({Value:true},{Value:false},{Value:false},{Value:false})
+
+// Example 20: Logical OR across two boolean columns
+// Excel: =MAP(TableA[Col1],TableA[Col2],LAMBDA(a,b,OR(a,b)))
+>> Map(Table({Col1:true,Col2:false},{Col1:false,Col2:false},{Col1:false,Col2:true}), Or(Col1, Col2))
+Table({Value:true},{Value:false},{Value:true})
+
+// Example 21: Discount calculation with per-row discount rate
+// Excel: =MAP(prices, discounts, LAMBDA(p, d, p*(1-d)))
+>> Map(Table({Price:100,Discount:0.1},{Price:200,Discount:0.2},{Price:50,Discount:0.05}), {FinalPrice: Price * (1 - Discount)})
+Table({FinalPrice:90},{FinalPrice:160},{FinalPrice:47.5})
+
+// Example 22: Concatenate first and last name columns
+// Excel: =MAP(first,last,LAMBDA(f,l,f&" "&l))
+>> Map(Table({First:"John",Last:"Doe"},{First:"Jane",Last:"Smith"},{First:"Bob",Last:"Jones"}), {FullName: First & " " & Last})
+Table({FullName:"John Doe"},{FullName:"Jane Smith"},{FullName:"Bob Jones"})
+
+// Example 23: Inventory stock level check with reorder point
+// Excel: =MAP(qty,reorder,LAMBDA(q,r,IF(q=0,"OUT",IF(q<=r,"LOW","OK"))))
+>> Map(Table({Qty:0,Reorder:50},{Qty:30,Reorder:50},{Qty:100,Reorder:50},{Qty:50,Reorder:50}), If(Qty = 0, "OUT", If(Qty <= Reorder, "LOW", "OK")))
+Table({Value:"OUT"},{Value:"LOW"},{Value:"OK"},{Value:"LOW"})
+
+// Example 24: BMI calculation from weight (kg) and height (cm) columns
+// Excel: =MAP(weights,heights,LAMBDA(w,h,ROUND(w/(h/100)^2,1)))
+>> Map(Table({Weight:70,Height:175},{Weight:90,Height:180},{Weight:55,Height:160}), {BMI: Round(Weight / Power(Height/100, 2), 1)})
+Table({BMI:22.9},{BMI:27.8},{BMI:21.5})
+
+// ****************** Additional Excel MAP function patterns ******************
+
+// Example 25: Absolute value transformation
+// Excel: =MAP(A1:A5,LAMBDA(x,ABS(x)))
+>> Map([-5, -3, 0, 2, -7], Abs(Value))
+Table({Value:5},{Value:3},{Value:0},{Value:2},{Value:7})
+
+// Example 26: Round currency values after conversion
+// Excel: =MAP(amounts,LAMBDA(a,ROUND(a*rate,2)))
+>> Map([10.456, 23.789, 5.123], Round(Value * 1.15, 2))
+Table({Value:12.02},{Value:27.36},{Value:5.89})
+
+// Example 27: Text length of each string
+// Excel: =MAP(names,LAMBDA(n,LEN(n)))
+>> Map(["hello", "hi", "goodbye"], Len(Value))
+Table({Value:5},{Value:2},{Value:7})
+
+// Example 28: Data cleaning - trim whitespace and fix casing
+// Excel: =MAP(data,LAMBDA(x,TRIM(PROPER(x))))
+>> Map(["  john doe  ", " JANE SMITH ", "bob jones"], Trim(Proper(Value)))
+Table({Value:"John Doe"},{Value:"Jane Smith"},{Value:"Bob Jones"})
+
+// Example 29: Extract first 3 characters (product code prefix)
+// Excel: =MAP(codes,LAMBDA(c,LEFT(c,3)))
+>> Map(["ABC123", "DEF456", "GHI789"], Left(Value, 3))
+Table({Value:"ABC"},{Value:"DEF"},{Value:"GHI"})
+
+// Example 30: Modulo - classify odd and even numerically
+// Excel: =MAP(nums,LAMBDA(n,MOD(n,2)))
+>> Map([1, 2, 3, 4, 5, 6], Mod(Value, 2))
+Table({Value:1},{Value:0},{Value:1},{Value:0},{Value:1},{Value:0})
+
+// Example 31: Floor negative values at zero
+// Excel: =MAP(A1:A5,LAMBDA(x,MAX(0,x)))
+>> Map([-5, 3, -2, 7, 0], Max(0, Value))
+Table({Value:0},{Value:3},{Value:0},{Value:7},{Value:0})
+
+// Example 32: Conditional - if above threshold double it, otherwise square it
+// Excel: =MAP(B6:C12,LAMBDA(x,IF(x>100,x*2,x*x)))
+>> Map([50, 100, 150, 200], If(Value > 100, Value * 2, Value * Value))
+Table({Value:2500},{Value:10000},{Value:300},{Value:400})
+
+// Example 33: Boolean flags to Yes/No text
+// Excel: =MAP(flags,LAMBDA(f,IF(f,"Yes","No")))
+>> Map([true, false, true, false], If(Value, "Yes", "No"))
+Table({Value:"Yes"},{Value:"No"},{Value:"Yes"},{Value:"No"})
+
+// Example 34: Create record with original value and its string length
+// Excel: Returning multiple computed columns per row
+>> Map(["apple", "banana", "cherry"], {Word: Value, Length: Len(Value)})
+Table({Length:5,Word:"apple"},{Length:6,Word:"banana"},{Length:6,Word:"cherry"})
+
+// Example 35: Normalize values to 0-1 range (given known min=0, max=100)
+// Excel: =MAP(scores,LAMBDA(s,s/100))
+>> Map([0, 25, 50, 75, 100], Value / 100)
+Table({Value:0},{Value:0.25},{Value:0.5},{Value:0.75},{Value:1})
+
+// Example 36: Square root of each value (positive values only)
+// Excel: =MAP(A1:A4,LAMBDA(x,SQRT(x)))
+>> Map([1, 4, 9, 16, 25], Sqrt(Value))
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5})
+
+// Example 37: Integer truncation
+// Excel: =MAP(vals,LAMBDA(x,INT(x)))
+>> Map([1.9, 2.5, 3.1, -1.5], Int(Value))
+Table({Value:1},{Value:2},{Value:3},{Value:-2})
+
+// Example 38: Power/exponentiation
+// Excel: =MAP(bases,LAMBDA(b,POWER(b,3))) -- cube each value
+>> Map([1, 2, 3, 4, 5], Power(Value, 3))
+Table({Value:1},{Value:8},{Value:27},{Value:64},{Value:125})
+
+// Example 39: Multi-field record output with tax and discount
+// Excel: Returning both computations from a price list
+>> Map(Table({Item:"A",Price:100},{Item:"B",Price:50},{Item:"C",Price:200}), {Item: Item, WithTax: Round(Price * 1.08, 2), WithDiscount: Round(Price * 0.9, 2)})
+Table({Item:"A",WithDiscount:90,WithTax:108},{Item:"B",WithDiscount:45,WithTax:54},{Item:"C",WithDiscount:180,WithTax:216})
+
+// Example 40: Running midpoint between two values
+// Excel: =MAP(lo,hi,LAMBDA(a,b,(a+b)/2))
+>> Map(Table({Lo:0,Hi:10},{Lo:20,Hi:30},{Lo:100,Hi:200}), (Lo + Hi) / 2)
+Table({Value:5},{Value:25},{Value:150})

@@ -84,6 +84,7 @@
     "Log",
     "LookUp",
     "Lower",
+    "Map",
     "Match",
     "MatchAll",
     "Max",
