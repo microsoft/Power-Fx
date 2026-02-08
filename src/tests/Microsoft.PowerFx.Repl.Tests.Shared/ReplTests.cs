@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
+using Microsoft.PowerFx.Repl.Services;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -20,6 +21,7 @@ namespace Microsoft.PowerFx.Repl.Tests
     {
         private readonly PowerFxREPL _repl;
         private readonly TestReplOutput _output = new TestReplOutput();
+        private readonly StandardFormatter _formatter = new StandardFormatter();
 
         public ReplTests()
         {
@@ -34,6 +36,7 @@ namespace Microsoft.PowerFx.Repl.Tests
                 Engine = engine,
                 Output = _output,
                 AllowSetDefinitions = true,
+                ValueFormatter = _formatter,
                 AllowUserDefinedFunctions = true,
                 ParserOptions = new ParserOptions() { AllowsSideEffects = true }
             };
@@ -520,6 +523,59 @@ Error 16-24: Unknown type Currency.", error2);
             await _repl.WritePromptAsync();
             var log2p = _output.Get(OutputKind.Control, trim: false);
             Assert.True(log2p == @"
+>> ");
+
+            Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
+            Assert.True(_output.Get(OutputKind.Repl, trim: false) == string.Empty);
+        }
+
+        [Fact]
+        public async Task BlankFormatTable()
+        {
+            await _repl.WritePromptAsync();
+
+            _formatter.FormatTable = true;
+
+            var log1p = _output.Get(OutputKind.Control, trim: false);
+            Assert.True(log1p == @"
+>> ");
+
+            await _repl.HandleCommandAsync(
+"Table(Blank(),{a:Blank(),b:true},Blank(),{a:42,b:Blank()})");
+            var log2 = _output.Get(OutputKind.Repl, trim: false);
+            var expected2 = @"
+  a    b
+ ==== ======
+ <BlankRecord>
+       true
+ <BlankRecord>
+  42
+";
+            Assert.True(Regex.Replace(log2, @"[ ]*\r?\n", @"\n") == Regex.Replace(expected2, @"[ ]*\r?\n", @"\n"));
+
+            await _repl.WritePromptAsync();
+
+            var log2p = _output.Get(OutputKind.Control, trim: false);
+            Assert.True(log2p == @"
+>> ");
+
+            _formatter.FormatTable = false;
+
+            await _repl.HandleCommandAsync(
+"Table(Blank(),{a:Blank(),b:true},Blank(),{a:42,b:Blank()})");
+            var log3 = _output.Get(OutputKind.Repl, trim: false);
+            var expected3 = 
+@"[Blank(), {a:Blank(), b:true}, Blank(), {a:42, b:Blank()}]
+";
+            Assert.True(Regex.Replace(log3, @"[ ]*\r?\n", @"\n") == Regex.Replace(expected3, @"[ ]*\r?\n", @"\n"));
+
+            _formatter.FormatTable = true;
+
+            await _repl.WritePromptAsync();
+
+            var log3p = _output.Get(OutputKind.Control, trim: false);
+            Assert.True(log3p == @"
 >> ");
 
             Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
