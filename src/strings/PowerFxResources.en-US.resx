@@ -3095,6 +3095,31 @@
     <value>formula</value>
     <comment>function_parameter - Second argument to the ForAll function - the formula to evaluate for all rows in the source.</comment>
   </data>
+  <data name="AboutReduce" xml:space="preserve">
+    <value>Reduces a table to a single value by applying a formula to each row and accumulating the results.</value>
+    <comment>Description of 'Reduce' function.</comment>
+  </data>
+  <data name="ReduceArg1" xml:space="preserve">
+    <value>source</value>
+    <comment>function_parameter - First argument to the Reduce function - the data source (table / collection) to operate on.</comment>
+  </data>
+  <data name="ReduceArg2" xml:space="preserve">
+    <value>formula</value>
+    <comment>function_parameter - Second argument to the Reduce function - the formula to evaluate for all rows in the source.</comment>
+  </data>
+  <data name="ReduceArg3" xml:space="preserve">
+    <value>initialValue</value>
+    <comment>function_parameter - Third argument (optional) to the Reduce function - the initial value for the accumulator.</comment>
+  </data>
+  <data name="AboutReduce_source" xml:space="preserve">
+    <value>A table to reduce.</value>
+  </data>
+  <data name="AboutReduce_formula" xml:space="preserve">
+    <value>A formula to evaluate for each row, combining it with the accumulated value.</value>
+  </data>
+  <data name="AboutReduce_initialValue" xml:space="preserve">
+    <value>The initial value of the accumulator before processing any rows.</value>
+  </data>
   <data name="AboutSummarize" xml:space="preserve">
     <value>Returns a grouping of the specified table, combining with aggregation functions.</value>
     <comment>Description of 'Patch' function.</comment>

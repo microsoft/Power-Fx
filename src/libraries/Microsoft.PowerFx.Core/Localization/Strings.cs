@@ -435,6 +435,11 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter ForAllArg1 = (b) => StringResources.Get("ForAllArg1", b);
         public static StringGetter ForAllArg2 = (b) => StringResources.Get("ForAllArg2", b);
 
+        public static StringGetter AboutReduce = (b) => StringResources.Get("AboutReduce", b);
+        public static StringGetter ReduceArg1 = (b) => StringResources.Get("ReduceArg1", b);
+        public static StringGetter ReduceArg2 = (b) => StringResources.Get("ReduceArg2", b);
+        public static StringGetter ReduceArg3 = (b) => StringResources.Get("ReduceArg3", b);
+
         public static StringGetter AboutPower = (b) => StringResources.Get("AboutPower", b);
         public static StringGetter PowerFuncArg1 = (b) => StringResources.Get("PowerFuncArg1", b);
         public static StringGetter PowerFuncArg2 = (b) => StringResources.Get("PowerFuncArg2", b);
