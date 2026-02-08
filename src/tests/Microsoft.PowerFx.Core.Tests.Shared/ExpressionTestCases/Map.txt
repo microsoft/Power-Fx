@@ -526,3 +526,19 @@ Table({Item:"A",WithDiscount:90,WithTax:108},{Item:"B",WithDiscount:45,WithTax:5
 // Excel: =MAP(lo,hi,LAMBDA(a,b,(a+b)/2))
 >> Map(Table({Lo:0,Hi:10},{Lo:20,Hi:30},{Lo:100,Hi:200}), (Lo + Hi) / 2)
 Table({Value:5},{Value:25},{Value:150})
+
+// ****************** Map does NOT allow Void-returning formulas ******************
+// Map is a pure functional map operation and rejects Void return types
+// Void can occur when If/Switch branches have incompatible types (e.g., [] vs {})
+
+>> Map([1], If(false,[],{}))
+Errors: Error 0-3: The function 'Map' has some invalid arguments.
+
+>> Map([1,2,3], If(false,[],{}))
+Errors: Error 0-3: The function 'Map' has some invalid arguments.
+
+// Even though the expression would never evaluate to Void at runtime (false condition),
+// the type checker determines the return type is Void and rejects it
+
+>> Map([1,2], If(Value = 1, Value * 2, {Result: Value}))
+Errors: Error 0-3: The function 'Map' has some invalid arguments.|Error 14-55: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
