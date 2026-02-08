@@ -196,6 +196,10 @@ false
 // TYPE MISMATCH ERRORS
 // =============================================
 
+// Type cannot be inferred without initial value - formula just passes through ThisReduce
+>> Reduce([1,2,3], ThisReduce)
+Errors: Error 16-26: Cannot determine the return type of Reduce. Provide an initial value to define the accumulator type.
+
 // Formula returns Boolean, InitialValue is GUID - incompatible types
 >> Reduce( [1,2,3], true, GUID() )
 Errors: Error 17-21: Invalid argument type (Boolean). Expecting a Guid value instead.
@@ -223,4 +227,28 @@ false
 // Coercible types with runtime error - "text" can't coerce to Boolean at runtime
 >> Reduce( [true, false], "text", true )
 Error({Kind:ErrorKind.InvalidArgument})
+
+// =============================================
+// RUNTIME ERRORS
+// =============================================
+
+// Divide by zero on every iteration - Reduce stops on first error
+>> Reduce( Sequence(10), 1/0 )
+Error({Kind:ErrorKind.Div0})
+
+// Only one error is produced (Reduce stops on first error, not all 10)
+>> IfError( Reduce(Sequence(10), 1/0), CountRows(AllErrors) )
+1
+
+// Divide by zero on a specific row (3rd row has Value=0)
+>> Reduce( [1, 2, 0, 3], ThisReduce + 1/Value, 0 )
+Error({Kind:ErrorKind.Div0})
+
+// Only one error even when error occurs mid-iteration
+>> IfError( Reduce([1, 2, 0, 3], ThisReduce + 1/Value, 0), CountRows(AllErrors) )
+1
+
+// Error row in the table is propagated
+>> Reduce( [1, 1/0, 3], ThisReduce + Value, 0 )
+Error({Kind:ErrorKind.Div0})
 

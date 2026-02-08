@@ -656,6 +656,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrBadArityMinimum = new ErrorResourceKey("ErrBadArityMinimum");
         public static ErrorResourceKey ErrBadArityOdd = new ErrorResourceKey("ErrBadArityOdd");
         public static ErrorResourceKey ErrBadArityEven = new ErrorResourceKey("ErrBadArityEven");
+        public static ErrorResourceKey ErrReduceUndeterminedType = new ErrorResourceKey("ErrReduceUndeterminedType");
         public static ErrorResourceKey ErrBadType = new ErrorResourceKey("ErrBadType");
         public static ErrorResourceKey ErrBadType_Type = new ErrorResourceKey("ErrBadType_Type");
         public static ErrorResourceKey ErrBadOperatorTypes = new ErrorResourceKey("ErrBadOperatorTypes");

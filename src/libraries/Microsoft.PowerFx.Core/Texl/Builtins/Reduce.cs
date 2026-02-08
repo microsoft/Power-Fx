@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
@@ -75,6 +76,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 // No InitialValue provided - return type is the formula type.
                 returnType = argTypes[1];
+            }
+
+            // If the return type is still ObjNull, the type could not be inferred.
+            if (returnType == DType.ObjNull)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrReduceUndeterminedType);
+                fArgsValid = false;
             }
 
             return fArgsValid;

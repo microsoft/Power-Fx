@@ -3120,6 +3120,10 @@
   <data name="AboutReduce_initialValue" xml:space="preserve">
     <value>The initial value of the accumulator before processing any rows.</value>
   </data>
+  <data name="ErrReduceUndeterminedType" xml:space="preserve">
+    <value>Cannot determine the return type of Reduce. Provide an initial value to define the accumulator type.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="AboutSummarize" xml:space="preserve">
     <value>Returns a grouping of the specified table, combining with aggregation functions.</value>
     <comment>Description of 'Patch' function.</comment>
