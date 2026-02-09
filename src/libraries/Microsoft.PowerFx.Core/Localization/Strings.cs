@@ -438,6 +438,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutMap = (b) => StringResources.Get("AboutMap", b);
         public static StringGetter MapArg1 = (b) => StringResources.Get("MapArg1", b);
         public static StringGetter MapArg2 = (b) => StringResources.Get("MapArg2", b);
+        public static StringGetter MapArg3 = (b) => StringResources.Get("MapArg3", b);
 
         public static StringGetter AboutPower = (b) => StringResources.Get("AboutPower", b);
         public static StringGetter PowerFuncArg1 = (b) => StringResources.Get("PowerFuncArg1", b);
@@ -737,6 +738,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrScopeModificationLambda = new ErrorResourceKey("ErrScopeModificationLambda");
         public static ErrorResourceKey ErrFunctionDisallowedWithinNondeterministicOperationOrder = new ErrorResourceKey("ErrFunctionDisallowedWithinNondeterministicOperationOrder");
         public static ErrorResourceKey ErrMapFunctionRequiresPureLambda = new ErrorResourceKey("ErrMapFunctionRequiresPureLambda");
+        public static ErrorResourceKey ErrMapMultiTableRequiresAs = new ErrorResourceKey("ErrMapMultiTableRequiresAs");
+        public static ErrorResourceKey ErrMapUnequalTableLengths = new ErrorResourceKey("ErrMapUnequalTableLengths");
+        public static ErrorResourceKey ErrMapInvalidMapLengthArg = new ErrorResourceKey("ErrMapInvalidMapLengthArg");
+        public static ErrorResourceKey ErrMapMapLengthRequiresMultiTable = new ErrorResourceKey("ErrMapMapLengthRequiresMultiTable");
         public static ErrorResourceKey ErrBadRecordFieldType_FieldName_ExpectedType = new ErrorResourceKey("ErrBadRecordFieldType_FieldName_ExpectedType");
         public static ErrorResourceKey ErrAsTypeAndIsTypeExpectConnectedDataSource = new ErrorResourceKey("ErrAsTypeAndIsTypeExpectConnectedDataSource");
         public static ErrorResourceKey ErrInvalidControlReference = new ErrorResourceKey("ErrInvalidControlReference");

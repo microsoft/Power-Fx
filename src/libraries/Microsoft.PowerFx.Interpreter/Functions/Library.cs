@@ -1151,9 +1151,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Map.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactSequence(
-                        ExactValueTypeOrBlank<TableValue>,
-                        ExactValueTypeOrBlank<LambdaFormulaValue>),
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Map)
@@ -2770,10 +2768,23 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Map([1,2,3,4,5], Value * Value)
+        // Map([1,2,3] As A, [4,5,6] As B, A.Value + B.Value)
         // Unlike ForAll, Map keeps errors in the result table instead of combining them.
         public static async ValueTask<FormulaValue> Map(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            // Streaming
+            // Detect single vs multi-table from args.
+            // Single-table: args[0] is TableValue, args[1] is LambdaFormulaValue
+            // Multi-table: N tables, lambda, scope name resolver record, MapLength string
+            if (args.Length >= 2 && args[0] is TableValue && args[1] is LambdaFormulaValue)
+            {
+                return await MapSingleTable(runner, context, irContext, args).ConfigureAwait(false);
+            }
+
+            return await MapMultiTable(runner, context, irContext, args).ConfigureAwait(false);
+        }
+
+        private static async ValueTask<FormulaValue> MapSingleTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
 
@@ -2787,8 +2798,120 @@ namespace Microsoft.PowerFx.Functions
                 rows.Add(await row.ConfigureAwait(false));
             }
 
-            // Unlike ForAll, Map does not combine errors - it keeps them in the result table
-            // This is the key difference: errors become error values in individual rows
+            if (irContext.ResultType is Types.Void)
+            {
+                return new VoidValue(irContext);
+            }
+
+            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
+        }
+
+        private static async ValueTask<FormulaValue> MapMultiTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            // Parse args: N tables, lambda, scope name resolver record, MapLength string
+            // Find the lambda (first LambdaFormulaValue)
+            var lambdaIndex = -1;
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (args[i] is LambdaFormulaValue)
+                {
+                    lambdaIndex = i;
+                    break;
+                }
+            }
+
+            if (lambdaIndex < 0)
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+
+            var tableCount = lambdaIndex;
+            var lambda = (LambdaFormulaValue)args[lambdaIndex];
+            var scopeNameResolver = (RecordValue)args[lambdaIndex + 1];
+            var mapLengthStr = ((StringValue)args[lambdaIndex + 2]).Value;
+
+            // Get scope names from resolver record
+            var scopeNames = new List<string>();
+            foreach (var field in scopeNameResolver.Fields)
+            {
+                scopeNames.Add(((StringValue)field.Value).Value);
+            }
+
+            // Materialize all table rows
+            var allTableRows = new List<List<DValue<RecordValue>>>();
+            for (int i = 0; i < tableCount; i++)
+            {
+                if (args[i] is not TableValue tableValue)
+                {
+                    return CommonErrors.RuntimeTypeMismatch(irContext);
+                }
+
+                var tableRows = new List<DValue<RecordValue>>();
+                foreach (var row in tableValue.Rows)
+                {
+                    tableRows.Add(row);
+                }
+
+                allTableRows.Add(tableRows);
+            }
+
+            // Determine result length based on MapLength mode
+            var lengths = allTableRows.Select(t => t.Count).ToArray();
+            int resultLength;
+
+            switch (mapLengthStr)
+            {
+                case "shortest":
+                    resultLength = lengths.Min();
+                    break;
+                case "longest":
+                    resultLength = lengths.Max();
+                    break;
+                case "equal":
+                default:
+                    if (lengths.Distinct().Count() > 1)
+                    {
+                        return new ErrorValue(irContext, new ExpressionError()
+                        {
+                            Message = "All tables passed to Map must have the same number of rows when using MapLength.Equal.",
+                            Span = irContext.SourceContext,
+                            Kind = ErrorKind.InvalidArgument
+                        });
+                    }
+
+                    resultLength = lengths.Length > 0 ? lengths[0] : 0;
+                    break;
+            }
+
+            // For each row index, build combined scope record and evaluate lambda
+            var rows = new List<FormulaValue>();
+            for (int rowIdx = 0; rowIdx < resultLength; rowIdx++)
+            {
+                runner.CheckCancel();
+
+                var fields = new List<NamedValue>();
+                for (int tIdx = 0; tIdx < tableCount; tIdx++)
+                {
+                    FormulaValue rowValue;
+                    if (rowIdx < allTableRows[tIdx].Count)
+                    {
+                        var dvalue = allTableRows[tIdx][rowIdx];
+                        rowValue = dvalue.IsValue ? dvalue.Value : (dvalue.IsBlank ? FormulaValue.NewBlank() : dvalue.ToFormulaValue());
+                    }
+                    else
+                    {
+                        // "longest" mode: exhausted table gets Blank
+                        rowValue = FormulaValue.NewBlank();
+                    }
+
+                    fields.Add(new NamedValue(scopeNames[tIdx], rowValue));
+                }
+
+                var scopeRecord = FormulaValue.NewRecordFromFields(fields);
+                var childContext = context.SymbolContext.WithScopeValues(scopeRecord);
+                var result = await lambda.EvalInRowScopeAsync(context.NewScope(childContext)).AsTask().ConfigureAwait(false);
+                rows.Add(result);
+            }
 
             if (irContext.ResultType is Types.Void)
             {

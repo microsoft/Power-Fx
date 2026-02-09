@@ -184,6 +184,16 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual int ScopeArgs => 1;
 
         /// <summary>
+        /// Returns the number of scope args for a specific call site.
+        /// Override this for functions where the scope arg count varies per invocation (e.g., Map with multiple tables).
+        /// Defaults to the static <see cref="ScopeArgs"/> property.
+        /// </summary>
+        public virtual int GetScopeArgs(CallNode node)
+        {
+            return ScopeArgs;
+        }
+
+        /// <summary>
         /// If this returns false, the Intellisense will use Arg[0] type to suggest the type of the argument.
         /// e.g. Collect(), Remove(), etc.
         /// </summary>

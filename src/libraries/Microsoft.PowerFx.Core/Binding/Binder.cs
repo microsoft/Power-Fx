@@ -4488,12 +4488,21 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (overloadWithUntypedObjectLambda != null)
                 {
-                    // Both overrides must have exactly the same arity.
-                    Contracts.Assert(maybeFunc.MaxArity == overloadWithUntypedObjectLambda.MaxArity);
-                    Contracts.Assert(maybeFunc.MinArity == overloadWithUntypedObjectLambda.MinArity);
+                    // Both overrides must have the same arity, unless the main function is variadic
+                    // (e.g., Map supports multiple tables with variable arity, while the UO variant is fixed arity).
+                    if (maybeFunc.MaxArity != int.MaxValue)
+                    {
+                        Contracts.Assert(maybeFunc.MaxArity == overloadWithUntypedObjectLambda.MaxArity);
+                        Contracts.Assert(maybeFunc.MinArity == overloadWithUntypedObjectLambda.MinArity);
 
-                    // There also cannot be optional parameters
-                    Contracts.Assert(maybeFunc.MinArity == maybeFunc.MaxArity);
+                        // There also cannot be optional parameters
+                        Contracts.Assert(maybeFunc.MinArity == maybeFunc.MaxArity);
+                    }
+                    else
+                    {
+                        // For variadic functions, at minimum the min arity should match
+                        Contracts.Assert(maybeFunc.MinArity == overloadWithUntypedObjectLambda.MinArity);
+                    }
                 }
 
                 var scopeInfo = maybeFunc.ScopeInfo;
@@ -4521,7 +4530,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             // Gets the lesser number between the CallNode chidl args and func.ScopeArgs.
                             // There reason why is that the intellisense can visit this code and provide a number of args less than the func.ScopeArgs.
                             // Example: Join(|
-                            var argsCount = Math.Min(node.Args.Children.Count, maybeFunc.ScopeArgs);
+                            var argsCount = Math.Min(node.Args.Children.Count, maybeFunc.GetScopeArgs(node));
                             var types = new DType[argsCount];
 
                             for (int i = 0; i < argsCount; i++)
@@ -4632,13 +4641,13 @@ namespace Microsoft.PowerFx.Core.Binding
                 else
                 {
                     // Starting from 1 since 0 was visited above.
-                    for (int i = 1; i < maybeFunc.ScopeArgs; i++)
+                    for (int i = 1; i < maybeFunc.GetScopeArgs(node); i++)
                     {
                         _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));
                         args[i].Accept(this);
                     }
 
-                    fArgsValid = scopeInfo.CheckInput(_txb.Features, node, args, out typeScope, GetScopeArgsTypes(node.Args.Children, maybeFunc.ScopeArgs));
+                    fArgsValid = scopeInfo.CheckInput(_txb.Features, node, args, out typeScope, GetScopeArgsTypes(node.Args.Children, maybeFunc.GetScopeArgs(node)));
 
                     // Determine the scope identifier using the first node for lambda params
                     identRequired = scopeInfo.GetScopeIdent(args, out scopeIdent);

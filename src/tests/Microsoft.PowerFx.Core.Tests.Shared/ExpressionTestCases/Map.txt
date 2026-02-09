@@ -526,3 +526,127 @@ Table({Item:"A",WithDiscount:90,WithTax:108},{Item:"B",WithDiscount:45,WithTax:5
 // Excel: =MAP(lo,hi,LAMBDA(a,b,(a+b)/2))
 >> Map(Table({Lo:0,Hi:10},{Lo:20,Hi:30},{Lo:100,Hi:200}), (Lo + Hi) / 2)
 Table({Value:5},{Value:25},{Value:150})
+
+// ****************** Multi-table Map basics ******************
+// Map(table1 As A, table2 As B, ..., lambda)
+
+// Two tables adding values - element-wise addition
+// Python: map(lambda a, b: a + b, [1,2,3], [4,5,6])
+>> Map([1,2,3] As A, [4,5,6] As B, A.Value + B.Value)
+Table({Value:5},{Value:7},{Value:9})
+
+// Two tables multiplying values - element-wise multiplication
+// Python: map(lambda a, b: a * b, [2,3,4], [5,6,7])
+>> Map([2,3,4] As A, [5,6,7] As B, A.Value * B.Value)
+Table({Value:10},{Value:18},{Value:28})
+
+// Two tables string concatenation
+>> Map(["hello", "good"] As A, [" world", " morning"] As B, A.Value & B.Value)
+Table({Value:"hello world"},{Value:"good morning"})
+
+// Three tables combining values
+// Python: map(lambda a, b, c: a + b + c, [1,2], [10,20], [100,200])
+>> Map([1,2] As A, [10,20] As B, [100,200] As C, A.Value + B.Value + C.Value)
+Table({Value:111},{Value:222})
+
+// Record output from multi-table lambda
+>> Map([1,2,3] As A, [4,5,6] As B, {Sum: A.Value + B.Value, Product: A.Value * B.Value})
+Table({Product:4,Sum:5},{Product:10,Sum:7},{Product:18,Sum:9})
+
+// Element-wise power
+// Python: map(pow, [2,3,4], [5,6,7])
+>> Map([2,3,4] As A, [5,6,7] As B, Power(A.Value, B.Value))
+Table({Value:32},{Value:729},{Value:16384})
+
+// Element-wise max
+// Python: map(max, [1,5,3], [4,2,6])
+>> Map([1,5,3] As A, [4,2,6] As B, Max(A.Value, B.Value))
+Table({Value:4},{Value:5},{Value:6})
+
+// ****************** MapLength.Equal (default) ******************
+
+// Equal lengths work normally
+>> Map([1,2,3] As A, [4,5,6] As B, A.Value + B.Value, MapLength.Equal)
+Table({Value:5},{Value:7},{Value:9})
+
+// Unequal lengths with default (Equal) -> runtime error
+>> Map([1,2,3] As A, [4,5] As B, A.Value + B.Value)
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Explicit MapLength.Equal behaves same as default - error on mismatch
+>> Map([1,2,3] As A, [4,5] As B, A.Value + B.Value, MapLength.Equal)
+Error({Kind:ErrorKind.InvalidArgument})
+
+// ****************** MapLength.Shortest ******************
+
+// Truncates to shortest table
+>> Map([1,2,3] As A, [4,5] As B, A.Value + B.Value, MapLength.Shortest)
+Table({Value:5},{Value:7})
+
+// Single-element shortest table
+>> Map([1,2,3] As A, [10] As B, A.Value + B.Value, MapLength.Shortest)
+Table({Value:11})
+
+// Empty table -> empty result
+>> Map([1,2,3] As A, Sequence(0) As B, A.Value, MapLength.Shortest)
+Table()
+
+// ****************** MapLength.Longest ******************
+
+// Pads shorter tables with Blank()
+>> Map([1,2,3] As A, [10,20] As B, A.Value + Coalesce(B.Value, 0), MapLength.Longest)
+Table({Value:11},{Value:22},{Value:3})
+
+// Use Coalesce to handle Blank padding
+>> Map([1,2] As A, [10,20,30] As B, Coalesce(A.Value, 0) + B.Value, MapLength.Longest)
+Table({Value:11},{Value:22},{Value:30})
+
+// Record output showing Blank fields from exhausted table
+>> Map([1,2,3] As A, [10,20] As B, {AVal: A.Value, BVal: B.Value}, MapLength.Longest)
+Table({AVal:1,BVal:10},{AVal:2,BVal:20},{AVal:3,BVal:Blank()})
+
+// ****************** Error handling in multi-table Map ******************
+
+// Division by zero in multi-table lambda - errors in individual rows
+>> Map([1,0,3] As A, [10,20,30] As B, B.Value / A.Value)
+Table({Value:10},{Value:Error({Kind:ErrorKind.Div0})},{Value:10})
+
+// ****************** Python-inspired patterns ******************
+
+// itertools.zip_longest equivalent via MapLength.Longest
+>> Map([1,2,3] As A, [4,5] As B, {A: A.Value, B: B.Value}, MapLength.Longest)
+Table({A:1,B:4},{A:2,B:5},{A:3,B:Blank()})
+
+// Multi-table with named table columns
+>> Map(Table({Name:"Alice"},{Name:"Bob"}) As P, Table({Score:90},{Score:85}) As S, {Person: P.Name, Grade: If(S.Score >= 90, "A", "B")})
+Table({Grade:"A",Person:"Alice"},{Grade:"B",Person:"Bob"})
+
+// ****************** Compile-time errors ******************
+
+// Multi-table without As on all tables
+>> Map([1,2,3] As A, [4,5,6], A.Value)
+Errors: Error 18-25: When using Map with multiple tables, all table arguments must use 'As' to provide unique names.|Error 0-3: The function 'Map' has some invalid arguments.
+
+// MapLength is not allowed with single table
+>> Map([1,2,3], Value * 2, MapLength.Equal)
+Errors: Error 33-39: MapLength can only be used with multiple tables. Use 'As' to name each table argument.|Error 0-3: The function 'Map' has some invalid arguments.
+
+// Invalid MapLength value (non-enum argument)
+>> Map([1,2,3] As A, [4,5,6] As B, A.Value + B.Value, "invalid")
+Errors: Error 51-60: Invalid MapLength argument. Use MapLength.Equal, MapLength.Shortest, or MapLength.Longest.
+
+// ****************** Map does NOT allow Void-returning formulas ******************
+// Map is a pure functional map operation and rejects Void return types
+// Void can occur when If/Switch branches have incompatible types (e.g., [] vs {})
+
+>> Map([1], If(false,[],{}))
+Errors: Error 0-3: The function 'Map' has some invalid arguments.
+
+>> Map([1,2,3], If(false,[],{}))
+Errors: Error 0-3: The function 'Map' has some invalid arguments.
+
+// Even though the expression would never evaluate to Void at runtime (false condition),
+// the type checker determines the return type is Void and rejects it
+
+>> Map([1,2], If(Value = 1, Value * 2, {Result: Value}))
+Errors: Error 0-3: The function 'Map' has some invalid arguments.|Error 14-55: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.

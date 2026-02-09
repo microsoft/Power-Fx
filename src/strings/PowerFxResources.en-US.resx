@@ -3117,6 +3117,29 @@
     <value>formula</value>
     <comment>function_parameter - Second argument to the Map function - the pure formula to evaluate for all rows in the source.</comment>
   </data>
+  <data name="AboutMap_map_length" xml:space="preserve">
+    <value>Optional. Controls how mismatched table lengths are handled: MapLength.Equal (default, errors on mismatch), MapLength.Shortest (truncates to shortest), or MapLength.Longest (pads with Blank).</value>
+  </data>
+  <data name="MapArg3" xml:space="preserve">
+    <value>map_length</value>
+    <comment>function_parameter - Optional MapLength argument to the Map function - controls how mismatched table lengths are handled.</comment>
+  </data>
+  <data name="ErrMapMultiTableRequiresAs" xml:space="preserve">
+    <value>When using Map with multiple tables, all table arguments must use 'As' to provide unique names.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrMapUnequalTableLengths" xml:space="preserve">
+    <value>All tables passed to Map must have the same number of rows when using MapLength.Equal (or the default). Use MapLength.Shortest or MapLength.Longest to handle different-length tables.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrMapInvalidMapLengthArg" xml:space="preserve">
+    <value>Invalid MapLength argument. Use MapLength.Equal, MapLength.Shortest, or MapLength.Longest.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrMapMapLengthRequiresMultiTable" xml:space="preserve">
+    <value>MapLength can only be used with multiple tables. Use 'As' to name each table argument.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="AboutSummarize" xml:space="preserve">
     <value>Returns a grouping of the specified table, combining with aggregation functions.</value>
     <comment>Description of 'Patch' function.</comment>
