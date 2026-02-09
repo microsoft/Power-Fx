@@ -274,7 +274,7 @@ namespace Microsoft.PowerFx.Repl.Services
                         }
                         else
                         {
-                            resultString.Append(row.IsError ? row.Error?.Errors?[0].Message : "<BlankRecord>");
+                            resultString.Append(row.IsError ? row.Error?.Errors?[0].Message : "<blank record>");
                         }
                     }
 
