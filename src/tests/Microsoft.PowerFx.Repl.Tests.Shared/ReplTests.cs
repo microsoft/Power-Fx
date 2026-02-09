@@ -547,9 +547,9 @@ Error 16-24: Unknown type Currency.", error2);
             var expected2 = @"
   a    b
  ==== ======
- <BlankRecord>
+ <blank record>
        true
- <BlankRecord>
+ <blank record>
   42
 ";
             Assert.True(Regex.Replace(log2, @"[ ]*\r?\n", @"\n") == Regex.Replace(expected2, @"[ ]*\r?\n", @"\n"));
