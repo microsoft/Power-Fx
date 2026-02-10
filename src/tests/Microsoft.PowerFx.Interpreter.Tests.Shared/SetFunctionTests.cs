@@ -598,13 +598,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.Config.SymbolTable.AddFunction(new RecalcEngineSetFunction());
             engine.Config.SymbolTable.AddFunction(new ParseJSONFunction());
             engine.Config.SymbolTable.AddFunction(new DistinctFunction());
-            engine.Config.SymbolTable.AddFunction(new MidFunction());
-            engine.Config.SymbolTable.AddFunction(new SumFunction());
-            engine.Config.SymbolTable.AddFunction(new AverageFunction());
-            engine.Config.SymbolTable.AddFunction(new MinMaxFunction(false));
-            engine.Config.SymbolTable.AddFunction(new MinMaxFunction(true));
-            engine.Config.SymbolTable.AddFunction(new StdevPFunction());
-            engine.Config.SymbolTable.AddFunction(new VarPFunction());
 
             engine.Config.SymbolTable.AddVariable("t1", FormulaType.Boolean, mutable: true);
 
