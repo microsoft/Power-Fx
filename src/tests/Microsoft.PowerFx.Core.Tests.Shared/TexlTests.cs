@@ -210,17 +210,13 @@ namespace Microsoft.PowerFx.Core.Tests
             engine.Config.SymbolTable.AddFunction(new ClearCollectFunction());
             engine.Config.SymbolTable.AddFunction(new ClearCollectScalarFunction());
             engine.Config.SymbolTable.AddFunction(new DistinctFunction());
-            engine.Config.SymbolTable.AddFunction(new SortFunction());
             engine.Config.SymbolTable.AddFunction(new MidFunction());
-            engine.Config.SymbolTable.AddFunction(new LookUpFunction());
-            engine.Config.SymbolTable.AddFunction(new CountIfFunction());
             engine.Config.SymbolTable.AddFunction(new SumFunction());
             engine.Config.SymbolTable.AddFunction(new AverageFunction());
             engine.Config.SymbolTable.AddFunction(new MinMaxFunction(false));
             engine.Config.SymbolTable.AddFunction(new MinMaxFunction(true));
             engine.Config.SymbolTable.AddFunction(new StdevPFunction());
             engine.Config.SymbolTable.AddFunction(new VarPFunction());
-            engine.Config.SymbolTable.AddFunction(new ConcatFunction());
 
             engine.Config.SymbolTable.AddVariable("t1", FormulaType.Build(expectedDType), mutable: true);
             engine.Config.SymbolTable.AddVariable("t2", FormulaType.Build(expectedDTypeScalar), mutable: true);

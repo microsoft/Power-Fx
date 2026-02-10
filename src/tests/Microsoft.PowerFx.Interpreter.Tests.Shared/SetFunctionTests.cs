@@ -576,6 +576,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Theory]
         [InlineData("Mid( \"hello\", %1; 1, 4 )", false)] // doesn't have IteratesOverScope set to true 
         [InlineData("ForAll( Sequence(5), %1 )", false)] // Iterates, but sets DeterministicIteration to true
+        [InlineData("ForAll( ParseJSON( \"[1,2,3]\" ), %1 )", false)] // Iterates, but sets DeterministicIteration to true
         [InlineData("Filter( Sequence(5), %1; Value > 2 )", true, "ErrFilterFunctionBahaviorAsPredicate")] // in addition, produces an error for all behavior functions
         [InlineData("CountIf( Sequence(5), %1; Value > 2 )", true, "ErrFilterFunctionBahaviorAsPredicate")] // in addition, produces an error for all behavior functions
         [InlineData("LookUp( Sequence(5), %1; Value = 2 )", true, "ErrFilterFunctionBahaviorAsPredicate")] // in addition, produces an error for all behavior functions
@@ -594,32 +595,20 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new Engine(new PowerFxConfig());
             var options = new ParserOptions() { AllowsSideEffects = true };
 
-            DType.TryParse("*[a:w,b:s]", out var expectedDType);
-            DType.TryParse("*[Value:w]", out var expectedDTypeScalar);
-
             engine.Config.SymbolTable.AddFunction(new RecalcEngineSetFunction());
-            engine.Config.SymbolTable.AddFunction(new ClearFunction());
-            engine.Config.SymbolTable.AddFunction(new CollectFunction());
-            engine.Config.SymbolTable.AddFunction(new CollectScalarFunction());
-            engine.Config.SymbolTable.AddFunction(new ClearCollectFunction());
-            engine.Config.SymbolTable.AddFunction(new ClearCollectScalarFunction());
+            engine.Config.SymbolTable.AddFunction(new ParseJSONFunction());
             engine.Config.SymbolTable.AddFunction(new DistinctFunction());
-            engine.Config.SymbolTable.AddFunction(new SortFunction());
             engine.Config.SymbolTable.AddFunction(new MidFunction());
-            engine.Config.SymbolTable.AddFunction(new LookUpFunction());
-            engine.Config.SymbolTable.AddFunction(new CountIfFunction());
             engine.Config.SymbolTable.AddFunction(new SumFunction());
             engine.Config.SymbolTable.AddFunction(new AverageFunction());
             engine.Config.SymbolTable.AddFunction(new MinMaxFunction(false));
             engine.Config.SymbolTable.AddFunction(new MinMaxFunction(true));
             engine.Config.SymbolTable.AddFunction(new StdevPFunction());
             engine.Config.SymbolTable.AddFunction(new VarPFunction());
-            engine.Config.SymbolTable.AddFunction(new ConcatFunction());
 
-            engine.Config.SymbolTable.AddVariable("t1", FormulaType.Build(expectedDType), mutable: true);
-            engine.Config.SymbolTable.AddVariable("t2", FormulaType.Build(expectedDTypeScalar), mutable: true);
+            engine.Config.SymbolTable.AddVariable("t1", FormulaType.Boolean, mutable: true);
 
-            foreach (var test in new string[] { "Set(t1, [{a:3}])", "Set(t2, 32)" })
+            foreach (var test in new string[] { "Set(t1, true)" })
             {
                 var testExpression = expression.Replace("%1", test);
                 var check = engine.Check(testExpression, options);
