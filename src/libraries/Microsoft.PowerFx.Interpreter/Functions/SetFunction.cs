@@ -44,6 +44,10 @@ namespace Microsoft.PowerFx.Interpreter
             yield return new[] { TexlStrings.SetArg1, TexlStrings.SetArg2 };
         }
 
+        // The safest way to create this object is with 
+        // RecalcEngineSetFunction(allowedWithinNondeterministicOperationOrder: false)
+        // which will prevent it from being used in Sort, Sum, Distinct, ... and other iterable functions.
+        // It defaults to true for backward compatibility, but new hosts should use the constructor that allows setting it to false.
         public RecalcEngineSetFunction()
         : base(
               DPath.Root,
@@ -58,10 +62,10 @@ namespace Microsoft.PowerFx.Interpreter
         {
         }
 
-        public RecalcEngineSetFunction(bool allowInNondeterministicIteration)
+        public RecalcEngineSetFunction(bool allowedWithinNondeterministicOperationOrder)
         : this()
         {
-            AllowedWithinNondeterministicOperationOrder = allowInNondeterministicIteration;
+            AllowedWithinNondeterministicOperationOrder = allowedWithinNondeterministicOperationOrder;
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
