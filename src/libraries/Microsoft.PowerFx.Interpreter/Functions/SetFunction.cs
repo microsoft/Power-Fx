@@ -29,7 +29,12 @@ namespace Microsoft.PowerFx.Interpreter
         // Set() is a behavior function. 
         public override bool IsSelfContained => false;
 
-        public override bool AllowedWithinNondeterministicOperationOrder => false;
+        // You might expect to find AllowedWithinNondeterministicOperationOrder => false here, as it is in Clear and in Canvas' Set.
+        // It should be, but this was an oversight when Set was added to the interpreter that we don't feel we can take back now
+        // for fear of breaking formulas in existing hosts. With freeing of ForAll in general, the lack of this flag only
+        // impacts Set being used in Sort, Sum, Distinct, ... and other iterable functions which is less common.
+        // For new hosts, instead of using EnableSetFunction, please use EnableSetFunctionRestrictedIteration instead.
+        public override bool AllowedWithinNondeterministicOperationOrder { get; } = true;
 
         // Set() of a simple identifier is not a mutation through a reference (a mutate), but rather changing the reference (a true set).
         public override bool MutatesArg(int argIndex, TexlNode arg) => argIndex == 0 && arg.Kind != NodeKind.FirstName;
@@ -51,6 +56,12 @@ namespace Microsoft.PowerFx.Interpreter
               2,
               2)
         {
+        }
+
+        public RecalcEngineSetFunction(bool allowInNondeterministicIteration)
+        : this()
+        {
+            AllowedWithinNondeterministicOperationOrder = allowInNondeterministicIteration;
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)

@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
@@ -592,45 +593,70 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("VarP( Sequence(5), %1; Value )", true)]
         public void TexlMutationFunctionsInIteration_Interpreter(string expression, bool restrictedSet, string functionErrorKey = null)
         {
-            var engine = new Engine(new PowerFxConfig());
-            var options = new ParserOptions() { AllowsSideEffects = true };
-
-            engine.Config.SymbolTable.AddVariable("t1", FormulaType.Boolean, mutable: true);
-
-            engine.Config.SymbolTable.AddFunction(new RecalcEngineSetFunction());
-            engine.Config.SymbolTable.AddFunction(new ParseJSONFunction());
-            engine.Config.SymbolTable.AddFunction(new DistinctFunction());
-
-            var tests = new string[]
+            foreach (var testConfig in new[] { 1, 2, 3, 4 })
             {
-                "Set(t1, true)", // restricted
-                "Not(t1)" // something that should always work
-            };
+                var engineConfig = new PowerFxConfig();
+                var engineSafe = true;
+                var options = new ParserOptions() { AllowsSideEffects = true };
 
-            foreach (var test in tests)
-            {
-                var testExpression = expression.Replace("%1", test);
-                var check = engine.Check(testExpression, options);
-                bool expectedErrorSeen = false;
-
-                // These two error checks are not mutually exclusive
-                if (restrictedSet && test.StartsWith("Set"))
+                switch (testConfig)
                 {
-                    Assert.False(check.IsSuccess);
-                    Assert.Contains(check.Errors, err => !err.IsWarning && err.MessageKey == "ErrFunctionDisallowedWithinNondeterministicOperationOrder");
-                    expectedErrorSeen = true;
+                    case 1:
+                        engineConfig.EnableSetFunction();
+                        engineSafe = false;
+                        break;
+                    case 2:
+                        engineConfig.EnableSetFunctionIterationSafe();
+                        engineSafe = true;
+                        break;
+                    case 3:
+                        engineConfig.SymbolTable.EnableMutationFunctions();
+                        engineSafe = false;
+                        break;
+                    case 4:
+                        engineConfig.SymbolTable.EnableMutationFunctionsIterationSafe();
+                        engineSafe = true;
+                        break;
                 }
 
-                if (functionErrorKey != null && !test.StartsWith("Not"))
-                {
-                    Assert.False(check.IsSuccess);
-                    Assert.Contains(check.Errors, err => !err.IsWarning && err.MessageKey == functionErrorKey);
-                    expectedErrorSeen = true;
-                }
+                var engine = new Engine(engineConfig);
 
-                if (!expectedErrorSeen)
+                engine.Config.SymbolTable.AddVariable("t1", FormulaType.Boolean, mutable: true);
+
+                engine.Config.SymbolTable.AddFunction(new ParseJSONFunction());
+                engine.Config.SymbolTable.AddFunction(new DistinctFunction());
+
+                var tests = new string[]
                 {
-                    Assert.True(check.IsSuccess);
+                    "Set(t1, true)", // restricted
+                    "Not(t1)" // something that should always work
+                };
+
+                foreach (var test in tests)
+                {
+                    var testExpression = expression.Replace("%1", test);
+                    var check = engine.Check(testExpression, options);
+                    bool expectedErrorSeen = false;
+
+                    // These two error checks are not mutually exclusive
+                    if (restrictedSet && engineSafe && test.StartsWith("Set"))
+                    {
+                        Assert.False(check.IsSuccess);
+                        Assert.Contains(check.Errors, err => !err.IsWarning && err.MessageKey == "ErrFunctionDisallowedWithinNondeterministicOperationOrder");
+                        expectedErrorSeen = true;
+                    }
+
+                    if (functionErrorKey != null && !test.StartsWith("Not"))
+                    {
+                        Assert.False(check.IsSuccess);
+                        Assert.Contains(check.Errors, err => !err.IsWarning && err.MessageKey == functionErrorKey);
+                        expectedErrorSeen = true;
+                    }
+
+                    if (!expectedErrorSeen)
+                    {
+                        Assert.True(check.IsSuccess);
+                    }
                 }
             }
         }
