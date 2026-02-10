@@ -1,0 +1,125 @@
+// We block some functions that could iterate over their lambdas, in non-deterministic ways that could impact side effects
+// This is an ad-hoc spot check in addition to TexlMutationFunctionsInIteration and TexlMutationFunctionsInIteration_Interpreter test.
+
+// ForAll works for all
+
+>> Set(t1,[1,2,3])
+Table({Value:1},{Value:2},{Value:3})
+
+>> ForAll(Sequence(3), Collect(t1, 4))
+Table({Value:4},{Value:4},{Value:4})
+
+>> 0; t1
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:4},{Value:4})
+
+>> ForAll(Sequence(3), Clear(t1))
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> 1; t1
+Table()
+
+>> ForAll(Sequence(3), ClearCollect(t1, 5))
+Table({Value:5},{Value:5},{Value:5})
+
+>> 2; t1
+Table({Value:5})
+
+>> ForAll(Sequence(3), Set(t1,[10,20,30]))
+Table({Value:10},{Value:20},{Value:30})
+
+>> 3; t1
+Table({Value:10},{Value:20},{Value:30})
+
+>> ForAll(Sequence(3), Collect(t1, {Value:5}))
+Table({Value:5},{Value:5},{Value:5})
+
+>> 4; t1
+Table({Value:10},{Value:20},{Value:30},{Value:5},{Value:5},{Value:5})
+
+>> ForAll(Sequence(3), ClearCollect(t1, {Value:5}))
+Table({Value:5},{Value:5},{Value:5})
+
+>> 5; t1
+Table({Value:5})
+
+// Filter doesn't work for any
+
+>> Set(t1,[11,12,13])
+Table({Value:11},{Value:12},{Value:13})
+
+>> Filter(Sequence(3), Collect(t1, 4); Value < 2)
+Errors: Error 34-35: Filter functions don't allow behavior functions as predicates.
+
+>> 10; t1
+Table({Value:11},{Value:12},{Value:13})
+
+>> Filter(Sequence(3), Clear(t1); Value < 2)
+Errors: Error 20-29: This function cannot be invoked within Filter.|Error 29-30: Filter functions don't allow behavior functions as predicates.
+
+>> 11; t1
+Table({Value:11},{Value:12},{Value:13})
+
+>> Filter(Sequence(3), ClearCollect(t1, 5); Value < 2)
+Errors: Error 20-39: This function cannot be invoked within Filter.|Error 39-40: Filter functions don't allow behavior functions as predicates.
+
+>> 12; t1
+Table({Value:11},{Value:12},{Value:13})
+
+>> Filter(Sequence(3), Set(t1,[10,20,30]); Value < 2)
+Errors: Error 20-38: This function cannot be invoked within Filter.|Error 38-39: Filter functions don't allow behavior functions as predicates.
+
+>> 13; t1
+Table({Value:11},{Value:12},{Value:13})
+
+>> Filter(Sequence(3), Collect(t1, {Value:5}); Value < 2)
+Errors: Error 42-43: Filter functions don't allow behavior functions as predicates.
+
+>> 14; t1
+Table({Value:11},{Value:12},{Value:13})
+
+>> Filter(Sequence(3), ClearCollect(t1, {Value:5}); Value < 2)
+Errors: Error 20-47: This function cannot be invoked within Filter.|Error 47-48: Filter functions don't allow behavior functions as predicates.
+
+>> 15; t1
+Table({Value:11},{Value:12},{Value:13})
+
+// Sort works for some
+
+>> Set(t1,[21,22,23])
+Table({Value:21},{Value:22},{Value:23})
+
+>> Sort(Sequence(3), Collect(t1, 4); Value + 2)
+Table({Value:1},{Value:2},{Value:3})
+
+>> 20; t1
+Table({Value:21},{Value:22},{Value:23},{Value:4},{Value:4},{Value:4})
+
+>> Sort(Sequence(3), Clear(t1); Value + 2)
+Errors: Error 18-27: This function cannot be invoked within Sort.
+
+>> 21; t1
+Table({Value:21},{Value:22},{Value:23},{Value:4},{Value:4},{Value:4})
+
+>> Sort(Sequence(3), ClearCollect(t1, 5); Value + 2)
+Errors: Error 18-37: This function cannot be invoked within Sort.
+
+>> 22; t1
+Table({Value:21},{Value:22},{Value:23},{Value:4},{Value:4},{Value:4})
+
+>> Sort(Sequence(3), Set(t1,[10,20,30]); Value + 2)
+Errors: Error 18-36: This function cannot be invoked within Sort.
+
+>> 23; t1
+Table({Value:21},{Value:22},{Value:23},{Value:4},{Value:4},{Value:4})
+
+>> Sort(Sequence(3), Collect(t1, {Value:5}); Value + 2)
+Table({Value:1},{Value:2},{Value:3})
+
+>> 24; t1
+Table({Value:21},{Value:22},{Value:23},{Value:4},{Value:4},{Value:4},{Value:5},{Value:5},{Value:5})
+
+>> Sort(Sequence(3), ClearCollect(t1, {Value:5}); Value + 2)
+Errors: Error 18-45: This function cannot be invoked within Sort.
+
+>> 25; t1
+Table({Value:21},{Value:22},{Value:23},{Value:4},{Value:4},{Value:4},{Value:5},{Value:5},{Value:5})

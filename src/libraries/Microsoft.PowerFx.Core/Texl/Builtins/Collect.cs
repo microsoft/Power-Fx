@@ -532,6 +532,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // ClearCollect(collection:*[...], item1:![...]|*[...], ...)
     internal class ClearCollectFunction : CollectFunction
     {
+        public override bool AllowedWithinNondeterministicOperationOrder => false;
+
         public ClearCollectFunction()
             : base("ClearCollect", TexlStrings.AboutClearCollect)
         {

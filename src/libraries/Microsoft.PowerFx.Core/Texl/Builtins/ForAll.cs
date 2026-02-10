@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public ForAllFunction()
             : base(ForAllInvariantFunctionName, TexlStrings.AboutForAll, FunctionCategories.Table, DType.Unknown, 0x2, 2, 2, DType.EmptyTable)
         {
-            ScopeInfo = new FunctionScopeInfo(this);
+            ScopeInfo = new FunctionScopeInfo(this, determinisitcIteration: true);
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public ForAllFunction_UO()
             : base(ForAllFunction.ForAllInvariantFunctionName, TexlStrings.AboutForAll, FunctionCategories.Table, DType.Unknown, 0x2, 2, 2, DType.UntypedObject)
         {
-            ScopeInfo = new FunctionScopeInfo(this);
+            ScopeInfo = new FunctionScopeInfo(this, determinisitcIteration: true);
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()

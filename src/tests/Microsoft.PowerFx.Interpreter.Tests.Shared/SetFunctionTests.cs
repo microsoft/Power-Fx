@@ -7,6 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -565,6 +567,84 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Verify check
             Assert.False(check.IsSuccess);
             Assert.Contains(check.Errors, d => d.Message.Contains("Invalid argument type (Boolean). Expecting a Number value instead."));
+        }
+
+        // Check proper treatment of functions that create their own FunctionScopeInfo and set IteratesOverScope to true,
+        // with functions that have AllowedWithinNondeterministicOperationOrder set to false (Clear, ClearCollect, but not Collect).
+        // Notable exception is ForAll that has DeterministicIteration set to true
+        // Companion to \src\tests\Microsoft.PowerFx.Core.Tests.Shared\TexlTests.cs for the Set function
+        [Theory]
+        [InlineData("Mid( \"hello\", %1; 1, 4 )", false)] // doesn't have IteratesOverScope set to true 
+        [InlineData("ForAll( Sequence(5), %1 )", false)] // Iterates, but sets DeterministicIteration to true
+        [InlineData("Filter( Sequence(5), %1; Value > 2 )", true, "ErrFilterFunctionBahaviorAsPredicate")] // in addition, produces an error for all behavior functions
+        [InlineData("CountIf( Sequence(5), %1; Value > 2 )", true, "ErrFilterFunctionBahaviorAsPredicate")] // in addition, produces an error for all behavior functions
+        [InlineData("LookUp( Sequence(5), %1; Value = 2 )", true, "ErrFilterFunctionBahaviorAsPredicate")] // in addition, produces an error for all behavior functions
+        [InlineData("Distinct( Sequence(5), %1; Value )", true)]
+        [InlineData("Sort( Sequence(5), %1; Value + 2 )", true)]
+        [InlineData("AddColumns( Sequence(5), Double, %1; Value*2 )", true)]
+        [InlineData("Concat( Sequence(5), %1; Value )", true)]
+        [InlineData("Sum( Sequence(5), %1; Value )", true)]
+        [InlineData("Max( Sequence(5), %1; Value )", true)]
+        [InlineData("Min( Sequence(5), %1; Value )", true)]
+        [InlineData("Average( Sequence(5), %1; Value )", true)]
+        [InlineData("StdevP( Sequence(5), %1; Value )", true)]
+        [InlineData("VarP( Sequence(5), %1; Value )", true)]
+        public void TexlMutationFunctionsInIteration_Interpreter(string expression, bool restrictedSet, string functionErrorKey = null)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var options = new ParserOptions() { AllowsSideEffects = true };
+
+            DType.TryParse("*[a:w,b:s]", out var expectedDType);
+            DType.TryParse("*[Value:w]", out var expectedDTypeScalar);
+
+            engine.Config.SymbolTable.AddFunction(new RecalcEngineSetFunction());
+            engine.Config.SymbolTable.AddFunction(new ClearFunction());
+            engine.Config.SymbolTable.AddFunction(new CollectFunction());
+            engine.Config.SymbolTable.AddFunction(new CollectScalarFunction());
+            engine.Config.SymbolTable.AddFunction(new ClearCollectFunction());
+            engine.Config.SymbolTable.AddFunction(new ClearCollectScalarFunction());
+            engine.Config.SymbolTable.AddFunction(new DistinctFunction());
+            engine.Config.SymbolTable.AddFunction(new SortFunction());
+            engine.Config.SymbolTable.AddFunction(new MidFunction());
+            engine.Config.SymbolTable.AddFunction(new LookUpFunction());
+            engine.Config.SymbolTable.AddFunction(new CountIfFunction());
+            engine.Config.SymbolTable.AddFunction(new SumFunction());
+            engine.Config.SymbolTable.AddFunction(new AverageFunction());
+            engine.Config.SymbolTable.AddFunction(new MinMaxFunction(false));
+            engine.Config.SymbolTable.AddFunction(new MinMaxFunction(true));
+            engine.Config.SymbolTable.AddFunction(new StdevPFunction());
+            engine.Config.SymbolTable.AddFunction(new VarPFunction());
+            engine.Config.SymbolTable.AddFunction(new ConcatFunction());
+
+            engine.Config.SymbolTable.AddVariable("t1", FormulaType.Build(expectedDType), mutable: true);
+            engine.Config.SymbolTable.AddVariable("t2", FormulaType.Build(expectedDTypeScalar), mutable: true);
+
+            foreach (var test in new string[] { "Set(t1, [{a:3}])", "Set(t2, 32)" })
+            {
+                var testExpression = expression.Replace("%1", test);
+                var check = engine.Check(testExpression, options);
+                bool expectedErrorSeen = false;
+
+                // These two error checks are not mutually exclusive
+                if (restrictedSet)
+                {
+                    Assert.False(check.IsSuccess);
+                    Assert.Contains(check.Errors, err => !err.IsWarning && err.MessageKey == "ErrFunctionDisallowedWithinNondeterministicOperationOrder");
+                    expectedErrorSeen = true;
+                }
+
+                if (functionErrorKey != null)
+                {
+                    Assert.False(check.IsSuccess);
+                    Assert.Contains(check.Errors, err => !err.IsWarning && err.MessageKey == functionErrorKey);
+                    expectedErrorSeen = true;
+                }
+
+                if (!expectedErrorSeen)
+                {
+                    Assert.True(check.IsSuccess);
+                }
+            }
         }
     }
 }
