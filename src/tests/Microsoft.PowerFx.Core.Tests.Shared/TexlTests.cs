@@ -214,7 +214,7 @@ namespace Microsoft.PowerFx.Core.Tests
             engine.Config.SymbolTable.AddFunction(new ClearCollectScalarFunction());
             engine.Config.SymbolTable.AddFunction(new DistinctFunction());
 
-            var tests = new []
+            var tests = new[]
             {
                 "Clear(t1)", "Clear(t2)", // restricted
                 "ClearCollect(t1,{a:4})", "ClearCollect(t2,4)", // restricted
