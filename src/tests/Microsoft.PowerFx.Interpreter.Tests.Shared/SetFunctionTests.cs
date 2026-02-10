@@ -595,27 +595,33 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new Engine(new PowerFxConfig());
             var options = new ParserOptions() { AllowsSideEffects = true };
 
+            engine.Config.SymbolTable.AddVariable("t1", FormulaType.Boolean, mutable: true);
+
             engine.Config.SymbolTable.AddFunction(new RecalcEngineSetFunction());
             engine.Config.SymbolTable.AddFunction(new ParseJSONFunction());
             engine.Config.SymbolTable.AddFunction(new DistinctFunction());
 
-            engine.Config.SymbolTable.AddVariable("t1", FormulaType.Boolean, mutable: true);
+            var tests = new string[]
+            {
+                "Set(t1, true)", // restricted
+                "Not(t1)" // something that should always work
+            };
 
-            foreach (var test in new string[] { "Set(t1, true)" })
+            foreach (var test in tests)
             {
                 var testExpression = expression.Replace("%1", test);
                 var check = engine.Check(testExpression, options);
                 bool expectedErrorSeen = false;
 
                 // These two error checks are not mutually exclusive
-                if (restrictedSet)
+                if (restrictedSet && test.StartsWith("Set"))
                 {
                     Assert.False(check.IsSuccess);
                     Assert.Contains(check.Errors, err => !err.IsWarning && err.MessageKey == "ErrFunctionDisallowedWithinNondeterministicOperationOrder");
                     expectedErrorSeen = true;
                 }
 
-                if (functionErrorKey != null)
+                if (functionErrorKey != null && !test.StartsWith("Not"))
                 {
                     Assert.False(check.IsSuccess);
                     Assert.Contains(check.Errors, err => !err.IsWarning && err.MessageKey == functionErrorKey);

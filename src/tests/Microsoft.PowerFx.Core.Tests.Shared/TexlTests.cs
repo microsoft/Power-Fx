@@ -204,6 +204,9 @@ namespace Microsoft.PowerFx.Core.Tests
             DType.TryParse("*[a:w,b:s]", out var expectedDType);
             DType.TryParse("*[Value:w]", out var expectedDTypeScalar);
 
+            engine.Config.SymbolTable.AddVariable("t1", FormulaType.Build(expectedDType), mutable: true);
+            engine.Config.SymbolTable.AddVariable("t2", FormulaType.Build(expectedDTypeScalar), mutable: true);
+
             engine.Config.SymbolTable.AddFunction(new ClearFunction());
             engine.Config.SymbolTable.AddFunction(new CollectFunction());
             engine.Config.SymbolTable.AddFunction(new CollectScalarFunction());
@@ -211,10 +214,15 @@ namespace Microsoft.PowerFx.Core.Tests
             engine.Config.SymbolTable.AddFunction(new ClearCollectScalarFunction());
             engine.Config.SymbolTable.AddFunction(new DistinctFunction());
 
-            engine.Config.SymbolTable.AddVariable("t1", FormulaType.Build(expectedDType), mutable: true);
-            engine.Config.SymbolTable.AddVariable("t2", FormulaType.Build(expectedDTypeScalar), mutable: true);
+            var tests = new string[]
+            {
+                "Clear(t1)", "Clear(t2)", // restricted
+                "ClearCollect(t1,{a:4})", "ClearCollect(t2,4)", // restricted
+                "Collect(t1,{a:5})", "Collect(t2,5)", // unrestricted, but still a mutation function
+                "First(t1)" // something that should always work
+            };
 
-            foreach (var test in new string[] { "Clear(t1)", "Clear(t2)", "ClearCollect(t1,{a:4})", "ClearCollect(t2,4)", "Collect(t1,{a:5})", "Collect(t2,5)" })
+            foreach (var test in tests)
             {
                 var testExpression = expression.Replace("%1", test);
                 var check = engine.Check(testExpression, options);
@@ -228,7 +236,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     expectedErrorSeen = true;
                 }
 
-                if (functionErrorKey != null)
+                if (functionErrorKey != null && !test.StartsWith("First"))
                 {
                     Assert.False(check.IsSuccess);
                     Assert.Contains(check.Errors, err => !err.IsWarning && err.MessageKey == functionErrorKey);
