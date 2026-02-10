@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx
         /// <param name="powerFxConfig"></param>
         public static void EnableSetFunctionIterationSafe(this PowerFxConfig powerFxConfig)
         {
-            powerFxConfig.AddFunction(new RecalcEngineSetFunction(allowInNondeterministicIteration: false));
+            powerFxConfig.AddFunction(new RecalcEngineSetFunction(allowedWithinNondeterministicOperationOrder: false));
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx
         /// <param name="symbolTable"></param>
         public static void EnableMutationFunctionsIterationSafe(this SymbolTable symbolTable)
         {
-            symbolTable.AddFunction(new RecalcEngineSetFunction(allowInNondeterministicIteration: false));
+            symbolTable.AddFunction(new RecalcEngineSetFunction(allowedWithinNondeterministicOperationOrder: false));
             EnableMutationFunctionsCore(symbolTable);
         }
 
