@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public async Task BlobTest_NoCopy()
         {
             PowerFxConfig config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
 
             SymbolTable symbolTable = new SymbolTable();
             ISymbolSlot var1Slot = symbolTable.AddVariable("var1", FormulaType.Blob, false, "var1");
@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public async Task BlobTest_CannotConvert()
         {
             PowerFxConfig config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
 
             SymbolTable symbolTable = new SymbolTable();
             ISymbolSlot var1Slot = symbolTable.AddVariable("var1", FormulaType.Blob, false, "var1");

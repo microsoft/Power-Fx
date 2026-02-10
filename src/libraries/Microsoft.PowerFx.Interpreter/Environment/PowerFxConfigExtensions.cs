@@ -34,16 +34,19 @@ namespace Microsoft.PowerFx
         /// This version of EnableSetFunction, which should be used for all new Power Fx hosts, correctly prevents Set from being used in a non-deterministic iteration context such as Sort.
         /// </summary>
         /// <param name="powerFxConfig"></param>
-        public static void EnableSetFunctionIterationSafe(this PowerFxConfig powerFxConfig)
+        /// <param name="iterationSafe">If true, default, prevents Set from being used in a non-deterministic iteration context such as Sort. 
+        /// For older hosts, you may want to keep this false as it previous was.</param>
+        public static void EnableSetFunctionIterationSafe(this PowerFxConfig powerFxConfig, bool iterationSafe = true)
         {
-            powerFxConfig.AddFunction(new RecalcEngineSetFunction(allowedWithinNondeterministicOperationOrder: false));
+            powerFxConfig.AddFunction(new RecalcEngineSetFunction(iterationSafe));
         }
 
         /// <summary>
         /// Enable a Set() function which allows scripts to do <see cref="RecalcEngine.UpdateVariable(string, Types.FormulaValue, SymbolProperties)"/>.
-        /// For new Power Fx hosts, use EnableSetFunctionIterationSafe instead which prevents Set from being used in a non-deterministic iteration context such as Sort.
+        /// For new Power Fx hosts, use EnableSetFunctionIterationSafe which defaults to preventing Set from being used in a non-deterministic iteration context such as Sort.
         /// </summary>
         /// <param name="powerFxConfig"></param>
+        [Obsolete("Use EnableSetFunctionIterationSafe instead, with iterationSafe: false for the same behavior.")]
         public static void EnableSetFunction(this PowerFxConfig powerFxConfig)
         {
             powerFxConfig.AddFunction(new RecalcEngineSetFunction());
@@ -55,9 +58,11 @@ namespace Microsoft.PowerFx
         /// correctly prevents Set from being used in a non-deterministic iteration context such as Sort.
         /// </summary>
         /// <param name="symbolTable"></param>
-        public static void EnableMutationFunctionsIterationSafe(this SymbolTable symbolTable)
+        /// <param name="iterationSafe">If true, default, prevents Set from being used in a non-deterministic iteration context such as Sort. 
+        /// For older hosts, you may want to keep this false as it previous was.</param>
+        public static void EnableMutationFunctionsIterationSafe(this SymbolTable symbolTable, bool iterationSafe = true)
         {
-            symbolTable.AddFunction(new RecalcEngineSetFunction(allowedWithinNondeterministicOperationOrder: false));
+            symbolTable.AddFunction(new RecalcEngineSetFunction(iterationSafe));
             EnableMutationFunctionsCore(symbolTable);
         }
 
@@ -66,6 +71,7 @@ namespace Microsoft.PowerFx
         /// For new Power Fx hosts, use EnableMutationFunctionsIterationSafe instead which prevents Set from being used in a non-deterministic iteration context such as Sort.
         /// </summary>
         /// <param name="symbolTable"></param>
+        [Obsolete("Use EnableMutationFunctionsIterationSafe instead, with iterationSafe: false for the same behavior.")]
         public static void EnableMutationFunctions(this SymbolTable symbolTable)
         {
             symbolTable.AddFunction(new RecalcEngineSetFunction());

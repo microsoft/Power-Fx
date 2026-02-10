@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private static object BlobSetup(PowerFxConfig config, SymbolTable symbolTable)
         {
             config.AddBlobTestFunctions();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
 
             return new List<(ISymbolSlot slot, FormulaValue value)>()
             { 
@@ -878,7 +878,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var waitForHelper = new WaitForFunctionsHelper(verify);
                 config.AddFunction(waitForHelper.GetFunction());
 
-                config.EnableSetFunction();
+                config.EnableSetFunctionIterationSafe();
                 var engine = new RecalcEngine(config);
                 engine.UpdateVariable("varNumber", 9999);
 

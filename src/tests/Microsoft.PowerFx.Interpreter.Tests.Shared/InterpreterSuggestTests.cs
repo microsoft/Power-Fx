@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void TestSuggestMutationFunctions(string expression, params string[] expectedSuggestions)
         {
             var config = SuggestTests.Default;
-            config.SymbolTable.EnableMutationFunctions();
+            config.SymbolTable.EnableMutationFunctionsIterationSafe();
 
             var actualSuggestions = SuggestStrings(expression, config, null);
             Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
@@ -232,7 +232,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var config = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet());
 
-            config.SymbolTable.EnableMutationFunctions();
+            config.SymbolTable.EnableMutationFunctionsIterationSafe();
 
             config.SymbolTable.AddHostObject("User", RecordType.Empty(), (sp) => RecordValue.NewRecordFromFields());
 
@@ -334,7 +334,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var config = SuggestTests.Default;
 
-            config.SymbolTable.EnableMutationFunctions();
+            config.SymbolTable.EnableMutationFunctionsIterationSafe();
 
             // With Input record type param
             config.AddFunction(new TestRecordInputCustomFunction());
@@ -360,7 +360,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void SuggestCollect(string exprWithPipe, string expectedSuggestions)
         {
             PowerFxConfig config = new PowerFxConfig() { SymbolTable = UserInfoTestSetup.GetUserInfoSymbolTable() };
-            config.SymbolTable.EnableMutationFunctions();
+            config.SymbolTable.EnableMutationFunctionsIterationSafe();
 
             RecalcEngine engine = new RecalcEngine(config);
             string expr = exprWithPipe.Replace("|", string.Empty);

@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Interpreter
         // It should be, but this was an oversight when Set was added to the interpreter that we don't feel we can take back now
         // for fear of breaking formulas in existing hosts. With freeing of ForAll in general, the lack of this flag only
         // impacts Set being used in Sort, Sum, Distinct, ... and other iterable functions which is less common.
-        // For new hosts, instead of using EnableSetFunction, please use EnableSetFunctionRestrictedIteration instead.
+        // For new hosts, instead of using EnableSetFunction, please use EnableSetFunctionIterationSafe instead which defaults this to false.
         public override bool AllowedWithinNondeterministicOperationOrder { get; } = true;
 
         // Set() of a simple identifier is not a mutation through a reference (a mutate), but rather changing the reference (a true set).
@@ -62,10 +62,10 @@ namespace Microsoft.PowerFx.Interpreter
         {
         }
 
-        public RecalcEngineSetFunction(bool allowedWithinNondeterministicOperationOrder)
+        public RecalcEngineSetFunction(bool iterationSafe)
         : this()
         {
-            AllowedWithinNondeterministicOperationOrder = allowedWithinNondeterministicOperationOrder;
+            AllowedWithinNondeterministicOperationOrder = !iterationSafe;
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)

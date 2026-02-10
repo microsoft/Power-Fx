@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void SetVar()
         {
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             engine.UpdateVariable("x", FormulaValue.New(12m));
@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var expectedValue = isFloat ? (object)15.0 : (object)15m;
 
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
             engine.UpdateVariable("x", value);
 
@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void Circular()
         {
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             engine.UpdateVariable("x", FormulaValue.NewBlank(FormulaType.Decimal));
@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void SetVar2()
         {
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             engine.UpdateVariable("x", FormulaValue.New(5));
@@ -113,7 +113,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void SetRecord()
         {
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             var cache = new TypeMarshallerCache();
@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void SetRecord_CanMutate()
         {
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             var cache = new TypeMarshallerCache();
@@ -155,7 +155,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void SetRecordFloat()
         {
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             var cache = new TypeMarshallerCache();
@@ -176,7 +176,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void SetRecordFloat_SetMutate()
         {
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             var cache = new TypeMarshallerCache();
@@ -198,7 +198,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void SetVarFailures()
         {
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             engine.UpdateVariable("x", FormulaValue.New(12));
@@ -243,7 +243,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             sym.Set(slotX, FormulaValue.New(12.0));
 
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             var expr = "Set(x, x+1);x";
@@ -270,7 +270,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             sym.Set(slotX, FormulaValue.New(12));
 
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             var expr = "Set(x, x+1);x";
@@ -294,7 +294,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             sym.Add("x", FormulaValue.New(12m)); // mutable by default
 
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             // ok, mutable 
@@ -315,7 +315,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             sym.Set(slotX, FormulaValue.New(12));
 
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             // fails on readonly failure. 
@@ -343,7 +343,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             sym.Set(slotX, FormulaValue.New(12)); // Ok 
 
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             // fails on readonly failure. 
@@ -364,7 +364,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Null(slot);
 
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             // fails on readonly failure. 
@@ -382,7 +382,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var slot = symTable.AddVariable("num", FormulaType.Number, mutable: true);
 
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             // Create multiple values that share a symbol table.
@@ -413,7 +413,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var slot = symTable.AddVariable("num", FormulaType.Decimal, mutable: true);
 
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             // Create multiple values that share a symbol table.
@@ -454,7 +454,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var sym = NewMutableFromRecord(record);
             
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             var runtimeConfig = new RuntimeConfig(sym);
@@ -497,7 +497,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var sym = ReadOnlySymbolValues.Compose(sym1, sym2);
 
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             // Verify Check, creating symbol table several ways 
@@ -558,7 +558,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Create an engine with variable and enable mutation functions
             var engine = new RecalcEngine(new PowerFxConfig());
             engine.UpdateVariable("testDoubleVariable", 2.0);
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
 
             // Run compliation check
             var check = engine.Check("Set(testDoubleVariable, true)", options: _opts);
@@ -591,16 +591,17 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("VarP( Sequence(5), %1; Value )", true)]
         public void TexlMutationFunctionsInIteration_Interpreter(string expression, bool restrictedSet, string functionErrorKey = null)
         {
-            foreach (var testConfig in new[] { 1, 2, 3, 4 })
+            for (var testConfig = 1; testConfig <= 6; testConfig++)
             {
                 var engineConfig = new PowerFxConfig();
                 var engineSafe = true;
-                var options = new ParserOptions() { AllowsSideEffects = true };
 
                 switch (testConfig)
                 {
                     case 1:
+#pragma warning disable CS0618 // Type or member is obsolete
                         engineConfig.EnableSetFunction();
+#pragma warning restore CS0618 // Type or member is obsolete
                         engineSafe = false;
                         break;
                     case 2:
@@ -608,16 +609,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         engineSafe = true;
                         break;
                     case 3:
-                        engineConfig.SymbolTable.EnableMutationFunctions();
+                        engineConfig.EnableSetFunctionIterationSafe(iterationSafe: false);
                         engineSafe = false;
                         break;
                     case 4:
+#pragma warning disable CS0618 // Type or member is obsolete
+                        engineConfig.SymbolTable.EnableMutationFunctions();
+#pragma warning restore CS0618 // Type or member is obsolete
+                        engineSafe = false;
+                        break;
+                    case 5:
                         engineConfig.SymbolTable.EnableMutationFunctionsIterationSafe();
                         engineSafe = true;
+                        break;
+                    case 6:
+                        engineConfig.SymbolTable.EnableMutationFunctionsIterationSafe(iterationSafe: false);
+                        engineSafe = false;
                         break;
                 }
 
                 var engine = new Engine(engineConfig);
+                var options = new ParserOptions() { AllowsSideEffects = true };
 
                 engine.Config.SymbolTable.AddVariable("t1", FormulaType.Boolean, mutable: true);
 
@@ -639,21 +651,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     // These two error checks are not mutually exclusive
                     if (restrictedSet && engineSafe && test.StartsWith("Set"))
                     {
-                        Assert.False(check.IsSuccess);
+                        Assert.False(check.IsSuccess, "Set should have been restricted in test ${testConfig} and ${testExpression}");
                         Assert.Contains(check.Errors, err => !err.IsWarning && err.MessageKey == "ErrFunctionDisallowedWithinNondeterministicOperationOrder");
                         expectedErrorSeen = true;
                     }
 
                     if (functionErrorKey != null && !test.StartsWith("Not"))
                     {
-                        Assert.False(check.IsSuccess);
+                        Assert.False(check.IsSuccess, "Should have had a global error in test ${testConfig} and ${testExpression}");
                         Assert.Contains(check.Errors, err => !err.IsWarning && err.MessageKey == functionErrorKey);
                         expectedErrorSeen = true;
                     }
 
                     if (!expectedErrorSeen)
                     {
-                        Assert.True(check.IsSuccess);
+                        Assert.True(check.IsSuccess, "Should have succeeded in test ${testConfig} and ${testExpression}");
                     }
                 }
             }
