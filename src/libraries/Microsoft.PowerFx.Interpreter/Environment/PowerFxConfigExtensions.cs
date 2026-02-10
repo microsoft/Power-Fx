@@ -31,16 +31,6 @@ namespace Microsoft.PowerFx
 
         /// <summary>
         /// Enable a Set() function which allows scripts to do <see cref="RecalcEngine.UpdateVariable(string, Types.FormulaValue, SymbolProperties)"/>.
-        /// For new Power Fx hosts, use EnableSetFunctionRestrictedIteration instead which prevents Set from being used in a non-deterministic iteration context such as Sort.
-        /// </summary>
-        /// <param name="powerFxConfig"></param>
-        public static void EnableSetFunction(this PowerFxConfig powerFxConfig)
-        {
-            powerFxConfig.AddFunction(new RecalcEngineSetFunction());
-        }
-
-        /// <summary>
-        /// Enable a Set() function which allows scripts to do <see cref="RecalcEngine.UpdateVariable(string, Types.FormulaValue, SymbolProperties)"/>.
         /// This version of EnableSetFunction, which should be used for all new Power Fx hosts, correctly prevents Set from being used in a non-deterministic iteration context such as Sort.
         /// </summary>
         /// <param name="powerFxConfig"></param>
@@ -50,14 +40,13 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Enable all multation functions which allows scripts to execute side effect behavior.
-        /// For new Power Fx hosts, use EnableMutationFunctionsRestrictedIteration instead which prevents Set from being used in a non-deterministic iteration context such as Sort.
+        /// Enable a Set() function which allows scripts to do <see cref="RecalcEngine.UpdateVariable(string, Types.FormulaValue, SymbolProperties)"/>.
+        /// For new Power Fx hosts, use EnableSetFunctionIterationSafe instead which prevents Set from being used in a non-deterministic iteration context such as Sort.
         /// </summary>
-        /// <param name="symbolTable"></param>
-        public static void EnableMutationFunctions(this SymbolTable symbolTable)
+        /// <param name="powerFxConfig"></param>
+        public static void EnableSetFunction(this PowerFxConfig powerFxConfig)
         {
-            symbolTable.AddFunction(new RecalcEngineSetFunction());
-            EnableMutationFunctionsCore(symbolTable);
+            powerFxConfig.AddFunction(new RecalcEngineSetFunction());
         }
 
         /// <summary>
@@ -69,6 +58,17 @@ namespace Microsoft.PowerFx
         public static void EnableMutationFunctionsIterationSafe(this SymbolTable symbolTable)
         {
             symbolTable.AddFunction(new RecalcEngineSetFunction(allowInNondeterministicIteration: false));
+            EnableMutationFunctionsCore(symbolTable);
+        }
+
+        /// <summary>
+        /// Enable all multation functions which allows scripts to execute side effect behavior.
+        /// For new Power Fx hosts, use EnableMutationFunctionsIterationSafe instead which prevents Set from being used in a non-deterministic iteration context such as Sort.
+        /// </summary>
+        /// <param name="symbolTable"></param>
+        public static void EnableMutationFunctions(this SymbolTable symbolTable)
+        {
+            symbolTable.AddFunction(new RecalcEngineSetFunction());
             EnableMutationFunctionsCore(symbolTable);
         }
 
