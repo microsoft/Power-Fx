@@ -41,6 +41,11 @@ namespace Microsoft.PowerFx.Repl.Services
         {
             StringBuilder resultString = new StringBuilder();
 
+            if (record == null)
+            {
+                return "Blank()";
+            }
+
             IEnumerable<string> fieldNames = selectedFieldNames ?? record.Type.FieldNames;
 
             var separator = string.Empty;
@@ -97,7 +102,8 @@ namespace Microsoft.PowerFx.Repl.Services
 
         private HashSet<string> TryGetSpecialFieldNames(RecordValue record)
         {
-            if (record.TryGetSpecialFieldName(SpecialFieldKind.PrimaryKey, out var primaryKey) &&
+            if (record != null &&
+                record.TryGetSpecialFieldName(SpecialFieldKind.PrimaryKey, out var primaryKey) &&
                 record.TryGetSpecialFieldName(SpecialFieldKind.PrimaryName, out var primaryName))
             { 
                     return new HashSet<string>() { primaryName, primaryKey };
@@ -268,7 +274,7 @@ namespace Microsoft.PowerFx.Repl.Services
                         }
                         else
                         {
-                            resultString.Append(row.IsError ? row.Error?.Errors?[0].Message : "Blank()");
+                            resultString.Append(row.IsError ? row.Error?.Errors?[0].Message : "<blank record>");
                         }
                     }
 
