@@ -3,9 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Functions;
 using Xunit;
@@ -45,10 +43,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 typeof(Core.Functions.TexlFunction),
                 typeof(Core.Types.DType),
                 typeof(Core.Utils.DPath),
-                typeof(PowerFx.Syntax.TexlNode),
+                typeof(Syntax.TexlNode),
                 typeof(ReadOnlySymbolTable),
                 typeof(FunctionInvokeInfo),
-                typeof(PowerFx.TableMarshallerProvider.TableMarshaller)
+                typeof(TableMarshallerProvider.TableMarshaller)
             };
 
             AnalyzeThreadSafety.CheckImmutableTypes(assemblies, knownFailures);
