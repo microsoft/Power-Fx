@@ -1,0 +1,358 @@
+
+// ******** LAZY EVALUATION AND SHORT-CIRCUIT BEHAVIOR ********
+
+// This test file documents Power Fx's short-circuit evaluation behavior.
+// Short-circuit evaluation means that the second operand is not evaluated
+// if the result can be determined from the first operand alone.
+
+// ******** BASIC && (AND) SHORT-CIRCUIT ********
+
+// False && <anything> should not evaluate the second operand
+>> false && (1/0 > 0)
+false
+
+// True && <error> must evaluate the second operand (and errors)
+>> true && (1/0 > 0)
+Error({Kind:ErrorKind.Div0})
+
+// False && <error-function> should not evaluate the second operand
+>> false && Sqrt(-1)
+false
+
+// ******** BASIC || (OR) SHORT-CIRCUIT ********
+
+// True || <anything> should not evaluate the second operand
+>> true || (1/0 > 0)
+true
+
+// False || <error> must evaluate the second operand (and errors)
+>> false || (1/0 > 0)
+Error({Kind:ErrorKind.Div0})
+
+// True || <error-function> should not evaluate the second operand
+>> true || Sqrt(-1)
+true
+
+// ******** IF FUNCTION SHORT-CIRCUIT ********
+
+// If with false condition should not evaluate the true branch
+>> If(false, 1/0, 42)
+42
+
+// If with true condition should not evaluate the false branch
+>> If(true, 42, 1/0)
+42
+
+// If with Blank (falsy) should not evaluate the true branch
+>> If(Blank(), 1/0, 99)
+99
+
+// ******** NESTED IF SHORT-CIRCUIT ********
+
+// Nested If should short-circuit at each level
+>> If(false, Sqrt(-1), If(false, 1/0, 100))
+100
+
+// Inner If should short-circuit even when outer doesn't
+>> If(true, If(false, 1/0, 50), 999)
+50
+
+// ******** SWITCH SHORT-CIRCUIT ********
+
+// Switch should not evaluate non-matching branches
+>> Switch(1, 1, "match", 2, 1/0, "default")
+"match"
+
+// Switch evaluates until it finds a match, then stops
+>> Switch(2, 1, "a", 2, "match", 1/0)
+"match"
+
+// Switch evaluates default if no match and no error in evaluated branches
+>> Switch(3, 1, "a", 2, "b", "default")
+"default"
+
+// Switch evaluates default expression, which can error
+>> Switch(4, 1, "a", 2, "b", 1/0)
+Error({Kind:ErrorKind.Div0})
+
+// ******** AND FUNCTION FORM ********
+
+// And() function also short-circuits
+>> And(false, 1/0 > 0)
+false
+
+// And() short-circuits on first false in multi-argument form
+>> And(true, false, 1/0 > 0)
+false
+
+// And() with all false doesn't reach later arguments
+>> And(false, false)
+false
+
+// ******** OR FUNCTION FORM ********
+
+// Or() function also short-circuits
+>> Or(true, 1/0 > 0)
+true
+
+// Or() short-circuits on first true in multi-argument form
+>> Or(false, true, 1/0 > 0)
+true
+
+// Or() with all true doesn't need to check later arguments
+>> Or(true, true)
+true
+
+// ******** COALESCE SHORT-CIRCUIT ********
+
+// Coalesce stops at first non-blank value
+>> Coalesce(5, 1/0)
+5
+
+// Coalesce skips blanks but stops at first non-blank
+>> Coalesce(Blank(), 10, 1/0)
+10
+
+// Coalesce evaluates all arguments if all are blank, then errors on the error expression
+>> Coalesce(Blank(), Blank(), 1/0)
+Error({Kind:ErrorKind.Div0})
+
+// ******** IFERROR SHORT-CIRCUIT ********
+
+// IfError should not evaluate replacement if no error
+>> IfError(42, 1/0)
+42
+
+// IfError evaluates replacement when there is an error
+>> IfError(1/0, 99)
+99
+
+// ******** NESTED BOOLEAN SHORT-CIRCUIT ********
+
+// Complex nested boolean expressions short-circuit properly
+>> (false && false) || (true && (false || true))
+true
+
+// Short-circuit in comparisons
+>> (1 = 1) || (1/0 = 1)
+true
+
+// Short-circuit prevents evaluation
+>> (1 = 2) && (1/0 = 1)
+false
+
+// ******** SHORT-CIRCUIT IN WITH ********
+
+// Short-circuit works with variables from With
+>> With({x: false}, x && (1/0 > 0))
+false
+
+// Short-circuit works with || in With
+>> With({x: true}, x || (1/0 > 0))
+true
+
+// ******** NOT WITH ERROR (NO SHORT-CIRCUIT) ********
+
+// Not() must evaluate its argument (no short-circuit possible)
+>> Not(1/0 > 0)
+Error({Kind:ErrorKind.Div0})
+
+// ******** DEEP NESTING ********
+
+// Deeply nested && short-circuits correctly
+>> (false && (false && (false && (false && (false && 1/0)))))
+false
+
+// Deeply nested || must evaluate all when all are false
+>> false || (false || (false || (false || (false || 1/0))))
+Error({Kind:ErrorKind.Div0})
+
+// Deeply nested If short-circuits at each level
+>> If(false, 1/0, If(false, 1/0, If(false, 1/0, If(false, 1/0, 100))))
+100
+
+// ******** MIXED ERROR TYPES ********
+
+// Short-circuit works regardless of error type
+>> false && Left("x", -5)
+false
+
+>> true || Left("x", -5)
+true
+
+// ******** ERROR POSITION SENSITIVITY ********
+
+// Error in first operand always propagates
+>> 1/0 > 0 && false
+Error({Kind:ErrorKind.Div0})
+
+// Error in second operand short-circuits
+>> false && 1/0 > 0
+false
+
+// Error in first operand of || propagates
+>> 1/0 > 0 || true
+Error({Kind:ErrorKind.Div0})
+
+// Error in second operand of || short-circuits
+>> true || 1/0 > 0
+true
+
+// Sqrt error in first operand propagates
+>> Sqrt(-1) && false
+Error({Kind:ErrorKind.Numeric})
+
+// ******** BLANK IN BOOLEAN CONTEXT ********
+
+// Blank() behaves as false in And
+>> Blank() && true
+false
+
+// Blank() enables short-circuit in And
+>> Blank() && 1/0
+false
+
+// Blank() in Or continues to next argument
+>> Blank() || true
+true
+
+// Double Blank() in And
+>> Blank() && Blank()
+false
+
+// Double Blank() in Or
+>> Blank() || Blank()
+false
+
+// ******** OPERATOR PRECEDENCE WITH SHORT-CIRCUIT ********
+
+// && binds tighter than ||, affects short-circuit
+>> false && false || true
+true
+
+>> false || false && true
+false
+
+// Parentheses control short-circuit order
+>> (false && 1/0) || true
+true
+
+// || doesn't short-circuit when first is false
+>> false || (true && 1/0)
+Error({Kind:ErrorKind.Div0})
+
+// ******** LARGE ARGUMENT LISTS ********
+
+// And stops at first false, doesn't reach error
+>> And(false, true, true, true, true, 1/0 > 0)
+false
+
+// And evaluates until false, stops before error
+>> And(true, true, true, true, false, 1/0 > 0)
+false
+
+// Or stops at first true, doesn't reach error
+>> Or(true, false, false, false, false, 1/0 > 0)
+true
+
+// Or evaluates until true, stops before error
+>> Or(false, false, false, false, true, 1/0 > 0)
+true
+
+// ******** NESTED IFERROR AND IF ********
+
+// If short-circuits, no error for IfError to catch
+>> IfError(If(false, 1/0, 42), 99)
+42
+
+// If evaluates branch with error, IfError catches it
+>> If(true, IfError(1/0, 99), 42)
+99
+
+// ******** SWITCH ERROR POSITIONS ********
+
+// Switch test expression always evaluated (error propagates)
+>> Switch(1/0, 1, "a", 2, "b")
+Error({Kind:ErrorKind.Div0})
+
+// Switch stops at match, later errors not evaluated
+>> Switch(1, 1, "match", 2, 1/0, 3, 1/0)
+"match"
+
+// Switch evaluates default when no match (error propagates)
+>> Switch(99, 1, "a", 2, "b", 1/0)
+Error({Kind:ErrorKind.Div0})
+
+// ******** COALESCE WITH BLANK/EMPTY ********
+
+// Coalesce stops at first real value
+>> Coalesce(1, 1/0)
+1
+
+// Blank() is not a value, continues to next (which happens to be a value)
+>> Coalesce(Blank(), 1, 1/0)
+1
+
+// Empty string is not a value for Coalesce, continues
+>> Coalesce("", 1, 1/0)
+"1"
+
+// Blank() causes Coalesce to continue, hitting error
+>> Coalesce(Blank(), 1/0, 5)
+Error({Kind:ErrorKind.Div0})
+
+// Empty string causes Coalesce to continue, hitting error
+>> Coalesce("", 1/0, 5)
+Error({Kind:ErrorKind.Div0})
+
+// Multiple Blanks, stops at first value
+>> Coalesce(Blank(), Blank(), 1, 1/0)
+1
+
+// ******** THREE-WAY BOOLEAN COMBINATIONS ********
+
+// Three false && - stops at first false
+>> false && false && 1/0
+false
+
+// Two true, then false - stops at false
+>> true && false && 1/0
+false
+
+// All true - must evaluate last (errors)
+>> true && true && 1/0
+Error({Kind:ErrorKind.Div0})
+
+// One true || - stops immediately
+>> true || false || 1/0
+true
+
+// All false || - must evaluate all (errors)
+>> false || false || 1/0
+Error({Kind:ErrorKind.Div0})
+
+// ******** NESTED COALESCE ********
+
+// Outer Coalesce stops at first value, inner not evaluated
+>> Coalesce(10, Coalesce(Blank(), 1/0))
+10
+
+// Both levels must evaluate, inner short-circuits correctly
+>> Coalesce(Blank(), Coalesce(Blank(), 5, 1/0))
+5
+
+// ******** COMPARISON OPERATORS WITH SHORT-CIRCUIT ********
+
+// Comparison with error short-circuits in And
+>> false && (1/0 = 1)
+false
+
+>> false && (1/0 <> 1)
+false
+
+>> false && (1/0 >= 0)
+false
+
+// Comparison with error short-circuits in Or
+>> true || (1/0 = 1)
+true
