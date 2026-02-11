@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var config = new PowerFxConfig();
             var engine = new RecalcEngine(config);
 
-            config.SymbolTable.EnableMutationFunctions();
+            config.SymbolTable.EnableMutationFunctionsIterationSafe();
 
             var r1 = FormulaValue.NewRecordFromFields(new NamedValue("property", FormulaValue.New("x")));
             var r2 = FormulaValue.NewRecordFromFields(new NamedValue("property", FormulaValue.New("check")));

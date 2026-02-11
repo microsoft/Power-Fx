@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var listT = new List<RecordValue>();
 
-            symbol.EnableMutationFunctions();
+            symbol.EnableMutationFunctionsIterationSafe();
 
             RecordValue r1 = FormulaValue.NewRecordFromFields(
                 new NamedValue("Field1", FormulaValue.New(1)),
@@ -79,8 +79,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void CheckMutationFunctionWithLazyTypesTest(string expr, bool isCheckSuccess)
         {
             var engine = new RecalcEngine();
-            engine.Config.SymbolTable.EnableMutationFunctions();
-            engine.Config.EnableSetFunction();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
+            engine.Config.EnableSetFunctionIterationSafe();
             var options = new ParserOptions() { AllowsSideEffects = true };
             
             var lazyRecordType = new CustomTypeRecordType("lazyRecord");
@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             engine.UpdateVariable("t", tableValue);
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
 
             var check = engine.Check(expression);
             Assert.False(check.IsSuccess);

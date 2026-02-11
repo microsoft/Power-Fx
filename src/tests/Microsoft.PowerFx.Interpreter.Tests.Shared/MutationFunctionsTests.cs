@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var parameters = RecordType.Empty()
                 .Add("rType", rType);
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             engine.Config.SymbolTable.AddConstant("t", t);
 
             if (toDisplay)
@@ -211,7 +211,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var parameters = RecordType.Empty()
                 .Add("rType", rType);
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             engine.Config.SymbolTable.AddConstant("t", t);
 
             var types = new List<FormulaType>()
@@ -257,7 +257,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var engine = new Engine(new PowerFxConfig());
             engine.Config.SymbolTable.AddVariable("namedFormula", new TableType(TestUtils.DT("*[Value:n]")), mutable: false);
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             var check = engine.Check(expression, options: _opts);
             Assert.False(check.IsSuccess);
         }
@@ -273,7 +273,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new Engine(new PowerFxConfig());
             engine.Config.SymbolTable.AddVariable("varTable", new TableType(TestUtils.DT("*[Value:s]")), mutable: true);
             engine.Config.SymbolTable.AddVariable("varRecord", new KnownRecordType(TestUtils.DT("![x:*[Value:s]]")), mutable: true);
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             var check = engine.Check(expression, options: _opts);
             Assert.True(check.IsSuccess);
         }
@@ -303,7 +303,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add(new NamedFormulaType("flavor", FormulaType.String))
                 .Add(new NamedFormulaType("quantity", fv.Type));
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             engine.UpdateVariable("checktable", FormulaValue.NewTable(rType));
 
             var check = engine.Check(expr, options: new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = true });
@@ -332,7 +332,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add(new NamedFormulaType("subject", FormulaType.String))
                 .Add(new NamedFormulaType("poly", FormulaType.Build(DType.Polymorphic)));
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             engine.UpdateVariable("t1", FormulaValue.NewTable(rType));
 
             var check = engine.Check(expr, options: new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = true });
@@ -353,7 +353,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             TableValue t = FormulaValue.NewTable(rType);
             RecordValue x = new FileObjectRecordValue("x", IRContext.NotInSource(rType), new List<NamedValue>());
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             engine.UpdateVariable("x", x);
             engine.UpdateVariable("t", t);
 
@@ -381,7 +381,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbolTable = new SymbolTable();
             var symbolTableEnabled = new SymbolTable();
 
-            symbolTableEnabled.EnableMutationFunctions();
+            symbolTableEnabled.EnableMutationFunctionsIterationSafe();
 
             // Mutation functions not listed.
             var check = engine.Check(expr, symbolTable: symbolTable);
@@ -399,7 +399,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine(new PowerFxConfig(Features.None));
             var t = FormulaValue.NewTable(RecordType.Empty().Add(new NamedFormulaType("Value", FormulaType.Decimal)));
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             engine.UpdateVariable("t", t);
 
             var check = engine.Check(expression, options: new ParserOptions() { AllowsSideEffects = true });
@@ -494,7 +494,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             config.SymbolTable.AddEntity(varTableValue);
             config.SymbolTable.AddVariable("r1", FormulaType.Build(varTableValue.Type.ToRecord()));
-            config.SymbolTable.EnableMutationFunctions();
+            config.SymbolTable.EnableMutationFunctionsIterationSafe();
 
             var engine = new RecalcEngine(config);
             var check = engine.Check(expression, options: new ParserOptions() { AllowsSideEffects = allowSideEffects });
@@ -509,7 +509,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var config = new PowerFxConfig();
             config.AddFunction(new UnknownReturnFunction());
-            config.SymbolTable.EnableMutationFunctions();
+            config.SymbolTable.EnableMutationFunctionsIterationSafe();
             config.SymbolTable.AddVariable("t", FormulaType.Build(TestUtils.DT("*[foo:n]")), mutable: true);
 
             var engine = new Engine(config);
@@ -528,7 +528,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var config = new PowerFxConfig();
             var engine = new RecalcEngine(config);
 
-            config.SymbolTable.EnableMutationFunctions();
+            config.SymbolTable.EnableMutationFunctionsIterationSafe();
 
             engine.UpdateVariable("t1", new ErrorTableValue());
 
@@ -663,7 +663,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 var varTableValue = new EntityTableValue(new List<RecordValue>() { record1, record2 });
 
-                engine.Config.SymbolTable.EnableMutationFunctions();
+                engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
                 engine.UpdateVariable("t1", varTableValue);
 
                 return engine;

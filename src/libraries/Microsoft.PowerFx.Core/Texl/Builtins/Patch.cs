@@ -284,6 +284,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // Return true if this function affects datasource query options.
         public override bool AffectsDataSourceQueryOptions => true;
 
+        // It can be argued that Patch should also set AllowedWithinNondeterministicOperationOrder => false, as Clear does.
+        // This was not done initially when Clear, ClearCollect, Set, ... were banned from ForAll, Sort, Sum, ...
+        // likely because one needs to be more creative to take an order depenency on the iteration for Patch where
+        // it is more obvious with ClearCollect and Set. In any case, it hsa been many years that Patch has been
+        // allowed within the iteration functions and the potential for breaking formulas is too high to add this flag now.
+
         public override bool MutatesArg(int argIndex, TexlNode arg) => argIndex == 0;
 
         public override RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.Create | RequiredDataSourcePermissions.Update;
