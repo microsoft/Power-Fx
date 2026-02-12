@@ -119,13 +119,18 @@ namespace Microsoft.PowerFx
         public ReadOnlySymbolTable BuiltInNamedTypes { get; }
 
         /// <summary>
+        /// There is no built in list of supported primitive types - each host brings their own as each host is different.
         /// Use BuiltInNamedTypes instead and pass the list of types to the Engine constructor for your host.
         /// The previous PrimitiveTypes was a list of all the possible types that a host might support,
         /// including restricted types in UDTs and UDF parameters and return types. But no host actually 
         /// supported all of those types, and it was confusing to have types included that later needed to be filtered out.
         /// </summary>
         [Obsolete("Use BuiltInNamedTypes instead and pass the list of types to the Engine constructor for your host.")]
-        public ReadOnlySymbolTable PrimitiveTypes => throw new NotSupportedException("Use BuiltInNamedTypes instead.");
+        public ReadOnlySymbolTable PrimitiveTypes 
+        { 
+            get => throw new NotSupportedException("Use BuiltInNamedTypes instead."); 
+            protected internal set => throw new NotSupportedException("Use BuiltInNamedTypes instead."); 
+        }
 
         /// <summary>
         /// Indicates whether the generic 'Number' type is represented as Float (double) or Decimal, 
