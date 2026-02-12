@@ -549,6 +549,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("ForAll(Table(t1, t2), Collect(t1, {Value:1}))", true)]
         [InlineData("ForAll(Table(t1, t2), Collect(t2, {Value:1}))", true)]
         [InlineData("ForAll(Table(t1, t2), Collect(t3, {Value:1}))", false)]
+
+        // Remove (AllowMutationOfIndirectIterator = false): only direct first arg match is flagged
+        [InlineData("ForAll(t1, Remove(t1, First(t1)))", true)]
+        [InlineData("ForAll(Filter(t1, Value > 0), Remove(t1, First(t1)))", false)]
+        [InlineData("ForAll(t1, Remove(t2, First(t2)))", false)]
         public void ScopeModificationLambdaVariableTests(string expression, bool expectError)
         {
             var config = new PowerFxConfig();

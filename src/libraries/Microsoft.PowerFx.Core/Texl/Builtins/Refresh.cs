@@ -25,6 +25,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool ModifiesValues => true;
 
+        public override bool AllowMutationOfIndirectIterator => true;
+
         public override bool IsStateless => false;
 
         public override bool IsAsync => true;

@@ -4990,12 +4990,30 @@ namespace Microsoft.PowerFx.Core.Binding
 
                                 if (innerFirstName != null)
                                 {
-                                    var ancestorNames = new List<FirstNameNode>();
-                                    CollectFirstNameNodesFromArg(ancestorScope.Call.Args.Children[0], ancestorNames);
-
-                                    foreach (var ancestorFirstName in ancestorNames)
+                                    if (func.AllowMutationOfIndirectIterator)
                                     {
-                                        if (innerFirstName.Ident.Name == ancestorFirstName.Ident.Name &&
+                                        // Check for any reference to the mutated variable in the iterator
+                                        var ancestorNames = new List<FirstNameNode>();
+                                        CollectFirstNameNodesFromArg(ancestorScope.Call.Args.Children[0], ancestorNames);
+
+                                        foreach (var ancestorFirstName in ancestorNames)
+                                        {
+                                            if (innerFirstName.Ident.Name == ancestorFirstName.Ident.Name &&
+                                                innerFirstName.Ident.Namespace == ancestorFirstName.Ident.Namespace)
+                                            {
+                                                errorKey = TexlStrings.ErrScopeModificationLambda;
+                                                badAncestor = ancestorScope.Call;
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // Only check for direct reference in the first argument
+                                        var ancestorFirstName = GetDirectFirstNameNode(ancestorScope.Call.Args.Children[0]);
+
+                                        if (ancestorFirstName != null &&
+                                            innerFirstName.Ident.Name == ancestorFirstName.Ident.Name &&
                                             innerFirstName.Ident.Namespace == ancestorFirstName.Ident.Namespace)
                                         {
                                             errorKey = TexlStrings.ErrScopeModificationLambda;
@@ -5038,6 +5056,17 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (arg is CallNode callNode && callNode.Args.Count > 0)
                 {
                     return GetFirstNameNodeFromArg(callNode.Args.Children[0]);
+                }
+
+                return arg.AsFirstName();
+            }
+
+            // Gets a FirstNameNode from an argument, only unwrapping AsNode but NOT walking into call nodes.
+            private static FirstNameNode GetDirectFirstNameNode(TexlNode arg)
+            {
+                if (arg is AsNode asNode)
+                {
+                    return asNode.Left.AsFirstName();
                 }
 
                 return arg.AsFirstName();
