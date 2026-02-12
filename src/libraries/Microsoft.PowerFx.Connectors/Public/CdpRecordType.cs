@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public override bool TryGetUnderlyingFieldType(string name, out FormulaType type) => TryGetFieldType(name, true, out type);
 
-        public override bool TryGetFieldType(string name, out FormulaType type) => TryGetFieldType(name, false, out type);
+        public override bool TryGetFieldType(string name, out FormulaType type) => TryGetFieldType(name, true, out type);
 
         private bool TryGetFieldType(string fieldName, bool ignorelationship, out FormulaType type)
         {

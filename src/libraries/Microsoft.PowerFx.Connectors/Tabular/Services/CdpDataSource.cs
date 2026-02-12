@@ -2,11 +2,13 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Entities;
 
 namespace Microsoft.PowerFx.Connectors
 {
@@ -20,11 +22,37 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly ConnectorSettings _connectorSettings;
 
+        /// <summary>
+        /// Cache for table metadata to prevent redundant network calls.
+        /// </summary>
+        /// <remarks>
+        /// Key format: Full metadata fetch URI including dataset encoding, table name, api-version, and optional settings.
+        /// Example: /v2/$metadata.json/datasets/{encoded-dataset}/tables/{encoded-table}?api-version=2015-09-01[&amp;extractSensitivityLabel=True][&amp;purviewAccountName={account}]
+        ///
+        /// Value: Task that returns tuple of (ConnectorType, OptionSets). Task is cached with CancellationToken.None to allow multiple callers to share the same fetch operation.
+        ///
+        /// URI construction varies based on settings - keys are unique per (dataset, table, settings configuration).
+        ///
+        /// Cache is bounded to 1000 entries and cleared completely when limit is reached. Failed tasks are automatically removed to allow retry.
+        /// </remarks>
+        private readonly ConcurrentDictionary<string, Task<(ConnectorType, IEnumerable<OptionSet>)>> _tableMetadataCache
+            = new ConcurrentDictionary<string, Task<(ConnectorType, IEnumerable<OptionSet>)>>();
+
+        private const int MaxCacheSize = 1000;
+
+        // Provide cache access to CdpTable instances
+        internal ConcurrentDictionary<string, Task<(ConnectorType, IEnumerable<OptionSet>)>> TableMetadataCache => _tableMetadataCache;
+
         public CdpDataSource(string dataset, ConnectorSettings connectorSettings = null)
         {
             DatasetName = dataset ?? throw new ArgumentNullException(nameof(dataset));
             _connectorSettings = connectorSettings ?? ConnectorSettings.NewCDPConnectorSettings();
         }
+
+        /// <summary>
+        /// Clears the table metadata cache, forcing fresh retrieval on next access.
+        /// </summary>
+        public void ClearTableMetadataCache() => _tableMetadataCache.Clear();
 
         public static async Task<DatasetMetadata> GetDatasetsMetadataAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {
@@ -51,7 +79,7 @@ namespace Microsoft.PowerFx.Connectors
 
             GetTables tables = await GetObject<GetTables>(httpClient, "Get tables", uri, null, cancellationToken, logger).ConfigureAwait(false);
 
-            return tables?.Value?.Select((RawTable rawTable) => new CdpTable(DatasetName, rawTable.Name, DatasetMetadata, tables?.Value, _connectorSettings) { DisplayName = rawTable.DisplayName });
+            return tables?.Value?.Select((RawTable rawTable) => new CdpTable(DatasetName, rawTable.Name, DatasetMetadata, tables?.Value, _connectorSettings, _tableMetadataCache) { DisplayName = rawTable.DisplayName });
         }
 
         /// <summary>
@@ -98,7 +126,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             cancellation.ThrowIfCancellationRequested();
 
-            CdpTable table = new CdpTable(DatasetName, logicalTableName, null, _connectorSettings);
+            CdpTable table = new CdpTable(DatasetName, logicalTableName, null, _connectorSettings, _tableMetadataCache);
             await table.InitAsync(httpClient, uriPrefix, cancellation, logger).ConfigureAwait(false);
 
             return table;
