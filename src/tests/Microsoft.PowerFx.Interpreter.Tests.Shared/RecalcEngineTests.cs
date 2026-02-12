@@ -984,10 +984,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 };
 
             // Inner table 
-            SymbolTable stInner = SymbolTable.WithBuiltInNamedTypes(textPrimitiveType);
+            SymbolTable stInner = SymbolTable.WithNamedTypes(textPrimitiveType);
             stInner.AddUserDefinedFunction("Func1() : Text = \"inner\";");
 
-            SymbolTable st = SymbolTable.WithBuiltInNamedTypes(textPrimitiveType);
+            SymbolTable st = SymbolTable.WithNamedTypes(textPrimitiveType);
             st.AddUserDefinedFunction("Func2() : Text = Func1() & \"2\";", symbolTable: stInner);
 
             var engine = new RecalcEngine();

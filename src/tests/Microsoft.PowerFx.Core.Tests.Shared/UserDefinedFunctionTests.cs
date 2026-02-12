@@ -591,7 +591,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void Basic()
         {
-            var st1 = SymbolTable.WithBuiltInNamedTypes(UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat);
+            var st1 = SymbolTable.WithNamedTypes(UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat);
             st1.AddUserDefinedFunction("Foo1(x: Number): Number = x*2;");
             st1.AddUserDefinedFunction("Foo2(x: Number): Number = Foo1(x)+1;");
 
@@ -601,7 +601,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(FormulaType.Number, check.ReturnType);
 
             // A different symbol table can have same function name with different type.  
-            var st2 = SymbolTable.WithBuiltInNamedTypes(UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat);
+            var st2 = SymbolTable.WithNamedTypes(UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat);
             st2.AddUserDefinedFunction("Foo2(x: Number): Text = x;");
             check = engine.Check("Foo2(3)", symbolTable: st2);
             Assert.True(check.IsSuccess);
@@ -612,7 +612,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void DefineEmpty()
         {
             // Empty symbol table doesn't get builtin functions. 
-            var st = SymbolTable.WithBuiltInNamedTypes(UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat);
+            var st = SymbolTable.WithNamedTypes(UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat);
             st.AddUserDefinedFunction("Foo1(x: Number): Number = x;"); // ok 
             Assert.False(st.AddUserDefinedFunction("Foo2(x: Number): Number = Abs(x);").IsSuccess);
         }

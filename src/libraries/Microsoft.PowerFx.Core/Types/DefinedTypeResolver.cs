@@ -50,8 +50,9 @@ namespace Microsoft.PowerFx.Core.Types
             "Row", "Column", "Matrix",
 
             // generic types
-            "Object", "Delegate", "Pointer", "Reference", "Unknown", "Unsupported",
+            "Object", "Delegate", "Pointer", "Reference", "Unsupported",
             "Control", "Component", "View",
+            "Unknown", "Deferred", "Lazy", // Power Fx internal types 
 
             // old name for dynamic
             "Untyped", "UnTyped",

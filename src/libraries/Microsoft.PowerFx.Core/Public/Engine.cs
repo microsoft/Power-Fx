@@ -95,14 +95,6 @@ namespace Microsoft.PowerFx
             {
                 throw new ArgumentException($"Engine BuiltInNamedTypes must contain a definition for the {BuiltInTypeNames.Number_Alias} type.");
             }
-            else if (resolver.LookupType(BuiltInTypeNames.Void, out _))
-            {
-                throw new ArgumentException($"Engine BuiltInNamedTypes must not contain {BuiltInTypeNames.Void} type.");
-            }
-            else if (resolver.LookupType(BuiltInTypeNames.Blank_None, out _))
-            {
-                throw new ArgumentException($"Engine BuiltInNamedTypes must not contain {BuiltInTypeNames.Blank_None} type.");
-            }
 
             BuiltInNamedTypes = builtInNamedTypes;
             NumberIsFloat = numberType == FormulaType.Number;
@@ -127,15 +119,21 @@ namespace Microsoft.PowerFx
         public ReadOnlySymbolTable BuiltInNamedTypes { get; }
 
         /// <summary>
+        /// Use BuiltInNamedTypes instead and pass the list of types to the Engine constructor for your host.
+        /// The previous PrimitiveTypes was a list of all the possible types that a host might support,
+        /// including restricted types in UDTs and UDF parameters and return types. But no host actually 
+        /// supported all of those types, and it was confusing to have types included that later needed to be filtered out.
+        /// </summary>
+        [Obsolete("Use BuiltInNamedTypes instead and pass the list of types to the Engine constructor for your host.")]
+        public ReadOnlySymbolTable PrimitiveTypes => throw new NotSupportedException("Use BuiltInNamedTypes instead.");
+
+        /// <summary>
         /// Indicates whether the generic 'Number' type is represented as Float (double) or Decimal, 
         /// after looking at BuiltInNamedTypes passed into the Engine constructor.
         /// This is used to create the default ParserOptions that are generated with GetDefaultParserOptionsCopy().
         /// Default is false if BuiltInNamedTypes is not provided.
         /// </summary>
         public bool NumberIsFloat { get; }
-
-        [Obsolete("Use BuiltInNamedTypes instead and pass the list of types to the Engine constructor. PrimitiveTypes will always be null.")]
-        public ReadOnlySymbolTable PrimitiveTypes { get; protected internal set; }
 
         // By default, we pull the core functions. 
         // These can be overridden. 

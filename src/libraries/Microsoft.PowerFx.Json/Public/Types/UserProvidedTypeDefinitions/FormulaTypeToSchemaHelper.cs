@@ -22,12 +22,11 @@ namespace Microsoft.PowerFx.Core
                 { BuiltInTypeNames.Time, FormulaType.Time },
                 { BuiltInTypeNames.DateTime, FormulaType.DateTime },
                 { BuiltInTypeNames.Guid, FormulaType.Guid },
-                { BuiltInTypeNames.Number_Alias, FormulaType.Number }, // Number, not Float, consistent with existing serialization format
+                { BuiltInTypeNames.Number_Alias, FormulaType.Number }, // Name "Number", not "Float", consistent with existing serialization format
                 { BuiltInTypeNames.Decimal, FormulaType.Decimal },
-                { BuiltInTypeNames.String_Text, FormulaType.String }, // Text
+                { BuiltInTypeNames.String_Text, FormulaType.String }, // Name "Text"
                 { BuiltInTypeNames.Hyperlink, FormulaType.Hyperlink },
-                { BuiltInTypeNames.UntypedObject_Dynamic, FormulaType.UntypedObject }, // Dynamic
-                { BuiltInTypeNames.Void, FormulaType.Void },
+                { BuiltInTypeNames.UntypedObject_Dynamic, FormulaType.UntypedObject }, // Name "Dynamic"
             };
 
         public static readonly ReadOnlySymbolTable JSONPrimitiveTypesTable = ReadOnlySymbolTable.NewDefaultTypes(JSONPrimitiveTypesDictionary);

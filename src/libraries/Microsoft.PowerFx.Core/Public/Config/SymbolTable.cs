@@ -425,6 +425,15 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
+        /// Names that are always illegal in the symbol table as a type, even if they aren't reserved words.
+        /// </summary>
+        private static readonly IReadOnlyList<string> _illegalTypeNames = new List<string>
+        {
+            BuiltInTypeNames.Void.Value,
+            BuiltInTypeNames.Blank_None.Value,
+        };
+
+        /// <summary>
         /// Adds a named type that can be referenced in expression.
         /// </summary>
         /// <param name="typeName">Name of the type to be added into Symbol table.</param>
@@ -438,6 +447,11 @@ namespace Microsoft.PowerFx
 
             using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
+
+            if (_illegalTypeNames.Contains(typeName))
+            {
+                throw new InvalidOperationException($"{typeName} is an illegal type name.");
+            }
 
             if (_namedTypes.ContainsKey(typeName))
             {
@@ -456,6 +470,11 @@ namespace Microsoft.PowerFx
 
             foreach (var type in types)
             {
+                if (_illegalTypeNames.Contains(type.Key))
+                {
+                    throw new InvalidOperationException($"{type.Key} is an illegal type name.");
+                }
+
                 if (_namedTypes.ContainsKey(type.Key))
                 {
                     throw new InvalidOperationException($"{type.Key} is already defined.");
@@ -466,24 +485,24 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Helper to create a symbol table with primitive types.
+        /// Helper to create a symbol table with named types.
         /// </summary>
-        /// <returns>SymbolTable with primitive types.</returns>
-        public static SymbolTable WithBuiltInNamedTypes(Dictionary<DName, FormulaType> namedTypes)
+        /// <returns>SymbolTable with named types.</returns>
+        public static SymbolTable WithNamedTypes(Dictionary<DName, FormulaType> namedTypes)
         {
             var s = new SymbolTable
             {
-                DebugName = $"SymbolTable with BuiltInNamedTypes"
+                DebugName = $"SymbolTable with NamedTypes"
             };
 
             s.AddTypes(namedTypes);
             return s;
         }
 
-        [Obsolete("Use WithBuiltInNamedTypes instead and pass in the list of named types.")]
+        [Obsolete("Use WithNamedTypes instead and pass in the list of named types.")]
         public static SymbolTable WithPrimitiveTypes()
         {
-            throw new System.NotImplementedException("Deprecated, use WithBuiltInNamedTypes instead and pass in the list of named types.");
+            throw new System.NotImplementedException("Deprecated, use WithNamedTypes instead and pass in the list of named types.");
         }
 
         bool INameResolver.LookupType(DName name, out FormulaType fType)

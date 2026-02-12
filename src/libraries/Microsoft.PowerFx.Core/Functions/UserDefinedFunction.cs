@@ -496,28 +496,28 @@ namespace Microsoft.PowerFx.Core.Functions
 
         private static bool CheckReturnType(IdentToken returnTypeToken, List<TexlError> errors, INameResolver nameResolver, bool isImperative, out DType returnType)
         {
-            FormulaType returnTypeFormulaType;
-
             if (returnTypeToken == null)
             {
                 returnType = DType.Unknown;
                 return false;
             }
 
-            // only the return type from a UDF can be a void type, it is not valid in other type contexts
-            if (returnTypeToken.Name == BuiltInTypeNames.Void)
+            if (!nameResolver.LookupType(returnTypeToken.Name, out var returnTypeFormulaType))
             {
-                returnTypeFormulaType = FormulaType.Void;
-
-                if (!isImperative)
+                // only the return type from a UDF can be a void type, it is not valid in other type contexts
+                if (returnTypeToken.Name == BuiltInTypeNames.Void)
                 {
-                    errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_NonImperativeVoidType));
-                    returnType = DType.Invalid;
-                    return false;
+                    if (!isImperative)
+                    {
+                        errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_NonImperativeVoidType));
+                        returnType = DType.Invalid;
+                        return false;
+                    }
+
+                    returnType = FormulaType.Void._type;
+                    return true;
                 }
-            }
-            else if (!nameResolver.LookupType(returnTypeToken.Name, out returnTypeFormulaType))
-            {
+
                 errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnTypeToken.Name));
                 returnType = DType.Invalid;
                 return false;
