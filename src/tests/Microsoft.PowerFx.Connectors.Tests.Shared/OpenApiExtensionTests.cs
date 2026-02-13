@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
@@ -283,6 +284,264 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.IsAssignableFrom<RecordType>(connectorType.FormulaType);
             Assert.False(connectorType.HasErrors);
+        }
+
+        [Theory]
+        [InlineData(@"{""type"":""string""}", typeof(StringType))]
+        [InlineData(@"{""type"":""number""}", typeof(DecimalType))]
+        [InlineData(@"{""type"":""integer""}", typeof(DecimalType))]
+        [InlineData(@"{""type"":""boolean""}", typeof(BooleanType))]
+        public void JsonSchemaToFormulaType_Primitives(string jsonSchema, Type expectedType)
+        {
+            FormulaType result = OpenApiExtensions.JsonSchemaToFormulaType(jsonSchema);
+            Assert.IsType(expectedType, result);
+        }
+
+        [Theory]
+        [InlineData(@"{""type"":""string"",""format"":""date""}", typeof(DateType))]
+        [InlineData(@"{""type"":""string"",""format"":""date-time""}", typeof(DateTimeType))]
+        [InlineData(@"{""type"":""string"",""format"":""binary""}", typeof(BlobType))]
+        [InlineData(@"{""type"":""string"",""format"":""byte""}", typeof(BlobType))]
+        [InlineData(@"{""type"":""string"",""format"":""uri""}", typeof(StringType))]
+        public void JsonSchemaToFormulaType_StringFormats(string jsonSchema, Type expectedType)
+        {
+            FormulaType result = OpenApiExtensions.JsonSchemaToFormulaType(jsonSchema);
+            Assert.IsType(expectedType, result);
+        }
+
+        [Fact]
+        public void JsonSchemaToFormulaType_Object()
+        {
+            string jsonSchema = @"{""type"":""object"",""properties"":{""name"":{""type"":""string""},""age"":{""type"":""integer""}}}";
+            FormulaType result = OpenApiExtensions.JsonSchemaToFormulaType(jsonSchema);
+            Assert.IsAssignableFrom<RecordType>(result);
+        }
+
+        [Fact]
+        public void JsonSchemaToFormulaType_ObjectEmptyProperties()
+        {
+            string jsonSchema = @"{""type"":""object"",""properties"":{}}";
+            FormulaType result = OpenApiExtensions.JsonSchemaToFormulaType(jsonSchema);
+            Assert.IsAssignableFrom<RecordType>(result);
+        }
+
+        [Fact]
+        public void JsonSchemaToFormulaType_NestedObject()
+        {
+            string jsonSchema = @"{""type"":""object"",""properties"":{""address"":{""type"":""object"",""properties"":{""city"":{""type"":""string""}}}}}";
+            FormulaType result = OpenApiExtensions.JsonSchemaToFormulaType(jsonSchema);
+            Assert.IsAssignableFrom<RecordType>(result);
+        }
+
+        [Fact]
+        public void JsonSchemaToFormulaType_ArrayOfObjects()
+        {
+            string jsonSchema = @"{""type"":""array"",""items"":{""type"":""object"",""properties"":{""id"":{""type"":""integer""}}}}";
+            FormulaType result = OpenApiExtensions.JsonSchemaToFormulaType(jsonSchema);
+            Assert.IsAssignableFrom<TableType>(result);
+        }
+
+        [Fact]
+        public void JsonSchemaToFormulaType_ArrayOfPrimitives()
+        {
+            string jsonSchema = @"{""type"":""array"",""items"":{""type"":""string""}}";
+            FormulaType result = OpenApiExtensions.JsonSchemaToFormulaType(jsonSchema);
+            Assert.IsAssignableFrom<TableType>(result);
+        }
+
+        [Fact]
+        public void JsonSchemaToFormulaType_File()
+        {
+            string jsonSchema = @"{""type"":""file""}";
+            FormulaType result = OpenApiExtensions.JsonSchemaToFormulaType(jsonSchema);
+            Assert.IsType<BlobType>(result);
+        }
+
+        [Fact]
+        public void JsonSchemaToFormulaType_UnsupportedType_ReturnsUntypedObject()
+        {
+            // A non-object JSON root element (e.g. just a string literal) returns null from SwaggerJsonSchema.New
+            string jsonSchema = @"""just a string""";
+            FormulaType result = OpenApiExtensions.JsonSchemaToFormulaType(jsonSchema);
+            Assert.IsType<UntypedObjectType>(result);
+        }
+
+        [Fact]
+        public void JsonSchemaToFormulaType_NullInput_ThrowsArgumentException()
+        {
+            Assert.ThrowsAny<ArgumentException>(() => OpenApiExtensions.JsonSchemaToFormulaType(null));
+        }
+
+        [Fact]
+        public void JsonSchemaToFormulaType_EmptyInput_ThrowsArgumentException()
+        {
+            Assert.ThrowsAny<ArgumentException>(() => OpenApiExtensions.JsonSchemaToFormulaType(string.Empty));
+        }
+
+        [Fact]
+        public void JsonSchemaToFormulaType_InvalidJson_ThrowsJsonException()
+        {
+            Assert.ThrowsAny<JsonException>(() => OpenApiExtensions.JsonSchemaToFormulaType("{not valid json}"));
+        }
+
+        [Fact]
+        public void JsonSchemaToFormulaType_WithSettings()
+        {
+            string jsonSchema = @"{""type"":""string""}";
+            var settings = new ConnectorSettings(null);
+            FormulaType result = OpenApiExtensions.JsonSchemaToFormulaType(jsonSchema, settings);
+            Assert.IsType<StringType>(result);
+        }
+
+        [Fact]
+        public void JsonSchemaToFormulaType_NullSettings_ThrowsArgumentException()
+        {
+            Assert.ThrowsAny<ArgumentException>(() => OpenApiExtensions.JsonSchemaToFormulaType(@"{""type"":""string""}", null));
+        }
+
+        [Fact]
+        public void JsonSchemaToFormulaType_EndToEnd_WithLookUp()
+        {
+            // 1. Define the JSON schema for the case documents structure
+            string jsonSchema = @"{
+                ""required"": [""CaseNumber"", ""Documents""],
+                ""properties"": {
+                    ""CaseNumber"": { ""type"": ""string"" },
+                    ""Documents"": {
+                        ""type"": ""array"",
+                        ""items"": {
+                            ""type"": ""object"",
+                            ""properties"": {
+                                ""Data"": {
+                                    ""type"": ""object"",
+                                    ""properties"": {
+                                        ""DocumentName"": { ""type"": ""string"" },
+                                        ""FooterId"": { ""type"": ""string"" },
+                                        ""Fields"": {
+                                            ""type"": ""array"",
+                                            ""items"": {
+                                                ""type"": ""object"",
+                                                ""properties"": {
+                                                    ""FieldName"": { ""type"": ""string"" },
+                                                    ""FieldValue"": { ""type"": ""string"" },
+                                                    ""ConfidenceValue"": { ""type"": ""string"" }
+                                                }
+                                            }
+                                        },
+                                        ""Tables"": {
+                                            ""type"": ""array"",
+                                            ""items"": {
+                                                ""type"": ""object"",
+                                                ""properties"": {
+                                                    ""Section"": { ""type"": ""string"" },
+                                                    ""Rows"": {
+                                                        ""type"": ""array"",
+                                                        ""items"": {
+                                                            ""type"": ""object"",
+                                                            ""properties"": {
+                                                                ""Fields"": {
+                                                                    ""type"": ""array"",
+                                                                    ""items"": {
+                                                                        ""type"": ""object"",
+                                                                        ""properties"": {
+                                                                            ""FieldName"": { ""type"": ""string"" },
+                                                                            ""FieldValue"": { ""type"": ""string"" },
+                                                                            ""ConfidenceValue"": { ""type"": ""string"" }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }";
+
+            // 2. Convert JSON schema to FormulaType
+            FormulaType caseDocumentsType = OpenApiExtensions.JsonSchemaToFormulaType(jsonSchema);
+            Assert.IsAssignableFrom<RecordType>(caseDocumentsType);
+
+            // 3. Create a parameter type wrapping it as "CaseDocuments"
+            RecordType parameterType = RecordType.Empty().Add("CaseDocuments", caseDocumentsType);
+
+            // 4. Parse JSON data using FormulaValueJSON.FromJson with the generated type
+            string jsonData = @"{
+                ""CaseNumber"": ""5-0000014066889"",
+                ""Documents"": [
+                    {
+                        ""Data"": {
+                            ""DocumentName"": ""Previous Agreement Form"",
+                            ""FooterId"": ""prevenragrform"",
+                            ""Fields"": [],
+                            ""Tables"": []
+                        }
+                    },
+                    {
+                        ""Data"": {
+                            ""DocumentName"": ""Signature Form"",
+                            ""FooterId"": ""ProgramSignForm"",
+                            ""Fields"": [
+                                { ""FieldName"": ""Proposal ID"", ""FieldValue"": ""7-3EJSBH65M5"", ""ConfidenceValue"": """" },
+                                { ""FieldName"": ""Agreement Number"", ""FieldValue"": ""47276518"", ""ConfidenceValue"": """" }
+                            ],
+                            ""Tables"": [
+                                {
+                                    ""Section"": ""Contract Documents"",
+                                    ""Rows"": [
+                                        {
+                                            ""Fields"": [
+                                                { ""FieldName"": ""PO Number"", ""FieldValue"": ""PO-12345"", ""ConfidenceValue"": ""0.95"" }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }";
+
+            FormulaValue caseDocumentsValue = FormulaValueJSON.FromJson(jsonData, caseDocumentsType);
+            Assert.IsAssignableFrom<RecordValue>(caseDocumentsValue);
+
+            // 5. Build the parameter record wrapping CaseDocuments
+            RecordValue parameters = FormulaValue.NewRecordFromFields(
+                new NamedValue("CaseDocuments", caseDocumentsValue));
+
+            // 6. Evaluate the Power Fx expression
+            var engine = new RecalcEngine();
+            string expression = @"With(
+                {
+                    caseNumber: CaseDocuments.CaseNumber,
+                    contract: LookUp(
+                        LookUp(CaseDocuments.Documents, Data.DocumentName = ""Signature Form"").Data.Tables,
+                        Section = ""Contract Documents""
+                    )
+                },
+                {
+                    results: contract
+                }
+            )";
+
+            FormulaValue result = engine.Eval(expression, parameters);
+
+            Assert.IsAssignableFrom<RecordValue>(result);
+            RecordValue resultRecord = (RecordValue)result;
+
+            // The "results" field should contain the matched table row
+            FormulaValue resultsField = resultRecord.GetField("results");
+            Assert.IsAssignableFrom<RecordValue>(resultsField);
+
+            RecordValue contractRecord = (RecordValue)resultsField;
+            FormulaValue sectionValue = contractRecord.GetField("Section");
+            Assert.Equal("Contract Documents", ((StringValue)sectionValue).Value);
         }
     }
 }
