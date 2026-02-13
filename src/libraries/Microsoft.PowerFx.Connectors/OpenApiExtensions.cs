@@ -908,6 +908,42 @@ namespace Microsoft.PowerFx.Connectors
             return ft;
         }
 
+        /// <summary>
+        /// Converts a JSON Schema string to a <see cref="FormulaType"/>.
+        /// Uses default <see cref="ConnectorSettings"/>.
+        /// </summary>
+        /// <param name="jsonSchema">A valid JSON string representing a JSON Schema object.</param>
+        /// <returns>The corresponding <see cref="FormulaType"/>, or <see cref="FormulaType.UntypedObject"/> if the schema cannot be resolved.</returns>
+        public static FormulaType JsonSchemaToFormulaType(string jsonSchema)
+        {
+            return JsonSchemaToFormulaType(jsonSchema, new ConnectorSettings(null));
+        }
+
+        /// <summary>
+        /// Converts a JSON Schema string to a <see cref="FormulaType"/> using the specified <see cref="ConnectorSettings"/>.
+        /// </summary>
+        /// <param name="jsonSchema">A valid JSON string representing a JSON Schema object.</param>
+        /// <param name="settings">The <see cref="ConnectorSettings"/> to use for type resolution.</param>
+        /// <returns>The corresponding <see cref="FormulaType"/>, or <see cref="FormulaType.UntypedObject"/> if the schema cannot be resolved.</returns>
+        public static FormulaType JsonSchemaToFormulaType(string jsonSchema, ConnectorSettings settings)
+        {
+            Contracts.CheckNonEmpty(jsonSchema, nameof(jsonSchema));
+            Contracts.CheckValue(settings, nameof(settings));
+
+            using JsonDocument doc = JsonDocument.Parse(jsonSchema);
+            ISwaggerSchema swaggerSchema = SwaggerJsonSchema.New(doc.RootElement);
+
+            if (swaggerSchema == null)
+            {
+                return ConnectorType.DefaultType;
+            }
+
+            SwaggerParameter param = new SwaggerParameter(null, true, swaggerSchema, null);
+            ConnectorType connectorType = param.GetConnectorType(settings);
+
+            return connectorType.HasErrors ? ConnectorType.DefaultType : connectorType.FormulaType;
+        }
+
         public static bool GetRequiresUserConfirmation(this OpenApiOperation op)
         {
             return op.Extensions.TryGetValue(XMsRequireUserConfirmation, out IOpenApiExtension openExt) && openExt is OpenApiBoolean b && b.Value;
