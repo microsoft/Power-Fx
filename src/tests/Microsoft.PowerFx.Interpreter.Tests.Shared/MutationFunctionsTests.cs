@@ -554,6 +554,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("ForAll(t1, Remove(t1, First(t1)))", true)]
         [InlineData("ForAll(Filter(t1, Value > 0), Remove(t1, First(t1)))", false)]
         [InlineData("ForAll(t1, Remove(t2, First(t2)))", false)]
+
+        // Set - should also detect Table() indirect references
+        [InlineData("ForAll(Table(t1, t2), Set(t1, t3))", true)]
+        [InlineData("ForAll(Table(t1, t2), Set(t2, t3))", true)]
+        [InlineData("ForAll(Table(t1, t2), Set(t3, t1))", false)]
         public void ScopeModificationLambdaVariableTests(string expression, bool expectError)
         {
             var config = new PowerFxConfig();
