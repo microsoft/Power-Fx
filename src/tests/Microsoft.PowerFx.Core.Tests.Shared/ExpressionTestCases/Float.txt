@@ -1,4 +1,5 @@
-﻿#SETUP: DecimalSupport,PowerFxV1CompatibilityRules
+﻿// this used to be under DecimalSupport and PowerFxV1 flags, 
+// but all hosts have the Float function now
 
 // Default to invariant
 >> Float("-5")
