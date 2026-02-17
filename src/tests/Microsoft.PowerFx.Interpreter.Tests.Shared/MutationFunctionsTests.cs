@@ -538,6 +538,50 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.IsType<ErrorValue>(result);
         }
 
+        [Theory]
+        [InlineData("ForAll(t1, Collect(t1, {Value:1}))", true)]
+        [InlineData("ForAll(t1 As r, Collect(t1, {Value:1}))", true)]
+        [InlineData("ForAll(t1, Collect(t2, {Value:1}))", false)]
+        [InlineData("ForAll(Filter(t1, Value > 0), Collect(t1, {Value:1}))", true)]
+        [InlineData("ForAll(Filter(t1, Value > 0) As r, Collect(t1, {Value:1}))", true)]
+        [InlineData("ForAll(Sort(t1, Value), Collect(t1, {Value:1}))", true)]
+        [InlineData("ForAll(Filter(t1, Value > 0), Collect(t2, {Value:1}))", false)]
+        [InlineData("ForAll(Table(t1, t2), Collect(t1, {Value:1}))", true)]
+        [InlineData("ForAll(Table(t1, t2), Collect(t2, {Value:1}))", true)]
+        [InlineData("ForAll(Table(t1, t2), Collect(t3, {Value:1}))", false)]
+
+        // Remove (AllowMutationOfIndirectIterator = false): only direct first arg match is flagged
+        [InlineData("ForAll(t1, Remove(t1, First(t1)))", true)]
+        [InlineData("ForAll(Filter(t1, Value > 0), Remove(t1, First(t1)))", false)]
+        [InlineData("ForAll(t1, Remove(t2, First(t2)))", false)]
+
+        // Set - should also detect Table() indirect references
+        [InlineData("ForAll(Table(t1, t2), Set(t1, t3))", true)]
+        [InlineData("ForAll(Table(t1, t2), Set(t2, t3))", true)]
+        [InlineData("ForAll(Table(t1, t2), Set(t3, t1))", false)]
+        public void ScopeModificationLambdaVariableTests(string expression, bool expectError)
+        {
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+
+            config.SymbolTable.EnableMutationFunctions();
+            config.SymbolTable.AddVariable("t1", FormulaType.Build(TestUtils.DT("*[Value:n]")), mutable: true);
+            config.SymbolTable.AddVariable("t2", FormulaType.Build(TestUtils.DT("*[Value:n]")), mutable: true);
+            config.SymbolTable.AddVariable("t3", FormulaType.Build(TestUtils.DT("*[Value:n]")), mutable: true);
+
+            var check = engine.Check(expression, options: new ParserOptions() { AllowsSideEffects = true });
+
+            if (expectError)
+            {
+                Assert.False(check.IsSuccess);
+                Assert.Contains(check.Errors, e => e.MessageKey == "ErrScopeModificationLambda");
+            }
+            else
+            {
+                Assert.DoesNotContain(check.Errors, e => e.MessageKey == "ErrScopeModificationLambda");
+            }
+        }
+
         /// <summary>
         /// Meant to test PatchSingleRecordCoreAsync override. Only tables with primary key column are supported.
         /// </summary>

@@ -39,6 +39,10 @@ namespace Microsoft.PowerFx.Interpreter
         // Set() of a simple identifier is not a mutation through a reference (a mutate), but rather changing the reference (a true set).
         public override bool MutatesArg(int argIndex, TexlNode arg) => argIndex == 0 && arg.Kind != NodeKind.FirstName;
 
+        // Set should check for indirect references (e.g., Table(t1, t2)) in the iterator
+        // because modifying a variable while iterating over it (even indirectly) is unsafe.
+        public override bool AllowMutationOfIndirectIterator => true;
+
         public override IEnumerable<StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.SetArg1, TexlStrings.SetArg2 };

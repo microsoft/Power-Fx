@@ -35,6 +35,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool ManipulatesCollections => true;
 
+        public override bool AllowMutationOfIndirectIterator => true;
+
         public override bool ModifiesValues => true;
 
         public override bool IsSelfContained => false;

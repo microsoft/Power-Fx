@@ -253,6 +253,15 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual Type DeclarationType => this.GetType();
 
         /// <summary>
+        /// When true, the self-modification check in lambdas will look through Filter/Sort/Table
+        /// calls in the ancestor iterator's first argument to find indirect references to the
+        /// mutated variable. When false (default), only a direct variable reference is checked.
+        /// Functions like Collect, ClearCollect, Patch, and Refresh set this to true because
+        /// mutating a collection while indirectly iterating over it (e.g. via Filter) is unsafe.
+        /// </summary>
+        public virtual bool AllowMutationOfIndirectIterator => false;
+
+        /// <summary>
         /// Indicates whether the function will propagate the mutability of its first argument.
         /// For example, if x is a mutable reference (i.e., a variable), then First(x) will still
         /// be mutable (since First is one function which propagates mutability).
