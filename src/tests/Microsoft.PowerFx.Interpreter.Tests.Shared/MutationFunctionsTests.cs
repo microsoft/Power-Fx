@@ -564,7 +564,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var config = new PowerFxConfig();
             var engine = new Engine(config);
 
-            config.SymbolTable.EnableMutationFunctions();
+            config.SymbolTable.EnableMutationFunctionsIterationSafe();
             config.SymbolTable.AddVariable("t1", FormulaType.Build(TestUtils.DT("*[Value:n]")), mutable: true);
             config.SymbolTable.AddVariable("t2", FormulaType.Build(TestUtils.DT("*[Value:n]")), mutable: true);
             config.SymbolTable.AddVariable("t3", FormulaType.Build(TestUtils.DT("*[Value:n]")), mutable: true);
