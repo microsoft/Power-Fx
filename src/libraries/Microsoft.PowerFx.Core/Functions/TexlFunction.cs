@@ -252,6 +252,46 @@ namespace Microsoft.PowerFx.Core.Functions
         // Indicates the base type of the function. The base type can differ if the function extends multiple base classes i.e. Join function.
         public virtual Type DeclarationType => this.GetType();
 
+        // Mutating an interator is inherently unsafe with questionable semantics that may differ across hosts.
+        //
+        // Historically, we have blocked Collect, Refrehs, and Patch from mutating a data source iterator, but only if the
+        // iterator was a simple reference to a data source by name, for example, Sum(table, Collect(table, 4)). 
+        // However, indirect references through Filter, Sort, Table, and other table shaping functions was permitted. 
+        // 
+        // Clear, ClearCollect, and Set were blocked completely in iteration function lambdas. The intent was to 
+        // allow these lambdas to evaluate out of order and the ability to clear and set a variable would make it too easy
+        // to take an order dependency. Collecr was permitted, assuming that the order put in a table may not be important,
+        // and it was very useful to makers.
+        // 
+        // Later, we decided to make this all more robust:
+        // - Variables were treated in the same way that data sources.
+        // - ForAll was opened to allow mutations within, accepting that this funciton would always be serial and that 
+        //   was a desirable maker semantic. Later, we'd introduce a Map function that was a pure function 
+        //   and allow no side effects.
+        // - Indirect checks were made for iterator references.
+        // 
+        // It is this last change that brought about the AllowMutationOfIndirectIterator flag. 
+        //
+        // We always check a top level reference for a mutation. But for backward compatibiliy, we stop there 
+        // as we don't want to change the semantics of Collect and friends when mutating an indirect reference in 
+        // the iterator. For these functions, AllowMutationOfIndirectIterator should be set to true.
+        // 
+        // For all other functions, we should go deeper and look for any indirect reference too, which is what an 
+        // AllowMutationOfIndirectIterator set be false will. This is the default and should be used for any new mutation
+        // funcitons.
+        //
+        // As Set, Clear, and ClearCollect were never previously allowed in any itereator functions, and are now being opened
+        // up to ForAll only, it is OK to block them from indirect references too without worrying about backward compatibility.
+
+        /// <summary>
+        /// For mutation functions only, when this function is included in the lambda of an iteration function,
+        /// determines how deep to search in the itereator for a reference of the data source or variable it is mutating,
+        /// to block mutating what is being iterated. If false, any reference in the iterator is an error. If true, set
+        /// for some functions that historically allowed indirect references, only a reference in the top level will cause
+        /// an error, such as Sum( x, Clear(x) ).
+        /// </summary>
+        public virtual bool AllowMutationOfIndirectIterator => false;
+
         /// <summary>
         /// Indicates whether the function will propagate the mutability of its first argument.
         /// For example, if x is a mutable reference (i.e., a variable), then First(x) will still

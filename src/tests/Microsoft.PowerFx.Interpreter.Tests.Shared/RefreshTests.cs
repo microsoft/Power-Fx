@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Tests
             PowerFxConfig config = new PowerFxConfig();                        
             RecalcEngine engine = new RecalcEngine(config);
 
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             engine.UpdateVariable("t", TableValue.NewTable(RecordType.Empty()));            
             FormulaValue result = engine.Eval("Refresh(t)", null, new ParserOptions { AllowsSideEffects = true });
             

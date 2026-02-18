@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
             var tableType = TableType.Empty().Add(new NamedFormulaType(new TypedName(DType.Currency, new DName("Currency"))));
 
             var symbols = new SymbolTable { DebugName = "ST1 " };
-            symbols.EnableMutationFunctions();
+            symbols.EnableMutationFunctionsIterationSafe();
             var slot = symbols.AddVariable("MyTable", tableType, mutable: true);
 
             var engine = new RecalcEngine(new PowerFxConfig());
@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
             var tableType = TableType.Empty().Add(new NamedFormulaType(new TypedName(DType.Decimal, new DName("Decimal"))));
 
             var symbols = new SymbolTable { DebugName = "ST1 " };
-            symbols.EnableMutationFunctions();
+            symbols.EnableMutationFunctionsIterationSafe();
             var slot = symbols.AddVariable("MyTable", tableType, mutable: true);
 
             var engine = new RecalcEngine(new PowerFxConfig());
@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
             var integerVar = FormulaValue.New(1);
             var datetimeVar = FormulaValue.New(DateTime.Now);
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             engine.Config.SymbolTable.AddConstant("stringVar", stringVar);
             engine.Config.SymbolTable.AddConstant("integerVar", integerVar);
             engine.Config.SymbolTable.AddConstant("datetimeVar", datetimeVar);
@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
             var integerVar = FormulaValue.New(1);
             var datetimeVar = FormulaValue.New(DateTime.Now);
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             engine.Config.SymbolTable.AddConstant("stringVar", stringVar);
             engine.Config.SymbolTable.AddConstant("integerVar", integerVar);
             engine.Config.SymbolTable.AddConstant("datetimeVar", datetimeVar);
