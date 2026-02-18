@@ -26,6 +26,7 @@
       <Link>IntellisenseTests\TestSignatures\%(FileName)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="$(MSBuildThisFileDirectory)mutationscripts\IteratorMutation.txt" />
     <None Include="$(MSBuildThisFileDirectory)InterpreterExpressionTestCases\*.txt" />
     <None Update="$(MSBuildThisFileDirectory)InterpreterExpressionTestCases\*.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

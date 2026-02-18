@@ -1,0 +1,27 @@
+#SETUP: MutationFunctionsTestSetup
+
+// Shallow iterator reference, ForAll
+
+
+>> ForAll(t1_MutateEnabled_SetMutateEnabled, Set(First(t1_MutateEnabled_SetMutateEnabled).Field1, 4))
+Error
+
+>> ForAll(t1_MutateEnabled_SetMutateEnabled, Collect(t1_MutateEnabled_SetMutateEnabled,{Field1:4}))
+Errors: Error 42-95: This function cannot operate on the same data source that is used in ForAll.
+
+>> ForAll(t1_MutateEnabled_SetMutateEnabled, Clear(t1_MutateEnabled_SetMutateEnabled))
+Errors: Error 42-82: This function cannot operate on the same data source that is used in ForAll.
+
+>> ForAll(t1_MutateEnabled_SetMutateEnabled, ClearCollect(t1_MutateEnabled_SetMutateEnabled,{Field1:4}))
+Errors: Error 42-100: This function cannot operate on the same data source that is used in ForAll.
+
+>> ForAll(t1_MutateEnabled_SetMutateEnabled, Remove(t1_MutateEnabled_SetMutateEnabled,{Field1:4}))
+Errors: Error 42-94: This function cannot operate on the same data source that is used in ForAll.
+
+>> ForAll(t1_MutateEnabled_SetMutateEnabled, Refresh(t1_MutateEnabled_SetMutateEnabled))
+Errors: Error 42-84: This function cannot operate on the same data source that is used in ForAll.
+
+>> ForAll(t1_MutateEnabled_SetMutateEnabled, Patch(t1_MutateEnabled_SetMutateEnabled,First(t1_MutateEnabled_SetMutateEnabled),{Field1:4}))
+Errors: Error 42-134: This function cannot operate on the same data source that is used in ForAll.
+
+

@@ -539,20 +539,25 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
+
+        // Collect has AllowMutationOfIndirectIterator set to true
+        // Mutation of simple named references fails
         [InlineData("ForAll(t1, Collect(t1, {Value:1}))", true)]
         [InlineData("ForAll(t1 As r, Collect(t1, {Value:1}))", true)]
         [InlineData("ForAll(t1, Collect(t2, {Value:1}))", false)]
-        [InlineData("ForAll(Filter(t1, Value > 0), Collect(t1, {Value:1}))", true)]
-        [InlineData("ForAll(Filter(t1, Value > 0) As r, Collect(t1, {Value:1}))", true)]
-        [InlineData("ForAll(Sort(t1, Value), Collect(t1, {Value:1}))", true)]
+
+        // Mutation of indirect references is acceptable, for backward compatibility
+        [InlineData("ForAll(Filter(t1, Value > 0), Collect(t1, {Value:1}))", false)]
+        [InlineData("ForAll(Filter(t1, Value > 0) As r, Collect(t1, {Value:1}))", false)]
+        [InlineData("ForAll(Sort(t1, Value), Collect(t1, {Value:1}))", false)]
         [InlineData("ForAll(Filter(t1, Value > 0), Collect(t2, {Value:1}))", false)]
-        [InlineData("ForAll(Table(t1, t2), Collect(t1, {Value:1}))", true)]
-        [InlineData("ForAll(Table(t1, t2), Collect(t2, {Value:1}))", true)]
+        [InlineData("ForAll(Table(t1, t2), Collect(t1, {Value:1}))", false)]
+        [InlineData("ForAll(Table(t1, t2), Collect(t2, {Value:1}))", false)]
         [InlineData("ForAll(Table(t1, t2), Collect(t3, {Value:1}))", false)]
 
-        // Remove (AllowMutationOfIndirectIterator = false): only direct first arg match is flagged
+        // Remove (AllowMutationOfIndirectIterator = false): direct and indirect are errors
         [InlineData("ForAll(t1, Remove(t1, First(t1)))", true)]
-        [InlineData("ForAll(Filter(t1, Value > 0), Remove(t1, First(t1)))", false)]
+        [InlineData("ForAll(Filter(t1, Value > 0), Remove(t1, First(t1)))", true)]
         [InlineData("ForAll(t1, Remove(t2, First(t2)))", false)]
 
         // Set - should also detect Table() indirect references

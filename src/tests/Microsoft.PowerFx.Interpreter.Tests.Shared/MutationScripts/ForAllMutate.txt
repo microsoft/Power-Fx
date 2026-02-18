@@ -36,7 +36,7 @@ Table({Value:2},{Value:4},{Value:6},{Value:8},{Value:10})
 Blank()
 
 >> ForAll(t3,Patch(t3,ThisRecord,{Value:4}))
-Blank()
+Errors: Error 10-40: This function cannot operate on the same data source that is used in ForAll.
 
 >> 1;t3
 Blank()
@@ -55,7 +55,7 @@ Table()
 
 // Should do nothing as t4 is empty
 >> ForAll(t4,Patch(t4,ThisRecord,{Value:4}))
-Table()
+Errors: Error 10-40: This function cannot operate on the same data source that is used in ForAll.
 
 >> 2;t4
 Table()

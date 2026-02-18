@@ -4975,16 +4975,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         // Check for bad scope modification
                         if (ancestorFunc != null && ancestorScopeInfo != null && ancestorScopeInfo.IteratesOverScope)
                         {
-                            // Data source check
-                            if (ds != null && ancestorFunc.TryGetDataSource(ancestorScope.Call, _txb, out var ancestorDs) && ancestorDs == ds)
-                            {
-                                errorKey = TexlStrings.ErrScopeModificationLambda;
-                                badAncestor = ancestorScope.Call;
-                                return true;
-                            }
-
-                            // Variable check - compare first arg names
-                            else if (ds == null && node.Args.Count > 0 && ancestorScope.Call.Args.Count > 0)
+                            if (node.Args.Count > 0 && ancestorScope.Call.Args.Count > 0)
                             {
                                 var innerFirstName = GetFirstNameNodeFromArg(node.Args.Children[0]);
 
@@ -4992,7 +4983,22 @@ namespace Microsoft.PowerFx.Core.Binding
                                 {
                                     if (func.AllowMutationOfIndirectIterator)
                                     {
-                                        // Check for any reference to the mutated variable in the iterator
+                                        // Check for direct reference in the first argument
+                                        var ancestorFirstName = GetDirectFirstNameNode(ancestorScope.Call.Args.Children[0]);
+
+                                        if (ancestorFirstName != null &&
+                                            innerFirstName.Ident.Name == ancestorFirstName.Ident.Name &&
+                                            innerFirstName.Ident.Namespace == ancestorFirstName.Ident.Namespace)
+                                        {
+                                            errorKey = TexlStrings.ErrScopeModificationLambda;
+                                            badAncestor = ancestorScope.Call;
+                                            return true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // If indirect iterator references are not allowed (default),
+                                        // check for any reference to the mutated variable in the iterator
                                         var ancestorNames = new List<FirstNameNode>();
                                         CollectFirstNameNodesFromArg(ancestorScope.Call.Args.Children[0], ancestorNames);
 
@@ -5005,20 +5011,6 @@ namespace Microsoft.PowerFx.Core.Binding
                                                 badAncestor = ancestorScope.Call;
                                                 return true;
                                             }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        // Only check for direct reference in the first argument
-                                        var ancestorFirstName = GetDirectFirstNameNode(ancestorScope.Call.Args.Children[0]);
-
-                                        if (ancestorFirstName != null &&
-                                            innerFirstName.Ident.Name == ancestorFirstName.Ident.Name &&
-                                            innerFirstName.Ident.Namespace == ancestorFirstName.Ident.Namespace)
-                                        {
-                                            errorKey = TexlStrings.ErrScopeModificationLambda;
-                                            badAncestor = ancestorScope.Call;
-                                            return true;
                                         }
                                     }
                                 }

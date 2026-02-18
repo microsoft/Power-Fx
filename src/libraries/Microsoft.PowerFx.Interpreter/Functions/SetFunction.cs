@@ -33,15 +33,12 @@ namespace Microsoft.PowerFx.Interpreter
         // It should be, but this was an oversight when Set was added to the interpreter that we don't feel we can take back now
         // for fear of breaking formulas in existing hosts. With freeing of ForAll in general, the lack of this flag only
         // impacts Set being used in Sort, Sum, Distinct, ... and other iterable functions which is less common.
-        // For new hosts, instead of using EnableSetFunction, please use EnableSetFunctionIterationSafe instead which defaults this to false.
+        // For new hosts, instead of using EnableSetFunction, please use EnableSetFunctionIterationSafe instead
+        // which defaults this to false.
         public override bool AllowedWithinNondeterministicOperationOrder { get; } = true;
 
         // Set() of a simple identifier is not a mutation through a reference (a mutate), but rather changing the reference (a true set).
         public override bool MutatesArg(int argIndex, TexlNode arg) => argIndex == 0 && arg.Kind != NodeKind.FirstName;
-
-        // Set should check for indirect references (e.g., Table(t1, t2)) in the iterator
-        // because modifying a variable while iterating over it (even indirectly) is unsafe.
-        public override bool AllowMutationOfIndirectIterator => true;
 
         public override IEnumerable<StringGetter[]> GetSignatures()
         {
