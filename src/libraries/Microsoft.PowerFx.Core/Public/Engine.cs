@@ -97,7 +97,7 @@ namespace Microsoft.PowerFx
             }
 
             BuiltInNamedTypes = builtInNamedTypes;
-            NumberIsFloat = numberType == FormulaType.Number;
+            NumberIsFloat = numberType == FormulaType.Number; // FormulaType.Number is the maker facing type "Float".
         }
 
         // All functions that powerfx core knows about. 

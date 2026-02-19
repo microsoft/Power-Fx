@@ -127,29 +127,15 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <param name="isImperative"></param>
         /// <param name="args"></param>
         /// <param name="argTypes">Array of argTypes in order.</param>
-        public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args, DType[] argTypes)
+        /// <param name="returnTypeName">Name of the type in the decleration, used by error messages.</param>
+        public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args, DType[] argTypes, IdentToken returnTypeName)
         : base(DPath.Root, functionName, functionName, SG(functionName), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, argTypes)
         {
             this._args = args;
             this._isImperative = isImperative;
+            this._returnTypeName = returnTypeName;
 
             this.UdfBody = body;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UserDefinedFunction"/> class. Includes the return type name for better error messages.
-        /// </summary>
-        /// <param name="functionName">Name of the function.</param>
-        /// <param name="returnType">Return type of the function.</param>
-        /// <param name="body">TexlNode for user defined function body.</param>
-        /// <param name="isImperative"></param>
-        /// <param name="args"></param>
-        /// <param name="argTypes">Array of argTypes in order.</param>
-        /// <param name="returnTypeName">Name of the type in the decleration, used by error messages.</param>
-        public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args, DType[] argTypes, IdentToken returnTypeName)
-        : this(functionName, returnType, body, isImperative, args, argTypes)
-        {
-            this._returnTypeName = returnTypeName;
         }
 
         /// <summary>
@@ -314,7 +300,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new ArgumentNullException(nameof(binderGlue));
             }
 
-            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), ParamTypes);
+            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), ParamTypes, _returnTypeName);
             binding = func.BindBody(nameResolver, binderGlue, bindingConfig, features, rule, updateDisplayNames);
 
             return func;

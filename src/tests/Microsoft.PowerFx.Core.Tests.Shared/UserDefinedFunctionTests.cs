@@ -632,15 +632,39 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(FormulaType.Number, check.ReturnType);
         }
 
-        [Fact]
-        public void TestUserDefinedFunctionCloning()
+        // By tracking the actual return type name's token for UDFs in the constructor for UserDefinedFunctio,
+        // we generate a better error message than just 'Number' for numeric type return value mismatches.
+        // This test verifies that the basic error message is correct.
+        [Theory]
+        [InlineData("F():Number = GUID();", "Number")]
+        [InlineData("F():Decimal = GUID();", "Decimal")]
+        [InlineData("F():Float = GUID();", "Float")]
+        public void TestUDFReturnTypeErrorMessages(string expression, string declaredType)
+        {
+            var parserOptions = new ParserOptions() { AllowsSideEffects = true };
+            var checkResult = new DefinitionsCheckResult()
+                                            .SetText(expression, parserOptions)
+                                            .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat));
+            var errors = checkResult.ApplyErrors();
+            Assert.NotEmpty(errors);
+            Assert.Contains(errors, x => x.MessageKey == "ErrUDF_ReturnTypeDoesNotMatch" &&
+                                         x.Message == $"The stated function return type '{declaredType}' does not match the return type of the function body 'GUID'.");
+        }
+
+        // By tracking the actual return type name's token for UDFs in the constructor for UserDefinedFunctio,
+        // we generate a better error message than just 'Number' for numeric type return value mismatches.
+        // This test verifies that UDF cloning, used by Canvas, carries the token through for the error message.
+        [Theory]
+        [InlineData("Add(a: Number, b: Number):Number = a + b;", null)]
+        [InlineData("F():Number = GUID();", "Number")]
+        [InlineData("F():Decimal = GUID();", "Decimal")]
+        [InlineData("F():Float = GUID();", "Float")]
+        public void TestUserDefinedFunctionCloning(string script, string errorReturnType)
         {
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false
             };
-
-            var script = "Add(a: Number, b: Number):Number = a + b;";
 
             var parseResult = UserDefinitions.Parse(script, parserOptions);
 
@@ -658,12 +682,23 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Single(udfs);
 
             var udf = udfs.First();
-            var binding = udf.BindBody(ReadOnlySymbolTable.Compose(nameResolver, ReadOnlySymbolTable.NewDefault(texlFunctionSet)), glue, BindingConfig.Default);
-            var clonedFunc = func.WithBinding(nameResolver, glue, out binding);
+            var clonedFunc = func.WithBinding(ReadOnlySymbolTable.Compose(nameResolver, ReadOnlySymbolTable.NewDefault(texlFunctionSet)), glue, out var binding, BindingConfig.Default);
             Assert.NotNull(clonedFunc);
             Assert.NotNull(binding);
 
             Assert.NotEqual(func, clonedFunc);
+
+            if (errorReturnType != null)
+            {
+                Assert.True(binding.ErrorContainer.HasErrors());
+
+                Assert.Contains(binding.ErrorContainer.GetErrors(), x => x.MessageKey == "ErrUDF_ReturnTypeDoesNotMatch" &&
+                                   x.ShortMessage == $"The stated function return type '{errorReturnType}' does not match the return type of the function body 'GUID'.");
+            }
+            else
+            {
+                Assert.False(binding.ErrorContainer.HasErrors());
+            }   
         }
 
         [Theory]
@@ -1104,23 +1139,6 @@ namespace Microsoft.PowerFx.Core.Tests
                                             .SetBindingInfo(nameResolver);
             var errorsNone = checkResultNone.ApplyErrors();
             Assert.Empty(errorsNone);
-        }
-
-        // Ensures that we don't just show "Number" for any mismatch with a numeric type that was declared as the UDF return type.
-        [Theory]
-        [InlineData("F():Number = GUID();", "Number")]
-        [InlineData("F():Decimal = GUID();", "Decimal")]
-        [InlineData("F():Float = GUID();", "Float")]
-        public void TestUDFReturnTypeErrorMessages(string expression, string declaredType)
-        {
-            var parserOptions = new ParserOptions() { AllowsSideEffects = true };
-            var checkResult = new DefinitionsCheckResult()
-                                            .SetText(expression, parserOptions)
-                                            .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat));
-            var errors = checkResult.ApplyErrors();
-            Assert.NotEmpty(errors);
-            Assert.Contains(errors, x => x.MessageKey == "ErrUDF_ReturnTypeDoesNotMatch" &&
-                                         x.Message == $"The stated function return type '{declaredType}' does not match the return type of the function body 'Guid'.");
         }
 
         [Theory]
