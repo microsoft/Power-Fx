@@ -2,8 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -39,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// If false, the author will be warned when inputting predicates that
         /// do not reference the input table.
         /// </summary>
-        public bool AcceptsLiteralPredicates { get; }
+        public bool CheckPredicateUsage { get; }
 
         /// <summary>
         /// True indicates that the function performs some sort of iteration over
@@ -72,7 +75,7 @@ namespace Microsoft.PowerFx.Core.Functions
             TexlFunction function,
             bool usesAllFieldsInScope = true,
             bool supportsAsyncLambdas = true,
-            bool acceptsLiteralPredicates = true,
+            bool checkPredicateUsage = false,
             bool iteratesOverScope = true,
             DType scopeType = null,
             Func<int, bool> appliesToArgument = null,
@@ -80,7 +83,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             UsesAllFieldsInScope = usesAllFieldsInScope;
             SupportsAsyncLambdas = supportsAsyncLambdas;
-            AcceptsLiteralPredicates = acceptsLiteralPredicates;
+            CheckPredicateUsage = checkPredicateUsage;
             IteratesOverScope = iteratesOverScope;
             ScopeType = scopeType;
             _function = function;
@@ -194,29 +197,6 @@ namespace Microsoft.PowerFx.Core.Functions
             return CheckInput(features, inputNode, inputSchema, TexlFunction.DefaultErrorContainer, out typeScope);
         }
 
-        public void CheckLiteralPredicates(TexlNode[] args, IErrorContainer errors)
-        {
-            Contracts.AssertValue(args);
-            Contracts.AssertValue(errors);
-
-            if (!AcceptsLiteralPredicates)
-            {
-                for (var i = 0; i < args.Length; i++)
-                {
-                    if (_function.IsLambdaParam(args[i], i))
-                    {
-                        if (args[i].Kind == NodeKind.BoolLit ||
-                            args[i].Kind == NodeKind.NumLit ||
-                            args[i].Kind == NodeKind.DecLit ||
-                            args[i].Kind == NodeKind.StrLit)
-                        {
-                            errors.EnsureError(DocumentErrorSeverity.Warning, args[i], TexlStrings.WarnLiteralPredicate);
-                        }
-                    }
-                }
-            }
-        }
-
         /// <summary>
         /// Get the scope identifiers for the function based on the CallNode child args.
         /// The majority of the functions will have a single scope identifier named ThisRecord.
@@ -235,6 +215,50 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             return false;
+        }
+
+        public virtual void CheckPredicateFields(TexlBinding binding, CallInfo callInfo)
+        {
+            var fields = binding.GetUsedScopeFields(callInfo);
+            var lambdaParamNames = binding.GetLambdaParamNames(callInfo.ScopeNest + 1);
+
+            if (fields == DType.Error || fields.GetAllNames(DPath.Root).Any())
+            {
+                return;
+            }
+
+            GetScopeIdent(callInfo.Node.Args.ChildNodes.ToArray(), out var idents);
+
+            if (!lambdaParamNames.Any(lambdaName => idents.Contains(lambdaName.Name)))
+            {
+                binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, callInfo.Node, TexlStrings.WarnCheckPredicateUsage);
+            }
+        }
+    }
+
+    internal class FunctionFilterScopeInfo : FunctionScopeInfo
+    {
+        public FunctionFilterScopeInfo(TexlFunction function)
+            : base(function, checkPredicateUsage: true)
+        {
+        }
+
+        public override void CheckPredicateFields(TexlBinding binding, CallInfo callInfo)
+        {
+            // Filter can also accept a view as argument.
+            // In the event of any argN (where N > 1) is a view, the binder will validate if the view is valid or not.
+            // We check if there is any view as argument. If there is, we just skip the predicate checking.
+            foreach (var childNode in callInfo.Node.Args.ChildNodes)
+            {
+                var argType = binding.GetType(childNode);
+
+                if (argType.Kind == DKind.ViewValue)
+                {
+                    return;
+                }
+            }
+
+            base.CheckPredicateFields(binding, callInfo);
         }
     }
 
@@ -290,7 +314,7 @@ namespace Microsoft.PowerFx.Core.Functions
         public static DName RightRecord => new DName("RightRecord");
 
         public FunctionJoinScopeInfo(TexlFunction function)
-            : base(function, appliesToArgument: (argIndex) => argIndex > 1)
+            : base(function, appliesToArgument: (argIndex) => argIndex > 1, checkPredicateUsage: true)
         {
         }
 
@@ -337,6 +361,52 @@ namespace Microsoft.PowerFx.Core.Functions
             // Returning false to indicate that the scope is not a whole scope.
             // Meaning that the scope is a record type and we are accessing the fields directly.
             return false;
+        }
+
+        public override void CheckPredicateFields(TexlBinding binding, CallInfo callInfo)
+        {
+            var fields = binding.GetUsedScopeFields(callInfo);
+            var lambdaParamNames = binding.GetLambdaParamNames(callInfo.ScopeNest + 1);
+
+            // If Join call node has less than 5 records, we are possibly looking for suggestions.
+            if (callInfo.Node.Args.ChildNodes.Count < 5 || fields == DType.Error)
+            {
+                return;
+            }
+
+            GetScopeIdent(callInfo.Node.Args.ChildNodes.ToArray(), out var idents);
+
+            var foundIdents = new HashSet<DName>();
+            var predicate = callInfo.Node.Args.ChildNodes[2];
+
+            // In the Join function, arg2 and argN > 3 are lambdas nodes.
+            // We need to check if scope identifiers are used arg2 (predicate).
+            foreach (var lambda in lambdaParamNames)
+            {
+                var parent = lambda.Node.Parent;
+
+                while (parent != null)
+                {
+                    if (parent.Id == predicate.Id)
+                    {
+                        foundIdents.Add(lambda.Name);
+                        break;
+                    }
+
+                    parent = parent.Parent;
+                }
+            }
+
+            var foundIdentsArray = foundIdents.ToArray();
+
+            if (foundIdents.Count == 2 && 
+                fields.TryGetType(foundIdentsArray[0], out _) && 
+                fields.TryGetType(foundIdentsArray[1], out _))
+            {                
+                return;
+            }
+
+            binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, callInfo.Node, TexlStrings.WarnCheckPredicateUsage);
         }
     }
 }
