@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -24,9 +25,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {
         [Theory]
         [InlineData("x=1;y=2;z=x+y;", "Float(Abs(-(x+y+z)))", 6d)]
+        [InlineData("x=1;y=2;z=x+y;", "Abs(-(x+y+z))", 6d)]
         [InlineData("x=1;y=2;Foo(x: Number): Number = Abs(x);", "Foo(-(y*y)+x)", 3d)]
         [InlineData("myvar=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Bar(1) + myvar", 2d)]
         [InlineData("a=2e200;b=2e200;", "a+b", 4e200d)]
+        [InlineData("Add(a: Number, b: Number): Number = a+b;", "Add(2e200,2e200)", 4e200d)]
+        [InlineData("x=1;y=2;Foo(x: Float): Float = Abs(x);", "Foo(-(y*y)+x)", 3d)]
+        [InlineData("myvar=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Float): Float = x + x;", "Bar(1) + myvar", 2d)]
+        [InlineData("Add(a: Float, b: Float): Float = a+b;", "Add(2e200,2e200)", 4e200d)]
+        [InlineData("Add(a: Decimal, b:Decimal): Float = a+b;", "Add(Decimal(\"1.0000000000000000000000001\"),Decimal(\"1.0000000000000000000000001\"))", 2d)]
+        [InlineData("Add(a: Number, b:Decimal): Float = a+b;", "Add(1,Decimal(\"1.0000000000000000000000001\"))", 2d)]
+        [InlineData("Add(a: Decimal, b:Decimal): Number = a+b;", "Add(Decimal(\"1.0000000000000000000000001\"),Decimal(\"1.0000000000000000000000001\"))", 2d)]
+        [InlineData("Add(a: Number, b:Decimal): Number = a+b;", "Add(1,Decimal(\"1.0000000000000000000000001\"))", 2d)]
         public void NamedFormulaEntryTest(string script, string expression, double expected)
         {
             var parserOptions = new ParserOptions()
@@ -42,23 +52,40 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check(expression);
             Assert.True(check.IsSuccess);
 
+            // ToString for rounding for comparison
             var result = (NumberValue)check.GetEvaluator().Eval();
-            Assert.Equal(expected, result.Value);
+            var resultString = result.Value.ToString("E6");
+            var expectedString = expected.ToString("E6");
+            Assert.Equal(expectedString, resultString);
         }
 
         [Theory]
 
         // no colon
         [InlineData("x=1;y=2;z=x+y;", "Decimal(Abs(-(x+y+z)))", "6")]
+        [InlineData("x=1;y=2;z=x+y;", "Abs(-(x+y+z))", "6")]
         [InlineData("x=1;y=2;Foo(x: Number): Number = Abs(x);", "Decimal(Foo(-(y*y)+x))", "3")]
+        [InlineData("x=1;y=2;Foo(x: Number): Number = Abs(x);", "Foo(-(y*y)+x)", "3")]
+        [InlineData("x=1;y=2;Foo(x: Decimal): Decimal = Abs(x);", "Foo(-(y*y)+x)", "3")]
         [InlineData("myvar=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Decimal(Bar(1) + myvar)", "2")]
         [InlineData("a=2.0000000000000000000001;b=2.0000000000000000000001;", "a+b", "4.0000000000000000000002")]
+        [InlineData("myvar=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Decimal): Decimal = x + x;", "Bar(1) + myvar", "2")]
+        [InlineData("myvar=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Bar(1) + myvar", "2")]
+        [InlineData("Add(a: Decimal, b:Decimal): Decimal = a+b;", "Add(1.0000000000000000000000001,1.0000000000000000000000001)", "2.0000000000000000000000002")]
+        [InlineData("Add(a: Number, b:Number): Number = a+b;", "Add(1.0000000000000000000000001,1.0000000000000000000000001)", "2.0000000000000000000000002")]
+        [InlineData("Add(a: Decimal, b:Float): Decimal = a+b;", "Add(1.0000000000000000000000001,1.0000000000000000000000001)", "2")]
+        [InlineData("Add(a: Number, b:Float): Decimal = a+b;", "Add(1.0000000000000000000000001,1.0000000000000000000000001)", "2")]
 
         // colon
         [InlineData("x:=1;y:=2;z:=x+y;", "Decimal(Abs(-(x+y+z)))", "6")]
+        [InlineData("x:=1;y:=2;z:=x+y;", "Abs(-(x+y+z))", "6")]
         [InlineData("x:=1;y:=2;Foo(x: Number): Number = Abs(x);", "Decimal(Foo(-(y*y)+x))", "3")]
+        [InlineData("x:=1;y:=2;Foo(x: Number): Number = Abs(x);", "Foo(-(y*y)+x)", "3")]
+        [InlineData("x:=1;y:=2;Foo(x: Decimal): Decimal = Abs(x);", "Foo(-(y*y)+x)", "3")]
         [InlineData("myvar:=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Decimal(Bar(1) + myvar)", "2")]
         [InlineData("a:=2.0000000000000000000001;b:=2.0000000000000000000001;", "a+b", "4.0000000000000000000002")]
+        [InlineData("myvar:=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Decimal): Decimal = x + x;", "Bar(1) + myvar", "2")]
+        [InlineData("myvar:=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Bar(1) + myvar", "2")]
         public void NamedFormulaEntryTestDecimal(string script, string expression, string expected)
         {
             var engine = new RecalcEngine();
@@ -77,9 +104,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [Theory]
         [InlineData("x:=1;y:=2;z:=x+y;", "Decimal(Abs(-(x+y+z)))", "6")]
+        [InlineData("x:=1;y:=2;z:=x+y;", "Abs(-(x+y+z))", "6")]
         [InlineData("x:=1;y:=2;Foo(x: Number): Number = Abs(x);", "Decimal(Foo(-(y*y)+x))", "3")]
+        [InlineData("x:=1;y:=2;Foo(x: Number): Number = Abs(x);", "Foo(-(y*y)+x)", "3")]
+        [InlineData("x:=1;y:=2;Foo(x: Decimal): Decimal = Abs(x);", "Foo(-(y*y)+x)", "3")]
         [InlineData("myvar:=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Decimal(Bar(1) + myvar)", "2")]
         [InlineData("a:=2.0000000000000000000001;b:=2.0000000000000000000001;", "a+b", "4.0000000000000000000002")]
+        [InlineData("myvar:=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Decimal): Decimal = x + x;", "Bar(1) + myvar", "2")]
+        [InlineData("myvar:=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Bar(1) + myvar", "2")]
         public void NamedFormulaEntryTestDecimal_ColonEqualRequired(string script, string expression, string expected)
         {
             var engine = new RecalcEngine();
@@ -111,6 +143,46 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var result = (NumberValue)check.GetEvaluator().Eval();
             Assert.Equal(expected, result.Value);
+        }
+
+        [Theory]
+        [InlineData("T:=Type({a:Number,b:Decimal,c:Float});x:={a:1.0000000000000000000000001};", "x.a", 1)]
+        [InlineData("T:=Type({a:Number,b:Decimal,c:Float});x:={c:2.0000000000000000000000001};", "x.c", 2)]
+        [InlineData("T:=Type({a:Number,b:Decimal,c:Float});x:={a:1e-100};", "x.a", 1e-100)]
+        [InlineData("T:=Type({a:Number,b:Decimal,c:Float});x:={c:2e-100};", "x.c", 2e-100)]
+        public void UDTRecordTests(string script, string expression, double expected)
+        {
+            var engine = new RecalcEngine(numberTypeIsFloat: true);
+
+            engine.TryAddUserDefinitions(script, out var errors, engine.GetDefaultParserOptionsCopy());
+            Assert.Empty(errors);
+
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess);
+
+            // ToString for rounding for comparison
+            var result = (NumberValue)check.GetEvaluator().Eval();
+            Assert.Equal(expected, result.Value);
+        }
+
+        [Theory]
+        [InlineData("T:=Type({a:Number,b:Decimal,c:Float});x:={a:1.0000000000000000000000001};", "x.a", "1.0000000000000000000000001")]
+        [InlineData("T:=Type({a:Number,b:Decimal,c:Float});x:={b:2.0000000000000000000000001};", "x.b", "2.0000000000000000000000001")]
+        [InlineData("T:=Type({a:Number,b:Decimal,c:Float});x:={a:1e-100};", "x.a", "0")]
+        [InlineData("T:=Type({a:Number,b:Decimal,c:Float});x:={b:2e-100};", "x.b", "0")]
+        public void UDTRecordTestsDecimal(string script, string expression, string expected)
+        {
+            var engine = new RecalcEngine();
+
+            engine.TryAddUserDefinitions(script, out var errors, engine.GetDefaultParserOptionsCopy());
+            Assert.Empty(errors);
+
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess);
+
+            // ToString for rounding for comparison
+            var result = (DecimalValue)check.GetEvaluator().Eval();
+            Assert.Equal(decimal.Parse(expected), result.Value);
         }
 
         [Theory]
@@ -553,6 +625,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 Assert.NotEmpty(errors);
             }
+        }
+
+        [Theory]
+
+        // This calculation will overflow a Decimal. If the NumberIsFloat config is not passed down properly from Engine -> ParserOptions -> BndingConfig,
+        // then there will be an overflow error as the * operator will treat the Date coercion to number as Decimal instead of the proper Float.
+        [InlineData("F():Float = Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1);", "F()", false, true)]
+        [InlineData("F():Float = Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1);", "F()", true, false)]
+        public void NumberIsFloatPassedToConfig(string script, string expression, bool numberIsFloat, bool expectOverflowError)
+        {
+            var engine = new RecalcEngine(numberTypeIsFloat: numberIsFloat);
+
+            // .SetText will pull NumberIsFloat from engine.ParserOptions, passing it on to BindingConfig
+            engine.TryAddUserDefinitions(script, out var errors, engine.GetDefaultParserOptionsCopy());
+            Assert.Empty(errors);
+
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess);
+
+            var result = check.GetEvaluator().Eval();
+            Assert.True((expectOverflowError && result is ErrorValue errorValue) || (!expectOverflowError && result is NumberValue numberValue));
         }
     }
 }

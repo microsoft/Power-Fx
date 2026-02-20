@@ -30,13 +30,20 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
         // For historical reasons, we do most of our testing with Number type as Float.
-        // Some tests are specifically designed without any Number type present.
         public static readonly Dictionary<DName, FormulaType> TestTypesDictionaryWithNumberTypeIsFloat = 
             new Dictionary<DName, FormulaType>(TestTypesDictionaryWithNoNumberType)
                 { { BuiltInTypeNames.Number_Alias, FormulaType.Number } };
 
-        public static readonly ReadOnlySymbolTable TestTypesWithNoNumberType = ReadOnlySymbolTable.NewDefaultTypes(TestTypesDictionaryWithNoNumberType);
-
         public static readonly ReadOnlySymbolTable TestTypesWithNumberTypeIsFloat = ReadOnlySymbolTable.NewDefaultTypes(TestTypesDictionaryWithNumberTypeIsFloat);
+
+        // Newer tests are designed to test with both NumberIsFloat and without.
+        public static readonly Dictionary<DName, FormulaType> TestTypesDictionaryWithNumberTypeIsDecimal =
+            new Dictionary<DName, FormulaType>(TestTypesDictionaryWithNoNumberType)
+                { { BuiltInTypeNames.Number_Alias, FormulaType.Decimal } };
+
+        public static readonly ReadOnlySymbolTable TestTypesWithNumberTypeIsDecimal = ReadOnlySymbolTable.NewDefaultTypes(TestTypesDictionaryWithNumberTypeIsDecimal);
+
+        // Some tests are specifically designed without any Number type present.
+        public static readonly ReadOnlySymbolTable TestTypesWithNoNumberType = ReadOnlySymbolTable.NewDefaultTypes(TestTypesDictionaryWithNoNumberType);
     }
 }

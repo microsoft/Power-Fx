@@ -172,23 +172,14 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Mul(x:Number, y:DateTime): DateTime = x * y;", "(NumberToDateTime:d(MulNumbers:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo), DateTimeToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)))), Scope 0)")]
-        [InlineData("sTon(x:Text): Number = x;", "(Float:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
-        [InlineData("bTon(x:Boolean): Number = x;", "(BooleanToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
-        [InlineData("dateTon(x:Date): Number = x;", "(DateToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
-        [InlineData("timeTon(x:Time): Number = x;", "(TimeToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
-        [InlineData("dateTimeTon(x:DateTime): Number = x;", "(DateTimeToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+
+        // without numbers
         [InlineData("textToHyperlink(x:Text): Hyperlink = x;", "(TextToHyperlink:h(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
-        [InlineData("nTos(x:Number): Text = x;", "(NumberToText:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("bTos(x:Boolean): Text = x;", "(BooleanToText:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("dateTos(x:Date): Text = x;", "(Text:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("dateTimeTos(x:DateTime): Text = x;", "(Text:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("timeTos(x:Time): Text = x;", "(Text:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
-        [InlineData("nToBool(x:Number): Boolean = x;", "(NumberToBoolean:b(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("sToBool(x:Text): Boolean = x;", "(TextToBoolean:b(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
-        [InlineData("nToDateTime(x:Number): DateTime = x;", "(NumberToDateTime:d(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
-        [InlineData("nToDate(x:Number): Date = x;", "(NumberToDate:D(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
-        [InlineData("nToTime(x:Number): Time = x;", "(NumberToTime:T(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("sToDateTime(x:Text): DateTime = x;", "(DateTimeValue:d(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("sToDate(x:Text): Date = x;", "(DateValue:D(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("sToTime(x:Text): Time = x;", "(TimeValue:T(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
@@ -200,14 +191,70 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("dateToDateTime(x:Date): DateTime = x;", "(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo), Scope 0)")]
         [InlineData("textToGUID(x:Text): GUID = x;", "(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo), Scope 0)")]
         [InlineData("GUIDToText(x:GUID): Text = x;", "(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo), Scope 0)")]
-        public void TestCoercionWithUDFBody(string udfScript, string expectedIR)
+
+        // with Float
+        [InlineData("Mul(x:Float, y:DateTime): DateTime = x * y;", "(NumberToDateTime:d(MulNumbers:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo), DateTimeToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)))), Scope 0)")]
+        [InlineData("sTon(x:Text): Float = x;", "(Float:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("bTon(x:Boolean): Float = x;", "(BooleanToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("dateTon(x:Date): Float = x;", "(DateToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("timeTon(x:Time): Float = x;", "(TimeToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("dateTimeTon(x:DateTime): Float = x;", "(DateTimeToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nTos(x:Float): Text = x;", "(NumberToText:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToBool(x:Float): Boolean = x;", "(NumberToBoolean:b(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToDateTime(x:Float): DateTime = x;", "(NumberToDateTime:d(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToDate(x:Float): Date = x;", "(NumberToDate:D(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToTime(x:Float): Time = x;", "(NumberToTime:T(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+
+        // with Number, NumberIsFloat = true
+        [InlineData("Mul(x:Number, y:DateTime): DateTime = x * y;", "(NumberToDateTime:d(MulNumbers:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo), DateTimeToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)))), Scope 0)")]
+        [InlineData("sTon(x:Text): Number = x;", "(Float:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("bTon(x:Boolean): Number = x;", "(BooleanToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("dateTon(x:Date): Number = x;", "(DateToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("timeTon(x:Time): Number = x;", "(TimeToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("dateTimeTon(x:DateTime): Number = x;", "(DateTimeToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nTos(x:Number): Text = x;", "(NumberToText:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToBool(x:Number): Boolean = x;", "(NumberToBoolean:b(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToDateTime(x:Number): DateTime = x;", "(NumberToDateTime:d(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToDate(x:Number): Date = x;", "(NumberToDate:D(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToTime(x:Number): Time = x;", "(NumberToTime:T(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+
+        // with Decimal
+        [InlineData("Mul(x:Decimal, y:DateTime): DateTime = x * y;", "(DecimalToDateTime:d(MulDecimals:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo), DateTimeToDecimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)))), Scope 0)")]
+        [InlineData("sTon(x:Text): Decimal = x;", "(Decimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("bTon(x:Boolean): Decimal = x;", "(BooleanToDecimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("dateTon(x:Date): Decimal = x;", "(DateToDecimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("timeTon(x:Time): Decimal = x;", "(TimeToDecimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("dateTimeTon(x:DateTime): Decimal = x;", "(DateTimeToDecimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nTos(x:Decimal): Text = x;", "(DecimalToText:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToBool(x:Decimal): Boolean = x;", "(DecimalToBoolean:b(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToDateTime(x:Decimal): DateTime = x;", "(DecimalToDateTime:d(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToDate(x:Decimal): Date = x;", "(DecimalToDate:D(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToTime(x:Decimal): Time = x;", "(DecimalToTime:T(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+
+        // with Number, NumberIsFloat = false
+        [InlineData("Mul(x:Number, y:DateTime): DateTime = x * y;", "(DecimalToDateTime:d(MulDecimals:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo), DateTimeToDecimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)))), Scope 0)", false)]
+        [InlineData("sTon(x:Text): Number = x;", "(Decimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)", false)]
+        [InlineData("bTon(x:Boolean): Number = x;", "(BooleanToDecimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)", false)]
+        [InlineData("dateTon(x:Date): Number = x;", "(DateToDecimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)", false)]
+        [InlineData("timeTon(x:Time): Number = x;", "(TimeToDecimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)", false)]
+        [InlineData("dateTimeTon(x:DateTime): Number = x;", "(DateTimeToDecimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)", false)]
+        [InlineData("nTos(x:Number): Text = x;", "(DecimalToText:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)", false)]
+        [InlineData("nToBool(x:Number): Boolean = x;", "(DecimalToBoolean:b(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)", false)]
+        [InlineData("nToDateTime(x:Number): DateTime = x;", "(DecimalToDateTime:d(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)", false)]
+        [InlineData("nToDate(x:Number): Date = x;", "(DecimalToDate:D(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)", false)]
+        [InlineData("nToTime(x:Number): Time = x;", "(DecimalToTime:T(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)", false)]
+
+        public void TestCoercionWithUDFBody(string udfScript, string expectedIR, bool numberIsFloat = true)
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = false,
+                NumberIsFloat = numberIsFloat,
             };
 
-            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat);
+            var nameResolver = ReadOnlySymbolTable.NewDefault(
+                BuiltinFunctionsCore._library, 
+                numberIsFloat ? UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat : UDTTestHelper.TestTypesDictionaryWithNumberTypeIsDecimal);
             var glue = new Glue2DocumentBinderGlue();
 
             var parseResult = UserDefinitions.Parse(udfScript, parserOptions);
@@ -655,10 +702,26 @@ namespace Microsoft.PowerFx.Core.Tests
         // we generate a better error message than just 'Number' for numeric type return value mismatches.
         // This test verifies that UDF cloning, used by Canvas, carries the token through for the error message.
         [Theory]
+
+        // no errors
         [InlineData("Add(a: Number, b: Number):Number = a + b;", null)]
+        [InlineData("Add(a: Number, b: Number):Decimal = a + b;", null)]
+        [InlineData("Add(a: Number, b: Number):Float = a + b;", null)]
+        [InlineData("Add(a: Number, b: Number):Text = a + b;", null)]
+        [InlineData("Add(a: Decimal, b: Decimal):Number = a + b;", null)]
+        [InlineData("Add(a: Decimal, b: Decimal):Decimal = a + b;", null)]
+        [InlineData("Add(a: Decimal, b: Decimal):Float = a + b;", null)]
+        [InlineData("Add(a: Decimal, b: Decimal):Text = a + b;", null)]
+        [InlineData("Add(a: Float, b: Float):Number = a + b;", null)]
+        [InlineData("Add(a: Float, b: Float):Decimal = a + b;", null)]
+        [InlineData("Add(a: Float, b: Float):Float = a + b;", null)]
+        [InlineData("Add(a: Float, b: Float):Text = a + b;", null)]
+
+        // errors specific to declared return type
         [InlineData("F():Number = GUID();", "Number")]
         [InlineData("F():Decimal = GUID();", "Decimal")]
         [InlineData("F():Float = GUID();", "Float")]
+
         public void TestUserDefinedFunctionCloning(string script, string errorReturnType)
         {
             var parserOptions = new ParserOptions()
@@ -1176,6 +1239,20 @@ namespace Microsoft.PowerFx.Core.Tests
                 Assert.NotEmpty(errors);
                 Assert.Contains(errors, x => x.MessageKey == "ErrBehaviorFunctionInDataUDF");
             }
+        }
+
+        [Theory]
+
+        [InlineData("F():Float = Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1);", false)]
+        [InlineData("F():Float = Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1);", true)]
+        public void NumberIsFloatPassedToConfig(string expression, bool numberIsFloat)
+        {
+            var parserOptions = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = numberIsFloat };
+
+            var checkResult = new DefinitionsCheckResult()
+                                            .SetText(expression, parserOptions);
+
+            Assert.Equal(checkResult.UDFBindingConfig.NumberIsFloat, numberIsFloat);
         }
 
         private class BehaviorFunction : TexlFunction
