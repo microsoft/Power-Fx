@@ -546,7 +546,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 MaxCallDepth = 100
             };
-            var recalcEngine = new RecalcEngine(config, numberTypeIsFloat: true);
+            var recalcEngine = new RecalcEngine(config, numberIsFloat: true);
 
             try
             {
@@ -572,7 +572,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("foo(x: Number, y:Number):Number = x - Abs(y);", "foo(myArg,1)", 9.0)]
         public void UserDefinedFunctionSymbolTableTest(string script, string expression, double expected)
         {
-            var engine = new RecalcEngine(numberTypeIsFloat: true);
+            var engine = new RecalcEngine(numberIsFloat: true);
             var symbolTable = new SymbolTable();
 
             engine.UpdateVariable("myArg", FormulaValue.New(10));
@@ -606,7 +606,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             SymbolTable st = new SymbolTable { DebugName = "Extras" };
             st.AddConstant("K1", FormulaValue.New(9999));
 
-            var engine = new RecalcEngine(numberTypeIsFloat: true);
+            var engine = new RecalcEngine(numberIsFloat: true);
             engine.AddUserDefinedFunction(script, symbolTable: st);
 
             var check = engine.Check("foo(1)");
@@ -620,7 +620,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void ShadowingFunctionPrecedenceTest()
         {
-            var engine = new RecalcEngine(numberTypeIsFloat: true);
+            var engine = new RecalcEngine(numberIsFloat: true);
             engine.AddUserDefinedFunction("Concat(x:Text):Text = \"xyz\"; Average(x:Number):Number = 11111;");
 
             var check = engine.Check("Concat(\"abc\")");
@@ -658,7 +658,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void ShadowingFunctionPrecedenceTest_Decimal()
         {
-            var engine = new RecalcEngine(numberTypeIsFloat: false);
+            var engine = new RecalcEngine(numberIsFloat: false);
             engine.AddUserDefinedFunction("Concat(x:Text):Text = \"xyz\"; Average(x:Number):Number = 11111;");
 
             var check = engine.Check("Concat(\"abc\")");
@@ -747,7 +747,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var config = new PowerFxConfig();
             config.EnableSetFunction();
-            var recalcEngine = new RecalcEngine(config, numberTypeIsFloat: true);
+            var recalcEngine = new RecalcEngine(config, numberIsFloat: true);
             recalcEngine.UpdateVariable("a", 1m);
 
             var definitionsCheckResult = recalcEngine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
@@ -787,7 +787,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var config = new PowerFxConfig();
             config.EnableSetFunction();
-            var engine = new RecalcEngine(config, numberTypeIsFloat: true);
+            var engine = new RecalcEngine(config, numberIsFloat: true);
             engine.UpdateVariable("x", 1m);
 
             var result = engine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: allowSideEffects);
@@ -2118,7 +2118,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void UserDefinedTypeTest(string userDefinitions, string evalExpression, bool isValidDefinition, bool isValidEval = false, double expectedResult = 0)
         {
             var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config, numberTypeIsFloat: true);
+            var recalcEngine = new RecalcEngine(config, numberIsFloat: true);
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
@@ -2213,7 +2213,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void UDFImperativeVsRecordAmbiguityTest(string udf, string evalExpression, bool isValid, double expectedResult = 0)
         {
             var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config, numberTypeIsFloat: true);
+            var recalcEngine = new RecalcEngine(config, numberIsFloat: true);
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = true,
@@ -2339,7 +2339,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void RecordOfTests(string userDefinitions, string evalExpression, bool isValid, double expectedResult = 0)
         {
             var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config, numberTypeIsFloat: true);
+            var recalcEngine = new RecalcEngine(config, numberIsFloat: true);
             var parserOptions = new ParserOptions();
 
             recalcEngine.Config.SymbolTable.AddType(new DName("Accounts"), FormulaType.Build(TestUtils.DT("*[id: n, name:s, address:s]")));

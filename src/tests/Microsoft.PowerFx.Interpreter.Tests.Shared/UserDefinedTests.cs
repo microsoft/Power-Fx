@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 AllowEqualOnlyNamedFormulas = true,
                 NumberIsFloat = true,
             };
-            var engine = new RecalcEngine(numberTypeIsFloat: true);
+            var engine = new RecalcEngine(numberIsFloat: true);
 
             engine.TryAddUserDefinitions(script, out var errors, parserOptions);
             Assert.Empty(errors);
@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("myvar:=Weekday(Date(2024,2,2)) > 1 And false;Bar(x: Number): Number = x + x;", "Bar(1) + myvar", 2d)]
         public void NamedFormulaEntryTest_ColonEqualRequired(string script, string expression, double expected)
         {
-            var engine = new RecalcEngine(numberTypeIsFloat: true);
+            var engine = new RecalcEngine(numberIsFloat: true);
 
             engine.AddUserDefinitions(script);
 
@@ -152,7 +152,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("T:=Type({a:Number,b:Decimal,c:Float});x:={c:2e-100};", "x.c", 2e-100)]
         public void UDTRecordTests(string script, string expression, double expected)
         {
-            var engine = new RecalcEngine(numberTypeIsFloat: true);
+            var engine = new RecalcEngine(numberIsFloat: true);
 
             engine.TryAddUserDefinitions(script, out var errors, engine.GetDefaultParserOptionsCopy());
             Assert.Empty(errors);
@@ -477,7 +477,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // easy way
 
             var configWorks = new PowerFxConfig(powerFxV1 ? Features.PowerFxV1 : Features.None);
-            var engineWorks = new RecalcEngine(configWorks, numberTypeIsFloat: true);
+            var engineWorks = new RecalcEngine(configWorks, numberIsFloat: true);
 
             engineWorks.AddUserDefinitions(script);
 
@@ -490,7 +490,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // harder way, using DefinitionCheckResult, that passes through a different UDF body path than above
 
             var configDCR = new PowerFxConfig(powerFxV1 ? Features.PowerFxV1 : Features.None);
-            var engineDCR = new RecalcEngine(configDCR, numberTypeIsFloat: true);
+            var engineDCR = new RecalcEngine(configDCR, numberIsFloat: true);
 
             var addDCR = engineDCR.AddUserDefinedFunction(script);
             var errorsDCR = addDCR.ApplyErrors();
@@ -506,7 +506,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // harder way, using DefinitionCheckResult, inverted Features setting
 
             var configDCRNot = new PowerFxConfig(powerFxV1 ? Features.None : Features.PowerFxV1);
-            var engineDCRNot = new RecalcEngine(configDCRNot, numberTypeIsFloat: true);
+            var engineDCRNot = new RecalcEngine(configDCRNot, numberIsFloat: true);
 
             var addDCRNot = engineDCRNot.AddUserDefinedFunction(script);
             var errorsDCRNot = addDCRNot.ApplyErrors();
@@ -635,7 +635,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("F():Float = Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1);", "F()", true, false)]
         public void NumberIsFloatPassedToConfig(string script, string expression, bool numberIsFloat, bool expectOverflowError)
         {
-            var engine = new RecalcEngine(numberTypeIsFloat: numberIsFloat);
+            var engine = new RecalcEngine(numberIsFloat: numberIsFloat);
 
             // .SetText will pull NumberIsFloat from engine.ParserOptions, passing it on to BindingConfig
             engine.TryAddUserDefinitions(script, out var errors, engine.GetDefaultParserOptionsCopy());

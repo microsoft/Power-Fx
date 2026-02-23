@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Json.Tests
             };
             var config = new PowerFxConfig(features);
             config.EnableJsonFunctions();
-            return new RecalcEngine(config, numberTypeIsFloat: true);
+            return new RecalcEngine(config, numberIsFloat: true);
         }
 
         [Fact]

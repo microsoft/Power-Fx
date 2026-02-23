@@ -210,7 +210,7 @@ namespace Microsoft.PowerFx.Json.Tests
         public async Task Copilot_WithNumberSchema_ReturnsNumber_Float()
         {
             var config = CreateConfigWithCopilot();
-            var engine = new RecalcEngine(config, numberTypeIsFloat: true);
+            var engine = new RecalcEngine(config, numberIsFloat: true);
 
             using var mockService = new MockCopilotService("42");
             var runtimeConfig = new RuntimeConfig();
@@ -271,7 +271,7 @@ namespace Microsoft.PowerFx.Json.Tests
         public async Task Copilot_WithRecordSchema_ReturnsRecord_Float()
         {
             var config = CreateConfigWithCopilot();
-            var engine = new RecalcEngine(config, numberTypeIsFloat: true);
+            var engine = new RecalcEngine(config, numberIsFloat: true);
 
             using var mockService = new MockCopilotService("{\"name\":\"Alice\",\"age\":25}");
             var runtimeConfig = new RuntimeConfig();
@@ -316,7 +316,7 @@ namespace Microsoft.PowerFx.Json.Tests
         public async Task Copilot_WithTableSchema_ReturnsTable_Float()
         {
             var config = CreateConfigWithCopilot();
-            var engine = new RecalcEngine(config, numberTypeIsFloat: true);
+            var engine = new RecalcEngine(config, numberIsFloat: true);
 
             using var mockService = new MockCopilotService("[{\"id\":1,\"name\":\"Item1\"},{\"id\":2,\"name\":\"Item2\"}]");
             var runtimeConfig = new RuntimeConfig();
@@ -576,7 +576,7 @@ namespace Microsoft.PowerFx.Json.Tests
         public async Task Copilot_NestedRecordSchema_WorksCorrectly_Float()
         {
             var config = CreateConfigWithCopilot();
-            var engine = new RecalcEngine(config, numberTypeIsFloat: true);
+            var engine = new RecalcEngine(config, numberIsFloat: true);
 
             using var mockService = new MockCopilotService(
                 "{\"person\":{\"name\":\"Bob\",\"age\":30},\"city\":\"Seattle\"}");
@@ -650,7 +650,7 @@ namespace Microsoft.PowerFx.Json.Tests
         public async Task Copilot_CodeFenceWithLanguage_StripsCorrectly_Float()
         {
             var config = CreateConfigWithCopilot();
-            var engine = new RecalcEngine(config, numberTypeIsFloat: true);
+            var engine = new RecalcEngine(config, numberIsFloat: true);
 
             using var mockService = new MockCopilotService("```json\n{\"value\":123}\n```");
             var runtimeConfig = new RuntimeConfig();
@@ -715,7 +715,7 @@ namespace Microsoft.PowerFx.Json.Tests
         public void Copilot_CheckResultType_WithNumberSchema_Float()
         {
             var config = CreateConfigWithCopilot();
-            var engine = new RecalcEngine(config, numberTypeIsFloat: true);
+            var engine = new RecalcEngine(config, numberIsFloat: true);
 
             var check = engine.Check("Copilot(\"test\", \"context\", Number)");
             Assert.True(check.IsSuccess);

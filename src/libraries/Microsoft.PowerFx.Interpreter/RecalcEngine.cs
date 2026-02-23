@@ -64,12 +64,12 @@ namespace Microsoft.PowerFx
         }
 
         public RecalcEngine(PowerFxConfig powerFxConfig)
-            : this(powerFxConfig, numberTypeIsFloat: false)
+            : this(powerFxConfig, numberIsFloat: false)
         {
         }
 
-        public RecalcEngine(bool numberTypeIsFloat)
-            : this(new PowerFxConfig(), numberTypeIsFloat: numberTypeIsFloat)
+        public RecalcEngine(bool numberIsFloat)
+            : this(new PowerFxConfig(), numberIsFloat: numberIsFloat)
         {
         }
 
@@ -78,17 +78,17 @@ namespace Microsoft.PowerFx
         /// Create a new power fx engine with control over which type is Number. 
         /// </summary>
         /// <param name="powerFxConfig"></param>
-        /// <param name="numberTypeIsFloat">
+        /// <param name="numberIsFloat">
         /// Note that there are two NumberIsFloat flags that are independent:
-        /// - numberTypeIsFloat paramter here, which impacts the symbol table which determines what type 
+        /// - numberIsFloat paramter here, which impacts the symbol table which determines what type 
         ///   Number should alias to (Float or Decimal) for use by UDFs and UDTs.
         ///   This also affects the default ParserOptions used by Check and SetText methods from the Engine.
         /// - ParserOptions NumberIsFloat, which impacts parsing of literals only.
         /// To put Power Fx into "Float" mode, for example for Canvas apps, both must be used together. 
         /// By default, Power Fx uses "Decimal" mode.
         /// </param>
-        public RecalcEngine(PowerFxConfig powerFxConfig, bool numberTypeIsFloat)
-            : base(powerFxConfig, SymbolTable.NewDefaultTypes(_builtInNamedTypesDictionary, numberTypeIsFloat ? FormulaType.Number : FormulaType.Decimal))
+        public RecalcEngine(PowerFxConfig powerFxConfig, bool numberIsFloat)
+            : base(powerFxConfig, SymbolTable.NewDefaultTypes(_builtInNamedTypesDictionary, numberIsFloat ? FormulaType.Number : FormulaType.Decimal))
         {
             _symbolTable = new SymbolTable { DebugName = "Globals" };
             _symbolValues = new SymbolValues(_symbolTable);
