@@ -44,7 +44,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> (Decimal(1237940039285380274899124224) * Decimal(1073741824)) / Decimal(1180591620717411303424) // powers of two, can be handled exactly in floating point, overflow decimal
 Error({Kind:ErrorKind.Numeric})
 
-// Value
+// Value (should be the same as Decimal)
 
 >> Value("1.0000000000000000000000001")
 1.0000000000000000000000001

@@ -6,7 +6,7 @@
 >> 1.0000000000000000000000001
 1
 
-// Value
+// Value (should be the same as Float)
 
 >> Value("1.0000000000000000000000001")
 1
