@@ -386,14 +386,8 @@ namespace Microsoft.PowerFx
         private BindingConfig GetDefaultBindingConfig()
         {
             var ruleScope = this.GetRuleScope();
-            bool useThisRecordForRuleScope = ruleScope != null;
 
-            var bindingConfig = BindingConfig.Default;
-
-            if (useThisRecordForRuleScope)
-            {
-                bindingConfig = new BindingConfig(bindingConfig.AllowsSideEffects, true);
-            }
+            var bindingConfig = new BindingConfig(useThisRecordForRuleScope: ruleScope != null, numberIsFloat: this.NumberIsFloat);
 
             return bindingConfig;
         }

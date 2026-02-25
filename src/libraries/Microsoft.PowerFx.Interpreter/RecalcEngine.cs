@@ -79,12 +79,17 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="powerFxConfig"></param>
         /// <param name="numberIsFloat">
-        /// Note that there are two NumberIsFloat flags that are independent:
-        /// - numberIsFloat paramter here, which impacts the symbol table which determines what type 
-        ///   Number should alias to (Float or Decimal) for use by UDFs and UDTs.
-        ///   This also affects the default ParserOptions used by Check and SetText methods from the Engine.
-        /// - ParserOptions NumberIsFloat, which impacts parsing of literals only.
-        /// To put Power Fx into "Float" mode, for example for Canvas apps, both must be used together. 
+        /// There are three NumberIsFloat flags that are related, but independent:
+        /// 1. numberIsFloat paramter here, which impacts the symbol table in what type name
+        ///    "Number" should alias to (Float or Decimal) for use by UDFs and UDTs.
+        /// 2. ParserOptions.NumberIsFloat, which impacts parsing of literals only.
+        /// 3. BindOptions.NumberIsFloat, which impacts type coercion during binding.
+        /// To put Power Fx into "Float" mode, for example for Canvas apps, they must be used together. 
+        /// 
+        /// By setting it here, which flows down to the Engine constructor, Engine methods will carry
+        /// the flag through, for example in GetDefaultParserOptionsCopy() and GetDefaultBindingConfig(). 
+        /// If only Engine methods are used, then setting it here is all that is needed.
+        /// 
         /// By default, Power Fx uses "Decimal" mode.
         /// </param>
         public RecalcEngine(PowerFxConfig powerFxConfig, bool numberIsFloat)
