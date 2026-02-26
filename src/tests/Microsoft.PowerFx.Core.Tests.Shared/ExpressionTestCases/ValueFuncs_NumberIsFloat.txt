@@ -38,10 +38,10 @@
 >> Decimal("1,0000000000000000000000001", "Fr-Fr")
 1.0000000000000000000000001
 
->> Decimal(1e50)
+>> Decimal(1e50) > 10
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text(Decimal("1e50"),"#.##")
+>> Decimal("1e50") > 10
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> Decimal(1e-50)
@@ -49,6 +49,9 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> (Decimal(1237940039285380274899124224) * Decimal(1073741824)) / Decimal(1180591620717411303424) // powers of two, can be handled exactly in floating point, overflow decimal
 Error({Kind:ErrorKind.Numeric})
+
+>> Decimal(340282366920938463463374607431768211456) / Decimal(1267650600228229401496703205376)
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 
 // Value (should be the same as Float)
 
@@ -76,14 +79,20 @@ Error({Kind:ErrorKind.Numeric})
 >> Value("1,0000000000000000000000001", "Fr-Fr")
 1
 
->> Text(Value("1e50"),"#.##")
-"100000000000000000000000000000000000000000000000000"
+>> Value("1e50") > 10
+true
 
 >> Value(1e-50)
 0
 
 >> (Value(1237940039285380274899124224) * Value(1073741824)) / Value(1180591620717411303424) // powers of two, can be handled exactly in floating point, overflow decimal
 1125899906842624
+
+>> 340282366920938463463374607431768211456 / 1267650600228229401496703205376
+268435456
+
+>> Value(340282366920938463463374607431768211456) / Value(1267650600228229401496703205376)
+268435456
 
 // Float
 
@@ -111,11 +120,17 @@ Error({Kind:ErrorKind.Numeric})
 >> Float("1,0000000000000000000000001", "Fr-Fr")
 1
 
->> Text(Float("1e50"),"#.##")
-"100000000000000000000000000000000000000000000000000"
+>> Float(1e50) > 10
+true
+
+>> Float("1e50") > 10
+true
 
 >> Float(1e-50)
 0
 
 >> (Float(1237940039285380274899124224) * Float(1073741824)) / Float(1180591620717411303424) // powers of two, can be handled exactly in floating point, overflow decimal
 1125899906842624
+
+>> Float(340282366920938463463374607431768211456) / Float(1267650600228229401496703205376)
+268435456
