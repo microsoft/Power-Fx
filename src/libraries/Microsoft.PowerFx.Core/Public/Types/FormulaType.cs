@@ -12,6 +12,27 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
+    // Names used for types in UDTs and UDFs.
+    // Every host will not support all of these, the host passes what they support into the Engine constructor.
+    public static class BuiltInTypeNames
+    {
+        public static readonly DName Blank_None = new DName("None"); // can't be used, here to validate it isn't present in the symbol table
+        public static readonly DName Boolean = new DName("Boolean");
+        public static readonly DName Number_Float = new DName("Float");
+        public static readonly DName Number_Alias = new DName("Number"); // alias for either Decimal or Float, every Engine needs one
+        public static readonly DName Decimal = new DName("Decimal");
+        public static readonly DName Date = new DName("Date");
+        public static readonly DName Time = new DName("Time");
+        public static readonly DName DateTime = new DName("DateTime");
+        public static readonly DName DateTimeNoTimeZone_DateTimeTZInd = new DName("DateTimeTZInd");
+        public static readonly DName String_Text = new DName("Text");
+        public static readonly DName Guid = new DName("GUID");
+        public static readonly DName Hyperlink = new DName("Hyperlink");
+        public static readonly DName Color = new DName("Color");
+        public static readonly DName UntypedObject_Dynamic = new DName("Dynamic");
+        public static readonly DName Void = new DName("Void"); // can't be used except for the return type of a UDF, here to validate it isn't present in the symbol table
+    }
+
     /// <summary>
     /// Base class for type of a Formula. 
     /// Formula Types are a class hiearchy.
@@ -30,6 +51,10 @@ namespace Microsoft.PowerFx.Types
         // Well-known types 
         public static FormulaType Boolean { get; } = new BooleanType();
 
+        // Despite the internal "Number" naming, this is actually the maker facing "Float" type. 
+        // The maker facing type name "Number" can mean either Float or Decimal depending on the host's config.
+        // "Number" was the term used when Power Fx was created, but we then later added Decimal
+        // and didn't want to do the huge public change here and in all the host code that used floating point.
         public static FormulaType Number { get; } = new NumberType();
 
         public static FormulaType Decimal { get; } = new DecimalType();
@@ -74,30 +99,12 @@ namespace Microsoft.PowerFx.Types
             _type = type;
         }
 
-        internal static readonly IReadOnlyDictionary<DName, FormulaType> PrimitiveTypes = ImmutableDictionary.CreateRange(new Dictionary<DName, FormulaType>()
-        {
-            { new DName("Boolean"), Boolean },
-            { new DName("Color"), Color },
-            { new DName("Date"), Date },
-            { new DName("Time"), Time },
-            { new DName("DateTime"), DateTime },
-            { new DName("DateTimeTZInd"), DateTimeNoTimeZone },
-            { new DName("GUID"), Guid },
-            { new DName("Number"), Number },
-            { new DName("Decimal"), Decimal },
-            { new DName("Text"), String },
-            { new DName("Hyperlink"), Hyperlink },
-            { new DName("None"), Blank },
-            { new DName("Dynamic"), UntypedObject },
-            { new DName("Void"), Void },
-        });
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FormulaType"/> class.
         /// Used for subclasses that must set DType themselves.
         /// </summary>
         private protected FormulaType()
-        {            
+        {
         }
 
         // Entites may be recursive and their Dytype is tagged with additional schema metadata. 

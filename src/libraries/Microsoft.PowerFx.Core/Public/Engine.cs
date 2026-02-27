@@ -73,6 +73,33 @@ namespace Microsoft.PowerFx
             Config = powerFxConfig ?? throw new ArgumentNullException(nameof(powerFxConfig));
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Engine"/> class with built in UDT and UDF primitive names.
+        /// </summary>
+        /// <param name="builtInNamedTypes">ReadOnlySymbolTable with primitive type names supported. The "Number" type must be included in the builtInNamedTypes.</param>
+        public Engine(ReadOnlySymbolTable builtInNamedTypes)
+            : this(new PowerFxConfig(), builtInNamedTypes)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Engine"/> class with built in UDT and UDF primitive names.
+        /// </summary>
+        /// <param name="powerFxConfig"></param>
+        /// <param name="builtInNamedTypes">ReadOnlySymbolTable with primitive type names supported. The "Number" type must be included in the builtInNamedTypes.</param>
+        public Engine(PowerFxConfig powerFxConfig, ReadOnlySymbolTable builtInNamedTypes)
+            : this(powerFxConfig)
+        {
+            INameResolver resolver = builtInNamedTypes;
+            if (!resolver.LookupType(BuiltInTypeNames.Number_Alias, out var numberType))
+            {
+                throw new ArgumentException($"Engine BuiltInNamedTypes must contain a definition for the {BuiltInTypeNames.Number_Alias} type.");
+            }
+
+            BuiltInNamedTypes = builtInNamedTypes;
+            NumberIsFloat = numberType == FormulaType.Number; // FormulaType.Number is the maker facing type "Float".
+        }
+
         // All functions that powerfx core knows about. 
         // Derived engines may only support a subset of these builtins, 
         // and they may add their own custom ones. 
@@ -84,9 +111,34 @@ namespace Microsoft.PowerFx
         public ReadOnlySymbolTable SupportedFunctions { get; protected internal set; } = _allBuiltinCoreFunctions;
 
         /// <summary>
-        /// Builtin Types supported by this engine. 
+        /// Builtin Type names supported by this engine for makers to reference in UDT and UDF definitions. 
+        /// This must be supplied in order for UDF/UDTs to find the existing primitive types, such as Text, Decimal, Date, etc. 
+        /// If UDF/UDTs are not supported, this can be skipped and left null as there is no way to reference a type.
+        /// If this list is used, it must include a definition for the 'Number' type, enforced in the Engine constructor.
         /// </summary>
-        public ReadOnlySymbolTable PrimitiveTypes { get; protected internal set; } = ReadOnlySymbolTable.PrimitiveTypesTableInstance;
+        public ReadOnlySymbolTable BuiltInNamedTypes { get; }
+
+        /// <summary>
+        /// There is no built in list of supported primitive types - each host brings their own as each host is different.
+        /// Use BuiltInNamedTypes instead and pass the list of types to the Engine constructor for your host.
+        /// The previous PrimitiveTypes was a list of all the possible types that a host might support,
+        /// including restricted types in UDTs and UDF parameters and return types. But no host actually 
+        /// supported all of those types, and it was confusing to have types included that later needed to be filtered out.
+        /// </summary>
+        [Obsolete("Use BuiltInNamedTypes instead and pass the list of types to the Engine constructor for your host.")]
+        public ReadOnlySymbolTable PrimitiveTypes 
+        { 
+            get => throw new NotSupportedException("Use BuiltInNamedTypes instead."); 
+            protected internal set => throw new NotSupportedException("Use BuiltInNamedTypes instead."); 
+        }
+
+        /// <summary>
+        /// Indicates whether the generic 'Number' type is represented as Float (double) or Decimal, 
+        /// after looking at BuiltInNamedTypes passed into the Engine constructor.
+        /// This is used to create the default ParserOptions that are generated with GetDefaultParserOptionsCopy().
+        /// Default is false if BuiltInNamedTypes is not provided.
+        /// </summary>
+        public bool NumberIsFloat { get; }
 
         // By default, we pull the core functions. 
         // These can be overridden. 
@@ -126,7 +178,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Binding symbols used for UDFs.
         /// </summary>
-        internal ReadOnlySymbolTable UDFDefaultBindingSymbols => ReadOnlySymbolTable.Compose(PrimitiveTypes, SupportedFunctions, Config.InternalConfigSymbols);
+        internal ReadOnlySymbolTable UDFDefaultBindingSymbols => ReadOnlySymbolTable.Compose(BuiltInNamedTypes, SupportedFunctions, Config.InternalConfigSymbols);
 
         internal int FunctionCount => Functions.Count();
 
@@ -182,7 +234,7 @@ namespace Microsoft.PowerFx
             // That will cache unifying into a single TexlFunctionSet - which is the most expensive part. 
             var functionList = _functionListCache.GetComposedCached(SupportedFunctions, Config.ComposedConfigSymbols);
 
-            var symbols = ReadOnlySymbolTable.Compose(EngineSymbols, functionList, PrimitiveTypes);
+            var symbols = ReadOnlySymbolTable.Compose(EngineSymbols, functionList, BuiltInNamedTypes);
 
             return symbols;
         }
@@ -213,6 +265,7 @@ namespace Microsoft.PowerFx
                 Culture = null,
                 AllowsSideEffects = false,
                 MaxExpressionLength = Config.MaximumExpressionLength,
+                NumberIsFloat = this.NumberIsFloat,
             };
         }
 
@@ -333,14 +386,8 @@ namespace Microsoft.PowerFx
         private BindingConfig GetDefaultBindingConfig()
         {
             var ruleScope = this.GetRuleScope();
-            bool useThisRecordForRuleScope = ruleScope != null;
 
-            var bindingConfig = BindingConfig.Default;
-
-            if (useThisRecordForRuleScope)
-            {
-                bindingConfig = new BindingConfig(bindingConfig.AllowsSideEffects, true);
-            }
+            var bindingConfig = new BindingConfig(useThisRecordForRuleScope: ruleScope != null, numberIsFloat: this.NumberIsFloat);
 
             return bindingConfig;
         }

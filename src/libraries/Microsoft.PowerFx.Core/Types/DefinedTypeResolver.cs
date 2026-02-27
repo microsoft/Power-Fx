@@ -29,8 +29,78 @@ namespace Microsoft.PowerFx.Core.Types
 
         private readonly List<TexlError> _errors;
 
-        // TODO: Add more future type names
-        private static readonly ISet<string> _restrictedTypeNames = new HashSet<string> { "Record", "Table", "Currency" };
+        // Reserved type names that can't be used for a UDT.
+        // We shouldn't introduce any data type names that aren't on this list.
+        internal static readonly ISet<string> _restrictedTypeNames = new HashSet<string> 
+        { 
+            // existing type names across all hosts
+            "Boolean", "Color", 
+            "DateTimeTZInd", "DateTime", "Date", "Time", 
+            "Number", "Float", "Decimal", 
+            "GUID", 
+            "Text", "Hyperlink",
+            "Dynamic",
+            "Null", "None", "Blank", "Void", "Nothing",
+
+            // strucutural type names
+            "Record", "Table", "Array",
+            "List", "Tuple", "Dictionary", "Range", "Hash", "HashSet",
+            "Enum", "Enumeration", "OptionSet", "Optionset", "Choice", "Choices",
+            "Reference", "RecordReference", "TableReference",
+            "Row", "Column", "Matrix",
+
+            // generic types
+            "Object", "Delegate", "Pointer", "Reference", "Unsupported",
+            "Control", "Component", "View",
+            "Unknown", "Deferred", "Lazy", // Power Fx internal types 
+
+            // old name for dynamic
+            "Untyped", "UnTyped",
+
+            // possible numeric data types
+            "Currency", "Money", 
+            "Double", "Single", "Bit", "Complex", "Real",
+            "Int", "Integer", "Byte", "Long", "Short", 
+            "Unisgned", "UnsignedInt", "UnisgnedInteger", "UnsignedByte", "UnisgnedLong", "UnsignedShort", 
+            "BigInt", "UnisgnedBigInt",
+            "WholeNumber",
+            "Numeric",
+            "UShort", "ULong", "UInt", "UInteger", "SByte",
+
+            // possible date/time data types
+            "DateTimeZone", "TimeZone", "Timezone", // Dataverse number format
+            "Duration", // Dataverse number format
+            "Timespan", "TimeSpan", 
+            "DateTimeNoTZ", "DateTimeNoTimeZone", "DateTimeNoTimeZoneInformation",
+
+            // possible text data types
+            "String", 
+            "HTML", "JSON", "XML", 
+            "Char", "Character", "UChar",
+            "URI", "URL",
+            "RichText", // Dataverse text formats
+            "LanguageCode", // Dataverse numeric format
+            "EmailAddress", "TickerSymbol", "PhoneNumber", // Dataverse text formats
+            "LanguageTag", "Language", "Locale", // Power Fx usage
+            "MultilineText", "MultiLineText", "TextArea", // Dataverse text formats
+            "SinglelineText", "SingleLineText", // Dataverse text formats
+
+            // possible GUID data types
+            "UniqueIdentifier", "PrimaryKey", "Identifier",
+
+            // possible Booelan data types
+            "YesNo", "TrueFalse", "OnOff", // Dataverse choice
+
+            // possible location data types
+            "Geography", "Geolocation", "Location", "Coordinates", "GeoCoordinates", "GPS",
+
+            // first class code
+            "Function", "Action", "Subroutine", "Method", "Procedure",
+
+            // possible binary data types
+            "Blob", "Binary", "File", "Attachment", "Document", 
+            "Image", "Media", "Audio", "Video",
+        };
 
         private DefinedTypeResolver(IEnumerable<DefinedType> definedTypes, ReadOnlySymbolTable globalSymbols)
         {

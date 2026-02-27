@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -12,15 +13,15 @@ using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
     public class ParseTests : PowerFxTest
     {
-        private static readonly ReadOnlySymbolTable _primitiveTypes = ReadOnlySymbolTable.PrimitiveTypesTableInstance;
-
         [Theory]
         [InlineData("0")]
         [InlineData("-0")]
@@ -1123,7 +1124,7 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             var parseResult = UserDefinitions.Parse(script, parserOptions);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), UDTTestHelper.TestTypesWithNumberTypeIsFloat, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.Equal(udfCount, parseResult.UDFs.Count());
@@ -1154,7 +1155,7 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             var parseResult = UserDefinitions.Parse(script, parserOptions);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), UDTTestHelper.TestTypesWithNumberTypeIsFloat, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.Equal(udfCount, parseResult.UDFs.Count());
@@ -1181,7 +1182,7 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             var parseResult = UserDefinitions.Parse(script, parserOptions);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), UDTTestHelper.TestTypesWithNumberTypeIsFloat, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.Equal(validUDFCount, udfs.Count());

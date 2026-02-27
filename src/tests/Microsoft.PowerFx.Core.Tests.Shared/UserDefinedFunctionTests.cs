@@ -25,8 +25,6 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class UserDefinedFunctionTests : PowerFxTest
     {
-        private static readonly ReadOnlySymbolTable _primitiveTypes = ReadOnlySymbolTable.PrimitiveTypesTableInstance;
-
         [Theory]
 
         // without colon
@@ -74,7 +72,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var parseResult = UserDefinitions.Parse(script, parserOptions);
 
-            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes);
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat);
 
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), nameResolver, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
@@ -129,7 +127,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var parseResult = UserDefinitions.Parse(script, parserOptions);
 
-            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes);
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat);
 
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), nameResolver, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
@@ -161,7 +159,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var glue = new Glue2DocumentBinderGlue();
 
             var parseResult = UserDefinitions.Parse(udfScript, parserOptions);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), UDTTestHelper.TestTypesWithNumberTypeIsFloat, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             var texlFunctionSet = new TexlFunctionSet(udfs);
@@ -174,23 +172,14 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Mul(x:Number, y:DateTime): DateTime = x * y;", "(NumberToDateTime:d(MulNumbers:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo), DateTimeToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)))), Scope 0)")]
-        [InlineData("sTon(x:Text): Number = x;", "(Float:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
-        [InlineData("bTon(x:Boolean): Number = x;", "(BooleanToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
-        [InlineData("dateTon(x:Date): Number = x;", "(DateToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
-        [InlineData("timeTon(x:Time): Number = x;", "(TimeToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
-        [InlineData("dateTimeTon(x:DateTime): Number = x;", "(DateTimeToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+
+        // without numbers
         [InlineData("textToHyperlink(x:Text): Hyperlink = x;", "(TextToHyperlink:h(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
-        [InlineData("nTos(x:Number): Text = x;", "(NumberToText:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("bTos(x:Boolean): Text = x;", "(BooleanToText:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("dateTos(x:Date): Text = x;", "(Text:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("dateTimeTos(x:DateTime): Text = x;", "(Text:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("timeTos(x:Time): Text = x;", "(Text:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
-        [InlineData("nToBool(x:Number): Boolean = x;", "(NumberToBoolean:b(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("sToBool(x:Text): Boolean = x;", "(TextToBoolean:b(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
-        [InlineData("nToDateTime(x:Number): DateTime = x;", "(NumberToDateTime:d(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
-        [InlineData("nToDate(x:Number): Date = x;", "(NumberToDate:D(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
-        [InlineData("nToTime(x:Number): Time = x;", "(NumberToTime:T(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("sToDateTime(x:Text): DateTime = x;", "(DateTimeValue:d(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("sToDate(x:Text): Date = x;", "(DateValue:D(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("sToTime(x:Text): Time = x;", "(TimeValue:T(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
@@ -202,14 +191,70 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("dateToDateTime(x:Date): DateTime = x;", "(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo), Scope 0)")]
         [InlineData("textToGUID(x:Text): GUID = x;", "(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo), Scope 0)")]
         [InlineData("GUIDToText(x:GUID): Text = x;", "(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo), Scope 0)")]
-        public void TestCoercionWithUDFBody(string udfScript, string expectedIR)
+
+        // with Float
+        [InlineData("Mul(x:Float, y:DateTime): DateTime = x * y;", "(NumberToDateTime:d(MulNumbers:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo), DateTimeToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)))), Scope 0)")]
+        [InlineData("sTon(x:Text): Float = x;", "(Float:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("bTon(x:Boolean): Float = x;", "(BooleanToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("dateTon(x:Date): Float = x;", "(DateToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("timeTon(x:Time): Float = x;", "(TimeToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("dateTimeTon(x:DateTime): Float = x;", "(DateTimeToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nTos(x:Float): Text = x;", "(NumberToText:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToBool(x:Float): Boolean = x;", "(NumberToBoolean:b(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToDateTime(x:Float): DateTime = x;", "(NumberToDateTime:d(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToDate(x:Float): Date = x;", "(NumberToDate:D(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToTime(x:Float): Time = x;", "(NumberToTime:T(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+
+        // with Number, NumberIsFloat = true
+        [InlineData("Mul(x:Number, y:DateTime): DateTime = x * y;", "(NumberToDateTime:d(MulNumbers:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo), DateTimeToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)))), Scope 0)")]
+        [InlineData("sTon(x:Text): Number = x;", "(Float:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("bTon(x:Boolean): Number = x;", "(BooleanToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("dateTon(x:Date): Number = x;", "(DateToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("timeTon(x:Time): Number = x;", "(TimeToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("dateTimeTon(x:DateTime): Number = x;", "(DateTimeToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nTos(x:Number): Text = x;", "(NumberToText:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToBool(x:Number): Boolean = x;", "(NumberToBoolean:b(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToDateTime(x:Number): DateTime = x;", "(NumberToDateTime:d(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToDate(x:Number): Date = x;", "(NumberToDate:D(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToTime(x:Number): Time = x;", "(NumberToTime:T(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+
+        // with Decimal
+        [InlineData("Mul(x:Decimal, y:DateTime): DateTime = x * y;", "(DecimalToDateTime:d(MulDecimals:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo), DateTimeToDecimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)))), Scope 0)")]
+        [InlineData("sTon(x:Text): Decimal = x;", "(Decimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("bTon(x:Boolean): Decimal = x;", "(BooleanToDecimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("dateTon(x:Date): Decimal = x;", "(DateToDecimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("timeTon(x:Time): Decimal = x;", "(TimeToDecimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("dateTimeTon(x:DateTime): Decimal = x;", "(DateTimeToDecimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nTos(x:Decimal): Text = x;", "(DecimalToText:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToBool(x:Decimal): Boolean = x;", "(DecimalToBoolean:b(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToDateTime(x:Decimal): DateTime = x;", "(DecimalToDateTime:d(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToDate(x:Decimal): Date = x;", "(DecimalToDate:D(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+        [InlineData("nToTime(x:Decimal): Time = x;", "(DecimalToTime:T(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
+
+        // with Number, NumberIsFloat = false
+        [InlineData("Mul(x:Number, y:DateTime): DateTime = x * y;", "(DecimalToDateTime:d(MulDecimals:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo), DateTimeToDecimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)))), Scope 0)", false)]
+        [InlineData("sTon(x:Text): Number = x;", "(Decimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)", false)]
+        [InlineData("bTon(x:Boolean): Number = x;", "(BooleanToDecimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)", false)]
+        [InlineData("dateTon(x:Date): Number = x;", "(DateToDecimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)", false)]
+        [InlineData("timeTon(x:Time): Number = x;", "(TimeToDecimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)", false)]
+        [InlineData("dateTimeTon(x:DateTime): Number = x;", "(DateTimeToDecimal:w(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)", false)]
+        [InlineData("nTos(x:Number): Text = x;", "(DecimalToText:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)", false)]
+        [InlineData("nToBool(x:Number): Boolean = x;", "(DecimalToBoolean:b(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)", false)]
+        [InlineData("nToDateTime(x:Number): DateTime = x;", "(DecimalToDateTime:d(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)", false)]
+        [InlineData("nToDate(x:Number): Date = x;", "(DecimalToDate:D(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)", false)]
+        [InlineData("nToTime(x:Number): Time = x;", "(DecimalToTime:T(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)", false)]
+
+        public void TestCoercionWithUDFBody(string udfScript, string expectedIR, bool numberIsFloat = true)
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = false
+                AllowsSideEffects = false,
+                NumberIsFloat = numberIsFloat,
             };
 
-            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes);
+            var nameResolver = ReadOnlySymbolTable.NewDefault(
+                BuiltinFunctionsCore._library, 
+                numberIsFloat ? UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat : UDTTestHelper.TestTypesDictionaryWithNumberTypeIsDecimal);
             var glue = new Glue2DocumentBinderGlue();
 
             var parseResult = UserDefinitions.Parse(udfScript, parserOptions);
@@ -593,7 +638,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void Basic()
         {
-            var st1 = SymbolTable.WithPrimitiveTypes();
+            var st1 = SymbolTable.WithNamedTypes(UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat);
             st1.AddUserDefinedFunction("Foo1(x: Number): Number = x*2;");
             st1.AddUserDefinedFunction("Foo2(x: Number): Number = Foo1(x)+1;");
 
@@ -603,7 +648,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(FormulaType.Number, check.ReturnType);
 
             // A different symbol table can have same function name with different type.  
-            var st2 = SymbolTable.WithPrimitiveTypes();
+            var st2 = SymbolTable.WithNamedTypes(UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat);
             st2.AddUserDefinedFunction("Foo2(x: Number): Text = x;");
             check = engine.Check("Foo2(3)", symbolTable: st2);
             Assert.True(check.IsSuccess);
@@ -613,8 +658,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void DefineEmpty()
         {
-            // Empty symbol table doesn't get builtins. 
-            var st = SymbolTable.WithPrimitiveTypes();
+            // Empty symbol table doesn't get builtin functions. 
+            var st = SymbolTable.WithNamedTypes(UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat);
             st.AddUserDefinedFunction("Foo1(x: Number): Number = x;"); // ok 
             Assert.False(st.AddUserDefinedFunction("Foo2(x: Number): Number = Abs(x);").IsSuccess);
         }
@@ -626,7 +671,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var extra = new SymbolTable();
             extra.AddVariable("K1", FormulaType.Number);
 
-            var engine = new Engine();
+            var engine = new Engine(UDTTestHelper.TestTypesWithNumberTypeIsFloat);
             engine.AddUserDefinedFunction("Foo1(x: Number): Number = Abs(K1);", symbolTable: extra);
 
             var check = engine.Check("Foo1(3)");
@@ -634,19 +679,59 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(FormulaType.Number, check.ReturnType);
         }
 
-        [Fact]
-        public void TestUserDefinedFunctionCloning()
+        // By tracking the actual return type name's token for UDFs in the constructor for UserDefinedFunctio,
+        // we generate a better error message than just 'Number' for numeric type return value mismatches.
+        // This test verifies that the basic error message is correct.
+        [Theory]
+        [InlineData("F():Number = GUID();", "Number")]
+        [InlineData("F():Decimal = GUID();", "Decimal")]
+        [InlineData("F():Float = GUID();", "Float")]
+        public void TestUDFReturnTypeErrorMessages(string expression, string declaredType)
+        {
+            var parserOptions = new ParserOptions() { AllowsSideEffects = true };
+            var checkResult = new DefinitionsCheckResult()
+                                            .SetText(expression, parserOptions)
+                                            .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat));
+            var errors = checkResult.ApplyErrors();
+            Assert.NotEmpty(errors);
+            Assert.Contains(errors, x => x.MessageKey == "ErrUDF_ReturnTypeDoesNotMatch" &&
+                                         x.Message == $"The stated function return type '{declaredType}' does not match the return type of the function body 'GUID'.");
+        }
+
+        // By tracking the actual return type name's token for UDFs in the constructor for UserDefinedFunctio,
+        // we generate a better error message than just 'Number' for numeric type return value mismatches.
+        // This test verifies that UDF cloning, used by Canvas, carries the token through for the error message.
+        [Theory]
+
+        // no errors
+        [InlineData("Add(a: Number, b: Number):Number = a + b;", null)]
+        [InlineData("Add(a: Number, b: Number):Decimal = a + b;", null)]
+        [InlineData("Add(a: Number, b: Number):Float = a + b;", null)]
+        [InlineData("Add(a: Number, b: Number):Text = a + b;", null)]
+        [InlineData("Add(a: Decimal, b: Decimal):Number = a + b;", null)]
+        [InlineData("Add(a: Decimal, b: Decimal):Decimal = a + b;", null)]
+        [InlineData("Add(a: Decimal, b: Decimal):Float = a + b;", null)]
+        [InlineData("Add(a: Decimal, b: Decimal):Text = a + b;", null)]
+        [InlineData("Add(a: Float, b: Float):Number = a + b;", null)]
+        [InlineData("Add(a: Float, b: Float):Decimal = a + b;", null)]
+        [InlineData("Add(a: Float, b: Float):Float = a + b;", null)]
+        [InlineData("Add(a: Float, b: Float):Text = a + b;", null)]
+
+        // errors specific to declared return type
+        [InlineData("F():Number = GUID();", "Number")]
+        [InlineData("F():Decimal = GUID();", "Decimal")]
+        [InlineData("F():Float = GUID();", "Float")]
+
+        public void TestUserDefinedFunctionCloning(string script, string errorReturnType)
         {
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false
             };
 
-            var script = "Add(a: Number, b: Number):Number = a + b;";
-
             var parseResult = UserDefinitions.Parse(script, parserOptions);
 
-            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes);
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat);
 
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), nameResolver, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
@@ -660,12 +745,23 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Single(udfs);
 
             var udf = udfs.First();
-            var binding = udf.BindBody(ReadOnlySymbolTable.Compose(nameResolver, ReadOnlySymbolTable.NewDefault(texlFunctionSet)), glue, BindingConfig.Default);
-            var clonedFunc = func.WithBinding(nameResolver, glue, out binding);
+            var clonedFunc = func.WithBinding(ReadOnlySymbolTable.Compose(nameResolver, ReadOnlySymbolTable.NewDefault(texlFunctionSet)), glue, out var binding, BindingConfig.Default);
             Assert.NotNull(clonedFunc);
             Assert.NotNull(binding);
 
             Assert.NotEqual(func, clonedFunc);
+
+            if (errorReturnType != null)
+            {
+                Assert.True(binding.ErrorContainer.HasErrors());
+
+                Assert.Contains(binding.ErrorContainer.GetErrors(), x => x.MessageKey == "ErrUDF_ReturnTypeDoesNotMatch" &&
+                                   x.ShortMessage == $"The stated function return type '{errorReturnType}' does not match the return type of the function body 'GUID'.");
+            }
+            else
+            {
+                Assert.False(binding.ErrorContainer.HasErrors());
+            }   
         }
 
         [Theory]
@@ -692,7 +788,7 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             var parseResult = UserDefinitions.Parse(formula, parserOptions);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), UDTTestHelper.TestTypesWithNumberTypeIsFloat, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.Equal(nfCount, parseResult.NamedFormulas.Count());
@@ -715,7 +811,7 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             var parseResult = UserDefinitions.Parse(formula, parserOptions);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), UDTTestHelper.TestTypesWithNumberTypeIsFloat, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.Equal(nfCount, parseResult.NamedFormulas.Count());
@@ -725,12 +821,11 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Foo(x: Number): None = Abs(x);")]
-        [InlineData("Foo(x: None): Number = Abs(x);")]
-        [InlineData("Foo(x: Decimal): Number =  Abs(x);")]
-        [InlineData("Foo(x: Number): Decimal =  Abs(x);")]
-        [InlineData("Foo(x: DateTimeTZInd): Decimal =  Abs(x);")]
-        [InlineData("Foo(x: Number): DateTimeTZInd =  Abs(x);")]
+        [InlineData("Foo(x: Text): None = Text(x);")] // Blank should never be included in TestTypesTable
+        [InlineData("Foo(x: None): Text = Text(x);")] // Blank should never be included in TestTypesTable
+        [InlineData("Foo(x: Text): Number = Value(x);")] // Number not included in TestTypesTable, must be added in as an alias
+        [InlineData("Foo(x: Number): Text = Text(x);")] // Number not included in TestTypesTable, must be added in as an alias
+        [InlineData("Foo(x: Void): Text =  Text(x);")] // Void is not allowed as a parameter
         public void TestUDFsWithRestrictedTypes(string script)
         {
             var parserOptions = new ParserOptions()
@@ -739,10 +834,10 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             var parseResult = UserDefinitions.Parse(script, parserOptions);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), UDTTestHelper.TestTypesWithNoNumberType, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            Assert.Contains(errors, x => x.MessageKey == "ErrUDF_InvalidReturnType" || x.MessageKey == "ErrUDF_InvalidParamType");
+            Assert.Contains(errors, x => x.MessageKey == "ErrUDF_UnknownType");
         }
 
         [Theory]
@@ -756,7 +851,7 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             var parseResult = UserDefinitions.Parse(script, parserOptions);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), UDTTestHelper.TestTypesWithNumberTypeIsFloat, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             if (expectedError)
@@ -788,7 +883,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 var script = $"{func}():Boolean = true;";
                 var parseResult = UserDefinitions.Parse(script, parserOptions);
-                var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+                var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), UDTTestHelper.TestTypesWithNumberTypeIsFloat, out var errors);
                 errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
                 if (!restrictedUDFNames.Contains(func))
                 {
@@ -824,7 +919,7 @@ namespace Microsoft.PowerFx.Core.Tests
             string script = $"test({string.Join(", ", parameters)}):Number = 1;";
 
             var parseResult = UserDefinitions.Parse(script, parserOptions);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), UDTTestHelper.TestTypesWithNumberTypeIsFloat, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             if (errorExpected)
@@ -850,7 +945,7 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             var parseResult = UserDefinitions.Parse(script, parserOptions);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), UDTTestHelper.TestTypesWithNumberTypeIsFloat, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.True(errors.Count() == 0);
@@ -864,7 +959,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 AllowsSideEffects = true,
             };
-            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes);
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat);
 
             var parseResult = UserDefinitions.Parse(script, parserOptions);
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), nameResolver, out var errors);
@@ -886,7 +981,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             SymbolTable symbolTable = new SymbolTable();
 
-            var add1 = symbolTable.AddUserDefinedFunction(script, extraSymbolTable: ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            var add1 = symbolTable.AddUserDefinedFunction(script, extraSymbolTable: ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat));
             Assert.True(add1.IsSuccess);
             if (shadowWarning)
             {
@@ -899,7 +994,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 Assert.True(!add1.Errors.Any());
             }
 
-            var add2 = symbolTable.AddUserDefinedFunction(script, extraSymbolTable: ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            var add2 = symbolTable.AddUserDefinedFunction(script, extraSymbolTable: ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat));
             Assert.False(add2.IsSuccess);
             Assert.True(add2.Errors.Count() == 1 &&
                 add2.Errors.Any(error => error.MessageKey == "ErrUDF_FunctionAlreadyDefined" &&
@@ -916,7 +1011,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             SymbolTable symbolTable = new SymbolTable();
 
-            var add1 = symbolTable.AddUserDefinedFunction(script, extraSymbolTable: ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+            var add1 = symbolTable.AddUserDefinedFunction(script, extraSymbolTable: ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat));
             Assert.False(add1.IsSuccess);
             if (shadowWarning)
             {
@@ -935,37 +1030,94 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
-        public void TestUDFRestrictedTypes()
+        public void TestUDFRestrictedReturnTypesNonImperative()
         {
             var parserOptions = new ParserOptions();
 
-            foreach (var type in FormulaType.PrimitiveTypes)
+            List<string> typeNames = UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat.Select(kv => kv.Key.Value).ToList();
+
+            foreach (var type in DefinedTypeResolver._restrictedTypeNames)
             {
-                if (UserDefinitions.RestrictedTypes.Contains(type.Value._type))
+                var script = $"func():{type} = Blank();"; 
+                var parseResult = UserDefinitions.Parse(script, parserOptions);
+                var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), UDTTestHelper.TestTypesWithNumberTypeIsFloat, out var errors);
+                errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+                if (typeNames.Contains(type))
                 {
-                    var script = $"func():{type.Key} = Blank();";
-                    var parseResult = UserDefinitions.Parse(script, parserOptions);
-                    var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
-                    errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
-                    Assert.Contains(errors, x => x.MessageKey == "ErrUDF_InvalidReturnType");
+                    Assert.Empty(errors);
+                }
+                else if (type == "Void")
+                {
+                    Assert.Contains(errors, x => x.MessageKey == "ErrUDF_NonImperativeVoidType");
+                }
+                else
+                {
+                    Assert.Contains(errors, x => x.MessageKey == "ErrUDF_UnknownType");
                 }
             }
         }
 
         [Fact]
-        public void TestUDFRestrictedParameterTypes()
+        public void TestUDFRestrictedTypeNamesCoverBuiltInNames()
+        {
+            List<string> typeNames = UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat.Select(kv => kv.Key.Value).ToList();
+            typeNames.Add("Void");
+            typeNames.Add("None");
+            typeNames.Add("Blank");
+
+            foreach (var type in typeNames)
+            {
+                Assert.Contains(type, DefinedTypeResolver._restrictedTypeNames);
+            }
+        }
+
+        [Fact]
+        public void TestUDFRestrictedReturnTypesImperative()
+        {
+            var parserOptions = new ParserOptions() { AllowsSideEffects = true };
+
+            List<string> typeNames = UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat.Select(kv => kv.Key.Value).ToList();
+
+            foreach (var type in DefinedTypeResolver._restrictedTypeNames)
+            {
+                var script = $"func():{type} = {{ Blank() }};";
+                var parseResult = UserDefinitions.Parse(script, parserOptions);
+                var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), UDTTestHelper.TestTypesWithNumberTypeIsFloat, out var errors);
+                errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+                if (typeNames.Contains(type) || type == "Void")
+                {
+                    Assert.Empty(errors);
+                }
+                else
+                {
+                    Assert.Contains(errors, x => x.MessageKey == "ErrUDF_UnknownType");
+                }
+            }
+        }
+
+        [Fact]
+        public void TestUDFRestrictedParamTypes()
         {
             var parserOptions = new ParserOptions();
 
-            foreach (var type in FormulaType.PrimitiveTypes)
+            List<string> typeNames = UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat.Select(kv => kv.Key.Value).ToList();
+
+            foreach (var type in DefinedTypeResolver._restrictedTypeNames)
             {
-                if (UserDefinitions.RestrictedParameterTypes.Contains(type.Value._type))
+                var script = $"func(x:{type}):Boolean = Blank();";
+                var parseResult = UserDefinitions.Parse(script, parserOptions);
+                var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), UDTTestHelper.TestTypesWithNumberTypeIsFloat, out var errors);
+                errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+                if (typeNames.Contains(type))
                 {
-                    var script = $"func(x: {type.Key}): Number = 42;";
-                    var parseResult = UserDefinitions.Parse(script, parserOptions);
-                    var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
-                    errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
-                    Assert.Contains(errors, x => x.MessageKey == "ErrUDF_InvalidParamType");
+                    Assert.Empty(errors);
+                }
+                else
+                {
+                    Assert.Contains(errors, x => x.MessageKey == "ErrUDF_UnknownType");
                 }
             }
         }
@@ -979,7 +1131,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var parserOptions = new ParserOptions();
             var checkResult = new DefinitionsCheckResult()
                                             .SetText(expression)
-                                            .SetBindingInfo(_primitiveTypes);
+                                            .SetBindingInfo(UDTTestHelper.TestTypesWithNumberTypeIsFloat);
             var errors = checkResult.ApplyErrors();
             Assert.Contains(errors, e => e.MessageKey.Contains("ErrUDF_NonImperativeVoidType"));
         }
@@ -1005,25 +1157,25 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var checkResultDot = new DefinitionsCheckResult()
                                .SetText(expressionDot, parserOptionsDot)
-                               .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+                               .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat));
             var errorsDot = checkResultDot.ApplyErrors();
             Assert.Empty(errorsDot);
 
             var checkResultCommaFail = new DefinitionsCheckResult()
                                 .SetText(expressionDot, parserOptionsComma)
-                                .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+                                .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat));
             var errorsCommaFail = checkResultCommaFail.ApplyErrors();
             Assert.NotEmpty(errorsCommaFail);
 
             var checkResultComma = new DefinitionsCheckResult()
                                  .SetText(expressionComma, parserOptionsComma)
-                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat));
             var errorsComma = checkResultComma.ApplyErrors();
             Assert.Empty(errorsComma);
 
             var checkResultDotFail = new DefinitionsCheckResult()
                                  .SetText(expressionComma, parserOptionsDot)
-                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat));
             var errorsDotFail = checkResultDotFail.ApplyErrors();
             Assert.NotEmpty(errorsDotFail);
         }
@@ -1036,7 +1188,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("f():Number = First(Mod([1,2,3],1)).Result;")] // ConsistentOneColumnTableResult
         public void TestUDFBodyFeaturesSupport(string expression)
         {
-            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes);
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat);
 
             var checkResultV1 = new DefinitionsCheckResult(Features.PowerFxV1)
                                             .SetText(expression)
@@ -1051,7 +1203,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var errorsNone = checkResultNone.ApplyErrors();
             Assert.Empty(errorsNone);
         }
-        
+
         [Theory]
         
         [InlineData("F():Number = 5;", true)]
@@ -1069,7 +1221,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var library = new TexlFunctionSet();
             library.Add(new BehaviorFunction());
             library.Add(new Texl.Builtins.PiFunction());
-            var nameResolver = ReadOnlySymbolTable.NewDefault(library, FormulaType.PrimitiveTypes);
+            var nameResolver = ReadOnlySymbolTable.NewDefault(library, UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat);
 
             var parserOptions = new ParserOptions() { AllowsSideEffects = true };
 
@@ -1087,6 +1239,20 @@ namespace Microsoft.PowerFx.Core.Tests
                 Assert.NotEmpty(errors);
                 Assert.Contains(errors, x => x.MessageKey == "ErrBehaviorFunctionInDataUDF");
             }
+        }
+
+        [Theory]
+
+        [InlineData("F():Float = Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1);", false)]
+        [InlineData("F():Float = Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1) * Date(9999,1,1);", true)]
+        public void NumberIsFloatPassedToConfig(string expression, bool numberIsFloat)
+        {
+            var parserOptions = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = numberIsFloat };
+
+            var checkResult = new DefinitionsCheckResult()
+                                            .SetText(expression, parserOptions);
+
+            Assert.Equal(checkResult.UDFBindingConfig.NumberIsFloat, numberIsFloat);
         }
 
         private class BehaviorFunction : TexlFunction

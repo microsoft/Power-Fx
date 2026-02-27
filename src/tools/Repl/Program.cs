@@ -158,7 +158,7 @@ namespace Microsoft.PowerFx
 
             config.AddOptionSet(optionsSet);
 
-            return new RecalcEngine(config);
+            return new RecalcEngine(config, _numberIsFloat);
         }
 
         public static void Main()
