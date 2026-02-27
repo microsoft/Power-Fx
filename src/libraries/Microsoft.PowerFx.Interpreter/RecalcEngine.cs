@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx
         /// <param name="powerFxConfig"></param>
         /// <param name="numberIsFloat">
         /// There are three NumberIsFloat flags that are related, but independent:
-        /// 1. numberIsFloat paramter here, which impacts the symbol table in what type name
+        /// 1. numberIsFloat parameter here, which impacts the symbol table in what type name
         ///    "Number" should alias to (Float or Decimal) for use by UDFs and UDTs.
         /// 2. ParserOptions.NumberIsFloat, which impacts parsing of literals only.
         /// 3. BindOptions.NumberIsFloat, which impacts type coercion during binding.
@@ -560,3 +560,4 @@ namespace Microsoft.PowerFx
         }
     } // end class RecalcEngine
 }
+
