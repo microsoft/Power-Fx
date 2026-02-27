@@ -560,4 +560,3 @@ namespace Microsoft.PowerFx
         }
     } // end class RecalcEngine
 }
-
