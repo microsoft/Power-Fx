@@ -145,7 +145,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var s1 = suggestions.Suggestions.OfType<IntellisenseSuggestion>();
 
             Assert.NotNull(s1);
-            Assert.Equal(8, s1.Count());
+            Assert.Equal(9, s1.Count());
 
             var s = s1.FirstOrDefault(su => su.Text == varName);
 

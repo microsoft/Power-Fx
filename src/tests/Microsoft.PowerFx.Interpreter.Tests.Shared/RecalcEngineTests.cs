@@ -2365,5 +2365,81 @@ namespace Microsoft.PowerFx.Tests
             _updates.Append($"{name}-->{str};");
         }
         #endregion
+
+        [Theory]
+        [InlineData("Map([1,2] As A, [10,20,30] As B, A.Value + B.Value, MapLength.First)")]
+        [InlineData("Map([1,2,3] As A, [10,20] As B, A.Value + Coalesce(B.Value, 0), MapLength.First)")]
+        [InlineData("Map([1,2,3] As A, [4,5,6] As B, A.Value + B.Value, MapLength.First)")]
+        public void MapLengthFirst(string expression)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig(Features.PowerFxV1));
+
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess, string.Join(", ", check.Errors));
+
+            var result = engine.Eval(expression);
+            var table = Assert.IsAssignableFrom<TableValue>(result);
+            var rows = table.Rows.ToList();
+
+            // MapLength.First uses the length of the first table argument
+            if (expression.Contains("[1,2] As A"))
+            {
+                Assert.Equal(2, rows.Count);
+            }
+            else
+            {
+                Assert.Equal(3, rows.Count);
+            }
+        }
+
+        [Fact]
+        public void MapLengthFirst_SortedNamesWithSequenceIndex()
+        {
+            var engine = new RecalcEngine(new PowerFxConfig(Features.PowerFxV1));
+
+            // Sort a list of string names alphabetically and pair with indices from Sequence(1000).
+            // MapLength.First drives the output length from the first table (4 sorted names),
+            // truncating the much larger Sequence(1000) to match.
+            // Both tables produce string-typed Value columns to avoid the mixed-type column issue.
+            var expression = "Map(Sort([\"Charlie\", \"Alice\", \"Bob\", \"Diana\"], Value) As Name, ForAll(Sequence(1000), Text(Value)) As Idx, {SortedName: Name.Value, Index: Idx.Value}, MapLength.First)";
+
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess, string.Join(", ", check.Errors));
+
+            var result = engine.Eval(expression);
+            var table = Assert.IsAssignableFrom<TableValue>(result);
+            var rows = table.Rows.ToList();
+
+            // MapLength.First uses the sorted names list length (4), not Sequence(1000)
+            Assert.Equal(4, rows.Count);
+
+            // Verify each row has the expected fields with string values
+            for (int i = 0; i < rows.Count; i++)
+            {
+                var record = rows[i].Value;
+                var sortedName = Assert.IsAssignableFrom<StringValue>(record.GetField("SortedName"));
+                var index = Assert.IsAssignableFrom<StringValue>(record.GetField("Index"));
+
+                // Index values should be sequential from "1" to "4"
+                Assert.Equal((i + 1).ToString(), index.Value);
+            }
+
+            // Verify the sorted names are alphabetically ordered
+            var names = rows.Select(r => ((StringValue)r.Value.GetField("SortedName")).Value).ToList();
+            Assert.Equal(new[] { "Alice", "Bob", "Charlie", "Diana" }, names);
+        }
+
+        [Fact]
+        public void MapRejectsBehaviorFunctions_MultiTable()
+        {
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+            engine.UpdateVariable("x", FormulaValue.New(0m));
+
+            // Set in multi-table lambda is rejected
+            var check = engine.Check("Map([1,2,3] As A, [4,5,6] As B, Set(x, A.Value + B.Value))");
+            Assert.False(check.IsSuccess);
+        }
     }
 }

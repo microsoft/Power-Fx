@@ -619,8 +619,37 @@ namespace Microsoft.PowerFx.Functions
         // Unlike ForAll_UO, Map_UO keeps errors in the result table instead of combining them.
         public static async ValueTask<FormulaValue> Map_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
+            // Detect single vs multi-UO mode.
+            // Single-UO: args[0] is UntypedObjectValue, args[1] is LambdaFormulaValue
+            // Multi-UO: N UntypedObjectValues, lambda, N scope name strings, MapLength string
+            if (args.Length >= 2 && args[0] is UntypedObjectValue && args[1] is LambdaFormulaValue)
+            {
+                return await MapSingleTable_UO(runner, context, irContext, args).ConfigureAwait(false);
+            }
+
+            return await MapMultiTable_UO(runner, context, irContext, args).ConfigureAwait(false);
+        }
+
+        private static async ValueTask<FormulaValue> MapSingleTable_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
             var arg0 = (UntypedObjectValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
+
+            // Validate that the untyped object is an array
+            if (arg0.Impl.Type == FormulaType.Blank)
+            {
+                return new BlankValue(irContext);
+            }
+
+            if (!(arg0.Impl.Type is ExternalType et && (et.Kind == ExternalTypeKind.Array || et.Kind == ExternalTypeKind.ArrayAndObject)))
+            {
+                return new ErrorValue(irContext, new ExpressionError()
+                {
+                    ResourceKey = RuntimeStringResources.ErrUntypedObjectNotArray,
+                    Span = irContext.SourceContext,
+                    Kind = ErrorKind.InvalidArgument
+                });
+            }
 
             var items = new List<DValue<UntypedObjectValue>>();
 
@@ -647,8 +676,139 @@ namespace Microsoft.PowerFx.Functions
                 rows.Add(await row.ConfigureAwait(false));
             }
 
-            // Unlike ForAll_UO, Map_UO does not combine errors - it keeps them in the result table
-            // This is the key difference: errors become error values in individual rows
+            if (irContext.ResultType is Types.Void)
+            {
+                return new VoidValue(irContext);
+            }
+
+            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
+        }
+
+        private static async ValueTask<FormulaValue> MapMultiTable_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            // Parse args: N UntypedObjectValues, lambda, N scope name strings, MapLength string
+            var lambdaIndex = -1;
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (args[i] is LambdaFormulaValue)
+                {
+                    lambdaIndex = i;
+                    break;
+                }
+            }
+
+            if (lambdaIndex < 0)
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+
+            var tableCount = lambdaIndex;
+            var lambda = (LambdaFormulaValue)args[lambdaIndex];
+
+            // Get scope names from ordered text args (one per table, matching table order)
+            var scopeNames = new List<string>();
+            for (int i = 0; i < tableCount; i++)
+            {
+                scopeNames.Add(((StringValue)args[lambdaIndex + 1 + i]).Value);
+            }
+
+            var mapLengthStr = ((StringValue)args[lambdaIndex + 1 + tableCount]).Value;
+
+            // Get array implementations and compute lengths via O(1) GetArrayLength()
+            var impls = new IUntypedObject[tableCount];
+            var lengths = new int[tableCount];
+            for (int i = 0; i < tableCount; i++)
+            {
+                if (args[i] is not UntypedObjectValue uov)
+                {
+                    return CommonErrors.RuntimeTypeMismatch(irContext);
+                }
+
+                if (uov.Impl.Type == FormulaType.Blank)
+                {
+                    return new BlankValue(irContext);
+                }
+
+                if (!(uov.Impl.Type is ExternalType et && (et.Kind == ExternalTypeKind.Array || et.Kind == ExternalTypeKind.ArrayAndObject)))
+                {
+                    return new ErrorValue(irContext, new ExpressionError()
+                    {
+                        ResourceKey = RuntimeStringResources.ErrUntypedObjectNotArray,
+                        Span = irContext.SourceContext,
+                        Kind = ErrorKind.InvalidArgument
+                    });
+                }
+
+                impls[i] = uov.Impl;
+                lengths[i] = impls[i].GetArrayLength();
+            }
+
+            // Determine result length based on MapLength mode
+            int resultLength;
+
+            switch (mapLengthStr)
+            {
+                case "shortest":
+                    resultLength = lengths.Min();
+                    break;
+                case "longest":
+                    resultLength = lengths.Max();
+                    break;
+                case "first":
+                    resultLength = lengths.Length > 0 ? lengths[0] : 0;
+                    break;
+                case "equal":
+                default:
+                    if (lengths.Distinct().Count() > 1)
+                    {
+                        return new ErrorValue(irContext, new ExpressionError()
+                        {
+                            Message = "All tables passed to Map must have the same number of rows when using MapLength.Equal.",
+                            Span = irContext.SourceContext,
+                            Kind = ErrorKind.InvalidArgument
+                        });
+                    }
+
+                    resultLength = lengths.Length > 0 ? lengths[0] : 0;
+                    break;
+            }
+
+            // Iterate row-by-row using index access
+            var rows = new List<FormulaValue>();
+            for (int rowIdx = 0; rowIdx < resultLength; rowIdx++)
+            {
+                runner.CheckCancel();
+
+                var fields = new List<NamedValue>();
+                for (int tIdx = 0; tIdx < tableCount; tIdx++)
+                {
+                    FormulaValue rowValue;
+                    if (rowIdx < lengths[tIdx])
+                    {
+                        var element = impls[tIdx][rowIdx];
+                        if (element == null || element.Type == FormulaType.Blank)
+                        {
+                            rowValue = new BlankValue(IRContext.NotInSource(FormulaType.Blank));
+                        }
+                        else
+                        {
+                            rowValue = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), element);
+                        }
+                    }
+                    else
+                    {
+                        // "longest" mode: exhausted array gets Blank
+                        rowValue = new BlankValue(IRContext.NotInSource(FormulaType.Blank));
+                    }
+
+                    fields.Add(new NamedValue(scopeNames[tIdx], rowValue));
+                }
+
+                var scopeRecord = FormulaValue.NewRecordFromFields(fields);
+                var childContext = context.SymbolContext.WithScopeValues(scopeRecord);
+                var result = await lambda.EvalInRowScopeAsync(context.NewScope(childContext)).AsTask().ConfigureAwait(false);
+                rows.Add(result);
+            }
 
             if (irContext.ResultType is Types.Void)
             {

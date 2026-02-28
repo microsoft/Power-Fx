@@ -1,0 +1,11 @@
+#setup: PowerFxV1CompatibilityRules
+
+// ****************** Map does NOT allow Void-returning formulas ******************
+// Map is a pure functional map operation and rejects Void return types
+// Void can occur when If/Switch branches have incompatible types (e.g., [] vs {})
+
+>> Map([1], If(false,[],{}))
+Errors: Error 0-3: The function 'Map' has some invalid arguments.
+
+>> Map([1,2,3], If(false,[],{}))
+Errors: Error 0-3: The function 'Map' has some invalid arguments.

@@ -44,6 +44,16 @@ Errors: Error 0-3: The function 'Map' has some invalid arguments.|Error 17-29: T
 >> Map(Sequence(3), Set(x,Value); x)
 Errors: Error 29-30: The second argument of Map cannot include behavior functions. Use ForAll instead for imperative logic.
 
+// ************** Multi-table Map with mutation functions ******************
+
+// Collect in multi-table lambda
+>> Map([1,2,3] As A, [4,5,6] As B, Collect(t, {Value: A.Value + B.Value}))
+Errors: Error 32-70: The second argument of Map cannot include behavior functions. Use ForAll instead for imperative logic.
+
+// Set in multi-table lambda (Set returns Void, so also get invalid args error)
+>> Map([1,2,3] As A, [4,5,6] As B, Set(x, A.Value + B.Value))
+Errors: Error 0-3: The function 'Map' has some invalid arguments.|Error 32-57: The second argument of Map cannot include behavior functions. Use ForAll instead for imperative logic.
+
 // ************** Void lambda ******************
 
 >> ForAll(Sequence(5), Set(x,Value)) // return value is actually Void, testing infrastucture returns change to x

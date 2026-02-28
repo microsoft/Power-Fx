@@ -605,6 +605,37 @@ Table({Value:11},{Value:22},{Value:30})
 >> Map([1,2,3] As A, [10,20] As B, {AVal: A.Value, BVal: B.Value}, MapLength.Longest)
 Table({AVal:1,BVal:10},{AVal:2,BVal:20},{AVal:3,BVal:Blank()})
 
+// ****************** MapLength.First ******************
+
+// First table is shorter - truncates to first table's length
+>> Map([1,2] As A, [10,20,30] As B, A.Value + B.Value, MapLength.First)
+Table({Value:11},{Value:22})
+
+// First table is longer - pads shorter tables with Blank
+>> Map([1,2,3] As A, [10,20] As B, A.Value + Coalesce(B.Value, 0), MapLength.First)
+Table({Value:11},{Value:22},{Value:3})
+
+// Equal lengths work normally
+>> Map([1,2,3] As A, [4,5,6] As B, A.Value + B.Value, MapLength.First)
+Table({Value:5},{Value:7},{Value:9})
+
+// First table is empty -> empty result
+>> Map(Sequence(0) As A, [10,20,30] As B, B.Value, MapLength.First)
+Table()
+
+// Record output showing Blank fields from exhausted second table
+>> Map([1,2,3] As A, [10] As B, {AVal: A.Value, BVal: B.Value}, MapLength.First)
+Table({AVal:1,BVal:10},{AVal:2,BVal:Blank()},{AVal:3,BVal:Blank()})
+
+// Three tables - uses length of first table
+>> Map([1,2] As A, [10,20,30] As B, [100,200,300] As C, A.Value + Coalesce(B.Value, 0) + Coalesce(C.Value, 0), MapLength.First)
+Table({Value:111},{Value:222})
+
+// Sort names and pair with indices from Sequence(1000) - output length matches the sorted names list
+// ForAll wraps Sequence to produce string Value columns matching the sorted names table type
+>> Map(Sort(["Charlie", "Alice", "Bob", "Diana"], Value) As Name, ForAll(Sequence(1000), Text(Value)) As Idx, {SortedName: Name.Value, Index: Idx.Value}, MapLength.First)
+Table({Index:"1",SortedName:"Alice"},{Index:"2",SortedName:"Bob"},{Index:"3",SortedName:"Charlie"},{Index:"4",SortedName:"Diana"})
+
 // ****************** Error handling in multi-table Map ******************
 
 // Division by zero in multi-table lambda - errors in individual rows
@@ -633,20 +664,99 @@ Errors: Error 33-39: MapLength can only be used with multiple tables. Use 'As' t
 
 // Invalid MapLength value (non-enum argument)
 >> Map([1,2,3] As A, [4,5,6] As B, A.Value + B.Value, "invalid")
-Errors: Error 51-60: Invalid MapLength argument. Use MapLength.Equal, MapLength.Shortest, or MapLength.Longest.
+Errors: Error 51-60: Invalid MapLength argument. Use MapLength.Equal, MapLength.Shortest, MapLength.Longest, or MapLength.First.
 
 // ****************** Map does NOT allow Void-returning formulas ******************
 // Map is a pure functional map operation and rejects Void return types
 // Void can occur when If/Switch branches have incompatible types (e.g., [] vs {})
 
->> Map([1], If(false,[],{}))
-Errors: Error 0-3: The function 'Map' has some invalid arguments.
-
->> Map([1,2,3], If(false,[],{}))
-Errors: Error 0-3: The function 'Map' has some invalid arguments.
+// Map([1], If(false,[],{})) has been moved to V1Compat and V1CompatDisabled varients, as it does not return a Void in pre-V1
 
 // Even though the expression would never evaluate to Void at runtime (false condition),
 // the type checker determines the return type is Void and rejects it
 
 >> Map([1,2], If(Value = 1, Value * 2, {Result: Value}))
-Errors: Error 0-3: The function 'Map' has some invalid arguments.|Error 14-55: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
+Errors: Error 0-3: The function 'Map' has some invalid arguments.|Error 11-52: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
+
+// Multi-table with different Value column types (Number vs String) - scope name ordering must be correct
+>> Map(Sequence(10) As Int, Map(Sequence(10),Char(Value+64)) As Alpha, {Int: Int.Value, Alpha: Alpha.Value})
+Table({Alpha:"A",Int:1},{Alpha:"B",Int:2},{Alpha:"C",Int:3},{Alpha:"D",Int:4},{Alpha:"E",Int:5},{Alpha:"F",Int:6},{Alpha:"G",Int:7},{Alpha:"H",Int:8},{Alpha:"I",Int:9},{Alpha:"J",Int:10})
+
+>> Map(Sequence(10) As Int, Map(Sequence(9),Char(Value+64)) As Alpha, ["I","II","III","IV","V","VI","VII","VIII","IX","X","XI"] As Roman, Map(Sequence(8),Date(1,1,Value)) As Date, Map(Sequence(11),Time(1,1,Value)) As Time, {Int: Int.Value, Alpha: Alpha.Value, Roman: Roman.Value, Date: Date.Value, Time: Time.Value}, MapLength.Longest )
+Table({Alpha:"A",Date:Date(1,1,1),Int:1,Roman:"I",Time:Time(1,1,1,0)},{Alpha:"B",Date:Date(1,1,2),Int:2,Roman:"II",Time:Time(1,1,2,0)},{Alpha:"C",Date:Date(1,1,3),Int:3,Roman:"III",Time:Time(1,1,3,0)},{Alpha:"D",Date:Date(1,1,4),Int:4,Roman:"IV",Time:Time(1,1,4,0)},{Alpha:"E",Date:Date(1,1,5),Int:5,Roman:"V",Time:Time(1,1,5,0)},{Alpha:"F",Date:Date(1,1,6),Int:6,Roman:"VI",Time:Time(1,1,6,0)},{Alpha:"G",Date:Date(1,1,7),Int:7,Roman:"VII",Time:Time(1,1,7,0)},{Alpha:"H",Date:Date(1,1,8),Int:8,Roman:"VIII",Time:Time(1,1,8,0)},{Alpha:"I",Date:Blank(),Int:9,Roman:"IX",Time:Time(1,1,9,0)},{Alpha:Blank(),Date:Blank(),Int:10,Roman:"X",Time:Time(1,1,10,0)},{Alpha:Blank(),Date:Blank(),Int:Blank(),Roman:"XI",Time:Time(1,1,11,0)})
+
+// ****************** Multi-table Map with UntypedObject (ParseJSON) ******************
+
+// Two UO arrays - element-wise addition
+>> Map(ParseJSON("[1,2,3]") As A, ParseJSON("[4,5,6]") As B, Value(A) + Value(B))
+Table({Value:5},{Value:7},{Value:9})
+
+// Two UO arrays - string concatenation
+>> Map(ParseJSON("[""hello"",""good""]") As A, ParseJSON("["" world"","" morning""]") As B, Text(A) & Text(B))
+Table({Value:"hello world"},{Value:"good morning"})
+
+// Three UO arrays combining values
+>> Map(ParseJSON("[1,2]") As A, ParseJSON("[10,20]") As B, ParseJSON("[100,200]") As C, Value(A) + Value(B) + Value(C))
+Table({Value:111},{Value:222})
+
+// Record output from multi-UO lambda
+>> Map(ParseJSON("[1,2,3]") As A, ParseJSON("[4,5,6]") As B, {Sum: Value(A) + Value(B), Product: Value(A) * Value(B)})
+Table({Product:4,Sum:5},{Product:10,Sum:7},{Product:18,Sum:9})
+
+// ****************** Multi-UO MapLength.Equal (default) ******************
+
+// Equal lengths work normally
+>> Map(ParseJSON("[1,2,3]") As A, ParseJSON("[4,5,6]") As B, Value(A) + Value(B), MapLength.Equal)
+Table({Value:5},{Value:7},{Value:9})
+
+// Unequal lengths with default (Equal) -> runtime error
+>> Map(ParseJSON("[1,2,3]") As A, ParseJSON("[4,5]") As B, Value(A) + Value(B))
+Error({Kind:ErrorKind.InvalidArgument})
+
+// ****************** Multi-UO MapLength.Shortest ******************
+
+// Truncates to shortest array
+>> Map(ParseJSON("[1,2,3]") As A, ParseJSON("[4,5]") As B, Value(A) + Value(B), MapLength.Shortest)
+Table({Value:5},{Value:7})
+
+// Single-element shortest
+>> Map(ParseJSON("[1,2,3]") As A, ParseJSON("[10]") As B, Value(A) + Value(B), MapLength.Shortest)
+Table({Value:11})
+
+// ****************** Multi-UO MapLength.Longest ******************
+
+// Pads shorter arrays with Blank
+>> Map(ParseJSON("[1,2,3]") As A, ParseJSON("[10,20]") As B, Value(A) + Coalesce(Value(B), 0), MapLength.Longest)
+Table({Value:11},{Value:22},{Value:3})
+
+// ****************** Multi-UO MapLength.First ******************
+
+// First array is shorter - truncates to first array's length
+>> Map(ParseJSON("[1,2]") As A, ParseJSON("[10,20,30]") As B, Value(A) + Value(B), MapLength.First)
+Table({Value:11},{Value:22})
+
+// First array is longer - pads shorter arrays with Blank
+>> Map(ParseJSON("[1,2,3]") As A, ParseJSON("[10,20]") As B, Value(A) + Coalesce(Value(B), 0), MapLength.First)
+Table({Value:11},{Value:22},{Value:3})
+
+// ****************** Multi-UO with JSON objects ******************
+
+// Extract fields from parallel object arrays
+>> Map(ParseJSON("[{""name"":""Alice""},{""name"":""Bob""}]") As Person, ParseJSON("[90,85]") As Score, {Name: Text(Person.name), Grade: If(Value(Score) >= 90, "A", "B")})
+Table({Grade:"A",Name:"Alice"},{Grade:"B",Name:"Bob"})
+
+// ****************** Multi-UO error handling ******************
+
+// Division by zero in multi-UO lambda - errors in individual rows
+>> Map(ParseJSON("[1,0,3]") As A, ParseJSON("[10,20,30]") As B, Value(B) / Value(A))
+Table({Value:10},{Value:Error({Kind:ErrorKind.Div0})},{Value:10})
+
+// ****************** Multi-UO compile-time errors ******************
+
+// Multi-UO without As on all tables
+>> Map(ParseJSON("[1,2,3]") As A, ParseJSON("[4,5,6]"), Value(A))
+Errors: Error 59-60: Name isn't valid. 'A' isn't recognized.|Error 53-58: The function 'Value' has some invalid arguments.|Error 31-51: When using Map with multiple tables, all table arguments must use 'As' to provide unique names.|Error 0-3: The function 'Map' has some invalid arguments.
+
+// MapLength is not allowed with single UO table
+>> Map(ParseJSON("[1,2,3]"), Value(ThisRecord) * 2, MapLength.Equal)
+Errors: Error 58-64: MapLength can only be used with multiple tables. Use 'As' to name each table argument.|Error 0-3: The function 'Map' has some invalid arguments.

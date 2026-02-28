@@ -1,0 +1,11 @@
+#setup: disable:PowerFxV1CompatibilityRules
+
+// ****************** Map does NOT allow Void-returning formulas ******************
+// Map is a pure functional map operation and rejects Void return types
+// Void can occur when If/Switch branches have incompatible types (e.g., [] vs {})
+
+>> Map([1], If(false,[],{}))
+Table({Value:Error({Kind:ErrorKind.NotSupported})})
+
+>> Map([1,2,3], If(false,[],{}))
+Table({Value:Error({Kind:ErrorKind.NotSupported})},{Value:Error({Kind:ErrorKind.NotSupported})},{Value:Error({Kind:ErrorKind.NotSupported})})

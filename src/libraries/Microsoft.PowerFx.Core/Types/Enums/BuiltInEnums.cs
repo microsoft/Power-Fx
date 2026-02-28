@@ -307,6 +307,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "Shortest", "shortest" },
                 { "Longest", "longest" },
                 { "Equal", "equal" },
+                { "First", "first" },
             });
     }
 }

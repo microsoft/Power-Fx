@@ -1156,21 +1156,19 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Map)
             },
+#if true
             {
                 BuiltinFunctionsCore.Map_UO,
                 StandardErrorHandlingAsync<FormulaValue>(
                     BuiltinFunctionsCore.Map_UO.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactSequence(
-                        ExactValueTypeOrBlank<UntypedObjectValue>,
-                        ExactValueTypeOrBlank<LambdaFormulaValue>),
-                    checkRuntimeValues: ExactSequence(
-                        UntypedObjectArrayChecker,
-                        DeferRuntimeValueChecking),
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Map_UO)
             },
+#endif
             {
                 BuiltinFunctionsCore.Max,
                 StandardErrorHandling<FormulaValue>(
@@ -2808,7 +2806,7 @@ namespace Microsoft.PowerFx.Functions
 
         private static async ValueTask<FormulaValue> MapMultiTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            // Parse args: N tables, lambda, scope name resolver record, MapLength string
+            // Parse args: N tables, lambda, N scope name strings, MapLength string
             // Find the lambda (first LambdaFormulaValue)
             var lambdaIndex = -1;
             for (int i = 0; i < args.Length; i++)
@@ -2827,18 +2825,19 @@ namespace Microsoft.PowerFx.Functions
 
             var tableCount = lambdaIndex;
             var lambda = (LambdaFormulaValue)args[lambdaIndex];
-            var scopeNameResolver = (RecordValue)args[lambdaIndex + 1];
-            var mapLengthStr = ((StringValue)args[lambdaIndex + 2]).Value;
 
-            // Get scope names from resolver record
+            // Get scope names from ordered text args (one per table, matching table order)
             var scopeNames = new List<string>();
-            foreach (var field in scopeNameResolver.Fields)
+            for (int i = 0; i < tableCount; i++)
             {
-                scopeNames.Add(((StringValue)field.Value).Value);
+                scopeNames.Add(((StringValue)args[lambdaIndex + 1 + i]).Value);
             }
 
-            // Materialize all table rows
-            var allTableRows = new List<List<DValue<RecordValue>>>();
+            var mapLengthStr = ((StringValue)args[lambdaIndex + 1 + tableCount]).Value;
+
+            // Get table values and compute lengths without materializing rows
+            var tables = new TableValue[tableCount];
+            var lengths = new int[tableCount];
             for (int i = 0; i < tableCount; i++)
             {
                 if (args[i] is not TableValue tableValue)
@@ -2846,17 +2845,11 @@ namespace Microsoft.PowerFx.Functions
                     return CommonErrors.RuntimeTypeMismatch(irContext);
                 }
 
-                var tableRows = new List<DValue<RecordValue>>();
-                foreach (var row in tableValue.Rows)
-                {
-                    tableRows.Add(row);
-                }
-
-                allTableRows.Add(tableRows);
+                tables[i] = tableValue;
+                lengths[i] = tableValue.Count();
             }
 
             // Determine result length based on MapLength mode
-            var lengths = allTableRows.Select(t => t.Count).ToArray();
             int resultLength;
 
             switch (mapLengthStr)
@@ -2866,6 +2859,9 @@ namespace Microsoft.PowerFx.Functions
                     break;
                 case "longest":
                     resultLength = lengths.Max();
+                    break;
+                case "first":
+                    resultLength = lengths.Length > 0 ? lengths[0] : 0;
                     break;
                 case "equal":
                 default:
@@ -2883,42 +2879,58 @@ namespace Microsoft.PowerFx.Functions
                     break;
             }
 
-            // For each row index, build combined scope record and evaluate lambda
-            var rows = new List<FormulaValue>();
-            for (int rowIdx = 0; rowIdx < resultLength; rowIdx++)
+            // Use enumerators for row-by-row iteration instead of materializing all rows
+            var enumerators = new IEnumerator<DValue<RecordValue>>[tableCount];
+            try
             {
-                runner.CheckCancel();
-
-                var fields = new List<NamedValue>();
-                for (int tIdx = 0; tIdx < tableCount; tIdx++)
+                for (int i = 0; i < tableCount; i++)
                 {
-                    FormulaValue rowValue;
-                    if (rowIdx < allTableRows[tIdx].Count)
-                    {
-                        var dvalue = allTableRows[tIdx][rowIdx];
-                        rowValue = dvalue.IsValue ? dvalue.Value : (dvalue.IsBlank ? FormulaValue.NewBlank() : dvalue.ToFormulaValue());
-                    }
-                    else
-                    {
-                        // "longest" mode: exhausted table gets Blank
-                        rowValue = FormulaValue.NewBlank();
-                    }
-
-                    fields.Add(new NamedValue(scopeNames[tIdx], rowValue));
+                    enumerators[i] = tables[i].Rows.GetEnumerator();
                 }
 
-                var scopeRecord = FormulaValue.NewRecordFromFields(fields);
-                var childContext = context.SymbolContext.WithScopeValues(scopeRecord);
-                var result = await lambda.EvalInRowScopeAsync(context.NewScope(childContext)).AsTask().ConfigureAwait(false);
-                rows.Add(result);
-            }
+                var rows = new List<FormulaValue>();
+                for (int rowIdx = 0; rowIdx < resultLength; rowIdx++)
+                {
+                    runner.CheckCancel();
 
-            if (irContext.ResultType is Types.Void)
+                    var fields = new List<NamedValue>();
+                    for (int tIdx = 0; tIdx < tableCount; tIdx++)
+                    {
+                        FormulaValue rowValue;
+                        if (rowIdx < lengths[tIdx] && enumerators[tIdx].MoveNext())
+                        {
+                            var dvalue = enumerators[tIdx].Current;
+                            rowValue = dvalue.IsValue ? dvalue.Value : (dvalue.IsBlank ? FormulaValue.NewBlank() : dvalue.ToFormulaValue());
+                        }
+                        else
+                        {
+                            // "longest" mode: exhausted table gets Blank
+                            rowValue = FormulaValue.NewBlank();
+                        }
+
+                        fields.Add(new NamedValue(scopeNames[tIdx], rowValue));
+                    }
+
+                    var scopeRecord = FormulaValue.NewRecordFromFields(fields);
+                    var childContext = context.SymbolContext.WithScopeValues(scopeRecord);
+                    var result = await lambda.EvalInRowScopeAsync(context.NewScope(childContext)).AsTask().ConfigureAwait(false);
+                    rows.Add(result);
+                }
+
+                if (irContext.ResultType is Types.Void)
+                {
+                    return new VoidValue(irContext);
+                }
+
+                return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
+            }
+            finally
             {
-                return new VoidValue(irContext);
+                for (int i = 0; i < tableCount; i++)
+                {
+                    enumerators[i]?.Dispose();
+                }
             }
-
-            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
         }
 
         public static FormulaValue IsError(IRContext irContext, FormulaValue[] args)

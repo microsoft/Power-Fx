@@ -19,7 +19,6 @@ using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.IR.IRTranslator;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
-using RecordNode = Microsoft.PowerFx.Core.IR.Nodes.RecordNode;
 
 #pragma warning disable SA1402 // File may only contain a single type
 #pragma warning disable SA1649 // File name should match first type name
@@ -161,7 +160,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 else if (lambdaIndex < argTypes.Length)
                 {
                     var lambdaType = argTypes[lambdaIndex];
-                    returnType = ComputeReturnType(lambdaType, out var valid);
+                    returnType = ComputeReturnType(lambdaType, args[lambdaIndex], errors, out var valid);
                     fArgsValid &= valid;
                 }
                 else
@@ -202,7 +201,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (lambdaIndex < argTypes.Length)
                 {
                     var lambdaType = argTypes[lambdaIndex];
-                    returnType = ComputeReturnType(lambdaType, out var valid);
+                    returnType = ComputeReturnType(lambdaType, args[lambdaIndex], errors, out var valid);
                     fArgsValid &= valid;
                 }
                 else
@@ -221,7 +220,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fArgsValid;
         }
 
-        private DType ComputeReturnType(DType lambdaType, out bool valid)
+        private DType ComputeReturnType(DType lambdaType, TexlNode lambdaArg, IErrorContainer errors, out bool valid)
         {
             valid = true;
 
@@ -235,6 +234,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else if (lambdaType.IsVoid)
             {
+                errors.EnsureError(DocumentErrorSeverity.Severe, lambdaArg, TexlStrings.ErrBadType_VoidExpression, Name);
                 valid = false;
                 return DType.Error;
             }
@@ -273,30 +273,54 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return index == 0;
         }
 
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            CheckLambdaForSideEffects(binding, args, errors);
+        }
+
         /// <summary>
         /// Map requires a pure (non-side-effectful) lambda expression.
-        /// This validation checks if the lambda argument contains any behavior functions.
+        /// PostVisitValidation catches cases where CheckTypes fails (e.g. Void return)
+        /// but we still want to report the behavior function error.
         /// </summary>
         public override bool PostVisitValidation(TexlBinding binding, CallNode callNode)
         {
             Contracts.AssertValue(binding);
             Contracts.AssertValue(callNode);
 
-            var args = callNode.Args.Children;
-            var tableCount = GetTableCount(callNode);
+            return CheckLambdaForSideEffects(binding, callNode.Args.Children.ToArray(), binding.ErrorContainer);
+        }
+
+        private static bool CheckLambdaForSideEffects(TexlBinding binding, TexlNode[] args, IErrorContainer errors)
+        {
+            var tableCount = CountTableArgs(args);
             var lambdaIndex = tableCount;
 
-            if (args.Count > lambdaIndex)
+            if (lambdaIndex < args.Length && binding.HasSideEffects(args[lambdaIndex]))
             {
-                var lambdaArg = args[lambdaIndex];
-                if (binding.HasSideEffects(lambdaArg))
-                {
-                    binding.ErrorContainer.EnsureError(lambdaArg, TexlStrings.ErrMapFunctionRequiresPureLambda, Name);
-                    return true;
-                }
+                errors.EnsureError(args[lambdaIndex], TexlStrings.ErrMapFunctionRequiresPureLambda);
+                return true;
             }
 
             return false;
+        }
+
+        private static int CountTableArgs(TexlNode[] args)
+        {
+            var asCount = 0;
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (args[i] is AsNode)
+                {
+                    asCount++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return asCount >= 2 ? asCount : 1;
         }
 
         public override IEnumerable<string> GetRequiredEnumNames()
@@ -325,21 +349,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 newArgs.Add(args[i]);
             }
 
-            // Build scope name resolver record: {A: "A", B: "B", ...}
+            // Add scope names as ordered text literals (one per table, matching table order)
             ScopeInfo.GetScopeIdent(node.Args.Children.ToArray(), out var scopeIdent);
-            var scopeNameResolverType = RecordType.Empty();
-            var scopeNameResolverFields = new Dictionary<DName, IntermediateNode>();
 
             for (int i = 0; i < tableCount; i++)
             {
-                var name = scopeIdent[i];
-                scopeNameResolverType = scopeNameResolverType.Add(name.Value, FormulaType.String);
-                scopeNameResolverFields[name] = new TextLiteralNode(IRContext.NotInSource(FormulaType.String), name.Value);
+                newArgs.Add(new TextLiteralNode(IRContext.NotInSource(FormulaType.String), scopeIdent[i].Value));
             }
-
-            newArgs.Add(new RecordNode(
-                IRContext.NotInSource(scopeNameResolverType),
-                scopeNameResolverFields));
 
             // Add MapLength string value
             var mapLengthValue = "equal"; // default
@@ -355,6 +371,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
+#if true
     internal sealed class MapFunction_UO : BuiltinFunction
     {
         public override bool IsSelfContained => true;
@@ -362,14 +379,74 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public MapFunction_UO()
-            : base(MapFunction.MapInvariantFunctionName, TexlStrings.AboutMap, FunctionCategories.Table, DType.Unknown, 0x2, 2, 2, DType.UntypedObject)
+            : base(MapFunction.MapInvariantFunctionName, TexlStrings.AboutMap, FunctionCategories.Table, DType.Unknown, 0x2, 2, int.MaxValue, DType.UntypedObject)
         {
-            ScopeInfo = new FunctionScopeInfo(this);
+            ScopeInfo = new FunctionMapScopeInfo(this);
+        }
+
+        /// <summary>
+        /// Count consecutive AsNode args from index 0 to determine the number of table args.
+        /// 0 or 1 → single-table mode (return 1). 2+ → multi-table mode (return that count).
+        /// </summary>
+        private static int GetTableCount(CallNode node)
+        {
+            if (node == null)
+            {
+                return 1;
+            }
+
+            var asCount = 0;
+            foreach (var child in node.Args.Children)
+            {
+                if (child is AsNode)
+                {
+                    asCount++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return asCount >= 2 ? asCount : 1;
+        }
+
+        public override int GetScopeArgs(CallNode node)
+        {
+            return GetTableCount(node);
+        }
+
+        public override bool IsLambdaParam(TexlNode node, int index)
+        {
+            if (node?.Parent?.Parent is CallNode callNode)
+            {
+                var tableCount = GetTableCount(callNode);
+                return index == tableCount;
+            }
+
+            return index == 1;
+        }
+
+        public override bool IsLazyEvalParam(TexlNode node, int index, Features features)
+        {
+            return IsLambdaParam(node, index);
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.MapArg1, TexlStrings.MapArg2 };
+            yield return new[] { TexlStrings.MapArg1, TexlStrings.MapArg1, TexlStrings.MapArg2 };
+            yield return new[] { TexlStrings.MapArg1, TexlStrings.MapArg1, TexlStrings.MapArg2, TexlStrings.MapArg3 };
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
+        {
+            if (arity > 4)
+            {
+                return GetGenericSignatures(arity, TexlStrings.MapArg1, TexlStrings.MapArg2);
+            }
+
+            return base.GetSignatures(arity);
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -382,29 +459,149 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
 
             nodeToCoercedTypeMap = null;
-            var fArgsValid = CheckType(context, args[0], argTypes[0], ParamTypes[0], errors, ref nodeToCoercedTypeMap);
 
-            if (argTypes[1].IsRecord)
+            // Count consecutive AsNode args from the start
+            var asCount = 0;
+            for (int i = 0; i < args.Length; i++)
             {
-                returnType = argTypes[1].ToTable();
+                if (args[i] is AsNode)
+                {
+                    asCount++;
+                }
+                else
+                {
+                    break;
+                }
             }
-            else if (argTypes[1].IsPrimitive || argTypes[1].IsTable || argTypes[1].IsUntypedObject)
+
+            var isMultiTable = asCount >= 2;
+            var tableCount = isMultiTable ? asCount : 1;
+            var lambdaIndex = tableCount;
+
+            bool fArgsValid;
+
+            if (!isMultiTable)
             {
-                returnType = DType.CreateTable(new TypedName(argTypes[1], ColumnName_Value));
-            }
-            else if (argTypes[1].IsVoid)
-            {
-                // Map does not support Void return type since it doesn't allow side effects
-                returnType = DType.Error;
-                fArgsValid = false;
+                // Single-table mode: original behavior
+                fArgsValid = CheckType(context, args[0], argTypes[0], ParamTypes[0], errors, ref nodeToCoercedTypeMap);
+
+                // Detect multi-table intent without proper As
+                if (asCount == 1 && args.Length > 2 && argTypes[1].IsUntypedObject)
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrMapMultiTableRequiresAs);
+                    returnType = DType.Error;
+                    fArgsValid = false;
+                }
+                else
+                {
+                    if (lambdaIndex < argTypes.Length)
+                    {
+                        var lambdaType = argTypes[lambdaIndex];
+                        returnType = ComputeReturnType(lambdaType, args[lambdaIndex], errors, out var valid);
+                        fArgsValid &= valid;
+                    }
+                    else
+                    {
+                        returnType = DType.Error;
+                        fArgsValid = false;
+                    }
+
+                    // MapLength is only valid with multiple tables
+                    if (args.Length > lambdaIndex + 1)
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[lambdaIndex + 1], TexlStrings.ErrMapMapLengthRequiresMultiTable);
+                        fArgsValid = false;
+                    }
+                }
             }
             else
             {
-                returnType = DType.Error;
-                fArgsValid = false;
+                // Multi-table mode
+                fArgsValid = true;
+
+                // Validate all table args are UntypedObject and all use As
+                for (int i = 0; i < tableCount; i++)
+                {
+                    if (!(args[i] is AsNode))
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrMapMultiTableRequiresAs);
+                        fArgsValid = false;
+                    }
+
+                    if (!argTypes[i].IsUntypedObject)
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNeedTable_Func, Name);
+                        fArgsValid = false;
+                    }
+                }
+
+                // Lambda return type determines result type
+                if (lambdaIndex < argTypes.Length)
+                {
+                    var lambdaType = argTypes[lambdaIndex];
+                    returnType = ComputeReturnType(lambdaType, args[lambdaIndex], errors, out var valid);
+                    fArgsValid &= valid;
+                }
+                else
+                {
+                    returnType = DType.Error;
+                    fArgsValid = false;
+                }
+
+                // Check optional MapLength arg at end
+                if (args.Length > lambdaIndex + 1)
+                {
+                    fArgsValid &= ValidateMapLengthArg(context, args, argTypes, lambdaIndex + 1, errors);
+                }
             }
 
             return fArgsValid;
+        }
+
+        private DType ComputeReturnType(DType lambdaType, TexlNode lambdaArg, IErrorContainer errors, out bool valid)
+        {
+            valid = true;
+
+            if (lambdaType.IsRecord)
+            {
+                return lambdaType.ToTable();
+            }
+            else if (lambdaType.IsPrimitive || lambdaType.IsTable || lambdaType.IsUntypedObject)
+            {
+                return DType.CreateTable(new TypedName(lambdaType, ColumnName_Value));
+            }
+            else if (lambdaType.IsVoid)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, lambdaArg, TexlStrings.ErrBadType_VoidExpression, Name);
+                valid = false;
+                return DType.Error;
+            }
+            else
+            {
+                valid = false;
+                return DType.Error;
+            }
+        }
+
+        private bool ValidateMapLengthArg(CheckTypesContext context, TexlNode[] args, DType[] argTypes, int mapLengthIndex, IErrorContainer errors)
+        {
+            if (mapLengthIndex >= args.Length)
+            {
+                return true;
+            }
+
+            var expectedType = context.Features.StronglyTypedBuiltinEnums
+                ? BuiltInEnums.MapLengthEnum.FormulaType._type
+                : DType.String;
+
+            if (!expectedType.Accepts(argTypes[mapLengthIndex], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) ||
+                args[mapLengthIndex] is not DottedNameNode)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[mapLengthIndex], TexlStrings.ErrMapInvalidMapLengthArg);
+                return false;
+            }
+
+            return true;
         }
 
         public override bool HasSuggestionsForParam(int index)
@@ -414,30 +611,103 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return index == 0;
         }
 
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            CheckLambdaForSideEffects(binding, args, errors);
+        }
+
         /// <summary>
-        /// Map requires a pure (non-side-effectful) lambda expression.
-        /// This validation checks if the lambda argument contains any behavior functions.
+        /// PostVisitValidation catches cases where CheckTypes fails (e.g. Void return)
+        /// but we still want to report the behavior function error.
         /// </summary>
         public override bool PostVisitValidation(TexlBinding binding, CallNode callNode)
         {
             Contracts.AssertValue(binding);
             Contracts.AssertValue(callNode);
 
-            // Get the lambda argument (second argument, index 1)
-            var args = callNode.Args.Children;
-            if (args.Count >= 2)
+            return CheckLambdaForSideEffects(binding, callNode.Args.Children.ToArray(), binding.ErrorContainer);
+        }
+
+        private static bool CheckLambdaForSideEffects(TexlBinding binding, TexlNode[] args, IErrorContainer errors)
+        {
+            var tableCount = CountTableArgs(args);
+            var lambdaIndex = tableCount;
+
+            if (lambdaIndex < args.Length && binding.HasSideEffects(args[lambdaIndex]))
             {
-                var lambdaArg = args[1];
-                if (binding.HasSideEffects(lambdaArg))
-                {
-                    binding.ErrorContainer.EnsureError(lambdaArg, TexlStrings.ErrMapFunctionRequiresPureLambda, Name);
-                    return true;
-                }
+                errors.EnsureError(args[lambdaIndex], TexlStrings.ErrMapFunctionRequiresPureLambda);
+                return true;
             }
 
             return false;
         }
+
+        private static int CountTableArgs(TexlNode[] args)
+        {
+            var asCount = 0;
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (args[i] is AsNode)
+                {
+                    asCount++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return asCount >= 2 ? asCount : 1;
+        }
+
+        public override IEnumerable<string> GetRequiredEnumNames()
+        {
+            return new List<string>() { LanguageConstants.MapLengthEnumString };
+        }
+
+        internal override IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
+        {
+            var tableCount = GetTableCount(node);
+
+            // Single-table mode: delegate to base
+            if (tableCount <= 1)
+            {
+                return base.CreateIRCallNode(node, context, args, scope);
+            }
+
+            // Multi-table mode: inject scope name resolver record and default MapLength
+            var carg = node.Args.Count;
+            var lambdaIndex = tableCount;
+            var newArgs = new List<IntermediateNode>();
+
+            // Add table args and lambda
+            for (int i = 0; i <= lambdaIndex && i < args.Count; i++)
+            {
+                newArgs.Add(args[i]);
+            }
+
+            // Add scope names as ordered text literals (one per table, matching table order)
+            ScopeInfo.GetScopeIdent(node.Args.Children.ToArray(), out var scopeIdent);
+
+            for (int i = 0; i < tableCount; i++)
+            {
+                newArgs.Add(new TextLiteralNode(IRContext.NotInSource(FormulaType.String), scopeIdent[i].Value));
+            }
+
+            // Add MapLength string value
+            var mapLengthValue = "equal"; // default
+            var mapLengthArgIndex = lambdaIndex + 1;
+            if (mapLengthArgIndex < carg && node.Args.Children[mapLengthArgIndex] is DottedNameNode dottedName)
+            {
+                mapLengthValue = dottedName.Right.Name.Value.ToLowerInvariant();
+            }
+
+            newArgs.Add(new TextLiteralNode(IRContext.NotInSource(FormulaType.String), mapLengthValue));
+
+            return new IRCallNode(context.GetIRContext(node), this, scope, newArgs);
+        }
     }
+#endif
 }
 
 #pragma warning restore SA1402 // File may only contain a single type

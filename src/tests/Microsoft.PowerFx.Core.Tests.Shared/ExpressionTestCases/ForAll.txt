@@ -90,6 +90,9 @@ Table({Value:true})
 Table({Value:false})
 
 // ************ ForAll and Void expressions ****************
+// ForAll allows expressions that evaluate to Void (e.g., when branches have incompatible types)
+// This is because ForAll is designed to support side effects and imperative-style operations
+// When the formula returns Void, ForAll returns a VoidValue (not a table)
 
 >> ForAll([1,2], If(Value = 1, Value * 2, {Result: Value}))
 Errors: Error 14-55: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
@@ -131,17 +134,3 @@ Table({a:1},Blank(),{a:3},{a:Blank()},{a:5})
 // Table blank values should be wrapped
 >> ForAll([1,2,3], If(Value = 1 Or Value = 3, Sequence(Value), Blank()))
 Table({Value:Table({Value:1})},{Value:Blank()},{Value:Table({Value:1},{Value:2},{Value:3})})
-
-// ************ ForAll allows Void-returning formulas ****************
-// ForAll allows expressions that evaluate to Void (e.g., when branches have incompatible types)
-// This is because ForAll is designed to support side effects and imperative-style operations
-// When the formula returns Void, ForAll returns a VoidValue (not a table)
-
->> ForAll([1], If(false,[],{}))
-If(true, {test:1}, "Void value (result of the expression can't be used).")
-
->> ForAll([1,2,3], If(false,[],{}))
-If(true, {test:1}, "Void value (result of the expression can't be used).")
-
->> ForAll([1,2], If(Value = 1, Value * 2, {Result: Value}))
-Errors: Error 14-55: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
