@@ -740,7 +740,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrMapFunctionRequiresPureLambda = new ErrorResourceKey("ErrMapFunctionRequiresPureLambda");
         public static ErrorResourceKey ErrMapFunctionTypedAndDynamicTogether = new ErrorResourceKey("ErrMapFunctionTypedAndDynamicTogether");
         public static ErrorResourceKey ErrMapMultiTableRequiresAs = new ErrorResourceKey("ErrMapMultiTableRequiresAs");
-        public static ErrorResourceKey ErrMapUnequalTableLengths = new ErrorResourceKey("ErrMapUnequalTableLengths");
+        public static ErrorResourceKey ErrMapNoLambda = new ErrorResourceKey("ErrMapNoLambda");
         public static ErrorResourceKey ErrMapInvalidMapLengthArg = new ErrorResourceKey("ErrMapInvalidMapLengthArg");
         public static ErrorResourceKey ErrMapMapLengthRequiresMultiTable = new ErrorResourceKey("ErrMapMapLengthRequiresMultiTable");
         public static ErrorResourceKey ErrBadRecordFieldType_FieldName_ExpectedType = new ErrorResourceKey("ErrBadRecordFieldType_FieldName_ExpectedType");

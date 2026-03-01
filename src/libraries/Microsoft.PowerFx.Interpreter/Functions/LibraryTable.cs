@@ -1617,7 +1617,6 @@ namespace Microsoft.PowerFx.Functions
                     resultLength = lengths.Length > 0 ? lengths[0] : 0;
                     break;
                 case "equal":
-                default:
                     if (lengths.Distinct().Count() > 1)
                     {
                         return new ErrorValue(irContext, new ExpressionError()
@@ -1630,6 +1629,13 @@ namespace Microsoft.PowerFx.Functions
 
                     resultLength = lengths.Length > 0 ? lengths[0] : 0;
                     break;
+                default:
+                    return new ErrorValue(irContext, new ExpressionError()
+                    {
+                        Message = "Invalid MapLength value.",
+                        Span = irContext.SourceContext,
+                        Kind = ErrorKind.InvalidArgument
+                    });
             }
 
             // Use enumerators for row-by-row iteration instead of materializing all rows

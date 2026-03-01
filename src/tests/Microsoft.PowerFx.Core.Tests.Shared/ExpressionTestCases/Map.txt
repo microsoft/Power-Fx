@@ -660,11 +660,15 @@ Errors: Error 18-25: When using Map with multiple tables, all table arguments mu
 
 // MapLength is not allowed with single table
 >> Map([1,2,3], Value * 2, MapLength.Equal)
-Errors: Error 33-39: MapLength can only be used with multiple tables. Use 'As' to name each table argument.|Error 0-3: The function 'Map' has some invalid arguments.
+Errors: Error 33-39: MapLength can only be used with multiple tables, each of which must be named with 'As'.|Error 0-3: The function 'Map' has some invalid arguments.
 
 // Invalid MapLength value (non-enum argument)
 >> Map([1,2,3] As A, [4,5,6] As B, A.Value + B.Value, "invalid")
 Errors: Error 51-60: Invalid MapLength argument. Use MapLength.Equal, MapLength.Shortest, MapLength.Longest, or MapLength.First.
+
+// Invalid MapLength value (non-enum argument)
+>> Map([1,2,3] As A, [4,5,6] As B, A.Value + B.Value, "shortest")
+Errors: Error 51-61: Invalid MapLength argument. Use MapLength.Equal, MapLength.Shortest, MapLength.Longest, or MapLength.First.
 
 // ****************** Map does NOT allow Void-returning formulas ******************
 // Map is a pure functional map operation and rejects Void return types
@@ -765,7 +769,7 @@ Errors: Error 59-60: Name isn't valid. 'A' isn't recognized.|Error 53-58: The fu
 
 // MapLength is not allowed with single UO table
 >> Map(ParseJSON("[1,2,3]"), Value(ThisRecord) * 2, MapLength.Equal)
-Errors: Error 58-64: MapLength can only be used with multiple tables. Use 'As' to name each table argument.|Error 0-3: The function 'Map' has some invalid arguments.
+Errors: Error 58-64: MapLength can only be used with multiple tables, each of which must be named with 'As'.|Error 0-3: The function 'Map' has some invalid arguments.
 
 // ***************** Mixing UO and non-UO tables *******************
 
@@ -780,6 +784,9 @@ Table({Value:1},{Value:2},{Value:3})
 
 >> Map([1,2,3] As A, [4,5,6] As B, A.Value * B.Value)
 Table({Value:4},{Value:10},{Value:18})
+
+>> Map([1,2,3], [4,5,6], 1)
+Errors: Error 4-11: When using Map with multiple tables, all table arguments must use 'As' to provide unique names.|Error 0-3: The function 'Map' has some invalid arguments.
 
 // Mixing UO and non-UO tables is not allowed (by the compiler) and should return a compile time error. 
 // There is no design need for this limitation, but supporting it would be a change in the compiler's treatment of UO iteration arguments.
@@ -807,4 +814,29 @@ Table({Value:1},{Value:2},{Value:3})
 3
 
 >> Map(Map(ParseJSON("[[1,2,3],[4,5,6],[7,8,9]]"), ThisRecord),CountRows(ThisRecord.Value))
-[3, 3, 3]
+Table({Value:3},{Value:3},{Value:3})
+
+>> Map([1,2,3], Value, MapLength.Equal)
+Errors: Error 29-35: MapLength can only be used with multiple tables, each of which must be named with 'As'.|Error 0-3: The function 'Map' has some invalid arguments.
+
+>> Map([1,2,3] As a, [4,5,6] As b, a.Value + b.Value, SortOrder.Ascending)
+Errors: Error 60-70: Invalid MapLength argument. Use MapLength.Equal, MapLength.Shortest, MapLength.Longest, or MapLength.First.|Error 0-3: The function 'Map' has some invalid arguments.
+
+>> Map([1,2,3] As a, [4,5,6] As b, a.Value + b.Value, "equal")
+Errors: Error 51-58: Invalid MapLength argument. Use MapLength.Equal, MapLength.Shortest, MapLength.Longest, or MapLength.First.|Error 0-3: The function 'Map' has some invalid arguments.
+
+>> Map([1,2,3], MapLength.Equal)
+ok
+
+>> Map([1,2,3] As a, MapLength.Equal)
+ok
+
+>> Map([1,2,3] As a, MapLength.Equal, MapLength.Equal)
+error
+
+>> Map([1,2,3] As a, [1,2,3] As b, MapLength.Equal, MapLength.Equal)
+ok
+
+>> Map([1,2,3] As a, [1,2,3] As b, MapLength.Equal, MapLength.Equal, MapLength.Equal)
+error
+

@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             RunExpressionTestCase(t, Features.PowerFxV1, numberIsFloat: false, Console);
         }
 
-        // Although we are using numbers as floats by default, since this interpreter supports decimal, we can run tests with decimal here.        
+        // Although we are using numbers as floats by default, since this interpreter supports decimal, we can run tests with decimal here.    dgf   eff
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,NumberIsFloat,DecimalSupport")]
         [InterpreterTheory]
         public void V1_Float(ExpressionTestCase t)
