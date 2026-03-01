@@ -738,6 +738,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrScopeModificationLambda = new ErrorResourceKey("ErrScopeModificationLambda");
         public static ErrorResourceKey ErrFunctionDisallowedWithinNondeterministicOperationOrder = new ErrorResourceKey("ErrFunctionDisallowedWithinNondeterministicOperationOrder");
         public static ErrorResourceKey ErrMapFunctionRequiresPureLambda = new ErrorResourceKey("ErrMapFunctionRequiresPureLambda");
+        public static ErrorResourceKey ErrMapFunctionTypedAndDynamicTogether = new ErrorResourceKey("ErrMapFunctionTypedAndDynamicTogether");
         public static ErrorResourceKey ErrMapMultiTableRequiresAs = new ErrorResourceKey("ErrMapMultiTableRequiresAs");
         public static ErrorResourceKey ErrMapUnequalTableLengths = new ErrorResourceKey("ErrMapUnequalTableLengths");
         public static ErrorResourceKey ErrMapInvalidMapLengthArg = new ErrorResourceKey("ErrMapInvalidMapLengthArg");

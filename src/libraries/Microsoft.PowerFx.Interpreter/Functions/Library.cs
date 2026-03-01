@@ -1156,7 +1156,6 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Map)
             },
-#if true
             {
                 BuiltinFunctionsCore.Map_UO,
                 StandardErrorHandlingAsync<FormulaValue>(
@@ -1166,9 +1165,8 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: DeferRuntimeTypeChecking,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: Map_UO)
+                    targetFunction: Map) // the typed Map implementation can handle untyped objects too
             },
-#endif
             {
                 BuiltinFunctionsCore.Max,
                 StandardErrorHandling<FormulaValue>(
@@ -2762,174 +2760,6 @@ namespace Microsoft.PowerFx.Functions
                 var result = filter.EvalInRowScopeAsync(context.NewScope(childContext)).AsTask();
 
                 yield return result;
-            }
-        }
-
-        // Map([1,2,3,4,5], Value * Value)
-        // Map([1,2,3] As A, [4,5,6] As B, A.Value + B.Value)
-        // Unlike ForAll, Map keeps errors in the result table instead of combining them.
-        public static async ValueTask<FormulaValue> Map(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
-        {
-            // Detect single vs multi-table from args.
-            // Single-table: args[0] is TableValue, args[1] is LambdaFormulaValue
-            // Multi-table: N tables, lambda, scope name resolver record, MapLength string
-            if (args.Length >= 2 && args[0] is TableValue && args[1] is LambdaFormulaValue)
-            {
-                return await MapSingleTable(runner, context, irContext, args).ConfigureAwait(false);
-            }
-
-            return await MapMultiTable(runner, context, irContext, args).ConfigureAwait(false);
-        }
-
-        private static async ValueTask<FormulaValue> MapSingleTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
-        {
-            var arg0 = (TableValue)args[0];
-            var arg1 = (LambdaFormulaValue)args[1];
-
-            var rowsAsync = LazyForAll(runner, context, arg0.Rows, arg1);
-
-            var rows = new List<FormulaValue>();
-
-            foreach (var row in rowsAsync)
-            {
-                runner.CheckCancel();
-                rows.Add(await row.ConfigureAwait(false));
-            }
-
-            if (irContext.ResultType is Types.Void)
-            {
-                return new VoidValue(irContext);
-            }
-
-            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
-        }
-
-        private static async ValueTask<FormulaValue> MapMultiTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
-        {
-            // Parse args: N tables, lambda, N scope name strings, MapLength string
-            // Find the lambda (first LambdaFormulaValue)
-            var lambdaIndex = -1;
-            for (int i = 0; i < args.Length; i++)
-            {
-                if (args[i] is LambdaFormulaValue)
-                {
-                    lambdaIndex = i;
-                    break;
-                }
-            }
-
-            if (lambdaIndex < 0)
-            {
-                return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
-
-            var tableCount = lambdaIndex;
-            var lambda = (LambdaFormulaValue)args[lambdaIndex];
-
-            // Get scope names from ordered text args (one per table, matching table order)
-            var scopeNames = new List<string>();
-            for (int i = 0; i < tableCount; i++)
-            {
-                scopeNames.Add(((StringValue)args[lambdaIndex + 1 + i]).Value);
-            }
-
-            var mapLengthStr = ((StringValue)args[lambdaIndex + 1 + tableCount]).Value;
-
-            // Get table values and compute lengths without materializing rows
-            var tables = new TableValue[tableCount];
-            var lengths = new int[tableCount];
-            for (int i = 0; i < tableCount; i++)
-            {
-                if (args[i] is not TableValue tableValue)
-                {
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-                }
-
-                tables[i] = tableValue;
-                lengths[i] = tableValue.Count();
-            }
-
-            // Determine result length based on MapLength mode
-            int resultLength;
-
-            switch (mapLengthStr)
-            {
-                case "shortest":
-                    resultLength = lengths.Min();
-                    break;
-                case "longest":
-                    resultLength = lengths.Max();
-                    break;
-                case "first":
-                    resultLength = lengths.Length > 0 ? lengths[0] : 0;
-                    break;
-                case "equal":
-                default:
-                    if (lengths.Distinct().Count() > 1)
-                    {
-                        return new ErrorValue(irContext, new ExpressionError()
-                        {
-                            Message = "All tables passed to Map must have the same number of rows when using MapLength.Equal.",
-                            Span = irContext.SourceContext,
-                            Kind = ErrorKind.InvalidArgument
-                        });
-                    }
-
-                    resultLength = lengths.Length > 0 ? lengths[0] : 0;
-                    break;
-            }
-
-            // Use enumerators for row-by-row iteration instead of materializing all rows
-            var enumerators = new IEnumerator<DValue<RecordValue>>[tableCount];
-            try
-            {
-                for (int i = 0; i < tableCount; i++)
-                {
-                    enumerators[i] = tables[i].Rows.GetEnumerator();
-                }
-
-                var rows = new List<FormulaValue>();
-                for (int rowIdx = 0; rowIdx < resultLength; rowIdx++)
-                {
-                    runner.CheckCancel();
-
-                    var fields = new List<NamedValue>();
-                    for (int tIdx = 0; tIdx < tableCount; tIdx++)
-                    {
-                        FormulaValue rowValue;
-                        if (rowIdx < lengths[tIdx] && enumerators[tIdx].MoveNext())
-                        {
-                            var dvalue = enumerators[tIdx].Current;
-                            rowValue = dvalue.IsValue ? dvalue.Value : (dvalue.IsBlank ? FormulaValue.NewBlank() : dvalue.ToFormulaValue());
-                        }
-                        else
-                        {
-                            // "longest" mode: exhausted table gets Blank
-                            rowValue = FormulaValue.NewBlank();
-                        }
-
-                        fields.Add(new NamedValue(scopeNames[tIdx], rowValue));
-                    }
-
-                    var scopeRecord = FormulaValue.NewRecordFromFields(fields);
-                    var childContext = context.SymbolContext.WithScopeValues(scopeRecord);
-                    var result = await lambda.EvalInRowScopeAsync(context.NewScope(childContext)).AsTask().ConfigureAwait(false);
-                    rows.Add(result);
-                }
-
-                if (irContext.ResultType is Types.Void)
-                {
-                    return new VoidValue(irContext);
-                }
-
-                return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
-            }
-            finally
-            {
-                for (int i = 0; i < tableCount; i++)
-                {
-                    enumerators[i]?.Dispose();
-                }
             }
         }
 

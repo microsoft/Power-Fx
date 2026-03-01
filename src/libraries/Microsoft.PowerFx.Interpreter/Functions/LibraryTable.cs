@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
@@ -1525,6 +1526,194 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 return l.ToArray();
+            }
+        }
+
+        // Map([1,2,3,4,5], Value * Value) // typed single
+        // Map([1,2,3] As A, [4,5,6] As B, A.Value + B.Value) // typed multiple
+        // Map(ParseJSON([1,2,3]) As A, ParseJSON([4,5,6]) As B, A + B) // untyped multiple
+        // This function can handle a mix of strongly typed tables and untyped arrays. The compiler limits it to either one
+        // or the other because of the field access ops that are inserted based on the types at bind time.
+        // Unlike ForAll, Map keeps errors in the result table instead of combining them.
+        private static async ValueTask<FormulaValue> Map(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            // Parse args: N tables, lambda, N scope name strings, MapLength string
+            // Find the lambda (first LambdaFormulaValue)
+            var lambdaIndex = -1;
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (args[i] is LambdaFormulaValue)
+                {
+                    lambdaIndex = i;
+                    break;
+                }
+            }
+
+            if (lambdaIndex < 0)
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+
+            var tableCount = lambdaIndex;
+            var lambda = (LambdaFormulaValue)args[lambdaIndex];
+
+            List<string> scopeNames = new List<string>();
+            string mapLengthStr = "equal";
+
+            if (tableCount > 1)
+            {
+                // Get scope names from ordered text args (one per table, matching table order)
+                for (int i = 0; i < tableCount; i++)
+                {
+                    scopeNames.Add(((StringValue)args[lambdaIndex + 1 + i]).Value);
+                }
+
+                mapLengthStr = ((StringValue)args[lambdaIndex + 1 + tableCount]).Value;
+            }
+
+            // Get table values and compute lengths without materializing rows
+            var enumerators = new IEnumerator<FormulaValue>[tableCount];
+            var lengths = new int[tableCount];
+            for (int i = 0; i < tableCount; i++)
+            {
+                if (args[i] is TableValue tableValue)
+                {
+                    enumerators[i] = MapEnumerableFromTable(tableValue).GetEnumerator();
+                    lengths[i] = tableValue.Count();
+                }
+                else if (args[i] is UntypedObjectValue uoValue)
+                {
+                    if (!(uoValue.Impl.Type is ExternalType et && (et.Kind == ExternalTypeKind.Array || et.Kind == ExternalTypeKind.ArrayAndObject)))
+                    {
+                        return new ErrorValue(irContext, new ExpressionError()
+                        {
+                            ResourceKey = RuntimeStringResources.ErrUntypedObjectNotArray,
+                            Span = irContext.SourceContext,
+                            Kind = ErrorKind.InvalidArgument
+                        });
+                    }
+
+                    enumerators[i] = MapEnumerableFromUOArray(uoValue.Impl).GetEnumerator();
+                    lengths[i] = uoValue.Impl.GetArrayLength();
+                }
+                else
+                {
+                    return CommonErrors.RuntimeTypeMismatch(irContext);
+                }
+            }
+
+            // Determine result length based on MapLength mode
+            int resultLength;
+
+            switch (mapLengthStr)
+            {
+                case "shortest":
+                    resultLength = lengths.Min();
+                    break;
+                case "longest":
+                    resultLength = lengths.Max();
+                    break;
+                case "first":
+                    resultLength = lengths.Length > 0 ? lengths[0] : 0;
+                    break;
+                case "equal":
+                default:
+                    if (lengths.Distinct().Count() > 1)
+                    {
+                        return new ErrorValue(irContext, new ExpressionError()
+                        {
+                            Message = "All tables passed to Map must have the same number of rows when using MapLength.Equal.",
+                            Span = irContext.SourceContext,
+                            Kind = ErrorKind.InvalidArgument
+                        });
+                    }
+
+                    resultLength = lengths.Length > 0 ? lengths[0] : 0;
+                    break;
+            }
+
+            // Use enumerators for row-by-row iteration instead of materializing all rows
+            try
+            {
+                var rows = new List<FormulaValue>();
+                for (int rowIdx = 0; rowIdx < resultLength; rowIdx++)
+                {
+                    runner.CheckCancel();
+
+                    FormulaValue scopeRecord;
+                    if (tableCount == 1)
+                    {
+                        enumerators[0].MoveNext();
+                        scopeRecord = enumerators[0].Current;
+                    }
+                    else
+                    {
+                        var fields = new List<NamedValue>();
+                        for (int tIdx = 0; tIdx < tableCount; tIdx++)
+                        {
+                            FormulaValue rowValue;
+                            if (rowIdx < lengths[tIdx] && enumerators[tIdx].MoveNext())
+                            {
+                                rowValue = enumerators[tIdx].Current;
+                            }
+                            else
+                            {
+                                // "longest" mode: exhausted table gets Blank
+                                rowValue = FormulaValue.NewBlank();
+                            }
+
+                            fields.Add(new NamedValue(scopeNames[tIdx], rowValue));
+                        }
+
+                        scopeRecord = FormulaValue.NewRecordFromFields(fields);
+                    }
+
+                    var childContext = context.SymbolContext.WithScopeValues(scopeRecord);
+                    var result = await lambda.EvalInRowScopeAsync(context.NewScope(childContext)).AsTask().ConfigureAwait(false);
+                    rows.Add(result);
+                }
+
+                if (irContext.ResultType is Types.Void)
+                {
+                    return new VoidValue(irContext);
+                }
+
+                return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
+            }
+            finally
+            {
+                for (int i = 0; i < tableCount; i++)
+                {
+                    enumerators[i]?.Dispose();
+                }
+            }
+        }
+
+        private static IEnumerable<FormulaValue> MapEnumerableFromUOArray(IUntypedObject array)
+        {
+            for (int i = 0; i < array.GetArrayLength(); i++)
+            {
+                FormulaValue rowValue;
+                var element = array[i];
+
+                if (element == null || element.Type == FormulaType.Blank)
+                {
+                    rowValue = new BlankValue(IRContext.NotInSource(FormulaType.Blank));
+                }
+                else
+                {
+                    rowValue = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), element);
+                }
+
+                yield return rowValue;
+            }
+        }
+
+        private static IEnumerable<FormulaValue> MapEnumerableFromTable(TableValue table)
+        {
+            foreach (var dvalue in table.Rows)
+            {
+                yield return dvalue.IsValue ? dvalue.Value : (dvalue.IsBlank ? FormulaValue.NewBlank() : dvalue.ToFormulaValue());
             }
         }
     }

@@ -27,10 +27,10 @@ Table({Value:1},{Value:10},{Value:20},{Value:30},{Value:-1},{Value:Error({Kind:E
 Table({Value:1})
 
 >> Map(Sequence(3), Collect(t, {Value: Value * 10}))
-Errors: Error 17-48: The second argument of Map cannot include behavior functions. Use ForAll instead for imperative logic.
+Errors: Error 17-48: The evaluation argument of the Map function cannot include behavior functions. Use ForAll instead for imperative logic.
 
 >> Map(Sequence(3), Patch(t, {Value:1}, {Value: Value * 10}))
-Errors: Error 17-57: The second argument of Map cannot include behavior functions. Use ForAll instead for imperative logic.
+Errors: Error 17-57: The evaluation argument of the Map function cannot include behavior functions. Use ForAll instead for imperative logic.
 
 >> ForAll(Sequence(3), Patch(t, {Value:1}, {Value: Value * 10}))
 Table({Value:10},{Value:20},{Value:30})
@@ -39,21 +39,20 @@ Table({Value:10},{Value:20},{Value:30})
 1
 
 >> Map(Sequence(3), Set(x,Value))
-Errors: Error 0-3: The function 'Map' has some invalid arguments.|Error 17-29: The second argument of Map cannot include behavior functions. Use ForAll instead for imperative logic.
+Errors: Error 0-3: The function 'Map' has some invalid arguments.|Error 17-29: The evaluation argument of the Map function cannot include behavior functions. Use ForAll instead for imperative logic.
 
 >> Map(Sequence(3), Set(x,Value); x)
-Errors: Error 29-30: The second argument of Map cannot include behavior functions. Use ForAll instead for imperative logic.
+Errors: Error 29-30: The evaluation argument of the Map function cannot include behavior functions. Use ForAll instead for imperative logic.
 
 // ************** Multi-table Map with mutation functions ******************
 
 // Collect in multi-table lambda
 >> Map([1,2,3] As A, [4,5,6] As B, Collect(t, {Value: A.Value + B.Value}))
-Errors: Error 32-70: The second argument of Map cannot include behavior functions. Use ForAll instead for imperative logic.
+Errors: Error 32-70: The evaluation argument of the Map function cannot include behavior functions. Use ForAll instead for imperative logic.
 
 // Set in multi-table lambda (Set returns Void, so also get invalid args error)
 >> Map([1,2,3] As A, [4,5,6] As B, Set(x, A.Value + B.Value))
-Errors: Error 0-3: The function 'Map' has some invalid arguments.|Error 32-57: The second argument of Map cannot include behavior functions. Use ForAll instead for imperative logic.
-
+Errors: Error 0-3: The function 'Map' has some invalid arguments.|Error 32-57: The evaluation argument of the Map function cannot include behavior functions. Use ForAll instead for imperative logic.
 // ************** Void lambda ******************
 
 >> ForAll(Sequence(5), Set(x,Value)) // return value is actually Void, testing infrastucture returns change to x

@@ -2174,7 +2174,11 @@
     <comment>Error Message.</comment>
   </data>
   <data name="ErrMapFunctionRequiresPureLambda" xml:space="preserve">
-    <value>The second argument of Map cannot include behavior functions. Use ForAll instead for imperative logic.</value>
+    <value>The evaluation argument of the Map function cannot include behavior functions. Use ForAll instead for imperative logic.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrMapFunctionTypedAndDynamicTogether" xml:space="preserve">
+    <value>The Map function does not support mixing typed tables with Dynamic arrays.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">

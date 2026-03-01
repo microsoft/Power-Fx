@@ -682,8 +682,14 @@ Errors: Error 0-3: The function 'Map' has some invalid arguments.|Error 11-52: A
 >> Map(Sequence(10) As Int, Map(Sequence(10),Char(Value+64)) As Alpha, {Int: Int.Value, Alpha: Alpha.Value})
 Table({Alpha:"A",Int:1},{Alpha:"B",Int:2},{Alpha:"C",Int:3},{Alpha:"D",Int:4},{Alpha:"E",Int:5},{Alpha:"F",Int:6},{Alpha:"G",Int:7},{Alpha:"H",Int:8},{Alpha:"I",Int:9},{Alpha:"J",Int:10})
 
+>> Map(ParseJSON("[1,2,3,4,5,6,7,8,9,10]") As Int, ParseJSON("[1,2,3,4,5,6,7,8,9,10]") As Alpha, {Int: Value(Int), Alpha: Char(Alpha+64)})
+Table({Alpha:"A",Int:1},{Alpha:"B",Int:2},{Alpha:"C",Int:3},{Alpha:"D",Int:4},{Alpha:"E",Int:5},{Alpha:"F",Int:6},{Alpha:"G",Int:7},{Alpha:"H",Int:8},{Alpha:"I",Int:9},{Alpha:"J",Int:10})
+
 >> Map(Sequence(10) As Int, Map(Sequence(9),Char(Value+64)) As Alpha, ["I","II","III","IV","V","VI","VII","VIII","IX","X","XI"] As Roman, Map(Sequence(8),Date(1,1,Value)) As Date, Map(Sequence(11),Time(1,1,Value)) As Time, {Int: Int.Value, Alpha: Alpha.Value, Roman: Roman.Value, Date: Date.Value, Time: Time.Value}, MapLength.Longest )
 Table({Alpha:"A",Date:Date(1,1,1),Int:1,Roman:"I",Time:Time(1,1,1,0)},{Alpha:"B",Date:Date(1,1,2),Int:2,Roman:"II",Time:Time(1,1,2,0)},{Alpha:"C",Date:Date(1,1,3),Int:3,Roman:"III",Time:Time(1,1,3,0)},{Alpha:"D",Date:Date(1,1,4),Int:4,Roman:"IV",Time:Time(1,1,4,0)},{Alpha:"E",Date:Date(1,1,5),Int:5,Roman:"V",Time:Time(1,1,5,0)},{Alpha:"F",Date:Date(1,1,6),Int:6,Roman:"VI",Time:Time(1,1,6,0)},{Alpha:"G",Date:Date(1,1,7),Int:7,Roman:"VII",Time:Time(1,1,7,0)},{Alpha:"H",Date:Date(1,1,8),Int:8,Roman:"VIII",Time:Time(1,1,8,0)},{Alpha:"I",Date:Blank(),Int:9,Roman:"IX",Time:Time(1,1,9,0)},{Alpha:Blank(),Date:Blank(),Int:10,Roman:"X",Time:Time(1,1,10,0)},{Alpha:Blank(),Date:Blank(),Int:Blank(),Roman:"XI",Time:Time(1,1,11,0)})
+
+>> Map(ParseJSON("[1,2,3,4,5,6,7,8,9,10]") As Int, ParseJSON("[1,2,3,4,5,6,7,8,9]") As Alpha, ParseJSON("[""I"",""II"",""III"",""IV"",""V"",""VI"",""VII"",""VIII"",""IX"",""X"",""XI""]") As Roman, {Int: Value(Int), Alpha: Char(Alpha+64), Roman: Text(Roman), Date:If(Int <= 8,Date(1,1,Int),Blank()), Time:Time(1,1,Int)}, MapLength.Longest)
+Table({Alpha:"A",Date:Date(1,1,1),Int:1,Roman:"I",Time:Time(1,1,1,0)},{Alpha:"B",Date:Date(1,1,2),Int:2,Roman:"II",Time:Time(1,1,2,0)},{Alpha:"C",Date:Date(1,1,3),Int:3,Roman:"III",Time:Time(1,1,3,0)},{Alpha:"D",Date:Date(1,1,4),Int:4,Roman:"IV",Time:Time(1,1,4,0)},{Alpha:"E",Date:Date(1,1,5),Int:5,Roman:"V",Time:Time(1,1,5,0)},{Alpha:"F",Date:Date(1,1,6),Int:6,Roman:"VI",Time:Time(1,1,6,0)},{Alpha:"G",Date:Date(1,1,7),Int:7,Roman:"VII",Time:Time(1,1,7,0)},{Alpha:"H",Date:Date(1,1,8),Int:8,Roman:"VIII",Time:Time(1,1,8,0)},{Alpha:"I",Date:Blank(),Int:9,Roman:"IX",Time:Time(1,1,9,0)},{Alpha:"@",Date:Blank(),Int:10,Roman:"X",Time:Time(1,1,10,0)},{Alpha:"@",Date:Error({Kind:ErrorKind.InvalidArgument}),Int:Blank(),Roman:"XI",Time:Time(1,1,0,0)})
 
 // ****************** Multi-table Map with UntypedObject (ParseJSON) ******************
 
@@ -760,3 +766,45 @@ Errors: Error 59-60: Name isn't valid. 'A' isn't recognized.|Error 53-58: The fu
 // MapLength is not allowed with single UO table
 >> Map(ParseJSON("[1,2,3]"), Value(ThisRecord) * 2, MapLength.Equal)
 Errors: Error 58-64: MapLength can only be used with multiple tables. Use 'As' to name each table argument.|Error 0-3: The function 'Map' has some invalid arguments.
+
+// ***************** Mixing UO and non-UO tables *******************
+
+>> Map([1,2,3],Value)
+Table({Value:1},{Value:2},{Value:3})
+
+>> Map([1,2,3],ThisRecord.Value)
+Table({Value:1},{Value:2},{Value:3})
+
+>> Map([1,2,3] As A,A.Value)
+Table({Value:1},{Value:2},{Value:3})
+
+>> Map([1,2,3] As A, [4,5,6] As B, A.Value * B.Value)
+Table({Value:4},{Value:10},{Value:18})
+
+// Mixing UO and non-UO tables is not allowed (by the compiler) and should return a compile time error. 
+// There is no design need for this limitation, but supporting it would be a change in the compiler's treatment of UO iteration arguments.
+
+// The error message on this first one could be better, but the parser is confused before it gets to Map.
+>> Map([1,2,3] As A, ParseJSON("[4,5,6]") As B, A.Value * Value(B))
+Errors: Error 12-14: Invalid argument type.|Error 0-3: The function 'Map' has some invalid arguments.|Error 39-41: As is not permitted in this context|Error 45-46: Name isn't valid. 'A' isn't recognized.|Error 46-52: The '.' operator cannot be used on Error values.|Error 61-62: Name isn't valid. 'B' isn't recognized.|Error 55-60: The function 'Value' has some invalid arguments.
+
+>> Map(ParseJSON("[1,2,3]") As A, [4,5,6] As B, Value(A) * B.Value)
+Errors: Error 39-41: The Map function does not support mixing typed tables with Dynamic arrays.|Error 0-3: The function 'Map' has some invalid arguments.
+
+>> Map(ParseJSON("[1,2,3]") As A, ParseJSON("[4,5,6]") As B, A * B)
+Table({Value:4},{Value:10},{Value:18})
+
+>> Map(ParseJSON("[1,2,3]") As A, Value(A))
+Table({Value:1},{Value:2},{Value:3})
+
+>> Map(ParseJSON("[1,2,3]"), Value(ThisRecord))
+Table({Value:1},{Value:2},{Value:3})
+
+>> Map(Map(ParseJSON("[1,2,3]"), ThisRecord), Value(ThisRecord.Value))
+Table({Value:1},{Value:2},{Value:3})
+
+>> CountRows(First(Map(ParseJSON("[[1,2,3],[4,5,6],[7,8,9]]"), ThisRecord)).Value)
+3
+
+>> Map(Map(ParseJSON("[[1,2,3],[4,5,6],[7,8,9]]"), ThisRecord),CountRows(ThisRecord.Value))
+[3, 3, 3]
