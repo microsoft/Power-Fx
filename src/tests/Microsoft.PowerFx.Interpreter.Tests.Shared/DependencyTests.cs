@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Patch(simple1, First(simple1), { a : First(simple1).b  } )", "Entity Simple1: a, b;")]
 
         // Remove
-        [InlineData("Remove(local, {name: First(remote).name})", "Entity Accounts: name; Entity Contacts: name;")]
+        [InlineData("Remove(simple1, {a:1, b:2})", "Entity Simple1: a, b;")]
 
         // Collect and ClearCollect.
         [InlineData("Collect(local, Table({ 'Account Name' : \"some name\"}))", "Entity Accounts: name;")]
