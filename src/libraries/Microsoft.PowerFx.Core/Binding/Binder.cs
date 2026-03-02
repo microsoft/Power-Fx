@@ -3063,6 +3063,31 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.FlagPathAsAsync(_txb.Top);
                 }
 
+                // Warn on implicit cross-gallery/form references.
+                // When a control outside a gallery references a control inside it by name,
+                // the reference implicitly uses the gallery's Selected/Current item.
+                if (lookupType.IsControl &&
+                    lookupInfo.Data is IExternalControl resolvedCtrl &&
+                    resolvedCtrl.IsReplicable &&
+                    resolvedCtrl.ReplicatingParent is IExternalControl gallery)
+                {
+                    var currentCtrl = _nameResolver?.CurrentEntity as IExternalControl;
+                    if (currentCtrl != null && !currentCtrl.IsDescendentOf(gallery))
+                    {
+                        var activeItemPropName = gallery.Template.ActiveItemPropertyName;
+                        if (activeItemPropName != null)
+                        {
+                            _txb.ErrorContainer.EnsureError(
+                                DocumentErrorSeverity.Warning,
+                                node,
+                                TexlStrings.WarnImplicitGallerySelectedReference,
+                                node.Ident.Name.Value,
+                                gallery.EntityName.Value,
+                                activeItemPropName);
+                        }
+                    }
+                }
+
                 // Update _usesGlobals, _usesResources, etc.
                 UpdateBindKindUseFlags(lookupInfo.Kind);
 
