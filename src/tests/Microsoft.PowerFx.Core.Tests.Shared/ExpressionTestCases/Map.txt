@@ -814,4 +814,21 @@ Table({Value:3},{Value:3},{Value:3})
 >> Map([1,2,3], Value, MapLength.Equal)
 Errors: Error 29-35: MapLength can only be used with multiple tables, each of which must be named with 'As'.|Error 0-3: The function 'Map' has some invalid arguments.
 
+// MapLength as a value and not a constant
+
+>> Map( [10,20,30] As a, [1,2,3,4,5] As b, a.Value + b.Value, If( false, MapLength.Shortest, MapLength.Longest) )
+Table({Value:11},{Value:22},{Value:33},{Value:4},{Value:5})
+
+>> Map( [10,20,30] As a, [1,2,3,4,5] As b, a.Value + b.Value, If( true, MapLength.Shortest, MapLength.Longest) )
+Table({Value:11},{Value:22},{Value:33})
+
+// ForAll returns a single Error, Map returns all results
+
+>> Map( [MapLength.Longest, MapLength.Shortest, MapLength.Equal, MapLength.First], Map( [10,20,30] As a, [1,2,3,4] As b, [100,200] As c, a.Value + b.Value + c.Value, Value ) )
+Table({Value:Table({Value:111},{Value:222},{Value:33},{Value:4})},{Value:Table({Value:111},{Value:222})},{Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:Table({Value:111},{Value:222},{Value:33})})
+[[111, 222, 33, 4], [111, 222], <Error: All tables passed to Map must have the same number of rows when using MapLength.Equal.>, [111, 222, 33]]
+
+>> ForAll( [MapLength.Longest, MapLength.Shortest, MapLength.Equal, MapLength.First], Map( [10,20,30] As a, [1,2,3,4] As b, [100,200] As c, a.Value + b.Value + c.Value, Value ) )
+Error({Kind:ErrorKind.InvalidArgument})
+
 
