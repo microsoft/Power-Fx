@@ -146,15 +146,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             nodeToCoercedTypeMap = null;
 
-            // Four valid patterns:
-            // 1. Map( table, lambda )
-            // 2. Map( table As name, lambda )
-            // 3. Map( table1 As name1, table2 As name2, [...,] lambda )
-            // 4. Map( table1 As name1, table2 As name2, [...,] lambda, MapLength enum )
+            // Count consecutive AsNode args from the start, with special disponsation for 2-argument, single table
+            var numberOfTables = CountTableArgs(args);
 
-            // Count consecutive AsNode args from the start
-            var lambdaIndex = CountTableArgs(args);
-
+            // Check the last argument for possible MapLength enum
             var mapLengthType = context.Features.StronglyTypedBuiltinEnums
                 ? BuiltInEnums.MapLengthEnum.FormulaType._type
                 : DType.String;
@@ -162,7 +157,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 mapLengthType.Accepts(argTypes[args.Length - 1], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
 
             // Validate all table args are tables
-            for (int i = 0; i < lambdaIndex; i++)
+            for (int i = 0; i < numberOfTables; i++)
             {
                 if (!IsAllowedIteratorTypeForMap(argTypes[i]))
                 {
@@ -173,44 +168,60 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 fArgsValid &= CheckType(context, args[i], argTypes[i], ParamTypes[0], errors, ref nodeToCoercedTypeMap);
             }
 
-            if (lambdaIndex == args.Length)
+            // Four valid patterns:
+            // 1. Map( table, lambda )
+            // 2. Map( table As name, lambda )
+            // 3. Map( table1 As name1, table2 As name2, [...,] lambda )
+            // 4. Map( table1 As name1, table2 As name2, [...,] lambda, MapLength enum )
+
+            if (numberOfTables == args.Length)
             {
                 // too many As, must be at least one arg without
+                // invalid: Map( table1 As name1, table2 As name2 ), numberOfTables = 2, args.Length = 2
+                // invalid: Map( table1 As name1, table2 As name2, table3 As name3 ), numberOfTables = 3, args.Length = 3
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[args.Length - 1], TexlStrings.ErrMapNoLambda);
                 fArgsValid = false;
             }
-            else if (lambdaIndex < 2 && args.Length == 3 && possibleMapLengthArg)
+            else if (numberOfTables < args.Length - 2)
             {
-                // invalid Map( table [lambdaIndex], lambda, mapLength )
-                // invalid Map( table As name, lambda [lambdaIndex], mapLength )
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrMapMapLengthRequiresMultiTable);
-                fArgsValid = false;
-            }
-            else if ((lambdaIndex < 2 && args.Length > 2) || (lambdaIndex < args.Length - 2))
-            {
-                // invalid Map( table1 As name1, table2 [lambdaIndex], lambda, mapLength )
-                // invalid Map( table1 as name1, table2 as name2, table3 [lambdaIndex], lambda, mapLength )
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[lambdaIndex], TexlStrings.ErrMapMultiTableRequiresAs);
-                fArgsValid = false;
-            }
-            else if (lambdaIndex == args.Length - 2) // legitimate MapLength position
-            {
-                // needs at least 4 arguments for MapLength to be used
-                if (args.Length < 4)
+                // too few As, at most two non As arguments (Lambda and MapOptions)
+                // invalid: Map( table1 As name1, table2, lambda, mapLength ), numberOfTables = 1, args.Length = 4
+                // invalid: Map( table1 as name1, table2 as name2, table3, lambda, mapLength ), numberOfTables = 2, args.Length = 5
+                // invalid: Map( table, lambda, mapLength ), numberOfTables = 0, args.Length = 3
+                if (possibleMapLengthArg)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[lambdaIndex + 1], TexlStrings.ErrMapMapLengthRequiresMultiTable);
+                    // more targeted error message if we think the last argument is MapLength
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[args.Length - 1], TexlStrings.ErrMapMapLengthRequiresMultiTable);
+                    fArgsValid = false;
+                }
+                else
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[numberOfTables], TexlStrings.ErrMapMultiTableRequiresAs);
+                    fArgsValid = false;
+                }
+            }
+
+            // Checking for valid MapLength
+            if (args.Length > 2 && numberOfTables == args.Length - 2)
+            {
+                if (args.Length == 3)
+                {
+                    // MapLength needs at least 4 arguments
+                    // invalid: Map( table As name, lambda, MapLength )
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[args.Length - 1], TexlStrings.ErrMapMapLengthRequiresMultiTable);
                     fArgsValid = false;
                 }
                 else if (!possibleMapLengthArg)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[lambdaIndex + 1], TexlStrings.ErrMapInvalidMapLengthArg);
+                    // invalid: Map( table1 As name, table2 As name, lambda, SortOrder.Ascending )
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[numberOfTables + 1], TexlStrings.ErrMapInvalidMapLengthArg);
                     fArgsValid = false;
                 }
             }
 
             if (fArgsValid)
             {
-                returnType = ComputeReturnType(argTypes[lambdaIndex], args[lambdaIndex], errors, out bool valid);
+                returnType = ComputeReturnType(argTypes[numberOfTables], args[numberOfTables], errors, out bool valid);
                 fArgsValid &= valid;
             }
             else
@@ -330,15 +341,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 newArgs.Add(new TextLiteralNode(IRContext.NotInSource(FormulaType.String), scopeIdent[i].Value));
             }
 
-            // Add MapLength string value
-            var mapLengthValue = "equal"; // default
-            var mapLengthArgIndex = lambdaIndex + 1;
-            if (mapLengthArgIndex < carg && node.Args.Children[mapLengthArgIndex] is DottedNameNode dottedName)
+            // Add MapLength string value (if present)
+            if (lambdaIndex + 1 < carg)
             {
-                mapLengthValue = dottedName.Right.Name.Value.ToLowerInvariant();
+                newArgs.Add(args[lambdaIndex + 1]);
             }
-
-            newArgs.Add(new TextLiteralNode(IRContext.NotInSource(FormulaType.String), mapLengthValue));
 
             return new IRCallNode(context.GetIRContext(node), this, scope, newArgs);
         }

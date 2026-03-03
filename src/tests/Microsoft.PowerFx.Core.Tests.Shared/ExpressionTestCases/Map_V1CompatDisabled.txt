@@ -1,4 +1,4 @@
-#setup: disable:PowerFxV1CompatibilityRules
+#setup: disable:PowerFxV1CompatibilityRules,disable:StronglyTypedBuiltinEnums
 
 // ****************** Map does NOT allow Void-returning formulas ******************
 // Map is a pure functional map operation and rejects Void return types
@@ -9,3 +9,35 @@ Table({Value:Error({Kind:ErrorKind.NotSupported})})
 
 >> Map([1,2,3], If(false,[],{}))
 Table({Value:Error({Kind:ErrorKind.NotSupported})},{Value:Error({Kind:ErrorKind.NotSupported})},{Value:Error({Kind:ErrorKind.NotSupported})})
+
+// Invalid MapLength value (non-enum argument)
+>> Map([1,2,3] As A, [4,5,6] As B, A.Value + B.Value, "invalid")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Invalid MapLength value (non-enum argument)
+>> Map([1,2,3] As A, [4,5,6] As B, A.Value + B.Value, "shortest")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// MapLength.Equal is a valid value that could be returned from Map, possibly used in nested Map
+
+>> Map([1,2,3], MapLength.Equal)
+Table({Value:"equal"},{Value:"equal"},{Value:"equal"})
+
+>> Map([1,2,3] As a, MapLength.Equal)
+Table({Value:"equal"},{Value:"equal"},{Value:"equal"})
+
+>> Map([1,2,3] As a, MapLength.Equal, MapLength.Equal)
+Errors: Error 44-50: MapLength can only be used with multiple tables, each of which must be named with 'As'.|Error 0-3: The function 'Map' has some invalid arguments.
+
+>> Map([1,2,3] As a, [1,2,3] As b, MapLength.Equal, MapLength.Equal)
+Table({Value:"equal"},{Value:"equal"},{Value:"equal"})
+
+>> Map([1,2,3] As a, [1,2,3] As b, MapLength.Equal, MapLength.Equal, MapLength.Equal)
+Errors: Error 75-81: MapLength can only be used with multiple tables, each of which must be named with 'As'.|Error 0-3: The function 'Map' has some invalid arguments.
+
+>> Map([1,2,3] As a, [4,5,6] As b, a.Value + b.Value, SortOrder.Ascending)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Map([1,2,3] As a, [4,5,6] As b, a.Value + b.Value, "equal")
+Table({Value:5},{Value:7},{Value:9})
+

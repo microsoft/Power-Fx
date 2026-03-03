@@ -1,4 +1,4 @@
-#setup: PowerFxV1CompatibilityRules
+#setup: PowerFxV1CompatibilityRules,StronglyTypedBuiltinEnums
 
 // ****************** Map does NOT allow Void-returning formulas ******************
 // Map is a pure functional map operation and rejects Void return types
@@ -9,3 +9,35 @@ Errors: Error 0-3: The function 'Map' has some invalid arguments.
 
 >> Map([1,2,3], If(false,[],{}))
 Errors: Error 0-3: The function 'Map' has some invalid arguments.
+
+// Invalid MapLength value (non-enum argument)
+>> Map([1,2,3] As A, [4,5,6] As B, A.Value + B.Value, "invalid")
+Errors: Error 51-60: Invalid MapLength argument. Use MapLength.Equal, MapLength.Shortest, MapLength.Longest, or MapLength.First.
+
+// Invalid MapLength value (non-enum argument)
+>> Map([1,2,3] As A, [4,5,6] As B, A.Value + B.Value, "shortest")
+Errors: Error 51-61: Invalid MapLength argument. Use MapLength.Equal, MapLength.Shortest, MapLength.Longest, or MapLength.First.
+
+// MapLength.Equal is a valid value that could be returned from Map, possibly used in nested Map
+
+>> Map([1,2,3], MapLength.Equal)
+Table({Value:MapLength.Equal},{Value:MapLength.Equal},{Value:MapLength.Equal})
+
+>> Map([1,2,3] As a, MapLength.Equal)
+Table({Value:MapLength.Equal},{Value:MapLength.Equal},{Value:MapLength.Equal})
+
+>> Map([1,2,3] As a, MapLength.Equal, MapLength.Equal)
+Errors: Error 44-50: MapLength can only be used with multiple tables, each of which must be named with 'As'.|Error 0-3: The function 'Map' has some invalid arguments.
+
+>> Map([1,2,3] As a, [1,2,3] As b, MapLength.Equal, MapLength.Equal)
+Table({Value:MapLength.Equal},{Value:MapLength.Equal},{Value:MapLength.Equal})
+
+>> Map([1,2,3] As a, [1,2,3] As b, MapLength.Equal, MapLength.Equal, MapLength.Equal)
+Errors: Error 75-81: MapLength can only be used with multiple tables, each of which must be named with 'As'.|Error 0-3: The function 'Map' has some invalid arguments.
+
+>> Map([1,2,3] As a, [4,5,6] As b, a.Value + b.Value, SortOrder.Ascending)
+Errors: Error 60-70: Invalid MapLength argument. Use MapLength.Equal, MapLength.Shortest, MapLength.Longest, or MapLength.First.|Error 0-3: The function 'Map' has some invalid arguments.
+
+>> Map([1,2,3] As a, [4,5,6] As b, a.Value + b.Value, "equal")
+Errors: Error 51-58: Invalid MapLength argument. Use MapLength.Equal, MapLength.Shortest, MapLength.Longest, or MapLength.First.|Error 0-3: The function 'Map' has some invalid arguments.
+

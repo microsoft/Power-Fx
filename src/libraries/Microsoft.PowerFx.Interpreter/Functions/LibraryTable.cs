@@ -1537,7 +1537,8 @@ namespace Microsoft.PowerFx.Functions
         // Unlike ForAll, Map keeps errors in the result table instead of combining them.
         private static async ValueTask<FormulaValue> Map(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            // Parse args: N tables, lambda, N scope name strings, MapLength string
+            // Parse args: N tables, lambda, N scope name strings, MapLength string (optional)
+
             // Find the lambda (first LambdaFormulaValue)
             var lambdaIndex = -1;
             for (int i = 0; i < args.Length; i++)
@@ -1558,7 +1559,6 @@ namespace Microsoft.PowerFx.Functions
             var lambda = (LambdaFormulaValue)args[lambdaIndex];
 
             List<string> scopeNames = new List<string>();
-            string mapLengthStr = "equal";
 
             if (tableCount > 1)
             {
@@ -1567,8 +1567,28 @@ namespace Microsoft.PowerFx.Functions
                 {
                     scopeNames.Add(((StringValue)args[lambdaIndex + 1 + i]).Value);
                 }
+            }
 
-                mapLengthStr = ((StringValue)args[lambdaIndex + 1 + tableCount]).Value;
+            string mapLengthStr = "equal"; // default
+            if (lambdaIndex + 1 + tableCount < args.Length)
+            {
+                // If present, get MapLength from last arg
+                switch (args[lambdaIndex + 1 + tableCount])
+                {
+                    case OptionSetValue osv:
+                        mapLengthStr = (string)osv.ExecutionValue;
+                        break;
+                    case StringValue sv:
+                        mapLengthStr = sv.Value;
+                        break;
+                    default:
+                        return new ErrorValue(irContext, new ExpressionError()
+                        {
+                            Message = "Invalid MapLength type.",
+                            Span = irContext.SourceContext,
+                            Kind = ErrorKind.InvalidArgument
+                        });
+                }
             }
 
             // Get table values and compute lengths without materializing rows
