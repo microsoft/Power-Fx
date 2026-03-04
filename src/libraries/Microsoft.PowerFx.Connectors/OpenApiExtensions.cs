@@ -39,6 +39,7 @@ namespace Microsoft.PowerFx.Connectors
         private static readonly IReadOnlyList<string> _knownContentTypes = new string[]
         {
             ContentType_ApplicationJson,
+            ContentType_ApplicationOctetStream,
             ContentType_XWwwFormUrlEncoded,
             ContentType_TextJson,
             ContentType_Multipart
