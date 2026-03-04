@@ -135,6 +135,9 @@ Table({Cubed:1,Original:1,Squared:1},{Cubed:8,Original:2,Squared:4},{Cubed:27,Or
 >> Map( ["First","Second","Third","Fourth"] As Name, Sequence(1000) As Index, {Number: Index.Value, Title:Name.Value}, MapLength.First)
 Table({Number:1,Title:"First"},{Number:2,Title:"Second"},{Number:3,Title:"Third"},{Number:4,Title:"Fourth"})
 
+>> Map( ["First","Second","Third","Fourth"] As Name, Sequence(1000) As Index, Patch( Name, {Number: Index.Value} ), MapLength.First)
+Table({Number:1,Value:"First"},{Number:2,Value:"Second"},{Number:3,Value:"Third"},{Number:4,Value:"Fourth"})
+
 >> Map( ParseJSON("[""First"",""Second"",""Third"",""Fourth""]") As Name, ParseJSON("[1,2,3,4,5,6,7,9]") As Index, {Number: Value(Index), Title:Text(Name)}, MapLength.First)
 Table({Number:1,Title:"First"},{Number:2,Title:"Second"},{Number:3,Title:"Third"},{Number:4,Title:"Fourth"})
 
@@ -1118,4 +1121,105 @@ Table({Value:Table({Value:111},{Value:222},{Value:33},{Value:4})},{Value:Table({
 >> ForAll( [MapLength.Longest, MapLength.Shortest, MapLength.Equal, MapLength.First], Map( [10,20,30] As a, [1,2,3,4] As b, [100,200] As c, a.Value + b.Value + c.Value, Value ) )
 Error({Kind:ErrorKind.InvalidArgument})
 
+// Vector and Linear Algebra examples
+
+// Vector Addition: zip(v1, v2).map((a,b) => a + b)
+>> Map( [1,2,3] As Vector1, [4,5,6] As Vector2, Vector1.Value + Vector2.Value )
+Table({Value:5},{Value:7},{Value:9})
+
+// Dot product: zip(v1, v2).map((a,b) => a * b).sum
+>> Sum( Map( [1,2,3] As Vector1, [4,5,6] As Vector2, Vector1.Value * Vector2.Value ), Value )
+32
+
+// Matrix Addition: zip(m1, m2).map((row1, row2) => zip(row1, row2).map((a,b) => a + b))
+>> Map( [[1,2,3],[4,5,6],[7,8,9]] As Matrix1, [[10,20,30],[40,50,60],[70,80,90]] As Matrix2, Map( Matrix1.Value As Row1, Matrix2.Value As Row2, Row1.Value + Row2.Value ) )
+Table({Value:Table({Value:11},{Value:22},{Value:33})},{Value:Table({Value:44},{Value:55},{Value:66})},{Value:Table({Value:77},{Value:88},{Value:99})})
+
+// ****************** Additional Vector Analysis (multi-table Zip) ******************
+
+// Vector Subtraction: element-wise difference
+>> Map( [10,20,30] As V1, [1,2,3] As V2, V1.Value - V2.Value )
+Table({Value:9},{Value:18},{Value:27})
+
+// Hadamard Product: element-wise multiplication of two vectors
+>> Map( [1,2,3] As V1, [4,5,6] As V2, V1.Value * V2.Value )
+Table({Value:4},{Value:10},{Value:18})
+
+// Linear Combination: 2*V1 + 3*V2
+>> Map( [1,0,3] As V1, [0,1,2] As V2, 2 * V1.Value + 3 * V2.Value )
+Table({Value:2},{Value:3},{Value:12})
+
+// Component-wise min and max of two vectors
+>> Map( [1,5,3] As V1, [4,2,6] As V2, {Min: Min(V1.Value, V2.Value), Max: Max(V1.Value, V2.Value)} )
+Table({Max:4,Min:1},{Max:5,Min:2},{Max:6,Min:3})
+
+// Element-wise absolute difference of two vectors
+>> Map( [10,3,8] As V1, [4,7,2] As V2, Abs(V1.Value - V2.Value) )
+Table({Value:6},{Value:4},{Value:6})
+
+// Euclidean Distance: sqrt(sum((a-b)^2))
+// Distance from [0,0,0] to [1,2,2] = sqrt(1+4+4) = 3
+>> Round( Sqrt( Sum( Map( [0,0,0] As V1, [1,2,2] As V2, (V1.Value - V2.Value)^2 ), Value ) ), 0 )
+3
+
+// Euclidean Distance from [1,2] to [4,6] = sqrt(9+16) = 5
+>> Round( Sqrt( Sum( Map( [1,2] As V1, [4,6] As V2, (V1.Value - V2.Value)^2 ), Value ) ), 0 )
+5
+
+// Midpoint (centroid) of two vectors
+>> Map( [1,2,3] As V1, [5,6,7] As V2, (V1.Value + V2.Value) / 2 )
+Table({Value:3},{Value:4},{Value:5})
+
+// Centroid of three 3D points
+>> Map( [1,2,3] As V1, [4,5,6] As V2, [7,8,9] As V3, (V1.Value + V2.Value + V3.Value) / 3 )
+Table({Value:4},{Value:5},{Value:6})
+
+// Three-vector weighted sum: 2*e1 + 3*e2 + 4*e3 using standard basis vectors
+>> Map( [1,0,0] As E1, [0,1,0] As E2, [0,0,1] As E3, 2 * E1.Value + 3 * E2.Value + 4 * E3.Value )
+Table({Value:2},{Value:3},{Value:4})
+
+// Cosine Similarity of perpendicular vectors [3,4] and [4,-3]: dot=0, cos=0
+>> Round( With( { Dot: Sum( Map( [3,4] As V1, [4,-3] As V2, V1.Value * V2.Value ), Value ), MagA: Sqrt( Sum( Map( [3,4], Value^2 ), Value ) ), MagB: Sqrt( Sum( Map( [4,-3], Value^2 ), Value ) ) }, Dot / (MagA * MagB) ), 0 )
+0
+
+// Cosine Similarity of parallel vectors [3,4] and [6,8]: cos=1
+>> Round( With( { Dot: Sum( Map( [3,4] As V1, [6,8] As V2, V1.Value * V2.Value ), Value ), MagA: Sqrt( Sum( Map( [3,4], Value^2 ), Value ) ), MagB: Sqrt( Sum( Map( [6,8], Value^2 ), Value ) ) }, Dot / (MagA * MagB) ), 0 )
+1
+
+// Dot product with detailed record output showing components
+>> Map( [1,2,3] As V1, [4,5,6] As V2, {A: V1.Value, B: V2.Value, Product: V1.Value * V2.Value} )
+Table({A:1,B:4,Product:4},{A:2,B:5,Product:10},{A:3,B:6,Product:18})
+
+// Vector addition with unequal lengths using MapLength.Longest (pad with zero)
+>> Map( [1,2,3,4,5] As V1, [10,20,30] As V2, Coalesce(V1.Value, 0) + Coalesce(V2.Value, 0), MapLength.Longest )
+Table({Value:11},{Value:22},{Value:33},{Value:4},{Value:5})
+
+// ****************** Additional Matrix Operations (multi-table Zip) ******************
+
+// Matrix Subtraction: nested Zip over corresponding rows
+>> Map( [[10,20],[30,40]] As M1, [[1,2],[3,4]] As M2, Map( M1.Value As R1, M2.Value As R2, R1.Value - R2.Value ) )
+Table({Value:Table({Value:9},{Value:18})},{Value:Table({Value:27},{Value:36})})
+
+// Matrix Hadamard Product: element-wise multiplication of two matrices
+>> Map( [[1,2],[3,4]] As M1, [[5,6],[7,8]] As M2, Map( M1.Value As R1, M2.Value As R2, R1.Value * R2.Value ) )
+Table({Value:Table({Value:5},{Value:12})},{Value:Table({Value:21},{Value:32})})
+
+// Matrix-Vector Multiplication: [[1,2],[3,4]] * [5,6] = [17, 39]
+// Each result element is the dot product of a matrix row with the vector
+>> Map( [[1,2],[3,4]] As MatrixRow, Sum( Map( MatrixRow.Value As M, [5,6] As V, M.Value * V.Value ), Value ) )
+Table({Value:17},{Value:39})
+
+// Matrix Trace: sum of diagonal elements of [[1,2,3],[4,5,6],[7,8,9]] = 1+5+9 = 15
+// Zip rows with index sequence, then use Index to pick diagonal element
+>> Sum( Map( [[1,2,3],[4,5,6],[7,8,9]] As Row, Sequence(3) As Idx, Index(Row.Value, Idx.Value).Value ), Value )
+15
+
+// Matrix Multiplication: [[1,2],[3,4]] * [[5,6],[7,8]] = [[19,22],[43,50]]
+// B is transposed to [[5,7],[6,8]] so columns become rows for dot products
+>> Map( [[1,2],[3,4]] As ARow, Map( [[5,7],[6,8]] As BCol, Sum( Map( ARow.Value As A, BCol.Value As B, A.Value * B.Value ), Value ) ) )
+Table({Value:Table({Value:19},{Value:22})},{Value:Table({Value:43},{Value:50})})
+
+// Matrix element-wise comparison: which matrix has larger values
+>> Map( [[1,5],[3,2]] As M1, [[4,2],[1,6]] As M2, Map( M1.Value As R1, M2.Value As R2, If(R1.Value >= R2.Value, "M1", "M2") ) )
+Table({Value:Table({Value:"M2"},{Value:"M1"})},{Value:Table({Value:"M1"},{Value:"M2"})})
 
