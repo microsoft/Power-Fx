@@ -365,7 +365,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [Theory]
         [InlineData("AA", "Name isn't valid. 'AA' isn't recognized.")]
         [InlineData("1+CountRowss", "Name isn't valid. 'CountRowss' isn't recognized.")]
-        [InlineData("CountRows(2)", "Invalid argument type (Decimal). Expecting a Table value instead.", "The function 'CountRows' has some invalid arguments.")]
+        [InlineData("CountRows(2)", "Invalid argument type (Number). Expecting a Table value instead.", "The function 'CountRows' has some invalid arguments.")]
         public void TestDidOpenErroneousFormula(string formula, params string[] expectedErrors)
         {
             var expectedDiagnostics = expectedErrors.Select(error => new Diagnostic()
@@ -2035,7 +2035,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             CheckBehaviorError(_sendToClientData[0], false, out var diags);
 
-            Assert.True(diags.First().Message.Contains("Type mismatch between source and target types. Expected Text; Found Decimal."), diags.First().Message);
+            Assert.True(diags.First().Message.Contains("Type mismatch between source and target types. Expected Text; Found Number."), diags.First().Message);
             Assert.Empty(exList);
         }
 

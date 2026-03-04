@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx
 
             _definitions = definitions;
             _parserOptions = parserOptions ?? new ParserOptions();
-            _bindingConfig = new BindingConfig(allowsSideEffects: _parserOptions.AllowsSideEffects, useThisRecordForRuleScope: false, numberIsFloat: false, userDefinitionsMode: true);
+            _bindingConfig = new BindingConfig(allowsSideEffects: _parserOptions.AllowsSideEffects, useThisRecordForRuleScope: false, numberIsFloat: _parserOptions.NumberIsFloat, userDefinitionsMode: true);
             _defaultErrorCulture = _parserOptions.Culture ?? CultureInfo.InvariantCulture;
 
             return this;

@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Core
 
         private static bool TryLookupType(string typeName, INameResolver definedTypeSymbols, out FormulaType type)
         {
-            var lookupOrder = new List<INameResolver>() { definedTypeSymbols, ReadOnlySymbolTable.PrimitiveTypesTableInstance };
+            var lookupOrder = new List<INameResolver>() { definedTypeSymbols, FormulaTypeToSchemaHelper.JSONPrimitiveTypesTable };
             foreach (var table in lookupOrder)
             {
                 if (table.LookupType(new DName(typeName), out var ft))

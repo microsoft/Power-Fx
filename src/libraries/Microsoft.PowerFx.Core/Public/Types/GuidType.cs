@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Types
 
         public override string ToString()
         {
-            return "Guid";
+            return "GUID";
         }
 
         internal override void DefaultExpressionValue(StringBuilder sb)

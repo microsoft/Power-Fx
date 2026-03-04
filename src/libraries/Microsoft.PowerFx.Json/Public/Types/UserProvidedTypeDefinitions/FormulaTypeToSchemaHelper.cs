@@ -6,12 +6,31 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core
 {
     internal static class FormulaTypeToSchemaHelper
     {
+        public static readonly Dictionary<DName, FormulaType> JSONPrimitiveTypesDictionary =
+            new Dictionary<DName, FormulaType>()
+            {
+                { BuiltInTypeNames.Boolean, FormulaType.Boolean },
+                { BuiltInTypeNames.Color, FormulaType.Color },
+                { BuiltInTypeNames.Date, FormulaType.Date },
+                { BuiltInTypeNames.Time, FormulaType.Time },
+                { BuiltInTypeNames.DateTime, FormulaType.DateTime },
+                { BuiltInTypeNames.Guid, FormulaType.Guid },
+                { BuiltInTypeNames.Number_Alias, FormulaType.Number }, // Name "Number", not "Float", consistent with existing serialization format
+                { BuiltInTypeNames.Decimal, FormulaType.Decimal },
+                { BuiltInTypeNames.String_Text, FormulaType.String }, // Name "Text"
+                { BuiltInTypeNames.Hyperlink, FormulaType.Hyperlink },
+                { BuiltInTypeNames.UntypedObject_Dynamic, FormulaType.UntypedObject }, // Name "Dynamic"
+            };
+
+        public static readonly ReadOnlySymbolTable JSONPrimitiveTypesTable = ReadOnlySymbolTable.NewDefaultTypes(JSONPrimitiveTypesDictionary);
+
         public static FormulaTypeSchema ToSchema(this FormulaType type, INameResolver definedTypeSymbols, FormulaTypeSerializerSettings settings)
         {
             // Converting a formulaType to a FormulaTypeSchema requires cutting off at a max depth
@@ -88,7 +107,7 @@ namespace Microsoft.PowerFx.Core
 
         private static bool TryLookupTypeName(FormulaType type, INameResolver definedTypeSymbols, out string typeName)
         {
-            var lookupOrder = new List<INameResolver>() { definedTypeSymbols, ReadOnlySymbolTable.PrimitiveTypesTableInstance };
+            var lookupOrder = new List<INameResolver>() { definedTypeSymbols, JSONPrimitiveTypesTable };
             foreach (var table in lookupOrder)
             {
                 var typeNames = table.NamedTypes.Where(kvp => kvp.Value.Equals(type));

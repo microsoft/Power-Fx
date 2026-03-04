@@ -1,0 +1,145 @@
+#setup: disable:NumberIsFloat
+
+// Number is Decimal (NumberIsFloat disabled)
+// Value function uses Decimal
+
+>> 1.0000000000000000000000001
+1.0000000000000000000000001
+
+// Decimal
+
+>> Decimal("1.0000000000000000000000001")
+1.0000000000000000000000001
+
+>> Decimal(1.0000000000000000000000001)
+1.0000000000000000000000001
+
+>> Decimal(1.0000000000000000000000001) + Decimal(1.0000000000000000000000001)
+2.0000000000000000000000002
+
+>> Decimal(1.0000000000000000000000001) * Decimal(2.0000000000000000000000002)
+2.0000000000000000000000004
+
+>> Decimal("1.0000000000000000000000001%")
+0.010000000000000000000000001
+
+>> Decimal(1.0000000000000000000000001%)
+0.010000000000000000000000001
+
+>> Decimal(1.0000000000000000000000001e2)
+100.00000000000000000000001
+
+>> Decimal("1,0000000000000000000000001", "Fr-Fr")
+1.0000000000000000000000001
+
+>> Decimal(1e50)
+Errors: Error 8-12: Numeric value is too large.|Error 0-7: The function 'Decimal' has some invalid arguments.|Error 8-12: Expected text or number. We expect text or a number at this point in the formula.
+
+>> Decimal(1e50) > 10
+Errors: Error 8-12: Numeric value is too large.|Error 0-7: The function 'Decimal' has some invalid arguments.|Error 8-12: Expected text or number. We expect text or a number at this point in the formula.
+
+>> Decimal("1e50") > 10
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Decimal(1e-50)
+0
+
+>> (Decimal(1237940039285380274899124224) * Decimal(1073741824)) / Decimal(1180591620717411303424) // powers of two, can be handled exactly in floating point, overflow decimal
+Error({Kind:ErrorKind.Numeric})
+
+>> 340282366920938463463374607431768211456 / 1267650600228229401496703205376
+Errors: Error 0-39: Numeric value is too large.|Error 42-73: Numeric value is too large.|Error 0-39: Invalid argument type. Expecting one of the following: Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, Dynamic.
+
+>> Decimal(340282366920938463463374607431768211456) / Decimal(1267650600228229401496703205376)
+Errors: Error 8-47: Numeric value is too large.|Error 59-90: Numeric value is too large.|Error 0-7: The function 'Decimal' has some invalid arguments.|Error 8-47: Expected text or number. We expect text or a number at this point in the formula.|Error 51-58: The function 'Decimal' has some invalid arguments.|Error 59-90: Expected text or number. We expect text or a number at this point in the formula.
+
+>> Decimal("340282366920938463463374607431768211456") / Decimal("1267650600228229401496703205376")
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
+
+// Value (should be the same as Decimal)
+
+>> Value("1.0000000000000000000000001")
+1.0000000000000000000000001
+
+>> Value(1.0000000000000000000000001)
+1.0000000000000000000000001
+
+>> Value(1.0000000000000000000000001) + Value(1.0000000000000000000000001)
+2.0000000000000000000000002
+
+>> Value(1.0000000000000000000000001) * Value(2.0000000000000000000000002)
+2.0000000000000000000000004
+
+>> Value("1.0000000000000000000000001%")
+0.010000000000000000000000001
+
+>> Value(1.0000000000000000000000001%)
+0.010000000000000000000000001
+
+>> Value(1.0000000000000000000000001e2)
+100.00000000000000000000001
+
+>> Value("1,0000000000000000000000001", "Fr-Fr")
+1.0000000000000000000000001
+
+>> Value(1e50) > 10
+Errors: Error 6-10: Numeric value is too large.|Error 0-5: The function 'Value' has some invalid arguments.|Error 6-10: Expected text or number. We expect text or a number at this point in the formula.
+
+>> Value("1e50") > 10
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value(1e-50)
+0
+
+>> (Value(1237940039285380274899124224) * Value(1073741824)) / Value(1180591620717411303424) // powers of two, can be handled exactly in floating point, overflow decimal
+Error({Kind:ErrorKind.Numeric})
+
+>> Value(340282366920938463463374607431768211456) / Value(1267650600228229401496703205376)
+Errors: Error 55-86: Numeric value is too large.|Error 0-5: The function 'Value' has some invalid arguments.|Error 6-45: Expected text or number. We expect text or a number at this point in the formula.|Error 49-54: The function 'Value' has some invalid arguments.|Error 55-86: Expected text or number. We expect text or a number at this point in the formula.
+
+>> Value("340282366920938463463374607431768211456") / Value("1267650600228229401496703205376")
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
+
+// Float
+
+>> Float("1.0000000000000000000000001")
+1
+
+>> Float(1.0000000000000000000000001)
+1
+
+>> Float(1.0000000000000000000000001) + Float(1.0000000000000000000000001)
+2
+
+>> Float(1.0000000000000000000000001) * Float(2.0000000000000000000000002)
+2
+
+>> Float("1.0000000000000000000000001%")
+0.01
+
+>> Float(1.0000000000000000000000001%)
+0.01
+
+>> Float(1.0000000000000000000000001e2)
+100
+
+>> Float("1,0000000000000000000000001", "Fr-Fr")
+1
+
+>> Float(1e50) > 10
+Errors: Error 6-10: Numeric value is too large.|Error 0-5: The function 'Float' has some invalid arguments.|Error 6-10: Expected text or number. We expect text or a number at this point in the formula.
+
+>> Float("1e50") > 10
+true
+
+>> Float(1e-50)
+0
+
+>> (Float(1237940039285380274899124224) * Float(1073741824)) / Float(1180591620717411303424) // powers of two, can be handled exactly in floating point, overflows decimal
+1125899906842624
+
+>> Float(340282366920938463463374607431768211456) / Float(1267650600228229401496703205376)
+Errors: Error 6-45: Numeric value is too large.|Error 55-86: Numeric value is too large.|Error 0-5: The function 'Float' has some invalid arguments.|Error 6-45: Expected text or number. We expect text or a number at this point in the formula.|Error 49-54: The function 'Float' has some invalid arguments.|Error 55-86: Expected text or number. We expect text or a number at this point in the formula.
+
+>> Float("340282366920938463463374607431768211456") / Float("1267650600228229401496703205376")
+268435456

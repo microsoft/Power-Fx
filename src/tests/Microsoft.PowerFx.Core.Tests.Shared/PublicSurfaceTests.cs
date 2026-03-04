@@ -117,6 +117,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.BlobContent",
                 "Microsoft.PowerFx.Types.BooleanType",
                 "Microsoft.PowerFx.Types.BooleanValue",
+                "Microsoft.PowerFx.Types.BuiltInTypeNames",
                 "Microsoft.PowerFx.Types.CollectionTableValue`1",
                 "Microsoft.PowerFx.Types.ColorType",
                 "Microsoft.PowerFx.Types.ColorValue",
