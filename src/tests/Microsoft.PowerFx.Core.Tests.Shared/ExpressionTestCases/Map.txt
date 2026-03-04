@@ -132,6 +132,12 @@ Table({C:1,V:1},{C:1,V:2},{C:1,V:3})
 >> Map([1,2,3,4], {Original: Value, Squared: Value * Value, Cubed: Value * Value * Value})
 Table({Cubed:1,Original:1,Squared:1},{Cubed:8,Original:2,Squared:4},{Cubed:27,Original:3,Squared:9},{Cubed:64,Original:4,Squared:16})
 
+>> Map( ["First","Second","Third","Fourth"] As Name, Sequence(1000) As Index, {Number: Index.Value, Title:Name.Value}, MapLength.First)
+Table({Number:1,Title:"First"},{Number:2,Title:"Second"},{Number:3,Title:"Third"},{Number:4,Title:"Fourth"})
+
+>> Map( ParseJSON("[""First"",""Second"",""Third"",""Fourth""]") As Name, ParseJSON("[1,2,3,4,5,6,7,9]") As Index, {Number: Value(Index), Title:Text(Name)}, MapLength.First)
+Table({Number:1,Title:"First"},{Number:2,Title:"Second"},{Number:3,Title:"Third"},{Number:4,Title:"Fourth"})
+
 // ****************** Handling Blank rows ******************
 
 >> Map(Table({a:1},If(1<0,{a:2}),{a:3},If(1<0,{a:4}),{a:5}), {b:Coalesce(a, 100)})
@@ -652,6 +658,279 @@ Table({A:1,B:4},{A:2,B:5},{A:3,B:Blank()})
 >> Map(Table({Name:"Alice"},{Name:"Bob"}) As P, Table({Score:90},{Score:85}) As S, {Person: P.Name, Grade: If(S.Score >= 90, "A", "B")})
 Table({Grade:"A",Person:"Alice"},{Grade:"B",Person:"Bob"})
 
+// ****************** Functional language Zip semantics ******************
+// Power Fx multi-table Map implements the classic "zip" family of operations
+// found across functional languages. The MapLength enum maps to behaviors:
+//   MapLength.Shortest  = Haskell zip, Python zip(), Clojure map, Swift zip, Kotlin zip, C# LINQ Zip, Elixir Enum.zip
+//   MapLength.Equal     = F# List.zip, OCaml List.combine, Python zip(strict=True), Erlang default, Rust zip_eq
+//   MapLength.Longest   = Python zip_longest, Scala zipAll, Lodash _.zip, Erlang {pad,_}
+//   MapLength.First     = Ruby Array#zip (receiver determines length)
+
+// ---------- Haskell ----------
+// Haskell's zip/zipWith truncate to the shorter list by default.
+// zipWith is the general form; zip = zipWith (,)
+
+// Haskell: zipWith (+) [1,3,5] [2,4,6] => [3,7,11]
+>> Map([1,3,5] As A, [2,4,6] As B, A.Value + B.Value)
+Table({Value:3},{Value:7},{Value:11})
+
+// Haskell: zipWith3 (\x y z -> x*y + z) [1,2,3] [4,5,6] [7,8,9] => [11,18,27]
+>> Map([1,2,3] As X, [4,5,6] As Y, [7,8,9] As Z, X.Value * Y.Value + Z.Value)
+Table({Value:11},{Value:18},{Value:27})
+
+// Haskell: zip [0..] ["a","b","c"] => [(0,"a"),(1,"b"),(2,"c")]
+// Classic Haskell idiom: zip with an infinite list for indexing.
+// Sequence(1000) serves as a "large enough" list; MapLength.First takes the data table's length.
+>> Map(["a","b","c"] As Item, Sequence(1000) As Idx, {Index: Idx.Value, Letter: Item.Value}, MapLength.First)
+Table({Index:1,Letter:"a"},{Index:2,Letter:"b"},{Index:3,Letter:"c"})
+
+// Haskell: zipWith (*) [1,2,3] [10,20] => [10,40]  (truncates silently)
+>> Map([1,2,3] As A, [10,20] As B, A.Value * B.Value, MapLength.Shortest)
+Table({Value:10},{Value:40})
+
+// Haskell: zipWith (++) ["hello","good"] [" world"," day"] => ["hello world","good day"]
+>> Map(["hello","good"] As A, [" world"," day"] As B, A.Value & B.Value, MapLength.Shortest)
+Table({Value:"hello world"},{Value:"good day"})
+
+// ---------- Python ----------
+// Python zip() truncates by default. zip(strict=True) raises ValueError.
+// itertools.zip_longest pads with a fill value.
+
+// Python: list(map(lambda a,b: a*b, [1,2,3], [10,20,30])) => [10,40,90]
+// Python's map() with multiple iterables is itself a zipWith.
+>> Map([1,2,3] As A, [10,20,30] As B, A.Value * B.Value)
+Table({Value:10},{Value:40},{Value:90})
+
+// Python 3.10: list(zip([1,2,3], [4,5], strict=True)) => ValueError
+// PEP 618 added strict=True to catch bugs where silent truncation masks errors.
+>> Map([1,2,3] As A, [4,5] As Z, A.Value + Z.Value, MapLength.Equal)
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Python: list(zip_longest([1,2,3], [10,20], fillvalue=0)) => [(1,10),(2,20),(3,0)]
+>> Map([1,2,3] As A, [10,20] As Z, A.Value + Coalesce(Z.Value, 0), MapLength.Longest)
+Table({Value:11},{Value:22},{Value:3})
+
+// Python: list(zip_longest(["a","b"], ["x","y","z"], fillvalue="?")) => [("a","x"),("b","y"),("?","z")]
+>> Map(["a","b"] As A, ["x","y","z"] As B, Coalesce(A.Value, "?") & B.Value, MapLength.Longest)
+Table({Value:"ax"},{Value:"by"},{Value:"?z"})
+
+// ---------- F# ----------
+// F# List.zip and List.map2 throw ArgumentException on unequal lengths.
+// This is the strict equality camp. (Seq.map2 silently truncates, an inconsistency.)
+
+// F#: List.map2 (+) [1;2;3] [10;20;30] => [11;22;33]
+>> Map([1,2,3] As A, [10,20,30] As B, A.Value + B.Value, MapLength.Equal)
+Table({Value:11},{Value:22},{Value:33})
+
+// F#: List.zip [1;2;3] ["a";"b"] => System.ArgumentException: The lists had different lengths.
+>> Map([1,2,3] As A, ["a","b"] As B, B.Value, MapLength.Equal)
+Error({Kind:ErrorKind.InvalidArgument})
+
+// F#: List.map2 (fun a b -> a * a + b) [1;2;3] [10;20;30] => [11;24;39]
+>> Map([1,2,3] As A, [10,20,30] As B, A.Value * A.Value + B.Value, MapLength.Equal)
+Table({Value:11},{Value:24},{Value:39})
+
+// F#: List.zip3 [1;2] ["a";"b"] [true;false] => [(1,"a",true);(2,"b",false)]
+>> Map([1,2] As X, ["a","b"] As Y, [true,false] As Z, {N: X.Value, S: Y.Value, B: Z.Value})
+Table({B:true,N:1,S:"a"},{B:false,N:2,S:"b"})
+
+// ---------- Scala ----------
+// Scala zip truncates. zipAll pads both sides with caller-specified defaults.
+// lazyZip chains for multi-arity without intermediate tuples.
+
+// Scala: List(1,2,3).zipAll(List(10,20), 0, 0) => List((1,10),(2,20),(3,0))
+>> Map([1,2,3] As A, [10,20] As B, {A: A.Value, B: Coalesce(B.Value, 0)}, MapLength.Longest)
+Table({A:1,B:10},{A:2,B:20},{A:3,B:0})
+
+// Scala: List(10,20).zipAll(List(1,2,3), 0, 0) => List((10,1),(20,2),(0,3))
+>> Map([10,20] As A, [1,2,3] As B, {A: Coalesce(A.Value, 0), B: B.Value}, MapLength.Longest)
+Table({A:10,B:1},{A:20,B:2},{A:0,B:3})
+
+// Scala: List("a","b","c").zipWithIndex => List(("a",0),("b",1),("c",2))
+>> Map(["a","b","c"] As Item, Sequence(3) As Idx, {Value: Item.Value, Index: Idx.Value - 1})
+Table({Index:0,Value:"a"},{Index:1,Value:"b"},{Index:2,Value:"c"})
+
+// Scala: (List(1,2) lazyZip List(10,20) lazyZip List(100,200)).map(_ + _ + _) => List(111,222)
+>> Map([1,2] As A, [10,20] As B, [100,200] As Z, A.Value + B.Value + Z.Value)
+Table({Value:111},{Value:222})
+
+// ---------- Clojure ----------
+// Clojure has no dedicated zip. Its map function naturally accepts multiple collections,
+// making (map f coll1 coll2) the idiomatic zipWith. Truncates to shortest.
+
+// Clojure: (map + [1 2 3] [10 20 30]) => (11 22 33)
+>> Map([1,2,3] As A, [10,20,30] As B, A.Value + B.Value, MapLength.Shortest)
+Table({Value:11},{Value:22},{Value:33})
+
+// Clojure: (map vector [1 2] ["a" "b"] [:x :y]) => ([1 "a" :x] [2 "b" :y])
+// Multi-way zip with record output, like Clojure's variadic map.
+>> Map([1,2] As N, ["a","b"] As S, [true,false] As B, {Num: N.Value, Str: S.Value, Bool: B.Value})
+Table({Bool:true,Num:1,Str:"a"},{Bool:false,Num:2,Str:"b"})
+
+// Clojure: (map * [2 3 4] [10 20]) => (20 60)  -- truncates to shorter
+>> Map([2,3,4] As A, [10,20] As B, A.Value * B.Value, MapLength.Shortest)
+Table({Value:20},{Value:60})
+
+// ---------- Erlang OTP 26 ----------
+// Erlang's lists:zip/3 has an explicit How parameter: fail | trim | {pad, Defaults}.
+// This is the closest analog to Power Fx's MapLength enum.
+
+// Erlang: lists:zipwith(fun(X,Y) -> X*Y end, [2,3,4], [5,6,7]) => [10,18,28]
+>> Map([2,3,4] As X, [5,6,7] As Y, X.Value * Y.Value)
+Table({Value:10},{Value:18},{Value:28})
+
+// Erlang: lists:zip([a,b], [1,2,3], fail) => exception  (default behavior)
+>> Map(["a","b"] As A, [1,2,3] As B, B.Value, MapLength.Equal)
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Erlang: lists:zip([a,b], [1,2,3], trim) => [{a,1},{b,2}]
+>> Map(["a","b"] As A, [1,2,3] As B, {Letter: A.Value, Num: B.Value}, MapLength.Shortest)
+Table({Letter:"a",Num:1},{Letter:"b",Num:2})
+
+// Erlang: lists:zip([a,b], [1,2,3], {pad, {x,0}}) => [{a,1},{b,2},{x,3}]
+>> Map(["a","b"] As A, [1,2,3] As B, {Letter: Coalesce(A.Value, "x"), Num: B.Value}, MapLength.Longest)
+Table({Letter:"a",Num:1},{Letter:"b",Num:2},{Letter:"x",Num:3})
+
+// ---------- Elixir ----------
+// Elixir Enum.zip truncates to shortest. Enum.zip_with applies a function.
+
+// Elixir: Enum.zip_with([1,2,3], [10,20,30], fn a,b -> a + b end) => [11,22,33]
+>> Map([1,2,3] As A, [10,20,30] As E, A.Value + E.Value, MapLength.Shortest)
+Table({Value:11},{Value:22},{Value:33})
+
+// Elixir: Enum.zip([[1,2], [10,20], [100,200]]) => [{1,10,100},{2,20,200}]
+>> Map([1,2] As A, [10,20] As B, [100,200] As E, {A: A.Value, B: B.Value, C: E.Value})
+Table({A:1,B:10,C:100},{A:2,B:20,C:200})
+
+// ---------- Rust ----------
+// Rust std::iter::zip truncates. itertools provides zip_eq (panic on mismatch)
+// and zip_longest (returns EitherOrBoth enum forcing caller to handle all cases).
+
+// Rust: [1,2,3].iter().zip([10,20]) => [(1,10),(2,20)]  -- truncates
+>> Map([1,2,3] As A, [10,20] As B, {A: A.Value, B: B.Value}, MapLength.Shortest)
+Table({A:1,B:10},{A:2,B:20})
+
+// Rust itertools: zip_eq panics on unequal lengths
+>> Map([1,2,3] As A, [10,20] As B, A.Value + B.Value, MapLength.Equal)
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Rust itertools: zip_longest returns EitherOrBoth { Both(a,b), Left(a), Right(b) }
+// Power Fx shows Blank() for exhausted table values, requiring explicit handling.
+>> Map([1,2,3] As A, [10,20] As B, {A: A.Value, B: B.Value, HasBoth: Not IsBlank(B.Value)}, MapLength.Longest)
+Table({A:1,B:10,HasBoth:true},{A:2,B:20,HasBoth:true},{A:3,B:Blank(),HasBoth:false})
+
+// ---------- Ruby ----------
+// Ruby's Array#zip is asymmetric: the receiver determines output length.
+// Shorter arguments are padded with nil; longer arguments are truncated.
+// This is exactly MapLength.First behavior.
+
+// Ruby: [1,2,3].zip(["a","b"]) => [[1,"a"],[2,"b"],[3,nil]]
+>> Map([1,2,3] As A, ["a","b"] As B, {N: A.Value, S: B.Value}, MapLength.First)
+Table({N:1,S:"a"},{N:2,S:"b"},{N:3,S:Blank()})
+
+// Ruby: [1,2].zip(["a","b","c"]) => [[1,"a"],[2,"b"]]  -- extra elements dropped
+>> Map([1,2] As A, ["a","b","c"] As B, {N: A.Value, S: B.Value}, MapLength.First)
+Table({N:1,S:"a"},{N:2,S:"b"})
+
+// Ruby: [1,2,3].zip([10,20], [100]) => [[1,10,100],[2,20,nil],[3,nil,nil]]
+>> Map([1,2,3] As A, [10,20] As B, [100] As C, {A: A.Value, B: B.Value, C: C.Value}, MapLength.First)
+Table({A:1,B:10,C:100},{A:2,B:20,C:Blank()},{A:3,B:Blank(),C:Blank()})
+
+// ---------- Kotlin ----------
+// Kotlin merges zip and zipWith into a single overloaded zip function.
+// Truncates to the shorter collection.
+
+// Kotlin: listOf(1,2,3).zip(listOf("a","b")) { n, s -> "$n=$s" }
+>> Map([1,2,3] As N, ["a","b"] As S, N.Value & "=" & S.Value, MapLength.Shortest)
+Table({Value:"1=a"},{Value:"2=b"})
+
+// Kotlin: listOf("red","brown","grey").zip(listOf("fox","bear","wolf")) { c, a -> "The $a is $c" }
+>> Map(["red","brown","grey"] As Color, ["fox","bear","wolf"] As Animal, "The " & Animal.Value & " is " & Color.Value)
+Table({Value:"The fox is red"},{Value:"The bear is brown"},{Value:"The wolf is grey"})
+
+// ---------- Swift ----------
+// Swift zip() is a free function taking two sequences. Returns lazy Zip2Sequence.
+// Truncates to shorter. No built-in pad variant.
+
+// Swift: zip([1,2,3], [10,20,30]).map(+) => [11,22,33]
+>> Map([1,2,3] As A, [10,20,30] As C, A.Value + C.Value, MapLength.Shortest)
+Table({Value:11},{Value:22},{Value:33})
+
+// Swift: zip(0..., ["a","b","c"]) -- zip with infinite range for indexing
+// This is the same Haskell [0..] idiom. Sequence(1000) is "infinite enough".
+>> Map(Sequence(1000) As Idx, ["x","y","z"] As Item, {Index: Idx.Value, Value: Item.Value}, MapLength.Shortest)
+Table({Index:1,Value:"x"},{Index:2,Value:"y"},{Index:3,Value:"z"})
+
+// ---------- C# LINQ ----------
+// C# Enumerable.Zip (since .NET 4.0) truncates to the shorter sequence.
+// .NET 6 added tuple-returning and three-way overloads.
+
+// C# .NET 6: new[]{1,2,3,4}.Zip(new[]{"one","two","three"}) -- truncates
+// numbers.Zip(words, (n,w) => $"{n} = {w}") => ["1 = one", "2 = two", "3 = three"]
+>> Map([1,2,3,4] As N, ["one","two","three"] As W, N.Value & " = " & W.Value, MapLength.Shortest)
+Table({Value:"1 = one"},{Value:"2 = two"},{Value:"3 = three"})
+
+// C# .NET 6: three-way zip - a.Zip(b, c)
+>> Map([1,2] As A, [10,20] As B, [100,200] As C, {A: A.Value, B: B.Value, C: C.Value})
+Table({A:1,B:10,C:100},{A:2,B:20,C:200})
+
+// ---------- OCaml ----------
+// OCaml List.combine raises Invalid_argument on unequal lengths.
+// Jane Street Base.List.zip returns Option (None on mismatch).
+
+// OCaml: List.map2 (fun a b -> (a, a*b)) [1;2;3] [10;20;30] => [(1,10);(2,40);(3,90)]
+>> Map([1,2,3] As A, [10,20,30] As B, {First: A.Value, Product: A.Value * B.Value}, MapLength.Equal)
+Table({First:1,Product:10},{First:2,Product:40},{First:3,Product:90})
+
+// OCaml: List.combine [1;2;3] ["a";"b"] => Invalid_argument (strict like F#)
+>> Map([1,2,3] As A, ["a","b"] As B, A.Value, MapLength.Equal)
+Error({Kind:ErrorKind.InvalidArgument})
+
+// ---------- Cross-language comparison: same operation, all four MapLength modes ----------
+// Given tables of lengths 3 and 2, show how each mode behaves.
+// This mirrors the choice each language makes as its default.
+
+// Haskell/Python/Clojure/Swift/Kotlin/C# default: truncate to shortest
+>> Map([10,20,30] As A, [1,2] As B, A.Value + B.Value, MapLength.Shortest)
+Table({Value:11},{Value:22})
+
+// F#/OCaml/Erlang default: error on mismatch
+>> Map([10,20,30] As A, [1,2] As B, A.Value + B.Value, MapLength.Equal)
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Python zip_longest / Scala zipAll / Lodash _.zip: pad to longest
+>> Map([10,20,30] As A, [1,2] As B, A.Value + Coalesce(B.Value, 0), MapLength.Longest)
+Table({Value:11},{Value:22},{Value:30})
+
+// Ruby Array#zip: receiver (first table) determines length
+>> Map([10,20,30] As A, [1,2] As B, A.Value + Coalesce(B.Value, 0), MapLength.First)
+Table({Value:11},{Value:22},{Value:30})
+
+// Same tables reversed: now the shorter table is first
+>> Map([1,2] As A, [10,20,30] As B, Coalesce(A.Value, 0) + B.Value, MapLength.First)
+Table({Value:11},{Value:22})
+
+// ---------- Classic functional programming zip patterns ----------
+
+// Dot product: Haskell sum (zipWith (*) xs ys)
+>> Sum(Map([1,2,3] As A, [4,5,6] As B, A.Value * B.Value), Value)
+32
+
+// Pairwise differences (Kotlin zipWithNext-like, using two offset tables)
+// Given [1,4,9,16], compute consecutive differences [3,5,7]
+>> Map(LastN([1,4,9,16], 3) As Next, FirstN([1,4,9,16], 3) As Prev, Next.Value - Prev.Value)
+Table({Value:3},{Value:5},{Value:7})
+
+// Interleave two lists into records (common zip-into-map pattern)
+// Clojure: (zipmap [:name :age :city] ["Alice" 30 "NYC"]) => {:name "Alice", :age 30, :city "NYC"}
+>> Map(["name","age","city"] As Key, ["Alice","30","NYC"] As Val, {Key: Key.Value, Value: Val.Value})
+Table({Key:"name",Value:"Alice"},{Key:"age",Value:"30"},{Key:"city",Value:"NYC"})
+
+// Weighted sum: zip weights with values and sum
+// Haskell: sum $ zipWith (*) [0.5, 0.3, 0.2] [100, 80, 90]
+>> Sum(Map([0.5, 0.3, 0.2] As W, [100, 80, 90] As V, W.Value * V.Value), Value)
+92
+
 // ****************** Compile-time errors ******************
 
 // Multi-table without As on all tables
@@ -786,12 +1065,21 @@ Errors: Error 4-11: When using Map with multiple tables, all table arguments mus
 // Mixing UO and non-UO tables is not allowed (by the compiler) and should return a compile time error. 
 // There is no design need for this limitation, but supporting it would be a change in the compiler's treatment of UO iteration arguments.
 
-// The error message on this first one could be better, but the parser is confused before it gets to Map.
+// The error message on this first set could be better, but the parser is confused before it gets to Map.
 >> Map([1,2,3] As A, ParseJSON("[4,5,6]") As B, A.Value * Value(B))
 Errors: Error 12-14: Invalid argument type.|Error 0-3: The function 'Map' has some invalid arguments.|Error 39-41: As is not permitted in this context|Error 45-46: Name isn't valid. 'A' isn't recognized.|Error 46-52: The '.' operator cannot be used on Error values.|Error 61-62: Name isn't valid. 'B' isn't recognized.|Error 55-60: The function 'Value' has some invalid arguments.
 
+>> Map([1,2,3] As A, ParseJSON("[4,5,6]") As B, true)
+Errors: Error 12-14: Invalid argument type.|Error 0-3: The function 'Map' has some invalid arguments.|Error 39-41: As is not permitted in this context
+
+>> Map([1,2,3] As A, [4,5,6] As C, [9,1,3] As D, ParseJSON("[4,5,6]") As B, true)
+Errors: Error 12-14: Invalid argument type.|Error 0-3: The function 'Map' has some invalid arguments.|Error 26-28: As is not permitted in this context|Error 40-42: As is not permitted in this context|Error 67-69: As is not permitted in this context
+
 >> Map(ParseJSON("[1,2,3]") As A, [4,5,6] As B, Value(A) * B.Value)
 Errors: Error 39-41: The Map function does not support mixing typed tables with Dynamic arrays.|Error 0-3: The function 'Map' has some invalid arguments.
+
+>> Map(ParseJSON("[1,2,3]") As A, ParseJSON("[4,5,6]") As C, ParseJSON("[9,1,3]") As D, [4,5,6] As B, true)
+Errors: Error 93-95: The Map function does not support mixing typed tables with Dynamic arrays.|Error 0-3: The function 'Map' has some invalid arguments.
 
 >> Map(ParseJSON("[1,2,3]") As A, ParseJSON("[4,5,6]") As B, A * B)
 Table({Value:4},{Value:10},{Value:18})
@@ -826,7 +1114,6 @@ Table({Value:11},{Value:22},{Value:33})
 
 >> Map( [MapLength.Longest, MapLength.Shortest, MapLength.Equal, MapLength.First], Map( [10,20,30] As a, [1,2,3,4] As b, [100,200] As c, a.Value + b.Value + c.Value, Value ) )
 Table({Value:Table({Value:111},{Value:222},{Value:33},{Value:4})},{Value:Table({Value:111},{Value:222})},{Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:Table({Value:111},{Value:222},{Value:33})})
-[[111, 222, 33, 4], [111, 222], <Error: All tables passed to Map must have the same number of rows when using MapLength.Equal.>, [111, 222, 33]]
 
 >> ForAll( [MapLength.Longest, MapLength.Shortest, MapLength.Equal, MapLength.First], Map( [10,20,30] As a, [1,2,3,4] As b, [100,200] As c, a.Value + b.Value + c.Value, Value ) )
 Error({Kind:ErrorKind.InvalidArgument})
