@@ -4488,20 +4488,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (overloadWithUntypedObjectLambda != null)
                 {
-                    // Both overrides must have the same arity, unless the main function is variadic
-                    // (e.g., Map supports multiple tables with variable arity, while the UO variant is fixed arity).
+                    // Both overrides must have the same arity.
+                    Contracts.Assert(maybeFunc.MaxArity == overloadWithUntypedObjectLambda.MaxArity);
+                    Contracts.Assert(maybeFunc.MinArity == overloadWithUntypedObjectLambda.MinArity);
+
+                    // The function needs to be fully variadiac, or no optional arguments.
                     if (maybeFunc.MaxArity != int.MaxValue)
                     {
-                        Contracts.Assert(maybeFunc.MaxArity == overloadWithUntypedObjectLambda.MaxArity);
-                        Contracts.Assert(maybeFunc.MinArity == overloadWithUntypedObjectLambda.MinArity);
-
-                        // There also cannot be optional parameters
                         Contracts.Assert(maybeFunc.MinArity == maybeFunc.MaxArity);
-                    }
-                    else
-                    {
-                        // For variadic functions, at minimum the min arity should match
-                        Contracts.Assert(maybeFunc.MinArity == overloadWithUntypedObjectLambda.MinArity);
                     }
                 }
 
