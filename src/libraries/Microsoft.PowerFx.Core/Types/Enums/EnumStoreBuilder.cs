@@ -31,6 +31,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { LanguageConstants.TraceSeverityEnumString, BuiltInEnums.TraceSeverityEnum },
                 { LanguageConstants.TraceOptionsEnumString, BuiltInEnums.TraceOptionsEnum },
                 { LanguageConstants.JoinTypeEnumString, BuiltInEnums.JoinTypeEnum },
+                { LanguageConstants.MapLengthEnumString, BuiltInEnums.MapLengthEnum },
             };
 
         // DefaultEnums, with enum strings, is legacy and only used by Power Apps
@@ -87,6 +88,10 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 {
                     LanguageConstants.JoinTypeEnumString,
                     $"%s[{string.Join(", ", BuiltInEnums.JoinTypeEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
+                },
+                {
+                    LanguageConstants.MapLengthEnumString,
+                    $"%s[{string.Join(", ", BuiltInEnums.MapLengthEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
                 }
             };
 

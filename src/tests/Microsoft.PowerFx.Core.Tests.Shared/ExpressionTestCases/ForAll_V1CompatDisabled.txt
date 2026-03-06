@@ -2,3 +2,15 @@
 
 >> ForAll([1], If(false, {a:1}, {b:2}))
 Table({})
+
+// ************ ForAll allows Void-returning formulas ****************
+// ForAll allows expressions that evaluate to Void (e.g., when branches have incompatible types)
+// This is because ForAll is designed to support side effects and imperative-style operations
+// When the formula returns Void, ForAll returns a VoidValue (not a table)
+
+>> ForAll([1], If(false,[],{}))
+Error({Kind:ErrorKind.NotSupported})
+
+>> ForAll([1,2,3], If(false,[],{}))
+Error(Table({Kind:ErrorKind.NotSupported},{Kind:ErrorKind.NotSupported},{Kind:ErrorKind.NotSupported}))
+
