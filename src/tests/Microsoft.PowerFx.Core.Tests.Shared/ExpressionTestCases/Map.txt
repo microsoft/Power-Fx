@@ -83,6 +83,12 @@ Table({Original:1,Squared:1},{Original:2,Squared:4},{Original:3,Squared:9})
 // ****************** Error handling in Map vs ForAll ******************
 // Key difference: Map keeps errors in individual rows, ForAll combines all errors
 
+>> Concat(Map([1,1/0,2],Value),IfError(Text(Value),"error"),",")
+"1,error,2"
+
+>> Concat(ForAll([1,1/0,2],Value),IfError(Text(Value),"error"),",")
+Error({Kind:ErrorKind.Div0})
+
 // Sort fails before Map processes - error in input
 >> Map(Sort([60, 61, 0, 63, 64], 1/Value), Char(Value))
 Error({Kind:ErrorKind.Div0})
@@ -281,6 +287,9 @@ Errors: Error 0-3: The function 'Map' has some invalid arguments.|Error 26-85: A
 // ThisItem not valid in Map (same as ForAll)
 >> Map(ParseJSON("[1,2,3]"), ThisItem)
 Errors: Error 26-34: Name isn't valid. 'ThisItem' isn't recognized.|Error 0-3: The function 'Map' has some invalid arguments.
+
+>> Map( ParseJSON( "[{ ""Product"": ""Widget"",    ""Quantity Requested"": 6,  ""Quantity Available"": 3 },{ ""Product"": ""Gadget"",    ""Quantity Requested"": 10, ""Quantity Available"": 20 },{ ""Product"": ""Gizmo"",     ""Quantity Requested"": 4,  ""Quantity Available"": 11 },{ ""Product"": ""Apparatus"", ""Quantity Requested"": 7,  ""Quantity Available"": 6 }]" ),{ Product: Text(ThisRecord.Product),'Quantity to Order':Max( ThisRecord.'Quantity Requested' - ThisRecord.'Quantity Available',0)})
+Table({Product:"Widget",'Quantity to Order':3},{Product:"Gadget",'Quantity to Order':0},{Product:"Gizmo",'Quantity to Order':0}, {Product:"Apparatus", 'Quantity to Order':1})
 
 // Test that demonstrates the difference between Map and ForAll
 // ForAll allows behavior functions (mutations), Map does not
