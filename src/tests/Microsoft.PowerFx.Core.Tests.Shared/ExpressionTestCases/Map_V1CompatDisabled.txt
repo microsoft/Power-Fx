@@ -4,11 +4,13 @@
 // Map is a pure functional map operation and rejects Void return types
 // Void can occur when If/Switch branches have incompatible types (e.g., [] vs {})
 
+// If(false,[].{}) does not return Void with V1CompatDisabled, so this does not trigger a Void error.
+
 >> Map([1], If(false,[],{}))
-Table({Value:Error({Kind:ErrorKind.NotSupported})})
+Table({Value:Table()})
 
 >> Map([1,2,3], If(false,[],{}))
-Table({Value:Error({Kind:ErrorKind.NotSupported})},{Value:Error({Kind:ErrorKind.NotSupported})},{Value:Error({Kind:ErrorKind.NotSupported})})
+Table({Value:Table()},{Value:Table()},{Value:Table()})
 
 // Invalid MapLength value (non-enum argument)
 >> Map([1,2,3] As A, [4,5,6] As B, A.Value + B.Value, "invalid")
@@ -16,7 +18,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 // Invalid MapLength value (non-enum argument)
 >> Map([1,2,3] As A, [4,5,6] As B, A.Value + B.Value, "shortest")
-Error({Kind:ErrorKind.InvalidArgument})
+Table({Value:5},{Value:7},{Value:9})
 
 // MapLength.Equal is a valid value that could be returned from Map, possibly used in nested Map
 

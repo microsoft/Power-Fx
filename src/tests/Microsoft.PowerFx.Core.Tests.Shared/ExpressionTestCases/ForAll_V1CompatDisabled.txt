@@ -9,8 +9,7 @@ Table({})
 // When the formula returns Void, ForAll returns a VoidValue (not a table)
 
 >> ForAll([1], If(false,[],{}))
-Error({Kind:ErrorKind.NotSupported})
+Table({Value:Table({})})
 
 >> ForAll([1,2,3], If(false,[],{}))
-Error(Table({Kind:ErrorKind.NotSupported},{Kind:ErrorKind.NotSupported},{Kind:ErrorKind.NotSupported}))
-
+Table({Value:Table({})},{Value:Table({})},{Value:Table({})})

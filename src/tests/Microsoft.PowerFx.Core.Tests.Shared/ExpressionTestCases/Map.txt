@@ -86,7 +86,25 @@ Table({Original:1,Squared:1},{Original:2,Squared:4},{Original:3,Squared:9})
 >> Concat(Map([1,1/0,2],Value),IfError(Text(Value),"error"),",")
 "1,error,2"
 
+>> Concat(Map([1,0,2],10/Value),IfError(Text(Value),"error"),",")
+"10,error,5"
+
+>> Concat(Map([1,0,2] As Den,[10,100,1000] As Num,Num.Value/Den.Value),IfError(Text(Value),"error"),",")
+"10,error,500"
+
+>> Concat(Map(ParseJSON("[1,0,2]"),10/ThisRecord),IfError(Text(Value),"error"),",")
+"10,error,5"
+
+>> Concat(Map(ParseJSON("[1,0,2]") As Den,ParseJSON("[10,100,1000]") As Num,Num/Den),IfError(Text(Value),"error"),",")
+"10,error,500"
+
 >> Concat(ForAll([1,1/0,2],Value),IfError(Text(Value),"error"),",")
+Error({Kind:ErrorKind.Div0})
+
+>> Concat(ForAll([1,0,2],10/Value),IfError(Text(Value),"error"),",")
+Error({Kind:ErrorKind.Div0})
+
+>> Concat(ForAll(ParseJSON("[1,0,2]"),10/ThisRecord),IfError(Text(Value),"error"),",")
 Error({Kind:ErrorKind.Div0})
 
 // Sort fails before Map processes - error in input
@@ -289,7 +307,7 @@ Errors: Error 0-3: The function 'Map' has some invalid arguments.|Error 26-85: A
 Errors: Error 26-34: Name isn't valid. 'ThisItem' isn't recognized.|Error 0-3: The function 'Map' has some invalid arguments.
 
 >> Map( ParseJSON( "[{ ""Product"": ""Widget"",    ""Quantity Requested"": 6,  ""Quantity Available"": 3 },{ ""Product"": ""Gadget"",    ""Quantity Requested"": 10, ""Quantity Available"": 20 },{ ""Product"": ""Gizmo"",     ""Quantity Requested"": 4,  ""Quantity Available"": 11 },{ ""Product"": ""Apparatus"", ""Quantity Requested"": 7,  ""Quantity Available"": 6 }]" ),{ Product: Text(ThisRecord.Product),'Quantity to Order':Max( ThisRecord.'Quantity Requested' - ThisRecord.'Quantity Available',0)})
-Table({Product:"Widget",'Quantity to Order':3},{Product:"Gadget",'Quantity to Order':0},{Product:"Gizmo",'Quantity to Order':0}, {Product:"Apparatus", 'Quantity to Order':1})
+Table({Product:"Widget",'Quantity to Order':3},{Product:"Gadget",'Quantity to Order':0},{Product:"Gizmo",'Quantity to Order':0},{Product:"Apparatus",'Quantity to Order':1})
 
 // Test that demonstrates the difference between Map and ForAll
 // ForAll allows behavior functions (mutations), Map does not
@@ -975,11 +993,11 @@ Table({Alpha:"A",Int:1},{Alpha:"B",Int:2},{Alpha:"C",Int:3},{Alpha:"D",Int:4},{A
 >> Map(ParseJSON("[1,2,3,4,5,6,7,8,9,10]") As Int, ParseJSON("[1,2,3,4,5,6,7,8,9,10]") As Alpha, {Int: Value(Int), Alpha: Char(Alpha+64)})
 Table({Alpha:"A",Int:1},{Alpha:"B",Int:2},{Alpha:"C",Int:3},{Alpha:"D",Int:4},{Alpha:"E",Int:5},{Alpha:"F",Int:6},{Alpha:"G",Int:7},{Alpha:"H",Int:8},{Alpha:"I",Int:9},{Alpha:"J",Int:10})
 
->> Map(Sequence(10) As Int, Map(Sequence(9),Char(Value+64)) As Alpha, ["I","II","III","IV","V","VI","VII","VIII","IX","X","XI"] As Roman, Map(Sequence(8),Date(1,1,Value)) As Date, Map(Sequence(11),Time(1,1,Value)) As Time, {Int: Int.Value, Alpha: Alpha.Value, Roman: Roman.Value, Date: Date.Value, Time: Time.Value}, MapLength.Longest )
-Table({Alpha:"A",Date:Date(1,1,1),Int:1,Roman:"I",Time:Time(1,1,1,0)},{Alpha:"B",Date:Date(1,1,2),Int:2,Roman:"II",Time:Time(1,1,2,0)},{Alpha:"C",Date:Date(1,1,3),Int:3,Roman:"III",Time:Time(1,1,3,0)},{Alpha:"D",Date:Date(1,1,4),Int:4,Roman:"IV",Time:Time(1,1,4,0)},{Alpha:"E",Date:Date(1,1,5),Int:5,Roman:"V",Time:Time(1,1,5,0)},{Alpha:"F",Date:Date(1,1,6),Int:6,Roman:"VI",Time:Time(1,1,6,0)},{Alpha:"G",Date:Date(1,1,7),Int:7,Roman:"VII",Time:Time(1,1,7,0)},{Alpha:"H",Date:Date(1,1,8),Int:8,Roman:"VIII",Time:Time(1,1,8,0)},{Alpha:"I",Date:Blank(),Int:9,Roman:"IX",Time:Time(1,1,9,0)},{Alpha:Blank(),Date:Blank(),Int:10,Roman:"X",Time:Time(1,1,10,0)},{Alpha:Blank(),Date:Blank(),Int:Blank(),Roman:"XI",Time:Time(1,1,11,0)})
+>> Map(Sequence(10) As Int, Map(Sequence(9),Char(Value+64)) As Alpha, ["I","II","III","IV","V","VI","VII","VIII","IX","X","XI"] As Roman, Map(Sequence(8),Date(2001,1,Value)) As Date, Map(Sequence(11),Time(1,1,Value)) As Time, {Int: Int.Value, Alpha: Alpha.Value, Roman: Roman.Value, Date: Date.Value, Time: Time.Value}, MapLength.Longest )
+Table({Alpha:"A",Date:Date(2001,1,1),Int:1,Roman:"I",Time:Time(1,1,1,0)},{Alpha:"B",Date:Date(2001,1,2),Int:2,Roman:"II",Time:Time(1,1,2,0)},{Alpha:"C",Date:Date(2001,1,3),Int:3,Roman:"III",Time:Time(1,1,3,0)},{Alpha:"D",Date:Date(2001,1,4),Int:4,Roman:"IV",Time:Time(1,1,4,0)},{Alpha:"E",Date:Date(2001,1,5),Int:5,Roman:"V",Time:Time(1,1,5,0)},{Alpha:"F",Date:Date(2001,1,6),Int:6,Roman:"VI",Time:Time(1,1,6,0)},{Alpha:"G",Date:Date(2001,1,7),Int:7,Roman:"VII",Time:Time(1,1,7,0)},{Alpha:"H",Date:Date(2001,1,8),Int:8,Roman:"VIII",Time:Time(1,1,8,0)},{Alpha:"I",Date:Blank(),Int:9,Roman:"IX",Time:Time(1,1,9,0)},{Alpha:Blank(),Date:Blank(),Int:10,Roman:"X",Time:Time(1,1,10,0)},{Alpha:Blank(),Date:Blank(),Int:Blank(),Roman:"XI",Time:Time(1,1,11,0)})
 
->> Map(ParseJSON("[1,2,3,4,5,6,7,8,9,10]") As Int, ParseJSON("[1,2,3,4,5,6,7,8,9]") As Alpha, ParseJSON("[""I"",""II"",""III"",""IV"",""V"",""VI"",""VII"",""VIII"",""IX"",""X"",""XI""]") As Roman, {Int: Value(Int), Alpha: Char(Alpha+64), Roman: Text(Roman), Date:If(Int <= 8,Date(1,1,Int),Blank()), Time:Time(1,1,Int)}, MapLength.Longest)
-Table({Alpha:"A",Date:Date(1,1,1),Int:1,Roman:"I",Time:Time(1,1,1,0)},{Alpha:"B",Date:Date(1,1,2),Int:2,Roman:"II",Time:Time(1,1,2,0)},{Alpha:"C",Date:Date(1,1,3),Int:3,Roman:"III",Time:Time(1,1,3,0)},{Alpha:"D",Date:Date(1,1,4),Int:4,Roman:"IV",Time:Time(1,1,4,0)},{Alpha:"E",Date:Date(1,1,5),Int:5,Roman:"V",Time:Time(1,1,5,0)},{Alpha:"F",Date:Date(1,1,6),Int:6,Roman:"VI",Time:Time(1,1,6,0)},{Alpha:"G",Date:Date(1,1,7),Int:7,Roman:"VII",Time:Time(1,1,7,0)},{Alpha:"H",Date:Date(1,1,8),Int:8,Roman:"VIII",Time:Time(1,1,8,0)},{Alpha:"I",Date:Blank(),Int:9,Roman:"IX",Time:Time(1,1,9,0)},{Alpha:"@",Date:Blank(),Int:10,Roman:"X",Time:Time(1,1,10,0)},{Alpha:"@",Date:Error({Kind:ErrorKind.InvalidArgument}),Int:Blank(),Roman:"XI",Time:Time(1,1,0,0)})
+>> Map(ParseJSON("[1,2,3,4,5,6,7,8,9,10]") As Int, ParseJSON("[1,2,3,4,5,6,7,8,9]") As Alpha, ParseJSON("[""I"",""II"",""III"",""IV"",""V"",""VI"",""VII"",""VIII"",""IX"",""X"",""XI""]") As Roman, {Int: Value(Int), Alpha: Char(Alpha+64), Roman: Text(Roman), Date:If(Int <= 8 && !IsBlank(Int),Date(2001,1,Int),Blank()), Time:Time(1,1,Int)}, MapLength.Longest)
+Table({Alpha:"A",Date:Date(2001,1,1),Int:1,Roman:"I",Time:Time(1,1,1,0)},{Alpha:"B",Date:Date(2001,1,2),Int:2,Roman:"II",Time:Time(1,1,2,0)},{Alpha:"C",Date:Date(2001,1,3),Int:3,Roman:"III",Time:Time(1,1,3,0)},{Alpha:"D",Date:Date(2001,1,4),Int:4,Roman:"IV",Time:Time(1,1,4,0)},{Alpha:"E",Date:Date(2001,1,5),Int:5,Roman:"V",Time:Time(1,1,5,0)},{Alpha:"F",Date:Date(2001,1,6),Int:6,Roman:"VI",Time:Time(1,1,6,0)},{Alpha:"G",Date:Date(2001,1,7),Int:7,Roman:"VII",Time:Time(1,1,7,0)},{Alpha:"H",Date:Date(2001,1,8),Int:8,Roman:"VIII",Time:Time(1,1,8,0)},{Alpha:"I",Date:Blank(),Int:9,Roman:"IX",Time:Time(1,1,9,0)},{Alpha:"@",Date:Blank(),Int:10,Roman:"X",Time:Time(1,1,10,0)},{Alpha:"@",Date:Blank(),Int:Blank(),Roman:"XI",Time:Time(1,1,0,0)})
 
 // ****************** Multi-table Map with UntypedObject (ParseJSON) ******************
 

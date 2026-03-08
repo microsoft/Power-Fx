@@ -74,3 +74,23 @@ Table({Value:Table({Value:1})},{Value:Table({Value:1})},{Value:Table({Value:1})}
 
 >> Map([1,2,3],If(true,{a:1},{a:2}))
 Table({a:1},{a:1},{a:1})
+
+// ************ ForAll allows Void-returning formulas ****************
+// ForAll allows expressions that evaluate to Void (e.g., when branches have incompatible types)
+// This is because ForAll is designed to support side effects and imperative-style operations
+// When the formula returns Void, ForAll returns a VoidValue (not a table)
+
+// The ForAll_V1Compat.txt file (not in MutationScripts) runs tests without side effects, and so we get an expected error for the Void return type.
+// This .txt file (in MutationScripts) has side effects enabled, and it supports returning Void.
+
+>> ForAll([1], If(false,[],{}))
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> ForAll([1,2,3], If(false,[],{}))
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> Map([1], If(false,[],{}))
+Errors: Error 0-3: The function 'Map' has some invalid arguments.
+
+>> Map([1,2,3], If(false,[],{}))
+Errors: Error 0-3: The function 'Map' has some invalid arguments.
