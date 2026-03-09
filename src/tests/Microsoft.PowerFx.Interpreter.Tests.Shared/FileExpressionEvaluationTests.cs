@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             Console = output;
         }
-
+        
         // File expression tests are run multiple times for the different ways a host can use Power Fx.
         // 
         // 1. Features.PowerFxV1 without NumberIsFloat - the main way that most hosts will use Power Fx.
@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InterpreterTheory]
         public void Canvas_Float_PFxV1(ExpressionTestCase t)
         {
-            // current default features in Canvas abc
+            // current default features in Canvas
             var features = new Features()
             {
                 TableSyntaxDoesntWrapRecords = true,
@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             RunExpressionTestCase(t, Features.PowerFxV1, numberIsFloat: false, Console);
         }
 
-        // Although we are using numbers as floats by default, since this interpreter supports decimal, we can run tests with decimal here.        
+        // Although we are using numbers as floats by default, since this interpreter supports decimal, we can run tests with decimal here.
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,NumberIsFloat,DecimalSupport")]
         [InterpreterTheory]
         public void V1_Float(ExpressionTestCase t)

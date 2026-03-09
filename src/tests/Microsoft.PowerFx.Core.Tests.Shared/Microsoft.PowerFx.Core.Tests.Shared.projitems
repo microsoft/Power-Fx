@@ -37,6 +37,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)ExpressionTestCases\Map_V1CompatDisabled.txt" />
     <None Remove="$(MSBuildThisFileDirectory)ExpressionTestCases\README.md" />
     <Content Include="$(MSBuildThisFileDirectory)ExpressionTestCases\*">
       <Link>ExpressionTestCases\%(Filename)%(Extension)</Link>

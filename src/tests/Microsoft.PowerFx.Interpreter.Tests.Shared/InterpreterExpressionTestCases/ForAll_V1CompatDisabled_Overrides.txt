@@ -1,0 +1,8 @@
+#OVERRIDE: ForAll_V1CompatDisabled.txt
+#SETUP: disable:PowerFxV1CompatibilityRules
+
+>> ForAll([1], If(false,[],{}))
+Error({Kind:ErrorKind.NotSupported})
+
+>> ForAll([1,2,3], If(false,[],{}))
+Error(Table({Kind:ErrorKind.NotSupported},{Kind:ErrorKind.NotSupported},{Kind:ErrorKind.NotSupported}))

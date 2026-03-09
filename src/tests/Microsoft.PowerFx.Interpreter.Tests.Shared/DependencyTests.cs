@@ -239,6 +239,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "ForAll",
                 "IfError",
                 "LookUp",
+                "Map",
                 "Max",
                 "Min",
                 "Refresh",
