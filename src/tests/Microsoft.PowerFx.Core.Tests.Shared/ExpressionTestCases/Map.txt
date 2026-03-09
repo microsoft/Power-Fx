@@ -1,3 +1,5 @@
+#setup: SupportColumnNamesAsIdentifiers
+
 // Map is a pure functional programming map operation
 // It transforms each element of a table using a formula
 // Unlike ForAll, Map does not allow side effects (behavior functions)
@@ -31,9 +33,52 @@ Table({Value:1},{Value:4},{Value:9})
 >> Map(Sort([60, 61, 62, 63, 64], 1/Value), Char(Value))
 Table({Value:"@"},{Value:"?"},{Value:">"},{Value:"="},{Value:"<"})
 
-// Map with empty table
+// Map with empty and blank tables
+
 >> Map(FirstN([60, 61, 62, 63, 64], Blank()), Char(Value))
 Table()
+
+>> Map([],1)
+Table()
+
+>> Map(If(false,[]),1)
+Blank()
+
+>> Map(ParseJSON("[]"),1)
+Table()
+
+>> Map(ParseJSON("null"),1)
+Blank()
+
+>> ShowColumns(Map([],{a:1}),a)
+Table()
+
+>> ShowColumns(Map([],{a:1}),a2)
+Errors: Error 26-28: The specified column 'a2' does not exist. The column with the most similar name is 'a'.|Error 0-11: The function 'ShowColumns' has some invalid arguments.
+
+>> ShowColumns(Map(If(false,[]),{a:1}),a)
+Blank()
+
+>> ShowColumns(Map(If(false,[]),{a:1}),a2)
+Errors: Error 36-38: The specified column 'a2' does not exist. The column with the most similar name is 'a'.|Error 0-11: The function 'ShowColumns' has some invalid arguments.
+
+>> ShowColumns(Map(ParseJSON("[]"),{a:1}),a)
+Table()
+
+>> ShowColumns(Map(ParseJSON("[]"),{a:1}),a2)
+Errors: Error 39-41: The specified column 'a2' does not exist. The column with the most similar name is 'a'.|Error 0-11: The function 'ShowColumns' has some invalid arguments.
+
+>> ShowColumns(Map(ParseJSON("null"),{a:1}),a)
+Blank()
+
+>> ShowColumns(Map(ParseJSON("null"),{a:1}),a2)
+Errors: Error 41-43: The specified column 'a2' does not exist. The column with the most similar name is 'a'.|Error 0-11: The function 'ShowColumns' has some invalid arguments.
+
+>> Map(If(false,[],Error("problem")),1)
+Error({Kind:ErrorKind.Custom})
+
+>> Map([60, 61, Error("problem"), 63, 64], Char(Value))
+Table({Value:"<"},{Value:"="},{Value:Error({Kind:ErrorKind.Custom})},{Value:"?"},{Value:"@"})
 
 // ****************** Pure expressions work with both ******************
 

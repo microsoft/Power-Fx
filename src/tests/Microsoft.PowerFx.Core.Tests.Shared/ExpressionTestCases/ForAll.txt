@@ -1,3 +1,5 @@
+#setup: SupportColumnNamesAsIdentifiers
+
 >> ForAll([1,2,3], ThisRecord)
 Table({Value:1},{Value:2},{Value:3})
 
@@ -24,9 +26,52 @@ Table({Value:1},{Value:4},{Value:9})
 >> ForAll(Sort([60, 61, 62, 63, 64], 1/Value), Char(Value))
 Table({Value:"@"},{Value:"?"},{Value:">"},{Value:"="},{Value:"<"})
 
-// ForAll with empty table
+// ForAll with empty and blank tables
+
 >> ForAll(FirstN([60, 61, 62, 63, 64], Blank()), Char(Value))
 Table()
+
+>> ForAll([],1)
+Table()
+
+>> ForAll(If(false,[]),1)
+Blank()
+
+>> ForAll(ParseJSON("[]"),1)
+Table()
+
+>> ForAll(ParseJSON("null"),1)
+Blank()
+
+>> ShowColumns(ForAll([],{a:1}),a)
+Table()
+
+>> ShowColumns(ForAll([],{a:1}),a2)
+Errors: Error 29-31: The specified column 'a2' does not exist. The column with the most similar name is 'a'.|Error 0-11: The function 'ShowColumns' has some invalid arguments.
+
+>> ShowColumns(ForAll(If(false,[]),{a:1}),a)
+Blank()
+
+>> ShowColumns(ForAll(If(false,[]),{a:1}),a2)
+Errors: Error 39-41: The specified column 'a2' does not exist. The column with the most similar name is 'a'.|Error 0-11: The function 'ShowColumns' has some invalid arguments.
+
+>> ShowColumns(ForAll(ParseJSON("[]"),{a:1}),a)
+Table()
+
+>> ShowColumns(ForAll(ParseJSON("[]"),{a:1}),a2)
+Errors: Error 42-44: The specified column 'a2' does not exist. The column with the most similar name is 'a'.|Error 0-11: The function 'ShowColumns' has some invalid arguments.
+
+>> ShowColumns(ForAll(ParseJSON("null"),{a:1}),a)
+Blank()
+
+>> ShowColumns(ForAll(ParseJSON("null"),{a:1}),a2)
+Errors: Error 44-46: The specified column 'a2' does not exist. The column with the most similar name is 'a'.|Error 0-11: The function 'ShowColumns' has some invalid arguments.
+
+>> ForAll(If(false,[],Error("problem")),1)
+Error({Kind:ErrorKind.Custom})
+
+>> ForAll([60, 61, Error("problem"), 63, 64], Char(Value))
+Error({Kind:ErrorKind.Custom})
 
 >> ForAll(Sort([60, 61, 0, 63, 64], 1/Value), Char(Value))
 Error({Kind:ErrorKind.Div0})
