@@ -815,7 +815,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrAsNotInContext = new ErrorResourceKey("ErrAsNotInContext");
         public static ErrorResourceKey ErrValueMustBeFullyQualified = new ErrorResourceKey("ErrValueMustBeFullyQualified");
         public static ErrorResourceKey WarnColumnNameSpecifiedMultipleTimes_Name = new ErrorResourceKey("WarnColumnNameSpecifiedMultipleTimes_Name");
-        public static ErrorResourceKey WarnLiteralPredicate = new ErrorResourceKey("WarnLiteralPredicate");
+        public static ErrorResourceKey WarnCheckPredicateUsage = new ErrorResourceKey("WarnCheckPredicateUsage");
         public static ErrorResourceKey WarnDynamicMetadata = new ErrorResourceKey("WarnDynamicMetadata");
         public static ErrorResourceKey WarnDeferredType = new ErrorResourceKey("WarnDeferredType");
         public static ErrorResourceKey ErrColRenamedTwice_Name = new ErrorResourceKey("ErrColRenamedTwice_Name");

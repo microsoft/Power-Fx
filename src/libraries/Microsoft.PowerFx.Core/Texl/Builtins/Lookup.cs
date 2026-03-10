@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public LookUpFunction()
             : base("LookUp", TexlStrings.AboutLookUp, FunctionCategories.Table, DType.Unknown, 0x6, 2, 3, DType.EmptyTable, DType.Boolean)
         {
-            ScopeInfo = new FunctionScopeInfo(this);
+            ScopeInfo = new FunctionScopeInfo(this, checkPredicateUsage: true);
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
