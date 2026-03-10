@@ -66,6 +66,93 @@ namespace Microsoft.PowerFx.Tests
             yield return (20, new TestUO(123456789012345.6789012345678m), @"""123456789012345.6789012345678""");
         }
 
+        [Fact]
+        public async Task JsonSerializeUOWithFlattenValueTablesTest()
+        {
+            PowerFxConfig config = new PowerFxConfig();
+            config.EnableJsonFunctions();
+
+            SymbolTable symbolTable = new SymbolTable();
+            ISymbolSlot objSlot = symbolTable.AddVariable("obj", FormulaType.UntypedObject);
+            RecalcEngine engine = new RecalcEngine(config);
+
+            // Test 1: Single-column "Value" table should be flattened
+            var singleColumnValueArray = new[]
+            {
+                new { Value = 1 },
+                new { Value = 2 },
+                new { Value = 3 }
+            };
+
+            SymbolValues symbolValues1 = new SymbolValues(symbolTable);
+            symbolValues1.Set(objSlot, FormulaValue.New(new TestUO(singleColumnValueArray)));
+            RuntimeConfig runtimeConfig1 = new RuntimeConfig(symbolValues1);
+
+            // With FlattenValueTables - should flatten to [1,2,3]
+            FormulaValue fv1 = await engine.EvalAsync("JSON(obj, JSONFormat.FlattenValueTables)", CancellationToken.None, runtimeConfig: runtimeConfig1);
+            Assert.IsNotType<ErrorValue>(fv1);
+            string str1 = fv1.ToExpression().ToString();
+            Assert.Equal(@"""[1,2,3]""", str1);
+
+            // Without FlattenValueTables - should keep structure
+            FormulaValue fv2 = await engine.EvalAsync("JSON(obj)", CancellationToken.None, runtimeConfig: runtimeConfig1);
+            Assert.IsNotType<ErrorValue>(fv2);
+            string str2 = fv2.ToExpression().ToString();
+            Assert.Equal(@"""[{""""Value"""":1},{""""Value"""":2},{""""Value"""":3}]""", str2);
+
+            // Test 2: Multi-column table should NOT be flattened even with FlattenValueTables
+            var multiColumnArray = new[]
+            {
+                new { a = 1, b = 2 },
+                new { a = 3, b = 4 }
+            };
+
+            SymbolValues symbolValues2 = new SymbolValues(symbolTable);
+            symbolValues2.Set(objSlot, FormulaValue.New(new TestUO(multiColumnArray)));
+            RuntimeConfig runtimeConfig2 = new RuntimeConfig(symbolValues2);
+
+            FormulaValue fv3 = await engine.EvalAsync("JSON(obj, JSONFormat.FlattenValueTables)", CancellationToken.None, runtimeConfig: runtimeConfig2);
+            Assert.IsNotType<ErrorValue>(fv3);
+            string str3 = fv3.ToExpression().ToString();
+            Assert.Equal(@"""[{""""a"""":1,""""b"""":2},{""""a"""":3,""""b"""":4}]""", str3);
+
+            // Test 3: Test with null/blank values in Value column
+            var arrayWithNulls = new[]
+            {
+                new { Value = (int?)1 },
+                new { Value = (int?)null },
+                new { Value = (int?)3 }
+            };
+
+            SymbolValues symbolValues3 = new SymbolValues(symbolTable);
+            symbolValues3.Set(objSlot, FormulaValue.New(new TestUO(arrayWithNulls)));
+            RuntimeConfig runtimeConfig3 = new RuntimeConfig(symbolValues3);
+
+            FormulaValue fv4 = await engine.EvalAsync("JSON(obj, JSONFormat.FlattenValueTables)", CancellationToken.None, runtimeConfig: runtimeConfig3);
+            Assert.IsNotType<ErrorValue>(fv4);
+            string str4 = fv4.ToExpression().ToString();
+            Assert.Equal(@"""[1,null,3]""", str4);
+
+            // Test 4: Mixed array with multi-column object first, then single-column Value objects
+            var mixedArray = new object[]
+            {
+                new { Value = 2, Value2 = 22 },
+                new { Value = 1 },
+                new { Value = 3 }
+            };
+
+            SymbolValues symbolValues4 = new SymbolValues(symbolTable);
+            symbolValues4.Set(objSlot, FormulaValue.New(new TestUO(mixedArray)));
+            RuntimeConfig runtimeConfig4 = new RuntimeConfig(symbolValues4);
+
+            FormulaValue fv5 = await engine.EvalAsync("JSON(obj, JSONFormat.FlattenValueTables)", CancellationToken.None, runtimeConfig: runtimeConfig4);
+            Assert.IsNotType<ErrorValue>(fv5);
+            string str5 = fv5.ToExpression().ToString();
+
+            // Should flatten only the single-property Value objects, keep the multi-property object as-is
+            Assert.Equal(@"""[{""""Value"""":2,""""Value2"""":22},{""""Value"""":1},{""""Value"""":3}]""", str5);
+        }
+
         public class TestUO : IUntypedObject
         {
             private enum UOType
