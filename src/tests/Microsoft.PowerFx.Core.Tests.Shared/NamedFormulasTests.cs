@@ -532,25 +532,25 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var checkResultDot = new DefinitionsCheckResult()
                                .SetText(expressionDot, parserOptionsDot)
-                               .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+                               .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library));
             var errorsDot = checkResultDot.ApplyErrors();
             Assert.Empty(errorsDot);
 
             var checkResultCommaFail = new DefinitionsCheckResult()
                                 .SetText(expressionDot, parserOptionsComma)
-                                .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+                                .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library));
             var errorsCommaFail = checkResultCommaFail.ApplyErrors();
             Assert.NotEmpty(errorsCommaFail);
 
             var checkResultComma = new DefinitionsCheckResult()
                                  .SetText(expressionComma, parserOptionsComma)
-                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library));
             var errorsComma = checkResultComma.ApplyErrors();
             Assert.Empty(errorsComma);
 
             var checkResultDotFail = new DefinitionsCheckResult()
                                  .SetText(expressionComma, parserOptionsDot)
-                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library));
             var errorsDotFail = checkResultDotFail.ApplyErrors();
             Assert.NotEmpty(errorsDotFail);
         }
@@ -572,25 +572,25 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var checkResultDot = new DefinitionsCheckResult()
                                .SetText(expressionDot, parserOptionsDot)
-                               .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+                               .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library));
             var errorsDot = checkResultDot.ApplyErrors();
             Assert.Empty(errorsDot);
 
             var checkResultCommaFail = new DefinitionsCheckResult()
                                 .SetText(expressionDot, parserOptionsComma)
-                                .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+                                .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library));
             var errorsCommaFail = checkResultCommaFail.ApplyErrors();
             Assert.NotEmpty(errorsCommaFail);
 
             var checkResultComma = new DefinitionsCheckResult()
                                  .SetText(expressionComma, parserOptionsComma)
-                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library));
             var errorsComma = checkResultComma.ApplyErrors();
             Assert.Empty(errorsComma);
 
             var checkResultDotFail = new DefinitionsCheckResult()
                                  .SetText(expressionComma, parserOptionsDot)
-                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes));
+                                 .SetBindingInfo(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library));
             var errorsDotFail = checkResultDotFail.ApplyErrors();
             Assert.NotEmpty(errorsDotFail);
         }

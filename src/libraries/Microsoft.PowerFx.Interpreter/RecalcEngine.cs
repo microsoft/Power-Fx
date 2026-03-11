@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -34,6 +35,25 @@ namespace Microsoft.PowerFx
         internal readonly SymbolTable _symbolTable;
         internal readonly SymbolValues _symbolValues;
 
+        // Number is added as an alias for Float or Decimal in the RecalcEngine constructor.
+        // Notable missing types that are inappropriate for UDFs and UDTs: None, Void, Unknown, Deferred, Error.
+        // Note that the intepreter has not implemented DateTimeNoTimeZone and so it is not included here.
+        internal static readonly IReadOnlyDictionary<DName, FormulaType> _builtInNamedTypesDictionary = 
+            new Dictionary<DName, FormulaType>()
+            {
+                { BuiltInTypeNames.Boolean, FormulaType.Boolean },
+                { BuiltInTypeNames.Color, FormulaType.Color },
+                { BuiltInTypeNames.Date, FormulaType.Date },
+                { BuiltInTypeNames.Time, FormulaType.Time },
+                { BuiltInTypeNames.DateTime, FormulaType.DateTime },
+                { BuiltInTypeNames.Guid, FormulaType.Guid },
+                { BuiltInTypeNames.Number_Float, FormulaType.Number }, // Float, this is not Number which is added later in the constructor
+                { BuiltInTypeNames.Decimal, FormulaType.Decimal },
+                { BuiltInTypeNames.String_Text, FormulaType.String }, // Text
+                { BuiltInTypeNames.Hyperlink, FormulaType.Hyperlink },
+                { BuiltInTypeNames.UntypedObject_Dynamic, FormulaType.UntypedObject }, // Dynamic
+            };
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
         /// Create a new power fx engine. 
@@ -44,7 +64,36 @@ namespace Microsoft.PowerFx
         }
 
         public RecalcEngine(PowerFxConfig powerFxConfig)
-            : base(powerFxConfig)
+            : this(powerFxConfig, numberIsFloat: false)
+        {
+        }
+
+        public RecalcEngine(bool numberIsFloat)
+            : this(new PowerFxConfig(), numberIsFloat: numberIsFloat)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
+        /// Create a new power fx engine with control over which type is Number. 
+        /// </summary>
+        /// <param name="powerFxConfig"></param>
+        /// <param name="numberIsFloat">
+        /// There are three NumberIsFloat flags that are related, but independent:
+        /// 1. numberIsFloat parameter here, which impacts the symbol table in what type name
+        ///    "Number" should alias to (Float or Decimal) for use by UDFs and UDTs.
+        /// 2. ParserOptions.NumberIsFloat, which impacts parsing of literals only.
+        /// 3. BindOptions.NumberIsFloat, which impacts type coercion during binding.
+        /// To put Power Fx into "Float" mode, for example for Canvas apps, they must be used together. 
+        /// 
+        /// By setting it here, which flows down to the Engine constructor, Engine methods will carry
+        /// the flag through, for example in GetDefaultParserOptionsCopy() and GetDefaultBindingConfig(). 
+        /// If only Engine methods are used, then setting it here is all that is needed.
+        /// 
+        /// By default, Power Fx uses "Decimal" mode.
+        /// </param>
+        public RecalcEngine(PowerFxConfig powerFxConfig, bool numberIsFloat)
+            : base(powerFxConfig, SymbolTable.NewDefaultTypes(_builtInNamedTypesDictionary, numberIsFloat ? FormulaType.Number : FormulaType.Decimal))
         {
             _symbolTable = new SymbolTable { DebugName = "Globals" };
             _symbolValues = new SymbolValues(_symbolTable);
@@ -456,7 +505,7 @@ namespace Microsoft.PowerFx
             if (checkResult.IsSuccess)
             {
                 // Compose will handle null symbols
-                var composedSymbols = SymbolTable.Compose(Config.ComposedConfigSymbols, SupportedFunctions, PrimitiveTypes, _symbolTable, extraFunctions);
+                var composedSymbols = SymbolTable.Compose(Config.ComposedConfigSymbols, SupportedFunctions, BuiltInNamedTypes, _symbolTable, extraFunctions);
 
                 checkResult
                     .SetBindingInfo(composedSymbols)

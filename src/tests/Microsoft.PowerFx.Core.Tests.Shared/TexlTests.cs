@@ -4744,7 +4744,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
             }
 
-            var engine = new Engine(config);
+            var engine = new Engine(config, UDTTestHelper.TestTypesWithNumberTypeIsFloat);
             var opts = new ParserOptions() { NumberIsFloat = numberIsFloat };
             var result = engine.Check(script, opts);
             Assert.Equal(expectedType, result.Binding.ResultType);

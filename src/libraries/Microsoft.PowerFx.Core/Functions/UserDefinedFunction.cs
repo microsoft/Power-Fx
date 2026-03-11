@@ -39,6 +39,7 @@ namespace Microsoft.PowerFx.Core.Functions
         private readonly bool _isImperative;
         private readonly IEnumerable<UDFArg> _args;
         private TexlBinding _binding;
+        private readonly IdentToken _returnTypeName;
 
         public override bool IsAsync => _binding.IsAsync(UdfBody);
 
@@ -126,11 +127,13 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <param name="isImperative"></param>
         /// <param name="args"></param>
         /// <param name="argTypes">Array of argTypes in order.</param>
-        public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args, DType[] argTypes)
+        /// <param name="returnTypeName">Name of the type in the decleration, used by error messages.</param>
+        public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args, DType[] argTypes, IdentToken returnTypeName)
         : base(DPath.Root, functionName, functionName, SG(functionName), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, argTypes)
         {
             this._args = args;
             this._isImperative = isImperative;
+            this._returnTypeName = returnTypeName;
 
             this.UdfBody = body;
         }
@@ -235,7 +238,7 @@ namespace Microsoft.PowerFx.Core.Functions
                         return;
                     }
 
-                    binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch, ReturnType.GetKindString(), actualBodyReturnType.GetKindString());
+                    binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch, _returnTypeName?.Name ?? ReturnType.GetKindString(), actualBodyReturnType.GetKindString());
                 }
             }
         }
@@ -297,7 +300,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new ArgumentNullException(nameof(binderGlue));
             }
 
-            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), ParamTypes);
+            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), ParamTypes, _returnTypeName);
             binding = func.BindBody(nameResolver, binderGlue, bindingConfig, features, rule, updateDisplayNames);
 
             return func;
@@ -366,7 +369,7 @@ namespace Microsoft.PowerFx.Core.Functions
                     errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Warning, TexlStrings.WrnUDF_ShadowingBuiltInFunction, udfName));
                 }
 
-                var func = new UserDefinedFunction(udfName.Value, returnType, udf.Body, udf.IsImperative, udf.Args, parameterTypes);
+                var func = new UserDefinedFunction(udfName.Value, returnType, udf.Body, udf.IsImperative, udf.Args, parameterTypes, udf.ReturnType);
 
                 texlFunctionSet.Add(func);
                 userDefinedFunctions.Add(func);
@@ -424,7 +427,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             var dummyref = 0;
             var udfBody = udf.Body ?? new PowerFx.Syntax.ErrorNode(ref dummyref, new CommentToken("dummy token", new Span(0, 0)), "dummy error");
-            var func = new UserDefinedFunction(udfName.Value, returnType, udfBody, udf.IsImperative, udf.Args, parameterTypes);
+            var func = new UserDefinedFunction(udfName.Value, returnType, udfBody, udf.IsImperative, udf.Args, parameterTypes, udf.ReturnType);
 
             return func;
         }
@@ -460,11 +463,6 @@ namespace Microsoft.PowerFx.Core.Functions
                             errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
                             isParamCheckSuccessful = false;
                         }
-                        else if (IsRestrictedType(parameterType, UserDefinitions.RestrictedParameterTypes))
-                        {
-                            errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_InvalidParamType, arg.TypeIdent.Name));
-                            isParamCheckSuccessful = false;
-                        }
                         else
                         {
                             Contracts.Assert(arg.ArgIndex >= 0);
@@ -492,21 +490,21 @@ namespace Microsoft.PowerFx.Core.Functions
 
             if (!nameResolver.LookupType(returnTypeToken.Name, out var returnTypeFormulaType))
             {
+                // only the return type from a UDF can be a void type, it is not valid in other type contexts
+                if (returnTypeToken.Name == BuiltInTypeNames.Void)
+                {
+                    if (!isImperative)
+                    {
+                        errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_NonImperativeVoidType));
+                        returnType = DType.Invalid;
+                        return false;
+                    }
+
+                    returnType = FormulaType.Void._type;
+                    return true;
+                }
+
                 errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnTypeToken.Name));
-                returnType = DType.Invalid;
-                return false;
-            }
-
-            if (!isImperative && returnTypeFormulaType._type.IsVoid)
-            {
-                errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_NonImperativeVoidType));
-                returnType = DType.Invalid;
-                return false;
-            }
-
-            if (IsRestrictedType(returnTypeFormulaType, UserDefinitions.RestrictedTypes))
-            {
-                errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_InvalidReturnType, returnTypeToken.Name));
                 returnType = DType.Invalid;
                 return false;
             }

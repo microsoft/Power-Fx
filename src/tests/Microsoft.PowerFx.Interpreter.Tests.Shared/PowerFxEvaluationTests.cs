@@ -932,16 +932,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                         if (k.configureEngine != null)
                         {
-                            engine ??= new RecalcEngine(config);
+                            engine ??= new RecalcEngine(config, numberIsFloat: NumberIsFloat);
                             k.configureEngine(engine, NumberIsFloat);
                         }                                                     
                     }
 
-                    engine ??= new RecalcEngine(config);
+                    engine ??= new RecalcEngine(config, numberIsFloat: NumberIsFloat);
                 }
                 else
                 {
-                    engine = new RecalcEngine(config);
+                    engine = new RecalcEngine(config, numberIsFloat: NumberIsFloat);
                     parameters = null;
                 }
 

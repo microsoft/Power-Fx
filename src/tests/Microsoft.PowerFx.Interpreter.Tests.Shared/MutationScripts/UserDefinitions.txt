@@ -8,6 +8,160 @@
 >> Reverse("Hello, World")
 "dlroW ,olleH"
 
+// Decimal square root good to more digits than built in Float based Sqrt, using Heron/Newton's method https://en.wikipedia.org/wiki/Square_root_algorithms#Heron's_method
+>> SqrtDecimal( d:Decimal ):Decimal = If( d = 0, 0, With( {x1: 0, x2: Decimal(Sqrt(d))} As i0, With( {x1: i0.x2, x2: (i0.x2 + (d/i0.x2)) / 2} As i1, (i1.x2 + (d/i1.x2))/2 )))
+#no value
+
+>> Text(SqrtDecimal(2),"#.###########################") // Text to avoid testing infrastructure rounding
+"1.414213562373095048801688724"
+
+>> Text(SqrtDecimal(Float(2)),"#.###########################")
+"1.414213562373095048801688724"
+
+>> OddDecimal( d:Decimal ):Boolean = Mod(d,2) = 1;
+#no value
+
+>> OddDecimal(54116956037952111668959660849)
+true
+
+>> OddDecimal(54116956037952111668959660848)
+false
+
+>> OddDecimal(Float(54116956037952111668959660849))
+false
+
+>> OddDecimal(Float(54116956037952111668959660848))
+false
+
+>> OddNumber( d:Number ):Boolean = Mod(d,2) = 1;
+#no value
+
+>> OddNumber(54116956037952111668959660849) // Number is same as Decimal
+true
+
+>> OddNumber(54116956037952111668959660848)
+false
+
+>> OddNumber(Float(54116956037952111668959660849))
+false
+
+>> OddNumber(Float(54116956037952111668959660848))
+false
+
+>> OddFloat( d:Float ):Boolean = Mod(d,2) = 1;
+#no value
+
+>> OddFloat(54116956037952111668959660849) // rounded down, last digits all zero
+false
+
+>> OddFloat(54116956037952111668959660848)
+false
+
+>> OddFloat(Float(54116956037952111668959660849))
+false
+
+>> OddFloat(Float(54116956037952111668959660848))
+false
+
+>> SquareDecimal( d:Decimal ):Decimal = d*d
+#no value
+
+>> SquareNumber( n:Number ):Number = n*n // same as Decimal
+#no value
+
+>> SquareFloat( f:Float ):Float = f*f
+#no value
+
+>> SquareDecimal(232630513987207)
+54116956037952111668959660849
+
+>> SquareDecimal(Float(232630513987207))
+54116956037952111668959660849
+
+>> SquareNumber(232630513987207)
+54116956037952111668959660849
+
+>> SquareNumber(Float(232630513987207))
+54116956037952111668959660849
+
+>> Text(SquareFloat(232630513987207),"#.######################")
+"54116956037952100000000000000"
+
+>> TSquarePairDecimal := Type({Base: Decimal, Square:Decimal})
+#no value
+
+>> IsSquareDecimal(x:TSquarePairDecimal):Boolean = Decimal(x.Base*x.Base) = x.Square;
+#no value
+
+>> IsSquareDecimal({Base:1,Square:1})
+true
+
+>> IsSquareDecimal({Base:1,Square:0})
+false
+
+>> IsSquareDecimal({Base:15252229,Square:232630489468441}) // still in floating range
+true
+
+>> IsSquareDecimal({Base:232630513987207,Square:54116956037952111668959660849})
+true
+
+>> IsSquareDecimal({Base:232630513987207,Square:54116956037952111668959660848})
+false
+
+>> IsSquareDecimal({Base:232630513987207,Square:Float(54116956037952111668959660849)})
+false
+
+>> IsSquareDecimal({Base:Float(232630513987207),Square:54116956037952111668959660849}) // number doesn't overflow floating point for Base, converts it to Decimal on the way in
+true
+
+>> TSquarePairNumber := Type({Base: Number, Square:Decimal})
+#no value
+
+>> IsSquareNumber(x:TSquarePairDecimal):Boolean = Decimal(x.Base*x.Base) = x.Square;
+#no value
+
+>> IsSquareNumber({Base:1,Square:1})
+true
+
+>> IsSquareNumber({Base:1,Square:0})
+false
+
+>> IsSquareNumber({Base:15252229,Square:232630489468441}) // still in floating range
+true
+
+>> IsSquareNumber({Base:232630513987207,Square:54116956037952111668959660849})
+true
+
+>> IsSquareNumber({Base:232630513987207,Square:54116956037952111668959660848})
+false
+
+>> IsSquareNumber({Base:232630513987207,Square:Float(54116956037952111668959660849)})
+false
+
+>> IsSquareNumber({Base:Float(232630513987207),Square:54116956037952111668959660849}) // number doesn't overflow floating point for Base, converts it to Decimal on the way in
+true
+
+>> TSquarePairFloat := Type({Base: Float, Square:Decimal})
+#no value
+
+>> IsSquareFloat(x:TSquarePairFloat):Boolean = Decimal(x.Base*x.Base) = x.Square;
+#no value
+
+>> IsSquareFloat({Base:1,Square:1})
+true
+
+>> IsSquareFloat({Base:1,Square:0})
+false
+
+>> IsSquareFloat({Base:15252229,Square:232630489468441}) // still in floating range
+true
+
+>> IsSquareFloat({Base:232630513987207,Square:54116956037952111668959660849}) // square overflows
+false
+
+>> IsSquareFloat({Base:232630513987207,Square:54116956037952111668959660848})
+false
+
 // UDF with side effects
 
 >> Set(offset, 0);
@@ -41,10 +195,10 @@
 
 // UDT
 
->> Integer := Type(Number);
+>> MyInteger := Type(Number);
 #no value
 
->> MyInt(x:Number):Integer = Int(x);
+>> MyInt(x:Number):MyInteger = Int(x);
 #no value
 
 >> MyInt(12.34)
@@ -206,7 +360,7 @@ Errors: Error 16-21: Invalid argument type (Enum (Color)). Expecting a Number va
 1
 
 >> ReturnMyNumColor():MyNum = Color.Red;
-Errors: Error 32-36: The stated function return type 'Number' does not match the return type of the function body 'Enum (Color)'.
+Errors: Error 32-36: The stated function return type 'MyNum' does not match the return type of the function body 'Enum (Color)'.
 
 >> MyNumRec := Type({Val:Number});
 #no value

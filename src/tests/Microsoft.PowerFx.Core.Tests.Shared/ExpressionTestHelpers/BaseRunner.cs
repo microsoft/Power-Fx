@@ -218,13 +218,15 @@ namespace Microsoft.PowerFx.Core.Tests
                         string[] actualStrArr = runResult.Errors.Select(err => err.ToString()).ToArray();
                         bool isValid = true;
 
-                        // Try both unaltered comparison and by replacing Decimal with Number for errors,
-                        // for tests that are run with and without NumberIsFloat set.
+                        // Try both unaltered comparison and by replacing "Decimal", "Float", "Number", and
+                        // sequences of these names with just a single "Number" for errors,
+                        // a change that was made with finalizing UDTs.
                         foreach (var exp in expectedStrArr)
                         {
                             if (!actualStrArr.Contains(exp) &&
-                                !(NumberIsFloat && actualStrArr.Contains(Regex.Replace(exp, "(?<!Number,)(\\s|'|\\()Decimal(\\s|'|,|\\.|\\))", "$1Number$2"))) &&
-                                !(NumberIsFloat && actualStrArr.Contains(Regex.Replace(exp, " Decimal, Number, ", " Number, Decimal, "))))
+                                !actualStrArr.Contains(Regex.Replace(exp, "( Decimal, Number, | Number, Decimal, | Decimal, (?!Number))", " Number, ")) &&
+                                !actualStrArr.Contains(Regex.Replace(exp, @"(['\(])Decimal(['\)])", "$1Number$2")) &&
+                                !actualStrArr.Contains(Regex.Replace(exp, @" Decimal( value|\.)", " Number$1")))
                             {
                                 isValid = false;
                                 break;

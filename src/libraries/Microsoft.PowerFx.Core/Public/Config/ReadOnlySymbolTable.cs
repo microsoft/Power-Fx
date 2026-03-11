@@ -294,7 +294,7 @@ namespace Microsoft.PowerFx
         }
 
         // Helper to create a ReadOnly symbol table around a set of core types. 
-        internal static ReadOnlySymbolTable NewDefaultTypes(IEnumerable<KeyValuePair<DName, FormulaType>> types)
+        internal static ReadOnlySymbolTable NewDefaultTypes(IEnumerable<KeyValuePair<DName, FormulaType>> types, FormulaType numberTypeIs = null)
         {
             Contracts.AssertValue(types);
 
@@ -304,6 +304,12 @@ namespace Microsoft.PowerFx
             };
             
             s.AddTypes(types);
+
+            if (numberTypeIs != null)
+            {
+                s.AddType(BuiltInTypeNames.Number_Alias, numberTypeIs);
+            }
+
             return s;
         }
 
@@ -323,8 +329,6 @@ namespace Microsoft.PowerFx
             s.AddTypes(types);
             return s;
         }
-
-        internal static readonly ReadOnlySymbolTable PrimitiveTypesTableInstance = NewDefaultTypes(FormulaType.PrimitiveTypes);
 
         /// <summary>
         /// Helper to create a symbol table around a set of core functions.
