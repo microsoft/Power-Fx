@@ -536,6 +536,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool AllowedWithinNondeterministicOperationOrder => false;
 
+        // overrides CollectFunction setting
+        public override bool DeepCheckIteratorsForMutation => true;
+
         public ClearCollectFunction()
             : base("ClearCollect", TexlStrings.AboutClearCollect)
         {

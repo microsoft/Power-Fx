@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Functions
     {
         public override bool IsSelfContained => false;
 
-        public virtual bool AllowMutationOfIndirectIterator => true;
+        public override bool DeepCheckIteratorsForMutation => false;
 
         public override bool RequiresDataSourceScope => true;
 

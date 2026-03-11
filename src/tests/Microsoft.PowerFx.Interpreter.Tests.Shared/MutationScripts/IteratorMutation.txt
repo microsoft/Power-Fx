@@ -1,5 +1,8 @@
 #SETUP: MutationFunctionsTestSetup
 
+>> Set(x,[0])
+Table({Value:0})
+
 // shallow iterator mutation
 
 >> ForAll(t1_MutateEnabled_SetMutateEnabled, Collect(t1_MutateEnabled_SetMutateEnabled,{Field1:4}))
@@ -20,26 +23,47 @@ Errors: Error 42-84: This function cannot operate on the same data source that i
 >> ForAll(t1_MutateEnabled_SetMutateEnabled, Patch(t1_MutateEnabled_SetMutateEnabled,First(t1_MutateEnabled_SetMutateEnabled),{Field1:4}))
 Errors: Error 42-134: This function cannot operate on the same data source that is used in ForAll.
 
+// shallow iterator mutation, with compound lambda
+
+>> ForAll(t1_MutateEnabled_SetMutateEnabled, Collect(x,4); Collect(t1_MutateEnabled_SetMutateEnabled,{Field1:4}))
+Errors: Error 56-109: This function cannot operate on the same data source that is used in ForAll.
+
+>> ForAll(t1_MutateEnabled_SetMutateEnabled, Collect(x,5); Clear(t1_MutateEnabled_SetMutateEnabled))
+Errors: Error 56-96: This function cannot operate on the same data source that is used in ForAll.
+
+>> ForAll(t1_MutateEnabled_SetMutateEnabled, Collect(x,6); ClearCollect(t1_MutateEnabled_SetMutateEnabled,{Field1:4}))
+Errors: Error 56-114: This function cannot operate on the same data source that is used in ForAll.
+
+>> ForAll(t1_MutateEnabled_SetMutateEnabled, Collect(x,7); Remove(t1_MutateEnabled_SetMutateEnabled,{Field1:4}))
+Errors: Error 56-108: This function cannot operate on the same data source that is used in ForAll.
+
+>> ForAll(t1_MutateEnabled_SetMutateEnabled, Collect(x,8); Refresh(t1_MutateEnabled_SetMutateEnabled))
+Errors: Error 56-98: This function cannot operate on the same data source that is used in ForAll.
+
+>> ForAll(t1_MutateEnabled_SetMutateEnabled, Collect(x,9); Patch(t1_MutateEnabled_SetMutateEnabled,First(t1_MutateEnabled_SetMutateEnabled),{Field1:4}))
+Errors: Error 56-148: This function cannot operate on the same data source that is used in ForAll.
+
 // deep iterator mutation, these are allowed for backward compatibility
 
->> ForAll(Filter(t1_MutateEnabled_SetMutateEnabled, Field1 > 0), Collect(t1_MutateEnabled_SetMutateEnabled,{Field1:4}))
-Errors: Error 42-95: This function cannot operate on the same data source that is used in ForAll.
+// CountRows since the return type of Collect varies with PowerFxV1
+>> CountRows( ForAll(Filter(t1_MutateEnabled_SetMutateEnabled, Field1 > 0), Collect(t1_MutateEnabled_SetMutateEnabled,{Field1:4})) )
+1
 
+// runtime error is expected
 >> ForAll(Filter(t1_MutateEnabled_SetMutateEnabled, Field1 > 0), Remove(t1_MutateEnabled_SetMutateEnabled,{Field1:4}))
-Errors: Error 42-94: This function cannot operate on the same data source that is used in ForAll.
+Error(Table({Kind:ErrorKind.NotFound},{Kind:ErrorKind.NotFound}))
 
+// runtime error is expected
 >> ForAll(Filter(t1_MutateEnabled_SetMutateEnabled, Field1 > 0), Refresh(t1_MutateEnabled_SetMutateEnabled))
-Errors: Error 42-84: This function cannot operate on the same data source that is used in ForAll.
+Error(Table({Kind:ErrorKind.Internal},{Kind:ErrorKind.Internal}))
 
 >> ForAll(Filter(t1_MutateEnabled_SetMutateEnabled, Field1 > 0), Patch(t1_MutateEnabled_SetMutateEnabled,First(t1_MutateEnabled_SetMutateEnabled),{Field1:4}))
-Errors: Error 42-134: This function cannot operate on the same data source that is used in ForAll.
+Table({Field1:4,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:4,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 
 // deep iterator mutation, these are not allowed as they were never supported
 
 >> ForAll(Filter(t1_MutateEnabled_SetMutateEnabled, Field1 > 0), Clear(t1_MutateEnabled_SetMutateEnabled))
-Errors: Error 42-82: This function cannot operate on the same data source that is used in ForAll.
+Errors: Error 62-102: This function cannot operate on the same data source that is used in ForAll.
 
 >> ForAll(Filter(t1_MutateEnabled_SetMutateEnabled, Field1 > 0), ClearCollect(t1_MutateEnabled_SetMutateEnabled,{Field1:4}))
-Errors: Error 42-100: This function cannot operate on the same data source that is used in ForAll.
-
-
+Errors: Error 62-120: This function cannot operate on the same data source that is used in ForAll.

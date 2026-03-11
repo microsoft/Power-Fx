@@ -1,18 +1,18 @@
-#SETUP: MutationFunctionsTestSetup,PowerFxV1CompatibilityRules
+#SETUP: MutationFunctionsTestSetup,disable:PowerFxV1CompatibilityRules
 
 // Shallow iterator reference, ForAll
 
 >> Set(First(t1_MutateEnabled_SetMutateEnabled).Field1, 4)
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 44-51: 'First(t1_MutateEnabled_SetMutateEnabled).Field1' can't be modified with 'Set' or conflicts with the name of an existing scope variable, data source, or other object.
 
 >> First(t1_MutateEnabled_SetMutateEnabled).Field1 // 1
-4
+1
 
 >> ForAll(t1_MutateEnabled_SetMutateEnabled, Set(t1_MutateEnabled_SetMutateEnabled, Table({Field1:5})))
-Errors: Error 81-98: Invalid argument type (Table). Expecting a Table value instead.|Error 42-99: This function cannot operate on the same data source that is used in ForAll.
+Errors: Error 42-45: The function 'Set' has some invalid arguments.|Error 81-98: Invalid argument type. Expecting a Table value, but of a different schema.|Error 42-99: This function cannot operate on the same data source that is used in ForAll.
 
 >> ForAll(t1_MutateEnabled_SetMutateEnabled, Set(First(t1_MutateEnabled_SetMutateEnabled).Field1, 6))
 Errors: Error 42-97: This function cannot operate on the same data source that is used in ForAll.
 
 >> First(t1_MutateEnabled_SetMutateEnabled).Field1 // 2
-4
+1
