@@ -13,7 +13,7 @@ using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
-/** 
+/**
 * Just a small handy mock of symbol table to be able to customize binder to compute different token types.
 * Might not be 100% correct but it works and allows testing against different token types.
 */

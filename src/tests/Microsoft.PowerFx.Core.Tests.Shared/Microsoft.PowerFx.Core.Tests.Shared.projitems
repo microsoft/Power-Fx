@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Docs\*.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExpressionTestHelpers\*.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\SymbolTableHelperMocks\*.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IntellisenseTests\*.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IRTests\*.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestRunnerTests\*.cs" />
