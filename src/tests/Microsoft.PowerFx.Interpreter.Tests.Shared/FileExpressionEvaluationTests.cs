@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Console = output;
         }
 
-        // File expression tests are run multiple times for the different ways a host can use Power Fx. a
+        // File expression tests are run multiple times for the different ways a host can use Power Fx.
         // 
         // 1. Features.PowerFxV1 without NumberIsFloat - the main way that most hosts will use Power Fx.
         // 2. Feautres.PowerFxV1 with NumberIsFloat - for hosts that wish to use floating point instead of Decimal.
@@ -236,7 +236,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // Normal tests have each line as an independent test case. 
         // Whereas these are fed into a repl and each file maintains state.
         // 
-        // These tests are run twice, as they are for the non-mutation tests, for both V1 and non-V1 compatibility.
+        // These tests are run twice, as they are for the non-mutation tests, for both V1 and non-V1 compatibility.a
         [Theory]
         [ReplFileSimpleList("MutationScripts")]
         public void RunMutationTests_V1(string file)

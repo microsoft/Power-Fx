@@ -1,10 +1,6 @@
 #SETUP: MutationFunctionsTestSetup
 
-// Shallow iterator reference, ForAll
-
-
->> ForAll(t1_MutateEnabled_SetMutateEnabled, Set(First(t1_MutateEnabled_SetMutateEnabled).Field1, 4))
-Error
+// shallow iterator mutation
 
 >> ForAll(t1_MutateEnabled_SetMutateEnabled, Collect(t1_MutateEnabled_SetMutateEnabled,{Field1:4}))
 Errors: Error 42-95: This function cannot operate on the same data source that is used in ForAll.
@@ -23,5 +19,27 @@ Errors: Error 42-84: This function cannot operate on the same data source that i
 
 >> ForAll(t1_MutateEnabled_SetMutateEnabled, Patch(t1_MutateEnabled_SetMutateEnabled,First(t1_MutateEnabled_SetMutateEnabled),{Field1:4}))
 Errors: Error 42-134: This function cannot operate on the same data source that is used in ForAll.
+
+// deep iterator mutation, these are allowed for backward compatibility
+
+>> ForAll(Filter(t1_MutateEnabled_SetMutateEnabled, Field1 > 0), Collect(t1_MutateEnabled_SetMutateEnabled,{Field1:4}))
+Errors: Error 42-95: This function cannot operate on the same data source that is used in ForAll.
+
+>> ForAll(Filter(t1_MutateEnabled_SetMutateEnabled, Field1 > 0), Remove(t1_MutateEnabled_SetMutateEnabled,{Field1:4}))
+Errors: Error 42-94: This function cannot operate on the same data source that is used in ForAll.
+
+>> ForAll(Filter(t1_MutateEnabled_SetMutateEnabled, Field1 > 0), Refresh(t1_MutateEnabled_SetMutateEnabled))
+Errors: Error 42-84: This function cannot operate on the same data source that is used in ForAll.
+
+>> ForAll(Filter(t1_MutateEnabled_SetMutateEnabled, Field1 > 0), Patch(t1_MutateEnabled_SetMutateEnabled,First(t1_MutateEnabled_SetMutateEnabled),{Field1:4}))
+Errors: Error 42-134: This function cannot operate on the same data source that is used in ForAll.
+
+// deep iterator mutation, these are not allowed as they were never supported
+
+>> ForAll(Filter(t1_MutateEnabled_SetMutateEnabled, Field1 > 0), Clear(t1_MutateEnabled_SetMutateEnabled))
+Errors: Error 42-82: This function cannot operate on the same data source that is used in ForAll.
+
+>> ForAll(Filter(t1_MutateEnabled_SetMutateEnabled, Field1 > 0), ClearCollect(t1_MutateEnabled_SetMutateEnabled,{Field1:4}))
+Errors: Error 42-100: This function cannot operate on the same data source that is used in ForAll.
 
 

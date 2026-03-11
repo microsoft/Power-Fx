@@ -4981,9 +4981,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                                 if (innerFirstName != null)
                                 {
-                                    if (func.AllowMutationOfIndirectIterator)
+                                    if (!func.DeepCheckIteratorsForMutation)
                                     {
-                                        // Check for direct reference in the first argument
+                                        // Check for direct reference in the first argument only
                                         var ancestorFirstName = GetDirectFirstNameNode(ancestorScope.Call.Args.Children[0]);
 
                                         if (ancestorFirstName != null &&
@@ -5048,6 +5048,12 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (arg is CallNode callNode && callNode.Args.Count > 0)
                 {
                     return GetFirstNameNodeFromArg(callNode.Args.Children[0]);
+                }
+
+                // Walk through DottedName nodes (e.g., "First(t1).field1" for deep mutations, such as "Set(First(t1).field1,4)")
+                if (arg is DottedNameNode dottedNameNode)
+                {
+                    return GetFirstNameNodeFromArg(dottedNameNode.Left);
                 }
 
                 return arg.AsFirstName();
