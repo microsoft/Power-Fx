@@ -4555,6 +4555,182 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+
+        // Filter functions block side effects in predicate                                  delegable DS,   non-del DS,  variable DS
+
+        [InlineData("Filter(DS, Collect(TblVar, {Id:1}); 1=1)                             ", "FilterNoSE", "FilterNoSE", "FilterNoSE")]
+        [InlineData("LookUp(DS, Collect(TblVar, {Id:1}); 1=1)                             ", "FilterNoSE", "FilterNoSE", "FilterNoSE")]
+
+        // non self modifying
+
+        [InlineData("ForAll(DS, Collect(TblVar, {Id:1}))                                  ", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(DS, Refresh(TblVar))                                          ", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(DS, Patch(TblVar,First(TblVar),{Id:2}))                       ", "        Ok", "        Ok", "        Ok")]
+        [InlineData("AddColumns(DS, Num, Collect(TblVar, {Id:1}); 2)                      ", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(DS, ClearCollect(TblVar, {Id:1}))                             ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("ForAll(DS, Clear(TblVar))                                            ", " Unordered", " Unordered", " Unordered")]
+
+        // self modifying                                                                    delegable DS,   non-del DS,  variable DS
+
+        [InlineData("ForAll(DS, Collect(DS, {Id:1}))                                      ", "   SelfMod", "   SelfMod", "        Ok")]
+        [InlineData("ForAll(DS, Refresh(DS))                                              ", "   SelfMod", "   SelfMod", "        Ok")]
+        [InlineData("ForAll(DS, Patch(DS,First(DS),{Id:2}))                               ", "   SelfMod", "   SelfMod", "        Ok")]
+        [InlineData("AddColumns(DS, Num, Collect(DS, {Id:1}); 2)                          ", "   SelfMod", "   SelfMod", "        Ok")]
+        [InlineData("ForAll(DS, ClearCollect(DS, {Id:1}))                                 ", "   SelfMod", "   SelfMod", " Unordered")]
+        [InlineData("ForAll(DS, Clear(DS))                                                ", "   SelfMod", "   SelfMod", " Unordered")]
+
+        [InlineData("ForAll(Filter(DS,1=1), Collect(DS, {Id:1}))                          ", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("ForAll(Filter(DS,1=1), Refresh(DS))                                  ", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("ForAll(Filter(DS,1=1), Patch(DS,First(DS),{Id:2}))                   ", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("AddColumns(Filter(DS,1=1), Num, Collect(DS, {Id:1}); 2)              ", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("ForAll(Filter(DS,1=1), ClearCollect(DS, {Id:1}))                     ", "   SelfMod", " Unordered", " Unordered")]
+        [InlineData("ForAll(Filter(DS,1=1), Clear(DS))                                    ", "   SelfMod", " Unordered", " Unordered")]
+
+        [InlineData("ForAll(Sort(DS,Id), Collect(DS, {Id:1}))                             ", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("ForAll(Sort(DS,Id), Refresh(DS))                                     ", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("ForAll(Sort(DS,Id), Patch(DS,First(DS),{Id:2}))                      ", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("AddColumns(Sort(DS,Id), Num, Collect(DS, {Id:1}); 2)                 ", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("ForAll(Sort(DS,Id), ClearCollect(DS, {Id:1}))                        ", "   SelfMod", " Unordered", " Unordered")]
+        [InlineData("ForAll(Sort(DS,Id), Clear(DS))                                       ", "   SelfMod", " Unordered", " Unordered")]
+
+        [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Collect(DS, {Id:1}))                 ", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Refresh(DS))                         ", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Patch(DS,First(DS),{Id:2}))          ", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("AddColumns(Sort(Filter(DS,1=1),Id), Num, Collect(DS, {Id:1}); 2)     ", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("ForAll(Sort(Filter(DS,1=1),Id), ClearCollect(DS, {Id:1}))            ", "   SelfMod", " Unordered", " Unordered")]
+        [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Clear(DS))                           ", "   SelfMod", " Unordered", " Unordered")]
+
+        [InlineData("ForAll(SortByColumns(DS,\"Id\"), Collect(DS, {Id:1}))                ", "NonDelWarn", "        Ok", "        Ok")]
+        [InlineData("ForAll(SortByColumns(DS,\"Id\"), Refresh(DS))                        ", "NonDelWarn", "        Ok", "        Ok")]
+        [InlineData("ForAll(SortByColumns(DS,\"Id\"), Patch(DS,First(DS),{Id:2}))         ", "NonDelWarn", "        Ok", "        Ok")]
+        [InlineData("AddColumns(SortByColumns(DS,\"Id\"), Num, Collect(DS, {Id:1}); 2)    ", "NonDelWarn", "        Ok", "        Ok")]
+        [InlineData("ForAll(SortByColumns(DS,\"Id\"), ClearCollect(DS, {Id:1}))           ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("ForAll(SortByColumns(DS,\"Id\"), Clear(DS))                          ", " Unordered", " Unordered", " Unordered")]
+
+        [InlineData("ForAll(FirstN(DS,10), Collect(DS, {Id:1}))                           ", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(FirstN(DS,10), Refresh(DS))                                   ", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(FirstN(DS,10), Patch(DS,First(DS),{Id:2}))                    ", "        Ok", "        Ok", "        Ok")]
+        [InlineData("AddColumns(FirstN(DS,10), Num, Collect(DS, {Id:1}); 2)               ", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(FirstN(DS,10), ClearCollect(DS, {Id:1}))                      ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("ForAll(FirstN(DS,10), Clear(DS))                                     ", " Unordered", " Unordered", " Unordered")]
+
+        public void TexlFunctionSelfModifyingDetection(string script, string expectedErrorDSDelegable, string expectedErrorDSNonDelegable, string expectedErrorVar)
+        {
+            var dataSourceSchema = TestUtils.DT("*[Id:n, Name:s, Age:n]");
+
+            var symbol = new DelegatableSymbolTable();
+            
+            symbol.AddEntity(new TestDelegableDataSource(
+                    "DSdel",
+                    dataSourceSchema,
+                    new TestDelegationMetadata(
+                        new DelegationCapability(DelegationCapability.Filter | DelegationCapability.Sort), // delegable
+                        dataSourceSchema,
+                        new FilterOpMetadata(
+                            dataSourceSchema,
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new Dictionary<DPath, DelegationCapability>
+                            {
+                                { DPath.Root.Append(new DName("Name")), new DelegationCapability(DelegationCapability.Filter | DelegationCapability.Contains) }
+                            },
+                            new DelegationCapability(DelegationCapability.Equal),
+                            null),
+                        new SortOpMetadata(
+                            dataSourceSchema,
+                            new Dictionary<DPath, DelegationCapability>())),
+                    true));
+
+            symbol.AddEntity(new TestDelegableDataSource(
+                    "DSnondel",
+                    dataSourceSchema,
+                    new TestDelegationMetadata(
+                        new DelegationCapability(), // non delegable
+                        dataSourceSchema,
+                        new FilterOpMetadata(
+                            dataSourceSchema,
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new Dictionary<DPath, DelegationCapability>
+                            {
+                                { DPath.Root.Append(new DName("Name")), new DelegationCapability(DelegationCapability.Filter | DelegationCapability.Contains) }
+                            },
+                            new DelegationCapability(DelegationCapability.Equal),
+                            null),
+                        new SortOpMetadata(
+                            dataSourceSchema,
+                            new Dictionary<DPath, DelegationCapability>())),
+                    true));
+
+            symbol.AddVariable("DSvar", new TableType(dataSourceSchema), mutable: true, displayName: "DSVar");
+
+            symbol.AddVariable("TblVar", new TableType(dataSourceSchema), mutable: true, displayName: "TblVar");
+
+            symbol.AddFunction(new CollectFunction());
+            symbol.AddFunction(new ClearFunction());
+            symbol.AddFunction(new ClearCollectFunction());
+            symbol.AddFunction(new RefreshFunction());
+            symbol.AddFunction(new PatchFunction());
+
+            var config = new PowerFxConfig
+            {
+                SymbolTable = symbol,                
+            };
+
+            var engine = new Engine(config);
+
+            var parserOptions = new ParserOptions
+            {
+                AllowsSideEffects = true,
+            };
+
+            TestDS("DSdel", expectedErrorDSDelegable);
+            TestDS("DSnondel", expectedErrorDSNonDelegable);
+            TestDS("DSvar", expectedErrorVar);
+
+            void TestDS(string dsType, string expectedError)
+            {
+                var scriptDS = script.Replace("DS", dsType);
+                var result = engine.Check(scriptDS, options: parserOptions);
+                string expectedKey = null;
+
+                expectedError = expectedError.Trim();
+
+                switch (expectedError)
+                {
+                    case "SelfMod":
+                        expectedKey = "ErrScopeModification";
+                        break;
+                    case "Unordered":
+                        expectedKey = "ErrFunctionDisallowedWithinNondeterministicOperationOrder";
+                        break;
+                    case "FilterNoSE":
+                        expectedKey = "ErrFilterFunctionBahaviorAsPredicate";
+                        break;
+                    case "NonDelWarn":
+                        expectedKey = "SuggestRemoteExecutionHint";
+                        break;
+                    case "Ok":
+                        break;
+                    default:
+                        Assert.Fail(dsType + ": Unrecognized expected error type: " + expectedError);
+                        break;
+                }
+
+                if (expectedKey == null)
+                {
+                    Assert.True(
+                        result.Errors.Count() == 0,
+                        $"Unexpected errors were encountered for {dsType}: {string.Join(", ", result.Errors.Select(err => err.MessageKey))}");
+                }
+                else
+                {
+                    Assert.True(
+                        result.Errors.Any(err => err.MessageKey.Contains(expectedKey)),
+                        $"Expected error {expectedKey} ({expectedError}) was not found for {dsType}, instead found: {(result.Errors.Count() == 0 ? "<error>" : string.Join(", ", result.Errors.Select(err => err.MessageKey)))}");
+                }
+            }
+        }
+
+        [Theory]
         [InlineData("Type(Number)", "e")]
         [InlineData("Abs(Type(Number))", "n")]
         [InlineData("If(Type(Boolean), 1, 2)", "n")]
