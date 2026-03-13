@@ -35,6 +35,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool ManipulatesCollections => true;
 
+        public override bool DeepCheckIteratorsForMutation => false;
+
         public override bool ModifiesValues => true;
 
         public override bool IsSelfContained => false;
@@ -533,6 +535,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal class ClearCollectFunction : CollectFunction
     {
         public override bool AllowedWithinNondeterministicOperationOrder => false;
+
+        // overrides CollectFunction setting
+        public override bool DeepCheckIteratorsForMutation => true;
 
         public ClearCollectFunction()
             : base("ClearCollect", TexlStrings.AboutClearCollect)

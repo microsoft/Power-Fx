@@ -594,6 +594,8 @@ namespace Microsoft.PowerFx.Functions
 
             var rows = new List<FormulaValue>();
 
+            // ForAll semantics call for a sequential processing of each row. Do not parallelize this loop.
+            // This is declared with "determinisitcIteration: true" in the compiler's function definition.
             foreach (var row in rowsAsync)
             {
                 runner.CheckCancel();

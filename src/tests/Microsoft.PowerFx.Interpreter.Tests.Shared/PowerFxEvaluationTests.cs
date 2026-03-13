@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private static object BlobSetup(PowerFxConfig config, SymbolTable symbolTable)
         {
             config.AddBlobTestFunctions();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
 
             return new List<(ISymbolSlot slot, FormulaValue value)>()
             { 
@@ -628,6 +628,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
              * Table t_name: *[name:s] = []
              * Table t_bs1: *[b:s] 
              * Table t_bs2: *[b:s] 
+             * Data source ds1 => ![ID:g,Value:n] = []
              */
 
             var numberType = numberIsFloat ? FormulaType.Number : FormulaType.Decimal;
@@ -757,7 +758,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var symbol = engine._symbolTable;
 
-            symbol.EnableMutationFunctions();
+            symbol.EnableMutationFunctionsIterationSafe();
 
             engine.UpdateVariable("t1", t1);
             engine.UpdateVariable("r1", r1);
@@ -816,6 +817,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var t_bsType = TableType.Empty().Add("b", FormulaType.String);
             engine.UpdateVariable("t_bs1", FormulaValue.NewTable(t_bsType.ToRecord()));
             engine.UpdateVariable("t_bs2", FormulaValue.NewTable(t_bsType.ToRecord()));
+
+            var dsSchema = DType.CreateTable(
+                new TypedName(DType.Guid, new DName("ID")),
+                new TypedName(DType.Number, new DName("Field1")));
+            engine.Config.AddEntity(new TestDataSource("ds1", dsSchema, keyColumns: new[] { "ID" }, selectableColumns: new[] { "ID", "Field1" }));
 
             engine.Config.EnableJsonFunctions();
         }        
@@ -878,7 +884,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var waitForHelper = new WaitForFunctionsHelper(verify);
                 config.AddFunction(waitForHelper.GetFunction());
 
-                config.EnableSetFunction();
+                config.EnableSetFunctionIterationSafe();
                 var engine = new RecalcEngine(config);
                 engine.UpdateVariable("varNumber", 9999);
 

@@ -137,7 +137,7 @@ namespace Microsoft.PowerFx.Interpreter
                 SymbolTable = symbolTable
             };
 
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             config.EnableJsonFunctions();
 
             var engine = new RecalcEngine(config);

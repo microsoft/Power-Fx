@@ -1,0 +1,168 @@
+#SETUP: PowerFxV1CompatibilityRules,MutationFunctionsTestSetup
+
+// We block some functions that could iterate over their lambdas, in non-deterministic ways that could impact side effects
+// This is an ad-hoc spot check in addition to TexlMutationFunctionsInIteration and TexlMutationFunctionsInIteration_Interpreter test.
+
+// ForAll works for all
+
+>> Set(mm,[1,2,3])
+Table({Value:1},{Value:2},{Value:3})
+
+>> ForAll(Sequence(3), Collect(mm, 4))
+Table({Value:4},{Value:4},{Value:4})
+
+>> 0; mm
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:4},{Value:4})
+
+>> ForAll(Sequence(3), Clear(mm))
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> 1; mm
+Table()
+
+>> ForAll(Sequence(3), ClearCollect(mm, 5))
+Table({Value:5},{Value:5},{Value:5})
+
+>> 2; mm
+Table({Value:5})
+
+>> ForAll(Sequence(3), Set(mm,[10,20,30]))
+Table({Value:10},{Value:20},{Value:30})
+
+>> 3; mm
+Table({Value:10},{Value:20},{Value:30})
+
+>> ForAll(Sequence(3), Collect(mm, {Value:5}))
+Table({Value:5},{Value:5},{Value:5})
+
+>> 4; mm
+Table({Value:10},{Value:20},{Value:30},{Value:5},{Value:5},{Value:5})
+
+>> ForAll(Sequence(3), ClearCollect(mm, {Value:5}))
+Table({Value:5},{Value:5},{Value:5})
+
+>> 5; mm
+Table({Value:5})
+
+// Filter doesn't work for any
+
+>> Set(mm,[11,12,13])
+Table({Value:11},{Value:12},{Value:13})
+
+>> Filter(Sequence(3), Collect(mm, 4); Value < 2)
+Errors: Error 34-35: Filter functions don't allow behavior functions as predicates.
+
+>> 10; mm
+Table({Value:11},{Value:12},{Value:13})
+
+>> Filter(Sequence(3), Clear(mm); Value < 2)
+Errors: Error 20-29: This function cannot be invoked within Filter.|Error 29-30: Filter functions don't allow behavior functions as predicates.
+
+>> 11; mm
+Table({Value:11},{Value:12},{Value:13})
+
+>> Filter(Sequence(3), ClearCollect(mm, 5); Value < 2)
+Errors: Error 20-39: This function cannot be invoked within Filter.|Error 39-40: Filter functions don't allow behavior functions as predicates.
+
+>> 12; mm
+Table({Value:11},{Value:12},{Value:13})
+
+>> Filter(Sequence(3), Set(mm,[10,20,30]); Value < 2)
+Errors: Error 20-38: This function cannot be invoked within Filter.|Error 38-39: Filter functions don't allow behavior functions as predicates.
+
+>> 13; mm
+Table({Value:11},{Value:12},{Value:13})
+
+>> Filter(Sequence(3), Collect(mm, {Value:5}); Value < 2)
+Errors: Error 42-43: Filter functions don't allow behavior functions as predicates.
+
+>> 14; mm
+Table({Value:11},{Value:12},{Value:13})
+
+>> Filter(Sequence(3), ClearCollect(mm, {Value:5}); Value < 2)
+Errors: Error 20-47: This function cannot be invoked within Filter.|Error 47-48: Filter functions don't allow behavior functions as predicates.
+
+>> 15; mm
+Table({Value:11},{Value:12},{Value:13})
+
+// Sort works for some
+
+>> Set(mm,[21,22,23])
+Table({Value:21},{Value:22},{Value:23})
+
+>> Sort(Sequence(3), Collect(mm, 4); Value + 2)
+Table({Value:1},{Value:2},{Value:3})
+
+>> 20; mm
+Table({Value:21},{Value:22},{Value:23},{Value:4},{Value:4},{Value:4})
+
+>> Sort(Sequence(3), Clear(mm); Value + 2)
+Errors: Error 18-27: This function cannot be invoked within Sort.
+
+>> 21; mm
+Table({Value:21},{Value:22},{Value:23},{Value:4},{Value:4},{Value:4})
+
+>> Sort(Sequence(3), ClearCollect(mm, 5); Value + 2)
+Errors: Error 18-37: This function cannot be invoked within Sort.
+
+>> 22; mm
+Table({Value:21},{Value:22},{Value:23},{Value:4},{Value:4},{Value:4})
+
+>> Sort(Sequence(3), Set(mm,[10,20,30]); Value + 2)
+Errors: Error 18-36: This function cannot be invoked within Sort.
+
+>> 23; mm
+Table({Value:21},{Value:22},{Value:23},{Value:4},{Value:4},{Value:4})
+
+>> Sort(Sequence(3), Collect(mm, {Value:5}); Value + 2)
+Table({Value:1},{Value:2},{Value:3})
+
+>> 24; mm
+Table({Value:21},{Value:22},{Value:23},{Value:4},{Value:4},{Value:4},{Value:5},{Value:5},{Value:5})
+
+>> Sort(Sequence(3), ClearCollect(mm, {Value:5}); Value + 2)
+Errors: Error 18-45: This function cannot be invoked within Sort.
+
+>> 25; mm
+Table({Value:21},{Value:22},{Value:23},{Value:4},{Value:4},{Value:4},{Value:5},{Value:5},{Value:5})
+
+// ForAll UO works for all
+
+>> Set(mm,[1,2,3]) // reset for UO
+Table({Value:1},{Value:2},{Value:3})
+
+>> ForAll(ParseJSON("[1,2,3]"), Collect(mm, 4))
+Table({Value:4},{Value:4},{Value:4})
+
+>> 30; mm
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:4},{Value:4})
+
+>> ForAll(ParseJSON("[1,2,3]"), Clear(mm))
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> 31; mm
+Table()
+
+>> ForAll(ParseJSON("[1,2,3]"), ClearCollect(mm, 5))
+Table({Value:5},{Value:5},{Value:5})
+
+>> 32; mm
+Table({Value:5})
+
+>> ForAll(ParseJSON("[1,2,3]"), Set(mm,[10,20,30]))
+Table({Value:10},{Value:20},{Value:30})
+
+>> 33; mm
+Table({Value:10},{Value:20},{Value:30})
+
+>> ForAll(ParseJSON("[1,2,3]"), Collect(mm, {Value:5}))
+Table({Value:5},{Value:5},{Value:5})
+
+>> 34; mm
+Table({Value:10},{Value:20},{Value:30},{Value:5},{Value:5},{Value:5})
+
+>> ForAll(ParseJSON("[1,2,3]"), ClearCollect(mm, {Value:5}))
+Table({Value:5},{Value:5},{Value:5})
+
+>> 35; mm
+Table({Value:5})

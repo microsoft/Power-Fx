@@ -24,6 +24,8 @@ namespace Microsoft.PowerFx.Functions
     {
         public override bool IsSelfContained => false;
 
+        public override bool DeepCheckIteratorsForMutation => false;
+
         public override bool RequiresDataSourceScope => true;
 
         public override bool CanSuggestInputColumns => true;

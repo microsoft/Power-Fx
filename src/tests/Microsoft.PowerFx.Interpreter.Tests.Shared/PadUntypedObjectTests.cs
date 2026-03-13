@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
             RecalcEngine engine = new RecalcEngine(config);
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             engine.UpdateVariable("padTable", uov, new SymbolProperties() { CanMutate = true, CanSetMutate = true });
             engine.UpdateVariable("notImplementedUO", notImplementedValue, new SymbolProperties() { CanMutate = true, CanSetMutate = true });
             engine.UpdateVariable("padCell", uovCell);
@@ -100,7 +100,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
             RecalcEngine engine = new RecalcEngine(config);
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             engine.UpdateVariable("padTable", uovTable);
             engine.UpdateVariable("padRow", uovRow);
 
@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
             RecalcEngine engine = new RecalcEngine(config);
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             engine.UpdateVariable("padTable", uov, new SymbolProperties() { CanMutate = true, CanSetMutate = true });
 
             // Setting an untyped object (padCell)
@@ -150,7 +150,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             RecalcEngine engine = new RecalcEngine();
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             engine.UpdateVariable("padTable1", uov1);
             engine.UpdateVariable("padTable2", uov2);
 
@@ -172,7 +172,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
             RecalcEngine engine = new RecalcEngine(config);
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             engine.UpdateVariable("padTable", uov, new SymbolProperties() { CanMutate = true, CanSetMutate = true });
 
             var result = engine.Eval(@"ColumnNames(Index(padTable, 1))");
@@ -194,7 +194,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
             RecalcEngine engine = new RecalcEngine(config);
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             engine.UpdateVariable("padTable", uovTable);
 
             var result = engine.Eval(expression);

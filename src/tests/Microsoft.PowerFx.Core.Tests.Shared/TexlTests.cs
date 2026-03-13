@@ -175,6 +175,81 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(expectedType, check.Binding.ResultType.ToString());
         }
 
+        // Check proper treatment of functions that create their own FunctionScopeInfo and set IteratesOverScope to true,
+        // with functions that have AllowedWithinNondeterministicOperationOrder set to false (Clear, ClearCollect, but not Collect).
+        // Notable exception is ForAll that has DeterministicIteration set to true
+        // Other hosts may add functions that also are restricted, such as Set which is tested in
+        // \src\tests\Microsoft.PowerFx.Interpreter.Tests.Shared\SetFunctionTests.cs
+        [Theory]
+        [InlineData("Mid( \"hello\", %1; 1, 4 )", false)] // doesn't have IteratesOverScope set to true 
+        [InlineData("ForAll( Sequence(5), %1 )", false)] // Iterates, but sets DeterministicIteration to true
+        [InlineData("Filter( Sequence(5), %1; Value > 2 )", true, "ErrFilterFunctionBahaviorAsPredicate")] // in addition, produces an error for all behavior functions
+        [InlineData("CountIf( Sequence(5), %1; Value > 2 )", true, "ErrFilterFunctionBahaviorAsPredicate")] // in addition, produces an error for all behavior functions
+        [InlineData("LookUp( Sequence(5), %1; Value = 2 )", true, "ErrFilterFunctionBahaviorAsPredicate")] // in addition, produces an error for all behavior functions
+        [InlineData("Distinct( Sequence(5), %1; Value )", true)]
+        [InlineData("Sort( Sequence(5), %1; Value + 2 )", true)]
+        [InlineData("AddColumns( Sequence(5), Double, %1; Value*2 )", true)]
+        [InlineData("Concat( Sequence(5), %1; Value )", true)]
+        [InlineData("Sum( Sequence(5), %1; Value )", true)]
+        [InlineData("Max( Sequence(5), %1; Value )", true)]
+        [InlineData("Min( Sequence(5), %1; Value )", true)]
+        [InlineData("Average( Sequence(5), %1; Value )", true)]
+        [InlineData("StdevP( Sequence(5), %1; Value )", true)]
+        [InlineData("VarP( Sequence(5), %1; Value )", true)]
+        public void TexlMutationFunctionsInIteration(string expression, bool restrictedClear, string functionErrorKey = null)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var options = new ParserOptions() { AllowsSideEffects = true };
+
+            DType.TryParse("*[a:w,b:s]", out var expectedDType);
+            DType.TryParse("*[Value:w]", out var expectedDTypeScalar);
+
+            engine.Config.SymbolTable.AddVariable("t1", FormulaType.Build(expectedDType), mutable: true);
+            engine.Config.SymbolTable.AddVariable("t2", FormulaType.Build(expectedDTypeScalar), mutable: true);
+
+            engine.Config.SymbolTable.AddFunction(new ClearFunction());
+            engine.Config.SymbolTable.AddFunction(new CollectFunction());
+            engine.Config.SymbolTable.AddFunction(new CollectScalarFunction());
+            engine.Config.SymbolTable.AddFunction(new ClearCollectFunction());
+            engine.Config.SymbolTable.AddFunction(new ClearCollectScalarFunction());
+            engine.Config.SymbolTable.AddFunction(new DistinctFunction());
+
+            var tests = new[]
+            {
+                "Clear(t1)", "Clear(t2)", // restricted
+                "ClearCollect(t1,{a:4})", "ClearCollect(t2,4)", // restricted
+                "Collect(t1,{a:5})", "Collect(t2,5)", // unrestricted, but still a mutation function
+                "First(t1)" // something that should always work
+            };
+
+            foreach (var test in tests)
+            {
+                var testExpression = expression.Replace("%1", test);
+                var check = engine.Check(testExpression, options);
+                bool expectedErrorSeen = false;
+
+                // These two error checks are not mutually exclusive
+                if (restrictedClear && test.StartsWith("Clear"))
+                {
+                    Assert.False(check.IsSuccess);
+                    Assert.Contains(check.Errors, err => !err.IsWarning && err.MessageKey == "ErrFunctionDisallowedWithinNondeterministicOperationOrder");
+                    expectedErrorSeen = true;
+                }
+
+                if (functionErrorKey != null && !test.StartsWith("First"))
+                {
+                    Assert.False(check.IsSuccess);
+                    Assert.Contains(check.Errors, err => !err.IsWarning && err.MessageKey == functionErrorKey);
+                    expectedErrorSeen = true;
+                }
+
+                if (!expectedErrorSeen)
+                {
+                    Assert.True(check.IsSuccess);
+                }
+            }
+        }
+
         [Theory]
         [InlineData("DateDiff([Date(2000,1,1)],[Date(2001,1,1)],\"years\")", "*[Result:w]")]
         [InlineData("DateDiff(Date(2000,1,1),[Date(2001,1,1)],\"years\")", "*[Result:w]")]

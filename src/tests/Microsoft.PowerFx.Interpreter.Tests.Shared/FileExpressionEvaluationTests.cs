@@ -265,7 +265,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var path = Path.Combine(System.Environment.CurrentDirectory, "MutationScripts", file);
 
             var config = new PowerFxConfig(features) { SymbolTable = UserInfoTestSetup.GetUserInfoSymbolTable() };
-            config.SymbolTable.EnableMutationFunctions();
+            config.SymbolTable.EnableMutationFunctionsIterationSafe();
 #pragma warning disable CS0618 // Type or member is obsolete
             config.EnableJoinFunction();
 #pragma warning restore CS0618 // Type or member is obsolete

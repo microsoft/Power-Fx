@@ -122,7 +122,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Define symbol table
             var symbolTable = new SymbolTable();
-            symbolTable.EnableMutationFunctions();
+            symbolTable.EnableMutationFunctionsIterationSafe();
 
             if (setVariableValueInEngine)      
             {
