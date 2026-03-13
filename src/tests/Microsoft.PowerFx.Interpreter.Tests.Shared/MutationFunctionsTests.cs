@@ -24,6 +24,8 @@ using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
+#pragma warning disable CS0618 // Type or member is obsolete - We are still using the old EnableSetFunction in some tests for backward compatibility, but new tests should use EnableSetFunctionIterationSafe.
+
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class MutationFunctionsTests : PowerFxTest
@@ -98,7 +100,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var parameters = RecordType.Empty()
                 .Add("rType", rType);
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             engine.Config.SymbolTable.AddConstant("t", t);
 
             if (toDisplay)
@@ -214,7 +216,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var parameters = RecordType.Empty()
                 .Add("rType", rType);
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             engine.Config.SymbolTable.AddConstant("t", t);
 
             var types = new List<FormulaType>()
@@ -260,7 +262,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var engine = new Engine(new PowerFxConfig());
             engine.Config.SymbolTable.AddVariable("namedFormula", new TableType(TestUtils.DT("*[Value:n]")), mutable: false);
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             var check = engine.Check(expression, options: _opts);
             Assert.False(check.IsSuccess);
         }
@@ -276,7 +278,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new Engine(new PowerFxConfig());
             engine.Config.SymbolTable.AddVariable("varTable", new TableType(TestUtils.DT("*[Value:s]")), mutable: true);
             engine.Config.SymbolTable.AddVariable("varRecord", new KnownRecordType(TestUtils.DT("![x:*[Value:s]]")), mutable: true);
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             var check = engine.Check(expression, options: _opts);
             Assert.True(check.IsSuccess);
         }
@@ -306,7 +308,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add(new NamedFormulaType("flavor", FormulaType.String))
                 .Add(new NamedFormulaType("quantity", fv.Type));
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             engine.UpdateVariable("checktable", FormulaValue.NewTable(rType));
 
             var check = engine.Check(expr, options: new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = true });
@@ -335,7 +337,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add(new NamedFormulaType("subject", FormulaType.String))
                 .Add(new NamedFormulaType("poly", FormulaType.Build(DType.Polymorphic)));
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             engine.UpdateVariable("t1", FormulaValue.NewTable(rType));
 
             var check = engine.Check(expr, options: new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = true });
@@ -356,7 +358,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             TableValue t = FormulaValue.NewTable(rType);
             RecordValue x = new FileObjectRecordValue("x", IRContext.NotInSource(rType), new List<NamedValue>());
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             engine.UpdateVariable("x", x);
             engine.UpdateVariable("t", t);
 
@@ -384,7 +386,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbolTable = new SymbolTable();
             var symbolTableEnabled = new SymbolTable();
 
-            symbolTableEnabled.EnableMutationFunctions();
+            symbolTableEnabled.EnableMutationFunctionsIterationSafe();
 
             // Mutation functions not listed.
             var check = engine.Check(expr, symbolTable: symbolTable);
@@ -402,7 +404,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine(new PowerFxConfig(Features.None));
             var t = FormulaValue.NewTable(RecordType.Empty().Add(new NamedFormulaType("Value", FormulaType.Decimal)));
 
-            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
             engine.UpdateVariable("t", t);
 
             var check = engine.Check(expression, options: new ParserOptions() { AllowsSideEffects = true });
@@ -497,7 +499,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             config.SymbolTable.AddEntity(varTableValue);
             config.SymbolTable.AddVariable("r1", FormulaType.Build(varTableValue.Type.ToRecord()));
-            config.SymbolTable.EnableMutationFunctions();
+            config.SymbolTable.EnableMutationFunctionsIterationSafe();
 
             var engine = new RecalcEngine(config);
             var check = engine.Check(expression, options: new ParserOptions() { AllowsSideEffects = allowSideEffects });
@@ -524,170 +526,170 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // Set non self modifying                                                                       delegable DS,   non-del DS,  variable DS
 
         [InlineData("Search(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); \"b\", Name)                       ", "NonDelWarn", "        Ok", "        Ok")]
-        [InlineData("ForAll(DS, Set(TblVar, [{Id:1,Name:\"a\"}]))                                    ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("ForAll(DS, Set(First(TblVar).Id, 3))                                            ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("AddColumns(DS, Num, Set(TblVar, [{Id:1,Name:\"a\"}]); 2)                        ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("AddColumns(DS, Num, Set(First(TblVar).Id, 3); 2)                                ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Concat(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); Text(Id))                          ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Distinct(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); Id)                              ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Sum(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); Id)                                   ", "NonDelWarn", "NonDelWnOp", "        Ok")]
-        [InlineData("Average(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); Id)                               ", "NonDelWarn", "NonDelWnOp", "        Ok")]
-        [InlineData("Min(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); Id)                                   ", "NonDelWarn", "NonDelWnOp", "        Ok")]
-        [InlineData("Max(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); Id)                                   ", "NonDelWarn", "NonDelWnOp", "        Ok")]
-        [InlineData("VarP(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); Id)                                  ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("StdevP(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); Id)                                ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Concat(DS, Set(First(TblVar).Id, 3); Text(Id))                                  ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Distinct(DS, Set(First(TblVar).Id, 3); Id)                                      ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Sum(DS, Set(First(TblVar).Id, 3); Id)                                           ", "NonDelWarn", "NonDelWnOp", "        Ok")]
-        [InlineData("Average(DS, Set(First(TblVar).Id, 3); Id)                                       ", "NonDelWarn", "NonDelWnOp", "        Ok")]
-        [InlineData("Min(DS, Set(First(TblVar).Id, 3); Id)                                           ", "NonDelWarn", "NonDelWnOp", "        Ok")]
-        [InlineData("Max(DS, Set(First(TblVar).Id, 3); Id)                                           ", "NonDelWarn", "NonDelWnOp", "        Ok")]
-        [InlineData("VarP(DS, Set(First(TblVar).Id, 3); Id)                                          ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("StdevP(DS, Set(First(TblVar).Id, 3); Id)                                        ", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(DS, Set(TblVar, [{Id:1,Name:\"a\"}]))                                    ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("ForAll(DS, Set(First(TblVar).Id, 3))                                            ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("AddColumns(DS, Num, Set(TblVar, [{Id:1,Name:\"a\"}]); 2)                        ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("AddColumns(DS, Num, Set(First(TblVar).Id, 3); 2)                                ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Concat(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); Text(Id))                          ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Distinct(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); Id)                              ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Sum(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); Id)                                   ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Average(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); Id)                               ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Min(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); Id)                                   ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Max(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); Id)                                   ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("VarP(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); Id)                                  ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("StdevP(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); Id)                                ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Concat(DS, Set(First(TblVar).Id, 3); Text(Id))                                  ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Distinct(DS, Set(First(TblVar).Id, 3); Id)                                      ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Sum(DS, Set(First(TblVar).Id, 3); Id)                                           ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Average(DS, Set(First(TblVar).Id, 3); Id)                                       ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Min(DS, Set(First(TblVar).Id, 3); Id)                                           ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Max(DS, Set(First(TblVar).Id, 3); Id)                                           ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("VarP(DS, Set(First(TblVar).Id, 3); Id)                                          ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("StdevP(DS, Set(First(TblVar).Id, 3); Id)                                        ", " Unordered", " Unordered", " Unordered")]
 
         // Set self modifying, direct DS                                                                delegable DS,   non-del DS,  variable DS
 
         [InlineData("Search(DS, Set(DS, [{Id:1,Name:\"a\"}]); \"b\", Name)                           ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("ForAll(DS, Set(DS, [{Id:1,Name:\"a\"}]))                                        ", "   SelfMod", "   SelfMod", "        Ok")]
-        [InlineData("ForAll(DS, Set(First(DS).Id, 3))                                                ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("AddColumns(DS, Num, Set(DS, [{Id:1,Name:\"a\"}]); 2)                            ", "   SelfMod", "   SelfMod", "        Ok")]
-        [InlineData("AddColumns(DS, Num, Set(First(DS).Id, 3); 2)                                    ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Concat(DS, Set(DS, [{Id:1,Name:\"a\"}]); Text(Id))                              ", "   SelfMod", "   SelfMod", "        Ok")]
-        [InlineData("Distinct(DS, Set(DS, [{Id:1,Name:\"a\"}]); Id)                                  ", "   SelfMod", "   SelfMod", "        Ok")]
-        [InlineData("Sum(DS, Set(DS, [{Id:1,Name:\"a\"}]); Id)                                       ", "   SelfMod", "   SelfMod", "        Ok")]
-        [InlineData("Average(DS, Set(DS, [{Id:1,Name:\"a\"}]); Id)                                   ", "   SelfMod", "   SelfMod", "        Ok")]
-        [InlineData("Min(DS, Set(DS, [{Id:1,Name:\"a\"}]); Id)                                       ", "   SelfMod", "   SelfMod", "        Ok")]
-        [InlineData("Max(DS, Set(DS, [{Id:1,Name:\"a\"}]); Id)                                       ", "   SelfMod", "   SelfMod", "        Ok")]
-        [InlineData("VarP(DS, Set(DS, [{Id:1,Name:\"a\"}]); Id)                                      ", "   SelfMod", "   SelfMod", "        Ok")]
-        [InlineData("StdevP(DS, Set(DS, [{Id:1,Name:\"a\"}]); Id)                                    ", "   SelfMod", "   SelfMod", "        Ok")]
-        [InlineData("Concat(DS, Set(First(DS).Id, 3); Text(Id))                                      ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Distinct(DS, Set(First(DS).Id, 3); Id)                                          ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Sum(DS, Set(First(DS).Id, 3); Id)                                               ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Average(DS, Set(First(DS).Id, 3); Id)                                           ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Min(DS, Set(First(DS).Id, 3); Id)                                               ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Max(DS, Set(First(DS).Id, 3); Id)                                               ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("VarP(DS, Set(First(DS).Id, 3); Id)                                              ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("StdevP(DS, Set(First(DS).Id, 3); Id)                                            ", " Immutable", " Immutable", "        Ok")]
+        [InlineData("ForAll(DS, Set(DS, [{Id:1,Name:\"a\"}]))                                        ", "   SelfMod", "   SelfMod", " Unordered")]
+        [InlineData("ForAll(DS, Set(First(DS).Id, 3))                                                ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("AddColumns(DS, Num, Set(DS, [{Id:1,Name:\"a\"}]); 2)                            ", "   SelfMod", "   SelfMod", " Unordered")]
+        [InlineData("AddColumns(DS, Num, Set(First(DS).Id, 3); 2)                                    ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Concat(DS, Set(DS, [{Id:1,Name:\"a\"}]); Text(Id))                              ", "   SelfMod", "   SelfMod", " Unordered")]
+        [InlineData("Distinct(DS, Set(DS, [{Id:1,Name:\"a\"}]); Id)                                  ", "   SelfMod", "   SelfMod", " Unordered")]
+        [InlineData("Sum(DS, Set(DS, [{Id:1,Name:\"a\"}]); Id)                                       ", "   SelfMod", "   SelfMod", " Unordered")]
+        [InlineData("Average(DS, Set(DS, [{Id:1,Name:\"a\"}]); Id)                                   ", "   SelfMod", "   SelfMod", " Unordered")]
+        [InlineData("Min(DS, Set(DS, [{Id:1,Name:\"a\"}]); Id)                                       ", "   SelfMod", "   SelfMod", " Unordered")]
+        [InlineData("Max(DS, Set(DS, [{Id:1,Name:\"a\"}]); Id)                                       ", "   SelfMod", "   SelfMod", " Unordered")]
+        [InlineData("VarP(DS, Set(DS, [{Id:1,Name:\"a\"}]); Id)                                      ", "   SelfMod", "   SelfMod", " Unordered")]
+        [InlineData("StdevP(DS, Set(DS, [{Id:1,Name:\"a\"}]); Id)                                    ", "   SelfMod", "   SelfMod", " Unordered")]
+        [InlineData("Concat(DS, Set(First(DS).Id, 3); Text(Id))                                      ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Distinct(DS, Set(First(DS).Id, 3); Id)                                          ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Sum(DS, Set(First(DS).Id, 3); Id)                                               ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Average(DS, Set(First(DS).Id, 3); Id)                                           ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Min(DS, Set(First(DS).Id, 3); Id)                                               ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Max(DS, Set(First(DS).Id, 3); Id)                                               ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("VarP(DS, Set(First(DS).Id, 3); Id)                                              ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("StdevP(DS, Set(First(DS).Id, 3); Id)                                            ", " Immutable", " Immutable", " Unordered")]
 
         // Set self modifying, Filter of DS                                                             delegable DS,   non-del DS,  variable DS
 
         [InlineData("Search(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]); \"b\", Name)               ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("ForAll(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]))                            ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("ForAll(Filter(DS,1=1), Set(First(DS).Id, 3))                                    ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("AddColumns(Filter(DS,1=1), Num, Set(DS, [{Id:1,Name:\"a\"}]); 2)                ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("AddColumns(Filter(DS,1=1), Num, Set(First(DS).Id, 3); 2)                        ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Concat(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]); Text(Id))                  ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("Distinct(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]); Id)                      ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("Sum(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]); Id)                           ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("Average(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]); Id)                       ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("Min(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]); Id)                           ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("Max(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]); Id)                           ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("VarP(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]); Id)                          ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("StdevP(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]); Id)                        ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("Concat(Filter(DS,1=1), Set(First(DS).Id, 3); Text(Id))                          ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Distinct(Filter(DS,1=1), Set(First(DS).Id, 3); Id)                              ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Sum(Filter(DS,1=1), Set(First(DS).Id, 3); Id)                                   ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Average(Filter(DS,1=1), Set(First(DS).Id, 3); Id)                               ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Min(Filter(DS,1=1), Set(First(DS).Id, 3); Id)                                   ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Max(Filter(DS,1=1), Set(First(DS).Id, 3); Id)                                   ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("VarP(Filter(DS,1=1), Set(First(DS).Id, 3); Id)                                  ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("StdevP(Filter(DS,1=1), Set(First(DS).Id, 3); Id)                                ", " Immutable", " Immutable", "        Ok")]
+        [InlineData("ForAll(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]))                            ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("ForAll(Filter(DS,1=1), Set(First(DS).Id, 3))                                    ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("AddColumns(Filter(DS,1=1), Num, Set(DS, [{Id:1,Name:\"a\"}]); 2)                ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("AddColumns(Filter(DS,1=1), Num, Set(First(DS).Id, 3); 2)                        ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Concat(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]); Text(Id))                  ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("Distinct(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]); Id)                      ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("Sum(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]); Id)                           ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("Average(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]); Id)                       ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("Min(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]); Id)                           ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("Max(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]); Id)                           ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("VarP(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]); Id)                          ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("StdevP(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]); Id)                        ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("Concat(Filter(DS,1=1), Set(First(DS).Id, 3); Text(Id))                          ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Distinct(Filter(DS,1=1), Set(First(DS).Id, 3); Id)                              ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Sum(Filter(DS,1=1), Set(First(DS).Id, 3); Id)                                   ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Average(Filter(DS,1=1), Set(First(DS).Id, 3); Id)                               ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Min(Filter(DS,1=1), Set(First(DS).Id, 3); Id)                                   ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Max(Filter(DS,1=1), Set(First(DS).Id, 3); Id)                                   ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("VarP(Filter(DS,1=1), Set(First(DS).Id, 3); Id)                                  ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("StdevP(Filter(DS,1=1), Set(First(DS).Id, 3); Id)                                ", " Immutable", " Immutable", " Unordered")]
 
         // Set self modifying, Sort DS                                                                  delegable DS,   non-del DS,  variable DS
 
         [InlineData("Search(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]); \"b\", Name)                  ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("ForAll(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]))                               ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("ForAll(Sort(DS,Id), Set(First(DS).Id, 3))                                       ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("AddColumns(Sort(DS,Id), Num, Set(DS, [{Id:1,Name:\"a\"}]); 2)                   ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("AddColumns(Sort(DS,Id), Num, Set(First(DS).Id, 3); 2)                           ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Concat(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]); Text(Id))                     ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("Distinct(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                         ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("Sum(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                              ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("Average(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                          ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("Min(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                              ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("Max(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                              ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("VarP(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                             ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("StdevP(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                           ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("Concat(Sort(DS,Id), Set(First(DS).Id, 3); Text(Id))                             ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Distinct(Sort(DS,Id), Set(First(DS).Id, 3); Id)                                 ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Sum(Sort(DS,Id), Set(First(DS).Id, 3); Id)                                      ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Average(Sort(DS,Id), Set(First(DS).Id, 3); Id)                                  ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Min(Sort(DS,Id), Set(First(DS).Id, 3); Id)                                      ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Max(Sort(DS,Id), Set(First(DS).Id, 3); Id)                                      ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("VarP(Sort(DS,Id), Set(First(DS).Id, 3); Id)                                     ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("StdevP(Sort(DS,Id), Set(First(DS).Id, 3); Id)                                   ", " Immutable", " Immutable", "        Ok")]
+        [InlineData("ForAll(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]))                               ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("ForAll(Sort(DS,Id), Set(First(DS).Id, 3))                                       ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("AddColumns(Sort(DS,Id), Num, Set(DS, [{Id:1,Name:\"a\"}]); 2)                   ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("AddColumns(Sort(DS,Id), Num, Set(First(DS).Id, 3); 2)                           ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Concat(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]); Text(Id))                     ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("Distinct(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                         ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("Sum(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                              ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("Average(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                          ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("Min(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                              ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("Max(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                              ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("VarP(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                             ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("StdevP(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                           ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("Concat(Sort(DS,Id), Set(First(DS).Id, 3); Text(Id))                             ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Distinct(Sort(DS,Id), Set(First(DS).Id, 3); Id)                                 ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Sum(Sort(DS,Id), Set(First(DS).Id, 3); Id)                                      ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Average(Sort(DS,Id), Set(First(DS).Id, 3); Id)                                  ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Min(Sort(DS,Id), Set(First(DS).Id, 3); Id)                                      ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Max(Sort(DS,Id), Set(First(DS).Id, 3); Id)                                      ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("VarP(Sort(DS,Id), Set(First(DS).Id, 3); Id)                                     ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("StdevP(Sort(DS,Id), Set(First(DS).Id, 3); Id)                                   ", " Immutable", " Immutable", " Unordered")]
 
         // Set self modifying, Sort composed with Filter DS                                             delegable DS,   non-del DS,  variable DS
 
         [InlineData("Search(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]); \"b\", Name)      ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]))                   ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Set(First(DS).Id, 3))                           ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("AddColumns(Sort(Filter(DS,1=1),Id), Num, Set(DS, [{Id:1,Name:\"a\"}]); 2)       ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("AddColumns(Sort(Filter(DS,1=1),Id), Num, Set(First(DS).Id, 3); 2)               ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Concat(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]); Text(Id))         ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("Distinct(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)             ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("Sum(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                  ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("Average(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)              ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("Min(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                  ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("Max(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                  ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("VarP(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                 ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("StdevP(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)               ", "   SelfMod", "   CantMod", "        Ok")]
-        [InlineData("Concat(Sort(Filter(DS,1=1),Id), Set(First(DS).Id, 3); Text(Id))                 ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Distinct(Sort(Filter(DS,1=1),Id), Set(First(DS).Id, 3); Id)                     ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Sum(Sort(Filter(DS,1=1),Id), Set(First(DS).Id, 3); Id)                          ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Average(Sort(Filter(DS,1=1),Id), Set(First(DS).Id, 3); Id)                      ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Min(Sort(Filter(DS,1=1),Id), Set(First(DS).Id, 3); Id)                          ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Max(Sort(Filter(DS,1=1),Id), Set(First(DS).Id, 3); Id)                          ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("VarP(Sort(Filter(DS,1=1),Id), Set(First(DS).Id, 3); Id)                         ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("StdevP(Sort(Filter(DS,1=1),Id), Set(First(DS).Id, 3); Id)                       ", " Immutable", " Immutable", "        Ok")]
+        [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]))                   ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Set(First(DS).Id, 3))                           ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("AddColumns(Sort(Filter(DS,1=1),Id), Num, Set(DS, [{Id:1,Name:\"a\"}]); 2)       ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("AddColumns(Sort(Filter(DS,1=1),Id), Num, Set(First(DS).Id, 3); 2)               ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Concat(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]); Text(Id))         ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("Distinct(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)             ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("Sum(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                  ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("Average(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)              ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("Min(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                  ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("Max(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                  ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("VarP(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)                 ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("StdevP(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]); Id)               ", "   SelfMod", "   CantMod", " Unordered")]
+        [InlineData("Concat(Sort(Filter(DS,1=1),Id), Set(First(DS).Id, 3); Text(Id))                 ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Distinct(Sort(Filter(DS,1=1),Id), Set(First(DS).Id, 3); Id)                     ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Sum(Sort(Filter(DS,1=1),Id), Set(First(DS).Id, 3); Id)                          ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Average(Sort(Filter(DS,1=1),Id), Set(First(DS).Id, 3); Id)                      ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Min(Sort(Filter(DS,1=1),Id), Set(First(DS).Id, 3); Id)                          ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Max(Sort(Filter(DS,1=1),Id), Set(First(DS).Id, 3); Id)                          ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("VarP(Sort(Filter(DS,1=1),Id), Set(First(DS).Id, 3); Id)                         ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("StdevP(Sort(Filter(DS,1=1),Id), Set(First(DS).Id, 3); Id)                       ", " Immutable", " Immutable", " Unordered")]
 
         // Set self modifying, SortByColumns DS, non-delegable                                          delegable DS,   non-del DS,  variable DS
 
         [InlineData("Search(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]); \"b\", Name)     ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("ForAll(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]))                  ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("ForAll(SortByColumns(DS,\"Id\"), Set(First(DS).Id, 3))                          ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("AddColumns(SortByColumns(DS,\"Id\"), Num, Set(DS, [{Id:1,Name:\"a\"}]); 2)      ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("AddColumns(SortByColumns(DS,\"Id\"), Num, Set(First(DS).Id, 3); 2)              ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Concat(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]); Text(Id))        ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("Distinct(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]); Id)            ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("Sum(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]); Id)                 ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("Average(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]); Id)             ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("Min(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]); Id)                 ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("Max(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]); Id)                 ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("VarP(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]); Id)                ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("StdevP(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]); Id)              ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("Concat(SortByColumns(DS,\"Id\"), Set(First(DS).Id, 3); Text(Id))                ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Distinct(SortByColumns(DS,\"Id\"), Set(First(DS).Id, 3); Id)                    ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Sum(SortByColumns(DS,\"Id\"), Set(First(DS).Id, 3); Id)                         ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Average(SortByColumns(DS,\"Id\"), Set(First(DS).Id, 3); Id)                     ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Min(SortByColumns(DS,\"Id\"), Set(First(DS).Id, 3); Id)                         ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Max(SortByColumns(DS,\"Id\"), Set(First(DS).Id, 3); Id)                         ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("VarP(SortByColumns(DS,\"Id\"), Set(First(DS).Id, 3); Id)                        ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("StdevP(SortByColumns(DS,\"Id\"), Set(First(DS).Id, 3); Id)                      ", " Immutable", " Immutable", "        Ok")]
+        [InlineData("ForAll(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]))                  ", "   CantMod", "   CantMod", " Unordered")]
+        [InlineData("ForAll(SortByColumns(DS,\"Id\"), Set(First(DS).Id, 3))                          ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("AddColumns(SortByColumns(DS,\"Id\"), Num, Set(DS, [{Id:1,Name:\"a\"}]); 2)      ", "   CantMod", "   CantMod", " Unordered")]
+        [InlineData("AddColumns(SortByColumns(DS,\"Id\"), Num, Set(First(DS).Id, 3); 2)              ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Concat(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]); Text(Id))        ", "   CantMod", "   CantMod", " Unordered")]
+        [InlineData("Distinct(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]); Id)            ", "   CantMod", "   CantMod", " Unordered")]
+        [InlineData("Sum(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]); Id)                 ", "   CantMod", "   CantMod", " Unordered")]
+        [InlineData("Average(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]); Id)             ", "   CantMod", "   CantMod", " Unordered")]
+        [InlineData("Min(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]); Id)                 ", "   CantMod", "   CantMod", " Unordered")]
+        [InlineData("Max(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]); Id)                 ", "   CantMod", "   CantMod", " Unordered")]
+        [InlineData("VarP(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]); Id)                ", "   CantMod", "   CantMod", " Unordered")]
+        [InlineData("StdevP(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]); Id)              ", "   CantMod", "   CantMod", " Unordered")]
+        [InlineData("Concat(SortByColumns(DS,\"Id\"), Set(First(DS).Id, 3); Text(Id))                ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Distinct(SortByColumns(DS,\"Id\"), Set(First(DS).Id, 3); Id)                    ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Sum(SortByColumns(DS,\"Id\"), Set(First(DS).Id, 3); Id)                         ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Average(SortByColumns(DS,\"Id\"), Set(First(DS).Id, 3); Id)                     ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Min(SortByColumns(DS,\"Id\"), Set(First(DS).Id, 3); Id)                         ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Max(SortByColumns(DS,\"Id\"), Set(First(DS).Id, 3); Id)                         ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("VarP(SortByColumns(DS,\"Id\"), Set(First(DS).Id, 3); Id)                        ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("StdevP(SortByColumns(DS,\"Id\"), Set(First(DS).Id, 3); Id)                      ", " Immutable", " Immutable", " Unordered")]
 
         // Set self modifying, FirstN DS, non delegable                                                 delegable DS,   non-del DS,  variable DS
 
         [InlineData("Search(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]); \"b\", Name)                ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("ForAll(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]))                             ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("ForAll(FirstN(DS,10), Set(First(DS).Id, 3))                                     ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("AddColumns(FirstN(DS,10), Num, Set(DS, [{Id:1,Name:\"a\"}]); 2)                 ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("AddColumns(FirstN(DS,10), Num, Set(First(DS).Id, 3); 2)                         ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Concat(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]); Text(Id))                   ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("Distinct(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]); Id)                       ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("Sum(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]); Id)                            ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("Average(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]); Id)                        ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("Min(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]); Id)                            ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("Max(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]); Id)                            ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("VarP(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]); Id)                           ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("StdevP(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]); Id)                         ", "   CantMod", "   CantMod", "        Ok")]
-        [InlineData("Concat(FirstN(DS,10), Set(First(DS).Id, 3); Text(Id))                           ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Distinct(FirstN(DS,10), Set(First(DS).Id, 3); Id)                               ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Sum(FirstN(DS,10), Set(First(DS).Id, 3); Id)                                    ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Average(FirstN(DS,10), Set(First(DS).Id, 3); Id)                                ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Min(FirstN(DS,10), Set(First(DS).Id, 3); Id)                                    ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("Max(FirstN(DS,10), Set(First(DS).Id, 3); Id)                                    ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("VarP(FirstN(DS,10), Set(First(DS).Id, 3); Id)                                   ", " Immutable", " Immutable", "        Ok")]
-        [InlineData("StdevP(FirstN(DS,10), Set(First(DS).Id, 3); Id)                                 ", " Immutable", " Immutable", "        Ok")]
+        [InlineData("ForAll(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]))                             ", "   CantMod", "   CantMod", " Unordered")]
+        [InlineData("ForAll(FirstN(DS,10), Set(First(DS).Id, 3))                                     ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("AddColumns(FirstN(DS,10), Num, Set(DS, [{Id:1,Name:\"a\"}]); 2)                 ", "   CantMod", "   CantMod", " Unordered")]
+        [InlineData("AddColumns(FirstN(DS,10), Num, Set(First(DS).Id, 3); 2)                         ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Concat(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]); Text(Id))                   ", "   CantMod", "   CantMod", " Unordered")]
+        [InlineData("Distinct(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]); Id)                       ", "   CantMod", "   CantMod", " Unordered")]
+        [InlineData("Sum(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]); Id)                            ", "   CantMod", "   CantMod", " Unordered")]
+        [InlineData("Average(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]); Id)                        ", "   CantMod", "   CantMod", " Unordered")]
+        [InlineData("Min(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]); Id)                            ", "   CantMod", "   CantMod", " Unordered")]
+        [InlineData("Max(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]); Id)                            ", "   CantMod", "   CantMod", " Unordered")]
+        [InlineData("VarP(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]); Id)                           ", "   CantMod", "   CantMod", " Unordered")]
+        [InlineData("StdevP(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]); Id)                         ", "   CantMod", "   CantMod", " Unordered")]
+        [InlineData("Concat(FirstN(DS,10), Set(First(DS).Id, 3); Text(Id))                           ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Distinct(FirstN(DS,10), Set(First(DS).Id, 3); Id)                               ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Sum(FirstN(DS,10), Set(First(DS).Id, 3); Id)                                    ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Average(FirstN(DS,10), Set(First(DS).Id, 3); Id)                                ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Min(FirstN(DS,10), Set(First(DS).Id, 3); Id)                                    ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("Max(FirstN(DS,10), Set(First(DS).Id, 3); Id)                                    ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("VarP(FirstN(DS,10), Set(First(DS).Id, 3); Id)                                   ", " Immutable", " Immutable", " Unordered")]
+        [InlineData("StdevP(FirstN(DS,10), Set(First(DS).Id, 3); Id)                                 ", " Unordered", " Immutable", " Unordered")]
 
         // Remove non self modifying                                                                    delegable DS,   non-del DS,  variable DS
 
@@ -831,7 +833,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             symbol.AddVariable("TblVar", new TableType(dataSourceSchema), new SymbolProperties { CanMutate = true, CanSet = true, CanSetMutate = true }, displayName: "TblVar");
 
-            symbol.EnableMutationFunctions();
+            symbol.EnableMutationFunctionsIterationSafe();
             symbol.AddFunction(new DistinctFunction());
 
             var config = new PowerFxConfig
@@ -908,7 +910,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var config = new PowerFxConfig();
             config.AddFunction(new UnknownReturnFunction());
-            config.SymbolTable.EnableMutationFunctions();
+            config.SymbolTable.EnableMutationFunctionsIterationSafe();
             config.SymbolTable.AddVariable("t", FormulaType.Build(TestUtils.DT("*[foo:n]")), mutable: true);
 
             var engine = new Engine(config);
@@ -927,7 +929,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var config = new PowerFxConfig();
             var engine = new RecalcEngine(config);
 
-            config.SymbolTable.EnableMutationFunctions();
+            config.SymbolTable.EnableMutationFunctionsIterationSafe();
 
             engine.UpdateVariable("t1", new ErrorTableValue());
 
@@ -1062,7 +1064,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 var varTableValue = new EntityTableValue(new List<RecordValue>() { record1, record2 });
 
-                engine.Config.SymbolTable.EnableMutationFunctions();
+                engine.Config.SymbolTable.EnableMutationFunctionsIterationSafe();
                 engine.UpdateVariable("t1", varTableValue);
 
                 return engine;

@@ -108,6 +108,9 @@ Errors: Error 37-43: 'Field1' can't be modified with 'Set' or conflicts with the
 Errors: Error 47-54: The value passed to the 'Set' function cannot be changed.
 
 >> ForAll( [NewRecord, NewRecord], Set( NewRecord.Field1, 23 ) ); NewRecord
+Errors: Error 32-59: This function cannot be invoked within ForAll.
+
+>> With( NewRecord, Set( NewRecord.Field1, 23 ) ); NewRecord
 {Field1:23,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
 
 // The following three tests are effecitvely the same, with different levels of explicitness

@@ -747,7 +747,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 // Add another table with a mutable var, 'Counter', and demonstrate 
                 // we can call Set. 
                 var symTable2 = new SymbolTable();
-                symTable2.EnableMutationFunctions();
+                symTable2.EnableMutationFunctionsIterationSafe();
                 var slot = symTable2.AddVariable("counter", FormulaType.Number, mutable: true);
 
                 var symTableAll = ReadOnlySymbolTable.Compose(symTable2, symTableThisItem);
@@ -839,7 +839,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             });
 
             var config = new PowerFxConfig();
-            config.SymbolTable.EnableMutationFunctions();
+            config.SymbolTable.EnableMutationFunctionsIterationSafe();
             var engine = new RecalcEngine(config);
 
             var opts = new ParserOptions 

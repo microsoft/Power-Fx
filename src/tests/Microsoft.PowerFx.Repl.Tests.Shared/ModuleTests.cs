@@ -29,9 +29,9 @@ namespace Microsoft.PowerFx.Repl.Tests
         public ModuleTests()
         {
             var config = new PowerFxConfig();
-            config.SymbolTable.EnableMutationFunctions();
+            config.SymbolTable.EnableMutationFunctionsIterationSafe();
 
-            // config.EnableSetFunction();
+            // config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             _repl = new PowerFxREPL
