@@ -1,5 +1,8 @@
 #SETUP: MutationFunctionsTestSetup,disable:PowerFxV1CompatibilityRules
 
+>> Set(a,[0])
+Table({Value:0})
+
 // Shallow iterator reference, ForAll
 
 >> Set(First(t1_MutateEnabled_SetMutateEnabled).Field1, 4)
@@ -16,3 +19,7 @@ Errors: Error 42-97: This function cannot operate on the same data source that i
 
 >> First(t1_MutateEnabled_SetMutateEnabled).Field1 // 2
 1
+
+>> ClearCollect(a,[1,2,3]); ForAll(a,Set(First(a).Value,9))
+Errors: Error 46-52: The value passed to the 'Set' function cannot be changed.|Error 34-55: This function cannot operate on the same data source that is used in ForAll.
+
