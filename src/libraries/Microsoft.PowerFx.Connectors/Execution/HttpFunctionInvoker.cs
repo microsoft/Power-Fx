@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -93,7 +94,7 @@ namespace Microsoft.PowerFx.Connectors
                 if (incomingParameters.TryGetValue(param.Name, out FormulaValue paramValue) ||
                     _function.GlobalContext.ConnectorValues?.TryGetValue(param.Name, out paramValue) == true)
                 {
-                    var valueStr = paramValue?.ToObject()?.ToString() ?? string.Empty;
+                    var valueStr = FormatParameterValue(paramValue, param.Schema?.Format, utcConverter);
 
                     if (param.GetDoubleEncoding())
                     {
@@ -206,6 +207,46 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             return request;
+        }
+
+        /// <summary>
+        /// Formats a FormulaValue as a string for use in query, path, or header parameters.
+        /// DateTime and Date values are formatted using ISO 8601 to ensure correct wire format,
+        /// rather than relying on culture-dependent DateTime.ToString().
+        /// </summary>
+        internal static string FormatParameterValue(FormulaValue paramValue, string schemaFormat, IConvertToUTC utcConverter)
+        {
+            if (paramValue == null || paramValue is BlankValue)
+            {
+                return string.Empty;
+            }
+
+            if (paramValue is DateTimeValue dtv)
+            {
+                if (schemaFormat == "date-no-tz")
+                {
+                    return ((PrimitiveValue<DateTime>)dtv).Value.ToString(
+                        FormulaValueSerializer.DateTimeFormat,
+                        CultureInfo.InvariantCulture);
+                }
+
+                // Default for DateTimeValue: convert to UTC and use ISO 8601 format
+                // Covers "date-time" and any other/missing format
+                DateTime utcDt = utcConverter != null
+                    ? utcConverter.ToUTC(dtv)
+                    : dtv.GetConvertedValue(TimeZoneInfo.Utc);
+
+                return utcDt.ToString(
+                    FormulaValueSerializer.UtcDateTimeFormat,
+                    CultureInfo.InvariantCulture);
+            }
+
+            if (paramValue is DateValue dv)
+            {
+                return dv.GetConvertedValue(null).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            }
+
+            return paramValue.ToObject()?.ToString() ?? string.Empty;
         }
 
         public Dictionary<string, FormulaValue> ConvertToNamedParameters(IReadOnlyList<FormulaValue> args)
