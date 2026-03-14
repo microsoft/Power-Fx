@@ -31,9 +31,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool HasColumnIdentifiers => true;
 
         public SearchFunction()
-            : base("Search", TexlStrings.AboutSearch, FunctionCategories.Table, DType.EmptyTable, 0, 3, int.MaxValue, DType.EmptyTable, DType.String, DType.String)
+            : base("Search", TexlStrings.AboutSearch, FunctionCategories.Table, DType.EmptyTable, 0x2, 3, int.MaxValue, DType.EmptyTable, DType.String, DType.String)
         {
-            ScopeInfo = new FunctionScopeInfo(this, appliesToArgument: (argIndex) => argIndex > 1);
+            ScopeInfo = new FunctionScopeInfo(this);
         }
 
         public override ParamIdentifierStatus GetIdentifierParamStatus(TexlNode node, Features features, int index)
