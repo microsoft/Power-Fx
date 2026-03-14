@@ -29,7 +29,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public ForAllFunction()
             : base(ForAllInvariantFunctionName, TexlStrings.AboutForAll, FunctionCategories.Table, DType.Unknown, 0x2, 2, 2, DType.EmptyTable)
         {
-            ScopeInfo = new FunctionScopeInfo(this);
+            // ForAll is now defined to always iterate over its table in record order.
+            // Initially, the function was meant to be parallelizable. But an attempt was made in Canvas
+            // to use parallel execution that did not go well as despite our best efforts to block makers from
+            // taking an order dependency (no Clear, no Set, etc) they found a way anyway and we would have broken formulas.
+            // We also have had numerous requests over the years to remove the blocks that made ForAll harder to use.
+            // A Map function will one day be introduced which does not allow any side effects and that can be parallelized.
+            ScopeInfo = new FunctionScopeInfo(this, iteratesOnceEachInOrder: true);
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
