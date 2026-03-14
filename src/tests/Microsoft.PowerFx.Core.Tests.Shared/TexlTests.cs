@@ -4562,6 +4562,28 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("LookUp(DS, Collect(TblVar, {Id:1}); 1=1)                             ", "FilterNoSE", "FilterNoSE", "FilterNoSE")]
         [InlineData("CountIf(DS, Collect(TblVar, {Id:1}); Id>2)                           ", "FilterNoSE", "FilterNoSE", "FilterNoSE")]
 
+        // Untyped objects can be iterated only by ForAll                                      dynamic DS
+
+        [InlineData("ForAll(DynVar, Collect(TblVar, {Id:1}))                              ", "        Ok")]
+        [InlineData("ForAll(DynVar, Clear(TblVar))                                        ", " Unordered")]
+        [InlineData("ForAll(DynVar, Collect(DynVar, {Id:1}))                              ", "InvalidArg")]
+        [InlineData("ForAll(DynVar, Clear(DynVar))                                        ", "BadTypeExp")]
+
+        [InlineData("Filter(DynVar, Collect(TblVar, {Id:1}); 1=1)                         ", "   BadType")]
+        [InlineData("LookUp(DynVar, Collect(TblVar, {Id:1}); 1=1)                         ", "   BadType")]
+        [InlineData("CountIf(DynVar, Collect(TblVar, {Id:1}); 1=1)                        ", "   BadType")]
+        [InlineData("AddColumns(DynVar, Num, Collect(TblVar, {Id:1}); 2)                  ", "   BadType")]
+        [InlineData("Concat(DynVar, Collect(TblVar, {Id:1}); Text(Id))                    ", "   BadType")]
+        [InlineData("Distinct(DynVar, Collect(TblVar, {Id:1}); Id)                        ", "   BadType")]
+        [InlineData("Sum(DynVar, Collect(TblVar, {Id:1}); Id)                             ", " NoUntyped")]
+        [InlineData("Average(DynVar, Collect(TblVar, {Id:1}); Id)                         ", " NoUntyped")]
+        [InlineData("Min(DynVar, Collect(TblVar, {Id:1}); Id)                             ", " NoUntyped")]
+        [InlineData("Max(DynVar, Collect(TblVar, {Id:1}); Id)                             ", " NoUntyped")]
+        [InlineData("VarP(DynVar, Collect(TblVar, {Id:1}); Id)                            ", " NoUntyped")]
+        [InlineData("StdevP(DynVar, Collect(TblVar, {Id:1}); Id)                          ", " NoUntyped")]
+        [InlineData("Search(DynVar, Clear(TblVar); \"b\", Name)                           ", "   BadType")]
+        [InlineData("With(First(DynVar), Collect(TblVar, {Id:1}))                         ", "   BadType")]
+
         // non self modifying                                                                delegable DS,   non-del DS,  variable DS
 
         [InlineData("With(LookUp(DS,1=1), Collect(TblVar, {Id:1}))                        ", "        Ok", "        Ok", "        Ok")]
@@ -4756,7 +4778,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("VarP(FirstN(DS,10), Clear(DS); Id)                                   ", " Unordered", " Unordered", " Unordered")]
         [InlineData("StdevP(FirstN(DS,10), Clear(DS); Id)                                 ", " Unordered", " Unordered", " Unordered")]
 
-        public void TexlFunctionSelfModifyingDetection(string script, string expectedErrorDSDelegable, string expectedErrorDSNonDelegable, string expectedErrorVar)
+        public void TexlFunctionSelfModifyingDetection(string script, string expectedErrorDSDelegable, string expectedErrorDSNonDelegable = null, string expectedErrorVar = null)
         {
             var dataSourceSchema = TestUtils.DT("*[Id:w, Name:s]");
 
@@ -4783,7 +4805,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     true));
 
             symbol.AddEntity(new TestDelegableDataSource(
-                    "DSnondel",
+                    "DSnonDel",
                     dataSourceSchema,
                     new TestDelegationMetadata(
                         new DelegationCapability(), // non delegable
@@ -4802,9 +4824,11 @@ namespace Microsoft.PowerFx.Core.Tests
                             new Dictionary<DPath, DelegationCapability>())),
                     true));
 
-            symbol.AddVariable("DSvar", new TableType(dataSourceSchema), mutable: true, displayName: "DSVar");
+            symbol.AddVariable("DSvar", new TableType(dataSourceSchema), new SymbolProperties { CanMutate = true, CanSet = true, CanSetMutate = true }, displayName: "DSVar");
 
-            symbol.AddVariable("TblVar", new TableType(dataSourceSchema), mutable: true, displayName: "TblVar");
+            symbol.AddVariable("TblVar", new TableType(dataSourceSchema), new SymbolProperties { CanMutate = true, CanSet = true, CanSetMutate = true }, displayName: "TblVar");
+
+            symbol.AddVariable("DynVar", new UntypedObjectType(), new SymbolProperties { CanMutate = true, CanSet = true, CanSetMutate = true }, displayName: "DynVar");
 
             symbol.AddFunction(new CollectFunction());
             symbol.AddFunction(new ClearFunction());
@@ -4826,8 +4850,16 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             TestDS("DSdel", expectedErrorDSDelegable);
-            TestDS("DSnondel", expectedErrorDSNonDelegable);
-            TestDS("DSvar", expectedErrorVar);
+
+            if (expectedErrorDSNonDelegable != null)
+            {
+                TestDS("DSnonDel", expectedErrorDSNonDelegable);
+            }
+
+            if (expectedErrorVar != null)
+            {
+                TestDS("DSvar", expectedErrorVar);
+            }
 
             void TestDS(string dsType, string expectedError)
             {
@@ -4853,6 +4885,18 @@ namespace Microsoft.PowerFx.Core.Tests
                         break;
                     case "NonDelWnOp":
                         expectedKey = "SuggestRemoteExecutionHint_OpNotSupportedByService";
+                        break;
+                    case "NoUntyped":
+                        expectedKey = "ErrUntypedObjectScope";
+                        break;
+                    case "BadType":
+                        expectedKey = "ErrBadType";
+                        break;
+                    case "BadTypeExp":
+                        expectedKey = "ErrBadType_ExpectedType_ProvidedType";
+                        break;
+                    case "InvalidArg":
+                        expectedKey = "ErrInvalidArgs_Func";
                         break;
                     case "Ok":
                         break;
