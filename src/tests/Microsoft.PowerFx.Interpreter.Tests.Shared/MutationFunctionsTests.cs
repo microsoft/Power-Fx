@@ -521,6 +521,40 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("LookUp(DS, Remove(TblVar, {}); 1=1)                                             ", "FilterNoSE", "FilterNoSE", "FilterNoSE")]
         [InlineData("CountIf(DS, Remove(TblVar, {}); Id>2)                                           ", "FilterNoSE", "FilterNoSE", "FilterNoSE")]
 
+        // Search and With can have a formula for the second argument,
+        // but it is not an iterated lambda and OK                                                      delegable DS,   non-del DS,  variable DS
+
+        [InlineData("Search(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); \"b\", Name)                       ", "NonDelWarn", "        Ok", "        Ok")]
+        [InlineData("With(LookUp(DS,1=1), Set(TblVar, [{Id:1,Name:\"a\"}]))                          ", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Search(DS, Remove(TblVar, {}); \"b\", Name)                                     ", "NonDelWarn", "        Ok", "        Ok")]
+        [InlineData("Search(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]); \"b\", Name)               ", "   CantMod", "   CantMod", "        Ok")]
+        [InlineData("Search(DS, Set(DS, [{Id:1,Name:\"a\"}]); \"b\", Name)                           ", "   CantMod", "   CantMod", "        Ok")]
+        [InlineData("Search(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]); \"b\", Name)                  ", "   CantMod", "   CantMod", "        Ok")]
+        [InlineData("Search(Sort(DS,Id), Remove(DS, {}); \"b\", Name)                                ", "NonDelWarn", "        Ok", "        Ok")]
+        [InlineData("Search(Sort(Filter(DS,1=1),Id), Remove(DS, {}); \"b\", Name)                    ", "NonDelWarn", "        Ok", "        Ok")]
+        [InlineData("Search(SortByColumns(DS,\"Id\"), Remove(DS, {}); \"b\", Name)                   ", "NonDelWarn", "        Ok", "        Ok")]
+        [InlineData("Search(FirstN(DS,10), Remove(DS, {}); \"b\", Name)                              ", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Search(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]); \"b\", Name)     ", "   CantMod", "   CantMod", "        Ok")]
+        [InlineData("Search(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]); \"b\", Name)      ", "   CantMod", "   CantMod", "        Ok")]
+        [InlineData("Search(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]); \"b\", Name)                ", "   CantMod", "   CantMod", "        Ok")]
+        [InlineData("With(LookUp(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]))                              ", "   CantMod", "   CantMod", "        Ok")]
+        [InlineData("Search(DS, Remove(DS, {}); \"b\", Name)                                         ", "NonDelWarn", "        Ok", "        Ok")]
+        [InlineData("Search(Filter(DS,1=1), Remove(DS, {}); \"b\", Name)                             ", "NonDelWarn", "        Ok", "        Ok")]
+
+        // DropColumns, and friends use record scpoe for the column names, 
+        // but don't have lambdas or even a formula, so can't have side effects                         delegable DS,   non-del DS,  variable DS
+
+        [InlineData("Search(DS, \"a\", Set(TblVar, [{Id:1,Name:\"a\"}]); Name )                      ", " IdentName", " IdentName", " IdentName")]
+        [InlineData("Search(DS, \"a\", Set(DS, [{Id:1,Name:\"a\"}]); Name )                          ", " IdentName", " IdentName", " IdentName")]
+        [InlineData("Search(DS, \"a\", Remove(DS, {}); Name )                                        ", " IdentName", " IdentName", " IdentName")]
+        [InlineData("DropColumns(DS, Set(DS, [{Id:1,Name:\"a\"}]); Name )                            ", " IdentName", " IdentName", " IdentName")]
+        [InlineData("DropColumns(DS, Remove(DS, {}); Name )                                          ", " IdentName", " IdentName", " IdentName")]
+        [InlineData("ShowColumns(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); Name )                        ", " IdentName", " IdentName", " IdentName")]
+        [InlineData("RenameColumns(DS, Name, Set(TblVar, [{Id:1,Name:\"a\"}]); NewName )             ", " IdentName", " IdentName", " IdentName")]
+        [InlineData("RenameColumns(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); Name, NewName )             ", " IdentName", " IdentName", " IdentName")]
+        [InlineData("RenameColumns(DS, Name, Remove(DS, {}); NewName )                               ", " IdentName", " IdentName", " IdentName")]
+        [InlineData("RenameColumns(DS, Remove(DS, {}); Name, NewName )                               ", " IdentName", " IdentName", " IdentName")]
+
         // Untyped objects can be iterated only by ForAll                                                 dynamic DS
 
         [InlineData("ForAll(DynVar, Set(DynVar, TblDynVar))                                          ", "        Ok")]
@@ -546,7 +580,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Set non self modifying                                                                       delegable DS,   non-del DS,  variable DS
 
-        [InlineData("Search(DS, Set(TblVar, [{Id:1,Name:\"a\"}]); \"b\", Name)                       ", "NonDelWarn", "        Ok", "        Ok")]
         [InlineData("ForAll(DS, Set(TblVar, [{Id:1,Name:\"a\"}]))                                    ", "        Ok", "        Ok", "        Ok")]
         [InlineData("ForAll(DS, Set(First(TblVar).Id, 3))                                            ", "        Ok", "        Ok", "        Ok")]
         [InlineData("AddColumns(DS, Num, Set(TblVar, [{Id:1,Name:\"a\"}]); 2)                        ", "        Ok", "        Ok", "        Ok")]
@@ -570,7 +603,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Set self modifying, direct DS                                                                delegable DS,   non-del DS,  variable DS
 
-        [InlineData("Search(DS, Set(DS, [{Id:1,Name:\"a\"}]); \"b\", Name)                           ", "   CantMod", "   CantMod", "        Ok")]
         [InlineData("ForAll(DS, Set(DS, [{Id:1,Name:\"a\"}]))                                        ", "   SelfMod", "   SelfMod", "        Ok")]
         [InlineData("ForAll(DS, Set(First(DS).Id, 3))                                                ", " Immutable", " Immutable", "        Ok")]
         [InlineData("AddColumns(DS, Num, Set(DS, [{Id:1,Name:\"a\"}]); 2)                            ", "   SelfMod", "   SelfMod", "        Ok")]
@@ -594,7 +626,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Set self modifying, Filter of DS                                                             delegable DS,   non-del DS,  variable DS
 
-        [InlineData("Search(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]); \"b\", Name)               ", "   CantMod", "   CantMod", "        Ok")]
         [InlineData("ForAll(Filter(DS,1=1), Set(DS, [{Id:1,Name:\"a\"}]))                            ", "   SelfMod", "   CantMod", "        Ok")]
         [InlineData("ForAll(Filter(DS,1=1), Set(First(DS).Id, 3))                                    ", " Immutable", " Immutable", "        Ok")]
         [InlineData("AddColumns(Filter(DS,1=1), Num, Set(DS, [{Id:1,Name:\"a\"}]); 2)                ", "   SelfMod", "   CantMod", "        Ok")]
@@ -618,7 +649,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Set self modifying, Sort DS                                                                  delegable DS,   non-del DS,  variable DS
 
-        [InlineData("Search(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]); \"b\", Name)                  ", "   CantMod", "   CantMod", "        Ok")]
         [InlineData("ForAll(Sort(DS,Id), Set(DS, [{Id:1,Name:\"a\"}]))                               ", "   SelfMod", "   CantMod", "        Ok")]
         [InlineData("ForAll(Sort(DS,Id), Set(First(DS).Id, 3))                                       ", " Immutable", " Immutable", "        Ok")]
         [InlineData("AddColumns(Sort(DS,Id), Num, Set(DS, [{Id:1,Name:\"a\"}]); 2)                   ", "   SelfMod", "   CantMod", "        Ok")]
@@ -642,7 +672,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Set self modifying, Sort composed with Filter DS                                             delegable DS,   non-del DS,  variable DS
 
-        [InlineData("Search(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]); \"b\", Name)      ", "   CantMod", "   CantMod", "        Ok")]
         [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Set(DS, [{Id:1,Name:\"a\"}]))                   ", "   SelfMod", "   CantMod", "        Ok")]
         [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Set(First(DS).Id, 3))                           ", " Immutable", " Immutable", "        Ok")]
         [InlineData("AddColumns(Sort(Filter(DS,1=1),Id), Num, Set(DS, [{Id:1,Name:\"a\"}]); 2)       ", "   SelfMod", "   CantMod", "        Ok")]
@@ -666,7 +695,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Set self modifying, SortByColumns DS, non-delegable                                          delegable DS,   non-del DS,  variable DS
 
-        [InlineData("Search(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]); \"b\", Name)     ", "   CantMod", "   CantMod", "        Ok")]
         [InlineData("ForAll(SortByColumns(DS,\"Id\"), Set(DS, [{Id:1,Name:\"a\"}]))                  ", "   CantMod", "   CantMod", "        Ok")]
         [InlineData("ForAll(SortByColumns(DS,\"Id\"), Set(First(DS).Id, 3))                          ", " Immutable", " Immutable", "        Ok")]
         [InlineData("AddColumns(SortByColumns(DS,\"Id\"), Num, Set(DS, [{Id:1,Name:\"a\"}]); 2)      ", "   CantMod", "   CantMod", "        Ok")]
@@ -690,7 +718,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Set self modifying, FirstN DS, non delegable                                                 delegable DS,   non-del DS,  variable DS
 
-        [InlineData("Search(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]); \"b\", Name)                ", "   CantMod", "   CantMod", "        Ok")]
         [InlineData("ForAll(FirstN(DS,10), Set(DS, [{Id:1,Name:\"a\"}]))                             ", "   CantMod", "   CantMod", "        Ok")]
         [InlineData("ForAll(FirstN(DS,10), Set(First(DS).Id, 3))                                     ", " Immutable", " Immutable", "        Ok")]
         [InlineData("AddColumns(FirstN(DS,10), Num, Set(DS, [{Id:1,Name:\"a\"}]); 2)                 ", "   CantMod", "   CantMod", "        Ok")]
@@ -714,7 +741,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Remove non self modifying                                                                    delegable DS,   non-del DS,  variable DS
 
-        [InlineData("Search(DS, Remove(TblVar, First(TblVar)); \"b\", Name)                          ", "NonDelWarn", "        Ok", "        Ok")]
         [InlineData("ForAll(DS, Remove(TblVar, First(TblVar)))                                       ", "        Ok", "        Ok", "        Ok")]
         [InlineData("AddColumns(DS, Num, Remove(TblVar, First(TblVar)); 2)                           ", "        Ok", "        Ok", "        Ok")]
         [InlineData("Concat(DS, Remove(TblVar, First(TblVar)); Text(Id))                             ", "        Ok", "        Ok", "        Ok")]
@@ -728,7 +754,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Remove self modifying, direct DS                                                             delegable DS,   non-del DS,  variable DS
 
-        [InlineData("Search(DS, Remove(DS, {}); \"b\", Name)                                         ", "NonDelWarn", "        Ok", "        Ok")]
         [InlineData("ForAll(DS, Remove(DS, {}))                                                      ", "   SelfMod", "   SelfMod", "        Ok")]
         [InlineData("AddColumns(DS, Num, Remove(DS, {}); 2)                                          ", "   SelfMod", "   SelfMod", "        Ok")]
         [InlineData("Concat(DS, Remove(DS, {}); Text(Id))                                            ", "   SelfMod", "   SelfMod", "        Ok")]
@@ -742,7 +767,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Remove self modifying, with Sort                                                             delegable DS,   non-del DS,  variable DS
 
-        [InlineData("Search(Sort(DS,Id), Remove(DS, {}); \"b\", Name)                                ", "NonDelWarn", "        Ok", "        Ok")]
         [InlineData("ForAll(Sort(DS,Id), Remove(DS, {}))                                             ", "   SelfMod", "        Ok", "        Ok")]
         [InlineData("AddColumns(Sort(DS,Id), Num, Remove(DS, {}); 2)                                 ", "   SelfMod", "        Ok", "        Ok")]
         [InlineData("Concat(Sort(DS,Id), Remove(DS, {}); Text(Id))                                   ", "   SelfMod", "        Ok", "        Ok")]
@@ -756,7 +780,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Remove self modifying, with Filter                                                           delegable DS,   non-del DS,  variable DS
 
-        [InlineData("Search(Filter(DS,1=1), Remove(DS, {}); \"b\", Name)                             ", "NonDelWarn", "        Ok", "        Ok")]
         [InlineData("ForAll(Filter(DS,1=1), Remove(DS, {}))                                          ", "   SelfMod", "        Ok", "        Ok")]
         [InlineData("AddColumns(Filter(DS,1=1), Num, Remove(DS, {}); 2)                              ", "   SelfMod", "        Ok", "        Ok")]
         [InlineData("Concat(Filter(DS,1=1), Remove(DS, {}); Text(Id))                                ", "   SelfMod", "        Ok", "        Ok")]
@@ -770,7 +793,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Remove self modifying, Sort composed with Filter DS                                          delegable DS,   non-del DS,  variable DS
 
-        [InlineData("Search(Sort(Filter(DS,1=1),Id), Remove(DS, {}); \"b\", Name)                    ", "NonDelWarn", "        Ok", "        Ok")]
         [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Remove(DS, {}))                                 ", "   SelfMod", "        Ok", "        Ok")]
         [InlineData("AddColumns(Sort(Filter(DS,1=1),Id), Num, Remove(DS, {}); 2)                     ", "   SelfMod", "        Ok", "        Ok")]
         [InlineData("Concat(Sort(Filter(DS,1=1),Id), Remove(DS, {}); Text(Id))                       ", "   SelfMod", "        Ok", "        Ok")]
@@ -784,7 +806,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Remove self modifying, SortByColumns DS, non-delegable                                       delegable DS,   non-del DS,  variable DS
 
-        [InlineData("Search(SortByColumns(DS,\"Id\"), Remove(DS, {}); \"b\", Name)                   ", "NonDelWarn", "        Ok", "        Ok")]
         [InlineData("ForAll(SortByColumns(DS,\"Id\"), Remove(DS, {}))                                ", "NonDelWarn", "        Ok", "        Ok")]
         [InlineData("AddColumns(SortByColumns(DS,\"Id\"), Num, Remove(DS, {}); 2)                    ", "NonDelWarn", "        Ok", "        Ok")]
         [InlineData("Concat(SortByColumns(DS,\"Id\"), Remove(DS, {}); Text(Id))                      ", "NonDelWarn", "        Ok", "        Ok")]
@@ -798,7 +819,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Remove self modifying, FirstN DS, non delegable                                              delegable DS,   non-del DS,  variable DS
 
-        [InlineData("Search(FirstN(DS,10), Remove(DS, {}); \"b\", Name)                              ", "        Ok", "        Ok", "        Ok")]
         [InlineData("ForAll(FirstN(DS,10), Remove(DS, {}))                                           ", "        Ok", "        Ok", "        Ok")]
         [InlineData("AddColumns(FirstN(DS,10), Num, Remove(DS, {}); 2)                               ", "        Ok", "        Ok", "        Ok")]
         [InlineData("Concat(FirstN(DS,10), Remove(DS, {}); Text(Id))                                 ", "        Ok", "        Ok", "        Ok")]
@@ -927,6 +947,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         break;
                     case "InvalidArg":
                         expectedKey = "ErrInvalidArgs_Func";
+                        break;
+                    case "IdentName":
+                        expectedKey = "ErrExpectedIdentifierArg_Name";
                         break;
                     case "Ok":
                         break;
