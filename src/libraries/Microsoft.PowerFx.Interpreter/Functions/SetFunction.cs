@@ -32,11 +32,23 @@ namespace Microsoft.PowerFx.Interpreter
         // Set() of a simple identifier is not a mutation through a reference (a mutate), but rather changing the reference (a true set).
         public override bool MutatesArg(int argIndex, TexlNode arg) => argIndex == 0 && arg.Kind != NodeKind.FirstName;
 
+        // You might expect AllowedWithinNondeterministicOperationOrder => false here, as it is in Clear and in Canvas' Set.
+        // It should be, but this was an oversight when Set was added to the interpreter that we don't feel we can
+        // take back now for fear of breaking formulas in existing hosts. 
+        //
+        // For new hosts, instead of using EnableSetFunction, please use EnableSetFunctionIterationSafe instead
+        // which changes this to false, by using the RecalcENgineSetFunction(bool iterationSafe) constructor.
+        public override bool AllowedWithinNondeterministicOperationOrder { get; } = true;
+
         public override IEnumerable<StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.SetArg1, TexlStrings.SetArg2 };
         }
 
+        // The safest way to create this object is with RecalcEngineSetFunction(iterationSafe: true)
+        // which will prevent it from being used in Sort, Sum, Distinct, ... and other iterable functions.
+        // It defaults to false for backward compatibility (which leaves AllowedWithinNondeterministicOperationOrder as true),
+        // but new hosts should use the constructor that allows setting it to true (with the inverse meaning for AllowedWithinNondeterministicOperationOrder).
         public RecalcEngineSetFunction()
         : base(
               DPath.Root,
@@ -49,6 +61,12 @@ namespace Microsoft.PowerFx.Interpreter
               2,
               2)
         {
+        }
+
+        public RecalcEngineSetFunction(bool iterationSafe)
+        : this()
+        {
+            AllowedWithinNondeterministicOperationOrder = !iterationSafe;
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)

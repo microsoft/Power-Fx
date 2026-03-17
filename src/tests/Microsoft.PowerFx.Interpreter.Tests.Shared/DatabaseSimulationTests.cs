@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbols = new SymbolTable();
 
             var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
-            symbols.EnableMutationFunctions();
+            symbols.EnableMutationFunctionsIterationSafe();
 
             var engine = new RecalcEngine();
             var runtimeConfig = new SymbolValues(symbols);
@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbols = new SymbolTable();
 
             var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
-            symbols.EnableMutationFunctions();
+            symbols.EnableMutationFunctionsIterationSafe();
 
             var engine = new RecalcEngine();
             var runtimeConfig = new SymbolValues(symbols);
@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbols = new SymbolTable();
 
             var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
-            symbols.EnableMutationFunctions();
+            symbols.EnableMutationFunctionsIterationSafe();
 
             var engine = new RecalcEngine();
             var runtimeConfig = new SymbolValues(symbols);
@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbols = new SymbolTable();
 
             var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
-            symbols.EnableMutationFunctions();
+            symbols.EnableMutationFunctionsIterationSafe();
 
             // Temporary feature to unblock Cards team
             //var config = new PowerFxConfig(Features.PowerFxV1AllowSetExpandedTypes);
@@ -133,7 +133,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbols = new SymbolTable();
 
             var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
-            symbols.EnableMutationFunctions();
+            symbols.EnableMutationFunctionsIterationSafe();
 
             var engine = new RecalcEngine();
             var runtimeConfig = new SymbolValues(symbols);

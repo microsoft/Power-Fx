@@ -146,7 +146,7 @@ namespace Microsoft.PowerFx.Tests
             var symbol = new SymbolTable();
             var opt = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = true };
 
-            symbol.EnableMutationFunctions();
+            symbol.EnableMutationFunctionsIterationSafe();
 
             engine.Config.SymbolTable = symbol;
 

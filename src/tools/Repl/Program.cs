@@ -122,9 +122,9 @@ namespace Microsoft.PowerFx
                 }
             }
 
-            config.SymbolTable.EnableMutationFunctions();
+            config.SymbolTable.EnableMutationFunctionsIterationSafe();
 
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             config.EnableJsonFunctions();
             config.EnableOptionSetInfo();
             config.EnableJoinFunction();

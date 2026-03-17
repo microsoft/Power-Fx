@@ -351,7 +351,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void SetFormula()
         {
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             engine.UpdateVariable("A", 1m);
@@ -379,7 +379,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void UserDefinitionOnUpdateTest()
         {
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
 
             engine.UpdateVariable("A", 1m);
@@ -712,7 +712,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void BehaviorFunctionInImperativeUDF(string udfExpression, bool expectedError, string expectedErrorKey, bool allowSideEffects)
         {
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config);
             engine.UpdateVariable("a", 1m);
 
@@ -746,7 +746,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void ImperativeUserDefinedFunctionTest(string udfExpression, string expression, bool expectedError, string errorKey, double expected)
         {
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var recalcEngine = new RecalcEngine(config, numberIsFloat: true);
             recalcEngine.UpdateVariable("a", 1m);
 
@@ -786,7 +786,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void TestMismatchReturnType(string udfExpression, bool expectedError, bool allowSideEffects, int min, int lim)
         {
             var config = new PowerFxConfig();
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
             var engine = new RecalcEngine(config, numberIsFloat: true);
             engine.UpdateVariable("x", 1m);
 
@@ -828,7 +828,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 SymbolTable = symbolTable
             };
-            config.EnableSetFunction();
+            config.EnableSetFunctionIterationSafe();
 
             var recalcEngine = new RecalcEngine(config);
 
