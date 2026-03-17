@@ -188,7 +188,9 @@ namespace Microsoft.PowerFx
         private class MyRepl : PowerFxREPL, IDisposable
         {
             public int _promptNumber = 1;
+#if EnableCopilotFunction
             private readonly ICopilotService _copilotService;
+#endif
             private bool _disposed;
 
             public override string Prompt => _numberedPrompts ? $"\n{_promptNumber++}>> " : "\n>> ";
@@ -271,7 +273,9 @@ namespace Microsoft.PowerFx
                 {
                     if (disposing)
                     {
+#if EnableCopilotFunction
                         _copilotService?.Dispose();
+#endif
                     }
 
                     _disposed = true;
