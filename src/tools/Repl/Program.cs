@@ -28,10 +28,10 @@ namespace Microsoft.PowerFx
 
     public static class ConsoleRepl
     {
-        private const bool EnableCopilotFunction = false;
-
+#if EnableCopilotFunction
         // Path to the file containing ChatGPT API credentials
         private const string CredentialsPathToChatGPT = "update your path\\chatgpt-credentials.json.template";
+#endif 
         
         private const string OptionFormatTable = "FormatTable";
 
@@ -58,6 +58,9 @@ namespace Microsoft.PowerFx
 
         private const string OptionNumberedPrompts = "NumberedPrompts";
         private static bool _numberedPrompts = false;
+
+        private const string OptionSetMutate = "SetMutate";
+        private static bool _setMutate = false;
 
 #if MATCHCOMPARE
         // to enable, place this in Solution Items/Directiory.Build.Props:
@@ -103,6 +106,7 @@ namespace Microsoft.PowerFx
                 { OptionTextFirst, OptionTextFirst },
                 { OptionAllowSideEffects, OptionAllowSideEffects },
                 { OptionNumberedPrompts, OptionNumberedPrompts },
+                { OptionSetMutate, OptionSetMutate },
 #if MATCHCOMPARE
                 { OptionMatchCompare, OptionMatchCompare },
 #endif
@@ -196,10 +200,12 @@ namespace Microsoft.PowerFx
                 _standardFormatter = new StandardFormatter();
                 this.ValueFormatter = _standardFormatter;
                 this.HelpProvider = new MyHelpProvider();
+                this.VariableSymbolProperties = new SymbolProperties() { CanMutate = true, CanSet = true, CanSetMutate = _setMutate };
 
                 var bsp = new BasicServiceProvider();
                 bsp.AddService(_cultureInfo);
-                
+
+#if EnableCopilotFunction
                 // Try to load and add ChatGPT Copilot service if credentials file exists
                 try
                 {
@@ -229,6 +235,7 @@ namespace Microsoft.PowerFx
 #pragma warning restore CA1303 // Do not pass literals as localized parameters
                     Console.ResetColor();
                 }
+#endif
                 
                 this.InnerServices = bsp;
 
@@ -309,6 +316,8 @@ namespace Microsoft.PowerFx
                     }
                 }
 
+                Console.WriteLine("<reset>");
+
                 _reset = false;
             }
         }
@@ -384,6 +393,7 @@ namespace Microsoft.PowerFx
                 sb.Append(CultureInfo.InvariantCulture, $"{"UserDefinedFunctions:",-42}{_enableUDFs}\n");
                 sb.Append(CultureInfo.InvariantCulture, $"{"AllowSideEffects:",-42}{_allowSideEffects}\n");
                 sb.Append(CultureInfo.InvariantCulture, $"{"NumberedPrompts:",-42}{_numberedPrompts}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"SetMutate:",-42}{_setMutate}\n");
 #if MATCHCOMPARE
                 sb.Append(CultureInfo.InvariantCulture, $"{"MatchCompare:",-42}{_matchCompare}\n");
 #endif
@@ -443,6 +453,11 @@ namespace Microsoft.PowerFx
                 if (string.Equals(option.Value, OptionUDF, StringComparison.OrdinalIgnoreCase))
                 {
                     return BooleanValue.New(_enableUDFs);
+                }
+
+                if (string.Equals(option.Value, OptionSetMutate, StringComparison.OrdinalIgnoreCase))
+                {
+                    return BooleanValue.New(_setMutate);
                 }
 
                 return FormulaValue.NewError(new ExpressionError()
@@ -521,6 +536,13 @@ namespace Microsoft.PowerFx
                 if (string.Equals(option.Value, OptionNumberedPrompts, StringComparison.OrdinalIgnoreCase))
                 {
                     _numberedPrompts = value.Value;
+                    return value;
+                }
+
+                if (string.Equals(option.Value, OptionSetMutate, StringComparison.OrdinalIgnoreCase))
+                {
+                    _setMutate = value.Value;
+                    _reset = true;
                     return value;
                 }
 

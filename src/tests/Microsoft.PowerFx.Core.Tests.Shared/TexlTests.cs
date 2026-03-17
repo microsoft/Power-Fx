@@ -4562,10 +4562,58 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("LookUp(DS, Collect(TblVar, {Id:1}); 1=1)                             ", "FilterNoSE", "FilterNoSE", "FilterNoSE")]
         [InlineData("CountIf(DS, Collect(TblVar, {Id:1}); Id>2)                           ", "FilterNoSE", "FilterNoSE", "FilterNoSE")]
 
+        // Search and With can have a formula for the second argument,
+        // but it is not an iterated lambda and OK                                           delegable DS,   non-del DS,  variable DS
+
+        [InlineData("Search(DS, Collect(TblVar, {Id:1}); \"a\", Name )                    ", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Search(DS, Clear(TblVar); \"b\", Name)                               ", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Search(Filter(DS,1=1), Clear(DS); \"b\", Name)                       ", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Search(DS, Clear(DS); \"b\", Name)                                   ", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Search(Sort(DS,Id), Clear(DS); \"b\", Name)                          ", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Search(Sort(Filter(DS,1=1),Id), Clear(DS); \"b\", Name)              ", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Search(SortByColumns(DS,\"Id\"), Clear(DS); \"b\", Name)             ", "NonDelWarn", "        Ok", "        Ok")]
+        [InlineData("Search(FirstN(DS,10), Clear(DS); \"b\", Name)                        ", "        Ok", "        Ok", "        Ok")]
+        [InlineData("With(LookUp(DS,1=1), Collect(TblVar, {Id:1}))                        ", "        Ok", "        Ok", "        Ok")]
+        [InlineData("With(LookUp(DS,1=1), Collect(DS, {Id:1}))                            ", "        Ok", "        Ok", "        Ok")]
+
+        // DropColumns, and friends use record scpoe for the column names, 
+        // but don't have lambdas or even a formula, so can't have side effects              delegable DS,   non-del DS,  variable DS
+
+        [InlineData("Search(DS, \"a\", Collect(TblVar, {Id:1}); Name )                    ", " IdentName", " IdentName", " IdentName")]
+        [InlineData("Search(DS, \"a\", Collect(DS, {Id:1}); Name )                        ", " IdentName", " IdentName", " IdentName")]
+        [InlineData("Search(DS, \"a\", Clear(DS); Name )                                  ", " IdentName", " IdentName", " IdentName")]
+        [InlineData("DropColumns(DS, Collect(TblVar, {Id:1}); Name )                      ", " IdentName", " IdentName", " IdentName")]
+        [InlineData("DropColumns(DS, Clear(DS); Name )                                    ", " IdentName", " IdentName", " IdentName")]
+        [InlineData("ShowColumns(DS, Collect(TblVar, {Id:1}); Name )                      ", " IdentName", " IdentName", " IdentName")]
+        [InlineData("RenameColumns(DS, Name, Collect(TblVar, {Id:1}); NewName )           ", " IdentName", " IdentName", " IdentName")]
+        [InlineData("RenameColumns(DS, Collect(TblVar, {Id:1}); Name, NewName )           ", " IdentName", " IdentName", " IdentName")]
+        [InlineData("RenameColumns(DS, Name, Clear(DS); NewName )                         ", " IdentName", " IdentName", " IdentName")]
+        [InlineData("RenameColumns(DS, Clear(DS); Name, NewName )                         ", " IdentName", " IdentName", " IdentName")]
+
+        // Untyped objects can be iterated only by ForAll                                      dynamic DS
+
+        [InlineData("ForAll(DynVar, Collect(TblVar, {Id:1}))                              ", "        Ok")]
+        [InlineData("ForAll(DynVar, Clear(TblVar))                                        ", " Unordered")]
+        [InlineData("ForAll(DynVar, Collect(DynVar, {Id:1}))                              ", "InvalidArg")]
+        [InlineData("ForAll(DynVar, Clear(DynVar))                                        ", "BadTypeExp")]
+
+        [InlineData("Filter(DynVar, Collect(TblVar, {Id:1}); 1=1)                         ", "   BadType")]
+        [InlineData("LookUp(DynVar, Collect(TblVar, {Id:1}); 1=1)                         ", "   BadType")]
+        [InlineData("CountIf(DynVar, Collect(TblVar, {Id:1}); 1=1)                        ", "   BadType")]
+        [InlineData("AddColumns(DynVar, Num, Collect(TblVar, {Id:1}); 2)                  ", "   BadType")]
+        [InlineData("Concat(DynVar, Collect(TblVar, {Id:1}); Text(Id))                    ", "   BadType")]
+        [InlineData("Distinct(DynVar, Collect(TblVar, {Id:1}); Id)                        ", "   BadType")]
+        [InlineData("Sum(DynVar, Collect(TblVar, {Id:1}); Id)                             ", " NoUntyped")]
+        [InlineData("Average(DynVar, Collect(TblVar, {Id:1}); Id)                         ", " NoUntyped")]
+        [InlineData("Min(DynVar, Collect(TblVar, {Id:1}); Id)                             ", " NoUntyped")]
+        [InlineData("Max(DynVar, Collect(TblVar, {Id:1}); Id)                             ", " NoUntyped")]
+        [InlineData("VarP(DynVar, Collect(TblVar, {Id:1}); Id)                            ", " NoUntyped")]
+        [InlineData("StdevP(DynVar, Collect(TblVar, {Id:1}); Id)                          ", " NoUntyped")]
+        [InlineData("Search(DynVar, Clear(TblVar); \"b\", Name)                           ", "   BadType")]
+        [InlineData("With(First(DynVar), Collect(TblVar, {Id:1}))                         ", "   BadType")]
+
         // non self modifying                                                                delegable DS,   non-del DS,  variable DS
 
-        [InlineData("With(LookUp(DS,1=1), Collect(TblVar, {Id:1}))                        ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Search(DS, Clear(TblVar); \"b\", Name)                               ", "        Ok", "        Ok", "        Ok")]
         [InlineData("ForAll(DS, Collect(TblVar, {Id:1}))                                  ", "        Ok", "        Ok", "        Ok")]
         [InlineData("ForAll(DS, Refresh(TblVar))                                          ", "        Ok", "        Ok", "        Ok")]
         [InlineData("ForAll(DS, Patch(TblVar,First(TblVar),{Id:2}))                       ", "        Ok", "        Ok", "        Ok")]
@@ -4590,13 +4638,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("VarP(DS, ClearCollect(TblVar, {Id:1}); Id)                           ", " Unordered", " Unordered", " Unordered")]
         [InlineData("StdevP(DS, Clear(TblVar); Id)                                        ", " Unordered", " Unordered", " Unordered")]
 
-        // self modifying, With                                                              delegable DS,   non-del DS,  variable DS
-
-        [InlineData("With(LookUp(DS,1=1), Collect(DS, {Id:1}))                            ", "        Ok", "        Ok", "        Ok")]
-
         // self modifying, direct to DS                                                      delegable DS,   non-del DS,  variable DS
 
-        [InlineData("Search(DS, Clear(DS); \"b\", Name)                                   ", "        Ok", "        Ok", "        Ok")]
         [InlineData("ForAll(DS, Collect(DS, {Id:1}))                                      ", "   SelfMod", "   SelfMod", "        Ok")]
         [InlineData("ForAll(DS, Refresh(DS))                                              ", "   SelfMod", "   SelfMod", "        Ok")]
         [InlineData("ForAll(DS, Patch(DS,First(DS),{Id:2}))                               ", "   SelfMod", "   SelfMod", "        Ok")]
@@ -4621,9 +4664,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("VarP(DS, Clear(DS); Id)                                              ", "   SelfMod", "   SelfMod", " Unordered")]
         [InlineData("StdevP(DS, ClearCollect(DS, {Id:1}); Id)                             ", "   SelfMod", "   SelfMod", " Unordered")]
 
-        // self modifying, Filter                                                            delegable DS,   non-del DS,  variable DS
+        // self modifying, with Filter                                                       delegable DS,   non-del DS,  variable DS
 
-        [InlineData("Search(Filter(DS,1=1), Clear(DS); \"b\", Name)                       ", "        Ok", "        Ok", "        Ok")]
         [InlineData("ForAll(Filter(DS,1=1), Collect(DS, {Id:1}))                          ", "   SelfMod", "        Ok", "        Ok")]
         [InlineData("ForAll(Filter(DS,1=1), Refresh(DS))                                  ", "   SelfMod", "        Ok", "        Ok")]
         [InlineData("ForAll(Filter(DS,1=1), Patch(DS,First(DS),{Id:2}))                   ", "   SelfMod", "        Ok", "        Ok")]
@@ -4648,9 +4690,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("VarP(Filter(DS,1=1), Clear(DS); Id)                                  ", "   SelfMod", " Unordered", " Unordered")]
         [InlineData("StdevP(Filter(DS,1=1), Clear(DS); Id)                                ", "   SelfMod", " Unordered", " Unordered")]
 
-        // self modifying, Sort                                                              delegable DS,   non-del DS,  variable DS
+        // self modifying, with Sort                                                         delegable DS,   non-del DS,  variable DS
 
-        [InlineData("Search(Sort(DS,Id), Clear(DS); \"b\", Name)                          ", "        Ok", "        Ok", "        Ok")]
         [InlineData("ForAll(Sort(DS,Id), Collect(DS, {Id:1}))                             ", "   SelfMod", "        Ok", "        Ok")]
         [InlineData("ForAll(Sort(DS,Id), Refresh(DS))                                     ", "   SelfMod", "        Ok", "        Ok")]
         [InlineData("ForAll(Sort(DS,Id), Patch(DS,First(DS),{Id:2}))                      ", "   SelfMod", "        Ok", "        Ok")]
@@ -4677,7 +4718,6 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // self modifying, Sort and Filter                                                   delegable DS,   non-del DS,  variable DS
 
-        [InlineData("Search(Sort(Filter(DS,1=1),Id), Clear(DS); \"b\", Name)              ", "        Ok", "        Ok", "        Ok")]
         [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Collect(DS, {Id:1}))                 ", "   SelfMod", "        Ok", "        Ok")]
         [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Refresh(DS))                         ", "   SelfMod", "        Ok", "        Ok")]
         [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Patch(DS,First(DS),{Id:2}))          ", "   SelfMod", "        Ok", "        Ok")]
@@ -4704,7 +4744,6 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // self modifying, SortByColumns, non-delegable                                      delegable DS,   non-del DS,  variable DS
 
-        [InlineData("Search(SortByColumns(DS,\"Id\"), Clear(DS); \"b\", Name)             ", "NonDelWarn", "        Ok", "        Ok")]
         [InlineData("ForAll(SortByColumns(DS,\"Id\"), Collect(DS, {Id:1}))                ", "NonDelWarn", "        Ok", "        Ok")]
         [InlineData("ForAll(SortByColumns(DS,\"Id\"), Refresh(DS))                        ", "NonDelWarn", "        Ok", "        Ok")]
         [InlineData("ForAll(SortByColumns(DS,\"Id\"), Patch(DS,First(DS),{Id:2}))         ", "NonDelWarn", "        Ok", "        Ok")]
@@ -4731,7 +4770,6 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // self modifying, FirstN, non-delegable                                             delegable DS,   non-del DS,  variable DS
 
-        [InlineData("Search(FirstN(DS,10), Clear(DS); \"b\", Name)                        ", "        Ok", "        Ok", "        Ok")]
         [InlineData("ForAll(FirstN(DS,10), Collect(DS, {Id:1}))                           ", "        Ok", "        Ok", "        Ok")]
         [InlineData("ForAll(FirstN(DS,10), Refresh(DS))                                   ", "        Ok", "        Ok", "        Ok")]
         [InlineData("ForAll(FirstN(DS,10), Patch(DS,First(DS),{Id:2}))                    ", "        Ok", "        Ok", "        Ok")]
@@ -4756,7 +4794,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("VarP(FirstN(DS,10), Clear(DS); Id)                                   ", " Unordered", " Unordered", " Unordered")]
         [InlineData("StdevP(FirstN(DS,10), Clear(DS); Id)                                 ", " Unordered", " Unordered", " Unordered")]
 
-        public void TexlFunctionSelfModifyingDetection(string script, string expectedErrorDSDelegable, string expectedErrorDSNonDelegable, string expectedErrorVar)
+        public void TexlFunctionSelfModifyingDetection(string script, string expectedErrorDSDelegable, string expectedErrorDSNonDelegable = null, string expectedErrorVar = null)
         {
             var dataSourceSchema = TestUtils.DT("*[Id:w, Name:s]");
 
@@ -4783,7 +4821,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     true));
 
             symbol.AddEntity(new TestDelegableDataSource(
-                    "DSnondel",
+                    "DSnonDel",
                     dataSourceSchema,
                     new TestDelegationMetadata(
                         new DelegationCapability(), // non delegable
@@ -4802,9 +4840,11 @@ namespace Microsoft.PowerFx.Core.Tests
                             new Dictionary<DPath, DelegationCapability>())),
                     true));
 
-            symbol.AddVariable("DSvar", new TableType(dataSourceSchema), mutable: true, displayName: "DSVar");
+            symbol.AddVariable("DSvar", new TableType(dataSourceSchema), new SymbolProperties { CanMutate = true, CanSet = true, CanSetMutate = true }, displayName: "DSVar");
 
-            symbol.AddVariable("TblVar", new TableType(dataSourceSchema), mutable: true, displayName: "TblVar");
+            symbol.AddVariable("TblVar", new TableType(dataSourceSchema), new SymbolProperties { CanMutate = true, CanSet = true, CanSetMutate = true }, displayName: "TblVar");
+
+            symbol.AddVariable("DynVar", new UntypedObjectType(), new SymbolProperties { CanMutate = true, CanSet = true, CanSetMutate = true }, displayName: "DynVar");
 
             symbol.AddFunction(new CollectFunction());
             symbol.AddFunction(new ClearFunction());
@@ -4826,8 +4866,16 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             TestDS("DSdel", expectedErrorDSDelegable);
-            TestDS("DSnondel", expectedErrorDSNonDelegable);
-            TestDS("DSvar", expectedErrorVar);
+
+            if (expectedErrorDSNonDelegable != null)
+            {
+                TestDS("DSnonDel", expectedErrorDSNonDelegable);
+            }
+
+            if (expectedErrorVar != null)
+            {
+                TestDS("DSvar", expectedErrorVar);
+            }
 
             void TestDS(string dsType, string expectedError)
             {
@@ -4854,6 +4902,21 @@ namespace Microsoft.PowerFx.Core.Tests
                     case "NonDelWnOp":
                         expectedKey = "SuggestRemoteExecutionHint_OpNotSupportedByService";
                         break;
+                    case "NoUntyped":
+                        expectedKey = "ErrUntypedObjectScope";
+                        break;
+                    case "BadType":
+                        expectedKey = "ErrBadType";
+                        break;
+                    case "BadTypeExp":
+                        expectedKey = "ErrBadType_ExpectedType_ProvidedType";
+                        break;
+                    case "InvalidArg":
+                        expectedKey = "ErrInvalidArgs_Func";
+                        break;
+                    case "IdentName":
+                        expectedKey = "ErrExpectedIdentifierArg_Name";
+                        break;  
                     case "Ok":
                         break;
                     default:
