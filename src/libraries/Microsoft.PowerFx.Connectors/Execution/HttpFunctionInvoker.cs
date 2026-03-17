@@ -225,6 +225,10 @@ namespace Microsoft.PowerFx.Connectors
             {
                 if (schemaFormat == "date-no-tz")
                 {
+                    // Intentionally accessing the raw DateTime via PrimitiveValue<DateTime>.Value
+                    // (bypassing DateTimeValue.Value which is marked [Obsolete] in favor of GetConvertedValue).
+                    // For "date-no-tz" schema format, the value carries no timezone semantics, so we need
+                    // the unconverted DateTime as-is — GetConvertedValue would incorrectly apply a timezone shift.
                     return ((PrimitiveValue<DateTime>)dtv).Value.ToString(
                         FormulaValueSerializer.DateTimeFormat,
                         CultureInfo.InvariantCulture);
