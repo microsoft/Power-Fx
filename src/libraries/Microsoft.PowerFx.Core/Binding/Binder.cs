@@ -5012,8 +5012,19 @@ namespace Microsoft.PowerFx.Core.Binding
                 return false;
             }
 
-            // Returns true if the first argument of callNode is a global table variable,
-            // and outputs its name.
+            // Returns true if the first argument of callNode is a global table variable, and outputs its name.
+            // Used for self modifying variable detection for ForAll and other iterator functions.
+            //
+            // This function will dive deep into the first argument of callNodes. So, it will extract the first argument of:
+            //
+            // top level: ForAll( DS, Set( DS, [...] ) ), lambda: Set( DS, [ ...] ) - match found, self modifying
+            // Self modifying and error produced.
+            //
+            // top level: ForAll( DS, Set( First(DS).Value, ... ) ), lambda: Set( First(DS).Value, ... ) - match NOT found due to lambda (two deep)
+            // We consider this OK and not self modifying as we are modifying a record of DS, not the structure of DS itself which would mess up the iteration.
+            //
+            // top level: ForAll( Filter(DS, Value > 0), Set( DS, [...] ) ), lambda: Set( DS, [...] ) - match NOT found due to top level (two deep)
+            // We consider this OK and not self modifying because DS is not delegable, so a copy is made for Filter to iterate over.
             private bool TryGetFirstArgGlobalTableVariable(CallNode callNode, out DName variableName)
             {
                 variableName = default;
