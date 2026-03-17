@@ -4973,9 +4973,19 @@ namespace Microsoft.PowerFx.Core.Binding
                         var ancestorScopeInfo = ancestorCall.Function?.ScopeInfo;
 
                         // Check for bad scope modification
-                        if (ancestorFunc != null && ancestorScopeInfo != null && ds != null && ancestorScopeInfo.IteratesOverScope)
+                        if (ancestorFunc != null && ancestorScopeInfo != null && ancestorScopeInfo.IteratesOverScope)
                         {
-                            if (ancestorFunc.TryGetDataSource(ancestorScope.Call, _txb, out var ancestorDs) && ancestorDs == ds)
+                            if (ds != null && ancestorFunc.TryGetDataSource(ancestorScope.Call, _txb, out var ancestorDs) && ancestorDs == ds)
+                            {
+                                errorKey = TexlStrings.ErrScopeModificationLambda;
+                                badAncestor = ancestorScope.Call;
+                                return true;
+                            }
+
+                            // Also check for global table variables (not external data sources)
+                            if (TryGetFirstArgGlobalTableVariable(node, out var modifiedVar) &&
+                                TryGetFirstArgGlobalTableVariable(ancestorScope.Call, out var iteratedVar) &&
+                                modifiedVar == iteratedVar)
                             {
                                 errorKey = TexlStrings.ErrScopeModificationLambda;
                                 badAncestor = ancestorScope.Call;
@@ -4997,6 +5007,30 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     // Pop up to the next scope.
                     ancestorScope = ancestorScope.Parent;
+                }
+
+                return false;
+            }
+
+            // Returns true if the first argument of callNode is a global table variable,
+            // and outputs its name.
+            private bool TryGetFirstArgGlobalTableVariable(CallNode callNode, out DName variableName)
+            {
+                variableName = default;
+
+                if (callNode.Args.Count < 1)
+                {
+                    return false;
+                }
+
+                if (callNode.Args.Children[0] is FirstNameNode firstName)
+                {
+                    var info = _txb.GetInfo(firstName);
+                    if (info?.Kind == BindKind.PowerFxResolvedObject && _txb.GetType(firstName).IsTable)
+                    {
+                        variableName = firstName.Ident.Name;
+                        return true;
+                    }
                 }
 
                 return false;
