@@ -638,8 +638,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [InlineData("ForAll(DS, Set(DS, [{Id:1,Name:\"a\"}]))                                        ", "   SelfMod", "   SelfMod", "        Ok")]
         [InlineData("ForAll(DS, Set(First(DS).Id, 3))                                                ", " Immutable", " Immutable", "        Ok")]
+        [InlineData("ForAll(DS, If(ThisRecord.Id>1, Set(DS, [{Id:1,Name:\"a\"}])))                   ", "   SelfMod", "   SelfMod", "        Ok")]
+        [InlineData("ForAll(DS, If(Id>1, Set(DS, [{Id:1,Name:\"a\"}])))                              ", "   SelfMod", "   SelfMod", "        Ok")]
         [InlineData("AddColumns(DS, Num, Set(DS, [{Id:1,Name:\"a\"}]); 2)                            ", "   SelfMod", "   SelfMod", "        Ok")]
         [InlineData("AddColumns(DS, Num, Set(First(DS).Id, 3); 2)                                    ", " Immutable", " Immutable", "        Ok")]
+        [InlineData("AddColumns(DS, Num, If(ThisRecord.Id>1,Set(DS, [{Id:1,Name:\"a\"}]); 2))        ", "   SelfMod", "   SelfMod", "        Ok")]
+        [InlineData("AddColumns(DS, Num, If(Id>1,Set(DS, [{Id:1,Name:\"a\"}]); 2))                   ", "   SelfMod", "   SelfMod", "        Ok")]
         [InlineData("Concat(DS, Set(DS, [{Id:1,Name:\"a\"}]); Text(Id))                              ", "   SelfMod", "   SelfMod", "        Ok")]
         [InlineData("Distinct(DS, Set(DS, [{Id:1,Name:\"a\"}]); Id)                                  ", "   SelfMod", "   SelfMod", "        Ok")]
         [InlineData("Sum(DS, Set(DS, [{Id:1,Name:\"a\"}]); Id)                                       ", "   SelfMod", "   SelfMod", "        Ok")]
