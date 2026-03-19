@@ -1146,6 +1146,28 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Lower)
             },
             {
+                BuiltinFunctionsCore.Map,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.Map.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Map)
+            },
+            {
+                BuiltinFunctionsCore.Map_UO,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.Map_UO.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Map) // the typed Map implementation can handle untyped objects too
+            },
+            {
                 BuiltinFunctionsCore.Max,
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.Max.Name,
