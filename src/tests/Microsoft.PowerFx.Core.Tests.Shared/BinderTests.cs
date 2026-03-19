@@ -226,6 +226,7 @@ namespace Microsoft.PowerFx.Core.Tests
         // String manipulation
         [InlineData("Replace(\"abcdef\", 1, 2, \"cd\")")]
         [InlineData("Substitute(\"abcabc\", \"a\", \"x\")")]
+        [InlineData("Concat([\"a\",\"b\"], Value)")]
 
         // More complex simple expressions
         [InlineData("If(And(true, Not(false)), Concatenate(\"Hello\", \" \", \"World\"), \"Goodbye\")")]
