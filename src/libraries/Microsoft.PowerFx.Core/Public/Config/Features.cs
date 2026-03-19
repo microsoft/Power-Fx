@@ -127,6 +127,7 @@ namespace Microsoft.PowerFx
             IsUserDefinedTypesEnabled = other.IsUserDefinedTypesEnabled;
             AsTypeLegacyCheck = other.AsTypeLegacyCheck;
             JsonFunctionAcceptsLazyTypes = other.JsonFunctionAcceptsLazyTypes;
+            EnhancedIterationFunctionChecks = other.EnhancedIterationFunctionChecks;
         }
     }
 }
