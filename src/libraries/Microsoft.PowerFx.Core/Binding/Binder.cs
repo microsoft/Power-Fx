@@ -4987,7 +4987,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         if (ancestorFunc != null &&
                             ancestorScopeInfo != null &&
                             ancestorScopeInfo.HasNondeterministicOperationOrder &&
-                            !func.AllowedWithinNondeterministicOperationOrder)
+                            !func.AllowedWithinNondeterministicOperationOrderWithFeatures(_features))
                         {
                             errorKey = TexlStrings.ErrFunctionDisallowedWithinNondeterministicOperationOrder;
                             badAncestor = ancestorScope.Call;
