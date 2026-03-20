@@ -28,10 +28,10 @@ namespace Microsoft.PowerFx
 
     public static class ConsoleRepl
     {
-        private const bool EnableCopilotFunction = false;
-
+#if EnableCopilotFunction
         // Path to the file containing ChatGPT API credentials
         private const string CredentialsPathToChatGPT = "update your path\\chatgpt-credentials.json.template";
+#endif 
         
         private const string OptionFormatTable = "FormatTable";
 
@@ -59,6 +59,9 @@ namespace Microsoft.PowerFx
         private const string OptionNumberedPrompts = "NumberedPrompts";
         private static bool _numberedPrompts = false;
 
+        private const string OptionSetMutate = "SetMutate";
+        private static bool _setMutate = false;
+
 #if MATCHCOMPARE
         // to enable, place this in Solution Items/Directiory.Build.Props:
         //  <PropertyGroup>
@@ -72,7 +75,7 @@ namespace Microsoft.PowerFx
         private const string OptionUDF = "UserDefinedFunctions";
         private static bool _enableUDFs = true;
 
-        private static readonly Features _features = Features.PowerFxV1;
+        private static readonly Features _features = Features.PowerFxV2;
 
         private static StandardFormatter _standardFormatter;
 
@@ -82,8 +85,10 @@ namespace Microsoft.PowerFx
 
         private static bool _reset;
 
+        private static readonly Dictionary<string, string> _featureVersion = new Dictionary<string, string>();
+
         private static RecalcEngine ReplRecalcEngine()
-        { 
+        {
             var config = new PowerFxConfig(_features);
 
             if (_largeCallDepth)
@@ -103,6 +108,7 @@ namespace Microsoft.PowerFx
                 { OptionTextFirst, OptionTextFirst },
                 { OptionAllowSideEffects, OptionAllowSideEffects },
                 { OptionNumberedPrompts, OptionNumberedPrompts },
+                { OptionSetMutate, OptionSetMutate },
 #if MATCHCOMPARE
                 { OptionMatchCompare, OptionMatchCompare },
 #endif
@@ -165,6 +171,15 @@ namespace Microsoft.PowerFx
         {
             var enabled = new StringBuilder();
 
+            // make a copy of Power Fx V1 and V1_1 feature props, before they are modified
+            foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+            {
+                if (prop.PropertyType == typeof(bool) && prop.CanWrite)
+                {
+                    _featureVersion.Add(prop.Name, (bool)prop.GetValue(Features.PowerFxV1) ? "V1" : (bool)prop.GetValue(Features.PowerFxV2) ? "V2" : null);
+                }
+            }
+
             Console.InputEncoding = System.Text.Encoding.UTF8;
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
@@ -184,7 +199,9 @@ namespace Microsoft.PowerFx
         private class MyRepl : PowerFxREPL, IDisposable
         {
             public int _promptNumber = 1;
+#if EnableCopilotFunction
             private readonly ICopilotService _copilotService;
+#endif
             private bool _disposed;
 
             public override string Prompt => _numberedPrompts ? $"\n{_promptNumber++}>> " : "\n>> ";
@@ -196,10 +213,12 @@ namespace Microsoft.PowerFx
                 _standardFormatter = new StandardFormatter();
                 this.ValueFormatter = _standardFormatter;
                 this.HelpProvider = new MyHelpProvider();
+                this.VariableSymbolProperties = new SymbolProperties() { CanMutate = true, CanSet = true, CanSetMutate = _setMutate };
 
                 var bsp = new BasicServiceProvider();
                 bsp.AddService(_cultureInfo);
-                
+
+#if EnableCopilotFunction
                 // Try to load and add ChatGPT Copilot service if credentials file exists
                 try
                 {
@@ -229,6 +248,7 @@ namespace Microsoft.PowerFx
 #pragma warning restore CA1303 // Do not pass literals as localized parameters
                     Console.ResetColor();
                 }
+#endif
                 
                 this.InnerServices = bsp;
 
@@ -264,7 +284,9 @@ namespace Microsoft.PowerFx
                 {
                     if (disposing)
                     {
+#if EnableCopilotFunction
                         _copilotService?.Dispose();
+#endif
                     }
 
                     _disposed = true;
@@ -308,6 +330,8 @@ namespace Microsoft.PowerFx
                         }
                     }
                 }
+
+                Console.WriteLine("<reset>");
 
                 _reset = false;
             }
@@ -373,26 +397,29 @@ namespace Microsoft.PowerFx
             {
                 StringBuilder sb = new StringBuilder();
 
+                const int labelWidth = 46;
+
                 sb.Append("\n");
 
-                sb.Append(CultureInfo.InvariantCulture, $"{"FormatTable:",-42}{_standardFormatter.FormatTable}\n");
-                sb.Append(CultureInfo.InvariantCulture, $"{"HashCodes:",-42}{_standardFormatter.HashCodes}\n");
-                sb.Append(CultureInfo.InvariantCulture, $"{"NumberIsFloat:",-42}{_numberIsFloat}\n");
-                sb.Append(CultureInfo.InvariantCulture, $"{"LargeCallDepth:",-42}{_largeCallDepth}\n");
-                sb.Append(CultureInfo.InvariantCulture, $"{"StackTrace:",-42}{_stackTrace}\n");
-                sb.Append(CultureInfo.InvariantCulture, $"{"TextFirst:",-42}{_textFirst}\n");
-                sb.Append(CultureInfo.InvariantCulture, $"{"UserDefinedFunctions:",-42}{_enableUDFs}\n");
-                sb.Append(CultureInfo.InvariantCulture, $"{"AllowSideEffects:",-42}{_allowSideEffects}\n");
-                sb.Append(CultureInfo.InvariantCulture, $"{"NumberedPrompts:",-42}{_numberedPrompts}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"FormatTable:",-labelWidth}{_standardFormatter.FormatTable}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"HashCodes:",-labelWidth}{_standardFormatter.HashCodes}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"NumberIsFloat:",-labelWidth}{_numberIsFloat}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"LargeCallDepth:",-labelWidth}{_largeCallDepth}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"StackTrace:",-labelWidth}{_stackTrace}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"TextFirst:",-labelWidth}{_textFirst}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"UserDefinedFunctions:",-labelWidth}{_enableUDFs}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"AllowSideEffects:",-labelWidth}{_allowSideEffects}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"NumberedPrompts:",-labelWidth}{_numberedPrompts}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"SetMutate:",-labelWidth}{_setMutate}\n");
 #if MATCHCOMPARE
-                sb.Append(CultureInfo.InvariantCulture, $"{"MatchCompare:",-42}{_matchCompare}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"MatchCompare:",-labelWidth}{_matchCompare}\n");
 #endif
 
                 foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
                     if (prop.PropertyType == typeof(bool) && prop.CanWrite)
                     {
-                        sb.Append(CultureInfo.InvariantCulture, $"{prop.Name + ((bool)prop.GetValue(Features.PowerFxV1) ? " (V1)" : string.Empty) + ":",-42}{prop.GetValue(_features)}\n");
+                        sb.Append(CultureInfo.InvariantCulture, $"{prop.Name + (_featureVersion[prop.Name] == null ? string.Empty : $" ({_featureVersion[prop.Name]})") + ":",-labelWidth}{prop.GetValue(_features)}\n");
                     }
                 }
 
@@ -443,6 +470,11 @@ namespace Microsoft.PowerFx
                 if (string.Equals(option.Value, OptionUDF, StringComparison.OrdinalIgnoreCase))
                 {
                     return BooleanValue.New(_enableUDFs);
+                }
+
+                if (string.Equals(option.Value, OptionSetMutate, StringComparison.OrdinalIgnoreCase))
+                {
+                    return BooleanValue.New(_setMutate);
                 }
 
                 return FormulaValue.NewError(new ExpressionError()
@@ -521,6 +553,13 @@ namespace Microsoft.PowerFx
                 if (string.Equals(option.Value, OptionNumberedPrompts, StringComparison.OrdinalIgnoreCase))
                 {
                     _numberedPrompts = value.Value;
+                    return value;
+                }
+
+                if (string.Equals(option.Value, OptionSetMutate, StringComparison.OrdinalIgnoreCase))
+                {
+                    _setMutate = value.Value;
+                    _reset = true;
                     return value;
                 }
 
