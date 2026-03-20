@@ -241,7 +241,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [ReplFileSimpleList("MutationScripts")]
         public void RunMutationTests_V1(string file)
         {
-            RunMutationTestFile(file, Features.PowerFxV1, "PowerFxV1");
+            var features = new Features(Features.PowerFxV1)
+            {
+                EnhancedIterationChecks = true,
+            };
+
+            RunMutationTestFile(file, features, "PowerFxV1");
         }
 
         [Theory]
@@ -253,6 +258,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 TableSyntaxDoesntWrapRecords = true,
                 ConsistentOneColumnTableResult = true,
                 IsUserDefinedTypesEnabled = true,
+                EnhancedIterationChecks = true,
             };
 
             // disable:PowerFxV1CompatibilityRules will force the tests specifically for those behaviors to be excluded from this run.

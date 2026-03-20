@@ -4973,9 +4973,20 @@ namespace Microsoft.PowerFx.Core.Binding
                         var ancestorScopeInfo = ancestorCall.Function?.ScopeInfo;
 
                         // Check for bad scope modification
-                        if (ancestorFunc != null && ancestorScopeInfo != null && ds != null && ancestorScopeInfo.IteratesOverScope)
+                        if (ancestorFunc != null && ancestorScopeInfo != null && ancestorScopeInfo.IteratesOverScope)
                         {
-                            if (ancestorFunc.TryGetDataSource(ancestorScope.Call, _txb, out var ancestorDs) && ancestorDs == ds)
+                            if (ds != null && ancestorFunc.TryGetDataSource(ancestorScope.Call, _txb, out var ancestorDs) && ancestorDs == ds)
+                            {
+                                errorKey = TexlStrings.ErrScopeModificationLambda;
+                                badAncestor = ancestorScope.Call;
+                                return true;
+                            }
+
+                            // Also check for global table variables (not external data sources)
+                            if (_txb.Features.EnhancedIterationChecks && 
+                                TryGetFirstArgGlobalTableVariable(node, out var modifiedVar) &&
+                                TryGetFirstArgGlobalTableVariable(ancestorScope.Call, out var iteratedVar) &&
+                                modifiedVar == iteratedVar)
                             {
                                 errorKey = TexlStrings.ErrScopeModificationLambda;
                                 badAncestor = ancestorScope.Call;
@@ -4997,6 +5008,41 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     // Pop up to the next scope.
                     ancestorScope = ancestorScope.Parent;
+                }
+
+                return false;
+            }
+
+            // Returns true if the first argument of callNode is a global table variable, and outputs its name.
+            // Used for self modifying variable detection for ForAll and other iterator functions.
+            //
+            // This function will dive deep into the first argument of callNodes. So, it will extract the first argument of:
+            //
+            // top level: ForAll( DS, Set( DS, [...] ) ), lambda: Set( DS, [ ...] ) - match found, self modifying
+            // Self modifying and error produced.
+            //
+            // top level: ForAll( DS, Set( First(DS).Value, ... ) ), lambda: Set( First(DS).Value, ... ) - match NOT found due to lambda (two deep)
+            // We consider this OK and not self modifying as we are modifying a record of DS, not the structure of DS itself which would mess up the iteration.
+            //
+            // top level: ForAll( Filter(DS, Value > 0), Set( DS, [...] ) ), lambda: Set( DS, [...] ) - match NOT found due to top level (two deep)
+            // We consider this OK and not self modifying because DS is not delegable, so a copy is made for Filter to iterate over.
+            private bool TryGetFirstArgGlobalTableVariable(CallNode callNode, out DName variableName)
+            {
+                variableName = default;
+
+                if (callNode.Args.Count < 1)
+                {
+                    return false;
+                }
+
+                if (callNode.Args.Children[0] is FirstNameNode firstName)
+                {
+                    var info = _txb.GetInfo(firstName);
+                    if (info?.Kind == BindKind.PowerFxResolvedObject && _txb.GetType(firstName).IsTable)
+                    {
+                        variableName = firstName.Ident.Name;
+                        return true;
+                    }
                 }
 
                 return false;
