@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        
+
         // Collect
         [InlineData("Collect(t1, {a:1})", "![a:w, b:s]")]
         [InlineData("Collect(t1, {a:1},{a:2})", "*[a:w, b:s]")]
@@ -165,7 +165,7 @@ namespace Microsoft.PowerFx.Core.Tests
             engine.Config.SymbolTable.AddFunction(new CollectScalarFunction());
             engine.Config.SymbolTable.AddFunction(new ClearCollectFunction());
             engine.Config.SymbolTable.AddFunction(new ClearCollectScalarFunction());
-            
+
             engine.Config.SymbolTable.AddVariable("t1", FormulaType.Build(expectedDType), mutable: true);
             engine.Config.SymbolTable.AddVariable("t2", FormulaType.Build(expectedDTypeScalar), mutable: true);
 
@@ -1419,7 +1419,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TexlFunctionTypeSemanticsIntWithCoercion(string script, string expectedType, string typedGlobal)
         {
             var symbol = new SymbolTable();
-            
+
             if (typedGlobal != null)
             {
                 symbol.AddVariable("T", new TableType(TestUtils.DT(typedGlobal)));
@@ -2060,8 +2060,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol.AddVariable("T", new TableType(TestUtils.DT(typedGlobal)));
 
                 TestSimpleBindingSuccess(
-                    script, 
-                    TestUtils.DT(expectedType), 
+                    script,
+                    TestUtils.DT(expectedType),
                     symbol);
             }
             else
@@ -2165,7 +2165,7 @@ namespace Microsoft.PowerFx.Core.Tests
             symbol.AddVariable("A", FormulaType.Boolean);
             symbol.AddVariable("B", FormulaType.String);
             symbol.AddVariable("C", FormulaType.Number);
-            
+
             TestSimpleBindingSuccess(
                 "StdevP(1, 2, A, B, C)",
                 DType.Number,
@@ -2842,7 +2842,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Concat([1, 2, 3], Text(Value), \",\")")]
         [InlineData("Concat([1, 2, 3], Text(Value), Text(Today()))")]
         [InlineData("Concat([], 1)")]
-        [InlineData("Concat([1, 2, 3], Value)")]        
+        [InlineData("Concat([1, 2, 3], Value)")]
         [InlineData("Concat([\"a\", \"b\", \"C\"], Value, 1)")]
         public void TexlFunctionTypeSemanticsConcat(string script)
         {
@@ -3048,7 +3048,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var churnDataFunction = new TestUtils.MockFunction(ChurnDataFunctionName, string.Empty, FunctionCategories.Text, functionFlags, DType.Number, 0, 2, 2, DType.Number, DType.Number);
             var symbol = new SymbolTable();
-            
+
             try
             {
                 symbol.AddFunction(churnDataFunction);
@@ -3124,7 +3124,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var mockFunction1 = new TestUtils.MockFunction("MockFunction", "_1", FunctionCategories.Text, functionFlags | TestUtils.FunctionFlags.SupportsParamCoercion, DType.Number, 0, 2, 2, DType.Number, DType.Number);
             var mockFunction2 = new TestUtils.MockFunction("MockFunction", "_2", FunctionCategories.Text, functionFlags, DType.Number, 0, 2, 2, DType.String, DType.String);
             var mockFunction3 = new TestUtils.MockFunction("MockFunction", "_3", FunctionCategories.Text, functionFlags | TestUtils.FunctionFlags.SupportsParamCoercion, DType.Number, 0, 2, 2, DType.String, DType.Number);
-            
+
             var symbol = new SymbolTable();
 
             try
@@ -3375,7 +3375,7 @@ namespace Microsoft.PowerFx.Core.Tests
             symbol.AddVariable("numvar", FormulaType.Number);
 
             TestSimpleBindingSuccess(
-                script, 
+                script,
                 DType.Number,
                 symbol);
         }
@@ -3393,7 +3393,7 @@ namespace Microsoft.PowerFx.Core.Tests
             symbol.AddVariable("numtable", new TableType(TestUtils.DT("*[Num:n]")));
 
             TestSimpleBindingSuccess(
-                script, 
+                script,
                 TestUtils.DT("*[Num:n]"),
                 symbol);
         }
@@ -3426,7 +3426,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // Expected type is "n" because when we fail typechecking for all overloads, the binder picks the first one
             TestBindingErrors(
-                script, 
+                script,
                 TestUtils.DT("n"),
                 symbol);
         }
@@ -3443,7 +3443,7 @@ namespace Microsoft.PowerFx.Core.Tests
             symbol.AddVariable("otherName", FormulaType.String);
 
             TestSimpleBindingSuccess(
-                script, 
+                script,
                 DType.Boolean,
                 symbol);
         }
@@ -3460,7 +3460,7 @@ namespace Microsoft.PowerFx.Core.Tests
             symbol.AddVariable("otherName", FormulaType.String);
 
             TestSimpleBindingSuccess(
-                script, 
+                script,
                 DType.Boolean,
                 symbol);
         }
@@ -3483,7 +3483,7 @@ namespace Microsoft.PowerFx.Core.Tests
             symbol.AddVariable("col", new TableType(TestUtils.DT("*[testname:s]")));
 
             TestSimpleBindingSuccess(
-                script, 
+                script,
                 TestUtils.DT(typeSpec),
                 symbol);
         }
@@ -3509,7 +3509,7 @@ namespace Microsoft.PowerFx.Core.Tests
             symbol.AddVariable("name", FormulaType.String);
 
             TestSimpleBindingSuccess(
-                script, 
+                script,
                 TestUtils.DT(typeSpec),
                 symbol);
         }
@@ -3573,9 +3573,9 @@ namespace Microsoft.PowerFx.Core.Tests
             var symbol = new SymbolTable();
             symbol.AddVariable("name", FormulaType.String);
             var temp = TestUtils.DT("%s[X:\"hi world\"]");
-            
+
             TestSimpleBindingSuccess(
-                script, 
+                script,
                 TestUtils.DT(typeSpec),
                 symbol);
         }
@@ -4006,7 +4006,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("Table", new TableType(TestUtils.DT("*[input:n]")));
-            
+
             TestSimpleBindingSuccess(
                 script,
                 TestUtils.DT("*[Value:n]"),
@@ -4238,7 +4238,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        
+
         // 1st arg needs to be a table.
         [InlineData("Search({Name: \"test\"}, \"a\", Name)", "*[]")]
 
@@ -4464,7 +4464,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void PrettyPrintTest(string op)
         {
             string expr = $"1 {op} [0]";
-            
+
             CheckResult check = new CheckResult(new Engine()).SetText(expr);
             ParseResult parse = check.ApplyParse();
 
@@ -4541,7 +4541,7 @@ namespace Microsoft.PowerFx.Core.Tests
                             new DelegationCapability(DelegationCapability.Equal),
                             null)),
                     true));
-            
+
             symbol.AddVariable("T1", new TableType(TestUtils.DT("*[a:n, b:s]")));
             Assert.True(DType.TryParse(expectedSchema, out DType type));
             Assert.True(type.IsValid);
@@ -4556,391 +4556,267 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
 
-        // Filter functions block side effects in predicate                                  delegable DS,   non-del DS,  variable DS
+        // Filter functions block side effects in predicate                                  delegable DS, enhanced    ,   non-del DS, enhanced    ,  variable DS, enhanced 
 
-        [InlineData("Filter(DS, Collect(TblVar, {Id:1}); 1=1)                             ", "FilterNoSE", "FilterNoSE", "FilterNoSE")]
-        [InlineData("LookUp(DS, Collect(TblVar, {Id:1}); 1=1)                             ", "FilterNoSE", "FilterNoSE", "FilterNoSE")]
-        [InlineData("CountIf(DS, Collect(TblVar, {Id:1}); Id>2)                           ", "FilterNoSE", "FilterNoSE", "FilterNoSE")]
+        [InlineData("Filter(DS, Collect(TblVar, {Id:1}); 1=1)                             ", "FilterNoSE", "FilterNoSE", "FilterNoSE", "FilterNoSE", "FilterNoSE", "FilterNoSE")]
+        [InlineData("LookUp(DS, Collect(TblVar, {Id:1}); 1=1)                             ", "FilterNoSE", "FilterNoSE", "FilterNoSE", "FilterNoSE", "FilterNoSE", "FilterNoSE")]
+        [InlineData("CountIf(DS, Collect(TblVar, {Id:1}); Id>2)                           ", "FilterNoSE", "FilterNoSE", "FilterNoSE", "FilterNoSE", "FilterNoSE", "FilterNoSE")]
 
         // Search and With can have a formula for the second argument,
-        // but it is not an iterated lambda and OK                                           delegable DS,   non-del DS,  variable DS
+        // but it is not an iterated lambda and OK                                           delegable DS, enhanced    ,   non-del DS, enhanced    ,  variable DS, enhanced 
 
-        [InlineData("Search(DS, Collect(TblVar, {Id:1}); \"a\", Name )                    ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Search(DS, Clear(TblVar); \"b\", Name)                               ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Search(Filter(DS,1=1), Clear(DS); \"b\", Name)                       ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Search(DS, Clear(DS); \"b\", Name)                                   ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Search(Sort(DS,Id), Clear(DS); \"b\", Name)                          ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Search(Sort(Filter(DS,1=1),Id), Clear(DS); \"b\", Name)              ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Search(SortByColumns(DS,\"Id\"), Clear(DS); \"b\", Name)             ", "NonDelWarn", "        Ok", "        Ok")]
-        [InlineData("Search(FirstN(DS,10), Clear(DS); \"b\", Name)                        ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("With(LookUp(DS,1=1), Collect(TblVar, {Id:1}))                        ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("With(LookUp(DS,1=1), Collect(DS, {Id:1}))                            ", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Search(DS, Collect(TblVar, {Id:1}); \"a\", Name )                    ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Search(DS, Clear(TblVar); \"b\", Name)                               ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Search(Filter(DS,1=1), Clear(DS); \"b\", Name)                       ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Search(DS, Clear(DS); \"b\", Name)                                   ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Search(Sort(DS,Id), Clear(DS); \"b\", Name)                          ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Search(Sort(Filter(DS,1=1),Id), Clear(DS); \"b\", Name)              ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Search(SortByColumns(DS,\"Id\"), Clear(DS); \"b\", Name)             ", "NonDelWarn", "NonDelWarn", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Search(FirstN(DS,10), Clear(DS); \"b\", Name)                        ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("With(LookUp(DS,1=1), Collect(TblVar, {Id:1}))                        ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("With(LookUp(DS,1=1), Collect(DS, {Id:1}))                            ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
 
         // DropColumns, and friends use record scpoe for the column names, 
-        // but don't have lambdas or even a formula, so can't have side effects              delegable DS,   non-del DS,  variable DS
+        // but don't have lambdas or even a formula, so can't have side effects              delegable DS, enhanced    ,   non-del DS, enhanced    ,  variable DS, enhanced 
 
-        [InlineData("Search(DS, \"a\", Collect(TblVar, {Id:1}); Name )                    ", " IdentName", " IdentName", " IdentName")]
-        [InlineData("Search(DS, \"a\", Collect(DS, {Id:1}); Name )                        ", " IdentName", " IdentName", " IdentName")]
-        [InlineData("Search(DS, \"a\", Clear(DS); Name )                                  ", " IdentName", " IdentName", " IdentName")]
-        [InlineData("DropColumns(DS, Collect(TblVar, {Id:1}); Name )                      ", " IdentName", " IdentName", " IdentName")]
-        [InlineData("DropColumns(DS, Clear(DS); Name )                                    ", " IdentName", " IdentName", " IdentName")]
-        [InlineData("ShowColumns(DS, Collect(TblVar, {Id:1}); Name )                      ", " IdentName", " IdentName", " IdentName")]
-        [InlineData("RenameColumns(DS, Name, Collect(TblVar, {Id:1}); NewName )           ", " IdentName", " IdentName", " IdentName")]
-        [InlineData("RenameColumns(DS, Collect(TblVar, {Id:1}); Name, NewName )           ", " IdentName", " IdentName", " IdentName")]
-        [InlineData("RenameColumns(DS, Name, Clear(DS); NewName )                         ", " IdentName", " IdentName", " IdentName")]
-        [InlineData("RenameColumns(DS, Clear(DS); Name, NewName )                         ", " IdentName", " IdentName", " IdentName")]
+        [InlineData("Search(DS, \"a\", Collect(TblVar, {Id:1}); Name )                    ", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName")]
+        [InlineData("Search(DS, \"a\", Collect(DS, {Id:1}); Name )                        ", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName")]
+        [InlineData("Search(DS, \"a\", Clear(DS); Name )                                  ", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName")]
+        [InlineData("DropColumns(DS, Collect(TblVar, {Id:1}); Name )                      ", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName")]
+        [InlineData("DropColumns(DS, Clear(DS); Name )                                    ", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName")]
+        [InlineData("ShowColumns(DS, Collect(TblVar, {Id:1}); Name )                      ", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName")]
+        [InlineData("RenameColumns(DS, Name, Collect(TblVar, {Id:1}); NewName )           ", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName")]
+        [InlineData("RenameColumns(DS, Collect(TblVar, {Id:1}); Name, NewName )           ", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName")]
+        [InlineData("RenameColumns(DS, Name, Clear(DS); NewName )                         ", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName")]
+        [InlineData("RenameColumns(DS, Clear(DS); Name, NewName )                         ", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName")]
 
-        // Untyped objects can be iterated only by ForAll                                      dynamic DS
+        // Untyped objects can be iterated only by ForAll                                      dynamic DS, enhanced
 
-        [InlineData("ForAll(DynVar, Collect(TblVar, {Id:1}))                              ", "        Ok")]
-        [InlineData("ForAll(DynVar, Clear(TblVar))                                        ", " Unordered")]
-        [InlineData("ForAll(DynVar, Collect(DynVar, {Id:1}))                              ", "InvalidArg")]
-        [InlineData("ForAll(DynVar, Clear(DynVar))                                        ", "BadTypeExp")]
+        [InlineData("ForAll(DynVar, Collect(TblVar, {Id:1}))                              ", "        Ok", "        Ok")]
+        [InlineData("ForAll(DynVar, Clear(TblVar))                                        ", " Unordered", " Unordered")]
+        [InlineData("ForAll(DynVar, Collect(DynVar, {Id:1}))                              ", "InvalidArg", "InvalidArg")]
+        [InlineData("ForAll(DynVar, Clear(DynVar))                                        ", "BadTypeExp", "BadTypeExp")]
 
-        [InlineData("Filter(DynVar, Collect(TblVar, {Id:1}); 1=1)                         ", "   BadType")]
-        [InlineData("LookUp(DynVar, Collect(TblVar, {Id:1}); 1=1)                         ", "   BadType")]
-        [InlineData("CountIf(DynVar, Collect(TblVar, {Id:1}); 1=1)                        ", "   BadType")]
-        [InlineData("AddColumns(DynVar, Num, Collect(TblVar, {Id:1}); 2)                  ", "   BadType")]
-        [InlineData("Concat(DynVar, Collect(TblVar, {Id:1}); Text(Id))                    ", "   BadType")]
-        [InlineData("Distinct(DynVar, Collect(TblVar, {Id:1}); Id)                        ", "   BadType")]
-        [InlineData("Sum(DynVar, Collect(TblVar, {Id:1}); Id)                             ", " NoUntyped")]
-        [InlineData("Average(DynVar, Collect(TblVar, {Id:1}); Id)                         ", " NoUntyped")]
-        [InlineData("Min(DynVar, Collect(TblVar, {Id:1}); Id)                             ", " NoUntyped")]
-        [InlineData("Max(DynVar, Collect(TblVar, {Id:1}); Id)                             ", " NoUntyped")]
-        [InlineData("VarP(DynVar, Collect(TblVar, {Id:1}); Id)                            ", " NoUntyped")]
-        [InlineData("StdevP(DynVar, Collect(TblVar, {Id:1}); Id)                          ", " NoUntyped")]
-        [InlineData("Search(DynVar, Clear(TblVar); \"b\", Name)                           ", "   BadType")]
-        [InlineData("With(First(DynVar), Collect(TblVar, {Id:1}))                         ", "   BadType")]
+        [InlineData("Filter(DynVar, Collect(TblVar, {Id:1}); 1=1)                         ", "   BadType", "   BadType")]
+        [InlineData("LookUp(DynVar, Collect(TblVar, {Id:1}); 1=1)                         ", "   BadType", "   BadType")]
+        [InlineData("CountIf(DynVar, Collect(TblVar, {Id:1}); 1=1)                        ", "   BadType", "   BadType")]
+        [InlineData("AddColumns(DynVar, Num, Collect(TblVar, {Id:1}); 2)                  ", "   BadType", "   BadType")]
+        [InlineData("Concat(DynVar, Collect(TblVar, {Id:1}); Text(Id))                    ", "   BadType", "   BadType")]
+        [InlineData("Distinct(DynVar, Collect(TblVar, {Id:1}); Id)                        ", "   BadType", "   BadType")]
+        [InlineData("Sum(DynVar, Collect(TblVar, {Id:1}); Id)                             ", " NoUntyped", " NoUntyped")]
+        [InlineData("Average(DynVar, Collect(TblVar, {Id:1}); Id)                         ", " NoUntyped", " NoUntyped")]
+        [InlineData("Min(DynVar, Collect(TblVar, {Id:1}); Id)                             ", " NoUntyped", " NoUntyped")]
+        [InlineData("Max(DynVar, Collect(TblVar, {Id:1}); Id)                             ", " NoUntyped", " NoUntyped")]
+        [InlineData("VarP(DynVar, Collect(TblVar, {Id:1}); Id)                            ", " NoUntyped", " NoUntyped")]
+        [InlineData("StdevP(DynVar, Collect(TblVar, {Id:1}); Id)                          ", " NoUntyped", " NoUntyped")]
+        [InlineData("Search(DynVar, Clear(TblVar); \"b\", Name)                           ", "   BadType", "   BadType")]
+        [InlineData("With(First(DynVar), Collect(TblVar, {Id:1}))                         ", "   BadType", "   BadType")]
 
-        // non self modifying                                                                delegable DS,   non-del DS,  variable DS
+        // non self modifying                                                                delegable DS, enhanced    ,   non-del DS, enhanced    ,  variable DS, enhanced 
 
-        [InlineData("ForAll(DS, Collect(TblVar, {Id:1}))                                  ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("ForAll(DS, Refresh(TblVar))                                          ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("ForAll(DS, Patch(TblVar,First(TblVar),{Id:2}))                       ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("AddColumns(DS, Num, Collect(TblVar, {Id:1}); 2)                      ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Concat(DS, Collect(TblVar, {Id:1}); Text(Id))                        ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Distinct(DS, Collect(TblVar, {Id:1}); Id)                            ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Sum(DS, Collect(TblVar, {Id:1}); Id)                                 ", "NonDelWarn", "NonDelWnOp", "        Ok")]
-        [InlineData("Average(DS, Collect(TblVar, {Id:1}); Id)                             ", "NonDelWarn", "NonDelWnOp", "        Ok")]
-        [InlineData("Min(DS, Collect(TblVar, {Id:1}); Id)                                 ", "NonDelWarn", "NonDelWnOp", "        Ok")]
-        [InlineData("Max(DS, Collect(TblVar, {Id:1}); Id)                                 ", "NonDelWarn", "NonDelWnOp", "        Ok")]
-        [InlineData("VarP(DS, Collect(TblVar, {Id:1}); Id)                                ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("StdevP(DS, Collect(TblVar, {Id:1}); Id)                              ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("ForAll(DS, ClearCollect(TblVar, {Id:1}))                             ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("ForAll(DS, Clear(TblVar))                                            ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("AddColumns(DS, Num, ClearCollect(TblVar, {Id:1}); 2)                 ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("Concat(DS, Clear(TblVar); Text(Id))                                  ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("Distinct(DS, ClearCollect(TblVar, {Id:1}); Id)                       ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("Sum(DS, Clear(TblVar); Id)                                           ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("Average(DS, Clear(TblVar); Id)                                       ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("Min(DS, ClearCollect(TblVar, {Id:1}); Id)                            ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("Max(DS, Clear(TblVar); Id)                                           ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("VarP(DS, ClearCollect(TblVar, {Id:1}); Id)                           ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("StdevP(DS, Clear(TblVar); Id)                                        ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("ForAll(DS, Collect(TblVar, {Id:1}))                                  ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(DS, Refresh(TblVar))                                          ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(DS, Patch(TblVar,First(TblVar),{Id:2}))                       ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("AddColumns(DS, Num, Collect(TblVar, {Id:1}); 2)                      ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Concat(DS, Collect(TblVar, {Id:1}); Text(Id))                        ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Distinct(DS, Collect(TblVar, {Id:1}); Id)                            ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Sum(DS, Collect(TblVar, {Id:1}); Id)                                 ", "NonDelWarn", "NonDelWarn", "NonDelWnOp", "NonDelWnOp", "        Ok", "        Ok")]
+        [InlineData("Average(DS, Collect(TblVar, {Id:1}); Id)                             ", "NonDelWarn", "NonDelWarn", "NonDelWnOp", "NonDelWnOp", "        Ok", "        Ok")]
+        [InlineData("Min(DS, Collect(TblVar, {Id:1}); Id)                                 ", "NonDelWarn", "NonDelWarn", "NonDelWnOp", "NonDelWnOp", "        Ok", "        Ok")]
+        [InlineData("Max(DS, Collect(TblVar, {Id:1}); Id)                                 ", "NonDelWarn", "NonDelWarn", "NonDelWnOp", "NonDelWnOp", "        Ok", "        Ok")]
+        [InlineData("VarP(DS, Collect(TblVar, {Id:1}); Id)                                ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("StdevP(DS, Collect(TblVar, {Id:1}); Id)                              ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(DS, ClearCollect(TblVar, {Id:1}))                             ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("ForAll(DS, Clear(TblVar))                                            ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("AddColumns(DS, Num, ClearCollect(TblVar, {Id:1}); 2)                 ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Concat(DS, Clear(TblVar); Text(Id))                                  ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Distinct(DS, ClearCollect(TblVar, {Id:1}); Id)                       ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Sum(DS, Clear(TblVar); Id)                                           ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Average(DS, Clear(TblVar); Id)                                       ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Min(DS, ClearCollect(TblVar, {Id:1}); Id)                            ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Max(DS, Clear(TblVar); Id)                                           ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("VarP(DS, ClearCollect(TblVar, {Id:1}); Id)                           ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("StdevP(DS, Clear(TblVar); Id)                                        ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
 
-        // self modifying, direct to DS                                                      delegable DS,   non-del DS,  variable DS
+        // self modifying, direct to DS                                                      delegable DS, enhanced    ,   non-del DS, enhanced    ,  variable DS, enhanced
 
-        [InlineData("ForAll(DS, Collect(DS, {Id:1}))                                      ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("ForAll(DS, Refresh(DS))                                              ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("ForAll(DS, Patch(DS,First(DS),{Id:2}))                               ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("ForAll(DS, If(ThisRecord.Id>1, Patch(DS,First(DS),{Id:2})))          ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("ForAll(DS, If(Id>1, Patch(DS,First(DS),{Id:2})))                     ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("AddColumns(DS, Num, Collect(DS, {Id:1}); 2)                          ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("AddColumns(DS, Num, If(ThisRecord.Id>1,Collect(DS, {Id:1}); 2))      ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("AddColumns(DS, Num, If(Id>1,Collect(DS, {Id:1}); 2))                 ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("Concat(DS, Collect(DS, {Id:1}); Text(Id))                            ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("Distinct(DS, Collect(DS, {Id:1}); Id)                                ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("Sum(DS, Collect(DS, {Id:1}); Id)                                     ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("Average(DS, Collect(DS, {Id:1}); Id)                                 ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("Min(DS, Collect(DS, {Id:1}); Id)                                     ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("Max(DS, Collect(DS, {Id:1}); Id)                                     ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("VarP(DS, Collect(DS, {Id:1}); Id)                                    ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("StdevP(DS, Collect(DS, {Id:1}); Id)                                  ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("ForAll(DS, ClearCollect(DS, {Id:1}))                                 ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("ForAll(DS, Clear(DS))                                                ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("AddColumns(DS, Num, ClearCollect(DS, {Id:1}); 2)                     ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("Concat(DS, Clear(DS); Text(Id))                                      ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("Distinct(DS, ClearCollect(DS, {Id:1}); Id)                           ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("Sum(DS, Clear(DS); Id)                                               ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("Average(DS, ClearCollect(DS, {Id:1}); Id)                            ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("Min(DS, Clear(DS); Id)                                               ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("Max(DS, ClearCollect(DS, {Id:1}); Id)                                ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("VarP(DS, Clear(DS); Id)                                              ", "   SelfMod", "   SelfMod", "   SelfMod")]
-        [InlineData("StdevP(DS, ClearCollect(DS, {Id:1}); Id)                             ", "   SelfMod", "   SelfMod", "   SelfMod")]
+        [InlineData("ForAll(DS, Collect(DS, {Id:1}))                                      ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("ForAll(DS, Refresh(DS))                                              ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("ForAll(DS, Patch(DS,First(DS),{Id:2}))                               ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("ForAll(DS, If(ThisRecord.Id>1, Patch(DS,First(DS),{Id:2})))          ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("ForAll(DS, If(Id>1, Patch(DS,First(DS),{Id:2})))                     ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("AddColumns(DS, Num, Collect(DS, {Id:1}); 2)                          ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("AddColumns(DS, Num, If(ThisRecord.Id>1,Collect(DS, {Id:1}); 2))      ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("AddColumns(DS, Num, If(Id>1,Collect(DS, {Id:1}); 2))                 ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("Concat(DS, Collect(DS, {Id:1}); Text(Id))                            ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("Distinct(DS, Collect(DS, {Id:1}); Id)                                ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("Sum(DS, Collect(DS, {Id:1}); Id)                                     ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("Average(DS, Collect(DS, {Id:1}); Id)                                 ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("Min(DS, Collect(DS, {Id:1}); Id)                                     ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("Max(DS, Collect(DS, {Id:1}); Id)                                     ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("VarP(DS, Collect(DS, {Id:1}); Id)                                    ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("StdevP(DS, Collect(DS, {Id:1}); Id)                                  ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", "        Ok", "        Ok")]
+        [InlineData("ForAll(DS, ClearCollect(DS, {Id:1}))                                 ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", " Unordered", " Unordered")]
+        [InlineData("ForAll(DS, Clear(DS))                                                ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", " Unordered", " Unordered")]
+        [InlineData("AddColumns(DS, Num, ClearCollect(DS, {Id:1}); 2)                     ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", " Unordered", " Unordered")]
+        [InlineData("Concat(DS, Clear(DS); Text(Id))                                      ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", " Unordered", " Unordered")]
+        [InlineData("Distinct(DS, ClearCollect(DS, {Id:1}); Id)                           ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", " Unordered", " Unordered")]
+        [InlineData("Sum(DS, Clear(DS); Id)                                               ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", " Unordered", " Unordered")]
+        [InlineData("Average(DS, ClearCollect(DS, {Id:1}); Id)                            ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", " Unordered", " Unordered")]
+        [InlineData("Min(DS, Clear(DS); Id)                                               ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", " Unordered", " Unordered")]
+        [InlineData("Max(DS, ClearCollect(DS, {Id:1}); Id)                                ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", " Unordered", " Unordered")]
+        [InlineData("VarP(DS, Clear(DS); Id)                                              ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", " Unordered", " Unordered")]
+        [InlineData("StdevP(DS, ClearCollect(DS, {Id:1}); Id)                             ", "   SelfMod", "   SelfMod", "   SelfMod", "   SelfMod", " Unordered", " Unordered")]
 
-        // self modifying, with Filter                                                       delegable DS,   non-del DS,  variable DS
+        // self modifying, with Filter                                                       delegable DS, enhanced    ,   non-del DS, enhanced    ,  variable DS, enhanced
 
-        [InlineData("ForAll(Filter(DS,1=1), Collect(DS, {Id:1}))                          ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("ForAll(Filter(DS,1=1), Refresh(DS))                                  ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("ForAll(Filter(DS,1=1), Patch(DS,First(DS),{Id:2}))                   ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("AddColumns(Filter(DS,1=1), Num, Collect(DS, {Id:1}); 2)              ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("Concat(Filter(DS,1=1), Collect(DS, {Id:1}); Text(Id))                ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("Distinct(Filter(DS,1=1), Collect(DS, {Id:1}); Id)                    ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("Sum(Filter(DS,1=1), Collect(DS, {Id:1}); Id)                         ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("Average(Filter(DS,1=1), Collect(DS, {Id:1}); Id)                     ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("Min(Filter(DS,1=1), Collect(DS, {Id:1}); Id)                         ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("Max(Filter(DS,1=1), Collect(DS, {Id:1}); Id)                         ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("VarP(Filter(DS,1=1), Collect(DS, {Id:1}); Id)                        ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("StdevP(Filter(DS,1=1), Collect(DS, {Id:1}); Id)                      ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("ForAll(Filter(DS,1=1), ClearCollect(DS, {Id:1}))                     ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("ForAll(Filter(DS,1=1), Clear(DS))                                    ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("AddColumns(Filter(DS,1=1), Num, Clear(DS); 2)                        ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("Concat(Filter(DS,1=1), Clear(DS); Text(Id))                          ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("Distinct(Filter(DS,1=1), Clear(DS); Id)                              ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("Sum(Filter(DS,1=1), Clear(DS); Id)                                   ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("Average(Filter(DS,1=1), Clear(DS); Id)                               ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("Min(Filter(DS,1=1), Clear(DS); Id)                                   ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("Max(Filter(DS,1=1), Clear(DS); Id)                                   ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("VarP(Filter(DS,1=1), Clear(DS); Id)                                  ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("StdevP(Filter(DS,1=1), Clear(DS); Id)                                ", "   SelfMod", " Unordered", " Unordered")]
+        [InlineData("ForAll(Filter(DS,1=1), Collect(DS, {Id:1}))                          ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(Filter(DS,1=1), Refresh(DS))                                  ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(Filter(DS,1=1), Patch(DS,First(DS),{Id:2}))                   ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("AddColumns(Filter(DS,1=1), Num, Collect(DS, {Id:1}); 2)              ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Concat(Filter(DS,1=1), Collect(DS, {Id:1}); Text(Id))                ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Distinct(Filter(DS,1=1), Collect(DS, {Id:1}); Id)                    ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Sum(Filter(DS,1=1), Collect(DS, {Id:1}); Id)                         ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Average(Filter(DS,1=1), Collect(DS, {Id:1}); Id)                     ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Min(Filter(DS,1=1), Collect(DS, {Id:1}); Id)                         ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Max(Filter(DS,1=1), Collect(DS, {Id:1}); Id)                         ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("VarP(Filter(DS,1=1), Collect(DS, {Id:1}); Id)                        ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("StdevP(Filter(DS,1=1), Collect(DS, {Id:1}); Id)                      ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(Filter(DS,1=1), ClearCollect(DS, {Id:1}))                     ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("ForAll(Filter(DS,1=1), Clear(DS))                                    ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("AddColumns(Filter(DS,1=1), Num, Clear(DS); 2)                        ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Concat(Filter(DS,1=1), Clear(DS); Text(Id))                          ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Distinct(Filter(DS,1=1), Clear(DS); Id)                              ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Sum(Filter(DS,1=1), Clear(DS); Id)                                   ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Average(Filter(DS,1=1), Clear(DS); Id)                               ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Min(Filter(DS,1=1), Clear(DS); Id)                                   ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Max(Filter(DS,1=1), Clear(DS); Id)                                   ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("VarP(Filter(DS,1=1), Clear(DS); Id)                                  ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("StdevP(Filter(DS,1=1), Clear(DS); Id)                                ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
 
-        // self modifying, with Sort                                                         delegable DS,   non-del DS,  variable DS
+        // self modifying, with Sort                                                         delegable DS, enhanced    ,   non-del DS, enhanced    ,  variable DS, enhanced
 
-        [InlineData("ForAll(Sort(DS,Id), Collect(DS, {Id:1}))                             ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("ForAll(Sort(DS,Id), Refresh(DS))                                     ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("ForAll(Sort(DS,Id), Patch(DS,First(DS),{Id:2}))                      ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("AddColumns(Sort(DS,Id), Num, Collect(DS, {Id:1}); 2)                 ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("Concat(Sort(DS,Id), Collect(DS, {Id:1}); Text(Id))                   ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("Distinct(Sort(DS,Id), Collect(DS, {Id:1}); Id)                       ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("Sum(Sort(DS,Id), Collect(DS, {Id:1}); Id)                            ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("Average(Sort(DS,Id), Collect(DS, {Id:1}); Id)                        ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("Min(Sort(DS,Id), Collect(DS, {Id:1}); Id)                            ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("Max(Sort(DS,Id), Collect(DS, {Id:1}); Id)                            ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("VarP(Sort(DS,Id), Collect(DS, {Id:1}); Id)                           ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("StdevP(Sort(DS,Id), Collect(DS, {Id:1}); Id)                         ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("ForAll(Sort(DS,Id), ClearCollect(DS, {Id:1}))                        ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("ForAll(Sort(DS,Id), Clear(DS))                                       ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("AddColumns(Sort(DS,Id), Num, ClearCollect(DS, {Id:1}); 2)            ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("Concat(Sort(DS,Id), Clear(DS); Text(Id))                             ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("Distinct(Sort(DS,Id), Clear(DS); Id)                                 ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("Sum(Sort(DS,Id), Clear(DS); Id)                                      ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("Average(Sort(DS,Id), Clear(DS); Id)                                  ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("Min(Sort(DS,Id), Clear(DS); Id)                                      ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("Max(Sort(DS,Id), Clear(DS); Id)                                      ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("VarP(Sort(DS,Id), Clear(DS); Id)                                     ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("StdevP(Sort(DS,Id), Clear(DS); Id)                                   ", "   SelfMod", " Unordered", " Unordered")]
+        [InlineData("ForAll(Sort(DS,Id), Collect(DS, {Id:1}))                             ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(Sort(DS,Id), Refresh(DS))                                     ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(Sort(DS,Id), Patch(DS,First(DS),{Id:2}))                      ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("AddColumns(Sort(DS,Id), Num, Collect(DS, {Id:1}); 2)                 ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Concat(Sort(DS,Id), Collect(DS, {Id:1}); Text(Id))                   ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Distinct(Sort(DS,Id), Collect(DS, {Id:1}); Id)                       ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Sum(Sort(DS,Id), Collect(DS, {Id:1}); Id)                            ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Average(Sort(DS,Id), Collect(DS, {Id:1}); Id)                        ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Min(Sort(DS,Id), Collect(DS, {Id:1}); Id)                            ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Max(Sort(DS,Id), Collect(DS, {Id:1}); Id)                            ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("VarP(Sort(DS,Id), Collect(DS, {Id:1}); Id)                           ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("StdevP(Sort(DS,Id), Collect(DS, {Id:1}); Id)                         ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(Sort(DS,Id), ClearCollect(DS, {Id:1}))                        ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("ForAll(Sort(DS,Id), Clear(DS))                                       ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("AddColumns(Sort(DS,Id), Num, ClearCollect(DS, {Id:1}); 2)            ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Concat(Sort(DS,Id), Clear(DS); Text(Id))                             ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Distinct(Sort(DS,Id), Clear(DS); Id)                                 ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Sum(Sort(DS,Id), Clear(DS); Id)                                      ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Average(Sort(DS,Id), Clear(DS); Id)                                  ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Min(Sort(DS,Id), Clear(DS); Id)                                      ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Max(Sort(DS,Id), Clear(DS); Id)                                      ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("VarP(Sort(DS,Id), Clear(DS); Id)                                     ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("StdevP(Sort(DS,Id), Clear(DS); Id)                                   ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
 
-        // self modifying, Sort and Filter                                                   delegable DS,   non-del DS,  variable DS
+        // self modifying, Sort and Filter                                                   delegable DS, enhanced    ,   non-del DS, enhanced    ,  variable DS, enhanced
 
-        [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Collect(DS, {Id:1}))                 ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Refresh(DS))                         ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Patch(DS,First(DS),{Id:2}))          ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("AddColumns(Sort(Filter(DS,1=1),Id), Num, Collect(DS, {Id:1}); 2)     ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("Concat(Sort(Filter(DS,1=1),Id), Collect(DS, {Id:1}); Text(Id))       ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("Distinct(Sort(Filter(DS,1=1),Id), Collect(DS, {Id:1}); Id)           ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("Sum(Sort(Filter(DS,1=1),Id), Collect(DS, {Id:1}); Id)                ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("Average(Sort(Filter(DS,1=1),Id), Collect(DS, {Id:1}); Id)            ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("Min(Sort(Filter(DS,1=1),Id), Collect(DS, {Id:1}); Id)                ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("Max(Sort(Filter(DS,1=1),Id), Collect(DS, {Id:1}); Id)                ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("VarP(Sort(Filter(DS,1=1),Id), Collect(DS, {Id:1}); Id)               ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("StdevP(Sort(Filter(DS,1=1),Id), Collect(DS, {Id:1}); Id)             ", "   SelfMod", "        Ok", "        Ok")]
-        [InlineData("ForAll(Sort(Filter(DS,1=1),Id), ClearCollect(DS, {Id:1}))            ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Clear(DS))                           ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("AddColumns(Sort(Filter(DS,1=1),Id), Num, Clear(DS); 2)               ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("Concat(Sort(Filter(DS,1=1),Id), Clear(DS); Text(Id))                 ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("Distinct(Sort(Filter(DS,1=1),Id), Clear(DS); Id)                     ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("Sum(Sort(Filter(DS,1=1),Id), Clear(DS); Id)                          ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("Average(Sort(Filter(DS,1=1),Id), Clear(DS); Id)                      ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("Min(Sort(Filter(DS,1=1),Id), Clear(DS); Id)                          ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("Max(Sort(Filter(DS,1=1),Id), Clear(DS); Id)                          ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("VarP(Sort(Filter(DS,1=1),Id), Clear(DS); Id)                         ", "   SelfMod", " Unordered", " Unordered")]
-        [InlineData("StdevP(Sort(Filter(DS,1=1),Id), Clear(DS); Id)                       ", "   SelfMod", " Unordered", " Unordered")]
+        [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Collect(DS, {Id:1}))                 ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Refresh(DS))                         ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Patch(DS,First(DS),{Id:2}))          ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("AddColumns(Sort(Filter(DS,1=1),Id), Num, Collect(DS, {Id:1}); 2)     ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Concat(Sort(Filter(DS,1=1),Id), Collect(DS, {Id:1}); Text(Id))       ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Distinct(Sort(Filter(DS,1=1),Id), Collect(DS, {Id:1}); Id)           ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Sum(Sort(Filter(DS,1=1),Id), Collect(DS, {Id:1}); Id)                ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Average(Sort(Filter(DS,1=1),Id), Collect(DS, {Id:1}); Id)            ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Min(Sort(Filter(DS,1=1),Id), Collect(DS, {Id:1}); Id)                ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Max(Sort(Filter(DS,1=1),Id), Collect(DS, {Id:1}); Id)                ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("VarP(Sort(Filter(DS,1=1),Id), Collect(DS, {Id:1}); Id)               ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("StdevP(Sort(Filter(DS,1=1),Id), Collect(DS, {Id:1}); Id)             ", "   SelfMod", "   SelfMod", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(Sort(Filter(DS,1=1),Id), ClearCollect(DS, {Id:1}))            ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("ForAll(Sort(Filter(DS,1=1),Id), Clear(DS))                           ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("AddColumns(Sort(Filter(DS,1=1),Id), Num, Clear(DS); 2)               ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Concat(Sort(Filter(DS,1=1),Id), Clear(DS); Text(Id))                 ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Distinct(Sort(Filter(DS,1=1),Id), Clear(DS); Id)                     ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Sum(Sort(Filter(DS,1=1),Id), Clear(DS); Id)                          ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Average(Sort(Filter(DS,1=1),Id), Clear(DS); Id)                      ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Min(Sort(Filter(DS,1=1),Id), Clear(DS); Id)                          ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Max(Sort(Filter(DS,1=1),Id), Clear(DS); Id)                          ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("VarP(Sort(Filter(DS,1=1),Id), Clear(DS); Id)                         ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("StdevP(Sort(Filter(DS,1=1),Id), Clear(DS); Id)                       ", "   SelfMod", "   SelfMod", " Unordered", " Unordered", " Unordered", " Unordered")]
 
-        // self modifying, SortByColumns, non-delegable                                      delegable DS,   non-del DS,  variable DS
+        // self modifying, SortByColumns, non-delegable                                      delegable DS, enhanced    ,   non-del DS, enhanced    ,  variable DS, enhanced
 
-        [InlineData("ForAll(SortByColumns(DS,\"Id\"), Collect(DS, {Id:1}))                ", "NonDelWarn", "        Ok", "        Ok")]
-        [InlineData("ForAll(SortByColumns(DS,\"Id\"), Refresh(DS))                        ", "NonDelWarn", "        Ok", "        Ok")]
-        [InlineData("ForAll(SortByColumns(DS,\"Id\"), Patch(DS,First(DS),{Id:2}))         ", "NonDelWarn", "        Ok", "        Ok")]
-        [InlineData("AddColumns(SortByColumns(DS,\"Id\"), Num, Collect(DS, {Id:1}); 2)    ", "NonDelWarn", "        Ok", "        Ok")]
-        [InlineData("Concat(SortByColumns(DS,\"Id\"), Collect(DS, {Id:1}); Text(Id))      ", "NonDelWarn", "        Ok", "        Ok")]
-        [InlineData("Distinct(SortByColumns(DS,\"Id\"), Collect(DS, {Id:1}); Id)          ", "NonDelWarn", "        Ok", "        Ok")]
-        [InlineData("Sum(SortByColumns(DS,\"Id\"), Collect(DS, {Id:1}); Id)               ", "NonDelWarn", "        Ok", "        Ok")]
-        [InlineData("Average(SortByColumns(DS,\"Id\"), Collect(DS, {Id:1}); Id)           ", "NonDelWarn", "        Ok", "        Ok")]
-        [InlineData("Min(SortByColumns(DS,\"Id\"), Collect(DS, {Id:1}); Id)               ", "NonDelWarn", "        Ok", "        Ok")]
-        [InlineData("Max(SortByColumns(DS,\"Id\"), Collect(DS, {Id:1}); Id)               ", "NonDelWarn", "        Ok", "        Ok")]
-        [InlineData("VarP(SortByColumns(DS,\"Id\"), Collect(DS, {Id:1}); Id)              ", "NonDelWarn", "        Ok", "        Ok")]
-        [InlineData("StdevP(SortByColumns(DS,\"Id\"), Collect(DS, {Id:1}); Id)            ", "NonDelWarn", "        Ok", "        Ok")]
-        [InlineData("ForAll(SortByColumns(DS,\"Id\"), ClearCollect(DS, {Id:1}))           ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("ForAll(SortByColumns(DS,\"Id\"), Clear(DS))                          ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("AddColumns(SortByColumns(DS,\"Id\"), Num, Clear(DS); 2)              ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("Concat(SortByColumns(DS,\"Id\"), Clear(DS); Text(Id))                ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("Distinct(SortByColumns(DS,\"Id\"), Clear(DS); Id)                    ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("Sum(SortByColumns(DS,\"Id\"), Clear(DS); Id)                         ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("Average(SortByColumns(DS,\"Id\"), ClearCollect(DS, {Id:1}; Id)       ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("Min(SortByColumns(DS,\"Id\"), Clear(DS); Id)                         ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("Max(SortByColumns(DS,\"Id\"), ClearCollect(DS, {Id:1}; Id)           ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("VarP(SortByColumns(DS,\"Id\"), ClearCollect(DS, {Id:1}; Id)          ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("StdevP(SortByColumns(DS,\"Id\"), Clear(DS); Id)                      ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("ForAll(SortByColumns(DS,\"Id\"), Collect(DS, {Id:1}))                ", "NonDelWarn", "NonDelWarn", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(SortByColumns(DS,\"Id\"), Refresh(DS))                        ", "NonDelWarn", "NonDelWarn", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(SortByColumns(DS,\"Id\"), Patch(DS,First(DS),{Id:2}))         ", "NonDelWarn", "NonDelWarn", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("AddColumns(SortByColumns(DS,\"Id\"), Num, Collect(DS, {Id:1}); 2)    ", "NonDelWarn", "NonDelWarn", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Concat(SortByColumns(DS,\"Id\"), Collect(DS, {Id:1}); Text(Id))      ", "NonDelWarn", "NonDelWarn", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Distinct(SortByColumns(DS,\"Id\"), Collect(DS, {Id:1}); Id)          ", "NonDelWarn", "NonDelWarn", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Sum(SortByColumns(DS,\"Id\"), Collect(DS, {Id:1}); Id)               ", "NonDelWarn", "NonDelWarn", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Average(SortByColumns(DS,\"Id\"), Collect(DS, {Id:1}); Id)           ", "NonDelWarn", "NonDelWarn", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Min(SortByColumns(DS,\"Id\"), Collect(DS, {Id:1}); Id)               ", "NonDelWarn", "NonDelWarn", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Max(SortByColumns(DS,\"Id\"), Collect(DS, {Id:1}); Id)               ", "NonDelWarn", "NonDelWarn", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("VarP(SortByColumns(DS,\"Id\"), Collect(DS, {Id:1}); Id)              ", "NonDelWarn", "NonDelWarn", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("StdevP(SortByColumns(DS,\"Id\"), Collect(DS, {Id:1}); Id)            ", "NonDelWarn", "NonDelWarn", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(SortByColumns(DS,\"Id\"), ClearCollect(DS, {Id:1}))           ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("ForAll(SortByColumns(DS,\"Id\"), Clear(DS))                          ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("AddColumns(SortByColumns(DS,\"Id\"), Num, Clear(DS); 2)              ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Concat(SortByColumns(DS,\"Id\"), Clear(DS); Text(Id))                ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Distinct(SortByColumns(DS,\"Id\"), Clear(DS); Id)                    ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Sum(SortByColumns(DS,\"Id\"), Clear(DS); Id)                         ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Average(SortByColumns(DS,\"Id\"), ClearCollect(DS, {Id:1}; Id)       ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Min(SortByColumns(DS,\"Id\"), Clear(DS); Id)                         ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Max(SortByColumns(DS,\"Id\"), ClearCollect(DS, {Id:1}; Id)           ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("VarP(SortByColumns(DS,\"Id\"), ClearCollect(DS, {Id:1}; Id)          ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("StdevP(SortByColumns(DS,\"Id\"), Clear(DS); Id)                      ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
 
-        // self modifying, FirstN, non-delegable                                             delegable DS,   non-del DS,  variable DS
+        // self modifying, FirstN, non-delegable                                              delegable DS, enhanced    ,   non-del DS, enhanced    ,  variable DS, enhanced
 
-        [InlineData("ForAll(FirstN(DS,10), Collect(DS, {Id:1}))                           ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("ForAll(FirstN(DS,10), Refresh(DS))                                   ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("ForAll(FirstN(DS,10), Patch(DS,First(DS),{Id:2}))                    ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("AddColumns(FirstN(DS,10), Num, Collect(DS, {Id:1}); 2)               ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Concat(FirstN(DS,10), Collect(DS, {Id:1}); Text(Id))                 ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Distinct(FirstN(DS,10), Collect(DS, {Id:1}); Id)                     ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Sum(FirstN(DS,10), Collect(DS, {Id:1}); Id)                          ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Average(FirstN(DS,10), Collect(DS, {Id:1}); Id)                      ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Min(FirstN(DS,10), Collect(DS, {Id:1}); Id)                          ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("Max(FirstN(DS,10), Collect(DS, {Id:1}); Id)                          ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("VarP(FirstN(DS,10), Collect(DS, {Id:1}); Id)                         ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("StdevP(FirstN(DS,10), Collect(DS, {Id:1}); Id)                       ", "        Ok", "        Ok", "        Ok")]
-        [InlineData("ForAll(FirstN(DS,10), ClearCollect(DS, {Id:1}))                      ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("ForAll(FirstN(DS,10), Clear(DS))                                     ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("AddColumns(FirstN(DS,10), Num, ClearCollect(DS, {Id:1}); 2)          ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("Concat(FirstN(DS,10), Clear(DS); Text(Id))                           ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("Distinct(FirstN(DS,10), Clear(DS); Id)                               ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("Sum(FirstN(DS,10), Clear(DS); Id)                                    ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("Average(FirstN(DS,10), Clear(DS); Id)                                ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("Min(FirstN(DS,10), Clear(DS); Id)                                    ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("Max(FirstN(DS,10), Clear(DS); Id)                                    ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("VarP(FirstN(DS,10), Clear(DS); Id)                                   ", " Unordered", " Unordered", " Unordered")]
-        [InlineData("StdevP(FirstN(DS,10), Clear(DS); Id)                                 ", " Unordered", " Unordered", " Unordered")]
+        [InlineData("ForAll(FirstN(DS,10), Collect(DS, {Id:1}))                           ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(FirstN(DS,10), Refresh(DS))                                   ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(FirstN(DS,10), Patch(DS,First(DS),{Id:2}))                    ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("AddColumns(FirstN(DS,10), Num, Collect(DS, {Id:1}); 2)               ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Concat(FirstN(DS,10), Collect(DS, {Id:1}); Text(Id))                 ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Distinct(FirstN(DS,10), Collect(DS, {Id:1}); Id)                     ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Sum(FirstN(DS,10), Collect(DS, {Id:1}); Id)                          ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Average(FirstN(DS,10), Collect(DS, {Id:1}); Id)                      ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Min(FirstN(DS,10), Collect(DS, {Id:1}); Id)                          ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("Max(FirstN(DS,10), Collect(DS, {Id:1}); Id)                          ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("VarP(FirstN(DS,10), Collect(DS, {Id:1}); Id)                         ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("StdevP(FirstN(DS,10), Collect(DS, {Id:1}); Id)                       ", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok", "        Ok")]
+        [InlineData("ForAll(FirstN(DS,10), ClearCollect(DS, {Id:1}))                      ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("ForAll(FirstN(DS,10), Clear(DS))                                     ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("AddColumns(FirstN(DS,10), Num, ClearCollect(DS, {Id:1}); 2)          ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Concat(FirstN(DS,10), Clear(DS); Text(Id))                           ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Distinct(FirstN(DS,10), Clear(DS); Id)                               ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Sum(FirstN(DS,10), Clear(DS); Id)                                    ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Average(FirstN(DS,10), Clear(DS); Id)                                ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Min(FirstN(DS,10), Clear(DS); Id)                                    ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("Max(FirstN(DS,10), Clear(DS); Id)                                    ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("VarP(FirstN(DS,10), Clear(DS); Id)                                   ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
+        [InlineData("StdevP(FirstN(DS,10), Clear(DS); Id)                                 ", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered", " Unordered")]
 
-        public void TexlFunctionSelfModifyingDetection(string script, string expectedErrorDSDelegable, string expectedErrorDSNonDelegable = null, string expectedErrorVar = null)
+        public void TexlFunctionSelfModifyingDetection(string script, string expectedErrorDSDelegable, string expectedErrorDSDelegableEnhanced = null, string expectedErrorDSNonDelegable = null, string expectedErrorDSNonDelegableEnhanced = null, string expectedErrorVar = null, string expectedErrorVarEnhanced = null)
         {
-            var dataSourceSchema = TestUtils.DT("*[Id:w, Name:s]");
-
-            var symbol = new DelegatableSymbolTable();
-            
-            symbol.AddEntity(new TestDelegableDataSource(
-                    "DSdel",
-                    dataSourceSchema,
-                    new TestDelegationMetadata(
-                        new DelegationCapability(DelegationCapability.Filter | DelegationCapability.Sort | DelegationCapability.Min | DelegationCapability.Max | DelegationCapability.Average | DelegationCapability.Sum),
-                        dataSourceSchema,
-                        new FilterOpMetadata(
-                            dataSourceSchema,
-                            new Dictionary<DPath, DelegationCapability>(),
-                            new Dictionary<DPath, DelegationCapability>()
-                            {
-                                { DPath.Root.Append(new DName("Name")), new DelegationCapability(DelegationCapability.Filter | DelegationCapability.Contains) }
-                            },
-                            new DelegationCapability(DelegationCapability.Equal),
-                            null),
-                        new SortOpMetadata(
-                            dataSourceSchema,
-                            new Dictionary<DPath, DelegationCapability>())),
-                    true));
-
-            symbol.AddEntity(new TestDelegableDataSource(
-                    "DSnonDel",
-                    dataSourceSchema,
-                    new TestDelegationMetadata(
-                        new DelegationCapability(), // non delegable
-                        dataSourceSchema,
-                        new FilterOpMetadata(
-                            dataSourceSchema,
-                            new Dictionary<DPath, DelegationCapability>(),
-                            new Dictionary<DPath, DelegationCapability>
-                            {
-                                { DPath.Root.Append(new DName("Name")), new DelegationCapability(DelegationCapability.Filter | DelegationCapability.Contains) }
-                            },
-                            new DelegationCapability(DelegationCapability.Equal),
-                            null),
-                        new SortOpMetadata(
-                            dataSourceSchema,
-                            new Dictionary<DPath, DelegationCapability>())),
-                    true));
-
-            symbol.AddVariable("DSvar", new TableType(dataSourceSchema), new SymbolProperties { CanMutate = true, CanSet = true, CanSetMutate = true }, displayName: "DSVar");
-
-            symbol.AddVariable("TblVar", new TableType(dataSourceSchema), new SymbolProperties { CanMutate = true, CanSet = true, CanSetMutate = true }, displayName: "TblVar");
-
-            symbol.AddVariable("DynVar", new UntypedObjectType(), new SymbolProperties { CanMutate = true, CanSet = true, CanSetMutate = true }, displayName: "DynVar");
-
-            symbol.AddFunction(new CollectFunction());
-            symbol.AddFunction(new ClearFunction());
-            symbol.AddFunction(new ClearCollectFunction());
-            symbol.AddFunction(new RefreshFunction());
-            symbol.AddFunction(new PatchFunction());
-            symbol.AddFunction(new DistinctFunction());
-
-            var config = new PowerFxConfig
-            {
-                SymbolTable = symbol,                
-            };
-
-            var engine = new Engine(config);
-
-            var parserOptions = new ParserOptions
-            {
-                AllowsSideEffects = true,
-            };
-
-            TestDS("DSdel", expectedErrorDSDelegable);
-
-            if (expectedErrorDSNonDelegable != null)
-            {
-                TestDS("DSnonDel", expectedErrorDSNonDelegable);
-            }
-
-            if (expectedErrorVar != null)
-            {
-                TestDS("DSvar", expectedErrorVar);
-            }
-
-            void TestDS(string dsType, string expectedError)
-            {
-                var scriptDS = script.Replace("DS", dsType);
-                var result = engine.Check(scriptDS, options: parserOptions);
-                string expectedKey = null;
-
-                expectedError = expectedError.Trim();
-
-                switch (expectedError)
+            TexlTestUtils.TexlCheckFunctionSideEffects(
+                symbol =>
                 {
-                    case "SelfMod":
-                        expectedKey = "ErrScopeModification";
-                        break;
-                    case "Unordered":
-                        expectedKey = "ErrFunctionDisallowedWithinNondeterministicOperationOrder";
-                        break;
-                    case "FilterNoSE":
-                        expectedKey = "ErrFilterFunctionBahaviorAsPredicate";
-                        break;
-                    case "NonDelWarn":
-                        expectedKey = "SuggestRemoteExecutionHint";
-                        break;
-                    case "NonDelWnOp":
-                        expectedKey = "SuggestRemoteExecutionHint_OpNotSupportedByService";
-                        break;
-                    case "NoUntyped":
-                        expectedKey = "ErrUntypedObjectScope";
-                        break;
-                    case "BadType":
-                        expectedKey = "ErrBadType";
-                        break;
-                    case "BadTypeExp":
-                        expectedKey = "ErrBadType_ExpectedType_ProvidedType";
-                        break;
-                    case "InvalidArg":
-                        expectedKey = "ErrInvalidArgs_Func";
-                        break;
-                    case "IdentName":
-                        expectedKey = "ErrExpectedIdentifierArg_Name";
-                        break;  
-                    case "Ok":
-                        break;
-                    default:
-                        Assert.Fail(dsType + ": Unrecognized expected error type: " + expectedError);
-                        break;
-                }
-
-                if (expectedKey == null)
-                {
-                    Assert.True(
-                        result.Errors.Count() == 0,
-                        $"Unexpected errors were encountered for {dsType}: {string.Join(", ", result.Errors.Select(err => err.MessageKey))}");
-                }
-                else
-                {
-                    Assert.True(
-                        result.Errors.Any(err => err.MessageKey.Contains(expectedKey)),
-                        $"Expected error {expectedKey} ({expectedError}) was not found for {dsType}, instead found: {(result.Errors.Count() == 0 ? "<no errors>" : string.Join(", ", result.Errors.Select(err => err.MessageKey)))}");
-                }
-            }
+                    symbol.AddFunction(new CollectFunction());
+                    symbol.AddFunction(new ClearFunction());
+                    symbol.AddFunction(new ClearCollectFunction());
+                    symbol.AddFunction(new RefreshFunction());
+                    symbol.AddFunction(new PatchFunction());
+                    symbol.AddFunction(new DistinctFunction());
+                },
+                script,
+                expectedErrorDSDelegable,
+                expectedErrorDSDelegableEnhanced,
+                expectedErrorDSNonDelegable,
+                expectedErrorDSNonDelegableEnhanced,
+                expectedErrorVar,
+                expectedErrorVarEnhanced);
         }
 
         [Theory]
@@ -4966,7 +4842,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new Engine(config);
             var result = engine.Check(script);
 
-            Assert.NotNull(result.Binding);        
+            Assert.NotNull(result.Binding);
             Assert.Equal(isPure, result.Binding.IsPure(result.Parse.Root));
         }
 
@@ -4980,7 +4856,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var engine = new Engine(config);
             var result = engine.Check(script, parserOptions, symbolTable);
-            
+
             Assert.Equal(expectedType, result.Binding.ResultType);
             Assert.True(result.Binding.ErrorContainer.HasErrors());
             if (expectedErrorCount != null)
@@ -5064,6 +4940,171 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(expectedType, result.Binding.ResultType);
             Assert.False(result.Binding.ErrorContainer.HasErrors());
             Assert.True(result.IsSuccess);
+        }
+    }
+
+    public partial class TexlTestUtils
+    {
+        public static void TexlCheckFunctionSideEffects(Action<SymbolTable> addFunctions, string script, string expectedErrorDSDelegable, string expectedErrorDSDelegableEnhanced = null, string expectedErrorDSNonDelegable = null, string expectedErrorDSNonDelegableEnhanced = null, string expectedErrorVar = null, string expectedErrorVarEnhanced = null)
+        {
+            var dataSourceSchema = TestUtils.DT("*[Id:w, Name:s]");
+
+            var symbol = new DelegatableSymbolTable();
+
+            symbol.AddEntity(new TestDelegableDataSource(
+                    "DSdel",
+                    dataSourceSchema,
+                    new TestDelegationMetadata(
+                        new DelegationCapability(DelegationCapability.Filter | DelegationCapability.Sort | DelegationCapability.Min | DelegationCapability.Max | DelegationCapability.Average | DelegationCapability.Sum),
+                        dataSourceSchema,
+                        new FilterOpMetadata(
+                            dataSourceSchema,
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new Dictionary<DPath, DelegationCapability>()
+                            {
+                                { DPath.Root.Append(new DName("Name")), new DelegationCapability(DelegationCapability.Filter | DelegationCapability.Contains) }
+                            },
+                            new DelegationCapability(DelegationCapability.Equal),
+                            null),
+                        new SortOpMetadata(
+                            dataSourceSchema,
+                            new Dictionary<DPath, DelegationCapability>())),
+                    true));
+
+            symbol.AddEntity(new TestDelegableDataSource(
+                    "DSnonDel",
+                    dataSourceSchema,
+                    new TestDelegationMetadata(
+                        new DelegationCapability(), // non delegable
+                        dataSourceSchema,
+                        new FilterOpMetadata(
+                            dataSourceSchema,
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new Dictionary<DPath, DelegationCapability>
+                            {
+                                { DPath.Root.Append(new DName("Name")), new DelegationCapability(DelegationCapability.Filter | DelegationCapability.Contains) }
+                            },
+                            new DelegationCapability(DelegationCapability.Equal),
+                            null),
+                        new SortOpMetadata(
+                            dataSourceSchema,
+                            new Dictionary<DPath, DelegationCapability>())),
+                    true));
+
+            symbol.AddVariable("DSvar", new TableType(dataSourceSchema), new SymbolProperties { CanMutate = true, CanSet = true, CanSetMutate = true }, displayName: "DSVar");
+
+            symbol.AddVariable("TblVar", new TableType(dataSourceSchema), new SymbolProperties { CanMutate = true, CanSet = true, CanSetMutate = true }, displayName: "TblVar");
+
+            symbol.AddVariable("DynVar", new UntypedObjectType(), new SymbolProperties { CanMutate = true, CanSet = true, CanSetMutate = true }, displayName: "DynVar");
+
+            symbol.AddVariable("TblDynVar", new UntypedObjectType(), new SymbolProperties { CanMutate = true, CanSet = true, CanSetMutate = true }, displayName: "TblDynVar");
+
+            addFunctions(symbol);
+
+            // Engine without enhanced variable iteration checks.
+            var config = new PowerFxConfig { SymbolTable = symbol };
+            var engine = new Engine(config);
+
+            // And an engine with enhanced chceks. Both share the same symbol table, but that should be OK as there are no changes to it.
+            var configEnhanced = new PowerFxConfig(new Features(Features.PowerFxV1) { EnhancedIterationChecks = true }) { SymbolTable = symbol };
+            var engineEnhanced = new Engine(configEnhanced);
+
+            // Shared parser options.
+            var parserOptions = new ParserOptions { AllowsSideEffects = true };
+
+            TestDS(engine, "DSdel", expectedErrorDSDelegable);
+
+            if (expectedErrorDSDelegableEnhanced != null)
+            {
+                TestDS(engineEnhanced, "DSdel", expectedErrorDSDelegableEnhanced);
+            }
+
+            if (expectedErrorDSNonDelegable != null)
+            {
+                TestDS(engine, "DSnonDel", expectedErrorDSNonDelegable);
+            }
+
+            if (expectedErrorDSNonDelegableEnhanced != null)
+            {
+                TestDS(engineEnhanced, "DSnonDel", expectedErrorDSNonDelegableEnhanced);
+            }
+
+            if (expectedErrorVar != null)
+            {
+                TestDS(engine, "DSvar", expectedErrorVar);
+            }
+
+            if (expectedErrorVarEnhanced != null)
+            {
+                TestDS(engineEnhanced, "DSvar", expectedErrorVarEnhanced);
+            }
+
+            void TestDS(Engine engine, string dsType, string expectedError)
+            {
+                var scriptDS = script.Replace("DS", dsType);
+                var result = engine.Check(scriptDS, options: parserOptions);
+                string expectedKey = null;
+
+                expectedError = expectedError.Trim();
+
+                switch (expectedError)
+                {
+                    case "SelfMod":
+                        expectedKey = "ErrScopeModification";
+                        break;
+                    case "Unordered":
+                        expectedKey = "ErrFunctionDisallowedWithinNondeterministicOperationOrder";
+                        break;
+                    case "FilterNoSE":
+                        expectedKey = "ErrFilterFunctionBahaviorAsPredicate";
+                        break;
+                    case "NonDelWarn":
+                        expectedKey = "SuggestRemoteExecutionHint";
+                        break;
+                    case "NonDelWnOp":
+                        expectedKey = "SuggestRemoteExecutionHint_OpNotSupportedByService";
+                        break;
+                    case "CantMod":
+                        expectedKey = "ErrNeedValidVariableName_Arg";
+                        break;
+                    case "Immutable":
+                        expectedKey = "ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue";
+                        break;
+                    case "NoUntyped":
+                        expectedKey = "ErrUntypedObjectScope";
+                        break;
+                    case "BadType":
+                        expectedKey = "ErrBadType";
+                        break;
+                    case "BadTypeExp":
+                        expectedKey = "ErrBadType_ExpectedType_ProvidedType";
+                        break;
+                    case "InvalidArg":
+                        expectedKey = "ErrInvalidArgs_Func";
+                        break;
+                    case "IdentName":
+                        expectedKey = "ErrExpectedIdentifierArg_Name";
+                        break;
+                    case "Ok":
+                        break;
+                    default:
+                        Assert.Fail($"{dsType} : Unrecognized expected error type: {expectedError}");
+                        break;
+                }
+
+                if (expectedKey == null)
+                {
+                    Assert.True(
+                        result.Errors.Count() == 0,
+                        $"Unexpected errors were encountered for {dsType} with enhanced={engine.Config.Features.EnhancedIterationChecks}: {string.Join(", ", result.Errors.Select(err => err.MessageKey))}");
+                }
+                else
+                {
+                    Assert.True(
+                        result.Errors.Any(err => err.MessageKey.Contains(expectedKey)),
+                        $"Expected error {expectedKey} ({expectedError}) was not found for {dsType} with enhanced={engine.Config.Features.EnhancedIterationChecks}, instead found: {(result.Errors.Count() == 0 ? "<no errors>" : string.Join(", ", result.Errors.Select(err => err.MessageKey)))}");
+                }
+            }
         }
     }
 }
