@@ -127,6 +127,9 @@ namespace Microsoft.PowerFx.Core.Functions
         // that have a nondeterministic operation order (due to multiple async calls).
         public virtual bool AllowedWithinNondeterministicOperationOrder => true;
 
+        // Allows override for functions for which this depends on enalbed features, in particular EnhancedIterationFunctionChecks.
+        public virtual bool AllowedWithinNondeterministicOperationOrderWithFeatures(Features features) => AllowedWithinNondeterministicOperationOrder;
+
         /// <summary>
         /// Whether the function always produces a visible error if CheckTypes returns invalid.
         /// This can be used to prevent the overall "Function has invalid arguments" error.
