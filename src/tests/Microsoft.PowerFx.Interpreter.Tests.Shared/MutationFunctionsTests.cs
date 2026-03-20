@@ -638,8 +638,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [InlineData("ForAll(DS, Set(DS, [{Id:1,Name:\"a\"}]))                                        ", "   SelfMod", "   SelfMod", "   SelfMod")]
         [InlineData("ForAll(DS, Set(First(DS).Id, 3))                                                ", " Immutable", " Immutable", "        Ok")]
+        [InlineData("ForAll(DS, If(ThisRecord.Id>1, Set(DS, [{Id:1,Name:\"a\"}])))                   ", "   SelfMod", "   SelfMod", "   SelfMod")]
+        [InlineData("ForAll(DS, If(Id>1, Set(DS, [{Id:1,Name:\"a\"}])))                              ", "   SelfMod", "   SelfMod", "   SelfMod")]
         [InlineData("AddColumns(DS, Num, Set(DS, [{Id:1,Name:\"a\"}]); 2)                            ", "   SelfMod", "   SelfMod", "   SelfMod")]
         [InlineData("AddColumns(DS, Num, Set(First(DS).Id, 3); 2)                                    ", " Immutable", " Immutable", "        Ok")]
+        [InlineData("AddColumns(DS, Num, If(ThisRecord.Id>1,Set(DS, [{Id:1,Name:\"a\"}]); 2))        ", "   SelfMod", "   SelfMod", "   SelfMod")]
+        [InlineData("AddColumns(DS, Num, If(Id>1,Set(DS, [{Id:1,Name:\"a\"}]); 2))                   ", "   SelfMod", "   SelfMod", "   SelfMod")]
         [InlineData("Concat(DS, Set(DS, [{Id:1,Name:\"a\"}]); Text(Id))                              ", "   SelfMod", "   SelfMod", "   SelfMod")]
         [InlineData("Distinct(DS, Set(DS, [{Id:1,Name:\"a\"}]); Id)                                  ", "   SelfMod", "   SelfMod", "   SelfMod")]
         [InlineData("Sum(DS, Set(DS, [{Id:1,Name:\"a\"}]); Id)                                       ", "   SelfMod", "   SelfMod", "   SelfMod")]
@@ -914,7 +918,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             symbol.EnableMutationFunctions();
             symbol.AddFunction(new DistinctFunction());
 
-            var config = new PowerFxConfig
+            var config = new PowerFxConfig(new Features(Features.PowerFxV1) { EnhancedIterationFunctionChecks = true })
             {
                 SymbolTable = symbol,
             };

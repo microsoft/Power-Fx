@@ -4983,7 +4983,8 @@ namespace Microsoft.PowerFx.Core.Binding
                             }
 
                             // Also check for global table variables (not external data sources)
-                            if (TryGetFirstArgGlobalTableVariable(node, out var modifiedVar) &&
+                            if (_txb.Features.EnhancedIterationFunctionChecks && 
+                                TryGetFirstArgGlobalTableVariable(node, out var modifiedVar) &&
                                 TryGetFirstArgGlobalTableVariable(ancestorScope.Call, out var iteratedVar) &&
                                 modifiedVar == iteratedVar)
                             {

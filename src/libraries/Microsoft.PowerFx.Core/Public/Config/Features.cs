@@ -125,6 +125,7 @@ namespace Microsoft.PowerFx
             PowerFxV1CompatibilityRules = other.PowerFxV1CompatibilityRules;
             PrimaryOutputPropertyCoercionDeprecated = other.PrimaryOutputPropertyCoercionDeprecated;
             IsUserDefinedTypesEnabled = other.IsUserDefinedTypesEnabled;
+            EnhancedIterationFunctionChecks = other.EnhancedIterationFunctionChecks;
             AsTypeLegacyCheck = other.AsTypeLegacyCheck;
             JsonFunctionAcceptsLazyTypes = other.JsonFunctionAcceptsLazyTypes;
         }
