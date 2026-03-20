@@ -555,28 +555,28 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("RenameColumns(DS, Name, Remove(DS, {}); NewName )                               ", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName")]
         [InlineData("RenameColumns(DS, Remove(DS, {}); Name, NewName )                               ", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName")]
 
-        // Untyped objects can be iterated only by ForAll                                                 dynamic DS
+        // Untyped objects can be iterated only by ForAll                                                 dynamic DS, enhanced
 
-        [InlineData("ForAll(DynVar, Set(DynVar, TblDynVar))                                          ", "        Ok")]
-        [InlineData("ForAll(DynVar, Set(First(DynVar), TblDynVar))                                   ", " Immutable")]
-        [InlineData("ForAll(DynVar, Clear(TblVar))                                                   ", " Unordered")]
-        [InlineData("ForAll(DynVar, Collect(DynVar, {Id:1}))                                         ", "InvalidArg")]
-        [InlineData("ForAll(DynVar, Clear(DynVar))                                                   ", "BadTypeExp")]
+        [InlineData("ForAll(DynVar, Set(DynVar, TblDynVar))                                          ", "        Ok", "        Ok")]
+        [InlineData("ForAll(DynVar, Set(First(DynVar), TblDynVar))                                   ", " Immutable", " Immutable")]
+        [InlineData("ForAll(DynVar, Clear(TblVar))                                                   ", " Unordered", " Unordered")]
+        [InlineData("ForAll(DynVar, Collect(DynVar, {Id:1}))                                         ", "InvalidArg", "InvalidArg")]
+        [InlineData("ForAll(DynVar, Clear(DynVar))                                                   ", "BadTypeExp", "BadTypeExp")]
 
-        [InlineData("Filter(DynVar, Set(DynVar, TblDynVar); 1=1)                                     ", "   BadType")]
-        [InlineData("LookUp(DynVar, Set(DynVar, TblDynVar); 1=1)                                     ", "   BadType")]
-        [InlineData("CountIf(DynVar, Set(DynVar, TblDynVar); 1=1)                                    ", "   BadType")]
-        [InlineData("AddColumns(DynVar, Num, Set(DynVar, TblDynVar); 2)                              ", "   BadType")]
-        [InlineData("Concat(DynVar, Set(DynVar, TblDynVar); Text(Id))                                ", "   BadType")]
-        [InlineData("Distinct(DynVar, Set(DynVar, TblDynVar); Id)                                    ", "   BadType")]
-        [InlineData("Sum(DynVar, Set(DynVar, TblDynVar); Id)                                         ", " NoUntyped")]
-        [InlineData("Average(DynVar, Set(DynVar, TblDynVar); Id)                                     ", " NoUntyped")]
-        [InlineData("Min(DynVar, Set(DynVar, TblDynVar); Id)                                         ", " NoUntyped")]
-        [InlineData("Max(DynVar, Set(DynVar, TblDynVar); Id)                                         ", " NoUntyped")]
-        [InlineData("VarP(DynVar, Set(DynVar, TblDynVar); Id)                                        ", " NoUntyped")]
-        [InlineData("StdevP(DynVar, Set(DynVar, TblDynVar); Id)                                      ", " NoUntyped")]
-        [InlineData("Search(DynVar, Set(DynVar, TblDynVar); \"b\", Name)                             ", "   BadType")]
-        [InlineData("With(First(DynVar), Set(DynVar, TblDynVar))                                     ", "   BadType")]
+        [InlineData("Filter(DynVar, Set(DynVar, TblDynVar); 1=1)                                     ", "   BadType", "   BadType")]
+        [InlineData("LookUp(DynVar, Set(DynVar, TblDynVar); 1=1)                                     ", "   BadType", "   BadType")]
+        [InlineData("CountIf(DynVar, Set(DynVar, TblDynVar); 1=1)                                    ", "   BadType", "   BadType")]
+        [InlineData("AddColumns(DynVar, Num, Set(DynVar, TblDynVar); 2)                              ", "   BadType", "   BadType")]
+        [InlineData("Concat(DynVar, Set(DynVar, TblDynVar); Text(Id))                                ", "   BadType", "   BadType")]
+        [InlineData("Distinct(DynVar, Set(DynVar, TblDynVar); Id)                                    ", "   BadType", "   BadType")]
+        [InlineData("Sum(DynVar, Set(DynVar, TblDynVar); Id)                                         ", " NoUntyped", " NoUntyped")]
+        [InlineData("Average(DynVar, Set(DynVar, TblDynVar); Id)                                     ", " NoUntyped", " NoUntyped")]
+        [InlineData("Min(DynVar, Set(DynVar, TblDynVar); Id)                                         ", " NoUntyped", " NoUntyped")]
+        [InlineData("Max(DynVar, Set(DynVar, TblDynVar); Id)                                         ", " NoUntyped", " NoUntyped")]
+        [InlineData("VarP(DynVar, Set(DynVar, TblDynVar); Id)                                        ", " NoUntyped", " NoUntyped")]
+        [InlineData("StdevP(DynVar, Set(DynVar, TblDynVar); Id)                                      ", " NoUntyped", " NoUntyped")]
+        [InlineData("Search(DynVar, Set(DynVar, TblDynVar); \"b\", Name)                             ", "   BadType", "   BadType")]
+        [InlineData("With(First(DynVar), Set(DynVar, TblDynVar))                                     ", "   BadType", "   BadType")]
 
         // Deep mutations are not supported on the iterated record                                      delegable DS, enhanced    ,   non-del DS, enhanced    ,  variable DS, enhanced
 
