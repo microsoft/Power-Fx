@@ -77,6 +77,15 @@ namespace Microsoft.PowerFx
         /// </summary>
         internal bool IsUserDefinedTypesEnabled { get; init; } = false;
 
+        /// <summary>
+        /// Enhanced checks for iteration functions (ForAll, Sum, AddColumns, ...) for:
+        /// 1. Recalc engine Set function is not allowed in the lambda of an iteration, in the same manner that 
+        ///    Clear and ClearCollect are not allowed. The Canvas Set function was already blocked. 
+        /// 2. Global variables are blocked from self-modification, just as data sources have always been.
+        ///    This became problematic when Canvas changed collection from being based on a data source to being based on a global variable.
+        /// </summary>
+        internal bool EnhancedIterationFunctionChecks { get; init; }
+
         internal static readonly Features None = new Features();
 
         /// <summary>
