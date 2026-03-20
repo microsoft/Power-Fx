@@ -4590,27 +4590,27 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("RenameColumns(DS, Name, Clear(DS); NewName )                         ", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName")]
         [InlineData("RenameColumns(DS, Clear(DS); Name, NewName )                         ", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName", " IdentName")]
 
-        // Untyped objects can be iterated only by ForAll                                      dynamic DS
+        // Untyped objects can be iterated only by ForAll                                      dynamic DS, enhanced
 
-        [InlineData("ForAll(DynVar, Collect(TblVar, {Id:1}))                              ", "        Ok")]
-        [InlineData("ForAll(DynVar, Clear(TblVar))                                        ", " Unordered")]
-        [InlineData("ForAll(DynVar, Collect(DynVar, {Id:1}))                              ", "InvalidArg")]
-        [InlineData("ForAll(DynVar, Clear(DynVar))                                        ", "BadTypeExp")]
+        [InlineData("ForAll(DynVar, Collect(TblVar, {Id:1}))                              ", "        Ok", "        Ok")]
+        [InlineData("ForAll(DynVar, Clear(TblVar))                                        ", " Unordered", " Unordered")]
+        [InlineData("ForAll(DynVar, Collect(DynVar, {Id:1}))                              ", "InvalidArg", "InvalidArg")]
+        [InlineData("ForAll(DynVar, Clear(DynVar))                                        ", "BadTypeExp", "BadTypeExp")]
 
-        [InlineData("Filter(DynVar, Collect(TblVar, {Id:1}); 1=1)                         ", "   BadType")]
-        [InlineData("LookUp(DynVar, Collect(TblVar, {Id:1}); 1=1)                         ", "   BadType")]
-        [InlineData("CountIf(DynVar, Collect(TblVar, {Id:1}); 1=1)                        ", "   BadType")]
-        [InlineData("AddColumns(DynVar, Num, Collect(TblVar, {Id:1}); 2)                  ", "   BadType")]
-        [InlineData("Concat(DynVar, Collect(TblVar, {Id:1}); Text(Id))                    ", "   BadType")]
-        [InlineData("Distinct(DynVar, Collect(TblVar, {Id:1}); Id)                        ", "   BadType")]
-        [InlineData("Sum(DynVar, Collect(TblVar, {Id:1}); Id)                             ", " NoUntyped")]
-        [InlineData("Average(DynVar, Collect(TblVar, {Id:1}); Id)                         ", " NoUntyped")]
-        [InlineData("Min(DynVar, Collect(TblVar, {Id:1}); Id)                             ", " NoUntyped")]
-        [InlineData("Max(DynVar, Collect(TblVar, {Id:1}); Id)                             ", " NoUntyped")]
-        [InlineData("VarP(DynVar, Collect(TblVar, {Id:1}); Id)                            ", " NoUntyped")]
-        [InlineData("StdevP(DynVar, Collect(TblVar, {Id:1}); Id)                          ", " NoUntyped")]
-        [InlineData("Search(DynVar, Clear(TblVar); \"b\", Name)                           ", "   BadType")]
-        [InlineData("With(First(DynVar), Collect(TblVar, {Id:1}))                         ", "   BadType")]
+        [InlineData("Filter(DynVar, Collect(TblVar, {Id:1}); 1=1)                         ", "   BadType", "   BadType")]
+        [InlineData("LookUp(DynVar, Collect(TblVar, {Id:1}); 1=1)                         ", "   BadType", "   BadType")]
+        [InlineData("CountIf(DynVar, Collect(TblVar, {Id:1}); 1=1)                        ", "   BadType", "   BadType")]
+        [InlineData("AddColumns(DynVar, Num, Collect(TblVar, {Id:1}); 2)                  ", "   BadType", "   BadType")]
+        [InlineData("Concat(DynVar, Collect(TblVar, {Id:1}); Text(Id))                    ", "   BadType", "   BadType")]
+        [InlineData("Distinct(DynVar, Collect(TblVar, {Id:1}); Id)                        ", "   BadType", "   BadType")]
+        [InlineData("Sum(DynVar, Collect(TblVar, {Id:1}); Id)                             ", " NoUntyped", " NoUntyped")]
+        [InlineData("Average(DynVar, Collect(TblVar, {Id:1}); Id)                         ", " NoUntyped", " NoUntyped")]
+        [InlineData("Min(DynVar, Collect(TblVar, {Id:1}); Id)                             ", " NoUntyped", " NoUntyped")]
+        [InlineData("Max(DynVar, Collect(TblVar, {Id:1}); Id)                             ", " NoUntyped", " NoUntyped")]
+        [InlineData("VarP(DynVar, Collect(TblVar, {Id:1}); Id)                            ", " NoUntyped", " NoUntyped")]
+        [InlineData("StdevP(DynVar, Collect(TblVar, {Id:1}); Id)                          ", " NoUntyped", " NoUntyped")]
+        [InlineData("Search(DynVar, Clear(TblVar); \"b\", Name)                           ", "   BadType", "   BadType")]
+        [InlineData("With(First(DynVar), Collect(TblVar, {Id:1}))                         ", "   BadType", "   BadType")]
 
         // non self modifying                                                                delegable DS, enhanced    ,   non-del DS, enhanced    ,  variable DS, enhanced 
 
