@@ -4832,6 +4832,83 @@ namespace Microsoft.PowerFx.Core.Tests
                 features: Features.PowerFxV1);
         }
 
+        [Theory]
+
+        // Exact type match: all arguments directly match the data source schema *[Name:s, Value:n]
+        [InlineData("Patch(MyDataSource, MyRecord, { Name: \"Hello\", Value: 1 })", true)]
+
+        // Exact type match: all arguments directly match the data source schema using display names
+        [InlineData("Patch(MyDataSource, MyRecord, { DisplayNameForName: \"Hello\", DisplayNameForValue: 1 })", true)]
+
+        // Coercions: date values to 'Value' column (number) - safe coercion, accepted
+        [InlineData("Patch(MyDataSource, MyRecord, { Name: \"Hello\", Value: Today() })", true)]
+
+        // String to number is an unsafe coercion (ill-formatted strings coerce to null), rejected by Patch
+        [InlineData("Patch(MyDataSource, MyRecord, { Name: \"Hello\", Value: \"42\" })", false)]
+
+        // Coercions: number/date values to 'Name' column (string)
+        [InlineData("Patch(MyDataSource, MyRecord, { Name: 42, Value: 1 })", true)]
+        [InlineData("Patch(MyDataSource, MyRecord, { Name: Today(), Value: 1 })", true)]
+
+        // Invalid: column does not exist in the data source schema
+        [InlineData("Patch(MyDataSource, MyRecord, { NonExistentField: \"Hello\" })", false)]
+
+        // Invalid: record value cannot coerce to a number field
+        [InlineData("Patch(MyDataSource, MyRecord, { Name: \"Hello\", Value: { X: 1 } })", false)]
+
+        // Invalid: table value cannot coerce to a string field
+        [InlineData("Patch(MyDataSource, MyRecord, { Name: [1, 2, 3], Value: 1 })", false)]
+
+        // Invalid: control cannot be coerced to a string field
+        [InlineData("Patch(MyDataSource, MyRecord, { Name: TextInputControl, Value: 1 })", false)]
+
+        // Invalid: control cannot be coerced to a string field (multiple updates)
+        [InlineData("Patch(MyDataSource, MyRecord, { Name: TextInputControl}, { Value: 1 })", false)]
+
+        // Invalid: control cannot be coerced to a string field (using display names)
+        [InlineData("Patch(MyDataSource, MyRecord, { DisplayNameForName: TextInputControl, DisplayNameForValue: 1 })", false)]
+
+        // Valid: gallery selection can be passed as the second argument even if it has
+        // extra fields that represent its children controls.
+        [InlineData("Patch(MyDataSource, Gallery1.Selected, { Name: \"Hello\", Value: 1 })", true)]
+        public void TexlPatchWithDataSourceArgumentValidation(string expression, bool expectSuccess)
+        {
+            foreach (var powerFxV1 in new[] { true, false })
+            {
+                var schema = TestUtils.DT("*[Name:s, Value:n]");
+                var config = powerFxV1 ? new PowerFxConfig() : new PowerFxConfig(new Features() { PowerFxV1CompatibilityRules = false });
+                var engine = new Engine(config);
+                engine.Config.SymbolTable.AddFunction(new PatchFunction());
+                var myDataSource = new TestDataSource("MyDataSource", schema);
+                myDataSource.DisplayNameMapping.Add("Name", "DisplayNameForName");
+                myDataSource.DisplayNameMapping.Add("Value", "DisplayNameForValue");
+                engine.Config.SymbolTable.AddEntity(myDataSource);
+                engine.Config.SymbolTable.AddVariable("MyRecord", FormulaType.Build(schema.ToRecord()));
+                var controlType = new DType(DKind.Control);
+                engine.Config.SymbolTable.AddVariable("TextInputControl", FormulaType.Build(controlType));
+                var galleryType = DType.EmptyRecord.Add(
+                    new DName("Selected"), DType.EmptyRecord
+                        .Add(new DName("Name"), DType.String)
+                        .Add(new DName("Value"), DType.Number)
+                        .Add(new DName("TextInput1"), controlType)
+                        .Add(new DName("Label1"), controlType)
+                        .Add(new DName("Arrow1"), controlType));
+                engine.Config.SymbolTable.AddVariable("Gallery1", FormulaType.Build(galleryType));
+
+                var options = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = true };
+                var result = engine.Check(expression, options);
+                if (expectSuccess)
+                {
+                    Assert.True(result.IsSuccess, $"[PowerFxV1 {powerFxV1}] Expression should succeed: {expression}");
+                    Assert.Equal(TestUtils.DT("![Name:s, Value:n]"), result.Binding.ResultType);
+                }
+                else
+                {
+                    Assert.False(result.IsSuccess, $"[PowerFxV1 {powerFxV1}] Expression should fail: {expression}");
+                }
+            }
+        }
+
         private void TestBindingPurity(string script, bool isPure, SymbolTable symbolTable = null)
         {
             var config = new PowerFxConfig
