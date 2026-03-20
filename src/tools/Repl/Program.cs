@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx
         private const string OptionUDF = "UserDefinedFunctions";
         private static bool _enableUDFs = true;
 
-        private static readonly Features _features = Features.PowerFxV1_1;
+        private static readonly Features _features = Features.PowerFxV2;
 
         private static StandardFormatter _standardFormatter;
 
@@ -176,7 +176,7 @@ namespace Microsoft.PowerFx
             {
                 if (prop.PropertyType == typeof(bool) && prop.CanWrite)
                 {
-                    _featureVersion.Add(prop.Name, (bool)prop.GetValue(Features.PowerFxV1) ? "V1" : (bool)prop.GetValue(Features.PowerFxV1_1) ? "V1_1" : null);
+                    _featureVersion.Add(prop.Name, (bool)prop.GetValue(Features.PowerFxV1) ? "V1" : (bool)prop.GetValue(Features.PowerFxV2) ? "V2" : null);
                 }
             }
 

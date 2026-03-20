@@ -83,6 +83,7 @@ namespace Microsoft.PowerFx
         ///    Clear and ClearCollect are not allowed. The Canvas Set function was already blocked. 
         /// 2. Global variables are blocked from self-modification, just as data sources have always been.
         ///    This became problematic when Canvas changed collection from being based on a data source to being based on a global variable.
+        /// This will break existing formulas and cannot be included in V1.
         /// </summary>
         internal bool EnhancedIterationChecks { get; init; }
 
@@ -109,7 +110,7 @@ namespace Microsoft.PowerFx
             IsUserDefinedTypesEnabled = true
         };
 
-        public static readonly Features PowerFxV1_1 = new Features(_powerFxV1)
+        public static readonly Features PowerFxV2 = new Features(_powerFxV1)
         {
             EnhancedIterationChecks = true
         };
