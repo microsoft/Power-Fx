@@ -150,23 +150,31 @@ namespace Microsoft.PowerFx.Core.Tests
         //To test DefinitionsCheckResult.ApplyErrors method and error messages
         [InlineData("Point := Type({ x: Number, y: Number }); Point := Type(Number);", 1, "ErrNamedType_TypeAlreadyDefined")]
         [InlineData("X:= Type({ f:Number, f:Number});", 1, "ErrNamedType_InvalidTypeDeclaration")]
-        [InlineData("B := Type({ x: A }); A := Type(B);", 2, "ErrNamedType_InvalidCycles")]
+        [InlineData("B := Type({ x: A }); A := Type(B);", 2, "ErrNamedType_InvalidCycles", "ErrNamedType_InvalidCycles")]
         [InlineData("B := Type(B);", 1, "ErrNamedType_InvalidCycles")]
-        [InlineData("Currency := Type({x: Text}); Record := Type([DateTime]);", 2, "ErrNamedType_InvalidTypeName")]
-        [InlineData("D := Type(None); E := Type(Void);", 2, "ErrNamedType_InvalidTypeDeclaration")]
+        [InlineData("Currency := Type({x: Text}); Record := Type([DateTime]);", 2, "ErrNamedType_InvalidTypeName", "ErrNamedType_InvalidTypeName")]
+        [InlineData("D := Type(None); E := Type(Void);", 2, "ErrNamedType_InvalidTypeDeclaration", "ErrNamedType_InvalidTypeDeclaration")]
         [InlineData("A := 5;C :=; B := Type(Number);", 1, "ErrNamedType_MissingTypeExpression")]
         [InlineData("T := Type([{a: {b: Void}}]);", 1, "ErrNamedType_InvalidTypeDeclaration")]
         [InlineData("T := Type([Void]);", 1, "ErrNamedType_InvalidTypeDeclaration")]
         [InlineData("T := Type({a: Void});", 1, "ErrNamedType_InvalidTypeDeclaration")]
-        public void TestUDTErrors(string typeDefinition, int expectedErrorCount, string expectedMessageKey)
+        [InlineData(
+            "T := Type({ A: Text, Lists: [ List ] }); List := Type({ B: Text, C: [ListItem] }); ListItem := Type({ D: Number });",
+            2,
+            "ErrNamedType_InvalidTypeName",
+            "ErrNamedType_InvalidTypeDeclaration")]
+        public void TestUDTErrors(string typeDefinition, int expectedErrorCount, params string[] expectedMessageKeys)
         {
             var checkResult = new DefinitionsCheckResult()
                                             .SetText(typeDefinition)
                                             .SetBindingInfo(UDTTestHelper.TestTypesWithNumberTypeIsFloat);
-            var errors = checkResult.ApplyErrors();
+            var errors = checkResult.ApplyErrors().ToArray();
 
-            Assert.Equal(expectedErrorCount, errors.Count());
-            Assert.All(errors, e => Assert.Contains(expectedMessageKey, e.MessageKey));
+            Assert.Equal(expectedErrorCount, errors.Length);
+            for (int i = 0; i < expectedMessageKeys.Length; i++)
+            {
+                Assert.Equal(expectedMessageKeys[i], errors[i].MessageKey);
+            }
         }
 
         [Theory]
