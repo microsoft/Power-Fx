@@ -226,6 +226,7 @@ namespace Microsoft.PowerFx.Core.Tests
         // String manipulation
         [InlineData("Replace(\"abcdef\", 1, 2, \"cd\")")]
         [InlineData("Substitute(\"abcabc\", \"a\", \"x\")")]
+        [InlineData("Concat([\"a\",\"b\"], Value)")]
 
         // More complex simple expressions
         [InlineData("If(And(true, Not(false)), Concatenate(\"Hello\", \" \", \"World\"), \"Goodbye\")")]
@@ -241,6 +242,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("IfError(1/0, 1)")] // Note, IfError is always Async (consider changing that/adding a sync version)
+        [InlineData("Concat([1,2], IfError(1/Value,Value), \",\")")] // Concat with async inner expression should fail
         [InlineData("Filter(tableVar, Value > 1)")]
         [InlineData("Filter(tableVar, ThisRecord.Value > 1)")]
         [InlineData("With(recordVar, Value > 1)")]
