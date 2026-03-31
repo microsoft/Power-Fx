@@ -528,8 +528,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutClearCollect = (b) => StringResources.Get("AboutClearCollect", b);
 
         public static StringGetter AboutRemove = (b) => StringResources.Get("AboutRemove", b);
-        public static StringGetter RemoveDataSourceArg = (b) => StringResources.Get("RemoveDataSourceArg", b);
-        public static StringGetter RemoveRecordsArg = (b) => StringResources.Get("RemoveRecordsArg", b);
+        public static StringGetter RemoveArg1 = (b) => StringResources.Get("RemoveArg1", b);
+        public static StringGetter RemoveArg2 = (b) => StringResources.Get("RemoveArg2", b);
+        public static StringGetter RemoveArg3 = (b) => StringResources.Get("RemoveArg3", b);
+        public static StringGetter RemoveAllArg2 = (b) => StringResources.Get("RemoveAllArg2", b);
 
         public static StringGetter AboutDec2Hex = (b) => StringResources.Get("AboutDec2Hex", b);
         public static StringGetter Dec2HexArg1 = (b) => StringResources.Get("Dec2HexArg1", b);
@@ -664,6 +666,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrBadSchema_AdditionalField = new ErrorResourceKey("ErrBadSchema_AdditionalField");
         public static ErrorResourceKey ErrInvalidArgs_Func = new ErrorResourceKey("ErrInvalidArgs_Func");
         public static ErrorResourceKey ErrNeedTable_Func = new ErrorResourceKey("ErrNeedTable_Func");
+        public static ErrorResourceKey ErrNeedTable_Arg = new ErrorResourceKey("ErrNeedTable_Arg");
         public static ErrorResourceKey ErrNeedTableCol_Func = new ErrorResourceKey("ErrNeedTableCol_Func");
         public static ErrorResourceKey ErrNotAccessibleInCurrentContext = new ErrorResourceKey("ErrNotAccessibleInCurrentContext");
         public static ErrorResourceKey ErrInternalControlInInputProperty = new ErrorResourceKey("ErrInternalControlInInputProperty");
@@ -940,5 +943,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrJoinDottedNameleft = new ErrorResourceKey("ErrJoinDottedNameleft");
         public static ErrorResourceKey ErrViolatedSimpleConstraintAccess = new ErrorResourceKey("ErrViolatedSimpleConstraintAccess");
         public static ErrorResourceKey ErrViolatedSimpleConstraintFunction = new ErrorResourceKey("ErrViolatedSimpleConstraintFunction");
+
+        public static ErrorResourceKey ErrCollectionDoesNotAcceptThisType = new ErrorResourceKey("ErrCollectionDoesNotAcceptThisType");
+        public static ErrorResourceKey ErrNeedAll = new ErrorResourceKey("ErrNeedAll");
+        public static ErrorResourceKey ErrNeedCollection_Func = new ErrorResourceKey("ErrNeedCollection_Func");
     }
 }
