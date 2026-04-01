@@ -227,6 +227,9 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Replace(\"abcdef\", 1, 2, \"cd\")")]
         [InlineData("Substitute(\"abcabc\", \"a\", \"x\")")]
         [InlineData("Concat([\"a\",\"b\"], Value)")]
+        [InlineData("Left(\"Hello\", 3)")]
+        [InlineData("Right(\"Hello\", 3)")]
+        [InlineData("Mid(\"Hello\", 2, 3)")]
 
         // More complex simple expressions
         [InlineData("If(And(true, Not(false)), Concatenate(\"Hello\", \" \", \"World\"), \"Goodbye\")")]
@@ -249,11 +252,15 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("With(recordVar, ThisRecord.Value > 1)")]
         [InlineData("AsType(ParseJson(\"Foo\"), Type(Text))")]
         [InlineData("Split(\"foo\", \"f\")")]
+        [InlineData("Match(\"abc\", \"a\")")]
+        [InlineData("IsMatch(\"abc\", \"a\")")]
+        [InlineData("Left(\"Hello\", numericVar)")]
         public void TestExpressionSimpleConstraintError(string expr)
         {
             var engine = new SimpleExpressionEngine();
             engine.Config.SymbolTable.AddVariable("tableVar", new TableType(TestUtils.DT("*[Value:n]")));
             engine.Config.SymbolTable.AddVariable("recordVar", new KnownRecordType(TestUtils.DT("![Value:n]")));
+            engine.Config.SymbolTable.AddVariable("numericVar", FormulaType.Number);
             var checkResult = engine.Check(expr);
             Assert.False(checkResult.IsSuccess);
         }
