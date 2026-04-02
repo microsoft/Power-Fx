@@ -87,17 +87,41 @@ namespace Microsoft.PowerFx.Types
             return FromJson(element, settings, new FormulaValueJsonSerializerWorkingData(), formulaType);  
         }
 
-        // // caller verified element is non-null and is of type string 
+        // // caller verified element is non-null and is of type string
         internal static FormulaValue ParseDate(JsonElement element, FormulaType targetType, Func<DateTime, FormulaValue> funcParse)
         {
-            var strValue = element.GetString(); 
+            var strValue = element.GetString();
             if (string.IsNullOrWhiteSpace(strValue))
             {
                 return FormulaValue.NewBlank(targetType);
             }
 
-            // Any exceptions will be caught at higher level. 
-            var dateTime = element.GetDateTime();
+            DateTime dateTime;
+
+            try
+            {
+                dateTime = element.GetDateTime();
+            }
+            catch (FormatException)
+            {
+                // element.GetDateTime() uses a strict ISO 8601 parser that rejects valid
+                // date formats commonly returned by connectors (e.g. timezone offsets
+                // without a colon like "+0000" instead of "+00:00").
+                // Fall back to the more lenient DateTimeOffset.Parse.
+                if (DateTimeOffset.TryParse(strValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto))
+                {
+                    dateTime = dto.UtcDateTime;
+                }
+                else
+                {
+                    return new ErrorValue(IRContext.NotInSource(targetType), new ExpressionError()
+                    {
+                        Message = $"Date '{strValue}' could not be parsed",
+                        Span = new Syntax.Span(0, 0),
+                        Kind = ErrorKind.InvalidArgument
+                    });
+                }
+            }
 
             var value = funcParse(dateTime);
             return value;

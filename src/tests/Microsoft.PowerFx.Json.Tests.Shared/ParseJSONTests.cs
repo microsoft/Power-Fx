@@ -601,14 +601,16 @@ namespace Microsoft.PowerFx.Json.Tests
             using var doc = JsonDocument.Parse("\"123\""); // not a date
             var je = doc.RootElement;
 
-            Assert.Throws<FormatException>(() =>
-                FormulaValueJSON.ParseDate(je, FormulaType.DateTime, (datetime) => throw new InvalidOperationException($"don't invoke this")));
+            var value = FormulaValueJSON.ParseDate(je, FormulaType.DateTime, (datetime) => throw new InvalidOperationException($"don't invoke this"));
+
+            var errorValue = Assert.IsType<ErrorValue>(value);
+            Assert.Contains("could not be parsed", errorValue.Errors[0].Message);
         }
 
         [Fact]
         public void ParseDates_Value()
         {
-            using var doc = JsonDocument.Parse("\"2024-10-02T23:13:50.123456\""); // not a date
+            using var doc = JsonDocument.Parse("\"2024-10-02T23:13:50.123456\"");
             var je = doc.RootElement;
 
             var value = FormulaValueJSON.ParseDate(je, FormulaType.DateTime, (datetime) => FormulaValue.New(datetime));
@@ -616,6 +618,40 @@ namespace Microsoft.PowerFx.Json.Tests
             var dtValue = Assert.IsType<DateTimeValue>(value);
             var dt = dtValue.GetConvertedValue(TimeZoneInfo.Local);
             Assert.Equal(2024, dt.Year);
+        }
+
+        [Fact]
+        public void ParseDates_LenientTimezoneOffset()
+        {
+            // Jira-style date with timezone offset without colon (+0000 instead of +00:00)
+            // System.Text.Json's GetDateTime() rejects this, but DateTimeOffset.Parse handles it
+            using var doc = JsonDocument.Parse("\"2026-03-26T19:18:26.729+0000\"");
+            var je = doc.RootElement;
+
+            var value = FormulaValueJSON.ParseDate(je, FormulaType.DateTime, (datetime) => FormulaValue.New(datetime));
+
+            var dtValue = Assert.IsType<DateTimeValue>(value);
+            var dt = dtValue.GetConvertedValue(TimeZoneInfo.Utc);
+            Assert.Equal(2026, dt.Year);
+            Assert.Equal(3, dt.Month);
+            Assert.Equal(26, dt.Day);
+            Assert.Equal(19, dt.Hour);
+            Assert.Equal(18, dt.Minute);
+        }
+
+        [Fact]
+        public void ParseDates_LenientTimezoneOffset_DateOnly()
+        {
+            using var doc = JsonDocument.Parse("\"2026-03-26T19:18:26.729+0000\"");
+            var je = doc.RootElement;
+
+            var value = FormulaValueJSON.ParseDate(je, FormulaType.Date, (datetime) => FormulaValue.NewDateOnly(datetime.Date));
+
+            var dtValue = Assert.IsType<DateValue>(value);
+            var dt = dtValue.GetConvertedValue(TimeZoneInfo.Utc);
+            Assert.Equal(2026, dt.Year);
+            Assert.Equal(3, dt.Month);
+            Assert.Equal(26, dt.Day);
         }
     }
 }
