@@ -19,6 +19,8 @@ internal class DummyTemplate : IExternalControlTemplate
 
     public bool ReplicatesNestedControls { get; set; } = false;
 
+    public string ActiveItemPropertyName { get; set; } = null;
+
     public IEnumerable<DName> NestedAwareTableOutputs { get; set; } = Enumerable.Empty<DName>();
 
     public bool IsComponent { get; set; } = false;
