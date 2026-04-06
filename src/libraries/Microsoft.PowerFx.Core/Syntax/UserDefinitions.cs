@@ -15,6 +15,7 @@ using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax.SourceInformation;
+using Attribute = Microsoft.PowerFx.Core.Parser.Attribute;
 
 namespace Microsoft.PowerFx.Syntax
 {
@@ -63,6 +64,37 @@ namespace Microsoft.PowerFx.Syntax
 
         private static readonly string _renamedFormulaGuid = Guid.NewGuid().ToString("N");
 
+        private enum PartialOperationKind
+        {
+            Error,
+            And,
+            Or,
+            Table,
+            Record
+        }
+
+        private static PartialOperationKind GetPartialOperationKind(string operationName)
+        {
+            switch (operationName)
+            {
+                case "And":
+                    return PartialOperationKind.And;
+                case "Or":
+                    return PartialOperationKind.Or;
+                case "Table":
+                    return PartialOperationKind.Table;
+                case "Record":
+                    return PartialOperationKind.Record;
+                default:
+                    return PartialOperationKind.Error;
+            }
+        }
+
+        private static Attribute GetPartialAttribute(IReadOnlyList<Attribute> attributes)
+        {
+            return attributes?.FirstOrDefault(a => a.Name.Name.Value == "Partial");
+        }
+
         /// <summary>
         /// For NamedFormulas with partial attributes,
         /// validates that the same attribute is applied to all matching names,
@@ -78,39 +110,47 @@ namespace Microsoft.PowerFx.Syntax
             foreach (var nameGroup in groupedFormulas)
             {
                 var name = nameGroup.Key;
-                var firstAttribute = nameGroup.Select(nf => nf.Attribute).FirstOrDefault(att => att != null);
+                var firstPartialAttribute = nameGroup.Select(nf => GetPartialAttribute(nf.Attributes)).FirstOrDefault(a => a != null);
 
-                if (firstAttribute == null || nameGroup.Count() == 1)
+                if (firstPartialAttribute == null || nameGroup.Count() == 1)
                 {
                     newFormulas.AddRange(nameGroup);
                     continue;
                 }
 
+                var firstOperationName = firstPartialAttribute.Arguments.Count > 0 ? firstPartialAttribute.Arguments[0] : null;
+                var firstOperation = firstOperationName != null ? GetPartialOperationKind(firstOperationName) : PartialOperationKind.Error;
+
                 var updatedGroupFormulas = new List<NamedFormula>();
                 var id = 0;
                 foreach (var formula in nameGroup)
                 {
-                    // This is just for the prototype, since we only have the one kind.
-                    if (formula.Attribute.AttributeName.Name != "Partial")
+                    var partialAttribute = GetPartialAttribute(formula.Attributes);
+
+                    if (partialAttribute == null || partialAttribute.Name.Name.Value != "Partial")
                     {
-                        errors.Add(new TexlError(formula.Attribute.AttributeOperationToken, DocumentErrorSeverity.Severe, TexlStrings.ErrOnlyPartialAttribute));
+                        errors.Add(new TexlError(formula.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrOnlyPartialAttribute));
                         continue;
                     }
 
-                    if (!firstAttribute.SameAttribute(formula.Attribute))
+                    var operationName = partialAttribute.Arguments.Count > 0 ? partialAttribute.Arguments[0] : null;
+                    var operation = operationName != null ? GetPartialOperationKind(operationName) : PartialOperationKind.Error;
+
+                    if (operation != firstOperation || operationName != firstOperationName)
                     {
-                        errors.Add(new TexlError(formula.Attribute.AttributeOperationToken, DocumentErrorSeverity.Severe, TexlStrings.ErrOperationDoesntMatch));
+                        errors.Add(new TexlError(partialAttribute.Name, DocumentErrorSeverity.Severe, TexlStrings.ErrOperationDoesntMatch));
                         continue;
                     }
 
                     var newName = new IdentToken(name + _renamedFormulaGuid + id, formula.Ident.Span, isNonSourceIdentToken: true);
                     id++;
-                    updatedGroupFormulas.Add(new NamedFormula(newName, formula.Formula, formula.StartingIndex, formula.ColonEqual, formula.Attribute));
+                    updatedGroupFormulas.Add(new NamedFormula(newName, formula.Formula, formula.StartingIndex, formula.ColonEqual, formula.Attributes));
                 }
 
-                if (firstAttribute.AttributeOperation == PartialAttribute.AttributeOperationKind.Error)
+                if (firstOperation == PartialOperationKind.Error)
                 {
-                    errors.Add(new TexlError(firstAttribute.AttributeOperationToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUnknownPartialOp));
+                    var errorToken = firstPartialAttribute.Arguments.Count > 0 ? firstPartialAttribute.ArgumentTokens[0] : (Token)firstPartialAttribute.Name;
+                    errors.Add(new TexlError(errorToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUnknownPartialOp));
 
                     // None of the "namemangled" formulas are valid at this point, even if they all matched, as we're not using a valid partial operation.
                     updatedGroupFormulas.Clear();
@@ -126,24 +166,24 @@ namespace Microsoft.PowerFx.Syntax
                 newFormulas.AddRange(updatedGroupFormulas);
                 newFormulas.Add(
                     new NamedFormula(
-                        new IdentToken(name, firstAttribute.AttributeName.Span, isNonSourceIdentToken: true),
-                        GetPartialCombinedFormula(name, firstAttribute.AttributeOperation, updatedGroupFormulas),
+                        new IdentToken(name, firstPartialAttribute.Name.Span, isNonSourceIdentToken: true),
+                        GetPartialCombinedFormula(name, firstOperation, updatedGroupFormulas),
                         0,
                         colonEqual: true,
-                        firstAttribute));
+                        nameGroup.First().Attributes));
             }
 
             return new ParseUserDefinitionResult(newFormulas, parsed.UDFs, parsed.DefinedTypes, errors, parsed.Comments, parsed.UserDefinitionSourceInfos, parsed.DefinitionsLikely);
         }
 
-        private Formula GetPartialCombinedFormula(string name, PartialAttribute.AttributeOperationKind operationKind, IList<NamedFormula> formulas)
+        private Formula GetPartialCombinedFormula(string name, PartialOperationKind operationKind, IList<NamedFormula> formulas)
         {
             return operationKind switch
             {
-                PartialAttribute.AttributeOperationKind.PartialAnd => GeneratePartialFunction("And", name, formulas),
-                PartialAttribute.AttributeOperationKind.PartialOr => GeneratePartialFunction("Or", name, formulas),
-                PartialAttribute.AttributeOperationKind.PartialTable => GeneratePartialFunction("Table", name, formulas),
-                PartialAttribute.AttributeOperationKind.PartialRecord => GeneratePartialFunction("MergeRecords", name, formulas),
+                PartialOperationKind.And => GeneratePartialFunction("And", name, formulas),
+                PartialOperationKind.Or => GeneratePartialFunction("Or", name, formulas),
+                PartialOperationKind.Table => GeneratePartialFunction("Table", name, formulas),
+                PartialOperationKind.Record => GeneratePartialFunction("MergeRecords", name, formulas),
                 _ => throw new InvalidOperationException("Unknown partial op while generating merged NF")
             };
         }
@@ -162,16 +202,17 @@ namespace Microsoft.PowerFx.Syntax
                 arguments.Add(new FirstNameNode(ref id, nf.Ident, new Identifier(nf.Ident)));
             }
 
-            var firstAttributeOpToken = formulas.First().Attribute.AttributeOperationToken;
+            var firstPartialAttribute = GetPartialAttribute(formulas.First().Attributes);
+            var firstToken = (Token)firstPartialAttribute.Name;
 
             var functionCall = new CallNode(
                 ref id,
-                firstAttributeOpToken,
-                new SourceList(firstAttributeOpToken),
-                new Identifier(new IdentToken(functionName, firstAttributeOpToken.Span, true)),
+                firstToken,
+                new SourceList(firstToken),
+                new Identifier(new IdentToken(functionName, firstToken.Span, true)),
                 headNode: null,
-                args: new ListNode(ref id, tok: firstAttributeOpToken, args: arguments.ToArray(), delimiters: null, sourceList: new SourceList(firstAttributeOpToken)),
-                tokParenClose: firstAttributeOpToken);
+                args: new ListNode(ref id, tok: firstToken, args: arguments.ToArray(), delimiters: null, sourceList: new SourceList(firstToken)),
+                tokParenClose: firstToken);
 
             return new Formula(script, functionCall);
         }

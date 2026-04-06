@@ -11,11 +11,13 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
+using Attribute = Microsoft.PowerFx.Core.Parser.Attribute;
 
 namespace Microsoft.PowerFx
 {
@@ -154,6 +156,55 @@ namespace Microsoft.PowerFx
             return this._resolvedTypes;
         }
 
+        private static readonly Dictionary<string, AttributeDefinition> _builtInAttributes =
+            new Dictionary<string, AttributeDefinition>(StringComparer.Ordinal)
+            {
+                { "Partial", new AttributeDefinition("Partial", minArgCount: 1, maxArgCount: 1) }
+            };
+
+        private List<TexlError> ValidateAttributes()
+        {
+            var errors = new List<TexlError>();
+
+            if (!_parserOptions.AllowAttributes)
+            {
+                return errors;
+            }
+
+            foreach (var udf in _parse.UDFs)
+            {
+                ValidateAttributeList(udf.Attributes, errors);
+            }
+
+            foreach (var nf in _parse.NamedFormulas)
+            {
+                ValidateAttributeList(nf.Attributes, errors);
+            }
+
+            return errors;
+        }
+
+        private void ValidateAttributeList(IReadOnlyList<Attribute> attributes, List<TexlError> errors)
+        {
+            foreach (var attr in attributes)
+            {
+                var attrName = attr.Name.Name.Value;
+
+                if (!_builtInAttributes.TryGetValue(attrName, out var definition) &&
+                    !_symbols.TryGetAttributeDefinition(attrName, out definition))
+                {
+                    errors.Add(new TexlError(attr.Name, DocumentErrorSeverity.Severe, TexlStrings.ErrUnknownAttribute, attrName));
+                    continue;
+                }
+
+                var argCount = attr.Arguments.Count;
+                if (argCount < definition.MinArgCount || argCount > definition.MaxArgCount)
+                {
+                    errors.Add(new TexlError(attr.OpenBracket, DocumentErrorSeverity.Severe, TexlStrings.ErrAttributeArgCount, attrName, definition.MinArgCount, definition.MaxArgCount, argCount));
+                }
+            }
+        }
+
         internal TexlFunctionSet ApplyCreateUserDefinedFunctions()
         {
             if (_parse == null)
@@ -174,6 +225,12 @@ namespace Microsoft.PowerFx
             if (_userDefinedFunctions == null)
             {
                 _userDefinedFunctions = new TexlFunctionSet();
+
+                var attrErrors = ValidateAttributes();
+                if (attrErrors.Any())
+                {
+                    _errors.AddRange(ExpressionError.New(attrErrors, _defaultErrorCulture));
+                }
 
                 var partialUDFs = UserDefinedFunction.CreateFunctions(_parse.UDFs.Where(udf => udf.IsParseValid), UDFBindingSymbols, out var errors);
 

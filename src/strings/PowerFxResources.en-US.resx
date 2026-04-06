@@ -5046,6 +5046,14 @@
       A partial operator is the 2nd part of a statement `[Partial Op]` and can be one of "And", "Or", "Table" or "Record".
       It's used to determine how to combine multiple expressions with the same name and operator.</comment>
   </data>
+  <data name="ErrUnknownAttribute" xml:space="preserve">
+    <value>Unknown attribute '{0}'.</value>
+    <comment>Error when an unregistered attribute is used on a definition.</comment>
+  </data>
+  <data name="ErrAttributeArgCount" xml:space="preserve">
+    <value>Attribute '{0}' expects between {1} and {2} arguments, but {3} were provided.</value>
+    <comment>Error when an attribute has the wrong number of arguments.</comment>
+  </data>
   <data name="AboutCollect_data_source" xml:space="preserve">
     <value>The datasource to add data to.</value>
   </data>

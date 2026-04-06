@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
@@ -14,12 +16,12 @@ namespace Microsoft.PowerFx.Core.Parser
 
         internal int StartingIndex { get; }
 
-        internal PartialAttribute Attribute { get; }
+        internal IReadOnlyList<Attribute> Attributes { get; }
 
         // used by the pretty printer to get the proper operator in the output
         internal bool ColonEqual { get; }
 
-        public NamedFormula(IdentToken ident, Formula formula, int startingIndex, bool colonEqual, PartialAttribute attribute = null)
+        public NamedFormula(IdentToken ident, Formula formula, int startingIndex, bool colonEqual, IReadOnlyList<Attribute> attributes = null)
         {
             Contracts.AssertValue(ident);
             Contracts.AssertValue(formula);
@@ -28,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Formula = formula;
             StartingIndex = startingIndex;
             ColonEqual = colonEqual;
-            Attribute = attribute;
+            Attributes = attributes ?? Array.Empty<Attribute>();
         }
     }
 }

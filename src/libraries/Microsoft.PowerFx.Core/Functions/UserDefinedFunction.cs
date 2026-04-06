@@ -25,6 +25,7 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
+using Attribute = Microsoft.PowerFx.Core.Parser.Attribute;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 
 namespace Microsoft.PowerFx.Core.Functions
@@ -40,6 +41,9 @@ namespace Microsoft.PowerFx.Core.Functions
         private readonly IEnumerable<UDFArg> _args;
         private TexlBinding _binding;
         private readonly IdentToken _returnTypeName;
+        private readonly IReadOnlyList<Attribute> _attributes;
+
+        internal IReadOnlyList<Attribute> Attributes => _attributes;
 
         public override bool IsAsync => _binding.IsAsync(UdfBody);
 
@@ -128,12 +132,14 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <param name="args"></param>
         /// <param name="argTypes">Array of argTypes in order.</param>
         /// <param name="returnTypeName">Name of the type in the decleration, used by error messages.</param>
-        public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args, DType[] argTypes, IdentToken returnTypeName)
+        /// <param name="attributes">Attributes applied to this UDF.</param>
+        public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args, DType[] argTypes, IdentToken returnTypeName, IReadOnlyList<Attribute> attributes = null)
         : base(DPath.Root, functionName, functionName, SG(functionName), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, argTypes)
         {
             this._args = args;
             this._isImperative = isImperative;
             this._returnTypeName = returnTypeName;
+            this._attributes = attributes ?? Array.Empty<Attribute>();
 
             this.UdfBody = body;
         }
@@ -300,7 +306,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new ArgumentNullException(nameof(binderGlue));
             }
 
-            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), ParamTypes, _returnTypeName);
+            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), ParamTypes, _returnTypeName, _attributes);
             binding = func.BindBody(nameResolver, binderGlue, bindingConfig, features, rule, updateDisplayNames);
 
             return func;
@@ -369,7 +375,7 @@ namespace Microsoft.PowerFx.Core.Functions
                     errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Warning, TexlStrings.WrnUDF_ShadowingBuiltInFunction, udfName));
                 }
 
-                var func = new UserDefinedFunction(udfName.Value, returnType, udf.Body, udf.IsImperative, udf.Args, parameterTypes, udf.ReturnType);
+                var func = new UserDefinedFunction(udfName.Value, returnType, udf.Body, udf.IsImperative, udf.Args, parameterTypes, udf.ReturnType, udf.Attributes);
 
                 texlFunctionSet.Add(func);
                 userDefinedFunctions.Add(func);
@@ -427,7 +433,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             var dummyref = 0;
             var udfBody = udf.Body ?? new PowerFx.Syntax.ErrorNode(ref dummyref, new CommentToken("dummy token", new Span(0, 0)), "dummy error");
-            var func = new UserDefinedFunction(udfName.Value, returnType, udfBody, udf.IsImperative, udf.Args, parameterTypes, udf.ReturnType);
+            var func = new UserDefinedFunction(udfName.Value, returnType, udfBody, udf.IsImperative, udf.Args, parameterTypes, udf.ReturnType, udf.Attributes);
 
             return func;
         }
