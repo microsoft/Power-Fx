@@ -156,7 +156,7 @@ namespace Microsoft.PowerFx
             return this._resolvedTypes;
         }
 
-        private static readonly Dictionary<string, AttributeDefinition> _builtInAttributes =
+        private static readonly IReadOnlyDictionary<string, AttributeDefinition> _builtInAttributes =
             new Dictionary<string, AttributeDefinition>(StringComparer.Ordinal)
             {
                 { "Partial", new AttributeDefinition("Partial", minArgCount: 1, maxArgCount: 1) }
