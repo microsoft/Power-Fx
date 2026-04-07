@@ -88,6 +88,18 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public TexlBinding Binding => _binding;
 
+        internal IReadOnlyList<NamedFormulaType> GetPublicParameters()
+        {
+            var result = new List<NamedFormulaType>();
+            foreach (var arg in _args.OrderBy(a => a.ArgIndex))
+            {
+                var formulaType = FormulaType.Build(ParamTypes[arg.ArgIndex]);
+                result.Add(new NamedFormulaType(arg.NameIdent.Name.Value, formulaType));
+            }
+
+            return result;
+        }
+
         public bool TryGetExternalDataSource(out IExternalDataSource dataSource)
         {
             return ArgValidators.DelegatableDataSourceInfoValidator.TryGetValidValue(_binding.Top, _binding, out dataSource);

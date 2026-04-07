@@ -29,6 +29,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 // Core namespace. 
                 "Microsoft.PowerFx.AttributeDefinition",
+                "Microsoft.PowerFx.AttributeValidationContext",
                 "Microsoft.PowerFx.CheckResult",
                 "Microsoft.PowerFx.DefinitionsCheckResult",
                 "Microsoft.PowerFx.CheckContextSummary",

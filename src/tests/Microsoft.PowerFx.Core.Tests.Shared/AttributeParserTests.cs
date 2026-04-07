@@ -452,5 +452,189 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.True(checkResult.IsSuccess);
         }
+
+        [Fact]
+        public void TestCustomValidatorAcceptsMatchingSignature()
+        {
+            var symbolTable = new SymbolTable();
+            symbolTable.AddAttribute(new AttributeDefinition(
+                "RequiresNumber",
+                0,
+                0,
+                validator: ctx =>
+                {
+                    if (ctx.ReturnType != FormulaType.Number)
+                    {
+                        return new[] { "Function must return Number." };
+                    }
+
+                    return Array.Empty<string>();
+                }));
+
+            var checkResult = GetCheckResult("[RequiresNumber] MyFunc(): Number = 1;", symbolTable);
+            checkResult.ApplyCreateUserDefinedFunctions();
+
+            Assert.True(checkResult.IsSuccess);
+            Assert.DoesNotContain(checkResult.Errors, e => e.Message == "Function must return Number.");
+        }
+
+        [Fact]
+        public void TestCustomValidatorRejectsWrongReturnType()
+        {
+            var symbolTable = new SymbolTable();
+            symbolTable.AddType(new DName("Text"), FormulaType.String);
+            symbolTable.AddAttribute(new AttributeDefinition(
+                "RequiresNumber",
+                0,
+                0,
+                validator: ctx =>
+                {
+                    if (ctx.ReturnType != FormulaType.Number)
+                    {
+                        return new[] { "Function must return Number." };
+                    }
+
+                    return Array.Empty<string>();
+                }));
+
+            var checkResult = GetCheckResult(@"[RequiresNumber] MyFunc(): Text = ""hello"";", symbolTable);
+            checkResult.ApplyCreateUserDefinedFunctions();
+
+            // Custom validation errors are warnings — IsSuccess stays true
+            Assert.True(checkResult.IsSuccess);
+            Assert.Contains(checkResult.Errors, e => e.Message == "Function must return Number." && e.IsWarning);
+        }
+
+        [Fact]
+        public void TestCustomValidatorChecksParameters()
+        {
+            var symbolTable = new SymbolTable();
+            symbolTable.AddAttribute(new AttributeDefinition(
+                "NeedsNumberParam",
+                0,
+                0,
+                validator: ctx =>
+                {
+                    if (ctx.Parameters.Count != 1 || ctx.Parameters[0].Type != FormulaType.Number)
+                    {
+                        return new[] { "Function must have exactly one Number parameter." };
+                    }
+
+                    return Array.Empty<string>();
+                }));
+
+            // Matching signature
+            var checkResult = GetCheckResult("[NeedsNumberParam] MyFunc(x: Number): Number = x;", symbolTable);
+            checkResult.ApplyCreateUserDefinedFunctions();
+            Assert.DoesNotContain(checkResult.Errors, e => e.Message == "Function must have exactly one Number parameter.");
+
+            // Non-matching: no parameters
+            var checkResult2 = GetCheckResult("[NeedsNumberParam] MyFunc(): Number = 1;", symbolTable);
+            checkResult2.ApplyCreateUserDefinedFunctions();
+            Assert.Contains(checkResult2.Errors, e => e.Message == "Function must have exactly one Number parameter." && e.IsWarning);
+        }
+
+        [Fact]
+        public void TestNullValidatorNoOp()
+        {
+            var symbolTable = new SymbolTable();
+            symbolTable.AddAttribute(new AttributeDefinition("NoValidator", 0, 0));
+
+            var checkResult = GetCheckResult("[NoValidator] MyFunc(): Number = 1;", symbolTable);
+            checkResult.ApplyCreateUserDefinedFunctions();
+
+            Assert.True(checkResult.IsSuccess);
+        }
+
+        [Fact]
+        public void TestValidatorReturnsEmpty()
+        {
+            var symbolTable = new SymbolTable();
+            symbolTable.AddAttribute(new AttributeDefinition("AlwaysOk", 0, 0, validator: ctx => Array.Empty<string>()));
+
+            var checkResult = GetCheckResult("[AlwaysOk] MyFunc(): Number = 1;", symbolTable);
+            checkResult.ApplyCreateUserDefinedFunctions();
+
+            Assert.True(checkResult.IsSuccess);
+        }
+
+        [Fact]
+        public void TestMultipleValidatorErrorMessages()
+        {
+            var symbolTable = new SymbolTable();
+            symbolTable.AddAttribute(new AttributeDefinition("Strict", 0, 0, validator: ctx => new[] { "Error one.", "Error two." }));
+
+            var checkResult = GetCheckResult("[Strict] MyFunc(): Number = 1;", symbolTable);
+            checkResult.ApplyCreateUserDefinedFunctions();
+
+            Assert.Contains(checkResult.Errors, e => e.Message == "Error one." && e.IsWarning);
+            Assert.Contains(checkResult.Errors, e => e.Message == "Error two." && e.IsWarning);
+        }
+
+        [Fact]
+        public void TestCustomValidatorErrorsAreWarnings()
+        {
+            var symbolTable = new SymbolTable();
+            symbolTable.AddAttribute(new AttributeDefinition("WarnMe", 0, 0, validator: ctx => new[] { "This is a warning." }));
+
+            var checkResult = GetCheckResult("[WarnMe] MyFunc(): Number = 1;", symbolTable);
+            checkResult.ApplyCreateUserDefinedFunctions();
+
+            // IsSuccess should still be true because custom validation errors are warnings
+            Assert.True(checkResult.IsSuccess);
+            var warning = Assert.Single(checkResult.Errors, e => e.Message == "This is a warning.");
+            Assert.True(warning.IsWarning);
+        }
+
+        [Fact]
+        public void TestCustomValidatorDoesNotRunOnNF()
+        {
+            var validatorCalled = false;
+            var symbolTable = new SymbolTable();
+            symbolTable.AddAttribute(new AttributeDefinition(
+                "UdfOnly",
+                0,
+                0,
+                validator: ctx =>
+                {
+                    validatorCalled = true;
+                    return new[] { "Should not appear." };
+                }));
+
+            var checkResult = GetCheckResult("[UdfOnly] X = 1;", symbolTable);
+            checkResult.ApplyCreateUserDefinedFunctions();
+
+            Assert.False(validatorCalled);
+            Assert.DoesNotContain(checkResult.Errors, e => e.Message == "Should not appear.");
+        }
+
+        [Fact]
+        public void TestCustomValidatorReceivesCorrectContext()
+        {
+            AttributeValidationContext capturedContext = null;
+            var symbolTable = new SymbolTable();
+            symbolTable.AddAttribute(new AttributeDefinition(
+                "Capture",
+                1,
+                2,
+                validator: ctx =>
+                {
+                    capturedContext = ctx;
+                    return Array.Empty<string>();
+                }));
+
+            var checkResult = GetCheckResult(@"[Capture(""arg1"", ""arg2"")] MyFunc(x: Number): Number = x;", symbolTable);
+            checkResult.ApplyCreateUserDefinedFunctions();
+
+            Assert.NotNull(capturedContext);
+            Assert.Equal("MyFunc", capturedContext.DefinitionName);
+            Assert.Equal(2, capturedContext.AttributeArguments.Count);
+            Assert.Equal("arg1", capturedContext.AttributeArguments[0]);
+            Assert.Equal("arg2", capturedContext.AttributeArguments[1]);
+            Assert.Equal(FormulaType.Number, capturedContext.ReturnType);
+            Assert.Single(capturedContext.Parameters);
+            Assert.Equal("x", capturedContext.Parameters[0].Name.Value);
+            Assert.Equal(FormulaType.Number, capturedContext.Parameters[0].Type);
+        }
     }
 }

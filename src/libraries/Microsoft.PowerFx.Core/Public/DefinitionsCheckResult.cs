@@ -205,6 +205,52 @@ namespace Microsoft.PowerFx
             }
         }
 
+        private List<ExpressionError> RunCustomAttributeValidation(IEnumerable<UserDefinedFunction> udfs)
+        {
+            var errors = new List<ExpressionError>();
+
+            if (!_parserOptions.AllowAttributes)
+            {
+                return errors;
+            }
+
+            foreach (var udf in udfs)
+            {
+                foreach (var attr in udf.Attributes)
+                {
+                    var attrName = attr.Name.Name.Value;
+
+                    if (!_builtInAttributes.TryGetValue(attrName, out var definition))
+                    {
+                        _symbols.TryGetAttributeDefinition(attrName, out definition);
+                    }
+
+                    if (definition?.Validator == null)
+                    {
+                        continue;
+                    }
+
+                    var context = new AttributeValidationContext(
+                        definitionName: udf.Name,
+                        attributeArguments: attr.Arguments,
+                        returnType: FormulaType.Build(udf.ReturnType),
+                        parameters: udf.GetPublicParameters());
+
+                    foreach (var errorMsg in definition.Validator(context) ?? Enumerable.Empty<string>())
+                    {
+                        errors.Add(new ExpressionError
+                        {
+                            Message = errorMsg,
+                            Span = attr.Name.Span,
+                            Severity = ErrorSeverity.Warning
+                        });
+                    }
+                }
+            }
+
+            return errors;
+        }
+
         internal TexlFunctionSet ApplyCreateUserDefinedFunctions()
         {
             if (_parse == null)
@@ -237,6 +283,12 @@ namespace Microsoft.PowerFx
                 if (errors.Any())
                 {
                     _errors.AddRange(ExpressionError.New(errors, _defaultErrorCulture));
+                }
+
+                var customErrors = RunCustomAttributeValidation(partialUDFs);
+                if (customErrors.Any())
+                {
+                    _errors.AddRange(customErrors);
                 }
 
                 foreach (var udf in partialUDFs)
