@@ -412,6 +412,12 @@ namespace Microsoft.PowerFx
         }
 
         // Hook from Lookup - Get just variables. 
+        internal virtual bool TryGetAttributeDefinition(string name, out AttributeDefinition definition)
+        {
+            definition = null;
+            return false;
+        }
+
         internal virtual bool TryGetVariable(DName name, out NameLookupInfo symbol, out DName displayName)
         {
             symbol = default;

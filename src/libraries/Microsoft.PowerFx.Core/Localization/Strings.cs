@@ -915,6 +915,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrOperationDoesntMatch = new ErrorResourceKey("ErrOperationDoesntMatch");
         public static ErrorResourceKey ErrUnknownPartialOp = new ErrorResourceKey("ErrUnknownPartialOp");
 
+        public static ErrorResourceKey ErrUnknownAttribute = new ErrorResourceKey("ErrUnknownAttribute");
+        public static ErrorResourceKey ErrAttributeArgCount = new ErrorResourceKey("ErrAttributeArgCount");
+
         public static ErrorResourceKey ErrTruncatedArgWarning = new ErrorResourceKey("ErrTruncatedArgWarning");
 
         public static ErrorResourceKey ErrNeedPrimitive = new ErrorResourceKey("ErrNeedPrimitive");

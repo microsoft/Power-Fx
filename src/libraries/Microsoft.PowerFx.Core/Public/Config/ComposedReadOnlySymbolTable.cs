@@ -183,6 +183,20 @@ namespace Microsoft.PowerFx
             }
         }
 
+        internal override bool TryGetAttributeDefinition(string name, out AttributeDefinition definition)
+        {
+            foreach (var table in _symbolTables)
+            {
+                if (table.TryGetAttributeDefinition(name, out definition))
+                {
+                    return true;
+                }
+            }
+
+            definition = null;
+            return false;
+        }
+
         internal override bool TryGetVariable(DName name, out NameLookupInfo symbol, out DName displayName)
         {
             foreach (ReadOnlySymbolTable st in _symbolTables)
