@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx
     /// Defines a known attribute that can be applied to UDFs and NamedFormulas.
     /// </summary>
     [ThreadSafeImmutable]
-    public class AttributeDefinition
+    internal class AttributeDefinition
     {
         /// <summary>
         /// Gets the name of the attribute.

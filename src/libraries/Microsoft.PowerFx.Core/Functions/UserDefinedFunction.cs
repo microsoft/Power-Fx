@@ -560,11 +560,12 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(targetUDF);
 
             if (Name != targetUDF.Name ||
-                UdfBody.GetCompleteSpan().GetFragment(definitionsScript) != targetUDFbody || 
+                UdfBody.GetCompleteSpan().GetFragment(definitionsScript) != targetUDFbody ||
                 _args.Count() != targetUDF._args.Count() ||
                 ReturnType.AssociatedDataSources.SetEquals(targetUDF.ReturnType.AssociatedDataSources) == false ||
                 ReturnType != targetUDF.ReturnType ||
-                _isImperative != targetUDF._isImperative)
+                _isImperative != targetUDF._isImperative ||
+                !AttributesEqual(_attributes, targetUDF._attributes))
             {
                 return false;
             }
@@ -578,6 +579,25 @@ namespace Microsoft.PowerFx.Core.Functions
                     argInfo.Name != arg.NameIdent.Name || 
                     argInfo.Item2.AssociatedDataSources.SetEquals(targetUDF.ParamTypes[arg.ArgIndex].AssociatedDataSources) == false ||
                     argInfo.Item2 != targetUDF.ParamTypes[arg.ArgIndex])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static bool AttributesEqual(IReadOnlyList<Attribute> a, IReadOnlyList<Attribute> b)
+        {
+            if (a.Count != b.Count)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < a.Count; i++)
+            {
+                if (a[i].Name.Name != b[i].Name.Name ||
+                    !a[i].Arguments.SequenceEqual(b[i].Arguments))
                 {
                     return false;
                 }

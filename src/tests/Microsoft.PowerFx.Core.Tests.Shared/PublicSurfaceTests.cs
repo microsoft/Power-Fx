@@ -27,9 +27,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var allowed = new HashSet<string>()
             {
-                // Core namespace. 
-                "Microsoft.PowerFx.AttributeDefinition",
-                "Microsoft.PowerFx.AttributeValidationContext",
+                // Core namespace.
                 "Microsoft.PowerFx.CheckResult",
                 "Microsoft.PowerFx.DefinitionsCheckResult",
                 "Microsoft.PowerFx.CheckContextSummary",

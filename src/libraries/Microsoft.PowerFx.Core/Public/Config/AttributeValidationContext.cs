@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx
     /// for use by custom attribute validation callbacks.
     /// </summary>
     [ThreadSafeImmutable]
-    public class AttributeValidationContext
+    internal class AttributeValidationContext
     {
         /// <summary>
         /// Gets the name of the UDF this attribute is on.

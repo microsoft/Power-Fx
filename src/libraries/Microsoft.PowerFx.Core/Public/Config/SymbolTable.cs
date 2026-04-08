@@ -490,7 +490,7 @@ namespace Microsoft.PowerFx
         /// Registers a known attribute definition for validation.
         /// </summary>
         /// <param name="attributeDefinition">The attribute definition to register.</param>
-        public void AddAttribute(AttributeDefinition attributeDefinition)
+        internal void AddAttribute(AttributeDefinition attributeDefinition)
         {
             Contracts.AssertValue(attributeDefinition);
 
