@@ -220,7 +220,7 @@ namespace Microsoft.PowerFx.Types
                 if (!found)
                 {
                     // https://github.com/microsoft/Power-Fx/issues/2618
-                    errors.Add(new ExpressionError() { Message = "The specified record was not found.", Kind = ErrorKind.NotFound });
+                    errors.Add(new ExpressionError() { Kind = ErrorKind.NotFound });
                 }
             }
 
