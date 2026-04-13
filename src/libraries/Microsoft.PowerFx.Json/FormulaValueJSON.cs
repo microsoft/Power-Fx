@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx.Types
                 // date formats commonly returned by connectors (e.g. timezone offsets
                 // without a colon like "+0000" instead of "+00:00").
                 // Fall back to the more lenient DateTimeOffset.Parse.
-                if (DateTimeOffset.TryParse(strValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto))
+                if (DateTimeOffset.TryParse(strValue, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var dto))
                 {
                     dateTime = dto.UtcDateTime;
                 }
