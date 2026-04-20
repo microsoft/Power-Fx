@@ -2626,6 +2626,59 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.True(patchItemParam.ConnectorType.SupportsDynamicSchemaOrProperty);
         }
 
+        // Regression tests for the "Sequence contains no elements" LINQ exception that
+        // escaped from a dynamic-schema resolution when the sub-call's response body had
+        // an empty or missing value at the configured valuePath (e.g. Azure DevOps'
+        // GetQueryResultWorkItemSchema returning a body without Fields populated). Passing
+        // the default JsonElement through to OpenApiStringReader.ReadFragment caused
+        // Microsoft.OpenApi.Readers.OpenApiTextReaderReader.LoadYamlDocument to call
+        // YamlStream.Documents.First() on an empty stream and throw. The fix returns null
+        // from GetConnectorType so the caller can fall back to the static schema.
+
+        [Fact]
+        public void GetConnectorType_MissingValuePath_ReturnsNull()
+        {
+            StringValue sv = (StringValue)FormulaValue.New("{\"otherProperty\":\"value\"}");
+            ConnectorSettings settings = new ConnectorSettings("test");
+
+            ConnectorType result = ConnectorFunction.GetConnectorType("Fields", sv, settings);
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void GetConnectorType_EmptyStringValue_ReturnsNull()
+        {
+            StringValue sv = (StringValue)FormulaValue.New(string.Empty);
+            ConnectorSettings settings = new ConnectorSettings("test");
+
+            ConnectorType result = ConnectorFunction.GetConnectorType("Fields", sv, settings);
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void GetConnectorType_ValuePathResolvesToNull_ReturnsNull()
+        {
+            StringValue sv = (StringValue)FormulaValue.New("{\"Fields\":null}");
+            ConnectorSettings settings = new ConnectorSettings("test");
+
+            ConnectorType result = ConnectorFunction.GetConnectorType("Fields", sv, settings);
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void GetConnectorType_ValidSchemaAtValuePath_ReturnsConnectorType()
+        {
+            StringValue sv = (StringValue)FormulaValue.New("{\"Fields\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"}}}}");
+            ConnectorSettings settings = new ConnectorSettings("test");
+
+            ConnectorType result = ConnectorFunction.GetConnectorType("Fields", sv, settings);
+
+            Assert.NotNull(result);
+        }
+
         public class HttpLogger : HttpClient
         {
             private readonly ITestOutputHelper _console;

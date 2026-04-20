@@ -1007,6 +1007,12 @@ namespace Microsoft.PowerFx.Connectors
 
             ConnectorType connectorType = GetConnectorType(cds.ValuePath, sv, ConnectorSettings);
 
+            if (connectorType == null)
+            {
+                runtimeContext.ExecutionLogger?.LogWarning($"Exiting {this.LogFunction(nameof(GetConnectorSuggestionsFromDynamicSchemaAsync))}, no schema at valuePath '{cds.ValuePath}'");
+                return null;
+            }
+
             if (connectorType.HasErrors)
             {
                 runtimeContext.ExecutionLogger?.LogError($"Exiting {this.LogFunction(nameof(GetConnectorSuggestionsFromDynamicSchemaAsync))}, with {LogConnectorType(connectorType)}");
@@ -1022,6 +1028,19 @@ namespace Microsoft.PowerFx.Connectors
         internal static ConnectorType GetConnectorType(string valuePath, StringValue sv, ConnectorSettings settings)
         {
             JsonElement je = ExtractFromJson(sv, valuePath);
+
+            // ExtractFromJson returns default(JsonElement) (ValueKind == Undefined) when
+            // 'sv' is empty or the 'valuePath' doesn't resolve in the JSON body. Forwarding
+            // that default value to GetConnectorTypeInternal makes OpenApiStringReader parse
+            // an empty string, which fails deep inside Microsoft.OpenApi.Readers with
+            // InvalidOperationException("Sequence contains no elements") from
+            // YamlStream.Documents.First(). Return null so callers can fall back to the
+            // static schema instead of propagating a misleading LINQ exception.
+            if (je.ValueKind == JsonValueKind.Undefined || je.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
+
             return GetConnectorTypeInternal(settings, je);
         }
 
@@ -1257,6 +1276,12 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             ConnectorType connectorType = GetConnectorType(cdp.ItemValuePath, sv, ConnectorSettings);
+
+            if (connectorType == null)
+            {
+                runtimeContext.ExecutionLogger?.LogWarning($"Exiting {this.LogFunction(nameof(GetConnectorSuggestionsFromDynamicPropertyAsync))}, no schema at itemValuePath '{cdp.ItemValuePath}'");
+                return null;
+            }
 
             if (connectorType.HasErrors)
             {
