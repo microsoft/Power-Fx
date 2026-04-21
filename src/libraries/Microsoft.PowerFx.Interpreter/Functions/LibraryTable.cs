@@ -1429,7 +1429,10 @@ namespace Microsoft.PowerFx.Functions
                     fields.Add(field.Name, field.Value);
                 }
 
-                SymbolContext childContext = context.SymbolContext.WithScopeValues(thisGroupTableValue);
+                var scopeFields = record.Fields.Select(f => new NamedValue(f.Name, f.Value)).ToList();
+                scopeFields.Add(new NamedValue("ThisGroup", thisGroupTableValue));
+                var scopeRecord = FormulaValue.NewRecordFromFields(scopeFields);
+                SymbolContext childContext = context.SymbolContext.WithScopeValues(scopeRecord);
 
                 foreach (LambdaFormulaValue arg in args.Where(arg => arg is LambdaFormulaValue))
                 {
