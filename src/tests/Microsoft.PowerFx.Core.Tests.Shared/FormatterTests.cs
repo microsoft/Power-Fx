@@ -324,6 +324,16 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(
             "// Math\nAdd(x:Number,y:Number):Number= /*c1*/ x+y;\n// Trig\nCosine(x:Number):Number=Cos(x);\n",
             "// Math\nAdd(x:Number,y:Number):Number = /*c1*/x + y;\n// Trig\nCosine(x:Number):Number = Cos(x);")]
+
+        // Trailing // line comment on the header line must not be merged with the '=' body (issue #2998).
+        [InlineData(
+            "MyNF // My Named Formula\n    = Pi()/2;",
+            "MyNF // My Named Formula\n    = Pi() / 2;")]
+
+        // Mixing /*..*/ block and // line comments in a UDF declaration must also preserve the line break.
+        [InlineData(
+            "Add(x:Number,y:Number):Number /* rt */ // trailing\n  = x+y;",
+            "Add(x:Number,y:Number):Number /* rt */ // trailing\n    = x + y;")]
         public void TestUserDefinitionsPrettyPrint(string script, string expected)
         {
             var parserOptions = new ParserOptions()
