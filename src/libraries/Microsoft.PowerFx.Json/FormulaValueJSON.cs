@@ -96,35 +96,22 @@ namespace Microsoft.PowerFx.Types
                 return FormulaValue.NewBlank(targetType);
             }
 
-            DateTime dateTime;
-
-            try
+            // Use DateTimeOffset.TryParse for consistent, machine-independent parsing that matches
+            // Power Automate / Logic Apps behavior. Treats offset-less values as UTC and normalizes
+            // offset-bearing values to UTC, so the resulting instant does not depend on the host's
+            // local timezone. Also accepts non-strict ISO 8601 forms emitted by connectors (e.g.
+            // "+0000" instead of "+00:00") that element.GetDateTime() would reject.
+            if (!DateTimeOffset.TryParse(strValue, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AllowWhiteSpaces, out var dto))
             {
-                dateTime = element.GetDateTime();
-            }
-            catch (FormatException)
-            {
-                // element.GetDateTime() uses a strict ISO 8601 parser that rejects valid
-                // date formats commonly returned by connectors (e.g. timezone offsets
-                // without a colon like "+0000" instead of "+00:00").
-                // Fall back to the more lenient DateTimeOffset.Parse.
-                if (DateTimeOffset.TryParse(strValue, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var dto))
+                return new ErrorValue(IRContext.NotInSource(targetType), new ExpressionError()
                 {
-                    dateTime = dto.UtcDateTime;
-                }
-                else
-                {
-                    return new ErrorValue(IRContext.NotInSource(targetType), new ExpressionError()
-                    {
-                        Message = $"Date '{strValue}' could not be parsed",
-                        Span = new Syntax.Span(0, 0),
-                        Kind = ErrorKind.InvalidArgument
-                    });
-                }
+                    Message = $"Date '{strValue}' could not be parsed",
+                    Span = new Syntax.Span(0, 0),
+                    Kind = ErrorKind.InvalidArgument
+                });
             }
 
-            var value = funcParse(dateTime);
-            return value;
+            return funcParse(dto.UtcDateTime);
         }
 
         internal static FormulaValue FromJson(JsonElement element, FormulaValueJsonSerializerSettings settings, FormulaValueJsonSerializerWorkingData data, FormulaType formulaType = null)
