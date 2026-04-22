@@ -404,9 +404,6 @@ namespace Microsoft.PowerFx
 
             FormulaValue result;
 
-            // Remove this: https://github.com/microsoft/Power-Fx/issues/2821
-            IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction> extraFunctions = _services.GetService<IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction>>();
-
             try
             {
                 IFunctionInvoker invoker = GetInvoker(func);
@@ -427,10 +424,6 @@ namespace Microsoft.PowerFx
                     result = await invoker.InvokeAsync(invokeInfo, _cancellationToken).ConfigureAwait(false);
                 }
                 else if (func is IAsyncTexlFunction asyncFunc)
-                {
-                    result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
-                }
-                else if (extraFunctions?.TryGetValue(func, out asyncFunc) == true)
                 {
                     result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
                 }
