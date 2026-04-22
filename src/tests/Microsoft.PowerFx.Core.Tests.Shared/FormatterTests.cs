@@ -334,6 +334,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(
             "Add(x:Number,y:Number):Number /* rt */ // trailing\n  = x+y;",
             "Add(x:Number,y:Number):Number /* rt */ // trailing\n    = x + y;")]
+            
         // Issue #2997: trailing comment on the last user definition must be preserved.
         [InlineData("MyNF=Pi()/2; // Half PI", "MyNF = Pi() / 2; // Half PI")]
         [InlineData("MyNF=Pi()/2; /* Half PI */", "MyNF = Pi() / 2; /* Half PI */")]
