@@ -1255,6 +1255,95 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Equal("id", string.Join("|", GetPrimaryKeyNames(zdTable.RecordType)));
         }
+
+        // Regression tests for https://github.com/microsoft/Power-Fx/issues/2893:
+        // CdpTable.GetResult previously silently produced a null TableValue when the CDP
+        // response did not contain a recognizable 'value' field, causing a generic
+        // NullReferenceException downstream. These tests verify that a descriptive
+        // PowerFxConnectorException is thrown instead.
+        [Fact]
+        public async Task SQL_CdpTabular_GetItems_MissingValueField_ThrowsDescriptiveException()
+        {
+            using var testConnector = new LoggingTestServer(null, _output);
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            using var httpClient = new HttpClient(testConnector);
+            string connectionId = "c1a4e9f52ec94d55bb82f319b3e33a6a";
+            string jwt = "eyJ0eXAiOiJKV1QiL...";
+            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+
+            testConnector.SetResponseFromFiles(
+                @"Responses\SQL GetDatasetsMetadata.json",
+                @"Responses\SQL GetTables.json",
+                @"Responses\SQL Server Load Customers DB.json",
+                @"Responses\SQL GetRelationships SampleDB.json");
+
+            CdpDataSource cds = new CdpDataSource("pfxdev-sql.database.windows.net,connectortest", ConnectorSettings.NewCDPConnectorSettings());
+            IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+            CdpTable connectorTable = tables.First(t => t.DisplayName == "Customers");
+            await connectorTable.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+
+            CdpTableValue tableValue = connectorTable.GetTableValue();
+            SymbolValues symbolValues = new SymbolValues().Add("Customers", tableValue);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
+
+            // Response intentionally omits the 'value' field that CdpTable.GetResult expects.
+            testConnector.SetResponse("{\"@odata.context\":\"https://example/$metadata#datasets/tables/items\"}");
+
+            string expr = @"First(Customers).Name";
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            PowerFxConnectorException ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () =>
+                await check.GetEvaluator().EvalAsync(CancellationToken.None, rc));
+
+            Assert.Contains("'value'", ex.Message);
+            Assert.Contains("Customers", ex.Message);
+        }
+
+        [Fact]
+        public async Task SQL_CdpTabular_GetItems_ValueFieldWrongType_ThrowsDescriptiveException()
+        {
+            using var testConnector = new LoggingTestServer(null, _output);
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            using var httpClient = new HttpClient(testConnector);
+            string connectionId = "c1a4e9f52ec94d55bb82f319b3e33a6a";
+            string jwt = "eyJ0eXAiOiJKV1QiL...";
+            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+
+            testConnector.SetResponseFromFiles(
+                @"Responses\SQL GetDatasetsMetadata.json",
+                @"Responses\SQL GetTables.json",
+                @"Responses\SQL Server Load Customers DB.json",
+                @"Responses\SQL GetRelationships SampleDB.json");
+
+            CdpDataSource cds = new CdpDataSource("pfxdev-sql.database.windows.net,connectortest", ConnectorSettings.NewCDPConnectorSettings());
+            IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+            CdpTable connectorTable = tables.First(t => t.DisplayName == "Customers");
+            await connectorTable.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+
+            CdpTableValue tableValue = connectorTable.GetTableValue();
+            SymbolValues symbolValues = new SymbolValues().Add("Customers", tableValue);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
+
+            // Response provides 'value' as a scalar string, not a table.
+            testConnector.SetResponse("{\"@odata.context\":\"https://example/$metadata#datasets/tables/items\",\"value\":\"not-a-table\"}");
+
+            string expr = @"First(Customers).Name";
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            PowerFxConnectorException ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () =>
+                await check.GetEvaluator().EvalAsync(CancellationToken.None, rc));
+
+            Assert.Contains("'value'", ex.Message);
+            Assert.Contains("Customers", ex.Message);
+        }
     }
 
     public static class Exts2
