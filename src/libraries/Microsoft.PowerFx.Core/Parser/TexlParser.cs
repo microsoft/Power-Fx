@@ -283,6 +283,13 @@ namespace Microsoft.PowerFx.Core.Parser
             var definitionBeforeTrivia = new List<ITexlSource>();
             var declarationStart = 0;
             var index = 0;
+
+            // Trivia after the last terminating semicolon; captured so FormatUserDefinitions
+            // can emit trailing comments (issue #2997). Overwritten on each iteration so only
+            // the final post-semicolon ParseTrivia survives — by construction that is the
+            // trivia between the last ";" and EOF.
+            ITexlSource trailingTrivia = null;
+
             ParseTrivia();
 
             while (_curs.TokCur.Kind != TokKind.Eof)
@@ -358,7 +365,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     declarationStart = _curs.TokCur.Span.Lim;
                     _curs.TokMove();
-                    ParseTrivia();
+                    trailingTrivia = ParseTrivia();
                 }
                 else if (_curs.TidCur == TokKind.Equ)
                 {
@@ -410,7 +417,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     declarationStart = _curs.TokCur.Span.Lim;
                     _curs.TokMove();
-                    ParseTrivia();
+                    trailingTrivia = ParseTrivia();
                 }
                 else if (_curs.TidCur == TokKind.ParenOpen)
                 {
@@ -529,7 +536,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         break;
                     }
 
-                    ParseTrivia();
+                    trailingTrivia = ParseTrivia();
                 }
                 else
                 {
@@ -539,12 +546,25 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
             }
 
-            return new ParseUserDefinitionResult(namedFormulas, udfs, definedTypes, _errors, _comments, userDefinitionSourceInfos: userDefinitionSourceInfos, definitionsLikely);
+            return new ParseUserDefinitionResult(namedFormulas, udfs, definedTypes, _errors, _comments, userDefinitionSourceInfos: userDefinitionSourceInfos, definitionsLikely, trailingTrivia: trailingTrivia);
         }
 
         private SourceList GetExtraTriviaSourceList()
         {
-            return _extraTrivia != null ? new SourceList(new List<ITexlSource> { _extraTrivia }) : null;
+            if (_extraTrivia == null)
+            {
+                return null;
+            }
+
+            // Transfer ownership of _extraTrivia into the returned SourceList. The original
+            // caller (UserDefinitionSourceInfo.After) is now the authoritative holder of these
+            // comment/whitespace tokens. Clearing here prevents the next post-semicolon
+            // ParseTrivia() from re-consuming them as trailing trivia (issue #2997).
+            // This matches prior effective semantics: previously the next ParseTrivia would
+            // drain _extraTrivia and then discard the returned sources.
+            var result = new SourceList(new List<ITexlSource> { _extraTrivia });
+            _extraTrivia = null;
+            return result;
         }
 
         // Look ahead to check if the upcoming token sequence is a record
