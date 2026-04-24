@@ -137,7 +137,11 @@ namespace Microsoft.PowerFx.Core.Types
                     // Ensure no edges from non-existent node.
                     if (_typesDict.ContainsKey(processFirst))
                     {
-                        _edges.Add(new TopologicalSortEdge<string>(processFirst, definedType.Ident.Name.Value));
+                        // Ensure no edges to non-existent node.
+                        if (_typesDict.ContainsKey(definedType.Ident.Name.Value))
+                        {
+                            _edges.Add(new TopologicalSortEdge<string>(processFirst, definedType.Ident.Name.Value));
+                        }
                     }
                 }
             }
@@ -166,7 +170,8 @@ namespace Microsoft.PowerFx.Core.Types
 
         private IReadOnlyDictionary<DName, FormulaType> ResolveTypes()
         {
-            var containsCycles = !TopologicalSort.TrySort(_nodes, _edges, out var resolveOrder, out var cycles);
+            TopologicalSort.TrySort(_nodes, _edges, out var resolveOrder, out var cycles);
+            var containsCycles = cycles?.Any() ?? false;
 
             Contracts.AssertValue(resolveOrder);
 

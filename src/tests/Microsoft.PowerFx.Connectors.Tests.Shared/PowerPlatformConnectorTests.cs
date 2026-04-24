@@ -2587,6 +2587,45 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal<object>(expected, testConnector._log.ToString());
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ExcelOnlineAddRowV2_ItemParamHasDynamicSchema(bool useItemDynamicPropertiesSpecialHandling)
+        {
+            // Validates that x-ms-dynamic-schema on a $ref body definition (Item)
+            // is propagated to the synthesized body parameter.
+            // This is the fix for: OpenApiParser not propagating ContainsDynamicSchemaOrProperty
+            // through $ref resolution for body parameter schemas.
+            using var testConnector = new LoggingTestServer(@"Swagger\ExcelOnlineBusiness.swagger.json", _output);
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(
+                new ConnectorSettings("ExcelOnline")
+                {
+                    Compatibility = ConnectorCompatibility.SwaggerCompatibility,
+                    UseItemDynamicPropertiesSpecialHandling = useItemDynamicPropertiesSpecialHandling
+                },
+                testConnector._apiDocument).ToList();
+
+            ConnectorFunction addRowV2 = functions.First(f => f.Name == "AddRowV2");
+            ConnectorParameter itemParam = useItemDynamicPropertiesSpecialHandling
+                ? addRowV2.RequiredParameters.First(p => p.Name == "item")
+                : addRowV2.RequiredParameters.FirstOrDefault(p => p.Name == "dynamicProperties")
+                    ?? addRowV2.OptionalParameters.First(p => p.Name == "dynamicProperties");
+
+            // The item/dynamicProperties parameter must report dynamic schema
+            // because the parent Item definition has x-ms-dynamic-schema.
+            // Before the fix, this was false because x-ms-dynamic-schema on the $ref'd Item
+            // definition was not propagated to the synthesized body parameter.
+            Assert.True(itemParam.ConnectorType.SupportsDynamicSchemaOrProperty);
+
+            // Also verify PatchItem has the same behavior
+            ConnectorFunction patchItem = functions.First(f => f.Name == "PatchItem");
+            ConnectorParameter patchItemParam = useItemDynamicPropertiesSpecialHandling
+                ? patchItem.RequiredParameters.First(p => p.Name == "item")
+                : patchItem.OptionalParameters.First(p => p.Name == "dynamicProperties");
+
+            Assert.True(patchItemParam.ConnectorType.SupportsDynamicSchemaOrProperty);
+        }
+
         public class HttpLogger : HttpClient
         {
             private readonly ITestOutputHelper _console;

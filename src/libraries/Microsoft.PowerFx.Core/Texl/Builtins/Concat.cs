@@ -18,6 +18,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
+        public override bool IsAllowedInSimpleExpressions => true;
+
         public ConcatFunction()
             : base("Concat", TexlStrings.AboutConcat, FunctionCategories.Table, DType.String, 0x02, 2, 3, DType.EmptyTable, DType.String, DType.String)
         {
