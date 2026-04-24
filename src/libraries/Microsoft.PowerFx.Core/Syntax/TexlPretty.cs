@@ -547,8 +547,23 @@ namespace Microsoft.PowerFx.Syntax
                 }
             }
 
-            return string.Join($"{TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorChainingSeparator}\n", definitions) +
+            var output = string.Join($"{TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorChainingSeparator}\n", definitions) +
                 TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorChainingSeparator;
+
+            // Issue #2997: trailing comments after the final ";" (e.g. "MyNF = Pi()/2; // Half PI")
+            // are held on ParseUserDefinitionResult.TrailingTrivia because no subsequent definition
+            // consumes them. Emit them here so pretty print is idempotent on inputs with a trailing
+            // comment on the last user definition.
+            if (result.TrailingTrivia != null && definitions.Count > 0)
+            {
+                var trailingComments = visitor.CommentsOf(new SourceList(result.TrailingTrivia));
+                if (trailingComments.Any())
+                {
+                    output += " " + string.Concat(trailingComments);
+                }
+            }
+
+            return output;
         }
 
         private LazyList<string> CommentsOf(SourceList list)

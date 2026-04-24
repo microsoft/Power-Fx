@@ -324,6 +324,13 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(
             "// Math\nAdd(x:Number,y:Number):Number= /*c1*/ x+y;\n// Trig\nCosine(x:Number):Number=Cos(x);\n",
             "// Math\nAdd(x:Number,y:Number):Number = /*c1*/x + y;\n// Trig\nCosine(x:Number):Number = Cos(x);")]
+
+        // Issue #2997: trailing comment on the last user definition must be preserved.
+        [InlineData("MyNF=Pi()/2; // Half PI", "MyNF = Pi() / 2; // Half PI")]
+        [InlineData("MyNF=Pi()/2; /* Half PI */", "MyNF = Pi() / 2; /* Half PI */")]
+        [InlineData("a=1; b=2; // last", "a = 1;\nb = 2; // last")]
+        [InlineData("F(x:Number):Number=x; // Identity", "F(x:Number):Number = x; // Identity")]
+        [InlineData("T := Type(Number); // the type", "T := Type(Number); // the type")]
         public void TestUserDefinitionsPrettyPrint(string script, string expected)
         {
             var parserOptions = new ParserOptions()

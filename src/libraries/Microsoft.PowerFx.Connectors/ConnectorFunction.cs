@@ -1643,7 +1643,31 @@ namespace Microsoft.PowerFx.Connectors
                                         }
                                     }
 
-                                    OpenApiParameter bodyParameter = new OpenApiParameter() { Name = bodyPropertyName, Schema = bodyPropertySchema, Description = requestBody.Description, Required = bodyPropertyRequired, Extensions = bodyPropertySchema.Extensions };
+                                    // Propagate x-ms-dynamic-schema and x-ms-dynamic-properties from parent body schema
+                                    // to property parameters when the property doesn't have its own.
+                                    // This handles $ref body schemas (e.g., Excel Online's Item definition) where
+                                    // x-ms-dynamic-schema is on the referenced definition, not on individual properties.
+                                    IDictionary<string, IOpenApiExtension> bodyParamExtensions = bodyPropertySchema.Extensions;
+
+                                    if (bodySchema.Extensions != null)
+                                    {
+                                        foreach (string dynamicExtKey in new[] { Constants.XMsDynamicSchema, Constants.XMsDynamicProperties })
+                                        {
+                                            if (bodySchema.Extensions.TryGetValue(dynamicExtKey, out IOpenApiExtension dynamicExt) &&
+                                                (bodyParamExtensions == null || !bodyParamExtensions.ContainsKey(dynamicExtKey)))
+                                            {
+                                                if (bodyParamExtensions == bodyPropertySchema.Extensions)
+                                                {
+                                                    // Clone to avoid mutating the original schema extensions
+                                                    bodyParamExtensions = new Dictionary<string, IOpenApiExtension>(bodyPropertySchema.Extensions);
+                                                }
+
+                                                bodyParamExtensions[dynamicExtKey] = dynamicExt;
+                                            }
+                                        }
+                                    }
+
+                                    OpenApiParameter bodyParameter = new OpenApiParameter() { Name = bodyPropertyName, Schema = bodyPropertySchema, Description = requestBody.Description, Required = bodyPropertyRequired, Extensions = bodyParamExtensions };
                                     ConnectorParameter bodyConnectorParameter2 = errorsAndWarnings.AggregateErrorsAndWarnings(new ConnectorParameter(bodyParameter, requestBody, ConnectorSettings));
                                     openApiBodyParameters.Add(bodyConnectorParameter2, OpenApiExtensions.TryGetOpenApiValue(bodyConnectorParameter2.Schema.Default, null, out FormulaValue defaultValue, errorsAndWarnings) ? defaultValue : null);
 
