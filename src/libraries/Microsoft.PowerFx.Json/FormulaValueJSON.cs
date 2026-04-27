@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx.Types
             // offset-bearing values to UTC, so the resulting instant does not depend on the host's
             // local timezone. Also accepts non-strict ISO 8601 forms emitted by connectors (e.g.
             // "+0000" instead of "+00:00") that element.GetDateTime() would reject.
-            if (!DateTimeOffset.TryParse(strValue, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AllowWhiteSpaces, out var dto))
+            if (!DateTimeOffset.TryParse(strValue, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var dto))
             {
                 return new ErrorValue(IRContext.NotInSource(targetType), new ExpressionError()
                 {
