@@ -184,7 +184,21 @@ namespace Microsoft.PowerFx.Connectors
                 return new List<DValue<RecordValue>>() { DValue<RecordValue>.Of(err) };
             }
 
-            TableValue tv = rv.Fields.FirstOrDefault(field => field.Name == "value").Value as TableValue;
+            NamedValue valueField = rv.Fields.FirstOrDefault(field => field.Name == "value");
+            if (valueField == null)
+            {
+                throw new PowerFxConnectorException(
+                    $"CDP response for table '{TableName}' is missing the expected 'value' field. " +
+                    $"Received fields: [{string.Join(", ", rv.Fields.Select(f => f.Name))}].");
+            }
+
+            if (valueField.Value is not TableValue tv)
+            {
+                throw new PowerFxConnectorException(
+                    $"CDP response for table '{TableName}' has an unexpected shape: " +
+                    $"the 'value' field was expected to be a table, " +
+                    $"but was {valueField.Value?.GetType().Name ?? "null"}.");
+            }
 
             // The call we make contains more fields and we want to remove them here ('@odata.etag')
             return new InMemoryTableValue(IRContext.NotInSource(TableType), tv.Rows).Rows.ToArray();
