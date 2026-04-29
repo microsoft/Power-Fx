@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Types
 
             // Use DateTimeOffset.TryParse for consistent, machine-independent parsing that matches
             // Power Automate / Logic Apps behavior. Treats offset-less values as UTC and normalizes
-            // offset-bearing values to UTC, so the resulting instant does not depend on the host's
+            // offset-bearing values to UTC, so the resulting instance does not depend on the host's
             // local timezone. Also accepts non-strict ISO 8601 forms emitted by connectors (e.g.
             // "+0000" instead of "+00:00") that element.GetDateTime() would reject.
             if (!DateTimeOffset.TryParse(strValue, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var dto))
