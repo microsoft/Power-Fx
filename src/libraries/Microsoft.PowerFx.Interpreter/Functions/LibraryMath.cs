@@ -1345,6 +1345,21 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, Math.PI);
         }
 
+        private static FormulaValue Infinity(IRContext irContext, FormulaValue[] args)
+        {
+            return new NumberValue(irContext, double.PositiveInfinity);
+        }
+
+        private static FormulaValue MaxValue(IRContext irContext, FormulaValue[] args)
+        {
+            return new NumberValue(irContext, double.MaxValue);
+        }
+
+        private static FormulaValue MinValue(IRContext irContext, FormulaValue[] args)
+        {
+            return new NumberValue(irContext, double.MinValue);
+        }
+
         // Given the absence of Math.Cot function, we compute Cot(x) as 1/Tan(x)
         // Reference: https://en.wikipedia.org/wiki/Trigonometric_functions
         private static FormulaValue Cot(IRContext irContext, NumberValue[] args)

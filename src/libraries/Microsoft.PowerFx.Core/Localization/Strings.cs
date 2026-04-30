@@ -331,6 +331,12 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static StringGetter AboutPi = (b) => StringResources.Get("AboutPi", b);
 
+        public static StringGetter AboutInfinity = (b) => StringResources.Get("AboutInfinity", b);
+
+        public static StringGetter AboutMaxValue = (b) => StringResources.Get("AboutMaxValue", b);
+
+        public static StringGetter AboutMinValue = (b) => StringResources.Get("AboutMinValue", b);
+
         public static StringGetter AboutDate = (b) => StringResources.Get("AboutDate", b);
         public static StringGetter DateArg1 = (b) => StringResources.Get("DateArg1", b);
         public static StringGetter DateArg2 = (b) => StringResources.Get("DateArg2", b);

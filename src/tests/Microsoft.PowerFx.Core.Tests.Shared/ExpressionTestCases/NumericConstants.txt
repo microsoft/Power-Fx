@@ -1,0 +1,32 @@
+#SETUP: NumberIsFloat
+
+// Tests for Infinity(), MaxValue(), and MinValue() numeric constants (#3010)
+
+// Positive infinity - serializes as Infinity() for round-trip
+>> Infinity()
+Infinity()
+
+// MaxValue returns the largest finite double
+>> MaxValue()
+1.7976931348623157E+308
+
+// MinValue returns the most-negative finite double
+>> MinValue()
+-1.7976931348623157E+308
+
+// IsError should be false - Infinity() returns a NumberValue, not an ErrorValue
+>> IsError(Infinity())
+false
+
+>> IsError(MaxValue())
+false
+
+>> IsError(MinValue())
+false
+
+// IsNumeric with MaxValue and MinValue (finite values work)
+>> IsNumeric(MaxValue())
+true
+
+>> IsNumeric(MinValue())
+true

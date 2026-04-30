@@ -1497,6 +1497,15 @@
   <data name="AboutPi" xml:space="preserve">
     <value>Returns the value of pi.</value>
   </data>
+  <data name="AboutInfinity" xml:space="preserve">
+    <value>Returns the IEEE 754 positive infinity value. Use -Infinity() for negative infinity.</value>
+  </data>
+  <data name="AboutMaxValue" xml:space="preserve">
+    <value>Returns the largest finite value that can be represented as a Number.</value>
+  </data>
+  <data name="AboutMinValue" xml:space="preserve">
+    <value>Returns the most-negative finite value that can be represented as a Number.</value>
+  </data>
   <data name="AboutRadians" xml:space="preserve">
     <value>Returns the radians value of a number.</value>
     <comment>Radians function parameter.</comment>

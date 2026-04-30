@@ -1289,6 +1289,18 @@ namespace Microsoft.PowerFx.Functions
                 NoErrorHandling(Pi)
             },
             {
+                BuiltinFunctionsCore.Infinity,
+                NoErrorHandling(Infinity)
+            },
+            {
+                BuiltinFunctionsCore.MaxValue,
+                NoErrorHandling(MaxValue)
+            },
+            {
+                BuiltinFunctionsCore.MinValue,
+                NoErrorHandling(MinValue)
+            },
+            {
                 BuiltinFunctionsCore.PlainText,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.PlainText.Name,

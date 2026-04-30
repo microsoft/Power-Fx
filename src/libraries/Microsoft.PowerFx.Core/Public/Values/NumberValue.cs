@@ -27,6 +27,18 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
+            if (double.IsPositiveInfinity(Value))
+            {
+                sb.Append("Infinity()");
+                return;
+            }
+
+            if (double.IsNegativeInfinity(Value))
+            {
+                sb.Append("-Infinity()");
+                return;
+            }
+
             if (!settings.UseCompactRepresentation)
             {
                 sb.Append("Float(");

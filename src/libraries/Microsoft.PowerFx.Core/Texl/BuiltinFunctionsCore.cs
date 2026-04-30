@@ -131,6 +131,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction IfError = _library.Add(new IfErrorFunction());
         public static readonly TexlFunction Index = _library.Add(new IndexFunction());
         public static readonly TexlFunction Index_UO = _library.Add(new IndexFunction_UO());
+        public static readonly TexlFunction Infinity = _library.Add(new InfinityFunction());
         public static readonly TexlFunction Int = _library.Add(new IntFunction());
         public static readonly TexlFunction IntT = _library.Add(new IntTableFunction());
         public static readonly TexlFunction IsBlank = _library.Add(new IsBlankFunction());
@@ -164,10 +165,12 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction LowerT = _library.Add(new LowerUpperTFunction(isLower: true));
         public static readonly TexlFunction Max = _library.Add(new MinMaxFunction(isMin: false));
         public static readonly TexlFunction MaxT = _library.Add(new MinMaxTableFunction(isMin: false));
+        public static readonly TexlFunction MaxValue = _library.Add(new MaxValueFunction());
         public static readonly TexlFunction Mid = _library.Add(new MidFunction());
         public static readonly TexlFunction MidT = _library.Add(new MidTFunction());
         public static readonly TexlFunction Min = _library.Add(new MinMaxFunction(isMin: true));
         public static readonly TexlFunction MinT = _library.Add(new MinMaxTableFunction(isMin: true));
+        public static readonly TexlFunction MinValue = _library.Add(new MinValueFunction());
         public static readonly TexlFunction Minute = _library.Add(new MinuteFunction());
         public static readonly TexlFunction Mod = _library.Add(new ModFunction());
         public static readonly TexlFunction ModT = _library.Add(new ModTFunction());
