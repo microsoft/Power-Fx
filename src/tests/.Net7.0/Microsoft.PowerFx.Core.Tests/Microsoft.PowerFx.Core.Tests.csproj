@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <!--Do not generate this package for public builds.  -->
     <IsPackable Condition="'$(InternalBuild)' == 'true'">true</IsPackable>
     <IsPackable Condition="'$(InternalBuild)' != 'true'">false</IsPackable>
