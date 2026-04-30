@@ -12,8 +12,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 {
     public partial class LanguageServerTestBase
     {
-        // Fix this: https://github.com/microsoft/Power-Fx/issues/2755
-#if false
         [Fact]
         public async Task TestNl2FxIsCanceledCorrectly()
         {
@@ -27,19 +25,31 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             Init(new InitParams(scopeFactory: scopeFactory));
             var nl2FxHandler = CreateAndConfigureNl2FxHandler();
             nl2FxHandler.ThrowOnCancellation = true;
-            nl2FxHandler.Nl2FxDelayTime = 800;
+            nl2FxHandler.Nl2FxDelayTime = 500;
+
+            // Use a semaphore to synchronize cancellation: the token is cancelled only after
+            // the NL2Fx handler has demonstrably entered NL2FxAsync, eliminating the
+            // wall-clock race that made the original CancelAfter(500) approach flaky.
+            using var handlerEntered = new SemaphoreSlim(0, 1);
+            nl2FxHandler.NL2FxEnteredSemaphore = handlerEntered;
+
             var payload = NL2FxMessageJson(documentUri);
             using var source = new CancellationTokenSource();
-            source.CancelAfter(500);  <-- flaky 
 
-            // Act
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload, source.Token);
+            // Start the server call without awaiting — it will run concurrently.
+            var responseTask = TestServer.OnDataReceivedAsync(payload.payload, source.Token);
+
+            // Wait until the handler body has started, then cancel.
+            await handlerEntered.WaitAsync();
+            source.Cancel();
+
+            // Act — now await the response with cancellation already signalled.
+            var rawResponse = await responseTask;
 
             // Assert
             AssertErrorPayload(rawResponse, payload.id, JsonRpcHelper.ErrorCode.RequestCancelled);
             Assert.NotEmpty(TestServer.UnhandledExceptions);
             Assert.Equal(1, nl2FxHandler.PreHandleNl2FxCallCount);
         }
-#endif 
     }
 }

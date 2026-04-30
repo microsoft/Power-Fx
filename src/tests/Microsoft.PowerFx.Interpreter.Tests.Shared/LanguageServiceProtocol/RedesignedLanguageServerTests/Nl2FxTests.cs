@@ -40,12 +40,23 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
         public int PreHandleNl2FxCallCount { get; set; } = 0;
 
+        /// <summary>
+        /// When set, Released once NL2FxAsync has been entered. Allows tests to synchronize
+        /// cancellation to a point after the handler has demonstrably started, avoiding
+        /// wall-clock races.
+        /// </summary>
+        public SemaphoreSlim NL2FxEnteredSemaphore { get; set; }
+
         public TestNL2FxHandler()
         {
         }
 
         public override async Task<CustomNL2FxResult> NL2FxAsync(NL2FxParameters request, CancellationToken cancel)
         {
+            // Signal to any waiting test that the handler body has been entered.
+            // This must happen before any delay so callers can cancel deterministically.
+            NL2FxEnteredSemaphore?.Release();
+
             if (Nl2FxDelayTime.HasValue)
             {
                 await Task.Delay(Nl2FxDelayTime.Value, CancellationToken.None);
