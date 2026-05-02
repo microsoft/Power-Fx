@@ -49,6 +49,12 @@ namespace Microsoft.PowerFx.Core.Functions
         public bool IteratesOverScope { get; }
 
         /// <summary>
+        /// True indicates that the function performs iteration in a deterministic manner,
+        /// for example ForAll with one record after another in order, evaluated exactly once per record.
+        /// </summary>
+        public bool IteratesOnceEachInOrder { get; }
+
+        /// <summary>
         /// Null if this is a row scope, but if it's a constant row scope this will
         /// be the constant scope of the function.
         /// </summary>
@@ -66,7 +72,7 @@ namespace Microsoft.PowerFx.Core.Functions
         // True indicates that this function cannot guarantee that it will iterate over the datasource in order.
         // This means it should not allow lambdas that operate on the same data multiple times, as this will
         // cause nondeterministic behavior.
-        public bool HasNondeterministicOperationOrder => IteratesOverScope && SupportsAsyncLambdas;
+        public bool HasNondeterministicOperationOrder => IteratesOverScope && !IteratesOnceEachInOrder && SupportsAsyncLambdas;
 
         public FunctionScopeInfo(
             TexlFunction function,
@@ -76,7 +82,8 @@ namespace Microsoft.PowerFx.Core.Functions
             bool iteratesOverScope = true,
             DType scopeType = null,
             Func<int, bool> appliesToArgument = null,
-            bool canBeCreatedByRecord = false)
+            bool canBeCreatedByRecord = false,
+            bool iteratesOnceEachInOrder = false)
         {
             UsesAllFieldsInScope = usesAllFieldsInScope;
             SupportsAsyncLambdas = supportsAsyncLambdas;
@@ -86,6 +93,7 @@ namespace Microsoft.PowerFx.Core.Functions
             _function = function;
             AppliesToArgument = appliesToArgument ?? (i => i > 0);
             CanBeCreatedByRecord = canBeCreatedByRecord;
+            IteratesOnceEachInOrder = iteratesOnceEachInOrder;
         }
 
         /// <summary>
