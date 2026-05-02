@@ -92,25 +92,47 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     continue;
                 }
 
+                // As long as source doesn't contain control type we can skip the type check for control types.
+                // This allows for an expression such as Patch(ds, Gallery.Selected, { ... updates ... }), where
+                // Gallery.Selected exposes a record not only with the fields from the original data source,
+                // but also all of its child controls.
+                //
+                // On literal record expressions, however, we shouldn't remove the control properties, as if they
+                // are there they were explicitly added by the maker.
+                bool hasControlFieldType = false;
+                foreach (var typedName in curType.GetNames(DPath.Root))
+                {
+                    if (!sourceContainsControlType && typedName.Type.IsControl && args[i] is not RecordNode)
+                    {
+                        hasControlFieldType = true;
+                        continue;
+                    }
+                }
+
                 // Ensure that if the key in argument1 exists in the current record, their types match.
                 bool isSafeToUnion = true;
 
+                if (hasControlFieldType)
+                {
+                    bool fError = false;
+                    curType = curType.DropAllOfKind(ref fError, DPath.Root, DKind.Control);
+                    if (fError)
+                    {
+                        isValid = isSafeToUnion = false;
+                    }
+                }
+
                 if (context.Features.PowerFxV1CompatibilityRules)
                 {
-                    isValid = isSafeToUnion = curType.CheckAggregateNames(dataSourceType, args[i], errors, context.Features, SupportsParamCoercion);
+                    if (!curType.CheckAggregateNames(dataSourceType, args[i], errors, context.Features, SupportsParamCoercion))
+                    {
+                        isValid = isSafeToUnion = false;
+                    }
                 }
                 else
                 {
-                    bool hasControlFieldType = false;
                     foreach (var typedName in curType.GetNames(DPath.Root))
                     {
-                        // As long as source doesn't contain control type we can skip the type check for control types.
-                        if (!sourceContainsControlType && typedName.Type.IsControl)
-                        {
-                            hasControlFieldType = true;
-                            continue;
-                        }
-
                         // If the datasource doesn't contain the supplied type.
                         DName name = typedName.Name;
                         if (!dataSourceType.TryGetType(name, out DType dsNameType))
@@ -153,16 +175,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTypeError_Arg_Expected_Found, name, dsNameType.GetKindString(), type.GetKindString());
                             }
 
-                            isValid = isSafeToUnion = false;
-                        }
-                    }
-
-                    if (hasControlFieldType)
-                    {
-                        bool fError = false;
-                        curType = curType.DropAllOfKind(ref fError, DPath.Root, DKind.Control);
-                        if (fError)
-                        {
                             isValid = isSafeToUnion = false;
                         }
                     }

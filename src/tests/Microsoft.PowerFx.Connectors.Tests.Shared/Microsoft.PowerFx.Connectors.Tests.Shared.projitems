@@ -31,6 +31,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiExtensionTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiFormUrlEncoderTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiHelperFunctions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FormatParameterValueTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiJsonSerializerTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiParserTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PowerAppsForMakersTests.cs" />

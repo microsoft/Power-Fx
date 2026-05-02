@@ -284,5 +284,153 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.IsAssignableFrom<RecordType>(connectorType.FormulaType);
             Assert.False(connectorType.HasErrors);
         }
+
+        [Fact]
+        public void GetContentTypeAndSchema_ApplicationOctetStream_ReturnsCorrectContentType()
+        {
+            var content = new Dictionary<string, OpenApiMediaType>
+            {
+                [OpenApiExtensions.ContentType_ApplicationOctetStream] = new OpenApiMediaType
+                {
+                    Schema = new OpenApiSchema { Type = "string", Format = "byte" }
+                }
+            };
+
+            var (contentType, mediaType) = content.GetContentTypeAndSchema();
+
+            Assert.Equal(OpenApiExtensions.ContentType_ApplicationOctetStream, contentType);
+            Assert.NotNull(mediaType);
+            Assert.Equal("string", mediaType.Schema.Type);
+            Assert.Equal("byte", mediaType.Schema.Format);
+        }
+
+        [Fact]
+        public void GetContentTypeAndSchema_UnknownContentType_ReturnsNull()
+        {
+            var content = new Dictionary<string, OpenApiMediaType>
+            {
+                ["application/xml"] = new OpenApiMediaType
+                {
+                    Schema = new OpenApiSchema { Type = "string" }
+                }
+            };
+
+            var (contentType, mediaType) = content.GetContentTypeAndSchema();
+
+            Assert.Null(contentType);
+            Assert.Null(mediaType);
+        }
+
+        [Fact]
+        public void GetContentTypeAndSchema_JsonAndOctetStream_PrefersJson()
+        {
+            var content = new Dictionary<string, OpenApiMediaType>
+            {
+                [OpenApiExtensions.ContentType_ApplicationOctetStream] = new OpenApiMediaType
+                {
+                    Schema = new OpenApiSchema { Type = "string", Format = "byte" }
+                },
+                [OpenApiExtensions.ContentType_ApplicationJson] = new OpenApiMediaType
+                {
+                    Schema = new OpenApiSchema
+                    {
+                        Type = "object",
+                        Properties = new Dictionary<string, OpenApiSchema>
+                        {
+                            ["data"] = new OpenApiSchema { Type = "string" }
+                        }
+                    }
+                }
+            };
+
+            var (contentType, mediaType) = content.GetContentTypeAndSchema();
+
+            Assert.Equal(OpenApiExtensions.ContentType_ApplicationJson, contentType);
+        }
+
+        [Fact]
+        public void OpenApiParser_OctetStreamBodyWithByteFormat_IncludesBlobParameter()
+        {
+            var doc = new OpenApiDocument
+            {
+                Paths = new OpenApiPaths
+                {
+                    ["/test"] = new OpenApiPathItem
+                    {
+                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        {
+                            [OperationType.Post] = new OpenApiOperation
+                            {
+                                OperationId = "TestOperation",
+                                RequestBody = new OpenApiRequestBody
+                                {
+                                    Required = true,
+                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    {
+                                        [OpenApiExtensions.ContentType_ApplicationOctetStream] = new OpenApiMediaType
+                                        {
+                                            Schema = new OpenApiSchema { Type = "string", Format = "byte" }
+                                        }
+                                    }
+                                },
+                                Responses = new OpenApiResponses
+                                {
+                                    ["200"] = new OpenApiResponse { Description = "OK" }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var functions = OpenApiParser.GetFunctions(new ConnectorSettings("test"), doc);
+            var function = functions.Single();
+
+            Assert.Single(function.RequiredParameters);
+            Assert.Equal(FormulaType.Blob, function.RequiredParameters[0].FormulaType);
+        }
+
+        [Fact]
+        public void OpenApiParser_OctetStreamBodyWithBinaryFormat_NamedFile()
+        {
+            var doc = new OpenApiDocument
+            {
+                Paths = new OpenApiPaths
+                {
+                    ["/test"] = new OpenApiPathItem
+                    {
+                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        {
+                            [OperationType.Post] = new OpenApiOperation
+                            {
+                                OperationId = "TestOperation",
+                                RequestBody = new OpenApiRequestBody
+                                {
+                                    Required = true,
+                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    {
+                                        [OpenApiExtensions.ContentType_ApplicationOctetStream] = new OpenApiMediaType
+                                        {
+                                            Schema = new OpenApiSchema { Type = "string", Format = "binary" }
+                                        }
+                                    }
+                                },
+                                Responses = new OpenApiResponses
+                                {
+                                    ["200"] = new OpenApiResponse { Description = "OK" }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var functions = OpenApiParser.GetFunctions(new ConnectorSettings("test"), doc);
+            var function = functions.Single();
+
+            Assert.Single(function.RequiredParameters);
+            Assert.Equal("file", function.RequiredParameters[0].Name);
+            Assert.Equal(FormulaType.Blob, function.RequiredParameters[0].FormulaType);
+        }
     }
 }
