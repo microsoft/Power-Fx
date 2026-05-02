@@ -518,6 +518,9 @@ namespace Microsoft.PowerFx.Syntax
             foreach (var info in result.UserDefinitionSourceInfos)
             {
                 var declaration = info.Declaration.Trim();
+
+                // If a // line comment is the last thing in the declaration, Trim() ate the newline that terminated it — emit a line break before '=' so the operator doesn't land inside the comment.
+                var preAssignSeparator = EndsInsideLineComment(declaration) ? "\n    " : " ";
                 var name = info.Name;
                 var before = info.Before;
                 var after = info.After;
@@ -526,7 +529,7 @@ namespace Microsoft.PowerFx.Syntax
                     case UserDefinitionType.NamedFormula:
                         var nf = result.NamedFormulas.First(nf => nf.Ident == name);
 
-                        definitions.Add(declaration + $" {(nf.ColonEqual ? TexlLexer.PunctuatorColonEqual : TexlLexer.PunctuatorEqual)} " + string.Concat(visitor.CommentsOf(before).With(nf.Formula.ParseTree.Accept(visitor, new Context(0)).With(visitor.CommentsOf(after)))));
+                        definitions.Add(declaration + $"{preAssignSeparator}{(nf.ColonEqual ? TexlLexer.PunctuatorColonEqual : TexlLexer.PunctuatorEqual)} " + string.Concat(visitor.CommentsOf(before).With(nf.Formula.ParseTree.Accept(visitor, new Context(0)).With(visitor.CommentsOf(after)))));
                         break;
                     case UserDefinitionType.UDF:
                         var udf = result.UDFs.First(udf => udf.Ident == name);
@@ -535,12 +538,12 @@ namespace Microsoft.PowerFx.Syntax
                             $"\n{{\n\t{string.Concat(visitor.CommentsOf(before).With(udf.Body.Accept(visitor, new Context(1)).With(visitor.CommentsOf(after)))).Trim()}\n}}" :
                             string.Concat(visitor.CommentsOf(before).With(udf.Body.Accept(visitor, new Context(0)).With(visitor.CommentsOf(after))));
 
-                        definitions.Add(declaration + $" {TexlLexer.PunctuatorEqual} " + udfBody);
+                        definitions.Add(declaration + $"{preAssignSeparator}{TexlLexer.PunctuatorEqual} " + udfBody);
                         break;
                     case UserDefinitionType.DefinedType:
                         var type = result.DefinedTypes.First(type => type.Ident == name);
 
-                        definitions.Add(declaration + $" {TexlLexer.PunctuatorColonEqual} " + string.Concat(visitor.CommentsOf(before).With(type.Type.Accept(visitor, new Context(0))).With(visitor.CommentsOf(after))));
+                        definitions.Add(declaration + $"{preAssignSeparator}{TexlLexer.PunctuatorColonEqual} " + string.Concat(visitor.CommentsOf(before).With(type.Type.Accept(visitor, new Context(0))).With(visitor.CommentsOf(after))));
                         break;
                     default:
                         continue;
@@ -564,6 +567,52 @@ namespace Microsoft.PowerFx.Syntax
             }
 
             return output;
+        }
+
+        private static bool EndsInsideLineComment(string text)
+        {
+            var inLineComment = false;
+            var inBlockComment = false;
+            for (var i = 0; i < text.Length; i++)
+            {
+                var c = text[i];
+                if (inLineComment)
+                {
+                    if (c == '\n')
+                    {
+                        inLineComment = false;
+                    }
+
+                    continue;
+                }
+
+                if (inBlockComment)
+                {
+                    if (c == '*' && i + 1 < text.Length && text[i + 1] == '/')
+                    {
+                        inBlockComment = false;
+                        i++;
+                    }
+
+                    continue;
+                }
+
+                if (c == '/' && i + 1 < text.Length)
+                {
+                    if (text[i + 1] == '/')
+                    {
+                        inLineComment = true;
+                        i++;
+                    }
+                    else if (text[i + 1] == '*')
+                    {
+                        inBlockComment = true;
+                        i++;
+                    }
+                }
+            }
+
+            return inLineComment;
         }
 
         private LazyList<string> CommentsOf(SourceList list)
