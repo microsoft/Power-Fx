@@ -88,7 +88,7 @@ false
 true
 
 >> IsType(ParseJSON("""1900-12-31T24:59:59.1002Z"""), DateTime)
-false
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> IsType(ParseJSON("""24:59:59.12345678"""), Time)
 false
