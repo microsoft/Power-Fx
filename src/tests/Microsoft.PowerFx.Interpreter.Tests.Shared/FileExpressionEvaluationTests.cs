@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Console = output;
         }
 
-        // File expression tests are run multiple times for the different ways a host can use Power Fx.
+        // File expression tests are run multiple times for the different ways a host can use Power Fx. a
         // 
         // 1. Features.PowerFxV1 without NumberIsFloat - the main way that most hosts will use Power Fx.
         // 2. Feautres.PowerFxV1 with NumberIsFloat - for hosts that wish to use floating point instead of Decimal.
@@ -181,12 +181,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return false;
         }
 
-#if false
+#if true
         // Helper to run a single .txt
         [Fact]
         public void RunOne()
         {
-            var path = @"C:\od\regex\match9\one.txt";
+            var path = @"D:\repos\free\all\src\tests\Microsoft.PowerFx.Interpreter.Tests.Shared\MutationScripts\ForAll_DeepMutation_V1Compat.txt";
 
             var line = 0;
 
@@ -241,7 +241,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [ReplFileSimpleList("MutationScripts")]
         public void RunMutationTests_V1(string file)
         {
-            RunMutationTestFile(file, Features.PowerFxV1, "PowerFxV1");
+            var features = new Features(Features.PowerFxV1)
+            {
+                EnhancedIterationChecks = true,
+            };
+
+            RunMutationTestFile(file, features, "PowerFxV1");
         }
 
         [Theory]
@@ -253,6 +258,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 TableSyntaxDoesntWrapRecords = true,
                 ConsistentOneColumnTableResult = true,
                 IsUserDefinedTypesEnabled = true,
+                EnhancedIterationChecks = true,
             };
 
             // disable:PowerFxV1CompatibilityRules will force the tests specifically for those behaviors to be excluded from this run.

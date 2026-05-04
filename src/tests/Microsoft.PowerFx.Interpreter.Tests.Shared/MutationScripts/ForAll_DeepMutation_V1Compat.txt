@@ -1,0 +1,21 @@
+#SETUP: PowerFxV1CompatibilityRules,MutationFunctionsTestSetup
+
+>> JSON( rwt1_MutateEnabled_SetMutateEnabled )
+"{""Field1"":3,""Field2"":{""Field2_1"":321,""Field2_2"":""2_2"",""Field2_4"":[{""Field1"":1,""Field2"":""earth"",""Field3"":""2022-01-01T08:00:00.000Z"",""Field4"":true}]}}"
+
+>> Patch( rwt1_MutateEnabled_SetMutateEnabled.Field2.Field2_4, {Field1:1,Field2:"earth",Field3:Date(2022,1,1),Field4:true}, {Field1: 2} )
+{Field1:2,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> ForAll( rwt1_MutateEnabled_SetMutateEnabled.Field2.Field2_4, Patch( rwt1_MutateEnabled_SetMutateEnabled.Field2.Field2_4, {Field1:2,Field2:"earth",Field3:Date(2022,1,1),Field4:true}, {Field1: 3} ) )
+Table({Field1:3,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Set( rwt1_MutateEnabled_SetMutateEnabled.Field2, {Field2_1:1,Field2_2:"",Field2_4:[{Field1:2,Field2:"moon",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}]} ); rwt1_MutateEnabled_SetMutateEnabled.Field2
+{Field2_1:1,Field2_2:"",Field2_4:Table({Field1:2,Field2:"moon",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})}
+
+>> Set( rwt1_MutateEnabled_SetMutateEnabled.Field2.Field2_4, [{Field1:2,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}] ); rwt1_MutateEnabled_SetMutateEnabled.Field2
+{Field2_1:1,Field2_2:"",Field2_4:Table({Field1:2,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})}
+
+>> ForAll( rwt1_MutateEnabled_SetMutateEnabled.Field2.Field2_4, Set( rwt1_MutateEnabled_SetMutateEnabled.Field2.Field2_4, [{Field1:4,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}] ) ); rwt1_MutateEnabled_SetMutateEnabled.Field2
+{Field2_1:1,Field2_2:"",Field2_4:Table({Field1:4,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})}
+
+
