@@ -87,20 +87,31 @@ namespace Microsoft.PowerFx.Types
             return FromJson(element, settings, new FormulaValueJsonSerializerWorkingData(), formulaType);  
         }
 
-        // // caller verified element is non-null and is of type string 
+        // // caller verified element is non-null and is of type string
         internal static FormulaValue ParseDate(JsonElement element, FormulaType targetType, Func<DateTime, FormulaValue> funcParse)
         {
-            var strValue = element.GetString(); 
+            var strValue = element.GetString();
             if (string.IsNullOrWhiteSpace(strValue))
             {
                 return FormulaValue.NewBlank(targetType);
             }
 
-            // Any exceptions will be caught at higher level. 
-            var dateTime = element.GetDateTime();
+            // Use DateTimeOffset.TryParse for consistent, machine-independent parsing that matches
+            // Power Automate / Logic Apps behavior. Treats offset-less values as UTC and normalizes
+            // offset-bearing values to UTC, so the resulting instance does not depend on the host's
+            // local timezone. Also accepts non-strict ISO 8601 forms emitted by connectors (e.g.
+            // "+0000" instead of "+00:00") that element.GetDateTime() would reject.
+            if (!DateTimeOffset.TryParse(strValue, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var dto))
+            {
+                return new ErrorValue(IRContext.NotInSource(targetType), new ExpressionError()
+                {
+                    Message = $"Date '{strValue}' could not be parsed",
+                    Span = new Syntax.Span(0, 0),
+                    Kind = ErrorKind.InvalidArgument
+                });
+            }
 
-            var value = funcParse(dateTime);
-            return value;
+            return funcParse(dto.UtcDateTime);
         }
 
         internal static FormulaValue FromJson(JsonElement element, FormulaValueJsonSerializerSettings settings, FormulaValueJsonSerializerWorkingData data, FormulaType formulaType = null)
