@@ -4581,12 +4581,12 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Patch(rec1, {b:2})", "![a:n, b:n]", "![a:n]")]
-        [InlineData("Patch(rec2, {c:\"new\"})", "![a:n, b:s, c:s]", "![a:n, b:s]")]
-        [InlineData("Patch(rec3, {b:3, c:4})", "![a:n, b:n, c:n]", "![a:n, b:n]")]
-        [InlineData("Patch(rec4, {y:Date(2020,1,1)})", "![x:b, y:D]", "![x:b]")]
-        [InlineData("Patch(rec5, {x:123})", "![x:$]", "![x:$]")]
-        public void TestPatchRecordFunctionWithVariable(string script, string expectedType, string variableType)
+        [InlineData("Patch(rec1, {b:2})", "![a:n, b:n]", "![a:n]", "rec1")]
+        [InlineData("Patch(rec2, {c:\"new\"})", "![a:n, b:s, c:s]", "![a:n, b:s]", "rec2")]
+        [InlineData("Patch(rec3, {b:3, c:4})", "![a:n, b:n, c:n]", "![a:n, b:n]", "rec3")]
+        [InlineData("Patch(rec4, {y:Date(2020,1,1)})", "![x:b, y:D]", "![x:b]", "rec4")]
+        [InlineData("Patch(rec5, {x:123})", "![x:$]", "![x:$]", "rec5")]
+        public void TestPatchRecordFunctionWithVariable(string script, string expectedType, string variableType, string variableName)
         {
             Assert.True(DType.TryParse(expectedType, out var type), script);
             Assert.True(type.IsValid, script);
@@ -4595,7 +4595,6 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(varType.IsValid, script);
 
             var symbol = new SymbolTable();
-            var variableName = script.Split('(')[1].Split(',')[0].Trim();
             symbol.AddVariable(variableName, FormulaType.Build(varType));
 
             TestSimpleBindingSuccess(script, type, symbol);
