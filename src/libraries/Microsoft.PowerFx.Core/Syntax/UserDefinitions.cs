@@ -173,7 +173,7 @@ namespace Microsoft.PowerFx.Syntax
                         nameGroup.First().Attributes));
             }
 
-            return new ParseUserDefinitionResult(newFormulas, parsed.UDFs, parsed.DefinedTypes, errors, parsed.Comments, parsed.UserDefinitionSourceInfos, parsed.DefinitionsLikely);
+            return new ParseUserDefinitionResult(newFormulas, parsed.UDFs, parsed.DefinedTypes, errors, parsed.Comments, parsed.UserDefinitionSourceInfos, parsed.DefinitionsLikely, trailingTrivia: parsed.TrailingTrivia);
         }
 
         private Formula GetPartialCombinedFormula(string name, PartialOperationKind operationKind, IList<NamedFormula> formulas)
