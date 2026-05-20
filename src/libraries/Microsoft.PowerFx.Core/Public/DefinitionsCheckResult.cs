@@ -156,10 +156,21 @@ namespace Microsoft.PowerFx
             return this._resolvedTypes;
         }
 
-        private static readonly IReadOnlyDictionary<string, AttributeDefinition> _builtInAttributes =
-            new Dictionary<string, AttributeDefinition>(StringComparer.Ordinal)
+        private sealed class PartialAttributeDefinition : IAttributeDefinition
+        {
+            public string Name => "Partial";
+
+            public int MinArgCount => 1;
+
+            public int MaxArgCount => 1;
+
+            public IEnumerable<TexlError> Validate(AttributeValidationContext context) => null;
+        }
+
+        private static readonly IReadOnlyDictionary<string, IAttributeDefinition> _builtInAttributes =
+            new Dictionary<string, IAttributeDefinition>(StringComparer.Ordinal)
             {
-                { "Partial", new AttributeDefinition("Partial", minArgCount: 1, maxArgCount: 1) }
+                { "Partial", new PartialAttributeDefinition() }
             };
 
         private List<TexlError> ValidateAttributes()
@@ -205,9 +216,9 @@ namespace Microsoft.PowerFx
             }
         }
 
-        private List<ExpressionError> RunCustomAttributeValidation(IEnumerable<UserDefinedFunction> udfs)
+        private List<TexlError> RunCustomAttributeValidation(IEnumerable<UserDefinedFunction> udfs)
         {
-            var errors = new List<ExpressionError>();
+            var errors = new List<TexlError>();
 
             if (!_parserOptions.AllowAttributes)
             {
@@ -225,25 +236,22 @@ namespace Microsoft.PowerFx
                         _symbols.TryGetAttributeDefinition(attrName, out definition);
                     }
 
-                    if (definition?.Validator == null)
+                    if (definition == null)
                     {
                         continue;
                     }
 
                     var context = new AttributeValidationContext(
                         definitionName: udf.Name,
-                        attributeArguments: attr.Arguments,
+                        attributeNameToken: attr.Name,
+                        attributeArguments: attr.ArgumentTokens,
                         returnType: FormulaType.Build(udf.ReturnType),
                         parameters: udf.GetPublicParameters());
 
-                    foreach (var errorMsg in definition.Validator(context) ?? Enumerable.Empty<string>())
+                    var validatorErrors = definition.Validate(context);
+                    if (validatorErrors != null)
                     {
-                        errors.Add(new ExpressionError
-                        {
-                            Message = errorMsg,
-                            Span = attr.Name.Span,
-                            Severity = ErrorSeverity.Warning
-                        });
+                        errors.AddRange(validatorErrors);
                     }
                 }
             }
@@ -288,7 +296,7 @@ namespace Microsoft.PowerFx
                 var customErrors = RunCustomAttributeValidation(partialUDFs);
                 if (customErrors.Any())
                 {
-                    _errors.AddRange(customErrors);
+                    _errors.AddRange(ExpressionError.New(customErrors, _defaultErrorCulture));
                 }
 
                 foreach (var udf in partialUDFs)

@@ -412,7 +412,7 @@ namespace Microsoft.PowerFx
         }
 
         // Hook from Lookup - Get just variables. 
-        internal virtual bool TryGetAttributeDefinition(string name, out AttributeDefinition definition)
+        internal virtual bool TryGetAttributeDefinition(string name, out IAttributeDefinition definition)
         {
             definition = null;
             return false;

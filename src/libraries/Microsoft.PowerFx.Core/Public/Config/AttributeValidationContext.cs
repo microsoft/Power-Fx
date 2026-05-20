@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -20,9 +21,14 @@ namespace Microsoft.PowerFx
         public string DefinitionName { get; }
 
         /// <summary>
-        /// Gets the string arguments from the attribute syntax.
+        /// Gets the token for the attribute name.
         /// </summary>
-        public IReadOnlyList<string> AttributeArguments { get; }
+        public IdentToken AttributeNameToken { get; }
+
+        /// <summary>
+        /// Gets the argument tokens from the attribute syntax.
+        /// </summary>
+        public IReadOnlyList<Token> AttributeArguments { get; }
 
         /// <summary>
         /// Gets the return type of the UDF.
@@ -36,11 +42,13 @@ namespace Microsoft.PowerFx
 
         internal AttributeValidationContext(
             string definitionName,
-            IReadOnlyList<string> attributeArguments,
+            IdentToken attributeNameToken,
+            IReadOnlyList<Token> attributeArguments,
             FormulaType returnType,
             IReadOnlyList<NamedFormulaType> parameters)
         {
             DefinitionName = definitionName;
+            AttributeNameToken = attributeNameToken;
             AttributeArguments = attributeArguments;
             ReturnType = returnType;
             Parameters = parameters;

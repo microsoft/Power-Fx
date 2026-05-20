@@ -183,7 +183,7 @@ namespace Microsoft.PowerFx
             }
         }
 
-        internal override bool TryGetAttributeDefinition(string name, out AttributeDefinition definition)
+        internal override bool TryGetAttributeDefinition(string name, out IAttributeDefinition definition)
         {
             foreach (var table in _symbolTables)
             {

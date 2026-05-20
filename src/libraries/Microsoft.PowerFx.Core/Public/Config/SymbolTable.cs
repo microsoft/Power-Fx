@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx
 
         private readonly IDictionary<DName, FormulaType> _namedTypes = new Dictionary<DName, FormulaType>();
 
-        private readonly Dictionary<string, AttributeDefinition> _knownAttributes = new Dictionary<string, AttributeDefinition>(StringComparer.Ordinal);
+        private readonly Dictionary<string, IAttributeDefinition> _knownAttributes = new Dictionary<string, IAttributeDefinition>(StringComparer.Ordinal);
 
         private DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
 
@@ -490,7 +490,7 @@ namespace Microsoft.PowerFx
         /// Registers a known attribute definition for validation.
         /// </summary>
         /// <param name="attributeDefinition">The attribute definition to register.</param>
-        internal void AddAttribute(AttributeDefinition attributeDefinition)
+        internal void AddAttribute(IAttributeDefinition attributeDefinition)
         {
             Contracts.AssertValue(attributeDefinition);
 
@@ -505,7 +505,7 @@ namespace Microsoft.PowerFx
             _knownAttributes.Add(attributeDefinition.Name, attributeDefinition);
         }
 
-        internal override bool TryGetAttributeDefinition(string name, out AttributeDefinition definition)
+        internal override bool TryGetAttributeDefinition(string name, out IAttributeDefinition definition)
         {
             return _knownAttributes.TryGetValue(name, out definition);
         }

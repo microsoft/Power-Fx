@@ -1,11 +1,13 @@
-﻿// Copyright (c) Microsoft Corporation.
+// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -393,7 +395,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TestRegisteredAttributeOnNFSucceeds()
         {
             var symbolTable = new SymbolTable();
-            symbolTable.AddAttribute(new AttributeDefinition("MyAttr", 0, 0));
+            symbolTable.AddAttribute(new MockAttributeDefinition("MyAttr", 0, 0));
 
             var checkResult = GetCheckResult("[MyAttr] X = 1;", symbolTable);
             checkResult.ApplyCreateUserDefinedFunctions();
@@ -405,7 +407,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TestRegisteredAttributeOnUDFSucceeds()
         {
             var symbolTable = new SymbolTable();
-            symbolTable.AddAttribute(new AttributeDefinition("MyAttr", 0, 0));
+            symbolTable.AddAttribute(new MockAttributeDefinition("MyAttr", 0, 0));
 
             var checkResult = GetCheckResult("[MyAttr] MyFunc(): Number = 1;", symbolTable);
             checkResult.ApplyCreateUserDefinedFunctions();
@@ -417,7 +419,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TestAttributeArgCountTooFew()
         {
             var symbolTable = new SymbolTable();
-            symbolTable.AddAttribute(new AttributeDefinition("Foo", 1, 2));
+            symbolTable.AddAttribute(new MockAttributeDefinition("Foo", 1, 2));
 
             var checkResult = GetCheckResult("[Foo] X = 1;", symbolTable);
             checkResult.ApplyCreateUserDefinedFunctions();
@@ -430,7 +432,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TestAttributeArgCountTooMany()
         {
             var symbolTable = new SymbolTable();
-            symbolTable.AddAttribute(new AttributeDefinition("Foo", 0, 1));
+            symbolTable.AddAttribute(new MockAttributeDefinition("Foo", 0, 1));
 
             var checkResult = GetCheckResult(@"[Foo(""a"", ""b"")] X = 1;", symbolTable);
             checkResult.ApplyCreateUserDefinedFunctions();
@@ -455,10 +457,10 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TestComposedSymbolTableAttributeLookup()
         {
             var table1 = new SymbolTable();
-            table1.AddAttribute(new AttributeDefinition("AttrA", 0, 0));
+            table1.AddAttribute(new MockAttributeDefinition("AttrA", 0, 0));
 
             var table2 = new SymbolTable();
-            table2.AddAttribute(new AttributeDefinition("AttrB", 1, 1));
+            table2.AddAttribute(new MockAttributeDefinition("AttrB", 1, 1));
 
             var composed = ReadOnlySymbolTable.Compose(table1, table2);
 
@@ -488,17 +490,17 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TestDuplicateAttributeRegistrationThrows()
         {
             var symbolTable = new SymbolTable();
-            symbolTable.AddAttribute(new AttributeDefinition("MyAttr", 0, 0));
+            symbolTable.AddAttribute(new MockAttributeDefinition("MyAttr", 0, 0));
 
             Assert.Throws<InvalidOperationException>(() =>
-                symbolTable.AddAttribute(new AttributeDefinition("MyAttr", 1, 1)));
+                symbolTable.AddAttribute(new MockAttributeDefinition("MyAttr", 1, 1)));
         }
 
         [Fact]
         public void TestRegisteredAttributeWithCorrectArgs()
         {
             var symbolTable = new SymbolTable();
-            symbolTable.AddAttribute(new AttributeDefinition("Tag", 1, 3));
+            symbolTable.AddAttribute(new MockAttributeDefinition("Tag", 1, 3));
 
             var checkResult = GetCheckResult(@"[Tag(""hello"", ""world"")] MyFunc(): Number = 1;", symbolTable);
             checkResult.ApplyCreateUserDefinedFunctions();
@@ -510,25 +512,25 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TestCustomValidatorAcceptsMatchingSignature()
         {
             var symbolTable = new SymbolTable();
-            symbolTable.AddAttribute(new AttributeDefinition(
+            symbolTable.AddAttribute(new MockAttributeDefinition(
                 "RequiresNumber",
                 0,
                 0,
-                validator: ctx =>
+                validate: ctx =>
                 {
                     if (ctx.ReturnType != FormulaType.Number)
                     {
-                        return new[] { "Function must return Number." };
+                        return new[] { new TexlError(ctx.AttributeNameToken, DocumentErrorSeverity.Warning, TexlStrings.ErrGeneralError) };
                     }
 
-                    return Array.Empty<string>();
+                    return Array.Empty<TexlError>();
                 }));
 
             var checkResult = GetCheckResult("[RequiresNumber] MyFunc(): Number = 1;", symbolTable);
             checkResult.ApplyCreateUserDefinedFunctions();
 
             Assert.True(checkResult.IsSuccess);
-            Assert.DoesNotContain(checkResult.Errors, e => e.Message == "Function must return Number.");
+            Assert.DoesNotContain(checkResult.Errors, e => e.MessageKey == TexlStrings.ErrGeneralError.Key);
         }
 
         [Fact]
@@ -536,18 +538,18 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var symbolTable = new SymbolTable();
             symbolTable.AddType(new DName("Text"), FormulaType.String);
-            symbolTable.AddAttribute(new AttributeDefinition(
+            symbolTable.AddAttribute(new MockAttributeDefinition(
                 "RequiresNumber",
                 0,
                 0,
-                validator: ctx =>
+                validate: ctx =>
                 {
                     if (ctx.ReturnType != FormulaType.Number)
                     {
-                        return new[] { "Function must return Number." };
+                        return new[] { new TexlError(ctx.AttributeNameToken, DocumentErrorSeverity.Warning, TexlStrings.ErrGeneralError) };
                     }
 
-                    return Array.Empty<string>();
+                    return Array.Empty<TexlError>();
                 }));
 
             var checkResult = GetCheckResult(@"[RequiresNumber] MyFunc(): Text = ""hello"";", symbolTable);
@@ -555,43 +557,43 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // Custom validation errors are warnings — IsSuccess stays true
             Assert.True(checkResult.IsSuccess);
-            Assert.Contains(checkResult.Errors, e => e.Message == "Function must return Number." && e.IsWarning);
+            Assert.Contains(checkResult.Errors, e => e.MessageKey == TexlStrings.ErrGeneralError.Key && e.IsWarning);
         }
 
         [Fact]
         public void TestCustomValidatorChecksParameters()
         {
             var symbolTable = new SymbolTable();
-            symbolTable.AddAttribute(new AttributeDefinition(
+            symbolTable.AddAttribute(new MockAttributeDefinition(
                 "NeedsNumberParam",
                 0,
                 0,
-                validator: ctx =>
+                validate: ctx =>
                 {
                     if (ctx.Parameters.Count != 1 || ctx.Parameters[0].Type != FormulaType.Number)
                     {
-                        return new[] { "Function must have exactly one Number parameter." };
+                        return new[] { new TexlError(ctx.AttributeNameToken, DocumentErrorSeverity.Warning, TexlStrings.ErrGeneralError) };
                     }
 
-                    return Array.Empty<string>();
+                    return Array.Empty<TexlError>();
                 }));
 
             // Matching signature
             var checkResult = GetCheckResult("[NeedsNumberParam] MyFunc(x: Number): Number = x;", symbolTable);
             checkResult.ApplyCreateUserDefinedFunctions();
-            Assert.DoesNotContain(checkResult.Errors, e => e.Message == "Function must have exactly one Number parameter.");
+            Assert.DoesNotContain(checkResult.Errors, e => e.MessageKey == TexlStrings.ErrGeneralError.Key);
 
             // Non-matching: no parameters
             var checkResult2 = GetCheckResult("[NeedsNumberParam] MyFunc(): Number = 1;", symbolTable);
             checkResult2.ApplyCreateUserDefinedFunctions();
-            Assert.Contains(checkResult2.Errors, e => e.Message == "Function must have exactly one Number parameter." && e.IsWarning);
+            Assert.Contains(checkResult2.Errors, e => e.MessageKey == TexlStrings.ErrGeneralError.Key && e.IsWarning);
         }
 
         [Fact]
         public void TestNullValidatorNoOp()
         {
             var symbolTable = new SymbolTable();
-            symbolTable.AddAttribute(new AttributeDefinition("NoValidator", 0, 0));
+            symbolTable.AddAttribute(new MockAttributeDefinition("NoValidator", 0, 0));
 
             var checkResult = GetCheckResult("[NoValidator] MyFunc(): Number = 1;", symbolTable);
             checkResult.ApplyCreateUserDefinedFunctions();
@@ -603,7 +605,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TestValidatorReturnsEmpty()
         {
             var symbolTable = new SymbolTable();
-            symbolTable.AddAttribute(new AttributeDefinition("AlwaysOk", 0, 0, validator: ctx => Array.Empty<string>()));
+            symbolTable.AddAttribute(new MockAttributeDefinition("AlwaysOk", 0, 0, validate: ctx => Array.Empty<TexlError>()));
 
             var checkResult = GetCheckResult("[AlwaysOk] MyFunc(): Number = 1;", symbolTable);
             checkResult.ApplyCreateUserDefinedFunctions();
@@ -615,27 +617,31 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TestMultipleValidatorErrorMessages()
         {
             var symbolTable = new SymbolTable();
-            symbolTable.AddAttribute(new AttributeDefinition("Strict", 0, 0, validator: ctx => new[] { "Error one.", "Error two." }));
+            symbolTable.AddAttribute(new MockAttributeDefinition("Strict", 0, 0, validate: ctx => new[]
+            {
+                new TexlError(ctx.AttributeNameToken, DocumentErrorSeverity.Warning, TexlStrings.ErrBadToken),
+                new TexlError(ctx.AttributeNameToken, DocumentErrorSeverity.Warning, TexlStrings.ErrOperandExpected)
+            }));
 
             var checkResult = GetCheckResult("[Strict] MyFunc(): Number = 1;", symbolTable);
             checkResult.ApplyCreateUserDefinedFunctions();
 
-            Assert.Contains(checkResult.Errors, e => e.Message == "Error one." && e.IsWarning);
-            Assert.Contains(checkResult.Errors, e => e.Message == "Error two." && e.IsWarning);
+            Assert.Contains(checkResult.Errors, e => e.MessageKey == TexlStrings.ErrBadToken.Key && e.IsWarning);
+            Assert.Contains(checkResult.Errors, e => e.MessageKey == TexlStrings.ErrOperandExpected.Key && e.IsWarning);
         }
 
         [Fact]
         public void TestCustomValidatorErrorsAreWarnings()
         {
             var symbolTable = new SymbolTable();
-            symbolTable.AddAttribute(new AttributeDefinition("WarnMe", 0, 0, validator: ctx => new[] { "This is a warning." }));
+            symbolTable.AddAttribute(new MockAttributeDefinition("WarnMe", 0, 0, validate: ctx => new[] { new TexlError(ctx.AttributeNameToken, DocumentErrorSeverity.Warning, TexlStrings.ErrGeneralError) }));
 
             var checkResult = GetCheckResult("[WarnMe] MyFunc(): Number = 1;", symbolTable);
             checkResult.ApplyCreateUserDefinedFunctions();
 
             // IsSuccess should still be true because custom validation errors are warnings
             Assert.True(checkResult.IsSuccess);
-            var warning = Assert.Single(checkResult.Errors, e => e.Message == "This is a warning.");
+            var warning = Assert.Single(checkResult.Errors, e => e.MessageKey == TexlStrings.ErrGeneralError.Key);
             Assert.True(warning.IsWarning);
         }
 
@@ -644,21 +650,21 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var validatorCalled = false;
             var symbolTable = new SymbolTable();
-            symbolTable.AddAttribute(new AttributeDefinition(
+            symbolTable.AddAttribute(new MockAttributeDefinition(
                 "UdfOnly",
                 0,
                 0,
-                validator: ctx =>
+                validate: ctx =>
                 {
                     validatorCalled = true;
-                    return new[] { "Should not appear." };
+                    return new[] { new TexlError(ctx.AttributeNameToken, DocumentErrorSeverity.Warning, TexlStrings.ErrGeneralError) };
                 }));
 
             var checkResult = GetCheckResult("[UdfOnly] X = 1;", symbolTable);
             checkResult.ApplyCreateUserDefinedFunctions();
 
             Assert.False(validatorCalled);
-            Assert.DoesNotContain(checkResult.Errors, e => e.Message == "Should not appear.");
+            Assert.DoesNotContain(checkResult.Errors, e => e.MessageKey == TexlStrings.ErrGeneralError.Key);
         }
 
         [Fact]
@@ -666,14 +672,14 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             AttributeValidationContext capturedContext = null;
             var symbolTable = new SymbolTable();
-            symbolTable.AddAttribute(new AttributeDefinition(
+            symbolTable.AddAttribute(new MockAttributeDefinition(
                 "Capture",
                 1,
                 2,
-                validator: ctx =>
+                validate: ctx =>
                 {
                     capturedContext = ctx;
-                    return Array.Empty<string>();
+                    return Array.Empty<TexlError>();
                 }));
 
             var checkResult = GetCheckResult(@"[Capture(""arg1"", ""arg2"")] MyFunc(x: Number): Number = x;", symbolTable);
@@ -681,9 +687,11 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.NotNull(capturedContext);
             Assert.Equal("MyFunc", capturedContext.DefinitionName);
+            Assert.NotNull(capturedContext.AttributeNameToken);
+            Assert.Equal("Capture", capturedContext.AttributeNameToken.Name.Value);
             Assert.Equal(2, capturedContext.AttributeArguments.Count);
-            Assert.Equal("arg1", capturedContext.AttributeArguments[0]);
-            Assert.Equal("arg2", capturedContext.AttributeArguments[1]);
+            Assert.Equal("arg1", capturedContext.AttributeArguments[0].As<StrLitToken>().Value);
+            Assert.Equal("arg2", capturedContext.AttributeArguments[1].As<StrLitToken>().Value);
             Assert.Equal(FormulaType.Number, capturedContext.ReturnType);
             Assert.Single(capturedContext.Parameters);
             Assert.Equal("x", capturedContext.Parameters[0].Name.Value);
