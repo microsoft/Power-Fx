@@ -69,6 +69,59 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void TestAnnotationWithIdentArgs()
+        {
+            var result = UserDefinitions.Parse(
+            @"
+                [MyAttr(foo, bar)]
+                Baz = 123;
+            ", _parseOptions);
+
+            Assert.False(result.HasErrors);
+
+            var attribute = result.NamedFormulas.First().Attributes[0];
+            Assert.Equal("MyAttr", attribute.Name.Name.Value);
+            Assert.Equal(2, attribute.Arguments.Count);
+            Assert.Equal("foo", attribute.Arguments[0]);
+            Assert.Equal("bar", attribute.Arguments[1]);
+        }
+
+        [Fact]
+        public void TestAnnotationWithMixedArgs()
+        {
+            var result = UserDefinitions.Parse(
+            @"
+                [MyAttr(""hello"", world)]
+                Foo = 123;
+            ", _parseOptions);
+
+            Assert.False(result.HasErrors);
+
+            var attribute = result.NamedFormulas.First().Attributes[0];
+            Assert.Equal("MyAttr", attribute.Name.Name.Value);
+            Assert.Equal(2, attribute.Arguments.Count);
+            Assert.Equal("hello", attribute.Arguments[0]);
+            Assert.Equal("world", attribute.Arguments[1]);
+        }
+
+        [Fact]
+        public void TestAnnotationWithIdentArgOnUDF()
+        {
+            var result = UserDefinitions.Parse(
+            @"
+                [MyAttr(someIdent)]
+                MyFunc(): Number = 1;
+            ", _parseOptions);
+
+            Assert.False(result.HasErrors);
+
+            var udf = result.UDFs.First();
+            Assert.Equal("MyAttr", udf.Attributes[0].Name.Name.Value);
+            Assert.Single(udf.Attributes[0].Arguments);
+            Assert.Equal("someIdent", udf.Attributes[0].Arguments[0]);
+        }
+
+        [Fact]
         public void TestNFAttributeSingleKeyAnd()
         {
             var result = UserDefinitions.Parse(

@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Parser
         public Attribute(IdentToken name, IReadOnlyList<Token> argumentTokens, Token openBracket)
         {
             Name = name;
-            Arguments = argumentTokens.Select(t => t.As<StrLitToken>().Value).ToList();
+            Arguments = argumentTokens.Select(t => t is IdentToken ident ? ident.Name.Value : t.As<StrLitToken>().Value).ToList();
             ArgumentTokens = argumentTokens;
             OpenBracket = openBracket;
         }

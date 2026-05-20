@@ -254,7 +254,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     _curs.TokMove();
                     ParseTrivia();
 
-                    while (_curs.TidCur == TokKind.StrLit)
+                    while (_curs.TidCur == TokKind.StrLit || _curs.TidCur == TokKind.Ident)
                     {
                         argumentTokens.Add(_curs.TokCur);
                         _curs.TokMove();
