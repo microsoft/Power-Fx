@@ -156,17 +156,6 @@ namespace Microsoft.PowerFx
             return this._resolvedTypes;
         }
 
-        private sealed class PartialAttributeDefinition : IAttributeDefinition
-        {
-            public string Name => "Partial";
-
-            public int MinArgCount => 1;
-
-            public int MaxArgCount => 1;
-
-            public IEnumerable<TexlError> Validate(AttributeValidationContext context) => null;
-        }
-
         private static readonly IReadOnlyDictionary<string, IAttributeDefinition> _builtInAttributes =
             new Dictionary<string, IAttributeDefinition>(StringComparer.Ordinal)
             {
