@@ -594,10 +594,25 @@ namespace Microsoft.PowerFx.Core.Functions
                 return false;
             }
 
+            var matched = new bool[b.Count];
+
             for (var i = 0; i < a.Count; i++)
             {
-                if (a[i].Name.Name != b[i].Name.Name ||
-                    !a[i].Arguments.SequenceEqual(b[i].Arguments))
+                var found = false;
+
+                for (var j = 0; j < b.Count; j++)
+                {
+                    if (!matched[j] &&
+                        a[i].Name.Name == b[j].Name.Name &&
+                        a[i].Arguments.SequenceEqual(b[j].Arguments))
+                    {
+                        matched[j] = true;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
                 {
                     return false;
                 }

@@ -168,6 +168,22 @@ namespace Microsoft.PowerFx
 
             if (!_parserOptions.AllowAttributes)
             {
+                foreach (var udf in _parse.UDFs)
+                {
+                    foreach (var attr in udf.Attributes)
+                    {
+                        errors.Add(new TexlError(attr.Name, DocumentErrorSeverity.Severe, TexlStrings.ErrAttributesNotAllowed));
+                    }
+                }
+
+                foreach (var nf in _parse.NamedFormulas)
+                {
+                    foreach (var attr in nf.Attributes)
+                    {
+                        errors.Add(new TexlError(attr.Name, DocumentErrorSeverity.Severe, TexlStrings.ErrAttributesNotAllowed));
+                    }
+                }
+
                 return errors;
             }
 

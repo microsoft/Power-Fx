@@ -917,6 +917,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static ErrorResourceKey ErrUnknownAttribute = new ErrorResourceKey("ErrUnknownAttribute");
         public static ErrorResourceKey ErrAttributeArgCount = new ErrorResourceKey("ErrAttributeArgCount");
+        public static ErrorResourceKey ErrAttributesNotAllowed = new ErrorResourceKey("ErrAttributesNotAllowed");
 
         public static ErrorResourceKey ErrTruncatedArgWarning = new ErrorResourceKey("ErrTruncatedArgWarning");
 
