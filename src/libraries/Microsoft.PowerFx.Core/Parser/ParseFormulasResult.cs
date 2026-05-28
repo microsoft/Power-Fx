@@ -160,6 +160,11 @@ namespace Microsoft.PowerFx.Core.Parser
         internal bool IsParseValid { get; }
 
         /// <summary>
+        /// Gets the attributes applied to this UDF.
+        /// </summary>
+        internal IReadOnlyList<Attribute> Attributes { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UDF"/> class with the specified properties.
         /// </summary>
         /// <param name="ident">The identifier token of the UDF.</param>
@@ -170,7 +175,8 @@ namespace Microsoft.PowerFx.Core.Parser
         /// <param name="isImperative">A value indicating whether the UDF is imperative.</param>
         /// <param name="numberIsFloat">A value indicating whether numbers are treated as floats in the UDF.</param>
         /// <param name="isValid">A value indicating whether the UDF is parse valid.</param>
-        public UDF(IdentToken ident, Token colonToken, IdentToken returnType, HashSet<UDFArg> args, TexlNode body, bool isImperative, bool numberIsFloat, bool isValid)
+        /// <param name="attributes">The attributes applied to this UDF.</param>
+        public UDF(IdentToken ident, Token colonToken, IdentToken returnType, HashSet<UDFArg> args, TexlNode body, bool isImperative, bool numberIsFloat, bool isValid, IReadOnlyList<Attribute> attributes = null)
         {
             Ident = ident;
             ReturnType = returnType;
@@ -180,6 +186,7 @@ namespace Microsoft.PowerFx.Core.Parser
             NumberIsFloat = numberIsFloat;
             IsParseValid = isValid;
             ReturnTypeColonToken = colonToken;
+            Attributes = attributes ?? Array.Empty<Attribute>();
         }
     }
 

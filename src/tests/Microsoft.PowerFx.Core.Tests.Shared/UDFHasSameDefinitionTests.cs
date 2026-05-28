@@ -46,11 +46,30 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // Imperative UDF vs Declarative UDF
         [InlineData("Foo(x: Number): Number = Abs(x);", "Foo(x: Number): Number = {Abs(x)};", false)]
+
+        // test with attributes - same attributes
+        [InlineData("[MyAttr(\"a\")] Foo(x: Number): Number = Abs(x);", "[MyAttr(\"a\")] Foo(x: Number): Number = Abs(x);", true)]
+
+        // test with attributes - different attribute names
+        [InlineData("[MyAttr(\"a\")] Foo(x: Number): Number = Abs(x);", "[Other(\"a\")] Foo(x: Number): Number = Abs(x);", false)]
+
+        // test with attributes - different attribute arguments
+        [InlineData("[MyAttr(\"a\")] Foo(x: Number): Number = Abs(x);", "[MyAttr(\"b\")] Foo(x: Number): Number = Abs(x);", false)]
+
+        // test with attributes - one has attribute, other doesn't
+        [InlineData("[MyAttr(\"a\")] Foo(x: Number): Number = Abs(x);", "Foo(x: Number): Number = Abs(x);", false)]
+
+        // test with attributes - different number of attributes
+        [InlineData("[MyAttr(\"a\")] [Other(\"b\")] Foo(x: Number): Number = Abs(x);", "[MyAttr(\"a\")] Foo(x: Number): Number = Abs(x);", false)]
+
+        // test with attributes - same multiple attributes
+        [InlineData("[MyAttr(\"a\")] [Other(\"b\")] Foo(x: Number): Number = Abs(x);", "[MyAttr(\"a\")] [Other(\"b\")] Foo(x: Number): Number = Abs(x);", true)]
         public void TestSimpleUDFSameness(string udfFormula1, string udfFormula2, bool areSame)
         {
             var parserOptions = new ParserOptions()
             {
-                AllowsSideEffects = true
+                AllowsSideEffects = true,
+                AllowAttributes = true
             };
 
             var types = UDTTestHelper.TestTypesDictionaryWithNumberTypeIsFloat.Union(new Dictionary<DName, FormulaType>() 
