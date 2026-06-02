@@ -11,3 +11,9 @@ DateTime(1900,12,30,16,0,0,0)
 
 >> DateValue(ParseJSON("""1900-12-31T00:00:00.000Z""", Dynamic))
 Date(1900,12,30)
+
+>> ParseJSON("""2008-01-01T04:12:12.100""", DateTime) = DateTimeValue("2008-01-01T12:12:12.100Z")
+true
+
+>> ParseJSON("""2008-01-01T20:12:12.100Z""", DateTime) = DateTimeValue("2008-01-01T12:12:12.100")
+true
