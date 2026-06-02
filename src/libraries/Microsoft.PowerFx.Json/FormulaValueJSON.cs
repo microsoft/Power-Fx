@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx.Types
             // offset-bearing values to UTC, so the resulting instance does not depend on the host's
             // local timezone. Also accepts non-strict ISO 8601 forms emitted by connectors (e.g.
             // "+0000" instead of "+00:00") that element.GetDateTime() would reject.
-            if (!DateTimeOffset.TryParse(strValue, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var dto))
+            if (!DateTimeOffset.TryParse(strValue, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var dto))
             {
                 return new ErrorValue(IRContext.NotInSource(targetType), new ExpressionError()
                 {
@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx.Types
                 });
             }
 
-            return funcParse(dto.UtcDateTime);
+            return funcParse(dto.DateTime);
         }
 
         internal static FormulaValue FromJson(JsonElement element, FormulaValueJsonSerializerSettings settings, FormulaValueJsonSerializerWorkingData data, FormulaType formulaType = null)
