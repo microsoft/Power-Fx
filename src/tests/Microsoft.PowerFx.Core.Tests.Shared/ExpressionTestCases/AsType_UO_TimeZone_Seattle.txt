@@ -17,3 +17,6 @@ Date(1900,12,30)
 
 >> AsType(ParseJSON("""1900-12-31T24:59:59.1002Z"""), DateTime)
 Error({Kind:ErrorKind.InvalidArgument})
+
+>> AsType(ParseJSON("""2000-12-31T23:59:59.999Z"""), DateTime) = DateTimeValue("2000-12-31T15:59:59.999")
+true

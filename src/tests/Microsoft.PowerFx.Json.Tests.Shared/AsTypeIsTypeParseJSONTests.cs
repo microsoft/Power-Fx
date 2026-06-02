@@ -50,9 +50,7 @@ namespace Microsoft.PowerFx.Json.Tests
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"HelloWorld\"\"\"", "Text", "HelloWorld");
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"2000-01-01\"\"\"", "Date", new DateTime(2000, 1, 1));
 
-            // DateTime strings without an offset are parsed as UTC (matches Power Automate /
-            // Logic Apps semantics) and then converted to the runner's time zone for storage.
-            var expectedDateTime = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(2000, 1, 1, 0, 0, 1, 100, DateTimeKind.Utc), TimeZoneInfo.Local);
+            var expectedDateTime = new DateTime(2000, 1, 1, 0, 0, 1, 100, DateTimeKind.Local);
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"2000-01-01T00:00:01.100\"\"\"", "DateTime", expectedDateTime);
             CheckIsTypeAsTypeParseJSON(engine, "\"true\"", "Boolean", true);
             CheckIsTypeAsTypeParseJSON(engine, "\"false\"", "Boolean", false);

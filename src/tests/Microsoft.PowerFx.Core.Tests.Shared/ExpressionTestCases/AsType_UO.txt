@@ -29,10 +29,13 @@ Date(1900,12,31)
 >> AsType(ParseJSON("""1900-12-31T00:00:00.000Z"""), Date)
 Date(1900,12,31)
 
->> AsType(ParseJSON("""1900-12-31T23:59:59.999"""), DateTime) = DateTimeValue("1900-12-31T23:59:59.999Z")
+>> AsType(ParseJSON("""1900-12-31T23:59:59.999"""), DateTime) = DateTimeValue("1900-12-31T23:59:59.999")
 true
 
->> AsType(ParseJSON("""1900-12-31"""), DateTime) = DateTimeValue("1900-12-31T00:00:00Z")
+>> AsType(ParseJSON("""1900-12-31T23:59:59.999Z"""), DateTime) = DateTimeValue("1900-12-31T23:59:59.999Z")
+true
+
+>> AsType(ParseJSON("""1900-12-31"""), DateTime) = DateTimeValue("1900-12-31T00:00:00")
 true
 
 >> AsType(ParseJSON("""11:59:59.999"""), Time)
