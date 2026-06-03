@@ -5047,15 +5047,15 @@
       It's used to determine how to combine multiple expressions with the same name and operator.</comment>
   </data>
   <data name="ErrUnknownAttribute" xml:space="preserve">
-    <value>Unknown attribute '{0}'.</value>
+    <value>Attribut inconnu « {0} ».</value>
     <comment>Error when an unregistered attribute is used on a definition.</comment>
   </data>
   <data name="ErrAttributeArgCount" xml:space="preserve">
-    <value>Attribute '{0}' expects between {1} and {2} arguments, but {3} were provided.</value>
+    <value>L’attribut « {0} » attend entre {1} et {2} arguments, mais {3} ils ont été fournis.</value>
     <comment>Error when an attribute has the wrong number of arguments.</comment>
   </data>
   <data name="ErrAttributesNotAllowed" xml:space="preserve">
-    <value>Attributes are not supported in this context.</value>
+    <value>Les attributs ne sont pas pris en charge dans ce contexte.</value>
     <comment>Error when attributes are present but not allowed by parser options.</comment>
   </data>
   <data name="AboutCollect_data_source" xml:space="preserve">
