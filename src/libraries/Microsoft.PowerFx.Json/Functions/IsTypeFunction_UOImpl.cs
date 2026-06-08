@@ -26,24 +26,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return args[0];
             }
 
-            if (args[0] is BlankValue)
-            {
-                // Blank is not of the given type
-                return BooleanValue.New(false);
-            }
-
             try
             {
                 var fv = JSONFunctionUtils.ConvertUntypedObjectToFormulaValue(irContext, args[0], typeString, timezoneInfo);
 
-                if (fv is ErrorValue)
+                if (fv is ErrorValue || fv is BlankValue)
                 {
                     return BooleanValue.New(false);
-                }
-
-                if (fv is BlankValue)
-                {
-                    return fv;
                 }
 
                 return BooleanValue.New(true);
