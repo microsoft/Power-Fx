@@ -21,17 +21,32 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var irContext = IRContext.NotInSource(FormulaType.UntypedObject);
             var typeString = (StringValue)args[1];
 
-            try 
+            if (args[0] is ErrorValue)
+            {
+                return args[0];
+            }
+
+            if (args[0] is BlankValue)
+            {
+                // Blank is not of the given type
+                return BooleanValue.New(false);
+            }
+
+            try
             {
                 var fv = JSONFunctionUtils.ConvertUntypedObjectToFormulaValue(irContext, args[0], typeString, timezoneInfo);
-                if (fv is BlankValue || fv is ErrorValue)
+
+                if (fv is ErrorValue)
+                {
+                    return BooleanValue.New(false);
+                }
+
+                if (fv is BlankValue)
                 {
                     return fv;
                 }
-                else
-                {
-                    return BooleanValue.New(true);
-                }
+
+                return BooleanValue.New(true);
             }
             catch
             {
