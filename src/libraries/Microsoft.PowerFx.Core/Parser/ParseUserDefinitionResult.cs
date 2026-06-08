@@ -35,7 +35,12 @@ namespace Microsoft.PowerFx.Core.Parser
         // This determination is not definitive, but if true, user definition errors should be returned instead of standard parse errors.
         internal bool DefinitionsLikely { get; }
 
-        public ParseUserDefinitionResult(IEnumerable<NamedFormula> namedFormulas, IEnumerable<UDF> uDFs, IEnumerable<DefinedType> definedTypes, IEnumerable<TexlError> errors, IEnumerable<CommentToken> comments, IEnumerable<UserDefinitionSourceInfo> userDefinitionSourceInfos, bool definitionsLikely, ITexlSource trailingTrivia = null)
+        // Attributes that were parsed but not attached to any UDF or named formula because no
+        // definition name followed them (e.g. the maker is still typing "[RecordLink("). Exposed
+        // so IntelliSense can offer suggestions for the attribute and its arguments.
+        internal IEnumerable<Attribute> IncompleteAttributes { get; }
+
+        public ParseUserDefinitionResult(IEnumerable<NamedFormula> namedFormulas, IEnumerable<UDF> uDFs, IEnumerable<DefinedType> definedTypes, IEnumerable<TexlError> errors, IEnumerable<CommentToken> comments, IEnumerable<UserDefinitionSourceInfo> userDefinitionSourceInfos, bool definitionsLikely, ITexlSource trailingTrivia = null, IEnumerable<Attribute> incompleteAttributes = null)
         {
             NamedFormulas = namedFormulas;
             UDFs = uDFs;
@@ -44,6 +49,7 @@ namespace Microsoft.PowerFx.Core.Parser
             UserDefinitionSourceInfos = userDefinitionSourceInfos;
             DefinitionsLikely = definitionsLikely;
             TrailingTrivia = trailingTrivia;
+            IncompleteAttributes = incompleteAttributes ?? Enumerable.Empty<Attribute>();
 
             if (errors?.Any() ?? false)
             {

@@ -124,6 +124,129 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void TestAnnotationDelimiterTokensCaptured()
+        {
+            var result = UserDefinitions.Parse(
+            @"
+                [MyAttr(someIdent)]
+                MyFunc(): Number = 1;
+            ", _parseOptions);
+
+            Assert.False(result.HasErrors);
+
+            var attribute = result.UDFs.First().Attributes[0];
+            Assert.NotNull(attribute.OpenParen);
+            Assert.Equal(TokKind.ParenOpen, attribute.OpenParen.Kind);
+            Assert.NotNull(attribute.CloseParen);
+            Assert.Equal(TokKind.ParenClose, attribute.CloseParen.Kind);
+            Assert.NotNull(attribute.CloseBracket);
+            Assert.Equal(TokKind.BracketClose, attribute.CloseBracket.Kind);
+        }
+
+        [Fact]
+        public void TestAnnotationWithoutArgsHasNoParenTokens()
+        {
+            var result = UserDefinitions.Parse(
+            @"
+                [SomeName]
+                Foo = 123;
+            ", _parseOptions);
+
+            Assert.False(result.HasErrors);
+            var attribute = result.NamedFormulas.First().Attributes[0];
+            Assert.Null(attribute.OpenParen);
+            Assert.Null(attribute.CloseParen);
+            Assert.NotNull(attribute.CloseBracket);
+        }
+
+        // While the maker is mid-typing an attribute (e.g. "[RecordLink(") no definition name
+        // follows, so the parser previously discarded the attribute entirely. It is now surfaced
+        // through ParseUserDefinitionResult.IncompleteAttributes so IntelliSense can react.
+        [Fact]
+        public void TestIncompleteAttribute_OpenArgList()
+        {
+            var result = UserDefinitions.Parse("[RecordLink(", _parseOptions);
+
+            Assert.Empty(result.UDFs);
+            Assert.Empty(result.NamedFormulas);
+
+            var attribute = Assert.Single(result.IncompleteAttributes);
+            Assert.Equal("RecordLink", attribute.Name.Name.Value);
+            Assert.NotNull(attribute.OpenParen);
+            Assert.Equal(TokKind.ParenOpen, attribute.OpenParen.Kind);
+            Assert.Null(attribute.CloseParen);
+            Assert.Null(attribute.CloseBracket);
+        }
+
+        [Fact]
+        public void TestIncompleteAttribute_EmptyArgList()
+        {
+            var result = UserDefinitions.Parse("[RecordLink()]", _parseOptions);
+
+            Assert.Empty(result.UDFs);
+            Assert.Empty(result.NamedFormulas);
+
+            var attribute = Assert.Single(result.IncompleteAttributes);
+            Assert.Equal("RecordLink", attribute.Name.Name.Value);
+            Assert.Empty(attribute.Arguments);
+            Assert.NotNull(attribute.OpenParen);
+            Assert.NotNull(attribute.CloseParen);
+            Assert.NotNull(attribute.CloseBracket);
+        }
+
+        [Fact]
+        public void TestIncompleteAttribute_NameOnly()
+        {
+            var result = UserDefinitions.Parse("[RecordLink", _parseOptions);
+
+            var attribute = Assert.Single(result.IncompleteAttributes);
+            Assert.Equal("RecordLink", attribute.Name.Name.Value);
+            Assert.Null(attribute.OpenParen);
+            Assert.Null(attribute.CloseParen);
+            Assert.Null(attribute.CloseBracket);
+        }
+
+        [Theory]
+        [InlineData("[RecordLink()] OpenAccount")]
+        [InlineData("[RecordLink()] OpenAccount()")]
+        [InlineData("[RecordLink()] Foo =")]
+        [InlineData("[RecordLink()] Foo :=")]
+        [InlineData("[RecordLink()] Foo;")]
+        public void TestIncompleteAttribute_IncompleteDefinitionShape(string script)
+        {
+            var result = UserDefinitions.Parse(script, _parseOptions);
+
+            var attribute = Assert.Single(result.IncompleteAttributes);
+            Assert.Equal("RecordLink", attribute.Name.Name.Value);
+            Assert.NotNull(attribute.OpenParen);
+            Assert.NotNull(attribute.CloseParen);
+            Assert.NotNull(attribute.CloseBracket);
+        }
+
+        [Fact]
+        public void TestIncompleteAttribute_MultipleAttributes()
+        {
+            var result = UserDefinitions.Parse("[A][RecordLink()] OpenAccount", _parseOptions);
+
+            var attributes = result.IncompleteAttributes.ToList();
+            Assert.Equal(2, attributes.Count);
+            Assert.Equal("A", attributes[0].Name.Name.Value);
+            Assert.Equal("RecordLink", attributes[1].Name.Name.Value);
+        }
+
+        [Fact]
+        public void TestCompleteDefinitionHasNoIncompleteAttributes()
+        {
+            var result = UserDefinitions.Parse(
+            @"
+                [MyAttr(someIdent)]
+                MyFunc(): Number = 1;
+            ", _parseOptions);
+            Assert.False(result.HasErrors);
+            Assert.Empty(result.IncompleteAttributes);
+        }
+
+        [Fact]
         public void TestNFAttributeSingleKeyAnd()
         {
             var result = UserDefinitions.Parse(

@@ -248,9 +248,12 @@ namespace Microsoft.PowerFx.Core.Parser
                 ParseTrivia();
 
                 var argumentTokens = new List<Token>();
+                Token openParen = null;
+                Token closeParen = null;
 
                 if (_curs.TidCur == TokKind.ParenOpen)
                 {
+                    openParen = _curs.TokCur;
                     _curs.TokMove();
                     ParseTrivia();
 
@@ -271,17 +274,25 @@ namespace Microsoft.PowerFx.Core.Parser
                         }
                     }
 
-                    TokEat(TokKind.ParenClose);
+                    closeParen = TokEat(TokKind.ParenClose);
                     ParseTrivia();
                 }
 
-                TokEat(TokKind.BracketClose);
+                var closeBracket = TokEat(TokKind.BracketClose);
                 ParseTrivia();
 
-                attributes.Add(new Attribute(annotationName.As<IdentToken>(), argumentTokens, openBracket));
+                attributes.Add(new Attribute(annotationName.As<IdentToken>(), argumentTokens, openBracket, openParen, closeParen, closeBracket));
             }
 
             return attributes;
+        }
+
+        private static void PreserveIncompleteAttributes(IReadOnlyList<Attribute> attributes, List<Attribute> incompleteAttributes)
+        {
+            if (attributes != null && attributes.Count > 0)
+            {
+                incompleteAttributes.AddRange(attributes);
+            }
         }
 
         private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script, ParserOptions parserOptions)
@@ -295,6 +306,12 @@ namespace Microsoft.PowerFx.Core.Parser
             var definitionBeforeTrivia = new List<ITexlSource>();
             var declarationStart = 0;
             var index = 0;
+
+            // Attributes that were parsed but never attached to a definition because no UDF or
+            // named-formula name followed them. This happens while the maker is mid-typing
+            // (e.g. "[RecordLink("). Preserving them lets IntelliSense offer attribute/argument
+            // suggestions even though the statement is not yet a complete definition.
+            var incompleteAttributes = new List<Attribute>();
 
             // Trivia after the last terminating semicolon; captured so FormatUserDefinitions
             // can emit trailing comments (issue #2997). Overwritten on each iteration so only
@@ -315,6 +332,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 var thisIdentifier = TokEat(TokKind.Ident);
                 if (thisIdentifier == null)
                 {
+                    PreserveIncompleteAttributes(attributes, incompleteAttributes);
                     CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingValue);
                     _curs.TokMove();
                     continue;
@@ -325,6 +343,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                 if (_curs.TidCur == TokKind.Semicolon)
                 {
+                    PreserveIncompleteAttributes(attributes, incompleteAttributes);
                     CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
                     _curs.TokMove();
                     continue;
@@ -339,6 +358,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     if (_curs.TidCur == TokKind.Semicolon || _curs.TidCur == TokKind.Eof)
                     {
+                        PreserveIncompleteAttributes(attributes, incompleteAttributes);
                         CreateError(thisIdentifier, TexlStrings.ErrNamedType_MissingTypeExpression);
                     }
 
@@ -389,6 +409,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     if (_curs.TidCur == TokKind.Semicolon || _curs.TidCur == TokKind.Eof)
                     {
+                        PreserveIncompleteAttributes(attributes, incompleteAttributes);
                         CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
                     }
 
@@ -447,6 +468,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     var colonToken = TokEat(TokKind.Colon, addError: false);
                     if (colonToken == null)
                     {
+                        PreserveIncompleteAttributes(attributes, incompleteAttributes);
                         CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingReturnType);
                         userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.UDF, thisIdentifier.As<IdentToken>(), script.Substring(declarationStart, _curs.TokCur.Span.Min - declarationStart), new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));
                         _curs.TokMove();
@@ -553,12 +575,13 @@ namespace Microsoft.PowerFx.Core.Parser
                 else
                 {
                     // = or ( expected here
+                    PreserveIncompleteAttributes(attributes, incompleteAttributes);
                     ErrorTid(_curs.TokCur, TokKind.Equ);
                     MoveToNextUserDefinition();
                 }
             }
 
-            return new ParseUserDefinitionResult(namedFormulas, udfs, definedTypes, _errors, _comments, userDefinitionSourceInfos: userDefinitionSourceInfos, definitionsLikely, trailingTrivia: trailingTrivia);
+            return new ParseUserDefinitionResult(namedFormulas, udfs, definedTypes, _errors, _comments, userDefinitionSourceInfos: userDefinitionSourceInfos, definitionsLikely, trailingTrivia: trailingTrivia, incompleteAttributes: incompleteAttributes);
         }
 
         private SourceList GetExtraTriviaSourceList()
