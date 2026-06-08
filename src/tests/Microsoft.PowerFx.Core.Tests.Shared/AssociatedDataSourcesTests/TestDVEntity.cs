@@ -69,7 +69,8 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
                 accountsType, 
                 keyColumns: new[] { "accountid" },
                 selectableColumns: new[] { "name", "address1_city", "accountid", "address1_country", "address1_line1" },
-                hasCachedCountRows: hasCachedCountRows);
+                hasCachedCountRows: hasCachedCountRows,
+                requiresAsync: true);
             var displayNameMapping = dataSource.DisplayNameMapping;            
             displayNameMapping.Add("name", "Account Name");
             displayNameMapping.Add("address1_city", "Address 1: City");

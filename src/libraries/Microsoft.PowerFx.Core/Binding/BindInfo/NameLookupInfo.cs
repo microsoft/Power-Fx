@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
             DisplayName = displayName;
 
             // Any connectedDataSourceInfo or option set or view needs to be accessed asynchronously to allow data to be loaded.
-            IsAsync = Data is IExternalTabularDataSource || Kind == BindKind.OptionSet || Kind == BindKind.View || isAsync;
+            IsAsync = Data is IExternalTabularDataSource || Kind == BindKind.OptionSet || Kind == BindKind.View || isAsync || TypeRequiresAsync(kind, type, data);
         }
 
         public bool TryToSymbolEntry(out SymbolEntry x)
@@ -62,6 +62,46 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
 
             x = null;
             return false;
-        }            
+        }
+
+        private static bool TypeRequiresAsync(BindKind kind, DType type, object data)
+        {
+            Contracts.AssertValid(type);
+
+            if (!IsVariableBinding(kind, data))
+            {
+                return false;
+            }
+
+            if (!type.IsRecord)
+            {
+                return false;
+            }
+
+            foreach (var dataSource in type.AssociatedDataSources)
+            {
+                if (dataSource.RequiresAsync)
+                {
+                    return true;
+                }
+            }
+
+            return type.HasExpandInfo && type.ExpandInfo?.ParentDataSource?.RequiresAsync == true;
+        }
+
+        private static bool IsVariableBinding(BindKind kind, object data)
+        {
+            if (kind == BindKind.ScopeVariable)
+            {
+                return true;
+            }
+
+            if (kind != BindKind.PowerFxResolvedObject || data is not NameSymbol nameSymbol)
+            {
+                return false;
+            }
+
+            return nameSymbol.Owner is not Microsoft.PowerFx.SymbolTableOverRecordType;
+        }
     }
 }

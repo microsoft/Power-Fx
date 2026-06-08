@@ -176,8 +176,9 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
         private readonly HashSet<string> _selectableColumns;
         private readonly TabularDataQueryOptions _tabularDataQueryOptions;
         private readonly bool _hasCachedCountRows;
+        private readonly bool _requiresAsync;
 
-        internal TestDataSource(string name, DType schema, string[] keyColumns = null, IEnumerable<string> selectableColumns = null, bool hasCachedCountRows = false)
+        internal TestDataSource(string name, DType schema, string[] keyColumns = null, IEnumerable<string> selectableColumns = null, bool hasCachedCountRows = false, bool requiresAsync = false)
         {
             ExternalDataEntityMetadataProvider = new ExternalDataEntityMetadataProvider();
             Type = DType.AttachDataSourceInfo(schema, this);
@@ -187,6 +188,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
             _selectableColumns = new HashSet<string>(selectableColumns ?? Enumerable.Empty<string>());
             _tabularDataQueryOptions = new TabularDataQueryOptions(this);
             _hasCachedCountRows = hasCachedCountRows;
+            _requiresAsync = requiresAsync;
         }
 
         public string Name { get; }
@@ -197,7 +199,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public virtual bool IsDelegatable => throw new NotImplementedException();
 
-        public bool RequiresAsync => throw new NotImplementedException();
+        public bool RequiresAsync => _requiresAsync;
 
         public IExternalDataEntityMetadataProvider DataEntityMetadataProvider => ExternalDataEntityMetadataProvider;
 

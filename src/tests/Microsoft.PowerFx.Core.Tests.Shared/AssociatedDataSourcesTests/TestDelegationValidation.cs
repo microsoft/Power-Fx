@@ -152,5 +152,112 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             Assert.True(result.IsSuccess);
             Assert.Empty(result.Errors);
         }
+
+        [Theory]
+        [InlineData("Coalesce(varAccount.name, \"fallback\")")]
+        [InlineData("varAccount.name = \"Contoso\"")]
+        public void TestDataSourceBackedRecordVariablesAreAsync(string expression)
+        {
+            var symbolTable = new DelegatableSymbolTable();
+            var accountRecordType = AccountsTypeHelper.GetDType().ToRecord();
+            symbolTable.AddVariable("varAccount", FormulaType.Build(accountRecordType));
+
+            var config = new PowerFxConfig(Features.PowerFxV1)
+            {
+                SymbolTable = symbolTable
+            };
+
+            var engine = new Engine(config);
+            var result = engine.Check(expression);
+
+            Assert.True(result.IsSuccess);
+            Assert.True(result.Binding.IsAsync(result.Binding.Top));
+        }
+
+        [Fact]
+        public void TestDataSourceBackedTableVariablesRemainSync()
+        {
+            var symbolTable = new DelegatableSymbolTable();
+            symbolTable.AddVariable("localAccounts", FormulaType.Build(AccountsTypeHelper.GetDType()));
+
+            var config = new PowerFxConfig(Features.PowerFxV1)
+            {
+                SymbolTable = symbolTable
+            };
+
+            var engine = new Engine(config);
+            var result = engine.Check("CountRows(localAccounts)");
+
+            Assert.True(result.IsSuccess);
+            Assert.False(result.Binding.IsAsync(result.Binding.Top));
+        }
+
+        [Fact]
+        public void TestDataSourceBackedTableVariableRowScopeFieldsRemainSync()
+        {
+            var symbolTable = new DelegatableSymbolTable();
+            symbolTable.AddVariable("localAccounts", FormulaType.Build(AccountsTypeHelper.GetDType()));
+
+            var config = new PowerFxConfig(Features.PowerFxV1)
+            {
+                SymbolTable = symbolTable
+            };
+
+            var engine = new Engine(config);
+            var result = engine.Check("Filter(localAccounts, name = \"Contoso\")");
+
+            Assert.True(result.IsSuccess);
+            Assert.False(result.Binding.IsAsync(result.Binding.Top));
+        }
+
+        [Fact]
+        public void TestExpandedDataSourceBackedTableVariablesRemainSync()
+        {
+            var accountsType = AccountsTypeHelper.GetDType();
+            var expandInfo = new TestExpandInfo(accountsType)
+            {
+                DataSource = new TestDataSource("Accounts", accountsType, requiresAsync: true)
+            };
+            var expandedAccountsTableType = DType.CopyExpandInfo(accountsType, DType.CreateExpandType(expandInfo));
+            var symbolTable = new DelegatableSymbolTable();
+            symbolTable.AddVariable("expandedAccounts", FormulaType.Build(expandedAccountsTableType));
+
+            var config = new PowerFxConfig(Features.PowerFxV1)
+            {
+                SymbolTable = symbolTable
+            };
+
+            var engine = new Engine(config);
+            var result = engine.Check("CountRows(expandedAccounts)");
+
+            Assert.True(result.IsSuccess);
+            Assert.False(result.Binding.IsAsync(result.Binding.Top));
+        }
+
+        [Theory]
+        [InlineData("constAccount.name")]
+        [InlineData("hostAccount.name")]
+        public void TestDataSourceBackedResolvedObjectsRemainSyncUnlessVariables(string expression)
+        {
+            var accountRecordType = (RecordType)FormulaType.Build(AccountsTypeHelper.GetDType().ToRecord());
+            var accountRecordValue = FormulaValue.NewRecordFromFields(
+                accountRecordType,
+                new NamedValue("name", FormulaValue.New("Contoso")));
+            var symbolTable = new DelegatableSymbolTable();
+            symbolTable.AddConstant("constAccount", accountRecordValue);
+            symbolTable.AddHostObject("hostAccount", accountRecordType, _ => accountRecordValue);
+
+            var config = new PowerFxConfig(Features.PowerFxV1)
+            {
+                SymbolTable = symbolTable
+            };
+
+            var engine = new Engine(config);
+            var result = engine.Check(expression);
+
+            Assert.True(result.IsSuccess);
+            Assert.False(result.Binding.IsAsync(result.Binding.Top));
+        }
+
     }
 }
