@@ -88,7 +88,7 @@ false
 true
 
 >> IsType(ParseJSON("""1900-12-31T24:59:59.1002Z"""), DateTime)
-Error({Kind:ErrorKind.InvalidArgument})
+false
 
 >> IsType(ParseJSON("""24:59:59.12345678"""), Time)
 false
@@ -120,8 +120,27 @@ Errors: Error 28-29: Unsupported type 'Color' in type argument.
 >> IsType(If(1/0 > 1, ParseJSON("42")), Number)
 Error({Kind:ErrorKind.Div0})
 
+// IsType(blank, type) should always return false for any valid type, since the first argument is not a valid value of any type.
 >> IsType(ParseJSON(Blank()), Number)
-Blank()
+false
+
+>> IsType(If(1<0, ParseJSON("42")), Number)
+false
+
+>> IsType(If(1<0, ParseJSON("true")), Boolean)
+false
+
+>> IsType(If(1<0, ParseJSON("""Hello""")), Text)
+false
+
+>> IsType(If(1<0, ParseJSON("""2026-01-01""")), Date)
+false
+
+>> IsType(If(1<0, ParseJSON("""2026-01-01T12:34:56Z""")), DateTime)
+false
+
+>> IsType(If(1<0, ParseJSON("{""a"": 5}")), Type({a: Number}))
+false
 
 >> IsType(ParseJSON("42"), Blank())
 Errors: Error 24-31: Invalid argument 'Blank()'. Expected valid type name or inline type expression.
