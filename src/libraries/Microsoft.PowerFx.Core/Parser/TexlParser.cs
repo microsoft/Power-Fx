@@ -227,7 +227,7 @@ namespace Microsoft.PowerFx.Core.Parser
             return new TypeLiteralNode(ref _idNext, parenOpen, expr, new SourceList(sourceList));
         }
 
-        private IReadOnlyList<Attribute> MaybeParseAttributes()
+        private IReadOnlyList<Attribute> MaybeParseAttributes(List<Attribute> incompleteAttributes)
         {
             var attributes = new List<Attribute>();
 
@@ -267,6 +267,10 @@ namespace Microsoft.PowerFx.Core.Parser
                         {
                             _curs.TokMove();
                             ParseTrivia();
+                            if (!CanConsumeAttributeArgumentAfterComma())
+                            {
+                                break;
+                            }
                         }
                         else
                         {
@@ -281,10 +285,30 @@ namespace Microsoft.PowerFx.Core.Parser
                 var closeBracket = TokEat(TokKind.BracketClose);
                 ParseTrivia();
 
-                attributes.Add(new Attribute(annotationName.As<IdentToken>(), argumentTokens, openBracket, openParen, closeParen, closeBracket));
+                var attribute = new Attribute(annotationName.As<IdentToken>(), argumentTokens, openBracket, openParen, closeParen, closeBracket);
+                attributes.Add(attribute);
+
+                if (closeBracket == null)
+                {
+                    PreserveIncompleteAttributes(attributes, incompleteAttributes);
+                    attributes.Clear();
+                    break;
+                }
             }
 
             return attributes;
+        }
+
+        private bool CanConsumeAttributeArgumentAfterComma()
+        {
+            if (_curs.TidCur != TokKind.StrLit && _curs.TidCur != TokKind.Ident)
+            {
+                return false;
+            }
+
+            var nextToken = _curs.TidPeek(PeekSkipTrivia(1));
+            return nextToken == TokKind.Comma ||
+                nextToken == TokKind.ParenClose;
         }
 
         private static void PreserveIncompleteAttributes(IReadOnlyList<Attribute> attributes, List<Attribute> incompleteAttributes)
@@ -307,10 +331,10 @@ namespace Microsoft.PowerFx.Core.Parser
             var declarationStart = 0;
             var index = 0;
 
-            // Attributes that were parsed but never attached to a definition because no UDF or
-            // named-formula name followed them. This happens while the maker is mid-typing
-            // (e.g. "[RecordLink("). Preserving them lets IntelliSense offer attribute/argument
-            // suggestions even though the statement is not yet a complete definition.
+            // Attributes that were parsed but never attached to a definition because the
+            // attribute group is incomplete, or no UDF or named-formula name followed them.
+            // Preserving them lets IntelliSense offer attribute/argument suggestions even
+            // though the statement is not yet a complete definition.
             var incompleteAttributes = new List<Attribute>();
 
             // Trivia after the last terminating semicolon; captured so FormatUserDefinitions
@@ -326,7 +350,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 IReadOnlyList<Attribute> attributes = null;
                 if (_flagsMode.Peek().HasFlag(Flags.AllowAttributes))
                 {
-                    attributes = MaybeParseAttributes();
+                    attributes = MaybeParseAttributes(incompleteAttributes);
                 }
 
                 var thisIdentifier = TokEat(TokKind.Ident);
@@ -402,7 +426,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 else if (_curs.TidCur == TokKind.Equ)
                 {
                     var equalToken = _curs.TokCur;
-                    
+
                     var declaration = script.Substring(declarationStart, _curs.TokCur.Span.Min - declarationStart);
                     _curs.TokMove();
                     definitionBeforeTrivia.Add(ParseTrivia());
@@ -431,8 +455,8 @@ namespace Microsoft.PowerFx.Core.Parser
                             CreateError(equalToken, TexlStrings.ErrNamedFormulaColonEqualRequired);
                             continue;
                         }
-                      
-                        definitionsLikely = true;                      
+
+                        definitionsLikely = true;
 
                         namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex, colonEqual: false, attributes));
                         userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.NamedFormula, thisIdentifier.As<IdentToken>(), declaration, new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));

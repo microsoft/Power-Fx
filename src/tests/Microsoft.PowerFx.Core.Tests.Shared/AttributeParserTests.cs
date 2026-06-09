@@ -235,6 +235,210 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void TestIncompleteAttribute_ResumesAtNextDefinition()
+        {
+            var parseOptions = new ParserOptions() { AllowAttributes = true, AllowEqualOnlyNamedFormulas = true, AllowsSideEffects = true };
+            var result = UserDefinitions.Parse(
+            @"
+                Foo = 123;
+
+                [Record
+                Bar(): Void = { Notify(""Abc"") };
+
+                Baz = ""Valid?"";
+            ", parseOptions);
+
+            var attribute = Assert.Single(result.IncompleteAttributes);
+            Assert.Equal("Record", attribute.Name.Name.Value);
+            Assert.Null(attribute.CloseBracket);
+
+            var formulas = result.NamedFormulas.ToList();
+            Assert.Equal(2, formulas.Count);
+            Assert.Equal("Foo", formulas[0].Ident.Name.Value);
+            Assert.Equal("Baz", formulas[1].Ident.Name.Value);
+
+            var udf = Assert.Single(result.UDFs);
+            Assert.Equal("Bar", udf.Ident.Name.Value);
+            Assert.Empty(udf.Attributes);
+        }
+
+        [Fact]
+        public void TestIncompleteAttribute_ResumesBeforeDefinitionWithBracketedBody()
+        {
+            var parseOptions = new ParserOptions() { AllowAttributes = true, AllowEqualOnlyNamedFormulas = true, AllowsSideEffects = true };
+            var result = UserDefinitions.Parse(
+            @"
+                Foo = 123;
+
+                [Record
+                Bar(): Void = { Notify(""Abc""); CountRows([1, 2]) };
+
+                Baz = ""Valid?"";
+            ", parseOptions);
+
+            var attribute = Assert.Single(result.IncompleteAttributes);
+            Assert.Equal("Record", attribute.Name.Name.Value);
+            Assert.Null(attribute.CloseBracket);
+
+            var formulas = result.NamedFormulas.ToList();
+            Assert.Equal(2, formulas.Count);
+            Assert.Equal("Foo", formulas[0].Ident.Name.Value);
+            Assert.Equal("Baz", formulas[1].Ident.Name.Value);
+
+            var udf = Assert.Single(result.UDFs);
+            Assert.Equal("Bar", udf.Ident.Name.Value);
+            Assert.Empty(udf.Attributes);
+        }
+
+        [Fact]
+        public void TestIncompleteAttribute_ResumesAtNextNamedFormula()
+        {
+            var result = UserDefinitions.Parse(
+            @"
+                Foo = 123;
+
+                [Record
+                Baz = ""Valid?"";
+            ", _parseOptions);
+
+            var attribute = Assert.Single(result.IncompleteAttributes);
+            Assert.Equal("Record", attribute.Name.Name.Value);
+            Assert.Null(attribute.CloseBracket);
+
+            var formulas = result.NamedFormulas.ToList();
+            Assert.Equal(2, formulas.Count);
+            Assert.Equal("Foo", formulas[0].Ident.Name.Value);
+            Assert.Equal("Baz", formulas[1].Ident.Name.Value);
+            Assert.Empty(formulas[1].Attributes);
+        }
+
+        [Fact]
+        public void TestIncompleteAttribute_MissingCloseBracketAfterClosedArgsResumesAtNextDefinition()
+        {
+            var parseOptions = new ParserOptions() { AllowAttributes = true, AllowEqualOnlyNamedFormulas = true, AllowsSideEffects = true };
+            var result = UserDefinitions.Parse(
+            @"
+                Foo = 123;
+
+                [RecordLink()
+                Bar(): Void = { Notify(""Abc"") };
+
+                Baz = ""Valid?"";
+            ", parseOptions);
+
+            var attribute = Assert.Single(result.IncompleteAttributes);
+            Assert.Equal("RecordLink", attribute.Name.Name.Value);
+            Assert.NotNull(attribute.OpenParen);
+            Assert.NotNull(attribute.CloseParen);
+            Assert.Null(attribute.CloseBracket);
+
+            var formulas = result.NamedFormulas.ToList();
+            Assert.Equal(2, formulas.Count);
+            Assert.Equal("Foo", formulas[0].Ident.Name.Value);
+            Assert.Equal("Baz", formulas[1].Ident.Name.Value);
+
+            var udf = Assert.Single(result.UDFs);
+            Assert.Equal("Bar", udf.Ident.Name.Value);
+            Assert.Empty(udf.Attributes);
+        }
+
+        [Theory]
+        [InlineData("[RecordLink(foo")]
+        [InlineData("[RecordLink(foo,")]
+        public void TestIncompleteAttribute_PartialArgsResumeAtNextDefinition(string incompleteAttribute)
+        {
+            var parseOptions = new ParserOptions() { AllowAttributes = true, AllowEqualOnlyNamedFormulas = true, AllowsSideEffects = true };
+            var result = UserDefinitions.Parse(
+            $@"
+                Foo = 123;
+
+                {incompleteAttribute}
+                Bar(): Void = {{ Notify(""Abc"") }};
+
+                Baz = ""Valid?"";
+            ", parseOptions);
+
+            var attribute = Assert.Single(result.IncompleteAttributes);
+            Assert.Equal("RecordLink", attribute.Name.Name.Value);
+            var argument = Assert.Single(attribute.Arguments);
+            Assert.Equal("foo", argument);
+            Assert.NotNull(attribute.OpenParen);
+            Assert.Null(attribute.CloseParen);
+            Assert.Null(attribute.CloseBracket);
+
+            var formulas = result.NamedFormulas.ToList();
+            Assert.Equal(2, formulas.Count);
+            Assert.Equal("Foo", formulas[0].Ident.Name.Value);
+            Assert.Equal("Baz", formulas[1].Ident.Name.Value);
+
+            var udf = Assert.Single(result.UDFs);
+            Assert.Equal("Bar", udf.Ident.Name.Value);
+            Assert.Empty(udf.Attributes);
+        }
+
+        [Fact]
+        public void TestIncompleteAttribute_LaterIncompleteAttributeDoesNotAttachEarlierAttributeToNextDefinition()
+        {
+            var parseOptions = new ParserOptions() { AllowAttributes = true, AllowEqualOnlyNamedFormulas = true, AllowsSideEffects = true };
+            var result = UserDefinitions.Parse(
+            @"
+                Foo = 123;
+
+                [A(""arg"")][Record
+                Bar(): Void = { Notify(""Abc"") };
+
+                Baz = ""Valid?"";
+            ", parseOptions);
+
+            var attributes = result.IncompleteAttributes.ToList();
+            Assert.Equal(2, attributes.Count);
+            Assert.Equal("A", attributes[0].Name.Name.Value);
+            var firstAttributeArgument = Assert.Single(attributes[0].Arguments);
+            Assert.Equal("arg", firstAttributeArgument);
+            Assert.NotNull(attributes[0].CloseBracket);
+            Assert.Equal("Record", attributes[1].Name.Name.Value);
+            Assert.Null(attributes[1].CloseBracket);
+
+            var formulas = result.NamedFormulas.ToList();
+            Assert.Equal(2, formulas.Count);
+            Assert.Equal("Foo", formulas[0].Ident.Name.Value);
+            Assert.Equal("Baz", formulas[1].Ident.Name.Value);
+
+            var udf = Assert.Single(result.UDFs);
+            Assert.Equal("Bar", udf.Ident.Name.Value);
+            Assert.Empty(udf.Attributes);
+        }
+
+        [Fact]
+        public void TestIncompleteAttribute_ResumesBeforeDefinitionWithBracketedStringsAndCommentsInBody()
+        {
+            var parseOptions = new ParserOptions() { AllowAttributes = true, AllowEqualOnlyNamedFormulas = true, AllowsSideEffects = true };
+            var result = UserDefinitions.Parse(
+            @"
+                Foo = 123;
+
+                [Record
+                Bar(): Void = { Notify(""[""); // ]
+                    Notify(""]"") };
+
+                Baz = ""Valid?"";
+            ", parseOptions);
+
+            var attribute = Assert.Single(result.IncompleteAttributes);
+            Assert.Equal("Record", attribute.Name.Name.Value);
+            Assert.Null(attribute.CloseBracket);
+
+            var formulas = result.NamedFormulas.ToList();
+            Assert.Equal(2, formulas.Count);
+            Assert.Equal("Foo", formulas[0].Ident.Name.Value);
+            Assert.Equal("Baz", formulas[1].Ident.Name.Value);
+
+            var udf = Assert.Single(result.UDFs);
+            Assert.Equal("Bar", udf.Ident.Name.Value);
+            Assert.Empty(udf.Attributes);
+        }
+
+        [Fact]
         public void TestCompleteDefinitionHasNoIncompleteAttributes()
         {
             var result = UserDefinitions.Parse(
