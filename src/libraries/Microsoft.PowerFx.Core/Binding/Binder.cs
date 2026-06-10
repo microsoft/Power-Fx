@@ -3711,6 +3711,11 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
                 else if (leftType.IsRecord)
                 {
+                    if (ShouldFlagDottedOptionSetAccessAsAsync(node, typeRhs))
+                    {
+                        _txb.FlagPathAsAsync(node);
+                    }
+
                     // ![id:type, ...] . id --> type
                     _txb.SetType(node, typeRhs);
                 }
@@ -3781,6 +3786,61 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(node.Left));
                 _txb.SetIsUnliftable(node, _txb.IsUnliftable(node.Left));
+            }
+
+            /*
+             * If Rhs is accessing optionset, data source should be accessed async...
+             */
+
+            private bool ShouldFlagDottedOptionSetAccessAsAsync(DottedNameNode node, DType typeRhs)
+            {
+                if (typeRhs.Kind != DKind.OptionSetValue ||
+                    !typeRhs.AssociatedDataSources.Any(ds => ds.RequiresAsync))
+                {
+                    return false;
+                }
+
+                return IsAsyncRecordProducer(node.Left);
+            }
+
+            /*
+             * ... but check this isn't a constant, ThisRecord, As,              */
+
+            private bool IsAsyncRecordProducer(TexlNode node)
+            {
+                if (_txb.IsAsync(node))
+                {
+                    return true;
+                }
+
+                if (node is FirstNameNode firstNameNode)
+                {
+                    return IsVariableBackedRecord(_txb.GetInfo(firstNameNode));
+                }
+
+                if (node is DottedNameNode dottedNameNode)
+                {
+                    return IsAsyncRecordProducer(dottedNameNode.Left);
+                }
+
+                if (node is CallNode callNode)
+                {
+                    foreach (var child in callNode.Args.Children)
+                    {
+                        if (_txb.GetType(child).IsRecord && IsAsyncRecordProducer(child))
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            }
+
+            private static bool IsVariableBackedRecord(FirstNameInfo firstNameInfo)
+            {
+                return firstNameInfo?.Kind == BindKind.ScopeVariable ||
+                    (firstNameInfo?.Kind == BindKind.PowerFxResolvedObject && firstNameInfo.Data is NameSymbol);
             }
 
             private (IExternalControl controlInfo, bool isIndirectPropertyUsage) GetLHSControlInfo(DottedNameNode node)

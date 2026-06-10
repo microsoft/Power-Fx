@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -154,13 +155,64 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
         }
 
         [Theory]
-        [InlineData("Coalesce(varAccount.name, \"fallback\")")]
-        [InlineData("varAccount.name = \"Contoso\"")]
-        public void TestDataSourceBackedRecordVariablesAreAsync(string expression)
+        [InlineData("varAccount.'Account Name'", false)]
+        [InlineData("Coalesce(varAccount.'Account Name', \"fallback\")", false)]
+        [InlineData("varAccount.donotallowemails", true)]
+        [InlineData("Coalesce(varAccount.donotallowemails, DoNotAllowEmailsOptions.No)", true)]
+        [InlineData("Coalesce(varAccount.donotallowemails, false)", true)]
+        [InlineData("DoNotAllowEmailsOptions.No", false)]
+        [InlineData("Coalesce(DoNotAllowEmailsOptions.No, false)", false)]
+        [InlineData("plainAccount.donotallowemails", false)]
+        [InlineData("Coalesce(plainAccount.donotallowemails, false)", false)]
+        [InlineData("varAccountCopy.donotallowemails", true)]
+        [InlineData("If(true, varAccountCopy, varAccount).donotallowemails", true)]
+        [InlineData("Coalesce(If(true, varAccountCopy, varAccount).donotallowemails, false)", true)]
+        public void DataBackedRecordOptionSetField(string expression, bool expectedIsAsync)
+        {
+            var boolOptionSet = new EnumSymbol(
+                new DName("DoNotAllowEmailsOptions"),
+                DType.Boolean,
+                new Dictionary<string, object>
+                {
+                   { "Yes", true },
+                   { "No", false },
+                },
+                canCoerceFromBackingKind: true,
+                canCoerceToBackingKind: true);
+
+            var accountsType = AccountsTypeHelper.GetDType()
+                .Add(new TypedName(boolOptionSet.FormulaType._type, new DName("donotallowemails")));
+
+            var dataSource = new TestDataSource("Accounts", accountsType, requiresAsync: true);
+            var dataBackedAccountsType = dataSource.Type;
+
+            var symbolTable = new DelegatableSymbolTable();
+            symbolTable.AddVariable("plainAccount", FormulaType.Build(accountsType.ToRecord()));
+            symbolTable.AddVariable("varAccount", FormulaType.Build(dataBackedAccountsType.ToRecord()));
+            symbolTable.AddVariable("varAccountCopy", FormulaType.Build(dataBackedAccountsType.ToRecord()));
+
+            var enumStoreBuilder = new EnumStoreBuilder();
+            enumStoreBuilder.TestOnly_WithCustomEnum(boolOptionSet);
+
+            var config = PowerFxConfig.BuildWithEnumStore(enumStoreBuilder, Features.PowerFxV1);
+            config.SymbolTable = symbolTable;
+
+            var engine = new Engine(config);
+            var result = engine.Check(expression);
+
+            Assert.True(result.IsSuccess);
+            Assert.Empty(result.Errors);
+            Assert.Equal(expectedIsAsync, result.Binding.IsAsync(result.Binding.Top));
+        }
+
+        [Theory]
+        [InlineData("varAccount.'Account Name'", false)]
+        [InlineData("Coalesce(varAccount.'Account Name', \"fallback\")", false)]
+        [InlineData("varAccount.address1_addresstypecode", true)]
+        public void DataBackedRecordExistingOptionSetField(string expression, bool expectedIsAsync)
         {
             var symbolTable = new DelegatableSymbolTable();
-            var accountRecordType = AccountsTypeHelper.GetDType().ToRecord();
-            symbolTable.AddVariable("varAccount", FormulaType.Build(accountRecordType));
+            symbolTable.AddVariable("varAccount", FormulaType.Build(AccountsTypeHelper.GetDType().ToRecord()));
 
             var config = new PowerFxConfig(Features.PowerFxV1)
             {
@@ -171,7 +223,8 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             var result = engine.Check(expression);
 
             Assert.True(result.IsSuccess);
-            Assert.True(result.Binding.IsAsync(result.Binding.Top));
+            Assert.Empty(result.Errors);
+            Assert.Equal(expectedIsAsync, result.Binding.IsAsync(result.Binding.Top));
         }
 
         [Fact]
@@ -210,6 +263,26 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             Assert.False(result.Binding.IsAsync(result.Binding.Top));
         }
 
+        [Theory]
+        [InlineData("Filter(localAccounts, IsBlank(ThisRecord.address1_addresstypecode))")]
+        [InlineData("Filter(localAccounts As account, IsBlank(account.address1_addresstypecode))")]
+        public void TestDataSourceBackedTableVariableRowScopeOptionSetFieldsRemainSync(string expression)
+        {
+            var symbolTable = new DelegatableSymbolTable();
+            symbolTable.AddVariable("localAccounts", FormulaType.Build(AccountsTypeHelper.GetDType()));
+
+            var config = new PowerFxConfig(Features.PowerFxV1)
+            {
+                SymbolTable = symbolTable
+            };
+
+            var engine = new Engine(config);
+            var result = engine.Check(expression);
+
+            Assert.True(result.IsSuccess);
+            Assert.False(result.Binding.IsAsync(result.Binding.Top));
+        }
+
         [Fact]
         public void TestExpandedDataSourceBackedTableVariablesRemainSync()
         {
@@ -235,9 +308,13 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
         }
 
         [Theory]
-        [InlineData("constAccount.name")]
-        [InlineData("hostAccount.name")]
-        public void TestDataSourceBackedResolvedObjectsRemainSyncUnlessVariables(string expression)
+        [InlineData("constAccount.'Account Name'")]
+        [InlineData("constAccount.address1_addresstypecode")]
+        [InlineData("hostAccount.'Account Name'")]
+        [InlineData("hostAccount.address1_addresstypecode")]
+        [InlineData("If(true, constAccount, constAccount).address1_addresstypecode")]
+        [InlineData("If(true, hostAccount, hostAccount).address1_addresstypecode")]
+        public void TestDataSourceBackedResolvedObjectsRemainSync(string expression)
         {
             var accountRecordType = (RecordType)FormulaType.Build(AccountsTypeHelper.GetDType().ToRecord());
             var accountRecordValue = FormulaValue.NewRecordFromFields(
@@ -256,8 +333,8 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             var result = engine.Check(expression);
 
             Assert.True(result.IsSuccess);
+            Assert.Empty(result.Errors);
             Assert.False(result.Binding.IsAsync(result.Binding.Top));
         }
-
     }
 }
