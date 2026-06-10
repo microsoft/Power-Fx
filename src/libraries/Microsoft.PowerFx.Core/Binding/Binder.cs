@@ -2584,12 +2584,12 @@ namespace Microsoft.PowerFx.Core.Binding
 
             // Binding TypeLiteralNode from anywhere other than valid type context should be an error.
             // This ensures that binding of unintended use of TypeLiteralNode eg: "If(Type(Boolean), 1, 2)" will result in an error.
-            // VisitType method is used to resolve the type of TypeLiteralNode from valid context. 
+            // VisitType method is used to resolve the type of TypeLiteralNode from valid context.
             public override void Visit(TypeLiteralNode node)
             {
                 AssertValid();
                 Contracts.AssertValue(node);
-                
+
                 _txb.SetType(node, DType.Error);
                 _txb.ErrorContainer.Error(node, TexlStrings.ErrTypeFunction_UnsupportedUsage);
             }
@@ -2898,7 +2898,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
-                // We have an allowlist of kinds permitted in simple expressions, all of which should be Sync. 
+                // We have an allowlist of kinds permitted in simple expressions, all of which should be Sync.
                 // The IsAsync check is just to be sure we're not introducing async
                 // if things are added to the set of valid kinds in the future.
                 // As the main point of the "Simple Expression" constraint is to ensure certain expressions are sync
@@ -3055,8 +3055,8 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                 }
 
-                if (_txb.BindingConfig.MarkAsAsyncOnLazilyLoadedControlRef && 
-                    lookupType.IsControl && 
+                if (_txb.BindingConfig.MarkAsAsyncOnLazilyLoadedControlRef &&
+                    lookupType.IsControl &&
                     lookupInfo.Data is IExternalControl control &&
                     !control.IsAppGlobalControl)
                 {
@@ -3788,12 +3788,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetIsUnliftable(node, _txb.IsUnliftable(node.Left));
             }
 
-            /*
-             * If Rhs is accessing optionset, data source should be accessed async...
-             */
-
             private bool ShouldFlagDottedOptionSetAccessAsAsync(DottedNameNode node, DType typeRhs)
             {
+                // Data-backed option-set fields can require async loading when accessed from a record producer that can cross the data-source boundary.
                 if (typeRhs.Kind != DKind.OptionSetValue ||
                     !typeRhs.AssociatedDataSources.Any(ds => ds.RequiresAsync))
                 {
@@ -3802,9 +3799,6 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 return IsAsyncRecordProducer(node.Left);
             }
-
-            /*
-             * ... but check this isn't a constant, ThisRecord, As,              */
 
             private bool IsAsyncRecordProducer(TexlNode node)
             {
@@ -3918,9 +3912,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     // Expands reached via a different path should have a different relatedentitypath.
                     // If we found an expand in the cache but it's not accessed via the same relationship
-                    // we need to create a different expand info but with the same type. 
+                    // we need to create a different expand info but with the same type.
                     // DType.Clone doesn't clone expand info, so we force that with CopyExpandInfo,
-                    // because that sadly mutates expand info on what should otherwise be an immutable dtype. 
+                    // because that sadly mutates expand info on what should otherwise be an immutable dtype.
                     type = DType.CopyExpandInfo(type.Clone(), type);
                     type.ExpandInfo.UpdateEntityInfo(expandEntityInfo.ParentDataSource, relatedEntityPath);
                 }
@@ -4204,9 +4198,9 @@ namespace Microsoft.PowerFx.Core.Binding
                         // Behavior only component properties should be treated as stateful.
                         hasSideEffects |= infoTexlFunction.IsBehaviorOnly;
 
-                        // At the moment, we're going to treat all invocations of component scoped property functions as stateful. 
+                        // At the moment, we're going to treat all invocations of component scoped property functions as stateful.
                         // This ensures that we don't lift these function invocations in loops, and that they are re-evaluated every time they are called,
-                        // which is always correct, although less efficient in some cases. 
+                        // which is always correct, although less efficient in some cases.
                         isStateFul |= true;
                     }
                     else
