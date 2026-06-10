@@ -160,13 +160,27 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
         [InlineData("varAccount.donotallowemails", true)]
         [InlineData("Coalesce(varAccount.donotallowemails, DoNotAllowEmailsOptions.No)", true)]
         [InlineData("Coalesce(varAccount.donotallowemails, false)", true)]
+        [InlineData("varAccount.numericoption", true)]
+        [InlineData("Coalesce(varAccount.numericoption, NumericOptions.One)", true)]
+        [InlineData("Int(varAccount.numericoption)", true)]
+        [InlineData("varAccount.stringoption", true)]
+        [InlineData("Coalesce(varAccount.stringoption, StringOptions.Alpha)", true)]
+        [InlineData("Concatenate(varAccount.stringoption, \" suffix\")", true)]
         [InlineData("DoNotAllowEmailsOptions.No", false)]
         [InlineData("Coalesce(DoNotAllowEmailsOptions.No, false)", false)]
         [InlineData("plainAccount.donotallowemails", false)]
         [InlineData("Coalesce(plainAccount.donotallowemails, false)", false)]
+        [InlineData("plainAccount.numericoption", false)]
+        [InlineData("Int(plainAccount.numericoption)", false)]
+        [InlineData("plainAccount.stringoption", false)]
+        [InlineData("Concatenate(plainAccount.stringoption, \" suffix\")", false)]
         [InlineData("varAccountCopy.donotallowemails", true)]
+        [InlineData("varAccountCopy.numericoption", true)]
+        [InlineData("varAccountCopy.stringoption", true)]
         [InlineData("If(true, varAccountCopy, varAccount).donotallowemails", true)]
         [InlineData("Coalesce(If(true, varAccountCopy, varAccount).donotallowemails, false)", true)]
+        [InlineData("If(true, varAccountCopy, varAccount).numericoption", true)]
+        [InlineData("If(true, varAccountCopy, varAccount).stringoption", true)]
         public void DataBackedRecordOptionSetField(string expression, bool expectedIsAsync)
         {
             var boolOptionSet = new EnumSymbol(
@@ -180,8 +194,30 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
                 canCoerceFromBackingKind: true,
                 canCoerceToBackingKind: true);
 
+            var numericOptionSet = new EnumSymbol(
+                new DName("NumericOptions"),
+                DType.Number,
+                new Dictionary<string, object>
+                {
+                   { "One", 1 },
+                   { "Two", 2 },
+                },
+                canCoerceToBackingKind: true);
+
+            var stringOptionSet = new EnumSymbol(
+                new DName("StringOptions"),
+                DType.String,
+                new Dictionary<string, object>
+                {
+                   { "Alpha", "alpha" },
+                   { "Beta", "beta" },
+                },
+                canCoerceToBackingKind: true);
+
             var accountsType = AccountsTypeHelper.GetDType()
-                .Add(new TypedName(boolOptionSet.FormulaType._type, new DName("donotallowemails")));
+                .Add(new TypedName(boolOptionSet.FormulaType._type, new DName("donotallowemails")))
+                .Add(new TypedName(numericOptionSet.FormulaType._type, new DName("numericoption")))
+                .Add(new TypedName(stringOptionSet.FormulaType._type, new DName("stringoption")));
 
             var dataSource = new TestDataSource("Accounts", accountsType, requiresAsync: true);
             var dataBackedAccountsType = dataSource.Type;
@@ -193,6 +229,8 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
 
             var enumStoreBuilder = new EnumStoreBuilder();
             enumStoreBuilder.TestOnly_WithCustomEnum(boolOptionSet);
+            enumStoreBuilder.TestOnly_WithCustomEnum(numericOptionSet, append: true);
+            enumStoreBuilder.TestOnly_WithCustomEnum(stringOptionSet, append: true);
 
             var config = PowerFxConfig.BuildWithEnumStore(enumStoreBuilder, Features.PowerFxV1);
             config.SymbolTable = symbolTable;
