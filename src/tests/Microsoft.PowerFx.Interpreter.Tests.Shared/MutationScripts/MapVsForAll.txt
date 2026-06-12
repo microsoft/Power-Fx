@@ -1,0 +1,96 @@
+#SETUP: PowerFxV1CompatibilityRules
+
+// Test that demonstrates the difference between Map and ForAll
+// ForAll allows behavior functions (mutations), Map does not
+
+// ****************** ForAll allows mutations - Map does not ******************
+
+// Setup a collection for ForAll mutation tests
+>> Set(t, [1])
+Table({Value:1})
+
+// ForAll can use Collect (behavior function)
+>> ForAll(Sequence(3), Collect(t, {Value: Value * 10})); Concat(t, Value)
+"1102030"
+
+>> t // after *10 ForAll
+Table({Value:1},{Value:10},{Value:20},{Value:30})
+
+>> IfError(ForAll([1,2,4,2,6,2,10],Collect(t, 1/(Value-2));1/(Value-2)),[CountRows(AllErrors)])
+Table({Value:3})
+
+>> t // after error ForAll, should still execute all collects
+Table({Value:1},{Value:10},{Value:20},{Value:30},{Value:-1},{Value:Error({Kind:ErrorKind.Div0})},{Value:0.5},{Value:Error({Kind:ErrorKind.Div0})},{Value:0.25},{Value:Error({Kind:ErrorKind.Div0})},{Value:0.125})
+
+// **************** Map with mutation functions ******************
+
+>> Set(t, [1]) // reset table
+Table({Value:1})
+
+>> Map(Sequence(3), Collect(t, {Value: Value * 10}))
+Errors: Error 17-48: The evaluation argument of the Map function cannot include behavior functions. Use ForAll instead for imperative logic.
+
+>> Map(Sequence(3), Patch(t, {Value:1}, {Value: Value * 10}))
+Errors: Error 17-57: The evaluation argument of the Map function cannot include behavior functions. Use ForAll instead for imperative logic.
+
+>> ForAll(Sequence(3), Patch(t, {Value:1}, {Value: Value * 10}))
+Table({Value:10},{Value:20},{Value:30})
+
+>> Set(x,1);
+1
+
+>> Map(Sequence(3), Set(x,Value))
+Errors: Error 0-3: The function 'Map' has some invalid arguments.|Error 17-29: The evaluation argument of the Map function cannot include behavior functions. Use ForAll instead for imperative logic.
+
+>> Map(Sequence(3), Set(x,Value); x)
+Errors: Error 29-30: The evaluation argument of the Map function cannot include behavior functions. Use ForAll instead for imperative logic.
+
+// ************** Multi-table Map with mutation functions ******************
+
+// Collect in multi-table lambda
+>> Map([1,2,3] As A, [4,5,6] As B, Collect(t, {Value: A.Value + B.Value}))
+Errors: Error 32-70: The evaluation argument of the Map function cannot include behavior functions. Use ForAll instead for imperative logic.
+
+// Set in multi-table lambda (Set returns Void, so also get invalid args error)
+>> Map([1,2,3] As A, [4,5,6] As B, Set(x, A.Value + B.Value))
+Errors: Error 0-3: The function 'Map' has some invalid arguments.|Error 32-57: The evaluation argument of the Map function cannot include behavior functions. Use ForAll instead for imperative logic.
+
+// ************** Void lambda ******************
+
+>> ForAll(Sequence(5), Set(x,Value)) // return value is actually Void, testing infrastucture returns change to x
+5
+
+>> ForAll(Sequence(3), Set(x,Value); x)
+3
+
+>> x // after ForAll
+3
+
+>> Map([1,2,3],If(true,{a:1},[2])) // can't tolerate a Void value in second argument
+Errors: Error 0-3: The function 'Map' has some invalid arguments.
+
+>> Map([1,2,3],If(true,[1],[2]))
+Table({Value:Table({Value:1})},{Value:Table({Value:1})},{Value:Table({Value:1})})
+
+>> Map([1,2,3],If(true,{a:1},{a:2}))
+Table({a:1},{a:1},{a:1})
+
+// ************ ForAll allows Void-returning formulas ****************
+// ForAll allows expressions that evaluate to Void (e.g., when branches have incompatible types)
+// This is because ForAll is designed to support side effects and imperative-style operations
+// When the formula returns Void, ForAll returns a VoidValue (not a table)
+
+// The ForAll_V1Compat.txt file (not in MutationScripts) runs tests without side effects, and so we get an expected error for the Void return type.
+// This .txt file (in MutationScripts) has side effects enabled, and it supports returning Void.
+
+>> ForAll([1], If(false,[],{}))
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> ForAll([1,2,3], If(false,[],{}))
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> Map([1], If(false,[],{}))
+Errors: Error 0-3: The function 'Map' has some invalid arguments.
+
+>> Map([1,2,3], If(false,[],{}))
+Errors: Error 0-3: The function 'Map' has some invalid arguments.

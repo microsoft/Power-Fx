@@ -283,6 +283,72 @@ namespace Microsoft.PowerFx.Core.Functions
         }
     }
 
+    internal class FunctionMapScopeInfo : FunctionScopeInfo
+    {
+        public FunctionMapScopeInfo(TexlFunction function)
+            : base(function, appliesToArgument: (argIndex) => argIndex > 0)
+        {
+        }
+
+        public override bool CheckInput(Features features, CallNode callNode, TexlNode[] inputNodes, out DType typeScope, params DType[] inputSchema)
+        {
+            // Single-table mode: delegate to base (flat scope)
+            if (inputSchema.Length <= 1)
+            {
+                return base.CheckInput(features, callNode, inputNodes, out typeScope, inputSchema);
+            }
+
+            // Multi-table mode: compose nested record scope {A: recordTypeA, B: recordTypeB}
+            var ret = true;
+            var argCount = Math.Min(inputNodes.Length, inputSchema.Length);
+
+            typeScope = DType.EmptyRecord;
+
+            GetScopeIdent(inputNodes, out DName[] idents);
+
+            for (var i = 0; i < argCount; i++)
+            {
+                ret &= base.CheckInput(features, callNode, inputNodes[i], inputSchema[i], out var type);
+                typeScope = typeScope.Add(idents[i], type);
+            }
+
+            return ret;
+        }
+
+        public override bool GetScopeIdent(TexlNode[] nodes, out DName[] scopeIdents)
+        {
+            // Count how many leading AsNode args there are
+            var asCount = 0;
+            for (int i = 0; i < nodes.Length; i++)
+            {
+                if (nodes[i] is AsNode)
+                {
+                    asCount++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            // Single-table mode: use default behavior
+            if (asCount <= 1)
+            {
+                return base.GetScopeIdent(nodes, out scopeIdents);
+            }
+
+            // Multi-table mode: extract As name from each table arg
+            scopeIdents = new DName[asCount];
+            for (int i = 0; i < asCount; i++)
+            {
+                scopeIdents[i] = ((AsNode)nodes[i]).Right.Name;
+            }
+
+            // Returning false to indicate nested scope (same as Join)
+            return false;
+        }
+    }
+
     internal class FunctionJoinScopeInfo : FunctionScopeInfo
     {
         public static DName LeftRecord => new DName("LeftRecord");

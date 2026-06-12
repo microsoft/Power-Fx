@@ -192,7 +192,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Table({F1:1},{F1:2}).|")]
         [InlineData("Table({F1:1, F2:2},{F2:1}).|")]
         [InlineData("[1,2,3].|")]
-        [InlineData("With({testVar: \"testStr\"}, InvalidFunc(StartsWith(test|", "testVar")]
+        [InlineData("With({testVar: \"testStr\"}, InvalidFunc(StartsWith(test|", "MapLength.Shortest", "testVar")]
 
         // Suggests keywords and reserved words with indentifier escape.
         [InlineData("With({'Children':1}, ThisRecord.|", "'Children'")]
@@ -426,7 +426,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [Theory]
 
         // FirstNameNodeSuggestionHandleractualSuggestions = IntellisenseResult
-        [InlineData("Test|", "![Test1: s, Test2: n, Test3: h]", "Test1", "Test2", "Test3")]
+        [InlineData("Test|", "![Test1: s, Test2: n, Test3: h]", "MapLength.Shortest", "Test1", "Test2", "Test3")]
         [InlineData("RecordName[|", "![RecordName: ![StringName: s, NumberName: n]]", "@NumberName", "@StringName")]
         [InlineData("RecordName[|", "![RecordName: ![]]")]
         [InlineData("Test |", "![Test: s]", "&", "&&", "*", "+", "-", "/", "<", "<=", "<>", "=", ">", ">=", "And", "As", "exactin", "in", "Or", "^", "||")]

@@ -298,5 +298,16 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "Right", "right" },
                 { "Full", "full" },
             });
+
+        public static readonly EnumSymbol MapLengthEnum = new EnumSymbol(
+            new DName(LanguageConstants.MapLengthEnumString),
+            DType.String,
+            new Dictionary<string, object>()
+            {
+                { "Shortest", "shortest" },
+                { "Longest", "longest" },
+                { "Equal", "equal" },
+                { "First", "first" },
+            });
     }
 }

@@ -2,3 +2,17 @@
 
 >> ForAll([1], If(false, {a:1}, {b:2}))
 Table({a:Blank(),b:2})
+
+// ************ ForAll allows Void-returning formulas ****************
+// ForAll allows expressions that evaluate to Void (e.g., when branches have incompatible types)
+// This is because ForAll is designed to support side effects and imperative-style operations
+// When the formula returns Void, ForAll returns a VoidValue (not a table)
+
+// This .txt file runs tests without side effects, and so we get an expected error for the Void return type.
+// There is a companion .txt file in the MutationScripts that has side effects enabled, and it returns Void.
+
+>> ForAll([1], If(false,[],{}))
+Errors: Error 12-27: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
+
+>> ForAll([1,2,3], If(false,[],{}))
+Errors: Error 16-31: Argument type mismatch. The types of all result arguments must agree with or be coercible to the first result argument.
