@@ -1607,6 +1607,11 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValid(fromType);
             Contracts.AssertValid(toType);
 
+            if (toType.Kind == DKind.OptionSetValue)
+            {
+                return fromType.Kind is DKind.Boolean or DKind.Number or DKind.Decimal or DKind.String;
+            }
+
             if (fromType.Kind != DKind.OptionSetValue)
             {
                 return false;
