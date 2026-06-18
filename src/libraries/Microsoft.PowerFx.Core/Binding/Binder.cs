@@ -1596,7 +1596,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
             _coerceMap[node.Id] = type;
 
-            if (!IsRowScope(node) && IsAsyncCoercion(GetType(node), type))
+            if (IsAsyncCoercion(GetType(node), type))
             {
                 FlagPathAsAsync(node);
             }
@@ -1607,29 +1607,8 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValid(fromType);
             Contracts.AssertValid(toType);
 
-            if (toType.Kind == DKind.OptionSetValue)
-            {
-                return fromType.Kind is DKind.Boolean or DKind.Number or DKind.Decimal or DKind.String;
-            }
-
-            if (fromType.Kind != DKind.OptionSetValue)
-            {
-                return false;
-            }
-
-            if (fromType.OptionSetInfo == null)
-            {
-                return toType.Kind is DKind.String or DKind.Boolean or DKind.Number or DKind.Decimal or DKind.Color;
-            }
-
-            return toType.Kind switch
-            {
-                DKind.String => true,
-                DKind.Boolean => fromType.OptionSetInfo.BackingKind == DKind.Boolean,
-                DKind.Number or DKind.Decimal => fromType.OptionSetInfo.BackingKind == DKind.Number,
-                DKind.Color => fromType.OptionSetInfo.BackingKind == DKind.Color,
-                _ => false
-            };
+            return toType.Kind == DKind.OptionSetValue
+                && fromType.Kind is DKind.Boolean or DKind.Number or DKind.Decimal or DKind.String;
         }
 
         public void SetCoercedToplevelType(DType type)

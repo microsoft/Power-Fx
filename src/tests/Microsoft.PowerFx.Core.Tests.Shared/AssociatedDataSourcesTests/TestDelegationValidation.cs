@@ -163,19 +163,19 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
         [InlineData("recordValue.coloroption", false)]
         [InlineData("Coalesce(recordValue.donotallowemails, DoNotAllowEmailsOptions.No)", false)]
         [InlineData("Coalesce(recordValue.donotallowemails, false)", true)]
-        [InlineData("Not(recordValue.donotallowemails)", true)]
-        [InlineData("recordValue.donotallowemails = true", true)]
-        [InlineData("recordValue.numericoption = 1", true)]
-        [InlineData("Int(recordValue.numericoption)", true)]
-        [InlineData("ColorFade(recordValue.coloroption, 0.5)", true)]
+        [InlineData("Not(recordValue.donotallowemails)", false)]
+        [InlineData("recordValue.donotallowemails = true", false)]
+        [InlineData("recordValue.numericoption = 1", false)]
+        [InlineData("Int(recordValue.numericoption)", false)]
+        [InlineData("ColorFade(recordValue.coloroption, 0.5)", false)]
         [InlineData("Coalesce(recordValue.stringoption, StringOptions.Alpha)", false)]
         [InlineData("Concatenate(recordValue.stringoption, \" suffix\")", false)]
         [InlineData("If(true, recordValueCopy, recordValue).donotallowemails", false)]
         [InlineData("Coalesce(If(true, recordValueCopy, recordValue).donotallowemails, false)", true)]
-        [InlineData("If(true, recordValueCopy, recordValue).numericoption = 1", true)]
-        [InlineData("ColorFade(If(true, recordValueCopy, recordValue).coloroption, 0.5)", true)]
+        [InlineData("If(true, recordValueCopy, recordValue).numericoption = 1", false)]
+        [InlineData("ColorFade(If(true, recordValueCopy, recordValue).coloroption, 0.5)", false)]
         [InlineData("Concatenate(If(true, recordValueCopy, recordValue).stringoption, \" suffix\")", false)]
-        public void OptionSetValueCoercionsMarkAsync(string expression, bool expectedIsAsync)
+        public void PrimitiveToOptionSetValueCoercionsMarkAsync(string expression, bool expectedIsAsync)
         {
             var config = CreateOptionSetRecordVariableConfig();
             var engine = new Engine(config);
@@ -190,7 +190,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
         [InlineData("recordValue.donotallowemails", "Boolean")]
         [InlineData("recordValue.address1_addresstypecode", "Number")]
         [InlineData("recordValue.coloroption", "Color")]
-        public void TopLevelOptionSetValueCoercionsMarkAsync(string expression, string coercedKind)
+        public void TopLevelOptionSetValueToPrimitiveCoercionsRemainSync(string expression, string coercedKind)
         {
             var config = CreateOptionSetRecordVariableConfig();
             var engine = new Engine(config);
@@ -208,7 +208,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
                 _ => throw new InvalidOperationException($"Unexpected coerced kind: {coercedKind}")
             });
 
-            Assert.True(result.Binding.IsAsync(result.Binding.Top));
+            Assert.False(result.Binding.IsAsync(result.Binding.Top));
         }
 
         [Theory]
