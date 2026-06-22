@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -151,6 +152,242 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             result = engine.Check("CountRows(Filter(Accounts, IsBlank('Address 1: City')))");
             Assert.True(result.IsSuccess);
             Assert.Empty(result.Errors);
+        }
+
+        [Theory]
+        [InlineData("recordValue.'Account Name'", false)]
+        [InlineData("Coalesce(recordValue.'Account Name', \"fallback\")", false)]
+        [InlineData("recordValue.donotallowemails", false)]
+        [InlineData("recordValue.numericoption", false)]
+        [InlineData("recordValue.stringoption", false)]
+        [InlineData("recordValue.coloroption", false)]
+        [InlineData("Coalesce(recordValue.donotallowemails, DoNotAllowEmailsOptions.No)", false)]
+        [InlineData("Coalesce(recordValue.donotallowemails, false)", true)]
+        [InlineData("Not(recordValue.donotallowemails)", false)]
+        [InlineData("recordValue.donotallowemails = true", false)]
+        [InlineData("recordValue.numericoption = 1", false)]
+        [InlineData("Int(recordValue.numericoption)", false)]
+        [InlineData("ColorFade(recordValue.coloroption, 0.5)", false)]
+        [InlineData("Coalesce(recordValue.stringoption, StringOptions.Alpha)", false)]
+        [InlineData("Concatenate(recordValue.stringoption, \" suffix\")", false)]
+        [InlineData("If(true, recordValueCopy, recordValue).donotallowemails", false)]
+        [InlineData("Coalesce(If(true, recordValueCopy, recordValue).donotallowemails, false)", true)]
+        [InlineData("If(true, recordValueCopy, recordValue).numericoption = 1", false)]
+        [InlineData("ColorFade(If(true, recordValueCopy, recordValue).coloroption, 0.5)", false)]
+        [InlineData("Concatenate(If(true, recordValueCopy, recordValue).stringoption, \" suffix\")", false)]
+        public void PrimitiveToOptionSetValueCoercionsMarkAsync(string expression, bool expectedIsAsync)
+        {
+            var config = CreateOptionSetRecordVariableConfig();
+            var engine = new Engine(config);
+            var result = engine.Check(expression);
+
+            Assert.True(result.IsSuccess);
+            Assert.Empty(result.Errors);
+            Assert.Equal(expectedIsAsync, result.Binding.IsAsync(result.Binding.Top));
+        }
+
+        [Theory]
+        [InlineData("recordValue.donotallowemails", "Boolean")]
+        [InlineData("recordValue.address1_addresstypecode", "Number")]
+        [InlineData("recordValue.coloroption", "Color")]
+        public void TopLevelOptionSetValueToPrimitiveCoercionsRemainSync(string expression, string coercedKind)
+        {
+            var config = CreateOptionSetRecordVariableConfig();
+            var engine = new Engine(config);
+            var result = engine.Check(expression);
+
+            Assert.True(result.IsSuccess);
+            Assert.Empty(result.Errors);
+            Assert.False(result.Binding.IsAsync(result.Binding.Top));
+
+            result.Binding.SetCoercedToplevelType(coercedKind switch
+            {
+                "Boolean" => DType.Boolean,
+                "Number" => DType.Number,
+                "Color" => DType.Color,
+                _ => throw new InvalidOperationException($"Unexpected coerced kind: {coercedKind}")
+            });
+
+            Assert.False(result.Binding.IsAsync(result.Binding.Top));
+        }
+
+        [Theory]
+        [InlineData("true", "Boolean")]
+        [InlineData("1", "Number")]
+        [InlineData("\"alpha\"", "String")]
+        public void BackingPrimitiveToOptionSetValueCoercionsMarkAsync(string expression, string optionSetKind)
+        {
+            var config = CreateOptionSetRecordVariableConfig();
+            var engine = new Engine(config);
+            var result = engine.Check(expression);
+
+            Assert.True(result.IsSuccess);
+            Assert.Empty(result.Errors);
+            Assert.False(result.Binding.IsAsync(result.Binding.Top));
+
+            result.Binding.SetCoercedToplevelType(optionSetKind switch
+            {
+                "Boolean" => GetOptionSetFieldType(config, "donotallowemails"),
+                "Number" => GetOptionSetFieldType(config, "numericoption"),
+                "String" => GetOptionSetFieldType(config, "stringoption"),
+                _ => throw new InvalidOperationException($"Unexpected option-set kind: {optionSetKind}")
+            });
+
+            Assert.True(result.Binding.IsAsync(result.Binding.Top));
+        }
+
+        [Fact]
+        public void ColorToOptionSetValueCoercionIsNotSupported()
+        {
+            var config = CreateOptionSetRecordVariableConfig();
+            var engine = new Engine(config);
+            var result = engine.Check("Color.Red");
+
+            Assert.True(result.IsSuccess);
+            Assert.False(DType.Color.CoercesTo(GetOptionSetFieldType(config, "coloroption"), aggregateCoercion: true, isTopLevelCoercion: false, config.Features));
+        }
+
+        [Theory]
+        [InlineData("CountRows(localRecords)")]
+        public void OptionSetTableVariablesRemainSyncWithoutCoercion(string expression)
+        {
+            var boolOptionSet = CreateBooleanOptionSet();
+            var accountsType = AccountsTypeHelper.GetDType()
+                .Add(new TypedName(boolOptionSet.FormulaType._type, new DName("donotallowemails")));
+            var symbolTable = new DelegatableSymbolTable();
+            symbolTable.AddVariable("localRecords", FormulaType.Build(accountsType));
+
+            var enumStoreBuilder = new EnumStoreBuilder();
+            enumStoreBuilder.TestOnly_WithCustomEnum(boolOptionSet);
+
+            var config = PowerFxConfig.BuildWithEnumStore(enumStoreBuilder, Features.PowerFxV1);
+            config.SymbolTable = symbolTable;
+
+            var engine = new Engine(config);
+            var result = engine.Check(expression);
+
+            Assert.True(result.IsSuccess);
+            Assert.Empty(result.Errors);
+            Assert.False(result.Binding.IsAsync(result.Binding.Top));
+        }
+
+        [Theory]
+        [InlineData("Filter(localAccounts, IsBlank(ThisRecord.address1_addresstypecode))")]
+        [InlineData("Filter(localAccounts As account, IsBlank(account.address1_addresstypecode))")]
+        public void OptionSetTableRowScopeCoercionsRemainSync(string expression)
+        {
+            var symbolTable = new DelegatableSymbolTable();
+            symbolTable.AddVariable("localAccounts", FormulaType.Build(AccountsTypeHelper.GetDType()));
+
+            var config = new PowerFxConfig(Features.PowerFxV1)
+            {
+                SymbolTable = symbolTable
+            };
+
+            var engine = new Engine(config);
+            var result = engine.Check(expression);
+
+            Assert.True(result.IsSuccess);
+            Assert.Empty(result.Errors);
+            Assert.False(result.Binding.IsAsync(result.Binding.Top));
+        }
+
+        [Theory]
+        [InlineData("Filter(optionSetRows, ThisRecord.donotallowemails = true)")]
+        [InlineData("Filter(optionSetRows As rowScope, rowScope.numericoption = 1)")]
+        [InlineData("Filter(optionSetRows, ColorFade(ThisRecord.coloroption, 0.5) = RGBA(0, 0, 255, 1))")]
+        public void OptionSetTableRowScopeBackingCoercionsRemainSync(string expression)
+        {
+            var config = CreateOptionSetRecordVariableConfig(includeEnumStore: false);
+            var engine = new Engine(config);
+            var result = engine.Check(expression);
+
+            Assert.True(result.IsSuccess);
+            Assert.Empty(result.Errors);
+            Assert.False(result.Binding.IsAsync(result.Binding.Top));
+        }
+
+        private static PowerFxConfig CreateOptionSetRecordVariableConfig(bool includeEnumStore = true)
+        {
+            var boolOptionSet = CreateBooleanOptionSet();
+            var numericOptionSet = new EnumSymbol(
+                new DName("NumericOptions"),
+                DType.Number,
+                new Dictionary<string, object>
+                {
+                    { "One", 1 },
+                    { "Two", 2 },
+                },
+                canCoerceToBackingKind: true);
+            var stringOptionSet = new EnumSymbol(
+                new DName("StringOptions"),
+                DType.String,
+                new Dictionary<string, object>
+                {
+                    { "Alpha", "alpha" },
+                    { "Beta", "beta" },
+                },
+                canCoerceToBackingKind: true);
+            var colorOptionSet = new EnumSymbol(
+                new DName("ColorOptions"),
+                DType.Color,
+                new Dictionary<string, object>
+                {
+                    { "Blue", (double)0xFF0000FFU },
+                    { "Red", (double)0xFFFF0000U },
+                },
+                canCoerceToBackingKind: true);
+
+            var accountsType = AccountsTypeHelper.GetDType()
+                .Add(new TypedName(boolOptionSet.FormulaType._type, new DName("donotallowemails")))
+                .Add(new TypedName(numericOptionSet.FormulaType._type, new DName("numericoption")))
+                .Add(new TypedName(stringOptionSet.FormulaType._type, new DName("stringoption")))
+                .Add(new TypedName(colorOptionSet.FormulaType._type, new DName("coloroption")));
+            var variableRecordType = accountsType.ToRecord();
+
+            var symbolTable = new DelegatableSymbolTable();
+            symbolTable.AddVariable("recordValue", FormulaType.Build(variableRecordType));
+            symbolTable.AddVariable("recordValueCopy", FormulaType.Build(variableRecordType));
+            symbolTable.AddVariable("optionSetRows", FormulaType.Build(accountsType));
+
+            if (!includeEnumStore)
+            {
+                return new PowerFxConfig(Features.PowerFxV1)
+                {
+                    SymbolTable = symbolTable
+                };
+            }
+
+            var enumStoreBuilder = new EnumStoreBuilder();
+            enumStoreBuilder.TestOnly_WithCustomEnum(boolOptionSet);
+            enumStoreBuilder.TestOnly_WithCustomEnum(numericOptionSet, append: true);
+            enumStoreBuilder.TestOnly_WithCustomEnum(stringOptionSet, append: true);
+            enumStoreBuilder.TestOnly_WithCustomEnum(colorOptionSet, append: true);
+
+            var config = PowerFxConfig.BuildWithEnumStore(enumStoreBuilder, Features.PowerFxV1);
+            config.SymbolTable = symbolTable;
+            return config;
+        }
+
+        private static DType GetOptionSetFieldType(PowerFxConfig config, string fieldName)
+        {
+            Assert.True(config.SymbolTable.TryGetVariable(new DName("recordValue"), out var lookupInfo, out _));
+            Assert.True(lookupInfo.Type.TryGetType(new DName(fieldName), out var fieldType));
+            return fieldType;
+        }
+
+        private static EnumSymbol CreateBooleanOptionSet()
+        {
+            return new EnumSymbol(
+                new DName("DoNotAllowEmailsOptions"),
+                DType.Boolean,
+                new Dictionary<string, object>
+                {
+                    { "Yes", true },
+                    { "No", false },
+                },
+                canCoerceFromBackingKind: true,
+                canCoerceToBackingKind: true);
         }
     }
 }
