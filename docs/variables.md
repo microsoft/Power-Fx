@@ -139,7 +139,7 @@ Power Fx has two types of variables:
 
 | Variables type | Scope | Description | Functions that establish |
 | --- | --- | --- | --- |
-| Global variables |App |Simplest to use. Holds a number, text string, Boolean, record, table, etc. that can be references from anywhere in the app. |**Set** |
+| Global variables |App |Simplest to use. Holds a number, text string, Boolean, record, table, etc. that can be referenced from anywhere in the app. |**Set** |
 | Collections |App |Holds a table that can be referenced from anywhere in the app. Allows the contents of the table to be modified rather than being set as a whole. Can be saved to the local device for later use. |**Collect**<br>**ClearCollect** |
 
 When used in Power Apps, there is a third type of variable:
@@ -313,6 +313,7 @@ Let's recreate our adding machine by using a collection:
      ![OnSelect* property of the Save button](media/variables/papertape-6.png)
 
 12. Preview again by pressing the F5 key, enter numbers in the text-input control, and select buttons. Select the **Save** button. Close and reload the app, and select the **Load** button to reload your collection.
+
 
 
 

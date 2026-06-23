@@ -53,7 +53,7 @@ Time1: =1:34
 
 The pound sign `#` and colon `:` are not allowed anywhere in single-line formulas, even if they are in a quoted text string or identifier name. To use a pound sign or colon, the formula must be expressed as a multi-line formula.  The pound sign is interpreted as a comment in YAML and the colon is interpreted as a new name map in YAML.  To add a comment to a single-line comment, use the formula language's line comment starting with `//`.
 
-Using normal YAML escaping with single quotes and C-like backslashes is not supported.  If these would be required, us a multi-line formula instead.  We do this for consistency and to facilitate cut/paste between the formula bar in Power Apps Studio and YAML source files.
+Using normal YAML escaping with single quotes and C-like backslashes is not supported.  If these would be required, use a multi-line formula instead.  We do this for consistency and to facilitate cut/paste between the formula bar in Power Apps Studio and YAML source files.
 
 See the canvas apps [operators and identifiers](https://docs.microsoft.com/powerapps/maker/canvas-apps/functions/operators) documentation for details on allowed names and the structure of an expression.
 
@@ -182,3 +182,4 @@ YAML allows the same name map to be reused, the last silently overriding any pre
 ## Related articles
 
 - [Source code files for Canvas apps](https://powerapps.microsoft.com/en-us/blog/source-code-files-for-canvas-apps/)
+
