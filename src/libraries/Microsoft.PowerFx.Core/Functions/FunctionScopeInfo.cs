@@ -283,6 +283,122 @@ namespace Microsoft.PowerFx.Core.Functions
         }
     }
 
+    internal class FunctionReduceScopeInfo : FunctionScopeInfo
+    {
+        public static DName ThisReduceDefaultName => new DName("ThisReduce");
+
+        public FunctionReduceScopeInfo(TexlFunction function)
+            : base(function, supportsAsyncLambdas: false, appliesToArgument: (argIndex) => argIndex == 1)
+        {
+        }
+
+        public override bool CheckInput(Features features, CallNode callNode, TexlNode[] inputNodes, out DType typeScope, params DType[] inputSchema)
+        {
+            var ret = base.CheckInput(features, callNode, inputNodes[0], inputSchema[0], out typeScope);
+
+            // Determine the reduce name (default "ThisReduce", or renamed via As on arg 2)
+            var reduceName = ThisReduceDefaultName;
+            if (inputNodes.Length > 2 && inputNodes[2] is AsNode reduceAsNode)
+            {
+                reduceName = reduceAsNode.Right.Name;
+            }
+
+            // Infer the accumulator type from the initial value's AST node.
+            // The initial value hasn't been visited yet, but for record literals we can
+            // extract the field names so that ThisReduce.field access works in the lambda.
+            var reduceType = GetTypeFromNode(inputNodes.Length > 2 ? inputNodes[2] : null);
+
+            typeScope = typeScope.Add(new TypedName(reduceType, reduceName));
+
+            return ret;
+        }
+
+        public override bool GetScopeIdent(TexlNode[] nodes, out DName[] scopeIdents)
+        {
+            scopeIdents = new[] { TexlBinding.ThisRecordDefaultName };
+            if (nodes[0] is AsNode asNode)
+            {
+                scopeIdents = new[] { asNode.Right.Name };
+            }
+
+            // Always return false so that direct field access works even when As is used.
+            // This ensures ThisReduce (or As-renamed accumulator) is always accessible
+            // as a direct name, not requiring the scope identifier prefix.
+            return false;
+        }
+
+        public static DName GetReduceName(TexlNode[] nodes)
+        {
+            if (nodes.Length > 2 && nodes[2] is AsNode reduceAsNode)
+            {
+                return reduceAsNode.Right.Name;
+            }
+
+            return ThisReduceDefaultName;
+        }
+
+        // Infer a DType from an AST node before it has been visited by the binder.
+        // For record literals, recursively extracts field names and types.
+        // For scalar literals, returns the corresponding type.
+        // For other nodes, returns ObjNull (which coerces to numeric/string/boolean).
+        // Note: NumLitNode is inferred as Number (float). In decimal mode, the actual
+        // runtime type may be Decimal, which can cause a mismatch for record field access.
+        private static DType GetTypeFromNode(TexlNode node)
+        {
+            if (node == null)
+            {
+                return DType.ObjNull;
+            }
+
+            // Unwrap AsNode (e.g., "0 As Acc" or "{sum: 0} As Acc")
+            if (node is AsNode asNode)
+            {
+                node = asNode.Left;
+            }
+
+            // For record literals like {sum: 0, count: 0}, build a record type from field values
+            if (node is RecordNode recordNode)
+            {
+                var type = DType.EmptyRecord;
+                for (var i = 0; i < recordNode.Ids.Count; i++)
+                {
+                    var fieldType = GetTypeFromNode(recordNode.Children[i]);
+                    type = type.Add(new TypedName(fieldType, recordNode.Ids[i].Name));
+                }
+
+                return type;
+            }
+
+            // Handle unary operations like -999 (Negate(NumLitNode))
+            if (node is UnaryOpNode unaryNode)
+            {
+                return GetTypeFromNode(unaryNode.Child);
+            }
+
+            if (node is NumLitNode)
+            {
+                return DType.Number;
+            }
+
+            if (node is DecLitNode)
+            {
+                return DType.Decimal;
+            }
+
+            if (node is StrLitNode)
+            {
+                return DType.String;
+            }
+
+            if (node is BoolLitNode)
+            {
+                return DType.Boolean;
+            }
+
+            return DType.ObjNull;
+        }
+    }
+
     internal class FunctionJoinScopeInfo : FunctionScopeInfo
     {
         public static DName LeftRecord => new DName("LeftRecord");

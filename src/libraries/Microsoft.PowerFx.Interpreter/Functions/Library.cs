@@ -844,6 +844,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: ForAll_UO)
             },
             {
+                BuiltinFunctionsCore.Reduce,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.Reduce.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: ReduceTable)
+            },
+            {
                 BuiltinFunctionsCore.GUIDNoArg,
                 NoErrorHandling(GuidNoArg)
             },
@@ -2739,6 +2750,53 @@ namespace Microsoft.PowerFx.Functions
 
                 yield return result;
             }
+        }
+
+        // Reduce(table, lambda, reduceFieldName, [initialValue])
+        // The reduceFieldName arg is injected by CreateIRCallNode at compile time.
+        public static async ValueTask<FormulaValue> ReduceTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            // args[0] = table, args[1] = lambda, args[2] = reduce field name (injected), args[3] = initial value (optional)
+            if (args[0] is BlankValue)
+            {
+                return args.Length > 3 ? args[3] : new BlankValue(irContext);
+            }
+
+            if (args[0] is not TableValue table)
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+
+            var lambda = (LambdaFormulaValue)args[1];
+            var reduceName = ((StringValue)args[2]).Value;
+            FormulaValue accumulator = args.Length > 3 ? args[3] : new BlankValue(irContext);
+
+            foreach (var row in table.Rows)
+            {
+                runner.CheckCancel();
+
+                if (row.IsError)
+                {
+                    return row.Error;
+                }
+
+                if (row.IsBlank)
+                {
+                    continue;
+                }
+
+                var scope = new ReduceScope(row.Value, reduceName, accumulator);
+                SymbolContext childContext = context.SymbolContext.WithScopeValues(scope);
+
+                accumulator = await lambda.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
+
+                if (accumulator is ErrorValue)
+                {
+                    return accumulator;
+                }
+            }
+
+            return accumulator;
         }
 
         public static FormulaValue IsError(IRContext irContext, FormulaValue[] args)

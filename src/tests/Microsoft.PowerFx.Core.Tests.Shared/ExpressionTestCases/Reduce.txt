@@ -1,0 +1,254 @@
+// =============================================
+// BASIC NUMERIC REDUCTIONS
+// =============================================
+
+// Sum of sequence 1..10 (from spec)
+>> Reduce( Sequence(10), ThisReduce + Value, 0 )
+55
+
+// Sum of squares (from spec)
+>> Reduce( Sequence(3), ThisReduce + Value ^ 2, 0 )
+14
+
+// Sum without initial value - Blank coerces to 0
+>> Reduce( Sequence(10), ThisReduce + Value )
+55
+
+// Product of 1..5 (factorial)
+>> Reduce( Sequence(5), ThisReduce * Value, 1 )
+120
+
+// Max via reduce
+>> Reduce( [5, 3, 8, 1, 9, 2], If(Value > ThisReduce, Value, ThisReduce), 0 )
+9
+
+// Min via reduce
+>> Reduce( [5, 3, 8, 1, 9, 2], If(Value < ThisReduce, Value, ThisReduce), 999 )
+1
+
+// Count via reduce
+>> Reduce( [10, 20, 30], ThisReduce + 1, 0 )
+3
+
+// Average-style computation (sum / count would need separate tracking)
+>> Reduce( [2, 4, 6, 8, 10], ThisReduce + Value, 0 )
+30
+
+// =============================================
+// STRING REDUCTIONS
+// =============================================
+
+// Concatenation (from spec)
+>> Reduce( Split( "Hello World", " " ), ThisReduce & Value, "" )
+"HelloWorld"
+
+// Concatenation with separator
+>> Reduce( ["a", "b", "c"], ThisReduce & "-" & Value, "" )
+"-a-b-c"
+
+// Reverse string via reduce
+>> Reduce( Split( "abc", Blank() ), Value & ThisReduce, "" )
+"cba"
+
+// Build comma-separated list
+>> Reduce( ["apple", "banana", "cherry"], If(ThisReduce = "", Value, ThisReduce & ", " & Value), "" )
+"apple, banana, cherry"
+
+// =============================================
+// AS OPERATOR - Table
+// =============================================
+
+// Rename ThisRecord via As on table
+>> Reduce( [1, 2, 3] As Item, ThisReduce + Item.Value, 0 )
+6
+
+// With As, can still use Value directly
+>> Reduce( Sequence(5) As N, ThisReduce + N.Value, 0 )
+15
+
+// =============================================
+// AS OPERATOR - InitialValue
+// =============================================
+
+// Rename ThisReduce via As on initial value
+>> Reduce( Sequence(5), Acc + Value, 0 As Acc )
+15
+
+// Rename both table scope and reduce scope
+>> Reduce( Sequence(3) As N, Acc + N.Value ^ 2, 0 As Acc )
+14
+
+// =============================================
+// EMPTY TABLE
+// =============================================
+
+// Empty table with initial value returns initial value
+>> Reduce( FirstN([1, 2, 3], 0), ThisReduce + Value, 42 )
+42
+
+// Empty table without initial value returns Blank
+>> IsBlank( Reduce( FirstN([1, 2, 3], 0), ThisReduce + Value ) )
+true
+
+// =============================================
+// BLANK TABLE
+// =============================================
+
+// Blank table with initial value returns initial value
+>> Reduce( If(false, [1,2,3]), ThisReduce + Value, 99 )
+99
+
+// Blank table without initial value returns Blank
+>> IsBlank( Reduce( If(false, [1,2,3]), ThisReduce + Value ) )
+true
+
+// =============================================
+// EXAMPLES FROM OTHER FUNCTIONAL LANGUAGES
+// =============================================
+
+// Haskell: foldl (+) 0 [1..10] = 55
+>> Reduce( Sequence(10) As N, ThisReduce + N.Value, 0 )
+55
+
+// Haskell: foldl (*) 1 [1..5] = 120
+>> Reduce( Sequence(5), ThisReduce * Value, 1 ) + 0
+120
+
+// Python: functools.reduce(lambda a, b: a + b, [1,2,3,4,5]) = 15
+>> Reduce( [1, 2, 3, 4, 5], ThisReduce + Value, 0 ) + 0
+15
+
+// JavaScript: [1,2,3,4,5].reduce((acc, val) => acc + val, 0) = 15
+>> 0 + Reduce( [1, 2, 3, 4, 5], ThisReduce + Value, 0 )
+15
+
+// JavaScript: [1,2,3,4].reduce((acc, val) => acc * val, 1) = 24
+>> Reduce( [1, 2, 3, 4], ThisReduce * Value, 1 )
+24
+
+// Excel: =REDUCE(0, {1,2,3,4,5}, LAMBDA(a,b, a+b)) = 15
+>> Reduce( [1, 2, 3, 4, 5], Acc + Value, 0 As Acc )
+15
+
+// Excel: =REDUCE("", {"a","b","c"}, LAMBDA(a,b, a&b)) = "abc"
+>> Reduce( ["a", "b", "c"], Acc & Value, "" As Acc )
+"abc"
+
+// Excel: =REDUCE(1, {2,3,4}, LAMBDA(a,b, a*b)) = 24
+>> Reduce( [2, 3, 4], Acc * Value, 1 As Acc )
+24
+
+// Haskell: foldl (\acc x -> acc ++ show x) "" [1,2,3] = "123"
+>> Reduce( [1, 2, 3], ThisReduce & Text(Value), "" )
+"123"
+
+// =============================================
+// NESTED REDUCE
+// =============================================
+
+// Nested reduce: sum of row sums
+// Inner: sum of [1,2,3] = 6, sum of [4,5,6] = 15, sum of [7,8,9] = 24
+// Outer: 6 + 15 + 24 = 45
+>> Reduce( [1, 4, 7], ThisReduce + Reduce( Sequence(3, Value), ThisReduce + Value, 0 ), 0 )
+45
+
+// Nested reduce: concatenation of reductions
+>> Reduce( ["a", "b"], ThisReduce & "[" & Reduce( [1, 2], ThisReduce & Value, "" ) & "]", "" )
+"[12][12]"
+
+// Nested reduce with As to avoid scope confusion
+>> Reduce( [1, 2, 3] As Outer, OuterAcc + Reduce( Sequence(Outer.Value) As Inner, InnerAcc + Inner.Value, 0 As InnerAcc ), 0 As OuterAcc )
+10
+
+// =============================================
+// EDGE CASES
+// =============================================
+
+// Single element table
+>> Reduce( [42], ThisReduce + Value, 0 )
+42
+
+// Single element without initial value
+>> Reduce( [42], ThisReduce + Value )
+42
+
+// Reduce with boolean logic - all true
+>> Reduce( [true, true, true], ThisReduce And Value, true )
+true
+
+// Reduce with boolean logic - any false
+>> Reduce( [true, false, true], ThisReduce And Value, true )
+false
+
+// =============================================
+// THISRECORD ACCESS
+// =============================================
+
+// Access ThisRecord directly
+>> Reduce( [{a: 1, b: 10}, {a: 2, b: 20}], ThisReduce + ThisRecord.a + ThisRecord.b, 0 )
+33
+
+// Use multiple fields from record
+>> Reduce( [{x: 2, y: 3}, {x: 4, y: 5}], ThisReduce + x * y, 0 )
+26
+
+// =============================================
+// TYPE MISMATCH ERRORS
+// =============================================
+
+// Type cannot be inferred without initial value - formula just passes through ThisReduce
+>> Reduce([1,2,3], ThisReduce)
+Errors: Error 16-26: Cannot determine the return type of Reduce. Provide an initial value to define the accumulator type.
+
+// Formula returns Boolean, InitialValue is GUID - incompatible types
+>> Reduce( [1,2,3], true, GUID() )
+Errors: Error 17-21: Invalid argument type (Boolean). Expecting a Guid value instead.
+
+// Formula returns GUID, InitialValue is Boolean - incompatible types
+>> Reduce( [1,2,3], GUID(), true )
+Errors: Error 17-23: Invalid argument type (Guid). Expecting a Boolean value instead.
+
+// =============================================
+// RETURN TYPE HONORS INITIALVALUE
+// =============================================
+
+// InitialValue type determines return type - Text concatenation
+>> Reduce( [1, 2, 3], ThisReduce & Text(Value), "" ) & "!"
+"123!"
+
+// InitialValue type determines return type - Boolean reduction
+>> Not(Reduce( [true, true, true], ThisReduce And Value, true ))
+false
+
+// Coercible types work - Boolean coerces to Text (InitialValue is Text)
+>> Reduce( ["a","b","c"], true, "" )
+"true"
+
+// Coercible types with runtime error - "text" can't coerce to Boolean at runtime
+>> Reduce( [true, false], "text", true )
+Error({Kind:ErrorKind.InvalidArgument})
+
+// =============================================
+// RUNTIME ERRORS
+// =============================================
+
+// Divide by zero on every iteration - Reduce stops on first error
+>> Reduce( Sequence(10), 1/0 )
+Error({Kind:ErrorKind.Div0})
+
+// Only one error is produced (Reduce stops on first error, not all 10)
+>> IfError( Reduce(Sequence(10), 1/0), CountRows(AllErrors) )
+1
+
+// Divide by zero on a specific row (3rd row has Value=0)
+>> Reduce( [1, 2, 0, 3], ThisReduce + 1/Value, 0 )
+Error({Kind:ErrorKind.Div0})
+
+// Only one error even when error occurs mid-iteration
+>> IfError( Reduce([1, 2, 0, 3], ThisReduce + 1/Value, 0), CountRows(AllErrors) )
+1
+
+// Error row in the table is propagated
+>> Reduce( [1, 1/0, 3], ThisReduce + Value, 0 )
+Error({Kind:ErrorKind.Div0})
+
