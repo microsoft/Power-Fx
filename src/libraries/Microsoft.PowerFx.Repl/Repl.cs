@@ -72,6 +72,8 @@ namespace Microsoft.PowerFx
 
         public ParserOptions ParserOptions { get; set; } = new ParserOptions() { AllowsSideEffects = true };
 
+        public SymbolProperties VariableSymbolProperties { get; set; } = new SymbolProperties { CanMutate = true, CanSet = true };
+
         // example override, switching to [1], [2] etc.
         public virtual string Prompt => "\n>> ";
 
@@ -444,7 +446,7 @@ namespace Microsoft.PowerFx
                         // Start as blank. Will execute expression below to actually assign. 
                         var setValue = FormulaValue.NewBlank(setCheck.ReturnType);
 
-                        this.Engine.UpdateVariable(name, setValue);
+                        this.Engine.UpdateVariable(name, setValue, VariableSymbolProperties);
                         
                         createdDeclarations = true;
                     }
