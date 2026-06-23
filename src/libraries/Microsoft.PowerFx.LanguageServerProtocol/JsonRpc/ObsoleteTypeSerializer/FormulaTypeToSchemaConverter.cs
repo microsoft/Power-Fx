@@ -63,6 +63,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Color };
             }
 
+            public void Visit(GradientType type)
+            {
+                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Gradient };
+            }
+
             public void Visit(DateType type)
             {
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Date };

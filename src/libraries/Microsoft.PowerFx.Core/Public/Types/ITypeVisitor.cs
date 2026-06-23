@@ -42,6 +42,8 @@ namespace Microsoft.PowerFx.Types
 
         void Visit(ColorType type);
 
+        void Visit(GradientType type);
+
         void Visit(UnsupportedType type);
 
         void Visit(UnknownType type);

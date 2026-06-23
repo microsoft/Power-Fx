@@ -138,6 +138,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.ExternalTypeKind",
                 "Microsoft.PowerFx.Types.FormulaType",
                 "Microsoft.PowerFx.Types.FormulaValue",
+                "Microsoft.PowerFx.Types.GradientType",
                 "Microsoft.PowerFx.Types.GuidType",
                 "Microsoft.PowerFx.Types.GuidValue",
                 "Microsoft.PowerFx.Types.HyperlinkType",

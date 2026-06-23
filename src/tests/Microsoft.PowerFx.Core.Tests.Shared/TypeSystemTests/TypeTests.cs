@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -81,6 +82,14 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.Throws<ArgumentException>(
                 () => r1.TryGetFieldType(string.Empty, out var actualLogical, out var formulaType));
+        }
+
+        [Fact]
+        public void GradientType_MapsTo_GradientDType()
+        {
+            Assert.IsType<GradientType>(FormulaType.Gradient);
+            Assert.Equal(DKind.Gradient, FormulaType.Gradient._type.Kind);
+            Assert.Equal("Gradient", FormulaType.Gradient.ToString());
         }
 
         [Fact]

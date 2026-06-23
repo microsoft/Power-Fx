@@ -75,6 +75,8 @@ namespace Microsoft.PowerFx.Types
 
         public static FormulaType Color { get; } = new ColorType();
 
+        public static FormulaType Gradient { get; } = new GradientType();
+
         public static FormulaType Guid { get; } = new GuidType();
 
         public static FormulaType Unknown { get; } = new UnknownType();
@@ -160,6 +162,7 @@ namespace Microsoft.PowerFx.Types
                 case DKind.Currency: return Number; // TODO: validate
                 case DKind.Hyperlink: return Hyperlink;
                 case DKind.Color: return Color;
+                case DKind.Gradient: return Gradient;
                 case DKind.Guid: return Guid;
 
                 case DKind.Time: return Time;
