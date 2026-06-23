@@ -91,7 +91,10 @@ namespace Microsoft.PowerFx.Core.Types
 
         Void = 39,
 
-        _Lim = 40,
+        // Gradient (e.g. LinearGradient). A Color coerces to a single-stop Gradient.
+        Gradient = 40,
+
+        _Lim = 41,
 #pragma warning restore SA1300 // Element should begin with upper-case letter
     }
 }

@@ -57,6 +57,7 @@ namespace Microsoft.PowerFx.Core.Types
         public static readonly DType UntypedObject = new DType(DKind.UntypedObject);
         public static readonly DType Deferred = new DType(DKind.Deferred);
         public static readonly DType Void = new DType(DKind.Void);
+        public static readonly DType Gradient = new DType(DKind.Gradient);
 
         public static readonly DType Invalid = new DType();
 
@@ -3878,6 +3879,8 @@ namespace Microsoft.PowerFx.Core.Types
                     return "-";
                 case DKind.Decimal:
                     return "w";
+                case DKind.Gradient:
+                    return "G";
             }
         }
 

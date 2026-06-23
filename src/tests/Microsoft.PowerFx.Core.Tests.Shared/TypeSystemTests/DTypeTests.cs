@@ -209,6 +209,18 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void Gradient_Type_RoundTrips_ThroughTypeSpec()
+        {
+            // Writer emits "G" for Gradient.
+            Assert.Equal("G", DType.MapKindToStr(DKind.Gradient));
+
+            // Parser reads "G" back to the Gradient DType.
+            Assert.True(DType.TryParse("G", out var parsed));
+            Assert.Equal(DKind.Gradient, parsed.Kind);
+            Assert.Equal(DType.Gradient, parsed);
+        }
+
+        [Fact]
         public void DTypeCorrectDKind()
         {
             Assert.Equal(DKind.Unknown, DType.Unknown.Kind);

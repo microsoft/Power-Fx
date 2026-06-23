@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Types
 {
     internal static class DTypeSpecParser
     {
-        internal const string _typeEncodings = "?ebnshdipmgo$cDT!*%lLNZPQqVOX-w";
+        internal const string _typeEncodings = "?ebnshdipmgo$cDT!*%lLNZPQqVOX-wG";
         internal static readonly DType[] _types = new DType[]
         {
             /* ? */ DType.Unknown, 
@@ -45,6 +45,7 @@ namespace Microsoft.PowerFx.Core.Types
             /* X */ DType.Deferred, 
             /* - */ DType.Void, 
             /* w */ DType.Decimal,
+            /* G */ DType.Gradient,
         };
 
         // Parses a type specification, returns true and sets 'type' on success.
