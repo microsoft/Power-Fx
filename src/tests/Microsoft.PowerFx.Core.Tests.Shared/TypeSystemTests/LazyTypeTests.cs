@@ -118,6 +118,35 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void Log()
+        {
+            _getter1CalledCount = 0;
+
+            var symbols = new SymbolTable();
+            symbols.AddVariable("r", _lazyRecord1);
+
+            var check = new CheckResult(new Engine())
+                .SetText("r.Foo * 2")
+                .SetBindingInfo(symbols);
+
+            int c1 = _getter1CalledCount;
+            Assert.Equal(0, c1);
+
+            // This will parse, bind and do work.
+            check.ApplyErrors();
+            int c2 = _getter1CalledCount;
+            Assert.Equal(1, c1 + 1); // only does 1 lookup based on the expression.
+
+            Assert.True(check.IsSuccess);
+
+            // Logging shouldn't make any more calls. 
+            var log = check.ApplyGetLogging();
+
+            int c3 = _getter1CalledCount;
+            Assert.Equal(c2, c3); 
+        }
+
+        [Fact]
         public void AcceptsSimple()
         {
             foreach (var usePFxV1CompatRules in new[] { false, true })
