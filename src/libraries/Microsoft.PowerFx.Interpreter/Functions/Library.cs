@@ -654,6 +654,19 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: EOMonth)
             },
             {
+                BuiltinFunctionsCore.Workday,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.Workday.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWith(
+                        new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
+                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: Workday)
+            },
+            {
                 BuiltinFunctionsCore.EncodeHTML,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.EncodeUrl.Name,

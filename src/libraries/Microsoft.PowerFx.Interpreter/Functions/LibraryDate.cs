@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
@@ -923,6 +924,111 @@ namespace Microsoft.PowerFx.Functions
             else
             {
                 throw CommonExceptions.RuntimeMisMatch;
+            }
+        }
+
+        public static FormulaValue Workday(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            // Check for ErrorValue in any argument and return it immediately
+            foreach (var arg in args)
+            {
+                if (arg is ErrorValue)
+                {
+                    return arg;
+                }
+            }
+
+            var timeZoneInfo = runner.TimeZoneInfo;
+
+            DateTime startDate = runner.GetNormalizedDateTime(args[0]);
+
+            if (args[1] is not NumberValue daysValue)
+            {
+                throw CommonExceptions.RuntimeMisMatch;
+            }
+
+            // Truncate toward zero for Excel compatibility
+            int days = (int)Math.Truncate(daysValue.Value);
+
+            // Collect holidays from individual date arguments (args[2] onwards)
+            var holidays = new HashSet<DateTime>();
+            for (int i = 2; i < args.Length; i++)
+            {
+                if (args[i] is not BlankValue)
+                {
+                    if (args[i] is DateValue dateValue)
+                    {
+                        holidays.Add(dateValue.GetConvertedValue(timeZoneInfo).Date);
+                    }
+                    else if (args[i] is DateTimeValue dateTimeValue)
+                    {
+                        holidays.Add(dateTimeValue.GetConvertedValue(timeZoneInfo).Date);
+                    }
+                    else if (args[i] is TableValue holidayTable)
+                    {
+                        // Also support table for backward compatibility
+                        foreach (var row in holidayTable.Rows)
+                        {
+                            if (row.IsValue)
+                            {
+                                var fields = row.Value.Fields.ToArray();
+                                if (fields.Length > 0)
+                                {
+                                    var field = fields[0];
+                                    if (field.Value is DateValue dateVal)
+                                    {
+                                        holidays.Add(dateVal.GetConvertedValue(timeZoneInfo).Date);
+                                    }
+                                    else if (field.Value is DateTimeValue dateTimeVal)
+                                    {
+                                        holidays.Add(dateTimeVal.GetConvertedValue(timeZoneInfo).Date);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            try
+            {
+                DateTime currentDate = startDate.Date;
+                
+                // Early return for zero days
+                if (days == 0)
+                {
+                    DateTime resultDate = MakeValidDateTime(runner, currentDate, timeZoneInfo);
+                    return new DateValue(irContext, resultDate);
+                }
+
+                int direction = days > 0 ? 1 : -1;
+                int remainingDays = Math.Abs(days);
+
+                while (remainingDays > 0)
+                {
+                    currentDate = currentDate.AddDays(direction);
+
+                    // Check if it's a weekend (Saturday or Sunday)
+                    if (currentDate.DayOfWeek == DayOfWeek.Saturday || currentDate.DayOfWeek == DayOfWeek.Sunday)
+                    {
+                        continue;
+                    }
+
+                    // Check if it's a holiday
+                    if (holidays.Contains(currentDate))
+                    {
+                        continue;
+                    }
+
+                    remainingDays--;
+                }
+
+                DateTime newDate = MakeValidDateTime(runner, currentDate, timeZoneInfo);
+                return new DateValue(irContext, newDate);
+            }
+            catch
+            {
+                return CommonErrors.ArgumentOutOfRange(irContext);
             }
         }
 
