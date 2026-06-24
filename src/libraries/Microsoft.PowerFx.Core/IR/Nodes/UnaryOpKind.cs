@@ -78,6 +78,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         ColorToGradient,
 
+        GradientToColor,
+
         RecordToRecord, // See field mappings
         TableToTable,
         RecordToTable,

@@ -91,6 +91,8 @@ namespace Microsoft.PowerFx.Core.IR
 
         ColorToGradient,
 
+        GradientToColor,
+
         UntypedToText,
         UntypedToBoolean,
         UntypedToNumber,

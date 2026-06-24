@@ -3649,7 +3649,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                     break;
                 case DKind.Color:
-                    doesCoerce = Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Color && (OptionSetInfo.CanCoerceToBackingKind || !usePowerFxV1CompatibilityRules);
+                    doesCoerce = Kind == DKind.Gradient || (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Color && (OptionSetInfo.CanCoerceToBackingKind || !usePowerFxV1CompatibilityRules));
                     break;
                 case DKind.Gradient:
                     doesCoerce = Kind == DKind.Color;

@@ -75,6 +75,11 @@ namespace Microsoft.PowerFx.Core.IR
                     return GetToDecimalCoercion(fromType, usePowerFxV1CompatibilityRules);
 
                 case DKind.Color:
+                    if (fromType.Kind == DKind.Gradient)
+                    {
+                        return CoercionKind.GradientToColor;
+                    }
+
                     if (DType.OptionSetValue.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && fromType.OptionSetInfo?.BackingKind == DKind.Color)
                     {
                         return CoercionKind.OptionSetToColor;

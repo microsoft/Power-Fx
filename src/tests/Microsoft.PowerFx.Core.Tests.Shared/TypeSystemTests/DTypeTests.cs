@@ -2499,18 +2499,19 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void Color_CoercesTo_Gradient_OneWay()
+        public void Color_And_Gradient_CoerceBothWays()
         {
-            // Color -> Gradient coercion is valid (solid color is a degenerate gradient).
+            // Forward (from Plan 1): a solid Color becomes a single-stop Gradient.
             Assert.True(DType.Color.CoercesTo(DType.Gradient, aggregateCoercion: true, isTopLevelCoercion: false, features: PFxV1Enabled));
-
-            // No reverse coercion: Gradient does NOT coerce to Color.
-            Assert.False(DType.Gradient.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, features: PFxV1Enabled));
-
-            // Verify the CoercionMatrix emits the correct CoercionKind.
             Assert.Equal(
                 CoercionKind.ColorToGradient,
                 CoercionMatrix.GetCoercionKind(DType.Color, DType.Gradient, usePowerFxV1CompatibilityRules: true));
+
+            // Reverse (this addendum): a Gradient flattens to its first-stop Color.
+            Assert.True(DType.Gradient.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, features: PFxV1Enabled));
+            Assert.Equal(
+                CoercionKind.GradientToColor,
+                CoercionMatrix.GetCoercionKind(DType.Gradient, DType.Color, usePowerFxV1CompatibilityRules: true));
         }
 
         [Fact]
