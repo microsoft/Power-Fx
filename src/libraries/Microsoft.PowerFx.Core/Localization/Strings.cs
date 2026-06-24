@@ -230,6 +230,11 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter RGBAArg3 = (b) => StringResources.Get("RGBAArg3", b);
         public static StringGetter RGBAArg4 = (b) => StringResources.Get("RGBAArg4", b);
 
+        public static StringGetter AboutLinearGradient = (b) => StringResources.Get("AboutLinearGradient", b);
+        public static StringGetter LinearGradientArg1 = (b) => StringResources.Get("LinearGradientArg1", b);
+        public static StringGetter LinearGradientArg2 = (b) => StringResources.Get("LinearGradientArg2", b);
+        public static StringGetter LinearGradientArg3 = (b) => StringResources.Get("LinearGradientArg3", b);
+
         public static StringGetter AboutColorFade = (b) => StringResources.Get("AboutColorFade", b);
         public static StringGetter ColorFadeArg1 = (b) => StringResources.Get("ColorFadeArg1", b);
         public static StringGetter ColorFadeArg2 = (b) => StringResources.Get("ColorFadeArg2", b);

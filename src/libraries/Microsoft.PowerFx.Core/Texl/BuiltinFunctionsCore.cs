@@ -155,6 +155,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction LeftTT = _library.Add(new LeftRightTableTableFunction(isLeft: true));
         public static readonly TexlFunction Len = _library.Add(new LenFunction());
         public static readonly TexlFunction LenT = _library.Add(new LenTFunction());
+        public static readonly TexlFunction LinearGradient = _library.Add(new LinearGradientFunction());
         public static readonly TexlFunction Ln = _library.Add(new LnFunction());
         public static readonly TexlFunction LnT = _library.Add(new LnTableFunction());
         public static readonly TexlFunction Log = _library.Add(new LogFunction());

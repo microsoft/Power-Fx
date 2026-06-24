@@ -3,6 +3,7 @@
 
 using System.Drawing;
 using System.Text;
+using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
@@ -10,6 +11,26 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
+    public class LinearGradientBindingTests : PowerFxTest
+    {
+        [Fact]
+        public void LinearGradient_Binds_To_Gradient()
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var check = engine.Check("LinearGradient(RGBA(255,0,0,1), RGBA(0,0,255,1), 90)");
+            Assert.True(check.IsSuccess);
+            Assert.True(check.ReturnType is GradientType);
+        }
+
+        [Fact]
+        public void LinearGradient_AcceptsColorArgs_RejectsGradientArg()
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var bad = engine.Check("LinearGradient(LinearGradient(RGBA(0,0,0,1),RGBA(1,1,1,1),0), RGBA(0,0,255,1), 90)");
+            Assert.False(bad.IsSuccess);
+        }
+    }
+
     public class GradientValueTests : PowerFxTest
     {
         [Fact]

@@ -1273,6 +1273,31 @@
   <data name="AboutRGBA_alpha_value" xml:space="preserve">
     <value>Το στοιχείο alpha, 0 έως 1 (ή ποσοστό, π.χ. 49%).</value>
   </data>
+  <data name="AboutLinearGradient" xml:space="preserve">
+    <value>Creates a linear gradient from a start color to an end color at the given angle (degrees).</value>
+    <comment>Description of 'LinearGradient' function.</comment>
+  </data>
+  <data name="LinearGradientArg1" xml:space="preserve">
+    <value>start_color</value>
+    <comment>function_parameter - First argument to the LinearGradient function - the starting color of the gradient. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="LinearGradientArg2" xml:space="preserve">
+    <value>end_color</value>
+    <comment>function_parameter - Second argument to the LinearGradient function - the ending color of the gradient. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="LinearGradientArg3" xml:space="preserve">
+    <value>angle</value>
+    <comment>function_parameter - Third argument to the LinearGradient function - the angle of the gradient in degrees.</comment>
+  </data>
+  <data name="AboutLinearGradient_start_color" xml:space="preserve">
+    <value>The start color of the gradient.</value>
+  </data>
+  <data name="AboutLinearGradient_end_color" xml:space="preserve">
+    <value>The end color of the gradient.</value>
+  </data>
+  <data name="AboutLinearGradient_angle" xml:space="preserve">
+    <value>The angle of the gradient in degrees.</value>
+  </data>
   <data name="AboutColorFade" xml:space="preserve">
     <value>Παράγει μια νέα σκίαση για το καθορισμένο "χρώμα", με βάση το καθορισμένο ποσοστό "σταδιακού σβησίματος".</value>
     <comment>Description of 'ColorFade' function.</comment>
