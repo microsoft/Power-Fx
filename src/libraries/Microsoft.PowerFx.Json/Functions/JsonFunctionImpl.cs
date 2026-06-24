@@ -217,6 +217,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     _writer.WriteStringValue(GetColorString(colorValue.Value));
                 }
 
+                public void Visit(GradientValue gradientValue)
+                {
+                    throw new NotSupportedException("GradientValue is not supported in JSON serialization.");
+                }
+
                 public void Visit(DateTimeValue dateTimeValue)
                 {
                     _writer.WriteStringValue(ConvertToUTC(dateTimeValue.GetConvertedValue(_timeZoneInfo), _timeZoneInfo).ToString("yyyy-MM-dd'T'HH:mm:ss.fffK", CultureInfo.InvariantCulture));

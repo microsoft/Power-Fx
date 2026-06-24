@@ -915,6 +915,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 Result = string.Empty;
             }
 
+            public void Visit(GradientValue value)
+            {
+                Result = string.Empty;
+            }
+
             public void Visit(GuidValue value)
             {
                 Result = value.Value.ToString();
