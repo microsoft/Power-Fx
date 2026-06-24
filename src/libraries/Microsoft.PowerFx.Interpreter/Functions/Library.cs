@@ -329,6 +329,23 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: ColorFade)
             },
             {
+                BuiltinFunctionsCore.LinearGradient,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.LinearGradient.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWith(
+                        new ColorValue(IRContext.NotInSource(FormulaType.Color), Color.FromArgb(0, 0, 0, 0)),
+                        new ColorValue(IRContext.NotInSource(FormulaType.Color), Color.FromArgb(0, 0, 0, 0)),
+                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueType<ColorValue>,
+                        ExactValueType<ColorValue>,
+                        ExactValueType<NumberValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: LinearGradient)
+            },
+            {
                 BuiltinFunctionsCore.Column_UO,
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.CountRows_UO.Name,

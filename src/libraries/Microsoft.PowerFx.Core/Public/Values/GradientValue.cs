@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Types
         }
     }
 
-    public class GradientValue : FormulaValue
+    public class GradientValue : ValidFormulaValue
     {
         public double Angle { get; }
 

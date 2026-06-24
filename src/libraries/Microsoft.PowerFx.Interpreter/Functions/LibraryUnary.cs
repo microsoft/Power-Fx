@@ -570,6 +570,17 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: UntypedStringToUntypedDecimal)
             },
+            {
+                UnaryOpKind.ColorToGradient,
+                StandardErrorHandling<ColorValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<ColorValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: ColorToGradient)
+            },
         };
         #endregion
 
@@ -1053,6 +1064,12 @@ namespace Microsoft.PowerFx.Functions
 
             var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.OptionSetOptionNotSupported), null, optionSet.DisplayName, FormulaType.Color._type.GetKindString());
             return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Color), errorMessage);
+        }
+
+        private static GradientValue ColorToGradient(IRContext irContext, ColorValue[] args)
+        {
+            var color = args[0].Value;
+            return GradientValue.NewLinear(color, color, 0);
         }
 
         public static OptionSetValue StringToOptionSet(IRContext irContext, StringValue[] args)

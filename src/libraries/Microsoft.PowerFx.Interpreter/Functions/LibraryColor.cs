@@ -83,6 +83,15 @@ namespace Microsoft.PowerFx.Functions
             return new ColorValue(irContext, Color.FromArgb(alpha255, red, green, blue));
         }
 
+        public static FormulaValue LinearGradient(IRContext irContext, FormulaValue[] args)
+        {
+            var start = (ColorValue)args[0];
+            var end = (ColorValue)args[1];
+            var angle = ((NumberValue)args[2]).Value;
+
+            return GradientValue.NewLinear(start.Value, end.Value, angle);
+        }
+
         public static FormulaValue ColorFade(IRContext irContext, FormulaValue[] args)
         {
             var color = (ColorValue)args[0];
