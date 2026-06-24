@@ -1595,6 +1595,20 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.Assert(!_coerceMap[node.Id].IsValid);
 
             _coerceMap[node.Id] = type;
+
+            if (IsAsyncCoercion(GetType(node), type))
+            {
+                FlagPathAsAsync(node);
+            }
+        }
+
+        private static bool IsAsyncCoercion(DType fromType, DType toType)
+        {
+            Contracts.AssertValid(fromType);
+            Contracts.AssertValid(toType);
+
+            return toType.Kind == DKind.OptionSetValue
+                && fromType.Kind is DKind.Boolean or DKind.Number or DKind.Decimal or DKind.String;
         }
 
         public void SetCoercedToplevelType(DType type)
@@ -1603,6 +1617,11 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.Assert(!CoercedToplevelType.IsValid);
 
             CoercedToplevelType = type;
+
+            if (IsAsyncCoercion(GetType(Top), type))
+            {
+                FlagPathAsAsync(Top);
+            }
         }
 
         public FirstNameInfo GetInfo(FirstNameNode node)

@@ -17,12 +17,24 @@ namespace Microsoft.PowerFx.Core.Parser
 
         public readonly Token OpenBracket;
 
-        public Attribute(IdentToken name, IReadOnlyList<Token> argumentTokens, Token openBracket)
+        // Argument-list and closing tokens, when present. Preserved so consumers (such as
+        // IntelliSense) can locate attribute regions even when the argument list is empty or
+        // the closing delimiters have not been typed yet.
+        public readonly Token OpenParen;
+
+        public readonly Token CloseParen;
+
+        public readonly Token CloseBracket;
+
+        public Attribute(IdentToken name, IReadOnlyList<Token> argumentTokens, Token openBracket, Token openParen = null, Token closeParen = null, Token closeBracket = null)
         {
             Name = name;
             Arguments = argumentTokens.Select(t => t is IdentToken ident ? ident.Name.Value : t.As<StrLitToken>().Value).ToList();
             ArgumentTokens = argumentTokens;
             OpenBracket = openBracket;
+            OpenParen = openParen;
+            CloseParen = closeParen;
+            CloseBracket = closeBracket;
         }
     }
 }
