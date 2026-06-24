@@ -2502,13 +2502,15 @@ namespace Microsoft.PowerFx.Tests
         public void Color_And_Gradient_CoerceBothWays()
         {
             // Forward (from Plan 1): a solid Color becomes a single-stop Gradient.
-            Assert.True(DType.Color.CoercesTo(DType.Gradient, aggregateCoercion: true, isTopLevelCoercion: false, features: PFxV1Enabled));
+            Assert.True(DType.Color.CoercesTo(DType.Gradient, out var isColorToGradientSafe, aggregateCoercion: true, isTopLevelCoercion: false, features: PFxV1Enabled));
+            Assert.True(isColorToGradientSafe);
             Assert.Equal(
                 CoercionKind.ColorToGradient,
                 CoercionMatrix.GetCoercionKind(DType.Color, DType.Gradient, usePowerFxV1CompatibilityRules: true));
 
             // Reverse (this addendum): a Gradient flattens to its first-stop Color.
-            Assert.True(DType.Gradient.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, features: PFxV1Enabled));
+            Assert.True(DType.Gradient.CoercesTo(DType.Color, out var isGradientToColorSafe, aggregateCoercion: true, isTopLevelCoercion: false, features: PFxV1Enabled));
+            Assert.False(isGradientToColorSafe); // Gradient -> Color drops every stop except the first.
             Assert.Equal(
                 CoercionKind.GradientToColor,
                 CoercionMatrix.GetCoercionKind(DType.Gradient, DType.Color, usePowerFxV1CompatibilityRules: true));
