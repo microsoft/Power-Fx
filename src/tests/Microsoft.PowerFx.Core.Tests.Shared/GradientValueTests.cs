@@ -24,11 +24,16 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
-        public void LinearGradient_AcceptsColorArgs_RejectsGradientArg()
+        public void LinearGradient_AcceptsColorArgs_AndCoercesGradientArgToFirstStop()
         {
+            // With two-way Color <-> Gradient coercion, a Gradient passed where a Color is
+            // expected coerces to its first stop. So a nested LinearGradient argument now
+            // binds (the inner gradient flattens to its first-stop color) and the outer call
+            // still returns a Gradient, rather than being rejected at bind time.
             var engine = new Engine(new PowerFxConfig());
-            var bad = engine.Check("LinearGradient(LinearGradient(RGBA(0,0,0,1),RGBA(1,1,1,1),0), RGBA(0,0,255,1), 90)");
-            Assert.False(bad.IsSuccess);
+            var check = engine.Check("LinearGradient(LinearGradient(RGBA(0,0,0,1),RGBA(1,1,1,1),0), RGBA(0,0,255,1), 90)");
+            Assert.True(check.IsSuccess);
+            Assert.True(check.ReturnType is GradientType);
         }
     }
 
