@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Drawing;
+using System.Globalization;
 using System.Text;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.Texl.Builtins;
@@ -85,6 +86,30 @@ namespace Microsoft.PowerFx.Core.Tests
             // at bind time (like OptionSet/PenImage). This keeps the JSON visitor's
             // Visit(GradientValue) defensive throw unreachable in practice.
             Assert.True(JsonFunction.HasUnsupportedType(DType.Gradient, supportsLazyTypes: false, out _, out _));
+        }
+
+        [Fact]
+        public void GradientValue_ToExpression_UsesInvariantCulture()
+        {
+            // Under a comma-decimal culture a fractional angle must still serialize with a
+            // '.' separator, not the ',' that Power Fx would parse as an extra argument.
+            var original = CultureInfo.CurrentCulture;
+            try
+            {
+                CultureInfo.CurrentCulture = new CultureInfo("de-DE");
+                var g = GradientValue.NewLinear(Color.FromArgb(255, 255, 0, 0), Color.FromArgb(255, 0, 0, 255), 90.5);
+
+                var sb = new StringBuilder();
+                g.ToExpression(sb, new FormulaValueSerializerSettings());
+                var expr = sb.ToString();
+
+                Assert.Equal("LinearGradient(RGBA(255,0,0,1), RGBA(0,0,255,1), 90.5)", expr);
+                Assert.DoesNotContain("90,5", expr);
+            }
+            finally
+            {
+                CultureInfo.CurrentCulture = original;
+            }
         }
     }
 }

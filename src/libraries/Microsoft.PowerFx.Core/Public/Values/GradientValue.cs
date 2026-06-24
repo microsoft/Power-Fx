@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Drawing;
+using System.Globalization;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
 
@@ -51,10 +52,17 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
+            // Use invariant culture so the decimal separator is always '.', never the
+            // argument-separator ',' that a comma-decimal culture would otherwise emit.
             string Rgba(Color c) =>
-                $"RGBA({c.R},{c.G},{c.B},{Math.Round(c.A / 255.0, 3)})";
+                string.Format(CultureInfo.InvariantCulture, "RGBA({0},{1},{2},{3})", c.R, c.G, c.B, Math.Round(c.A / 255.0, 3));
 
-            sb.Append($"LinearGradient({Rgba(Stops[0].Color)}, {Rgba(Stops[Stops.Count - 1].Color)}, {Angle})");
+            sb.Append(string.Format(
+                CultureInfo.InvariantCulture,
+                "LinearGradient({0}, {1}, {2})",
+                Rgba(Stops[0].Color),
+                Rgba(Stops[Stops.Count - 1].Color),
+                Angle));
         }
     }
 }
