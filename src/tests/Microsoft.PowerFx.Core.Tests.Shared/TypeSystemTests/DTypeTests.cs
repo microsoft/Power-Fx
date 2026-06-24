@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -2495,6 +2496,21 @@ namespace Microsoft.PowerFx.Tests
 
             // Coercion to Error type
             Assert.True(DType.Error.CoercesTo(DType.Error, aggregateCoercion: true, isTopLevelCoercion: false, features: usePowerFxV1CompatibilityRules ? PFxV1Enabled : Features.None));
+        }
+
+        [Fact]
+        public void Color_CoercesTo_Gradient_OneWay()
+        {
+            // Color -> Gradient coercion is valid (solid color is a degenerate gradient).
+            Assert.True(DType.Color.CoercesTo(DType.Gradient, aggregateCoercion: true, isTopLevelCoercion: false, features: PFxV1Enabled));
+
+            // No reverse coercion: Gradient does NOT coerce to Color.
+            Assert.False(DType.Gradient.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, features: PFxV1Enabled));
+
+            // Verify the CoercionMatrix emits the correct CoercionKind.
+            Assert.Equal(
+                CoercionKind.ColorToGradient,
+                CoercionMatrix.GetCoercionKind(DType.Color, DType.Gradient, usePowerFxV1CompatibilityRules: true));
         }
 
         [Fact]

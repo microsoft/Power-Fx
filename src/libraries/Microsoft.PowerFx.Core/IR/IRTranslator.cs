@@ -1013,6 +1013,9 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.OptionSetToColor:
                         unaryOpKind = UnaryOpKind.OptionSetToColor;
                         break;
+                    case CoercionKind.ColorToGradient:
+                        unaryOpKind = UnaryOpKind.ColorToGradient;
+                        break;
                     case CoercionKind.OptionSetToDecimal:
                         unaryOpKind = UnaryOpKind.OptionSetToDecimal;
                         break;

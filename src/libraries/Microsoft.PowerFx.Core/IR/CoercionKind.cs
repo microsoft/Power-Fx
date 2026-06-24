@@ -89,6 +89,8 @@ namespace Microsoft.PowerFx.Core.IR
         
         OptionSetToColor,
 
+        ColorToGradient,
+
         UntypedToText,
         UntypedToBoolean,
         UntypedToNumber,

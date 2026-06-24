@@ -2098,6 +2098,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                 case DKind.Decimal:
                 case DKind.Color:
+                case DKind.Gradient:
                 case DKind.Boolean:
                 case DKind.PenImage:
                 case DKind.ObjNull:
@@ -3649,6 +3650,9 @@ namespace Microsoft.PowerFx.Core.Types
                     break;
                 case DKind.Color:
                     doesCoerce = Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Color && (OptionSetInfo.CanCoerceToBackingKind || !usePowerFxV1CompatibilityRules);
+                    break;
+                case DKind.Gradient:
+                    doesCoerce = Kind == DKind.Color;
                     break;
                 case DKind.Enum:
                     return CoercesTo(

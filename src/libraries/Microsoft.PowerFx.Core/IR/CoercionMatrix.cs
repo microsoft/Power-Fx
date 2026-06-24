@@ -83,6 +83,15 @@ namespace Microsoft.PowerFx.Core.IR
                     Contracts.Assert(false, "Unsupported type coercion");
                     break;
 
+                case DKind.Gradient:
+                    if (fromType.Kind == DKind.Color)
+                    {
+                        return CoercionKind.ColorToGradient;
+                    }
+
+                    Contracts.Assert(false, "Unsupported type coercion");
+                    break;
+
                 case DKind.PenImage:
                     // It is not safe to coerce this type.
                     Contracts.Assert(false, "Unsupported type coercion");

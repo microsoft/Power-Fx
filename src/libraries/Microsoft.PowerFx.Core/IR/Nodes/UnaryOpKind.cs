@@ -76,6 +76,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         OptionSetToColor,
 
+        ColorToGradient,
+
         RecordToRecord, // See field mappings
         TableToTable,
         RecordToTable,
