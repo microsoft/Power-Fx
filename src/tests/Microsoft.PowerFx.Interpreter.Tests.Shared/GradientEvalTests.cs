@@ -38,5 +38,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(g.Stops.Count >= 1);
             Assert.Equal(255, g.Stops[0].Color.R);
         }
+
+        [Fact]
+        public void Gradient_CoercesTo_Color_FirstStop()
+        {
+            var engine = new RecalcEngine(new PowerFxConfig());
+            var gradResult = engine.Eval("ColorFade(LinearGradient(RGBA(255,0,0,1), RGBA(0,0,255,1), 90), 0)");
+            var color = Assert.IsType<ColorValue>(gradResult);
+
+            // First stop is red; ColorFade(.., 0) is identity, so the flattened color is red.
+            Assert.Equal(System.Drawing.Color.FromArgb(255, 255, 0, 0), color.Value);
+        }
     }
 }

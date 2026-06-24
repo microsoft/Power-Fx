@@ -581,6 +581,17 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: ColorToGradient)
             },
+            {
+                UnaryOpKind.GradientToColor,
+                StandardErrorHandling<GradientValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<GradientValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: GradientToColor)
+            },
         };
         #endregion
 
@@ -1070,6 +1081,16 @@ namespace Microsoft.PowerFx.Functions
         {
             var color = args[0].Value;
             return GradientValue.NewLinear(color, color, 0);
+        }
+
+        private static ColorValue GradientToColor(IRContext irContext, GradientValue[] args)
+        {
+            var gradient = args[0];
+            var color = gradient.Stops.Count > 0
+                ? gradient.Stops[0].Color
+                : System.Drawing.Color.FromArgb(0, 0, 0, 0);
+
+            return new ColorValue(IRContext.NotInSource(FormulaType.Color), color);
         }
 
         public static OptionSetValue StringToOptionSet(IRContext irContext, StringValue[] args)
