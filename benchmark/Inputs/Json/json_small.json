@@ -1,0 +1,28 @@
+﻿{
+  "id": "123456",
+  "source": "blahblahblah",
+  "specversion": "1.0",
+  "type": "blahblahblah",
+  "datacontentype": "application/json",
+  "subject": "blahblahblah",
+  "time": "2022-06-07T20:15:48.8724133Z",
+  "data": {
+    "systemProperties": {
+      "iothub-connection-device-id": 123,
+      "iothub-connection-device-id2": 123,
+      "iothub-connection-device-id3": 123,
+      "iothub-connection-device-id4": 123,
+      "iot-connection-device-id": "device1"
+    },
+    "properties": {
+      "MyTemperature": 123,
+      "Blah": false,
+      "MyName": "blah"
+    },
+    "comfortIndex": 123,
+    "temperature": 123,
+    "isActive": false,
+    "testId": "floora",
+    "deviceTemperature": 222
+  }
+}
