@@ -560,6 +560,33 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void ApplyGetLoggingDoesNotEnumerateLazyFields()
+        {
+            var spy = new LazyLoggingSpyRecordType();
+            var symbolTable = new SymbolTable();
+            symbolTable.AddVariable("MyLazy", spy);
+
+            CheckResult check = new CheckResult(new Engine())
+                .SetText("With({x:MyLazy}, 1)")
+                .SetBindingInfo(symbolTable);
+
+            check.ApplyBinding();
+            Assert.True(check.IsSuccess);
+
+            // Reset counters so we observe only the logging path.
+            spy.TryGetFieldTypeCallCount = 0;
+            spy.FieldNamesIterationCount = 0;
+
+            var log = check.ApplyGetLogging();
+
+            Assert.NotNull(log);
+            Assert.DoesNotContain("MyLazy", log);
+            Assert.DoesNotContain("A", log);
+            Assert.Equal(0, spy.TryGetFieldTypeCallCount);
+            Assert.Equal(0, spy.FieldNamesIterationCount);
+        }
+
+        [Fact]
         public void TestSummary()
         {
             var check = new CheckResult(new Engine());
