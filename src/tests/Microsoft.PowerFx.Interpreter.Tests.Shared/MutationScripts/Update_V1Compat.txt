@@ -1,0 +1,22 @@
+﻿#SETUP: PowerFxV1CompatibilityRules
+
+>> Set(list, Table({ Name: "One", ID: 1, Stock: 10}, { Name: "Two", ID: 2, Stock: 20}))
+Table({ID:1,Name:"One",Stock:10},{ID:2,Name:"Two",Stock:20})
+
+>> Update(list, First(list), { Name: "Uno", ID: 1})
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> list
+Table({ID:1,Name:"Uno",Stock:Blank()},{ID:2,Name:"Two",Stock:20})
+
+>> Set(dupes, Table({ Name: "Same", ID: 1}, { Name: "Same", ID: 1}, { Name: "Other", ID: 2}))
+Table({ID:1,Name:"Same"},{ID:1,Name:"Same"},{ID:2,Name:"Other"})
+
+>> Update(dupes, { Name: "Same", ID: 1}, { Name: "Changed", ID: 9}, "ALL")
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> dupes
+Table({ID:9,Name:"Changed"},{ID:9,Name:"Changed"},{ID:2,Name:"Other"})
+
+>> Update(dupes, { Name: "Missing", ID: 3}, { Name: "Nope", ID: 0})
+Error({Kind:ErrorKind.NotFound})

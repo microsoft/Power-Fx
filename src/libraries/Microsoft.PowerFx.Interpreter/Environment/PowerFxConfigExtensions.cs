@@ -50,6 +50,7 @@ namespace Microsoft.PowerFx
             symbolTable.AddFunction(new PatchAggregateImpl());
             symbolTable.AddFunction(new PatchAggregateSingleTableImpl());
             symbolTable.AddFunction(new RemoveFunction());
+            symbolTable.AddFunction(new UpdateFunction());
             symbolTable.AddFunction(new ClearImpl());
             symbolTable.AddFunction(new ClearCollectImpl());
             symbolTable.AddFunction(new ClearCollectScalarImpl());
