@@ -64,10 +64,10 @@ The two main flavors of connector this library supports are covered in detail be
 
 Two extension points wire the two worlds together:
 
-- `PowerFxConfig.AddActionConnector(...)` — [`ConfigExtensions.AddActionConnector`](Environment/PowerFxConfigExtensions.cs) registers the generated functions with the config so they show up in `Engine.Check`.
-- `RuntimeConfig.AddRuntimeContext(...)` — [`RuntimeConfigExtensions.AddRuntimeContext`](Environment/RuntimeConfigExtensions.cs) supplies the `BaseRuntimeConnectorContext` (which owns the `HttpMessageInvoker`, `TimeZoneInfo`, logger, etc.) at eval time.
+- `PowerFxConfig.AddActionConnector(...)` — [`ConfigExtensions.AddActionConnector`](../src/libraries/Microsoft.PowerFx.Connectors/Environment/PowerFxConfigExtensions.cs) registers the generated functions with the config so they show up in `Engine.Check`.
+- `RuntimeConfig.AddRuntimeContext(...)` — [`RuntimeConfigExtensions.AddRuntimeContext`](../src/libraries/Microsoft.PowerFx.Connectors/Environment/RuntimeConfigExtensions.cs) supplies the `BaseRuntimeConnectorContext` (which owns the `HttpMessageInvoker`, `TimeZoneInfo`, logger, etc.) at eval time.
 
-The `BaseRuntimeConnectorContext` abstract class ([`BaseRuntimeConnectorContext`](Public/BaseRuntimeConnectorContext.cs)) is the seam between Power Fx execution and HTTP:
+The `BaseRuntimeConnectorContext` abstract class ([`BaseRuntimeConnectorContext`](../src/libraries/Microsoft.PowerFx.Connectors/Public/BaseRuntimeConnectorContext.cs)) is the seam between Power Fx execution and HTTP:
 
 ```csharp
 public abstract class BaseRuntimeConnectorContext
@@ -79,7 +79,7 @@ public abstract class BaseRuntimeConnectorContext
 }
 ```
 
-The invoker returned here is typically a [`PowerPlatformConnectorClient`](PowerPlatformConnectorClient.cs) (obsolete but still in use) or [`PowerPlatformConnectorClient2`](PowerPlatformConnectorClient2.cs) which knows how to translate a swagger-relative request into the APIM `/invoke` protocol used by Power Platform (adding `x-ms-request-method`, `x-ms-request-url`, `Authorization`, `x-ms-client-environment-id`, etc. — see [`PowerPlatformConnectorClient.Transform`](PowerPlatformConnectorClient.cs)).
+The invoker returned here is typically a [`PowerPlatformConnectorClient`](../src/libraries/Microsoft.PowerFx.Connectors/PowerPlatformConnectorClient.cs) (obsolete but still in use) or [`PowerPlatformConnectorClient2`](../src/libraries/Microsoft.PowerFx.Connectors/PowerPlatformConnectorClient2.cs) which knows how to translate a swagger-relative request into the APIM `/invoke` protocol used by Power Platform (adding `x-ms-request-method`, `x-ms-request-url`, `Authorization`, `x-ms-client-environment-id`, etc. — see [`PowerPlatformConnectorClient.Transform`](../src/libraries/Microsoft.PowerFx.Connectors/PowerPlatformConnectorClient.cs)).
 
 ---
 
@@ -91,15 +91,15 @@ Key types:
 
 | Type | Purpose |
 | --- | --- |
-| [`OpenApiParser`](OpenApiParser.cs) | Walks the swagger and produces `ConnectorFunction` objects. |
-| [`ConnectorFunction`](ConnectorFunction.cs) | Public wrapper over an `OpenApiOperation`. Exposes `Name`, `RequiredParameters`, `OptionalParameters`, `ReturnType`, `InvokeAsync(...)`. |
-| [`ConnectorTexlFunction`](Texl/ConnectorTexlFunction.cs) | Adapter that lets a `ConnectorFunction` participate in Power Fx binding/eval as a `TexlFunction` implementing `IFunctionInvoker`. |
-| [`HttpFunctionInvoker`](Execution/HttpFunctionInvoker.cs) | Builds `HttpRequestMessage` from `FormulaValue` args, sends it, and decodes the response. |
-| [`FormulaValueSerializer`](Execution/FormulaValueSerializer.cs) and subclasses (`OpenApiJsonSerializer`, `OpenApiFormUrlEncoder`, `OpenApiTextSerializer`, `OpenApiMultipart`) | Content-type–specific serializers that turn `FormulaValue` into the HTTP body. |
+| [`OpenApiParser`](../src/libraries/Microsoft.PowerFx.Connectors/OpenApiParser.cs) | Walks the swagger and produces `ConnectorFunction` objects. |
+| [`ConnectorFunction`](../src/libraries/Microsoft.PowerFx.Connectors/ConnectorFunction.cs) | Public wrapper over an `OpenApiOperation`. Exposes `Name`, `RequiredParameters`, `OptionalParameters`, `ReturnType`, `InvokeAsync(...)`. |
+| [`ConnectorTexlFunction`](../src/libraries/Microsoft.PowerFx.Connectors/Texl/ConnectorTexlFunction.cs) | Adapter that lets a `ConnectorFunction` participate in Power Fx binding/eval as a `TexlFunction` implementing `IFunctionInvoker`. |
+| [`HttpFunctionInvoker`](../src/libraries/Microsoft.PowerFx.Connectors/Execution/HttpFunctionInvoker.cs) | Builds `HttpRequestMessage` from `FormulaValue` args, sends it, and decodes the response. |
+| [`FormulaValueSerializer`](../src/libraries/Microsoft.PowerFx.Connectors/Execution/FormulaValueSerializer.cs) and subclasses (`OpenApiJsonSerializer`, `OpenApiFormUrlEncoder`, `OpenApiTextSerializer`, `OpenApiMultipart`) | Content-type–specific serializers that turn `FormulaValue` into the HTTP body. |
 
 ### How an action connector is registered
 
-The public entry point is `PowerFxConfig.AddActionConnector`, defined in [`ConfigExtensions.AddActionConnector`](Environment/PowerFxConfigExtensions.cs):
+The public entry point is `PowerFxConfig.AddActionConnector`, defined in [`ConfigExtensions.AddActionConnector`](../src/libraries/Microsoft.PowerFx.Connectors/Environment/PowerFxConfigExtensions.cs):
 
 ```csharp
 public static IReadOnlyList<ConnectorFunction> AddActionConnector(
@@ -111,12 +111,12 @@ public static IReadOnlyList<ConnectorFunction> AddActionConnector(
 
 Internally it:
 
-1. Calls [`OpenApiParser.ParseInternal`](OpenApiParser.cs) which produces two parallel lists:
+1. Calls [`OpenApiParser.ParseInternal`](../src/libraries/Microsoft.PowerFx.Connectors/OpenApiParser.cs) which produces two parallel lists:
    - `List<ConnectorFunction>` — the public/discoverable functions.
    - `List<ConnectorTexlFunction>` — the `TexlFunction` wrappers.
-2. Adds each `ConnectorTexlFunction` to the config via `config.AddFunction(function)` so binder/intellisense can see them ([`ConfigExtensions.AddActionConnectorInternal`](Environment/PowerFxConfigExtensions.cs)).
+2. Adds each `ConnectorTexlFunction` to the config via `config.AddFunction(function)` so binder/intellisense can see them ([`ConfigExtensions.AddActionConnectorInternal`](../src/libraries/Microsoft.PowerFx.Connectors/Environment/PowerFxConfigExtensions.cs)).
 
-The `ConnectorTexlFunction` derives from `TexlFunction` and implements `IFunctionInvoker.InvokeAsync` — this is the hook the interpreter calls at runtime ([`ConnectorTexlFunction.InvokeAsync`](Texl/ConnectorTexlFunction.cs) lines 89-108):
+The `ConnectorTexlFunction` derives from `TexlFunction` and implements `IFunctionInvoker.InvokeAsync` — this is the hook the interpreter calls at runtime ([`ConnectorTexlFunction.InvokeAsync`](../src/libraries/Microsoft.PowerFx.Connectors/Texl/ConnectorTexlFunction.cs) lines 89-108):
 
 ```csharp
 public async Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
@@ -135,22 +135,22 @@ Note the required indirection: the runtime context is fetched from the `IService
 
 ### Runtime invocation pipeline
 
-`ConnectorFunction.InvokeAsync` is also the public API when calling functions outside the engine (see [`ConnectorFunction.InvokeAsync`](ConnectorFunction.cs) line 819) and delegates to `InvokeInternalAsync` (line 854).
+`ConnectorFunction.InvokeAsync` is also the public API when calling functions outside the engine (see [`ConnectorFunction.InvokeAsync`](../src/libraries/Microsoft.PowerFx.Connectors/ConnectorFunction.cs) line 819) and delegates to `InvokeInternalAsync` (line 854).
 
 The pipeline is:
 
-1. **Bind FormulaValues to parameters** — [`HttpFunctionInvoker.ConvertToNamedParameters`](Execution/HttpFunctionInvoker.cs) (line 256) turns positional `FormulaValue[]` into a `Dictionary<string, FormulaValue>`, flattening records for optional args and applying default/hidden values.
-2. **Build the request** — [`HttpFunctionInvoker.BuildRequest`](Execution/HttpFunctionInvoker.cs) (line 44):
+1. **Bind FormulaValues to parameters** — [`HttpFunctionInvoker.ConvertToNamedParameters`](../src/libraries/Microsoft.PowerFx.Connectors/Execution/HttpFunctionInvoker.cs) (line 256) turns positional `FormulaValue[]` into a `Dictionary<string, FormulaValue>`, flattening records for optional args and applying default/hidden values.
+2. **Build the request** — [`HttpFunctionInvoker.BuildRequest`](../src/libraries/Microsoft.PowerFx.Connectors/Execution/HttpFunctionInvoker.cs) (line 44):
    - Iterates the swagger's `Operation.Parameters` and, based on `param.In` (`Path`, `Query`, `Header`, `Cookie`), places each formatted value in the right slot. Path values get URI-escaped via `Uri.EscapeDataString`, query values get appended to a `StringBuilder`, and headers go into a case-insensitive dictionary.
-   - Formats primitive values via [`HttpFunctionInvoker.FormatParameterValue`](Execution/HttpFunctionInvoker.cs) (line 217) — which converts `DateTimeValue` to ISO 8601 UTC (`yyyy-MM-ddTHH:mm:ss.fffZ`) and `DateValue` to `yyyy-MM-dd`.
-   - Builds the request body by calling [`HttpFunctionInvoker.GetBodyAsync`](Execution/HttpFunctionInvoker.cs) (line 398) which picks a `FormulaValueSerializer` based on the operation's `Content-Type`.
+   - Formats primitive values via [`HttpFunctionInvoker.FormatParameterValue`](../src/libraries/Microsoft.PowerFx.Connectors/Execution/HttpFunctionInvoker.cs) (line 217) — which converts `DateTimeValue` to ISO 8601 UTC (`yyyy-MM-ddTHH:mm:ss.fffZ`) and `DateValue` to `yyyy-MM-dd`.
+   - Builds the request body by calling [`HttpFunctionInvoker.GetBodyAsync`](../src/libraries/Microsoft.PowerFx.Connectors/Execution/HttpFunctionInvoker.cs) (line 398) which picks a `FormulaValueSerializer` based on the operation's `Content-Type`.
    - Concatenates `server + path + query`, then does a second pass to substitute `{connectionId}`–style placeholders using values from `GlobalContext.ConnectorValues` (line 149).
-3. **Send** — [`HttpFunctionInvoker.ExecuteHttpRequest`](Execution/HttpFunctionInvoker.cs) (line 566) uses `_httpClient.SendAsync(request, cancellationToken)`.
-4. **Decode** — [`HttpFunctionInvoker.DecodeResponseAsync`](Execution/HttpFunctionInvoker.cs) (line 449) inspects the status code and calls `FormulaValueJSON.FromJson` (see [`FormulaValueJSON.FromJson`](../Microsoft.PowerFx.Json/FormulaValueJSON.cs) line 45) with the function's known `ReturnType` so the JSON is materialized against the correct schema. On error it returns an `ErrorValue`/`HttpExpressionError`.
+3. **Send** — [`HttpFunctionInvoker.ExecuteHttpRequest`](../src/libraries/Microsoft.PowerFx.Connectors/Execution/HttpFunctionInvoker.cs) (line 566) uses `_httpClient.SendAsync(request, cancellationToken)`.
+4. **Decode** — [`HttpFunctionInvoker.DecodeResponseAsync`](../src/libraries/Microsoft.PowerFx.Connectors/Execution/HttpFunctionInvoker.cs) (line 449) inspects the status code and calls `FormulaValueJSON.FromJson` (see [`FormulaValueJSON.FromJson`](../src/libraries/Microsoft.PowerFx.Json/FormulaValueJSON.cs) line 45) with the function's known `ReturnType` so the JSON is materialized against the correct schema. On error it returns an `ErrorValue`/`HttpExpressionError`.
 
 ### FormulaValue serialization (request body)
 
-Serialization is driven by an abstract [`FormulaValueSerializer`](Execution/FormulaValueSerializer.cs):
+Serialization is driven by an abstract [`FormulaValueSerializer`](../src/libraries/Microsoft.PowerFx.Connectors/Execution/FormulaValueSerializer.cs):
 
 ```csharp
 internal abstract class FormulaValueSerializer
@@ -177,12 +177,12 @@ internal abstract class FormulaValueSerializer
 
 Concrete implementations:
 
-- [`OpenApiJsonSerializer`](Execution/OpenApiJsonSerializer.cs) — writes JSON via `Utf8JsonWriter`. Handles the "schema-less body" case (when the swagger declares the body itself as a primitive) by suppressing the outer `{ ... }` (see the `_schemaLessBody` / `_topPropertyWritten` logic in lines 39-160). `DateTimeValue` is written using `UtcDateTimeFormat`; `DateValue` as `o` format truncated to 10 characters; `BlobValue` is base64-encoded either as-is (if it already stores `Base64Blob`) or via `WriteBase64StringValue`.
+- [`OpenApiJsonSerializer`](../src/libraries/Microsoft.PowerFx.Connectors/Execution/OpenApiJsonSerializer.cs) — writes JSON via `Utf8JsonWriter`. Handles the "schema-less body" case (when the swagger declares the body itself as a primitive) by suppressing the outer `{ ... }` (see the `_schemaLessBody` / `_topPropertyWritten` logic in lines 39-160). `DateTimeValue` is written using `UtcDateTimeFormat`; `DateValue` as `o` format truncated to 10 characters; `BlobValue` is base64-encoded either as-is (if it already stores `Base64Blob`) or via `WriteBase64StringValue`.
 - `OpenApiFormUrlEncoder` — `application/x-www-form-urlencoded`.
 - `OpenApiTextSerializer` — `text/plain`.
 - `OpenApiMultipart` — `multipart/form-data`.
 
-Selection happens here ([`HttpFunctionInvoker.GetBodyAsync`](Execution/HttpFunctionInvoker.cs) lines 414-420):
+Selection happens here ([`HttpFunctionInvoker.GetBodyAsync`](../src/libraries/Microsoft.PowerFx.Connectors/Execution/HttpFunctionInvoker.cs) lines 414-420):
 
 ```csharp
 serializer = ct switch
@@ -194,13 +194,13 @@ serializer = ct switch
 };
 ```
 
-Traversal is schema-driven: [`FormulaValueSerializer.WriteObjectAsync`](Execution/FormulaValueSerializer.cs) (line 81) walks `schema.Properties` (not the record fields) so unknown/extra `FormulaValue` fields are dropped and missing required fields throw a `PowerFxConnectorException`.
+Traversal is schema-driven: [`FormulaValueSerializer.WriteObjectAsync`](../src/libraries/Microsoft.PowerFx.Connectors/Execution/FormulaValueSerializer.cs) (line 81) walks `schema.Properties` (not the record fields) so unknown/extra `FormulaValue` fields are dropped and missing required fields throw a `PowerFxConnectorException`.
 
 ### FormulaValue deserialization (response)
 
 The response side is much simpler because it reuses the existing JSON→FormulaValue infrastructure from `Microsoft.PowerFx.Json`.
 
-[`HttpFunctionInvoker.DecodeResponseAsync`](Execution/HttpFunctionInvoker.cs) (lines 503-520):
+[`HttpFunctionInvoker.DecodeResponseAsync`](../src/libraries/Microsoft.PowerFx.Connectors/Execution/HttpFunctionInvoker.cs) (lines 503-520):
 
 ```csharp
 if (statusCode < 300)
@@ -227,13 +227,13 @@ if (statusCode < 300)
 - `FormulaValueJSON.FromJson` will:
   - Try to match each JSON element against the target `FormulaType`.
   - Convert `"yyyy-MM-ddTHH:mm:ss..."` strings to `DateTimeValue` when the schema calls for it.
-  - Return an `ErrorValue` with `ErrorKind.InvalidJSON` if parsing fails ([`FormulaValueJSON.FromJson`](../Microsoft.PowerFx.Json/FormulaValueJSON.cs) lines 45-72).
+  - Return an `ErrorValue` with `ErrorKind.InvalidJSON` if parsing fails ([`FormulaValueJSON.FromJson`](../src/libraries/Microsoft.PowerFx.Json/FormulaValueJSON.cs) lines 45-72).
 - If the return type is `BlobType`, the raw bytes are returned via `FormulaValue.NewBlob(bytes)` (lines 457-462) instead of going through JSON.
 - On HTTP errors, `DecodeResponseAsync` returns a `FormulaValue.NewError(new HttpExpressionError(statusCode) { Kind = ErrorKind.Network, ... })` unless `throwOnError` is set.
 
 ### End-to-end example (action connector)
 
-The pattern below is exercised end-to-end by [`BaseConnectorTest.GetElements`](../../tests/Microsoft.PowerFx.Connectors.Tests.Shared/BaseConnectorTest.cs) (line 76) and every subclass in `tests/Microsoft.PowerFx.Connectors.Tests.Shared`.
+The pattern below is exercised end-to-end by [`BaseConnectorTest.GetElements`](../src/tests/Microsoft.PowerFx.Connectors.Tests.Shared/BaseConnectorTest.cs) (line 76) and every subclass in `tests/Microsoft.PowerFx.Connectors.Tests.Shared`.
 
 ```csharp
 using System;
@@ -325,14 +325,14 @@ Key types:
 
 | Type | Purpose |
 | --- | --- |
-| [`CdpDataSource`](Tabular/Services/CdpDataSource.cs) | Entry point. Represents one dataset. Fetches dataset metadata, enumerates tables, and creates `CdpTable` instances. |
-| [`CdpTable`](Tabular/Services/CdpTable.cs) | One table within the dataset. Initializes schema via `InitAsync`, queries items via `GetItemsInternalAsync`. |
-| [`CdpService`](Tabular/Services/CdpService.cs) | Abstract base defining `GetItemsAsync` / `ExecuteQueryAsync`. |
-| [`CdpServiceBase`](Tabular/Services/CdpServiceBase.cs) | Low-level HTTP helper. `GetObject<T>` deserializes CDP responses with `System.Text.Json`. |
-| [`CdpTableResolver`](Tabular/CdpTableResolver.cs) | Fetches per-table metadata and turns the CDP schema JSON into a `ConnectorType` / `RecordType`. Includes a bounded async-deduplicating cache. |
-| [`CdpTableValue`](Public/CdpTableValue.cs) | Public Power Fx `TableValue` that implements `IDelegatableTableValue` and lazily fetches rows. |
-| [`DatasetMetadata`, `RawTable`, `GetTables`](Tabular/Services/InternalObjects.cs) | POCOs mapped from the JSON responses. |
-| [`ServiceCapabilities`, `ColumnCapabilities`, ...](Tabular/Capabilities/) | Delegation capabilities parsed from `x-ms-capabilities`. |
+| [`CdpDataSource`](../src/libraries/Microsoft.PowerFx.Connectors/Tabular/Services/CdpDataSource.cs) | Entry point. Represents one dataset. Fetches dataset metadata, enumerates tables, and creates `CdpTable` instances. |
+| [`CdpTable`](../src/libraries/Microsoft.PowerFx.Connectors/Tabular/Services/CdpTable.cs) | One table within the dataset. Initializes schema via `InitAsync`, queries items via `GetItemsInternalAsync`. |
+| [`CdpService`](../src/libraries/Microsoft.PowerFx.Connectors/Tabular/Services/CdpService.cs) | Abstract base defining `GetItemsAsync` / `ExecuteQueryAsync`. |
+| [`CdpServiceBase`](../src/libraries/Microsoft.PowerFx.Connectors/Tabular/Services/CdpServiceBase.cs) | Low-level HTTP helper. `GetObject<T>` deserializes CDP responses with `System.Text.Json`. |
+| [`CdpTableResolver`](../src/libraries/Microsoft.PowerFx.Connectors/Tabular/CdpTableResolver.cs) | Fetches per-table metadata and turns the CDP schema JSON into a `ConnectorType` / `RecordType`. Includes a bounded async-deduplicating cache. |
+| [`CdpTableValue`](../src/libraries/Microsoft.PowerFx.Connectors/Public/CdpTableValue.cs) | Public Power Fx `TableValue` that implements `IDelegatableTableValue` and lazily fetches rows. |
+| [`DatasetMetadata`, `RawTable`, `GetTables`](../src/libraries/Microsoft.PowerFx.Connectors/Tabular/Services/InternalObjects.cs) | POCOs mapped from the JSON responses. |
+| [`ServiceCapabilities`, `ColumnCapabilities`, ...](../src/libraries/Microsoft.PowerFx.Connectors/Tabular/Capabilities/) | Delegation capabilities parsed from `x-ms-capabilities`. |
 
 ### Endpoint sequence
 
@@ -340,41 +340,41 @@ The library only exercises the CDP endpoints needed for a **read** scenario. Cre
 
 1. **Dataset metadata** —
    `GET {uriPrefix}[/v2]/$metadata.json/datasets`
-   ([`CdpDataSource.GetDatasetsMetadataAsync`](Tabular/Services/CdpDataSource.cs) lines 57-64).
-   Deserializes to [`DatasetMetadata`](Tabular/Services/InternalObjects.cs) — tells us whether the dataset uses single or double URL encoding, whether it's tabular/blob, etc.
+   ([`CdpDataSource.GetDatasetsMetadataAsync`](../src/libraries/Microsoft.PowerFx.Connectors/Tabular/Services/CdpDataSource.cs) lines 57-64).
+   Deserializes to [`DatasetMetadata`](../src/libraries/Microsoft.PowerFx.Connectors/Tabular/Services/InternalObjects.cs) — tells us whether the dataset uses single or double URL encoding, whether it's tabular/blob, etc.
 
 2. **Table list** —
    `GET {uriPrefix}[/v2]/datasets/{dataset}/tables` (or `/alltables` for SharePoint)
-   ([`CdpDataSource.GetTablesAsync`](Tabular/Services/CdpDataSource.cs) lines 66-83).
+   ([`CdpDataSource.GetTablesAsync`](../src/libraries/Microsoft.PowerFx.Connectors/Tabular/Services/CdpDataSource.cs) lines 66-83).
    Deserializes to `GetTables` (`InternalObjects.cs` lines 12-21), yielding `RawTable` entries with logical + display names. Each becomes a lazy `CdpTable`.
 
 3. **Table schema** —
    `GET {uriPrefix}[/v2]/$metadata.json/datasets/{dataset}/tables/{table}?api-version=2015-09-01[&extractSensitivityLabel=True][&purviewAccountName=...]`
-   ([`CdpTableResolver.BuildTableMetadataUri`](Tabular/CdpTableResolver.cs) lines 128-143; call site [`CdpTable.InitAsync`](Tabular/Services/CdpTable.cs) lines 81-112).
+   ([`CdpTableResolver.BuildTableMetadataUri`](../src/libraries/Microsoft.PowerFx.Connectors/Tabular/CdpTableResolver.cs) lines 128-143; call site [`CdpTable.InitAsync`](../src/libraries/Microsoft.PowerFx.Connectors/Tabular/Services/CdpTable.cs) lines 81-112).
    The response is a Swagger fragment describing the table's row schema, which is turned into a `ConnectorType` via `CdpTableResolver`. From that we derive:
    - `RecordType` / `TableType` used for type checking Power Fx expressions.
    - `TableDelegationInfo` (filter/sort/select restrictions) — surfaced via `CdpTable.DelegationInfo`.
    - `OptionSets` (enum columns).
    - `Relationships` (foreign key–style references to other tables).
 
-   `CdpTableResolver` uses an async-deduplicating cache keyed by the full metadata URI ([`CdpTableResolver`](Tabular/CdpTableResolver.cs) lines 34-97) so multiple concurrent lookups of the same table share a single HTTP round trip.
+   `CdpTableResolver` uses an async-deduplicating cache keyed by the full metadata URI ([`CdpTableResolver`](../src/libraries/Microsoft.PowerFx.Connectors/Tabular/CdpTableResolver.cs) lines 34-97) so multiple concurrent lookups of the same table share a single HTTP round trip.
 
 4. **List items** —
    `GET {uriPrefix}[/v2]/datasets/{dataset}/tables/{table}/items?api-version=2015-09-01[&$filter=...&$top=...&$orderby=...&$select=...]`
-   ([`CdpTable.Query`](Tabular/Services/CdpTable.cs) lines 145-163). The OData query string is produced by `DelegationParameters.GetODataQueryString`, which is fed the delegation info the engine builds during binding. Both `CdpTable.GetItemsInternalAsync` (paged rows) and `CdpTable.GetItemInternalAsync` (single-record / aggregation results) go through this same endpoint.
+   ([`CdpTable.Query`](../src/libraries/Microsoft.PowerFx.Connectors/Tabular/Services/CdpTable.cs) lines 145-163). The OData query string is produced by `DelegationParameters.GetODataQueryString`, which is fed the delegation info the engine builds during binding. Both `CdpTable.GetItemsInternalAsync` (paged rows) and `CdpTable.GetItemInternalAsync` (single-record / aggregation results) go through this same endpoint.
 
-`CdpServiceBase.GetObject` is the workhorse for all four calls ([`CdpServiceBase.GetObject`](Tabular/Services/CdpServiceBase.cs) lines 21-68). It:
+`CdpServiceBase.GetObject` is the workhorse for all four calls ([`CdpServiceBase.GetObject`](../src/libraries/Microsoft.PowerFx.Connectors/Tabular/Services/CdpServiceBase.cs) lines 21-68). It:
 - Uses `HttpMethod.Get` unless a `content` payload is provided (in which case `POST` with `application/json`).
 - Reads the response body as a UTF-8 string.
 - Throws a `PowerFxConnectorException` with `StatusCode` when status ≥ 300.
 - Deserializes the JSON payload via `System.Text.Json.JsonSerializer.Deserialize<T>` for the generic overload.
-- If the deserialized type implements `ISupportsPostProcessing`, calls `PostProcess()` (e.g. `GetTables.PostProcess` strips `[...]` decorations from display names — [`GetTables.PostProcess`](Tabular/Services/InternalObjects.cs) lines 17-20).
+- If the deserialized type implements `ISupportsPostProcessing`, calls `PostProcess()` (e.g. `GetTables.PostProcess` strips `[...]` decorations from display names — [`GetTables.PostProcess`](../src/libraries/Microsoft.PowerFx.Connectors/Tabular/Services/InternalObjects.cs) lines 17-20).
 
 ### Metadata → FormulaType conversion
 
-The schema JSON returned by step 3 is essentially a Swagger `Schema` object. `CdpTableResolver` uses the existing swagger→FormulaType path in [`OpenApiExtensions`](OpenApiExtensions.cs) so tabular column types are produced by the same code that produces action-connector types.
+The schema JSON returned by step 3 is essentially a Swagger `Schema` object. `CdpTableResolver` uses the existing swagger→FormulaType path in [`OpenApiExtensions`](../src/libraries/Microsoft.PowerFx.Connectors/OpenApiExtensions.cs) so tabular column types are produced by the same code that produces action-connector types.
 
-The public `ConnectorType` ([`ConnectorType`](Public/ConnectorType.cs)) is the intermediary — it holds both the Power Fx `FormulaType` (for the engine) and the OpenAPI/`ISwaggerSchema` details (for x-ms extensions such as `x-ms-keyType`, `x-ms-capabilities`, `x-ms-relationships`, `x-ms-enum-values`).
+The public `ConnectorType` ([`ConnectorType`](../src/libraries/Microsoft.PowerFx.Connectors/Public/ConnectorType.cs)) is the intermediary — it holds both the Power Fx `FormulaType` (for the engine) and the OpenAPI/`ISwaggerSchema` details (for x-ms extensions such as `x-ms-keyType`, `x-ms-capabilities`, `x-ms-relationships`, `x-ms-enum-values`).
 
 At the end of `CdpTable.InitAsync` (line 111):
 
@@ -388,16 +388,16 @@ RecordType = (RecordType)TabularTableDescriptor.FormulaType;
 
 There are two read code paths on `CdpTable`:
 
-- `GetItemsInternalAsync` (line 130) — returns a paged list. It calls `Query`, then passes the returned JSON to `FormulaValueJSON.FromJson(text, RecordType.Empty().Add("value", TableType))` inside [`CdpTable.GetResult`](Tabular/Services/CdpTable.cs) (line 165), extracts the `"value"` field (an OData collection) and returns its rows.
+- `GetItemsInternalAsync` (line 130) — returns a paged list. It calls `Query`, then passes the returned JSON to `FormulaValueJSON.FromJson(text, RecordType.Empty().Add("value", TableType))` inside [`CdpTable.GetResult`](../src/libraries/Microsoft.PowerFx.Connectors/Tabular/Services/CdpTable.cs) (line 165), extracts the `"value"` field (an OData collection) and returns its rows.
 - `GetItemInternalAsync` (line 137) — used for aggregations/single-record queries. Calls `FormulaValueJSON.FromJson(text)` without a schema hint and lets the engine coerce to `parameters.ExpectedReturnType`.
 
-Both paths ultimately delegate JSON deserialization to `FormulaValueJSON.FromJson` (see [`FormulaValueJSON.FromJson`](../Microsoft.PowerFx.Json/FormulaValueJSON.cs) line 45), which is the same deserialization used by action connectors. This guarantees that the type mapping (JSON string ↔ `StringValue`, JSON number ↔ `DecimalValue`/`NumberValue`, ISO 8601 ↔ `DateTimeValue`, arrays ↔ `TableValue`, objects ↔ `RecordValue`) stays consistent across both connector styles.
+Both paths ultimately delegate JSON deserialization to `FormulaValueJSON.FromJson` (see [`FormulaValueJSON.FromJson`](../src/libraries/Microsoft.PowerFx.Json/FormulaValueJSON.cs) line 45), which is the same deserialization used by action connectors. This guarantees that the type mapping (JSON string ↔ `StringValue`, JSON number ↔ `DecimalValue`/`NumberValue`, ISO 8601 ↔ `DateTimeValue`, arrays ↔ `TableValue`, objects ↔ `RecordValue`) stays consistent across both connector styles.
 
 `CdpTableValue.Rows` (line 50) caches the last-fetched page so that reading the same table twice in one expression doesn't re-hit the server. When the engine performs delegation it goes through `IDelegatableTableValue.GetRowsAsync` / `ExecuteQueryAsync` (lines 77-118) instead — those bypass the cache and always forward the caller's `DelegationParameters` (which include the OData $filter, $orderby, $top, etc.).
 
 ### End-to-end example (tabular connector)
 
-The pattern below is directly modelled on [`PowerPlatformTabularTests.SQL_CdpTabular`](../../tests/Microsoft.PowerFx.Connectors.Tests.Shared/PowerPlatformTabularTests.cs) (lines 546-600).
+The pattern below is directly modelled on [`PowerPlatformTabularTests.SQL_CdpTabular`](../src/tests/Microsoft.PowerFx.Connectors.Tests.Shared/PowerPlatformTabularTests.cs) (lines 546-600).
 
 ```csharp
 using System;
@@ -470,14 +470,14 @@ Traceable HTTP calls, in order:
 
 ## Shared infrastructure
 
-- **`ConnectorSettings`** ([`ConnectorSettings`](Public/ConnectorSettings.cs)) — controls parser and runtime behavior: namespace, max rows, compatibility mode (`PowerAppsCompatibility` vs `SwaggerCompatibility` vs `CdpCompatibility`), whether to include internal/unsupported functions, whether to return unknown record fields as `UntypedObject`, sensitivity label extraction, and more. `ConnectorSettings.NewCDPConnectorSettings` (line 37) is the canonical factory for tabular connectors.
+- **`ConnectorSettings`** ([`ConnectorSettings`](../src/libraries/Microsoft.PowerFx.Connectors/Public/ConnectorSettings.cs)) — controls parser and runtime behavior: namespace, max rows, compatibility mode (`PowerAppsCompatibility` vs `SwaggerCompatibility` vs `CdpCompatibility`), whether to include internal/unsupported functions, whether to return unknown record fields as `UntypedObject`, sensitivity label extraction, and more. `ConnectorSettings.NewCDPConnectorSettings` (line 37) is the canonical factory for tabular connectors.
 
-- **`ConnectorLogger`** ([`ConnectorLogger`](Public/ConnectorLogger.cs)) — abstract logger consumed by every entry point. Tests use `ConsoleLogger` and verify exact log output (see [`LoggerTests.ConnectorLogger_Test8`](../../tests/Microsoft.PowerFx.Connectors.Tests.Shared/LoggerTests.cs) line 117 for a full expected-log assertion).
+- **`ConnectorLogger`** ([`ConnectorLogger`](../src/libraries/Microsoft.PowerFx.Connectors/Public/ConnectorLogger.cs)) — abstract logger consumed by every entry point. Tests use `ConsoleLogger` and verify exact log output (see [`LoggerTests.ConnectorLogger_Test8`](../src/tests/Microsoft.PowerFx.Connectors.Tests.Shared/LoggerTests.cs) line 117 for a full expected-log assertion).
 
-- **`ConnectorType`** ([`ConnectorType`](Public/ConnectorType.cs)) — wraps a `FormulaType` with extra swagger metadata (dynamic values/schema/property/list, x-ms-visibility, x-ms-capabilities, x-ms-keyType, x-ms-relationships, x-ms-media-kind, MIP sensitivity labels, etc.). This is what feeds intellisense and delegation.
+- **`ConnectorType`** ([`ConnectorType`](../src/libraries/Microsoft.PowerFx.Connectors/Public/ConnectorType.cs)) — wraps a `FormulaType` with extra swagger metadata (dynamic values/schema/property/list, x-ms-visibility, x-ms-capabilities, x-ms-keyType, x-ms-relationships, x-ms-media-kind, MIP sensitivity labels, etc.). This is what feeds intellisense and delegation.
 
-- **`PowerPlatformConnectorClient` / `PowerPlatformConnectorClient2`** — `HttpClient` subclasses that rewrite the request to the APIM `/invoke` protocol (adds `authority`, `scheme`, `path`, `x-ms-request-method`, `x-ms-request-url`, `Authorization: Bearer …`, `x-ms-client-environment-id`, `x-ms-user-agent`, `x-ms-client-session-id`; see [`PowerPlatformConnectorClient.Transform`](PowerPlatformConnectorClient.cs) lines 173-210). Use `PowerPlatformConnectorClient2` for new code — v1 is marked `[Obsolete]`.
+- **`PowerPlatformConnectorClient` / `PowerPlatformConnectorClient2`** — `HttpClient` subclasses that rewrite the request to the APIM `/invoke` protocol (adds `authority`, `scheme`, `path`, `x-ms-request-method`, `x-ms-request-url`, `Authorization: Bearer …`, `x-ms-client-environment-id`, `x-ms-user-agent`, `x-ms-client-session-id`; see [`PowerPlatformConnectorClient.Transform`](../src/libraries/Microsoft.PowerFx.Connectors/PowerPlatformConnectorClient.cs) lines 173-210). Use `PowerPlatformConnectorClient2` for new code — v1 is marked `[Obsolete]`.
 
-- **`FormulaValueJSON`** (in `Microsoft.PowerFx.Json`) — the single JSON↔FormulaValue codec used by both connector styles for reading responses. See [`FormulaValueJSON.FromJson`](../Microsoft.PowerFx.Json/FormulaValueJSON.cs).
+- **`FormulaValueJSON`** (in `Microsoft.PowerFx.Json`) — the single JSON↔FormulaValue codec used by both connector styles for reading responses. See [`FormulaValueJSON.FromJson`](../src/libraries/Microsoft.PowerFx.Json/FormulaValueJSON.cs).
 
 Together these pieces let a swagger file or CDP endpoint show up as ordinary Power Fx symbols with strong typing, delegation, and intellisense.
