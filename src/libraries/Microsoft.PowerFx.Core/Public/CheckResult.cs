@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types.TypeCheckers;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
@@ -671,6 +672,33 @@ namespace Microsoft.PowerFx
             }
 
             return _expressionInvariant;
+        }
+
+        /// <summary>
+        /// Get the pretty-printed form of the expression.
+        /// If there are parse errors, returns the original expression text unchanged.
+        /// Always enables expression chaining and uses lenient disambiguation syntax
+        /// to avoid false negatives from deprecation errors during formatting.
+        /// </summary>
+        /// <returns>The formatted expression string.</returns>
+        public string ApplyFormat()
+        {
+            if (_expression == null)
+            {
+                throw new InvalidOperationException($"Must call {nameof(SetText)} before calling {nameof(ApplyFormat)}().");
+            }
+
+            var features = _engine?.Config?.Features;
+
+            // Use lenient features: keep structural features (e.g. IsUserDefinedTypesEnabled
+            // for Type literals) but allow [@...] disambiguation syntax which is still
+            // parseable even when deprecated. Without this, deprecation errors prevent formatting.
+            if (features != null && features.DisableRowScopeDisambiguationSyntax)
+            {
+                features = new Features(features) { DisableRowScopeDisambiguationSyntax = false };
+            }
+
+            return TexlParser.Format(_expression, features: features);
         }
 
         /// <summary>
