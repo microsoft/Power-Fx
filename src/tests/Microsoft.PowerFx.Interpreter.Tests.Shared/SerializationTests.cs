@@ -100,7 +100,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(check.IsSuccess);
 
             var result = check.GetEvaluator().Eval();
-            Assert.IsType<OptionSetValue>(result);
+            var resultOptionSetValue = Assert.IsType<OptionSetValue>(result);
+            Assert.Equal(optionSetValue.Option, resultOptionSetValue.Option);
+            Assert.Equal(optionSetValue.Type.OptionSetName, resultOptionSetValue.Type.OptionSetName);
         }
 
         [Fact]
@@ -127,7 +129,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(check.IsSuccess);
 
             var result = check.GetEvaluator().Eval();
-            Assert.IsType<OptionSetValue>(result);
+            var resultOptionSetValue = Assert.IsType<OptionSetValue>(result);
+            Assert.Equal(optionSetValue.Option, resultOptionSetValue.Option);
+            Assert.Equal(optionSetValue.Type.OptionSetName, resultOptionSetValue.Type.OptionSetName);
         }
 
         [Fact]
