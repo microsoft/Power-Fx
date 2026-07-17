@@ -47,5 +47,64 @@ namespace Microsoft.PowerFx.Performance.Tests
             Assert.Equal(first["DeepScopes"].Expression, second["DeepScopes"].Expression);
             Assert.Equal("Global0999 + Global0998 + Global0997 + Global0996", first["LargeGlobals"].Expression);
         }
+
+        [Fact]
+        public void ScenariosMatchExpectedOutcomes()
+        {
+            foreach (var scenario in FormulaBenchmarkScenarios.Create())
+            {
+                var benchmark = new ParsingAndBindingPerformance
+                {
+                    Scenario = scenario
+                };
+
+                benchmark.GlobalSetup();
+
+                var parse = benchmark.Parse();
+                var bind = benchmark.Bind();
+                var check = benchmark.Check();
+
+                switch (scenario.ExpectedOutcome)
+                {
+                    case FormulaBenchmarkExpectedOutcome.Success:
+                        Assert.True(parse.IsSuccess);
+                        Assert.True(bind.IsSuccess);
+                        Assert.True(check.IsSuccess);
+                        break;
+                    case FormulaBenchmarkExpectedOutcome.ParseError:
+                        Assert.False(parse.IsSuccess);
+                        Assert.False(bind.IsSuccess);
+                        Assert.False(check.IsSuccess);
+                        break;
+                    case FormulaBenchmarkExpectedOutcome.BindError:
+                        Assert.True(parse.IsSuccess);
+                        Assert.False(bind.IsSuccess);
+                        Assert.False(check.IsSuccess);
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Unexpected outcome {scenario.ExpectedOutcome}.");
+                }
+            }
+        }
+
+        [Fact]
+        public void BindCreatesFreshCheckResults()
+        {
+            foreach (var scenario in FormulaBenchmarkScenarios.Create())
+            {
+                var benchmark = new ParsingAndBindingPerformance
+                {
+                    Scenario = scenario
+                };
+
+                benchmark.GlobalSetup();
+
+                var first = benchmark.Bind();
+                var second = benchmark.Bind();
+
+                Assert.NotSame(first, second);
+                Assert.Same(first.Parse, second.Parse);
+            }
+        }
     }
 }
