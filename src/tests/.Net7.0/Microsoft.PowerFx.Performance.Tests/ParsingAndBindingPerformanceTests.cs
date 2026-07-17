@@ -64,6 +64,7 @@ namespace Microsoft.PowerFx.Performance.Tests
                 var bind = benchmark.Bind();
                 var check = benchmark.Check();
 
+                // These xUnit assertions intentionally duplicate GlobalSetup validation to produce clearer failures.
                 switch (scenario.ExpectedOutcome)
                 {
                     case FormulaBenchmarkExpectedOutcome.Success:

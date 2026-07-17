@@ -8,6 +8,7 @@ using BenchmarkDotNet.Attributes;
 
 namespace Microsoft.PowerFx.Performance.Tests
 {
+    // ETW and native profiler support stays opt-in so routine benchmark runs do not need elevation.
     [MemoryDiagnoser]
     [CsvExporter]
     [CategoriesColumn]
@@ -51,6 +52,8 @@ namespace Microsoft.PowerFx.Performance.Tests
         [BenchmarkCategory("Bind")]
         public CheckResult Bind()
         {
+            // SetText(ParseResult) reuses the parsed tree but does not copy parse errors into the new CheckResult, so
+            // parse-error scenarios must also surface binding errors; GlobalSetup validates that contract here.
             var result = new CheckResult(_engine)
                 .SetText(_parseResult)
                 .SetBindingInfo(Scenario.Symbols);
@@ -63,6 +66,8 @@ namespace Microsoft.PowerFx.Performance.Tests
         [BenchmarkCategory("Check")]
         public CheckResult Check()
         {
+            // Check includes error processing and dependency analysis in addition to parse and binding, so this is
+            // the end-to-end public API measurement rather than a simple Parse+Bind sum.
             return _engine.Check(Scenario.Expression, Scenario.ParserOptions, Scenario.Symbols);
         }
 
