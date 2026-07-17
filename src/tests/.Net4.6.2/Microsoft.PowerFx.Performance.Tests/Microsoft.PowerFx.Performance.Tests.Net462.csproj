@@ -7,7 +7,7 @@
     <Configurations>Debug;Release;Debug462;Debug70;DebugAll;Release462;Release70;ReleaseAll</Configurations>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <StartupObject>Microsoft.PowerFx.Performance.Tests.Program</StartupObject>    
-    <AssemblyName>Microsoft.PowerFx.Performance.Tests</AssemblyName>
+    <AssemblyName>Microsoft.PowerFx.Performance.Tests.Net462</AssemblyName>
     <SignAssembly>False</SignAssembly>
     <DelaySign>False</DelaySign>
   </PropertyGroup>
