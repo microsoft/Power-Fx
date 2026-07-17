@@ -14,9 +14,14 @@ namespace Microsoft.PowerFx.Performance.Tests
         {
             var scenarios = FormulaBenchmarkScenarios.Create();
             var names = scenarios.Select(scenario => scenario.Name).ToArray();
+            var duplicates = names
+                .GroupBy(name => name, StringComparer.Ordinal)
+                .Where(group => group.Count() > 1)
+                .Select(group => group.Key)
+                .ToArray();
 
             Assert.Equal(10, scenarios.Count);
-            Assert.Equal(names.Length, names.Distinct(StringComparer.Ordinal).Count());
+            Assert.Empty(duplicates);
 
             Assert.All(
                 scenarios,

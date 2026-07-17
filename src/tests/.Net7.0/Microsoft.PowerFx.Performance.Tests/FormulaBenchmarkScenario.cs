@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Performance.Tests
                     "LargeGlobals",
                     "Symbols",
                     "Synthetic 1,000-global host-scope case",
-                    "Global0999 + Global0998 + Global0997 + Global0996",
+                    CreateLargeGlobalsExpression(),
                     parserOptions,
                     largeGlobalSymbols,
                     FormulaBenchmarkExpectedOutcome.Success),
@@ -180,9 +180,28 @@ namespace Microsoft.PowerFx.Performance.Tests
             return symbols;
         }
 
+        private static string CreateLargeGlobalsExpression()
+        {
+            var builder = new StringBuilder();
+
+            for (var i = GlobalSymbolCount - 1; i >= GlobalSymbolCount - 4; i--)
+            {
+                if (builder.Length > 0)
+                {
+                    builder.Append(" + ");
+                }
+
+                builder.Append("Global");
+                builder.Append(i.ToString("0000", CultureInfo.InvariantCulture));
+            }
+
+            return builder.ToString();
+        }
+
         private static string CreateWideSwitchExpression()
         {
-            var builder = new StringBuilder("Switch(63");
+            var builder = new StringBuilder("Switch(");
+            builder.Append((WideSwitchArmCount - 1).ToString(CultureInfo.InvariantCulture));
 
             for (var i = 0; i < WideSwitchArmCount; i++)
             {
