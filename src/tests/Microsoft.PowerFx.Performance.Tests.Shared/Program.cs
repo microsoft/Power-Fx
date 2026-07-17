@@ -9,29 +9,18 @@ namespace Microsoft.PowerFx.Performance.Tests
     {
         public static void Main(string[] args)
         {
-            /*                                                  
-                   1. Build in Release mode
-
-                   2. Then, execute the following commands (from cmd.exe, ELEVATED [required for ETW generation])                       
-                        set MSBuildSDKsPath=C:\Program Files\dotnet\sdk\3.1.426\sdks
-                        cd <repo root>\src
-                        dotnet new globaljson --sdk-version 3.1.426
-                        "tests\Microsoft.PowerFx.Performance.Tests\bin\Release\netcoreapp3.1\Microsoft.PowerFx.Performance.Tests.exe" -f *
-                                
-                     Notice that version 3.1.426 or other versions are obtained with "dotnet --list-sdks"
-                     "dotnet new globaljson --sdk-version 3.1.426" shouldn't be needed
-                     
-                     Results are in 
-                       - <repo root>\src\BenchmarkDotNet.Artifacts
-                           Microsoft.PowerFx.Performance.Tests.<test class>-<date>-<time>.log
-                           Microsoft.PowerFx.Performance.Tests.<test class and name (+opt. N)>-<date>-<time>.etl
-                       - <repo root>\src\BenchmarkDotNet.Artifacts\results
-                           Microsoft.PowerFx.Performance.Tests.<test class>-report-github.md
-                           Microsoft.PowerFx.Performance.Tests.<test class>-report.html
-                           Microsoft.PowerFx.Performance.Tests.<test class>-report.csv
-            
-                     To identify the list of tests available
-                       "tests\Microsoft.PowerFx.Performance.Tests\bin\Release\netcoreapp3.1\Microsoft.PowerFx.Performance.Tests.exe" --list flat
+            /* Run benchmark suite from the repository root with Windows PowerShell:
+             * 1. Build:
+             *    dotnet build src\tests\.Net7.0\Microsoft.PowerFx.Performance.Tests\Microsoft.PowerFx.Performance.Tests.csproj -c Release
+             * 2. List benchmarks:
+             *    Set-Location src
+             *    dotnet run --project tests\.Net7.0\Microsoft.PowerFx.Performance.Tests\Microsoft.PowerFx.Performance.Tests.csproj -c Release --no-build -- --list flat
+             * 3. Dry validation:
+             *    dotnet run --project tests\.Net7.0\Microsoft.PowerFx.Performance.Tests\Microsoft.PowerFx.Performance.Tests.csproj -c Release --no-build -- --filter "*ParsingAndBindingPerformance*" --job Dry
+             * 4. Normal suite run:
+             *    dotnet run --project tests\.Net7.0\Microsoft.PowerFx.Performance.Tests\Microsoft.PowerFx.Performance.Tests.csproj -c Release --no-build -- --filter "*ParsingAndBindingPerformance*"
+             * 5. Results are written to:
+             *    src\BenchmarkDotNet.Artifacts
              */
 
             _ = BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
