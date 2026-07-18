@@ -29,14 +29,60 @@ namespace Microsoft.PowerFx.Syntax.SourceInformation
         {
             Contracts.AssertValue(items);
             Contracts.AssertAllValues(items);
-            Sources = items.SelectMany(item => item.Sources).ToArray();
+            Sources = Flatten(items);
         }
 
         public SourceList(IEnumerable<ITexlSource> items)
         {
             Contracts.AssertValue(items);
             Contracts.AssertAllValues(items);
-            Sources = items.SelectMany(item => item.Sources).ToArray();
+            Sources = Flatten(items as IReadOnlyList<ITexlSource> ?? items.ToArray());
+        }
+
+        // Flattens one level of sources. Every source other than SpreadSource is its own
+        // single source, so this avoids the per-leaf "new[] { this }" allocations and the
+        // LINQ SelectMany/array-builder churn that dominated parse-time allocations.
+        private static ITexlSource[] Flatten(IReadOnlyList<ITexlSource> items)
+        {
+            var hasSpread = false;
+            for (var i = 0; i < items.Count; i++)
+            {
+                if (items[i] is SpreadSource)
+                {
+                    hasSpread = true;
+                    break;
+                }
+            }
+
+            if (!hasSpread)
+            {
+                var flat = new ITexlSource[items.Count];
+                for (var i = 0; i < items.Count; i++)
+                {
+                    flat[i] = items[i];
+                }
+
+                return flat;
+            }
+
+            var result = new List<ITexlSource>(items.Count);
+            for (var i = 0; i < items.Count; i++)
+            {
+                var item = items[i];
+                if (item is SpreadSource)
+                {
+                    foreach (var source in item.Sources)
+                    {
+                        result.Add(source);
+                    }
+                }
+                else
+                {
+                    result.Add(item);
+                }
+            }
+
+            return result.ToArray();
         }
 
         public SourceList(Token token)

@@ -2579,6 +2579,22 @@ namespace Microsoft.PowerFx.Core.Binding
                 return set;
             }
 
+            // Overload that avoids copying an already-array-backed child list (node.Children)
+            // into a fresh array on every variadic node just to iterate it.
+            private ScopeUseSet JoinScopeUseSets(IReadOnlyList<TexlNode> nodes)
+            {
+                Contracts.AssertValue(nodes);
+                Contracts.AssertAllValues(nodes);
+
+                var set = ScopeUseSet.GlobalsOnly;
+                for (var i = 0; i < nodes.Count; i++)
+                {
+                    set = set.Union(_txb.GetScopeUseSet(nodes[i]));
+                }
+
+                return set;
+            }
+
             public override void Visit(ErrorNode node)
             {
                 AssertValid();
@@ -4094,7 +4110,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);
 
                 SetVariadicNodePurity(node);
-                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children.ToArray()));
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
             }
 
             private static bool IsValidAccessToScopedProperty(IExternalControl lhsControl, IExternalControlProperty rhsProperty, IExternalControl currentControl, IExternalControlProperty currentProperty)
@@ -5096,7 +5112,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);
 
                 SetVariadicNodePurity(node);
-                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children.ToArray()));
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
             }
 
             private bool TryGetAffectScopeVariableFunc(CallNode node, out TexlFunction func)
@@ -5608,7 +5624,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 AssertValid();
                 Contracts.AssertValue(node);
                 SetVariadicNodePurity(node);
-                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children.ToArray()));
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
             }
 
             private bool IsRecordScopeFieldName(DName name, out Scope scope)
@@ -5730,7 +5746,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 _txb.SetType(node, nodeType);
                 SetVariadicNodePurity(node);
-                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children.ToArray()));
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);
             }
 
@@ -5809,7 +5825,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 _txb.SetType(node, tableType);
                 SetVariadicNodePurity(node);
-                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children.ToArray()));
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);
             }
         }
