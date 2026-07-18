@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -82,6 +83,14 @@ namespace Microsoft.PowerFx.Core.Localization
         // This wrapper ensures that we don't accidentally do that        
         private readonly ResourceManager _resourceManager;
 
+        // CultureInfo.CreateSpecificCulture is comparatively expensive (it parses/normalizes the locale
+        // and allocates a fresh CultureInfo each call), yet GetLocaleResource is invoked once per resource
+        // lookup with only a tiny set of distinct locales. Memoize the result per locale so we build each
+        // CultureInfo at most once. The value is a pure function of the locale string, so caching is safe.
+        private static readonly ConcurrentDictionary<string, CultureInfo> SpecificCultureCache = new ConcurrentDictionary<string, CultureInfo>();
+
+        private static readonly Func<string, CultureInfo> CreateSpecificCulture = CultureInfo.CreateSpecificCulture;
+
         internal string ResourceLocation => _resourceManager.BaseName;
 
         internal ThreadSafeResourceManager(string resourceLocation, Assembly assembly)
@@ -97,7 +106,7 @@ namespace Microsoft.PowerFx.Core.Localization
                 return _resourceManager.GetString(resourceKey, CultureInfo.CurrentUICulture);
             }
 
-            return _resourceManager.GetString(resourceKey, CultureInfo.CreateSpecificCulture(locale));
+            return _resourceManager.GetString(resourceKey, SpecificCultureCache.GetOrAdd(locale, CreateSpecificCulture));
         }
     }
 
