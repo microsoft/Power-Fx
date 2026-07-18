@@ -1773,6 +1773,7 @@ namespace Microsoft.PowerFx.Syntax
                 return commentToken;
             }
 
+
             // Returns specialized token for unexpected character errors.
             private Token LexError()
             {
