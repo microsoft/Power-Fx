@@ -1710,11 +1710,14 @@ namespace Microsoft.PowerFx.Syntax
                 while (CurrentPos < _text.Length)
                 {
                     _sb.Append(NextChar());
-                    var str = _sb.ToString();
 
-                    // "str.Length >= commentLength + commentEnd.Length"  ensures block comment of "/*/"
-                    // does not satisfy starts with "/*" and ends with "*/" conditions
-                    if (str.EndsWith(commentEnd, StringComparison.Ordinal) && str.Length >= commentLength + commentEnd.Length)
+                    // Compare against the buffer tail directly instead of materializing the
+                    // whole (potentially very large) comment via _sb.ToString() on every
+                    // character, which made comment lexing O(n^2) in time and allocations.
+                    // The "_sb.Length >= commentLength + commentEnd.Length" check ensures a
+                    // block comment of "/*/" does not satisfy both the starts-with "/*" and
+                    // ends-with "*/" conditions.
+                    if (_sb.Length >= commentLength + commentEnd.Length && EndsWith(_sb, commentEnd))
                     {
                         break;
                     }
@@ -1768,6 +1771,27 @@ namespace Microsoft.PowerFx.Syntax
                 _lastCommentTokenPos = commentToken.Span.Lim; // Set last seen comment token position.
 
                 return commentToken;
+            }
+
+            // Ordinal comparison of the StringBuilder's trailing characters against a suffix,
+            // without allocating a string. Used by LexComment to detect the comment terminator.
+            private static bool EndsWith(StringBuilder sb, string suffix)
+            {
+                if (sb.Length < suffix.Length)
+                {
+                    return false;
+                }
+
+                var offset = sb.Length - suffix.Length;
+                for (var i = 0; i < suffix.Length; i++)
+                {
+                    if (sb[offset + i] != suffix[i])
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
             }
 
             // Returns specialized token for unexpected character errors.

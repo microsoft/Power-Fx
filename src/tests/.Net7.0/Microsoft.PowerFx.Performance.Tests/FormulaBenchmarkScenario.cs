@@ -63,6 +63,7 @@ namespace Microsoft.PowerFx.Performance.Tests
         private const int DeepCallCount = 32;
         private const int DeepScopeCount = 12;
         private const int GlobalSymbolCount = 1000;
+        private const int LongCommentCharCount = 100_000;
 
         public static IReadOnlyList<FormulaBenchmarkScenario> Create()
         {
@@ -117,6 +118,14 @@ namespace Microsoft.PowerFx.Performance.Tests
                     "Scale",
                     "Synthetic nested-call scaling case",
                     CreateDeepCallsExpression(),
+                    parserOptions,
+                    null,
+                    FormulaBenchmarkExpectedOutcome.Success),
+                new FormulaBenchmarkScenario(
+                    "LongComment",
+                    "Scale",
+                    "Synthetic 100k-character block comment case",
+                    CreateLongCommentExpression(),
                     parserOptions,
                     null,
                     FormulaBenchmarkExpectedOutcome.Success),
@@ -240,6 +249,17 @@ namespace Microsoft.PowerFx.Performance.Tests
             }
 
             return expression;
+        }
+
+        private static string CreateLongCommentExpression()
+        {
+            // A single block comment whose body is 100k+ characters, exercising the lexer's
+            // comment scanning throughput. 'a' is used to avoid an embedded "*/" terminator.
+            var builder = new StringBuilder(LongCommentCharCount + 16);
+            builder.Append("/* ");
+            builder.Append('a', LongCommentCharCount);
+            builder.Append(" */ 1 + 2");
+            return builder.ToString();
         }
     }
 }
