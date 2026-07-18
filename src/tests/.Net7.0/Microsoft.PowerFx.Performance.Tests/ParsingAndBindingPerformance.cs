@@ -10,7 +10,6 @@ namespace Microsoft.PowerFx.Performance.Tests
 {
     // ETW and native profiler support stays opt-in so routine benchmark runs do not need elevation.
     [MemoryDiagnoser]
-    [CsvExporter]
     [CategoriesColumn]
     [MinColumn]
     [Q1Column]
