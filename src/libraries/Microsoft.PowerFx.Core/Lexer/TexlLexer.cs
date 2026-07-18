@@ -1701,20 +1701,21 @@ namespace Microsoft.PowerFx.Syntax
                     _sb.Append(NextChar());
                 }
 
-                Contracts.Assert(_sb.ToString().Equals("/*", StringComparison.Ordinal) || _sb.ToString().Equals("//", StringComparison.Ordinal));
-                var commentEnd = _sb.ToString().StartsWith("/*", StringComparison.Ordinal) ? "*/" : "\n";
+                Contracts.Assert(_sb.Length == 2 && _sb[0] == '/' && (_sb[1] == '*' || _sb[1] == '/'));
+                var isBlockComment = _sb[1] == '*';
 
                 // Comment initiation takes up two chars, so must - 1 to get start
                 var startingPosition = CurrentPos - 1;
 
                 while (CurrentPos < _text.Length)
                 {
-                    _sb.Append(NextChar());
-                    var str = _sb.ToString();
+                    var nextChar = NextChar();
+                    _sb.Append(nextChar);
 
-                    // "str.Length >= commentLength + commentEnd.Length"  ensures block comment of "/*/"
-                    // does not satisfy starts with "/*" and ends with "*/" conditions
-                    if (str.EndsWith(commentEnd, StringComparison.Ordinal) && str.Length >= commentLength + commentEnd.Length)
+                    // "_sb.Length >= commentLength + 2" ensures block comment of "/*/"
+                    // does not satisfy starts with "/*" and ends with "*/" conditions.
+                    if ((isBlockComment && _sb.Length >= commentLength + 2 && _sb[_sb.Length - 2] == '*' && _sb[_sb.Length - 1] == '/') ||
+                        (!isBlockComment && nextChar == '\n'))
                     {
                         break;
                     }
@@ -1726,7 +1727,7 @@ namespace Microsoft.PowerFx.Syntax
                     var nxtChar = NextChar();
 
                     // If nxtChar is not whitespace, no need to handle trailing whitespace
-                    if (!char.IsWhiteSpace(nxtChar) || commentEnd != "*/")
+                    if (!char.IsWhiteSpace(nxtChar) || !isBlockComment)
                     {
                         break;
                     }
@@ -1759,8 +1760,10 @@ namespace Microsoft.PowerFx.Syntax
                     startingPosition--;
                 }
 
-                var commentToken = new CommentToken(_sb.ToString(), GetTextSpan());
-                if (_sb.ToString().Trim().StartsWith("/*", StringComparison.Ordinal) && !_sb.ToString().Trim().EndsWith("*/", StringComparison.Ordinal))
+                var commentText = _sb.ToString();
+                var commentToken = new CommentToken(commentText, GetTextSpan());
+                var trimmedCommentText = commentText.Trim();
+                if (trimmedCommentText.StartsWith("/*", StringComparison.Ordinal) && !trimmedCommentText.EndsWith("*/", StringComparison.Ordinal))
                 {
                     commentToken.IsOpenBlock = true;
                 }
