@@ -5051,7 +5051,7 @@
     <comment>Error when an unregistered attribute is used on a definition.</comment>
   </data>
   <data name="ErrAttributeArgCount" xml:space="preserve">
-    <value>'{0}' atributuak {1}eta {2} arteko argumentu kopurua espero du, baina{3} eman dira.</value>
+    <value>'{0}' atributuak {1} eta {2} arteko argumentu kopurua espero du, baina {3} eman dira.</value>
     <comment>Error when an attribute has the wrong number of arguments.</comment>
   </data>
   <data name="ErrAttributesNotAllowed" xml:space="preserve">

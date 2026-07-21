@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -69,9 +70,9 @@ namespace Microsoft.PowerFx.Types
             {
                 var firstOrderedValue = info.DisplayNameProvider.LogicalToDisplayPairs.OrderBy(x => x.Key.Value, StringComparer.Ordinal).First();
 
-                sb.Append(this.OptionSetName.Value);
+                sb.Append(TexlLexer.EscapeNameWithReservedWord(this.OptionSetName.Value));
                 sb.Append(".");
-                sb.Append(firstOrderedValue.Value);
+                sb.Append(TexlLexer.EscapeNameWithReservedWord(firstOrderedValue.Value));
             }
             else
             {

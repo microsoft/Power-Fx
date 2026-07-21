@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
-            sb.Append($"{Type._type.OptionSetInfo.EntityName}.{TexlLexer.EscapeNameWithReservedWord(Option)}");
+            sb.Append($"{TexlLexer.EscapeNameWithReservedWord(Type._type.OptionSetInfo.EntityName.Value)}.{TexlLexer.EscapeNameWithReservedWord(Option)}");
         }
     }
 }
