@@ -71,10 +71,7 @@ namespace Microsoft.PowerFx.Syntax.SourceInformation
                 var item = items[i];
                 if (item is SpreadSource)
                 {
-                    foreach (var source in item.Sources)
-                    {
-                        result.Add(source);
-                    }
+                    result.AddRange(item.Sources);
                 }
                 else
                 {
