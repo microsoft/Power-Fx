@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx.Performance.Tests
         {
             foreach (var option in _options)
             {
-                if (logicalName.Value.Equals(option.Value, StringComparer.Ordinal))
+                if (logicalName.Value.Equals(option.Value, StringComparison.Ordinal))
                 {
                     displayName = new DName(option.DisplayName ?? option.Value);
                     return true;
@@ -197,7 +197,7 @@ namespace Microsoft.PowerFx.Performance.Tests
         {
             foreach (var option in _options)
             {
-                if ((option.DisplayName != null && displayName.Value.Equals(option.DisplayName, StringComparer.Ordinal)) || option.Value.Equals(displayName.Value, StringComparer.Ordinal))
+                if ((option.DisplayName != null && displayName.Value.Equals(option.DisplayName, StringComparison.Ordinal)) || option.Value.Equals(displayName.Value, StringComparison.Ordinal))
                 {
                     logicalName = new DName(option.Value);
                     return true;
