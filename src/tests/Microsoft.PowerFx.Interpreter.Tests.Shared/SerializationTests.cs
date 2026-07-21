@@ -77,6 +77,64 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
+        public void OptionSetToExpressionWithDotInEntityNameTest()
+        {
+            var engine = new RecalcEngine(new PowerFxConfig());
+
+            var optionSetDisplayNameProvider = DisplayNameUtility.MakeUnique(new Dictionary<string, string>
+            {
+                { "0", "Zero" },
+                { "1", "One" },
+            });
+
+            // Entity name contains a dot - requires escaping in expressions
+            var optionSet = new OptionSet("My.OptionSet", optionSetDisplayNameProvider);
+            engine.Config.AddOptionSet(optionSet);
+
+            Assert.True(optionSet.FormulaType.TryGetValue("0", out var optionSetValue));
+            var expression = optionSetValue.ToExpression();
+
+            Assert.Equal("'My.OptionSet'.'0'", expression);
+
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess);
+
+            var result = check.GetEvaluator().Eval();
+            var resultOptionSetValue = Assert.IsType<OptionSetValue>(result);
+            Assert.Equal(optionSetValue.Option, resultOptionSetValue.Option);
+            Assert.Equal(optionSetValue.Type.OptionSetName, resultOptionSetValue.Type.OptionSetName);
+        }
+
+        [Fact]
+        public void OptionSetToExpressionWithSpaceInEntityNameTest()
+        {
+            var engine = new RecalcEngine(new PowerFxConfig());
+
+            var optionSetDisplayNameProvider = DisplayNameUtility.MakeUnique(new Dictionary<string, string>
+            {
+                { "0", "Zero" },
+                { "1", "One" },
+            });
+
+            // Entity name contains a space - requires escaping in expressions
+            var optionSet = new OptionSet("My OptionSet", optionSetDisplayNameProvider);
+            engine.Config.AddOptionSet(optionSet);
+
+            Assert.True(optionSet.FormulaType.TryGetValue("0", out var optionSetValue));
+            var expression = optionSetValue.ToExpression();
+
+            Assert.Equal("'My OptionSet'.'0'", expression);
+
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess);
+
+            var result = check.GetEvaluator().Eval();
+            var resultOptionSetValue = Assert.IsType<OptionSetValue>(result);
+            Assert.Equal(optionSetValue.Option, resultOptionSetValue.Option);
+            Assert.Equal(optionSetValue.Type.OptionSetName, resultOptionSetValue.Type.OptionSetName);
+        }
+
+        [Fact]
         public void OptionSetDefaultExpressionValueErrorTests()
         {
             var engine = new RecalcEngine(new PowerFxConfig());
