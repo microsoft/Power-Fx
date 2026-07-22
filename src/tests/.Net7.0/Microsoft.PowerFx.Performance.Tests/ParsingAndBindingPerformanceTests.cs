@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Performance.Tests
                 .Select(group => group.Key)
                 .ToArray();
 
-            Assert.Equal(10, scenarios.Count);
+            Assert.Equal(11, scenarios.Count);
             Assert.Empty(duplicates);
 
             Assert.All(

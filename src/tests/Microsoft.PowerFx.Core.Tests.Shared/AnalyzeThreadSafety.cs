@@ -136,7 +136,8 @@ namespace Microsoft.PowerFx.Core.Tests
                     }
 
                     // Field has is protected by a lock.
-                    if (field.GetCustomAttributes<ThreadSafeProtectedByLockAttribute>().Any())
+                    if (field.GetCustomAttributes<ThreadSafeProtectedByLockAttribute>().Any() ||
+                        IsTypeConcurrent(field.FieldType))
                     {
                         continue;
                     }
