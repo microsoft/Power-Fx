@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Globalization;
 using System.Linq;
 using Xunit;
 
@@ -45,7 +46,12 @@ namespace Microsoft.PowerFx.Performance.Tests
             Assert.Equal(first["WideSwitch"].Expression, second["WideSwitch"].Expression);
             Assert.Equal(first["DeepCalls"].Expression, second["DeepCalls"].Expression);
             Assert.Equal(first["DeepScopes"].Expression, second["DeepScopes"].Expression);
-            Assert.Equal("Global0999 + Global0998 + Global0997 + Global0996", first["LargeGlobals"].Expression);
+
+            var expectedGlobals = Enumerable.Range(0, 1000)
+                .Reverse()
+                .Select(index => "Global" + index.ToString("0000", CultureInfo.InvariantCulture));
+            Assert.Equal(string.Join(" + ", expectedGlobals), first["LargeGlobals"].Expression);
+            Assert.Equal(first["LargeGlobals"].Expression, second["LargeGlobals"].Expression);
         }
 
         [Fact]

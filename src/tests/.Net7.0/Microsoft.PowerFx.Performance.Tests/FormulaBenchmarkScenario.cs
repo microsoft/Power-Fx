@@ -193,7 +193,7 @@ namespace Microsoft.PowerFx.Performance.Tests
         {
             var builder = new StringBuilder();
 
-            for (var i = GlobalSymbolCount - 1; i >= GlobalSymbolCount - 4; i--)
+            for (var i = GlobalSymbolCount - 1; i >= 0; i--)
             {
                 if (builder.Length > 0)
                 {
