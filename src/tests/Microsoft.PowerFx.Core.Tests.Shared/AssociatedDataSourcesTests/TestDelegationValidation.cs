@@ -184,8 +184,8 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             Assert.True(result.IsSuccess);
             Assert.Empty(result.Errors);
             Assert.Equal(expectedIsAsync, result.Binding.IsAsync(result.Binding.Top));
-            Assert.False(result.Binding.IsAsyncWithoutCoercion(result.Binding.Top));
-            Assert.Equal(expectedIsAsync, result.Binding.HasAsyncCoercion(result.Binding.Top));
+            Assert.Equal(expectedIsAsync, result.Binding.IsAsyncWithoutCoercion(result.Binding.Top));
+            Assert.False(result.Binding.IsAsyncCoercion(result.Binding.Top));
         }
 
         [Theory]
@@ -202,7 +202,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             Assert.Empty(result.Errors);
             Assert.False(result.Binding.IsAsync(result.Binding.Top));
             Assert.False(result.Binding.IsAsyncWithoutCoercion(result.Binding.Top));
-            Assert.False(result.Binding.HasAsyncCoercion(result.Binding.Top));
+            Assert.False(result.Binding.IsAsyncCoercion(result.Binding.Top));
 
             result.Binding.SetCoercedToplevelType(coercedKind switch
             {
@@ -214,7 +214,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
 
             Assert.False(result.Binding.IsAsync(result.Binding.Top));
             Assert.False(result.Binding.IsAsyncWithoutCoercion(result.Binding.Top));
-            Assert.False(result.Binding.HasAsyncCoercion(result.Binding.Top));
+            Assert.False(result.Binding.IsAsyncCoercion(result.Binding.Top));
         }
 
         [Theory]
@@ -231,7 +231,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             Assert.Empty(result.Errors);
             Assert.False(result.Binding.IsAsync(result.Binding.Top));
             Assert.False(result.Binding.IsAsyncWithoutCoercion(result.Binding.Top));
-            Assert.False(result.Binding.HasAsyncCoercion(result.Binding.Top));
+            Assert.False(result.Binding.IsAsyncCoercion(result.Binding.Top));
 
             result.Binding.SetCoercedToplevelType(optionSetKind switch
             {
@@ -243,7 +243,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
 
             Assert.True(result.Binding.IsAsync(result.Binding.Top));
             Assert.False(result.Binding.IsAsyncWithoutCoercion(result.Binding.Top));
-            Assert.True(result.Binding.HasAsyncCoercion(result.Binding.Top));
+            Assert.True(result.Binding.IsAsyncCoercion(result.Binding.Top));
         }
 
         [Fact]
@@ -263,16 +263,16 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             var conditionNode = ifNode.Args.Children[0];
             Assert.True(result.Binding.IsAsync(conditionNode));
             Assert.True(result.Binding.IsAsyncWithoutCoercion(conditionNode));
-            Assert.False(result.Binding.HasAsyncCoercion(conditionNode));
+            Assert.False(result.Binding.IsAsyncCoercion(conditionNode));
 
             var fallbackNode = ifNode.Args.Children[2];
             Assert.True(result.Binding.IsAsync(fallbackNode));
             Assert.False(result.Binding.IsAsyncWithoutCoercion(fallbackNode));
-            Assert.True(result.Binding.HasAsyncCoercion(fallbackNode));
+            Assert.True(result.Binding.IsAsyncCoercion(fallbackNode));
 
             Assert.True(result.Binding.IsAsync(ifNode));
             Assert.True(result.Binding.IsAsyncWithoutCoercion(ifNode));
-            Assert.True(result.Binding.HasAsyncCoercion(ifNode));
+            Assert.False(result.Binding.IsAsyncCoercion(ifNode));
         }
 
         [Fact]
