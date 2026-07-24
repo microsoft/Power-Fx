@@ -34,6 +34,14 @@ namespace Microsoft.PowerFx.Core.Binding
 {
     internal sealed partial class TexlBinding
     {
+        [Flags]
+        private enum AsyncState
+        {
+            None = 0,
+            Node = 0x1,
+            Coercion = 0x2,
+        }
+
         private readonly IBinderGlue _glue;
 
         // The parse tree for this binding.
@@ -58,10 +66,10 @@ namespace Microsoft.PowerFx.Core.Binding
         private readonly DType[] _typeMap;
         private readonly DType[] _coerceMap;
 
-        // Maps Ids to whether the node/subtree is async or not. A subtree
-        // that has async components is itself async, so the async aspect of an expression
-        // propagates up the parse tree all the way to the root.
-        private readonly bool[] _asyncMap;
+        // Maps Ids to the sources of async behavior in the node/subtree. A subtree
+        // that has async components is itself async, so each source propagates up
+        // the parse tree all the way to the root.
+        private readonly AsyncState[] _asyncMap;
 
         // Used to mark nodes as delegatable or not.
         private readonly BitArray _isDelegatable;
@@ -300,7 +308,7 @@ namespace Microsoft.PowerFx.Core.Binding
             _nodeMap = new TexlNode[idLim];
             _infoMap = new object[idLim];
             _compilerGeneratedCallNodes = new CallNode[idLim];
-            _asyncMap = new bool[idLim];
+            _asyncMap = new AsyncState[idLim];
             _lambdaParams = new Dictionary<int, IList<FirstNameInfo>>(idLim);
             _isStateful = new BitArray(idLim);
             _hasSideEffects = new BitArray(idLim);
@@ -1598,7 +1606,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
             if (IsAsyncCoercion(GetType(node), type))
             {
-                FlagPathAsAsync(node);
+                FlagPathAsAsync(node, AsyncState.Coercion);
             }
         }
 
@@ -1620,7 +1628,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
             if (IsAsyncCoercion(GetType(Top), type))
             {
-                FlagPathAsAsync(Top);
+                FlagPathAsAsync(Top, AsyncState.Coercion);
             }
         }
 
@@ -2366,14 +2374,15 @@ namespace Microsoft.PowerFx.Core.Binding
             _infoMap[node.Id] = info;
         }
 
-        private void FlagPathAsAsync(TexlNode node)
+        private void FlagPathAsAsync(TexlNode node, AsyncState asyncState = AsyncState.Node)
         {
             Contracts.AssertValue(node);
             Contracts.AssertIndex(node.Id, _asyncMap.Length);
+            Contracts.Assert(asyncState is AsyncState.Node or AsyncState.Coercion);
 
-            while (node != null && !_asyncMap[node.Id])
+            while (node != null && (_asyncMap[node.Id] & asyncState) == 0)
             {
-                _asyncMap[node.Id] = true;
+                _asyncMap[node.Id] |= asyncState;
                 node = node.Parent;
             }
         }
@@ -2383,7 +2392,23 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValue(node);
             Contracts.AssertIndex(node.Id, _asyncMap.Length);
 
-            return _asyncMap[node.Id];
+            return _asyncMap[node.Id] != AsyncState.None;
+        }
+
+        public bool IsAsyncWithoutCoercion(TexlNode node)
+        {
+            Contracts.AssertValue(node);
+            Contracts.AssertIndex(node.Id, _asyncMap.Length);
+
+            return (_asyncMap[node.Id] & AsyncState.Node) != 0;
+        }
+
+        public bool HasAsyncCoercion(TexlNode node)
+        {
+            Contracts.AssertValue(node);
+            Contracts.AssertIndex(node.Id, _asyncMap.Length);
+
+            return (_asyncMap[node.Id] & AsyncState.Coercion) != 0;
         }
 
         /// <summary>
