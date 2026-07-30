@@ -184,6 +184,8 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             Assert.True(result.IsSuccess);
             Assert.Empty(result.Errors);
             Assert.Equal(expectedIsAsync, result.Binding.IsAsync(result.Binding.Top));
+            Assert.Equal(expectedIsAsync, result.Binding.IsAsyncWithoutCoercion(result.Binding.Top));
+            Assert.False(result.Binding.IsAsyncCoercion(result.Binding.Top));
         }
 
         [Theory]
@@ -199,6 +201,8 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             Assert.True(result.IsSuccess);
             Assert.Empty(result.Errors);
             Assert.False(result.Binding.IsAsync(result.Binding.Top));
+            Assert.False(result.Binding.IsAsyncWithoutCoercion(result.Binding.Top));
+            Assert.False(result.Binding.IsAsyncCoercion(result.Binding.Top));
 
             result.Binding.SetCoercedToplevelType(coercedKind switch
             {
@@ -209,6 +213,8 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             });
 
             Assert.False(result.Binding.IsAsync(result.Binding.Top));
+            Assert.False(result.Binding.IsAsyncWithoutCoercion(result.Binding.Top));
+            Assert.False(result.Binding.IsAsyncCoercion(result.Binding.Top));
         }
 
         [Theory]
@@ -224,6 +230,8 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             Assert.True(result.IsSuccess);
             Assert.Empty(result.Errors);
             Assert.False(result.Binding.IsAsync(result.Binding.Top));
+            Assert.False(result.Binding.IsAsyncWithoutCoercion(result.Binding.Top));
+            Assert.False(result.Binding.IsAsyncCoercion(result.Binding.Top));
 
             result.Binding.SetCoercedToplevelType(optionSetKind switch
             {
@@ -234,6 +242,37 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             });
 
             Assert.True(result.Binding.IsAsync(result.Binding.Top));
+            Assert.False(result.Binding.IsAsyncWithoutCoercion(result.Binding.Top));
+            Assert.True(result.Binding.IsAsyncCoercion(result.Binding.Top));
+        }
+
+        [Fact]
+        public void AsyncNodeAndCoercionAreTrackedSeparately()
+        {
+            var config = CreateOptionSetRecordVariableConfig();
+            config.SymbolTable.AddEntity(new AccountsEntity());
+            var engine = new Engine(config);
+            var result = engine.Check("If(CountRows(Accounts) > 0, recordValue.donotallowemails, false)");
+
+            Assert.True(result.IsSuccess);
+            Assert.Empty(result.Errors);
+
+            var ifNode = result.Binding.Top.AsCall();
+            Assert.NotNull(ifNode);
+
+            var conditionNode = ifNode.Args.Children[0];
+            Assert.True(result.Binding.IsAsync(conditionNode));
+            Assert.True(result.Binding.IsAsyncWithoutCoercion(conditionNode));
+            Assert.False(result.Binding.IsAsyncCoercion(conditionNode));
+
+            var fallbackNode = ifNode.Args.Children[2];
+            Assert.True(result.Binding.IsAsync(fallbackNode));
+            Assert.False(result.Binding.IsAsyncWithoutCoercion(fallbackNode));
+            Assert.True(result.Binding.IsAsyncCoercion(fallbackNode));
+
+            Assert.True(result.Binding.IsAsync(ifNode));
+            Assert.True(result.Binding.IsAsyncWithoutCoercion(ifNode));
+            Assert.False(result.Binding.IsAsyncCoercion(ifNode));
         }
 
         [Fact]
