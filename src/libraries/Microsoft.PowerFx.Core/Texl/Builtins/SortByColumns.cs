@@ -273,7 +273,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var column = columns.Single();
-            if (columnType != null && !columnType.Accepts(column.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+
+            // Allow numeric coercion between Number (Float) and Decimal for sort order values.
+            // A Float column can be ordered by a Decimal order table and vice versa.
+            var isNumericCoercionAllowed = columnType != null && columnType.IsNumeric && column.Type.IsNumeric;
+            if (columnType != null && !isNumericCoercionAllowed && !columnType.Accepts(column.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
                 errors.EnsureError(
                     DocumentErrorSeverity.Severe,
