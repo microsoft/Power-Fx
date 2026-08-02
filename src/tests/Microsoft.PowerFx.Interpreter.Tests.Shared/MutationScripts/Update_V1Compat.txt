@@ -1,0 +1,54 @@
+#SETUP: DecimalSupport
+#SETUP: PowerFxV1CompatibilityRules
+
+// Basic Update - replace a record entirely
+
+>> Set(t1, [{a:1, b:"hello"}, {a:2, b:"world"}, {a:3, b:"test"}])
+Table({a:1,b:"hello"},{a:2,b:"world"},{a:3,b:"test"})
+
+>> Update(t1, LookUp(t1, a=2), {a:20, b:"updated"})
+{a:20,b:"updated"}
+
+>> 0;t1
+Table({a:1,b:"hello"},{a:20,b:"updated"},{a:3,b:"test"})
+
+// Update with First
+
+>> Update(t1, First(t1), {a:10, b:"first_updated"})
+{a:10,b:"first_updated"}
+
+>> 1;t1
+Table({a:10,b:"first_updated"},{a:20,b:"updated"},{a:3,b:"test"})
+
+// Update with Index
+
+>> Update(t1, Index(t1, 3), {a:30, b:"third_updated"})
+{a:30,b:"third_updated"}
+
+>> 2;t1
+Table({a:10,b:"first_updated"},{a:20,b:"updated"},{a:30,b:"third_updated"})
+
+// Update with non-existent record returns error
+
+>> Update(t1, {a:999, b:"nonexistent"}, {a:0, b:"should_fail"})
+Error({Kind:ErrorKind.NotFound})
+
+// Table should not have changed after failed update
+
+>> 3;t1
+Table({a:10,b:"first_updated"},{a:20,b:"updated"},{a:30,b:"third_updated"})
+
+// Update with wrong argument count
+
+>> Update(t1, {a:1, b:"hello"})
+Errors: Error 0-28: Invalid number of arguments: received 2, expected 3-4.
+
+// Update with non-table first argument
+
+>> Update("not_a_table", {a:1}, {a:2})
+Errors: Error 7-20: Invalid argument type (Text). Expecting a Table value instead.|Error 0-6: The function 'Update' has some invalid arguments.
+
+// Update with non-record second argument
+
+>> Update(t1, "not_a_record", {a:2, b:"test"})
+Errors: Error 11-25: Invalid argument type (Text). Expecting a Record value instead.|Error 11-25: Cannot use a non-record value in this context: '"not_a_record"'.|Error 0-6: The function 'Update' has some invalid arguments.
