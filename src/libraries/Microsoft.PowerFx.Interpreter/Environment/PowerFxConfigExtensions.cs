@@ -67,15 +67,14 @@ namespace Microsoft.PowerFx
         {
             RegexTypeCache regexTypeCache = new (regexCacheSize);
 
-            foreach (KeyValuePair<TexlFunction, IAsyncTexlFunction> func in Library.RegexFunctions(regExTimeout, regexTypeCache))
+            foreach (TexlFunction func in Library.RegexFunctions(regExTimeout, regexTypeCache))
             {
-                if (config.ComposedConfigSymbols.Functions.AnyWithName(func.Key.Name))
+                if (config.ComposedConfigSymbols.Functions.AnyWithName(func.Name))
                 {
                     throw new InvalidOperationException("Cannot add RegEx functions more than once.");
                 }
 
-                config.InternalConfigSymbols.AddFunction(func.Key);
-                config.AdditionalFunctions.Add(func.Key, func.Value);
+                config.InternalConfigSymbols.AddFunction(func);
             }
         }
 
