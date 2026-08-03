@@ -92,6 +92,8 @@
     "Minute",
     "Mod",
     "Month",
+    "MonthsLong",
+    "MonthsShort",
     "Not",
     "Now",
     "OptionSetInfo",
@@ -147,6 +149,8 @@
     "Value",
     "VarP",
     "Weekday",
+    "WeekdaysLong",
+    "WeekdaysShort",
     "WeekNum",
     "With",
     "Year"

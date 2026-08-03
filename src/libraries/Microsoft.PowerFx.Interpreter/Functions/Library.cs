@@ -1244,6 +1244,14 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Month)
             },
             {
+                BuiltinFunctionsCore.MonthsLong,
+                NoErrorHandling(CalendarMonthsLong)
+            },
+            {
+                BuiltinFunctionsCore.MonthsShort,
+                NoErrorHandling(CalendarMonthsShort)
+            },
+            {
                 BuiltinFunctionsCore.Not,
                 StandardErrorHandling<BooleanValue>(
                     BuiltinFunctionsCore.Not.Name,
@@ -1874,6 +1882,14 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Weekday)
+            },
+            {
+                BuiltinFunctionsCore.WeekdaysLong,
+                NoErrorHandling(CalendarWeekdaysLong)
+            },
+            {
+                BuiltinFunctionsCore.WeekdaysShort,
+                NoErrorHandling(CalendarWeekdaysShort)
             },
             {
                 BuiltinFunctionsCore.WeekNum,
