@@ -54,7 +54,7 @@ Another example that uses a formula for the `Fill` color of the screen.  As the 
 
 ![Power Apps canvas with the formula Screen.Fill=RGBA(RedSlider.Value, GreenSlider.Value, BlueSlider.Value, 100%), as the color sliders are moved the formula recalcs and the background color changes](media/overview/color-sliders-power-apps.gif "Color slider")
 
-There are no `OnChange` events for the slider controls as would be common in other languages.  There is no way to explicitly set the `Fill` property value at all. If the color isn’t working as expected, you need to look at this one formula to understand why is it not working. You don’t need to search through the app to find a piece of code that sets the property at an unexpected time. There is no time element, the correct formula values are always maintained.
+There are no `OnChange` events for the slider controls as would be common in other languages.  There is no way to explicitly set the `Fill` property value at all. If the color isn’t working as expected, you need to look at this one formula to understand why it is not working. You don’t need to search through the app to find a piece of code that sets the property at an unexpected time. There is no time element, the correct formula values are always maintained.
 
 As the sliders are set to a dark color, the labels for Red, Green, and Blue change to white to compensate.  This is done through a simple formula on each label control's `Color` property.
 
@@ -220,7 +220,7 @@ For example, we introduced the `ShowError` function to display an error banner w
 
 ![Show error](media/overview/showerror-2018.png "Show error")
 
-Users loved it, but they also asked us for a way to show a success banner (green background) or an informational banner (blue background).  So, we came up with a more generic `Notify` function that took a second argument for the kind of notification.  We could have just added `Notify` and kept `ShowError` the way it was.  But we didn’t, we replaced `ShowError` with `Notify`. We removed a function that had previously been in production with something else. Because there would have been two ways to do the same thing, it would have caused confusion especially for new users, and most importantly it added complexity. Nobody complained, everybody, appreciated the change, and then moved on to their next Notify feature. For all the users we may have now, there are so many more to come, let’s get it right for them.
+Users loved it, but they also asked us for a way to show a success banner (green background) or an informational banner (blue background).  So, we came up with a more generic `Notify` function that took a second argument for the kind of notification.  We could have just added `Notify` and kept `ShowError` the way it was.  But we didn’t, we replaced `ShowError` with `Notify`. We removed a function that had previously been in production with something else. Because there would have been two ways to do the same thing, it would have caused confusion especially for new users, and most importantly it added complexity. Nobody complained, everybody appreciated the change, and then moved on to their next Notify feature. For all the users we may have now, there are so many more to come, let’s get it right for them.
 
 This is how the same app looks when loaded into the latest version of Power Apps. No action was required by the user to make this transformation happen, it was automatic upon open:
 
@@ -243,3 +243,4 @@ Some language such as JavaScript uses the concept of an "undefined" value for un
 - [Expression grammar](expression-grammar.md)
 - [YAML formula grammar](yaml-formula-grammar.md)
 - [YAML Source code files](https://powerapps.microsoft.com/en-us/blog/source-code-files-for-canvas-apps/)
+
