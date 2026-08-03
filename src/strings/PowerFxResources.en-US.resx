@@ -2173,6 +2173,10 @@
     <value>This function cannot be invoked within {0}.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrMapFunctionRequiresPureLambda" xml:space="preserve">
+    <value>The second argument of Map cannot include behavior functions. Use ForAll instead for imperative logic.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">
     <value>Incorrect argument. This formula expects a table from a connected data source. The AsType and IsType functions require connected data sources.</value>
     <comment>{Locked=AsType}{Locked=IsType} Error message provided when the user attempts to use a non-Connected data source table as the second argument to AsType or IsType.</comment>
@@ -3094,6 +3098,24 @@
   <data name="ForAllArg2" xml:space="preserve">
     <value>formula</value>
     <comment>function_parameter - Second argument to the ForAll function - the formula to evaluate for all rows in the source.</comment>
+  </data>
+  <data name="AboutMap" xml:space="preserve">
+    <value>Applies a pure (side-effect-free) formula to each row in a table and returns a new table with the results. Unlike ForAll, Map does not allow behavior functions.</value>
+    <comment>Description of 'Map' function.</comment>
+  </data>
+  <data name="AboutMap_source" xml:space="preserve">
+    <value>The table to operate on.</value>
+  </data>
+  <data name="AboutMap_formula" xml:space="preserve">
+    <value>The pure formula to evaluate for each row of the table.</value>
+  </data>
+  <data name="MapArg1" xml:space="preserve">
+    <value>source</value>
+    <comment>function_parameter - First argument to the Map function - the table to operate on.</comment>
+  </data>
+  <data name="MapArg2" xml:space="preserve">
+    <value>formula</value>
+    <comment>function_parameter - Second argument to the Map function - the pure formula to evaluate for all rows in the source.</comment>
   </data>
   <data name="AboutSummarize" xml:space="preserve">
     <value>Returns a grouping of the specified table, combining with aggregation functions.</value>
