@@ -1,0 +1,27 @@
+#SETUP: NumberIsFloat
+
+// =============================================
+// RECORD REDUCTIONS (require NumberIsFloat for type inference)
+// =============================================
+
+// Sum and count together
+>> Reduce( [10, 20, 30], {sum: ThisReduce.sum + Value, count: ThisReduce.count + 1}, {sum: 0, count: 0} ).sum
+60
+
+>> Reduce( [10, 20, 30], {sum: ThisReduce.sum + Value, count: ThisReduce.count + 1}, {sum: 0, count: 0} ).count
+3
+
+// Min and max together
+>> Reduce( [5, 3, 8, 1, 9], {min: If(Value < ThisReduce.min, Value, ThisReduce.min), max: If(Value > ThisReduce.max, Value, ThisReduce.max)}, {min: 999, max: -999} ).min
+1
+
+>> Reduce( [5, 3, 8, 1, 9], {min: If(Value < ThisReduce.min, Value, ThisReduce.min), max: If(Value > ThisReduce.max, Value, ThisReduce.max)}, {min: 999, max: -999} ).max
+9
+
+// =============================================
+// TYPE MISMATCH (Number mode specific)
+// =============================================
+
+// User's example: formula returns Number, InitialValue is GUID - incompatible
+>> Reduce([1,2,3], 3, GUID())
+Errors: Error 16-17: Invalid argument type (Number). Expecting a Guid value instead.
