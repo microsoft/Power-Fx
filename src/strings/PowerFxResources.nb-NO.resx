@@ -5115,7 +5115,7 @@
     <comment>{Locked=Copilot} Description of 'Copilot' function.</comment>
   </data>
   <data name="CopilotArg1" xml:space="preserve">
-    <value>spørsmål</value>
+    <value>instruks</value>
     <comment>function_parameter - First argument to the Copilot function - the prompt to be passed to the LLM (large language model).</comment>
   </data>
   <data name="CopilotArg2" xml:space="preserve">
@@ -5127,11 +5127,11 @@
     <comment>function_parameter - Third argument to the Copilot function - optional type value that will determine the type for the output of the function.</comment>
   </data>
   <data name="AboutCopilot_prompt" xml:space="preserve">
-    <value>Spørsmålet som skal sendes til Copilot.</value>
+    <value>Instruksen som skal sendes til Copilot.</value>
     <comment>{Locked=Copilot} Description of the first argument to the Copilot function, a prompt to be executed.</comment>
   </data>
   <data name="AboutCopilot_context" xml:space="preserve">
-    <value>Konteksten som skal sendes til Copilot-funksjonen i tillegg til spørsmålet.</value>
+    <value>Konteksten som skal sendes til Copilot-funksjonen i tillegg til instruksen.</value>
     <comment>{Locked=Copilot} Description of the (optional) second argument to the Copilot function.</comment>
   </data>
   <data name="AboutCopilot_type" xml:space="preserve">
