@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.11" />
+    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.31" />
     <PackageReference Include="YamlDotNet" Version="13.4.0" />
   </ItemGroup>
 
