@@ -164,6 +164,18 @@ namespace Microsoft.PowerFx.Connectors
             return authority;
         }
 
+        // connector gateway validates received x-ms-request-url, but short circuit client side
+        // reject "//" network-path prefix, and handle backslash variants as some URL parsers normalize it to '/'.
+        private static void ValidateRequestUrlHeaderValue(string url)
+        {
+            if (url != null && url.Length >= 2 &&
+                (url[0] == '/' || url[0] == '\\') &&
+                (url[1] == '/' || url[1] == '\\'))
+            {
+                throw new InvalidOperationException("x-ms-request-url header should not be a network-path reference");
+            }
+        }
+
         public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             using HttpRequestMessage req = await Transform(request).ConfigureAwait(false);
@@ -182,10 +194,12 @@ namespace Microsoft.PowerFx.Connectors
 
             url = url.Replace("{connectionId}", ConnectionId);
 
+            ValidateRequestUrlHeaderValue(url);
+
             var method = request.Method;
             var authToken = await GetAuthToken().ConfigureAwait(false);
 
-            var req = new HttpRequestMessage(HttpMethod.Post, $"https://{Endpoint}/invoke");
+            var req = new HttpRequestMessage(HttpMethod.Post, new UriBuilder(Uri.UriSchemeHttps, BaseAddress.Host, BaseAddress.Port, "/invoke").Uri);
             req.Headers.Add("authority", Endpoint);
             req.Headers.Add("scheme", "https");
             req.Headers.Add("path", "/invoke");            
