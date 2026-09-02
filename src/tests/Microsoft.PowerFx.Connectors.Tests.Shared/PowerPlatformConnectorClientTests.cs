@@ -80,6 +80,52 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Null(TestHandler.Request);
         }
 
+        // x-ms-request-url is resolved by the connector gateway. A network-path reference names an authority
+        // rather than a path; validate our client side short circuit
+        [Theory]
+        [InlineData("//evil.contoso.com/steal")]
+        [InlineData("//evil.contoso.com")]
+        [InlineData("/\\evil.contoso.com/steal")]
+        [InlineData("\\/evil.contoso.com/steal")]
+        [InlineData("\\\\evil.contoso.com/steal")]
+        public async Task PowerPlatformConnectorClient_TransformRejectsNetworkPathReference(string relativeUrl)
+        {
+            var client = Client;
+            using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(relativeUrl, UriKind.Relative));
+
+            await Assert.ThrowsAsync<InvalidOperationException>(() => client.Transform(request));
+        }
+
+        [Theory]
+        [InlineData("/apim/cognitiveservicestextanalytics/16e7c181/language/:analyze-conversations?api-version=2022-05-01")]
+        [InlineData("/apim/sharepointonline/6fb0a1a8/datasets/https%253A%252F%252Fcontoso.sharepoint.com%252Fsites%252FSite17/alltables")]
+        [InlineData("/apim/sql/5f57ec83/v2/datasets/contoso-sql.database.windows.net,connectortest/procedures")]
+        [InlineData("/apim/sql/5f57ec83/{queryPart}")]
+        [InlineData("/apim/sql/c1a4e9f5/tables/%5Bdbo%5D.%5BCustomers%5D/items?api-version=2015-09-01&$top=101")]
+        public async Task PowerPlatformConnectorClient_TransformPreservesSafeUrl(string relativeUrl)
+        {
+            var client = Client;
+            using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(relativeUrl, UriKind.Relative));
+
+            using var transformedRequest = await client.Transform(request);
+
+            Assert.Equal(new Uri("https://" + TestEndpoint + "/invoke"), transformedRequest.RequestUri);
+            Assert.Equal(relativeUrl, transformedRequest.Headers.GetValues("x-ms-request-url").Single());
+        }
+
+        // BaseAddress is settable on HttpClient, so the /invoke target must stay HTTPS even if it is reassigned.
+        [Fact]
+        public async Task PowerPlatformConnectorClient_TransformDoesNotDowngradeScheme()
+        {
+            var client = Client;
+            client.BaseAddress = new Uri("http://localhost:1234");
+
+            using var request = new HttpRequestMessage(HttpMethod.Get, new Uri($"/{TestConnectionId}/test/someUri", UriKind.Relative));
+            using var transformedRequest = await client.Transform(request);
+
+            Assert.Equal(new Uri("https://localhost:1234/invoke"), transformedRequest.RequestUri);
+        }
+
         private void ValidateHeaders(HttpRequestMessage request, HttpRequestMessage transformedRequest)
         {
             foreach (var header in transformedRequest.Headers)
