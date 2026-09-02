@@ -870,7 +870,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             CdpDataSource cds = new CdpDataSource("default");
 
             testConnector.SetResponseFromFiles(@"Responses\SF GetDatasetsMetadata.json", @"Responses\SF GetTables.json");
-            IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $" / apim/salesforce/{connectionId}", CancellationToken.None, logger);
+            IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
             CdpTable connectorTable = tables.First(t => t.DisplayName == "Accounts");
 
             testConnector.SetResponseFromFile(@"Responses\SF GetSchema.json");
