@@ -102,6 +102,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("/apim/sql/5f57ec83/v2/datasets/contoso-sql.database.windows.net,connectortest/procedures")]
         [InlineData("/apim/sql/5f57ec83/{queryPart}")]
         [InlineData("/apim/sql/c1a4e9f5/tables/%5Bdbo%5D.%5BCustomers%5D/items?api-version=2015-09-01&$top=101")]
+
+        // "." is a no-op segment and ".." inside a segment is not a dot-segment; neither escapes the path.
+        [InlineData("/apim/sql/5f57ec83/./tables")]
+        [InlineData("/apim/sharepointonline/6fb0a1a8/files/report..pdf")]
+        [InlineData("/apim/sharepointonline/6fb0a1a8/files/%252e%252e/report.pdf")]
+
+        // Dot-segments in the query string are never resolved as path segments.
+        [InlineData("/apim/sql/5f57ec83/tables?path=../parent")]
         public async Task PowerPlatformConnectorClient_TransformPreservesSafeUrl(string relativeUrl)
         {
             var client = Client;
@@ -124,6 +132,52 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             using var transformedRequest = await client.Transform(request);
 
             Assert.Equal(new Uri("https://localhost:1234/invoke"), transformedRequest.RequestUri);
+        }
+
+        // The gateway resolves x-ms-request-url relative to the connector path, so the value must be a
+        // plain relative path. PowerPlatformConnectorClient2 gets this from Uri.IsBaseOf.
+        [Theory]
+        [InlineData("/../malicious")]
+        [InlineData("/apim/sql/conn/../../../evil")]
+        [InlineData("/apim/sql/conn/..")]
+        [InlineData("/%2e%2e/malicious")]
+        [InlineData("/%2E%2E/malicious")]
+        [InlineData("/..%2fmalicious")]
+        [InlineData("/..%5Cmalicious")]
+        [InlineData("/apim/sql/conn/..%2F..%2Fevil")]
+        [InlineData("\\..\\malicious")]
+        public async Task PowerPlatformConnectorClient_TransformRejectsPathTraversal(string relativeUrl)
+        {
+            var client = Client;
+            using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(relativeUrl, UriKind.Relative));
+
+            await Assert.ThrowsAsync<InvalidOperationException>(() => client.Transform(request));
+        }
+
+        // The client sets these headers itself, so a value on the incoming request must not be
+        // appended alongside it.
+        [Theory]
+        [InlineData("x-ms-request-url", "/evil/path")]
+        [InlineData("X-MS-REQUEST-URL", "/evil/path")]
+        [InlineData("x-ms-request-method", "DELETE")]
+        [InlineData("x-ms-client-environment-id", "/providers/Microsoft.PowerApps/environments/EVIL")]
+        [InlineData("x-ms-client-session-id", "00000000-0000-0000-0000-000000000000")]
+        [InlineData("x-ms-user-agent", "EvilAgent/1.0")]
+        [InlineData("x-ms-enable-selects", "false")]
+        [InlineData("Authorization", "Bearer EvilToken")]
+        [InlineData("authority", "evil.contoso.com")]
+        [InlineData("scheme", "http")]
+        [InlineData("path", "/evil")]
+        public async Task PowerPlatformConnectorClient_TransformDropsReservedHeaders(string headerName, string headerValue)
+        {
+            var client = Client;
+            using var request = new HttpRequestMessage(HttpMethod.Get, new Uri($"/{TestConnectionId}/test/someUri", UriKind.Relative));
+            request.Headers.TryAddWithoutValidation(headerName, headerValue);
+
+            using var transformedRequest = await client.Transform(request);
+
+            Assert.DoesNotContain(headerValue, transformedRequest.Headers.GetValues(headerName));
+            Assert.Single(transformedRequest.Headers.GetValues(headerName));
         }
 
         private void ValidateHeaders(HttpRequestMessage request, HttpRequestMessage transformedRequest)
