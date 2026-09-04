@@ -8,6 +8,7 @@ using Microsoft.PowerFx.Core.App.Components;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Types;
@@ -17,8 +18,16 @@ using Microsoft.PowerFx.Core.Utils;
 * Just a small handy mock of symbol table to be able to customize binder to compute different token types.
 * Might not be 100% correct but it works and allows testing against different token types.
 */
-internal class MockSymbolTable : ReadOnlySymbolTable
+internal class MockSymbolTable : ReadOnlySymbolTable, INameResolver
 {
+    /// <summary>
+    /// Optional: set this to simulate binding in the context of a specific control.
+    /// Used by the Binder to determine cross-gallery references.
+    /// </summary>
+    public IExternalEntity MockCurrentEntity { get; set; }
+
+    IExternalEntity INameResolver.CurrentEntity => MockCurrentEntity;
+
     public void Add(string name, NameLookupInfo info)
     {
         _variables.Add(name, info);
