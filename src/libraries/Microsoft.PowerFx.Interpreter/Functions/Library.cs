@@ -22,12 +22,6 @@ namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
-        /// <summary>
-        /// This isn't part of <see cref="BuiltinFunctionsCore"/> since PA has different implementation of
-        /// Texl Instance of <see cref="DistinctFunction"/>.
-        /// </summary>
-        public static readonly TexlFunction DistinctInterpreterFunction = new DistinctFunction();
-
         internal static readonly DateTime _epoch = new DateTime(1899, 12, 30, 0, 0, 0, 0);
 
         // Helper to get a service or fallback to a default if the service is missing.
@@ -600,9 +594,9 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Decimal_UO)
             },
             {
-                DistinctInterpreterFunction,
+                BuiltinFunctionsCore.Distinct,
                 StandardErrorHandlingAsync<FormulaValue>(
-                    DistinctInterpreterFunction.Name,
+                    BuiltinFunctionsCore.Distinct.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(

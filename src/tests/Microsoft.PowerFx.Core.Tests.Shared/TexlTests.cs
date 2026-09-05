@@ -882,6 +882,45 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
         }
 
+        [Theory]
+        [InlineData("Distinct(Table, A)", "*[A:n, B:b, C:s]", "*[Value:n]")]
+        [InlineData("Distinct(Table, B)", "*[A:n, B:b, C:s]", "*[Value:b]")]
+        [InlineData("Distinct(Table, C)", "*[A:n, B:b, C:s]", "*[Value:s]")]
+        [InlineData("Distinct(Table, \"hello\")", "*[A:n, B:b, C:s]", "*[Value:s]")]
+        [InlineData("Distinct(Table, A * 2 / 3)", "*[A:n, B:b, C:s]", "*[Value:n]")]
+        [InlineData("Distinct(Table, REC)", "*[A:n, REC:![b:n], C:s]", "*[Value:![b:n]]", true)]
+        [InlineData("Distinct(Table, TBL)", "*[A:n, TBL:*[b:n], C:s]", "*[Value:*[b:n]]", true)]
+        [InlineData("Distinct(Table, Date)", "*[Date:D, DateTime:d, Time:T]", "*[Value:D]")]
+        [InlineData("Distinct(Table, DateTime)", "*[Date:D, DateTime:d, Time:T]", "*[Value:d]")]
+        [InlineData("Distinct(Table, Time)", "*[Date:D, DateTime:d, Time:T]", "*[Value:T]")]
+        [InlineData("Distinct(Table, G)", "*[G:g, OS:l]", "*[Value:g]")]
+        [InlineData("Distinct(Table, OS)", "*[G:g, OS:l]", "*[Value:l]")]
+        [InlineData("Distinct(Table, Untyped)", "*[Untyped:O]", "*[Value:O]", true)]
+        public void TexlFunctionTypeSemanticsDistinct(string expression, string tableType, string expectedResult, bool failsForPFxV1 = false)
+        {
+            foreach (var usePFxV1 in new[] { false, true })
+            {
+                var symbolTable = new SymbolTable();
+                symbolTable.AddVariable("Table", new TableType(TestUtils.DT(tableType)));
+
+                var features = new Features
+                {
+                    PowerFxV1CompatibilityRules = usePFxV1,
+                    ConsistentOneColumnTableResult = true,
+                };
+
+                var expectedDType = TestUtils.DT(expectedResult);
+                if (!usePFxV1 || !failsForPFxV1)
+                {
+                    TestSimpleBindingSuccess(expression, expectedDType, symbolTable: symbolTable, features: features);
+                }
+                else
+                {
+                    TestBindingErrors(expression, TestUtils.DT("*[]"), symbolTable: symbolTable, features: features);
+                }
+            }
+        }
+
         [Fact]
         public void TexlFunctionTypeSemanticsIf()
         {

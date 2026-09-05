@@ -90,13 +90,3 @@ Table({Value:1},{Value:2},{Value:3},{Value:4})
 
 >> Distinct([GUID("c203b79b-b985-42f0-b523-c10eb64387c6"), GUID("c203b79b-b985-42f0-b523-c10eb64387c6")], Value)
 Table({Value:GUID("c203b79b-b985-42f0-b523-c10eb64387c6")})
-
->> Distinct(Table({a:1,b:2},{a:3,b:4},{a:5,b:6}), Blank())
-Table({Value:Blank()})
-
-// Distinct only supports Primitive types.
->> Distinct(Table({a:1,b:2},{a:3,b:4},{a:5,b:6}), Table({test: a * 2}))
-Error({Kind:ErrorKind.InvalidArgument})
-
->> Distinct(Table({x:1,y:2},{x:10,y:2}), ThisRecord)
-Error({Kind:ErrorKind.InvalidArgument})
