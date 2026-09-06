@@ -11,9 +11,8 @@ namespace Microsoft.AppMagic.Transport
     [AttributeUsage(AttributeTargets.Method)]
     public class TransportMethodAttribute : Attribute
     {
-        public TransportMethodAttribute(bool supportSynchronousClient = false, TransportBatchingMode batchingMode = TransportBatchingMode.Default, bool isParallel = false)
+        public TransportMethodAttribute(TransportBatchingMode batchingMode = TransportBatchingMode.Default, bool isParallel = false)
         {
-            SupportSynchronousClient = supportSynchronousClient;
             BatchingMode = batchingMode;
             IsParallel = isParallel;
         }
@@ -22,11 +21,6 @@ namespace Microsoft.AppMagic.Transport
         /// Deferred methods must return 'void' or 'Task', and are bundled with the next non-deferred api call.
         /// </summary>
         public bool Deferred { get; }
-
-        /// <summary>
-        /// For back-compat, support blocking callers.
-        /// </summary>
-        public bool SupportSynchronousClient { get; }
 
         /// <summary>
         /// Defines batching.
