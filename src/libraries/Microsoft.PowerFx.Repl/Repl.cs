@@ -349,6 +349,8 @@ namespace Microsoft.PowerFx
                  ServiceProvider = new BasicServiceProvider(this.InnerServices)
             };
 
+            runtimeConfig.SetTimeZone(TimeZoneInfo.Local);
+
             if (this.UserInfo != null)
             {
                 if (!_userEnabled)
