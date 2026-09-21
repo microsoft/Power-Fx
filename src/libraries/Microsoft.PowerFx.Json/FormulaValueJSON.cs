@@ -97,9 +97,10 @@ namespace Microsoft.PowerFx.Types
             }
 
             // Use DateTimeOffset.TryParse for consistent, machine-independent parsing. Explicit
-            // offsets are normalized to UTC, while offset-less values are treated as local to match
-            // DateTimeValue semantics. This also accepts non-strict ISO 8601 forms emitted by
-            // connectors (e.g. "+0000" instead of "+00:00") that element.GetDateTime() would reject.
+            // offsets are normalized to UTC, while offset-less values preserve their wall-clock
+            // time as unspecified so the caller's configured time zone, rather than the machine's
+            // local time zone, determines the value. This also accepts non-strict ISO 8601 forms
+            // emitted by connectors (e.g. "+0000" instead of "+00:00") that GetDateTime() rejects.
             if (!DateTimeOffset.TryParse(strValue, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var dto))
             {
                 return new ErrorValue(IRContext.NotInSource(targetType), new ExpressionError()
@@ -110,7 +111,9 @@ namespace Microsoft.PowerFx.Types
                 });
             }
 
-            return funcParse(HasExplicitTimeZone(strValue) ? dto.UtcDateTime : dto.LocalDateTime);
+            return funcParse(HasExplicitTimeZone(strValue)
+                ? dto.UtcDateTime
+                : DateTime.SpecifyKind(dto.DateTime, DateTimeKind.Unspecified));
         }
 
         private static bool HasExplicitTimeZone(string value)

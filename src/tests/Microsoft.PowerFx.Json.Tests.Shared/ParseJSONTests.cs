@@ -671,18 +671,18 @@ namespace Microsoft.PowerFx.Json.Tests
         }
 
         [Fact]
-        public void ParseDates_NoOffsetAssumedLocal()
+        public void ParseDates_NoOffsetPreservesWallClock()
         {
-            // Input with no offset should be treated as local (AssumeLocal), matching
-            // other functions in the platform such as DateTimeValue.
+            // Input with no offset is a wall-clock value. Keep it unspecified so the
+            // configured Power Fx time zone, not the host machine time zone, is used.
             using var doc = JsonDocument.Parse("\"2024-10-02T23:13:50\"");
             var je = doc.RootElement;
 
             var value = FormulaValueJSON.ParseDate(je, FormulaType.DateTime, (datetime) => FormulaValue.New(datetime));
 
             var dtValue = Assert.IsType<DateTimeValue>(value);
-            var dt = dtValue.GetConvertedValue(TimeZoneInfo.Local);
-            Assert.Equal(new DateTime(2024, 10, 2, 23, 13, 50, DateTimeKind.Local), dt);
+            var dt = dtValue.GetConvertedValue(TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
+            Assert.Equal(new DateTime(2024, 10, 2, 23, 13, 50, DateTimeKind.Unspecified), dt);
         }
     }
 }
