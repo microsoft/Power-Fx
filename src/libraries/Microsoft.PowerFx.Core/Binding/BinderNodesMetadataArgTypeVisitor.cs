@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.App;
@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         return;
                     }
 
-                    var metadata = new DataTableMetadata(tabularDataSourceInfo.Name, tableMetadata.DisplayName);
+                    var metadata = new DataTableMetadata(tableMetadata.Name, tableMetadata.DisplayName);
                     nodeType = DType.CreateMetadataType(new DataColumnMetadata(columnMetadata, metadata), tabularDataSourceInfo);
                 }
                 else
