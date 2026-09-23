@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.
+// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
 using System;
@@ -406,7 +406,7 @@ namespace Microsoft.PowerFx.Core.Types
         }
 
         // Constructor for Metadata type
-        private DType(DKind kind, IDataColumnMetadata metadata, TypeTree outputTypeTree)
+        private DType(DKind kind, IDataColumnMetadata metadata, TypeTree outputTypeTree, HashSet<IExternalTabularDataSource> associatedDataSources = null)
         {
             Contracts.Assert(kind == DKind.Metadata);
             Contracts.AssertValue(metadata);
@@ -419,7 +419,7 @@ namespace Microsoft.PowerFx.Core.Types
             ExpandInfo = metadata.IsExpandEntity ? metadata.Type.ExpandInfo : null;
             PolymorphicInfo = null;
             Metadata = metadata;
-            AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
+            AssociatedDataSources = associatedDataSources ?? new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
@@ -899,6 +899,14 @@ namespace Microsoft.PowerFx.Core.Types
             return new DType(DKind.Metadata, metadata, Unknown.TypeTree);
         }
 
+        public static DType CreateMetadataType(IDataColumnMetadata metadata, IExternalTabularDataSource associatedDataSource)
+        {
+            Contracts.AssertValue(metadata);
+            Contracts.AssertValue(associatedDataSource);
+
+            return new DType(DKind.Metadata, metadata, Unknown.TypeTree, new HashSet<IExternalTabularDataSource> { associatedDataSource });
+        }
+
         /// <summary>
         /// Attachment types can be either tables or records, and are represented using a LazyTable/Record type.
         /// </summary>
@@ -1063,7 +1071,7 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             // Both numeric types return "Number" which is coalesced if there could be more than one in an error message list with a .Distinct() call.
-            // Having them the same and coalescing both makes it easier for makers to read, emphasizes Number as the primary way to get a numeric type, 
+            // Having them the same and coalescing both makes it easier for makers to read, emphasizes Number as the primary way to get a numeric type,
             // and is easier for us to implement since we don't care which one is aliased to Number.
             if (Kind == DKind.Number || Kind == DKind.Decimal)
             {
