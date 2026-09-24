@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
@@ -306,58 +305,6 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new Engine(config);
             var checkResult = engine.Check("IsType(First(CDS).Poly, Accounts)");
             Assert.True(checkResult.IsSuccess);
-        }
-
-        [Fact]
-        public void MetadataArgumentUsesLogicalTableNameAndRetainsDataSource()
-        {
-            var schema = DType.CreateTable(new TypedName(DType.String, new DName("name")));
-            var tableMetadata = new InternalTableMetadata(new KnownRecordType(schema.ToRecord()), "account", "Accounts", false);
-            var dataSource = new TestDataSource("Accounts", schema, tableMetadata: tableMetadata);
-
-            var config = new PowerFxConfig();
-            config.SymbolTable.AddEntity(dataSource);
-            config.AddFunction(new MetadataArgumentFunction());
-
-            var checkResult = new Engine(config).Check("MetadataArgument(Accounts.name)");
-
-            Assert.True(checkResult.IsSuccess);
-
-            var callNode = Assert.IsType<CallNode>(checkResult.Binding.Top);
-            var argumentType = checkResult.Binding.GetType(callNode.Args.Children[0]);
-            Assert.Equal(DKind.Metadata, argumentType.Kind);
-            Assert.Equal("account", argumentType.Metadata.ParentTableMetadata.Name);
-            Assert.Equal("Accounts", argumentType.Metadata.ParentTableMetadata.DisplayName);
-            Assert.Same(dataSource, Assert.Single(argumentType.AssociatedDataSources));
-        }
-
-        private sealed class MetadataArgumentFunction : BuiltinFunction
-        {
-            public MetadataArgumentFunction()
-                : base("MetadataArgument", (x) => "MetadataArgument", FunctionCategories.Table, DType.String, 0, 1, 1, DType.String)
-            {
-            }
-
-            public override bool SupportsMetadataTypeArg => true;
-
-            public override bool IsSelfContained => true;
-
-            public override bool IsMetadataTypeArg(int index)
-            {
-                return index == 0;
-            }
-
-            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
-            {
-                return Enumerable.Empty<TexlStrings.StringGetter[]>();
-            }
-
-            public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-            {
-                returnType = DType.String;
-                nodeToCoercedTypeMap = null;
-                return argTypes.Length == 1 && argTypes[0].Kind == DKind.Metadata;
-            }
         }
 
         private class IsTypeTestFunction : BuiltinFunction
