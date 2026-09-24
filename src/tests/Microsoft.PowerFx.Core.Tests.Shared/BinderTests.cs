@@ -331,6 +331,86 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Same(dataSource, Assert.Single(argumentType.AssociatedDataSources));
         }
 
+        [Theory]
+        [InlineData(true, "Accounts")]
+        [InlineData(false, "account")]
+        public void MetadataArgumentForExpandUsesParentTableDisplayNameWhenAvailable(bool includeTableMetadata, string expectedDisplayName)
+        {
+            var expandInfo = new MetadataArgumentExpandInfo("primarycontactid");
+            var schema = DType.CreateTable(new TypedName(DType.CreateExpandType(expandInfo), new DName("primarycontactid")));
+            var tableMetadata = includeTableMetadata ? new InternalTableMetadata(new KnownRecordType(schema.ToRecord()), "account", "Accounts", false) : null;
+            var dataSource = new TestDataSource("account", schema, tableMetadata: tableMetadata);
+            dataSource.ExternalDataEntityMetadataProvider = new MetadataArgumentEntityMetadataProvider();
+            expandInfo.UpdateEntityInfo(dataSource, string.Empty);
+
+            var config = new PowerFxConfig();
+            config.SymbolTable.AddEntity(dataSource);
+            config.AddFunction(new MetadataArgumentFunction());
+
+            var checkResult = new Engine(config).Check("MetadataArgument(account.primarycontactid)");
+
+            Assert.True(checkResult.IsSuccess);
+
+            var callNode = Assert.IsType<CallNode>(checkResult.Binding.Top);
+            var argumentType = checkResult.Binding.GetType(callNode.Args.Children[0]);
+            Assert.Equal(DKind.Metadata, argumentType.Kind);
+            Assert.True(argumentType.Metadata.IsExpandEntity);
+            Assert.Equal("account", argumentType.Metadata.ParentTableMetadata.Name);
+            Assert.Equal(expectedDisplayName, argumentType.Metadata.ParentTableMetadata.DisplayName);
+        }
+
+        private sealed class MetadataArgumentEntityMetadataProvider : IExternalDataEntityMetadataProvider
+        {
+            public bool TryGetEntityMetadata(string expandInfoIdentity, out IDataEntityMetadata entityMetadata)
+            {
+                entityMetadata = new DataEntityMetadata();
+                return true;
+            }
+        }
+
+        private sealed class MetadataArgumentExpandInfo : IExpandInfo
+        {
+            private IExternalDataSource _parentDataSource;
+            private string _relatedEntityPath;
+
+            public MetadataArgumentExpandInfo(string name)
+            {
+                Name = name;
+                Identity = name;
+                _relatedEntityPath = string.Empty;
+            }
+
+            public string Identity { get; }
+
+            public bool IsTable => false;
+
+            public string Name { get; }
+
+            public string PolymorphicParent => null;
+
+            public IExternalDataSource ParentDataSource => _parentDataSource;
+
+            public ExpandPath ExpandPath => ExpandPath.CreateExpandPath(_relatedEntityPath, Name);
+
+            public IExpandInfo Clone()
+            {
+                var clone = new MetadataArgumentExpandInfo(Name);
+                clone.UpdateEntityInfo(_parentDataSource, _relatedEntityPath);
+                return clone;
+            }
+
+            public string ToDebugString()
+            {
+                return Name;
+            }
+
+            public void UpdateEntityInfo(IExternalDataSource dataSource, string relatedEntityPath)
+            {
+                _parentDataSource = dataSource;
+                _relatedEntityPath = relatedEntityPath;
+            }
+        }
+
         private sealed class MetadataArgumentFunction : BuiltinFunction
         {
             public MetadataArgumentFunction()

@@ -74,7 +74,10 @@ namespace Microsoft.PowerFx.Core.Binding
                     var expandedEntityType = GetExpandedEntityType(typeRhs, entityPath);
 
                     var parentDataSource = entityInfo.ParentDataSource;
-                    var metadata = new DataTableMetadata(parentDataSource.Name, parentDataSource.Name);
+                    var tableDisplayName = parentDataSource.TableMetadata?.DisplayName;
+                    var metadata = new DataTableMetadata(
+                        parentDataSource.Name,
+                        string.IsNullOrEmpty(tableDisplayName) ? parentDataSource.Name : tableDisplayName);
                     nodeType = DType.CreateMetadataType(new DataColumnMetadata(typeRhs.ExpandInfo.Name, expandedEntityType, metadata));
                 }
                 else if ((firstNameNode = node.Left.AsFirstName()) != null && (firstNameInfo = _txb.GetInfo(firstNameNode)) != null)
