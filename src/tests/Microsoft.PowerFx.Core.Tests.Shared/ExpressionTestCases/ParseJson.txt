@@ -240,10 +240,13 @@ Error({Kind:ErrorKind.InvalidArgument})
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> DateValue(ParseJSON("""2011-1-15"""))
-Error({Kind:ErrorKind.InvalidArgument})
+Date(2011,1,15)
 
 >> DateValue(ParseJSON("""2011-01"""))
-Error({Kind:ErrorKind.InvalidArgument})
+Date(2011,1,1)
+
+>> DateValue(ParseJSON("""2011-1-15""")) = DateValue("2011-1-15")
+true
 
 >> DateValue(ParseJSON("""2011"""))
 Error({Kind:ErrorKind.InvalidArgument})
@@ -265,6 +268,9 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T00:00:00""")), DateTimeValue(ParseJSON("""2011-01-30""")))
 15
+
+>> DateDiff(DateTimeValue(ParseJSON("""8/13/2024 9:10 AM""")), DateTimeValue(ParseJSON("""8/14/2024 9:10 AM""")))
+1
 
 >> DateTimeValue(ParseJSON("""2011-01-15T08:0:00.000Z"""))
 Error({Kind:ErrorKind.InvalidArgument})
