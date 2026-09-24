@@ -406,7 +406,7 @@ namespace Microsoft.PowerFx.Core.Types
         }
 
         // Constructor for Metadata type
-        private DType(DKind kind, IDataColumnMetadata metadata, TypeTree outputTypeTree, HashSet<IExternalTabularDataSource> associatedDataSources = null)
+        private DType(DKind kind, IDataColumnMetadata metadata, TypeTree outputTypeTree)
         {
             Contracts.Assert(kind == DKind.Metadata);
             Contracts.AssertValue(metadata);
@@ -419,7 +419,7 @@ namespace Microsoft.PowerFx.Core.Types
             ExpandInfo = metadata.IsExpandEntity ? metadata.Type.ExpandInfo : null;
             PolymorphicInfo = null;
             Metadata = metadata;
-            AssociatedDataSources = associatedDataSources ?? new HashSet<IExternalTabularDataSource>();
+            AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
@@ -897,14 +897,6 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.AssertValue(metadata);
 
             return new DType(DKind.Metadata, metadata, Unknown.TypeTree);
-        }
-
-        public static DType CreateMetadataType(IDataColumnMetadata metadata, IExternalTabularDataSource associatedDataSource)
-        {
-            Contracts.AssertValue(metadata);
-            Contracts.AssertValue(associatedDataSource);
-
-            return new DType(DKind.Metadata, metadata, Unknown.TypeTree, new HashSet<IExternalTabularDataSource> { associatedDataSource });
         }
 
         /// <summary>

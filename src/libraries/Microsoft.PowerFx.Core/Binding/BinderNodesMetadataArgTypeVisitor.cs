@@ -25,6 +25,13 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb = binding;
             }
 
+            private bool IsColumnMultiChoice(IExternalColumnMetadata columnMetadata)
+            {
+                Contracts.AssertValue(columnMetadata);
+
+                return columnMetadata?.DataFormat == DataFormat.Lookup;
+            }
+
             public override void PostVisit(DottedNameNode node)
             {
                 Contracts.AssertValue(node);
@@ -40,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (node.Left.Kind != NodeKind.FirstName &&
                     node.Left.Kind != NodeKind.DottedName)
                 {
-                    SetDottedNameError(node, TexlStrings.ErrInvalidName, node.Right.Name.Value);
+                    SetDottedNameError(node, TexlStrings.ErrInvalidName);
                     return;
                 }
 
@@ -48,7 +55,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (!lhsType.TryGetType(nameRhs, out typeRhs))
                 {
-                    SetDottedNameError(node, TexlStrings.ErrInvalidName, node.Right.Name.Value);
+                    SetDottedNameError(node, TexlStrings.ErrInvalidName);
                     return;
                 }
 
@@ -81,18 +88,18 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     var tabularDataSourceInfo = firstNameInfo.Data as IExternalTabularDataSource;
                     tableMetadata = tabularDataSourceInfo?.TableMetadata;
-                    if (tableMetadata == null || !tableMetadata.TryGetColumn(nameRhs.Value, out var columnMetadata))
+                    if (tableMetadata == null || !tableMetadata.TryGetColumn(nameRhs.Value, out var columnMetadata) || !IsColumnMultiChoice(columnMetadata))
                     {
-                        SetDottedNameError(node, TexlStrings.ErrInvalidName, node.Right.Name.Value);
+                        SetDottedNameError(node, TexlStrings.ErrInvalidName);
                         return;
                     }
 
                     var metadata = new DataTableMetadata(tableMetadata.Name, tableMetadata.DisplayName);
-                    nodeType = DType.CreateMetadataType(new DataColumnMetadata(columnMetadata, metadata), tabularDataSourceInfo);
+                    nodeType = DType.CreateMetadataType(new DataColumnMetadata(columnMetadata, metadata));
                 }
                 else
                 {
-                    SetDottedNameError(node, TexlStrings.ErrInvalidName, node.Right.Name.Value);
+                    SetDottedNameError(node, TexlStrings.ErrInvalidName);
                     return;
                 }
 
