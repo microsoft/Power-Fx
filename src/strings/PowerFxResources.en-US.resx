@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -5247,5 +5247,20 @@
   <data name="ErrJoinDottedNameleft" xml:space="preserve">
     <value>The '{0}' value is invalid in this context. It should be a reference to either '{1}' or '{2}' scope name.</value>
     <comment>{Locked='RightRecord'}</comment>
+  </data>
+  <data name="AboutUpdate" xml:space="preserve">
+    <value>Replaces a record in a data source with a new record.</value>
+  </data>
+  <data name="UpdateArg_Source" xml:space="preserve">
+    <value>datasource</value>
+  </data>
+  <data name="UpdateArg_Record" xml:space="preserve">
+    <value>old_record</value>
+  </data>
+  <data name="UpdateArg_Update" xml:space="preserve">
+    <value>new_record</value>
+  </data>
+  <data name="UpdateArg_RemoveFlags" xml:space="preserve">
+    <value>remove_flags</value>
   </data>
 </root>
