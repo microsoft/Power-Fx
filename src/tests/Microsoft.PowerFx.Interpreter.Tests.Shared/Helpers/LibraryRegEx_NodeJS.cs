@@ -242,19 +242,18 @@ namespace Microsoft.PowerFx.Functions
         {
             RegexTypeCache regexTypeCache = new (regexCacheSize);
 
-            foreach (KeyValuePair<TexlFunction, IAsyncTexlFunction> func in RegexFunctions(regExTimeout, regexTypeCache))
+            foreach (TexlFunction func in RegexFunctions(regExTimeout, regexTypeCache))
             {
-                if (config.SymbolTable.Functions.AnyWithName(func.Key.Name))
+                if (config.SymbolTable.Functions.AnyWithName(func.Name))
                 {
                     throw new InvalidOperationException("Cannot add RegEx functions more than once.");
                 }
 
-                config.SymbolTable.AddFunction(func.Key);
-                config.AdditionalFunctions.Add(func.Key, func.Value);
+                config.SymbolTable.AddFunction(func);
             }
         }
 
-        internal static Dictionary<TexlFunction, IAsyncTexlFunction> RegexFunctions(TimeSpan regexTimeout, RegexTypeCache regexCache)
+        internal static IEnumerable<TexlFunction> RegexFunctions(TimeSpan regexTimeout, RegexTypeCache regexCache)
         {
             if (regexTimeout == TimeSpan.Zero)
             {
@@ -266,11 +265,11 @@ namespace Microsoft.PowerFx.Functions
                 throw new ArgumentOutOfRangeException(nameof(regexTimeout), "Timeout duration for regular expression execution must be positive.");
             }
 
-            return new Dictionary<TexlFunction, IAsyncTexlFunction>()
+            return new TexlFunction[]
             {
-                { new IsMatchFunction(regexCache), new NodeJS_IsMatchImplementation(regexTimeout) },
-                { new MatchFunction(regexCache), new NodeJS_MatchImplementation(regexTimeout) },
-                { new MatchAllFunction(regexCache), new NodeJS_MatchAllImplementation(regexTimeout) }
+                new Library.IsMatchImpl(regexCache, new NodeJS_IsMatchImplementation(regexTimeout)),
+                new Library.MatchImpl(regexCache, new NodeJS_MatchImplementation(regexTimeout)),
+                new Library.MatchAllImpl(regexCache, new NodeJS_MatchAllImplementation(regexTimeout)),
             };
         }
 
