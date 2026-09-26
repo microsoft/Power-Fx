@@ -45,11 +45,14 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         private readonly FilterOpMetadata _filterDelegationMetadata;
 
-        public TestDelegationMetadata(DelegationCapability capability = default, DType schema = default, Core.Functions.Delegation.DelegationMetadata.FilterOpMetadata filterDelegationMetadata = default)
+        private readonly SortOpMetadata _sortDelegationMetadata;
+
+        public TestDelegationMetadata(DelegationCapability capability = default, DType schema = default, FilterOpMetadata filterDelegationMetadata = default, SortOpMetadata sortDelegationMetadata = default)
         {
             _capability = capability;
             _schema = schema ?? EntityRecordType._type;
             _filterDelegationMetadata = filterDelegationMetadata;
+            _sortDelegationMetadata = sortDelegationMetadata;
         }
 
         public static RecordType EntityRecordType => RecordType.Empty()
@@ -62,7 +65,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public DelegationCapability TableCapabilities => _capability;
 
-        public SortOpMetadata SortDelegationMetadata => throw new NotImplementedException();
+        public SortOpMetadata SortDelegationMetadata => _sortDelegationMetadata;
 
         public FilterOpMetadata FilterDelegationMetadata => _filterDelegationMetadata;
 
@@ -93,7 +96,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
             if (_symbol.TryGetVariable(currentEntityEntityName, out NameLookupInfo lookupInfo, out _))
             {
                 externalEntity = lookupInfo.Data as T;
-                return true;
+                return externalEntity != null;
             }
 
             return false;
@@ -197,7 +200,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public virtual bool IsDelegatable => throw new NotImplementedException();
 
-        public bool RequiresAsync => throw new NotImplementedException();
+        public bool RequiresAsync => false;
 
         public IExternalDataEntityMetadataProvider DataEntityMetadataProvider => ExternalDataEntityMetadataProvider;
 
@@ -221,13 +224,13 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public BidirectionalDictionary<string, string> PreviousDisplayNameMapping => null;
 
-        public bool IsRefreshable => throw new NotImplementedException();
+        public bool IsRefreshable => true;
 
         IDelegationMetadata IExternalDataSource.DelegationMetadata => DelegationMetadata;
 
         public bool IsWritable => true;
 
-        public bool IsClearable => throw new NotImplementedException();
+        public bool IsClearable => true;
 
         public bool CanIncludeExpand(IExpandInfo expandToAdd)
         {
