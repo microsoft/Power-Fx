@@ -15,6 +15,8 @@ namespace Microsoft.PowerFx.Core.App.Controls
 
         bool ReplicatesNestedControls { get; }
 
+        string ActiveItemPropertyName { get; }
+
         IEnumerable<DName> NestedAwareTableOutputs { get; }
 
         bool IsComponent { get; }

@@ -7,7 +7,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 internal class DummyExternalControl : IExternalControl
 {
-    public IExternalControlTemplate Template => null;
+    public IExternalControlTemplate Template { get; set; }
 
     public bool IsComponentControl { get; set; } = false;
 
@@ -16,6 +16,8 @@ internal class DummyExternalControl : IExternalControl
     public string DisplayName { get; set; } = "DummyExternalControl";
 
     public bool IsReplicable { get; set; } = false;
+
+    public IExternalControl ReplicatingParent { get; set; } = null;
 
     public bool IsAppInfoControl { get; set; } = false;
 

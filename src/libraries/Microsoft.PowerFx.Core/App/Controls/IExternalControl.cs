@@ -18,6 +18,8 @@ namespace Microsoft.PowerFx.Core.App.Controls
 
         bool IsReplicable { get; }
 
+        IExternalControl ReplicatingParent { get; }
+
         bool IsAppInfoControl { get; }
 
         DType ThisItemType { get; }
