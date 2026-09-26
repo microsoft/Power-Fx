@@ -241,6 +241,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "LookUp",
                 "Max",
                 "Min",
+                "Reduce",
                 "Refresh",
                 "Search",
                 "Sort",

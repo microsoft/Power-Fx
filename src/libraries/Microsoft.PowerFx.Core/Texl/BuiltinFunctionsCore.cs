@@ -189,6 +189,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction RadiansT = _library.Add(new RadiansTableFunction());
         public static readonly TexlFunction Rand = _library.Add(new RandFunction());
         public static readonly TexlFunction RandBetween = _library.Add(new RandBetweenFunction());
+        public static readonly TexlFunction Reduce = _library.Add(new ReduceFunction());
         public static readonly TexlFunction Refresh = _library.Add(new RefreshFunction());
         public static readonly TexlFunction RenameColumns = _library.Add(new RenameColumnsFunction());
         public static readonly TexlFunction Replace = _library.Add(new ReplaceFunction());
