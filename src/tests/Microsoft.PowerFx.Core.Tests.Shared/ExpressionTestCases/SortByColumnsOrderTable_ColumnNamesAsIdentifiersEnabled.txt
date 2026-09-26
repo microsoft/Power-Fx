@@ -415,7 +415,16 @@ Error({Kind:ErrorKind.Numeric})
   { name: "Team Meeting", Day: "Monday" },
   { name: "Scrum Meeting 2", Day: "Tuesday" }), "Day", ["Monday","Tuesday","Wednesday",Left("Hello", -1),"Friday"])
 Error({Kind:ErrorKind.InvalidArgument})
-  
+
+// Mixing Float (Number) column values with Decimal order table - issue #2607
+// Sort Float column with string literal column name and decimal order table
+>> SortByColumns([{A:Float(1)},{A:Float(3)},{A:Float(2)}], "A", [3,2,1])
+Table({A:3},{A:2},{A:1})
+
+// Sort Float column with dynamic string column name and decimal order table
+>> SortByColumns([{A:Float(1)},{A:Float(3)},{A:Float(2)}], If(true,"A"), [3,2,1])
+Table({A:3},{A:2},{A:1})
+
 // Sort calendar, with error in a column of the source referenced by the order values
 >> SortByColumns(Table(
   { name: "Project Meeting 3", Day: "Friday" },
