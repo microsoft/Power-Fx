@@ -483,7 +483,13 @@ namespace Microsoft.PowerFx.Core.Logging
         {
             var type = _binding?.GetTypeAllowInvalid(node);
 
-            return type != null && type.AggregateHasExpandedType();
+            if (type == null)
+            {
+                return false;
+            }
+
+            // Skip lazy aggregates: AggregateHasExpandedType forces per-field materialization.
+            return !type.IsLazyType && type.AggregateHasExpandedType();
         }
     }
 }
