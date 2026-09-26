@@ -2379,6 +2379,39 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Contains(expectedError, ex.InnerExceptions.First().Message);
         }
 
+        // Regression test for https://github.com/microsoft/Power-Fx/issues/2973
+        // SortByColumns should not throw when called via a UDF and the actual argument table
+        // omits one of the sort columns. Missing columns should be treated as Blank.
+        [Fact]
+        public void SortByColumns_UDF_MissingField()
+        {
+            var engine = new RecalcEngine();
+
+            // Define types and UDF matching the issue repro exactly.
+            engine.AddUserDefinitions(
+                "Person := Type( { Name: Text, Age: Number } );" +
+                "People := Type( [ Person ] );" +
+                "SortedPeople(list:People):People = SortByColumns(list, \"Name\", SortOrder.Ascending, \"Age\", SortOrder.Ascending);");
+
+            // AC-1: Missing Age column - should succeed and return sorted table, not an error.
+            var result = engine.Eval("SortedPeople([{Name:\"John\"},{Name:\"Jane\"}])");
+            Assert.IsNotType<ErrorValue>(result);
+            Assert.IsAssignableFrom<TableValue>(result);
+            var rows = ((TableValue)result).Rows.ToList();
+            Assert.Equal(2, rows.Count);
+            Assert.Equal("Jane", ((StringValue)rows[0].Value.GetField("Name")).Value);
+            Assert.Equal("John", ((StringValue)rows[1].Value.GetField("Name")).Value);
+
+            // AC-2: Full columns present - should continue to work.
+            result = engine.Eval("SortedPeople([{Name:\"John\", Age:30},{Name:\"Jane\", Age:40}])");
+            Assert.IsNotType<ErrorValue>(result);
+            Assert.IsAssignableFrom<TableValue>(result);
+            rows = ((TableValue)result).Rows.ToList();
+            Assert.Equal(2, rows.Count);
+            Assert.Equal("Jane", ((StringValue)rows[0].Value.GetField("Name")).Value);
+            Assert.Equal("John", ((StringValue)rows[1].Value.GetField("Name")).Value);
+        }
+
         #region Test
 
         private readonly StringBuilder _updates = new StringBuilder();
