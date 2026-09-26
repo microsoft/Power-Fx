@@ -615,6 +615,49 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
         }
 
+        // Map_UO for untyped objects
+        // Unlike ForAll_UO, Map_UO keeps errors in the result table instead of combining them.
+        public static async ValueTask<FormulaValue> Map_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = (UntypedObjectValue)args[0];
+            var arg1 = (LambdaFormulaValue)args[1];
+
+            var items = new List<DValue<UntypedObjectValue>>();
+
+            var len = arg0.Impl.GetArrayLength();
+
+            for (var i = 0; i < len; i++)
+            {
+                runner.CheckCancel();
+
+                var element = arg0.Impl[i];
+                var item = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), element);
+
+                items.Add(DValue<UntypedObjectValue>.Of(item));
+            }
+
+            var rowsAsync = LazyForAll(runner, context, items, arg1);
+
+            var rows = new List<FormulaValue>();
+
+            foreach (var row in rowsAsync)
+            {
+                runner.CheckCancel();
+
+                rows.Add(await row.ConfigureAwait(false));
+            }
+
+            // Unlike ForAll_UO, Map_UO does not combine errors - it keeps them in the result table
+            // This is the key difference: errors become error values in individual rows
+
+            if (irContext.ResultType is Types.Void)
+            {
+                return new VoidValue(irContext);
+            }
+
+            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
+        }
+
         public static FormulaValue ColorValue_UO(IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
