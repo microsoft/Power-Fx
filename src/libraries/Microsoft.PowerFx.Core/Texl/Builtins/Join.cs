@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
@@ -146,6 +147,70 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return valid;
+        }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            Contracts.AssertValue(binding);
+            Contracts.AssertValue(args);
+            Contracts.AssertValue(errors);
+
+            base.CheckSemantics(binding, args, argTypes, errors);
+
+            // Warn when the predicate (arg index 2) does not reference one of the two scope symbols.
+            // args.Length must be at least 3 to have a predicate argument.
+            if (args.Length >= 3)
+            {
+                var predicate = args[2];
+                ScopeInfo.GetScopeIdent(args, out var scopeIdents);
+
+                for (var s = 0; s < scopeIdents.Length; s++)
+                {
+                    if (!PredicateReferencesScope(predicate, scopeIdents[s]))
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Warning, predicate, TexlStrings.WarnJoinPredicateDoesNotUseScope, scopeIdents[s]);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the predicate AST subtree contains at least one FirstName or DottedName
+        /// node whose root FirstName identifier equals <paramref name="scopeIdent"/>.
+        /// </summary>
+        private static bool PredicateReferencesScope(TexlNode node, DName scopeIdent)
+        {
+            Contracts.AssertValue(node);
+
+            switch (node.Kind)
+            {
+                case NodeKind.FirstName:
+                    return node.AsFirstName().Ident.Name == scopeIdent;
+
+                case NodeKind.DottedName:
+                    // For dotted names like T1.a, we check whether the root (leftmost) FirstName
+                    // matches the scope identifier.
+                    return PredicateReferencesScope(node.AsDottedName().Left, scopeIdent);
+
+                case NodeKind.BinaryOp:
+                    var binary = node.AsBinaryOp();
+                    return PredicateReferencesScope(binary.Left, scopeIdent) ||
+                           PredicateReferencesScope(binary.Right, scopeIdent);
+
+                case NodeKind.UnaryOp:
+                    return PredicateReferencesScope(node.AsUnaryOpLit().Child, scopeIdent);
+
+                case NodeKind.Call:
+                    var call = node.AsCall();
+                    return call.Args.Children.Any(child => PredicateReferencesScope(child, scopeIdent));
+
+                case NodeKind.VariadicOp:
+                    var variadic = node.AsVariadicOp();
+                    return variadic.ChildNodes.Any(child => PredicateReferencesScope(child, scopeIdent));
+
+                default:
+                    return false;
+            }
         }
 
         public override bool IsLambdaParam(TexlNode node, int index)

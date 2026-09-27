@@ -2451,6 +2451,10 @@
     <value>Warning: This predicate is a literal value and does not reference the input table.</value>
     <comment>Warning given when a literal predicate is given to a function operating over a table.</comment>
   </data>
+  <data name="WarnJoinPredicateDoesNotUseScope" xml:space="preserve">
+    <value>Warning: The Join predicate does not reference '{0}'. Every row from that side will match, which is likely unintentional.</value>
+    <comment>Warning given when a Join predicate does not reference one of the two scope symbols (LeftRecord/RightRecord or their aliases).</comment>
+  </data>
   <data name="WarnDynamicMetadata" xml:space="preserve">
     <value>Warning: Select "Capture Schema" at the bottom of the expanded formula bar to set and refresh this method's result schema. Otherwise this method will return no result.</value>
     <comment>Warning given when service function returns dynamic metadata.</comment>
