@@ -987,11 +987,11 @@ namespace Microsoft.PowerFx.Connectors
         /// <exception cref="NotImplementedException">When we cannot determine the content type to use.</exception>
         public static (string ContentType, OpenApiMediaType MediaType) GetContentTypeAndSchema(this IDictionary<string, OpenApiMediaType> content)
         {
-            Dictionary<string, OpenApiMediaType> list = new ();
-
             foreach (var ct in _knownContentTypes)
             {
-                if (content.TryGetValue(ct, out var mediaType))
+                var mediaType = content.FirstOrDefault(kvp => string.Equals(kvp.Key, ct, StringComparison.OrdinalIgnoreCase)).Value;
+
+                if (mediaType != null)
                 {
                     if (ct == ContentType_TextJson && mediaType.Schema.Properties.Any())
                     {

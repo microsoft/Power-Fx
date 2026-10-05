@@ -60,6 +60,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(19, @"Test.GetT8({body: Table({Value: 1}, {Value: 3})})", "POST http://localhost:5000/weather/t8\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] [1,3]")]
         [InlineData(20, @"Test.GetT8a(Table({Value: 1}, {Value: 444}))", "POST http://localhost:5000/weather/t8a\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] [1,444]")]
         [InlineData(21, @"Test.PostWeatherWithComplexInput({children: [{parent: { someNumbers: [123] }, otherString: ""xyz""}], someNumbers: [1,2,3]})", "POST http://localhost:5000/weatherPost4\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] {\"complexInput\":{\"children\":[{\"parent\":{\"someNumbers\":[123]},\"otherString\":\"xyz\"}],\"someNumbers\":[1,2,3]}}")]
+        [InlineData(22, @"Test.PostWeatherWithId({'content-type': ""application/json"", body: 5})", "POST http://localhost:5000/weatherPost\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] 5")]
         public async Task ValidateHttpCalls(int i /* used for debugging */, string fxQuery, string httpQuery)
         {
             var swaggerFile = @"Swagger\TestOpenAPI.json";
