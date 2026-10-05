@@ -299,6 +299,94 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(expected, result);
         }
 
+        [Fact]
+        public void TestApplyFormatWithParseError()
+        {
+            // Expression with a parse error should return the original text unchanged.
+            var badExpression = "If(1,";
+            var check = new CheckResult(new Engine(new PowerFxConfig()));
+            check.SetText(badExpression, new ParserOptions { AllowsSideEffects = true });
+            var formatted = check.ApplyFormat();
+            Assert.Equal(badExpression, formatted);
+        }
+
+        [Theory]
+        [InlineData("foo[@bar]", "foo[@bar]")]
+        [InlineData("Back()", "Back()")]
+        [InlineData("false", "false")]
+        [InlineData("\"Are you sure you want to delete this \r\nreceipt?\"", "\"Are you sure you want to delete this \r\nreceipt?\"")]
+        [InlineData("RGBA(255,255,255,1)", "RGBA(\n    255,\n    255,\n    255,\n    1\n)")]
+        [InlineData("RGBA(255, /*r*/255, 255, 1)//com", "RGBA(\n    255,/*r*/\n    255,\n    255,\n    1\n)//com")]
+        [InlineData("ColorFade(Button4.BorderColor, 20%)", "ColorFade(\n    Button4.BorderColor,\n    20%\n)")]
+        [InlineData("If(!IsBlank(NewAddressText.Text)&&!IsBlank(NewCityText.Text)&&!IsBlank(NewZipText.Text)&&!IsBlank(NewStateText.Text)&&!IsBlank(NewTitleText.Text)&&!IsBlank(NewSubTitleText.Text)||!IsBlank(NewTitleText.Text)&&!IsBlank(NewSubTitleText.Text)&&Radio1_4.Selected.Value=\"Use GPS for current Location\", true)", "If(\n    !IsBlank(NewAddressText.Text) && !IsBlank(NewCityText.Text) && !IsBlank(NewZipText.Text) && !IsBlank(NewStateText.Text) && !IsBlank(NewTitleText.Text) && !IsBlank(NewSubTitleText.Text) || !IsBlank(NewTitleText.Text) && !IsBlank(NewSubTitleText.Text) && Radio1_4.Selected.Value = \"Use GPS for current Location\",\n    true\n)")]
+        [InlineData("Set(ErrorC,0);ForAll(myData,Patch('[dbo].[BookingData]',First(Filter('[dbo].[BookingData]',ID=myData[@ID])),{FiscalYearValue:myData[@FiscalYearValue],ModifiedBy:TextInput1.Text}));If(CountRows(Errors('[dbo].[BookingData]'))>ErrorC,Set(Err,CountRows(Errors('[dbo].[BookingData]'))&\" \"&First(Errors('[dbo].[BookingData]')).Message),Set(Err,\"Success\"))", "Set(\n    ErrorC,\n    0\n);\nForAll(\n    myData,\n    Patch(\n        '[dbo].[BookingData]',\n        First(\n            Filter(\n                '[dbo].[BookingData]',\n                ID = myData[@ID]\n            )\n        ),\n        {\n            FiscalYearValue: myData[@FiscalYearValue],\n            ModifiedBy: TextInput1.Text\n        }\n    )\n);\nIf(\n    CountRows(Errors('[dbo].[BookingData]')) > ErrorC,\n    Set(\n        Err,\n        CountRows(Errors('[dbo].[BookingData]')) & \" \" & First(Errors('[dbo].[BookingData]')).Message\n    ),\n    Set(\n        Err,\n        \"Success\"\n    )\n)")]
+        [InlineData("\"(\"&RoundUp(Value(UsedHrsText.Text/8),1) &\" DAYS)\"", "\"(\" & RoundUp(\n    Value(UsedHrsText.Text / 8),\n    1\n) & \" DAYS)\"")]
+        [InlineData("If(true = !true,false,true)", "If(\n    true = !true,\n    false,\n    true\n)")]
+        [InlineData("If(true > -1,false,true)", "If(\n    true > -1,\n    false,\n    true\n)")]
+        [InlineData("If(1 <= -1,-11 >= -1,-11 < 1)", "If(\n    1 <= -1,\n    -11 >= -1,\n    -11 < 1\n)")]
+        [InlineData("If(true <> -1,false,true)", "If(\n    true <> -1,\n    false,\n    true\n)")]
+        [InlineData("If(true = Not true,false,true)", "If(\n    true = Not true,\n    false,\n    true\n)")]
+        [InlineData("If(7% = !true,false,true)", "If(\n    7% = !true,\n    false,\n    true\n)")]
+        [InlineData("-Label1.X & -Label1.Y", "-Label1.X & -Label1.Y")]
+        [InlineData("(-Label1.X) & (-Label1.Y)", "(-Label1.X) & (-Label1.Y)")]
+        [InlineData("UsedHrsText.Text-TextBox7_1.Text", "UsedHrsText.Text - TextBox7_1.Text")]
+        [InlineData("If(!IsBlank(Address.Text) || !IsBlank(City.Text) || !IsBlank(States.Text) || !IsBlank(ZipCode.Text),SubmitForm(Form1),UpdateContext({error1:true}))", "If(\n    !IsBlank(Address.Text) || !IsBlank(City.Text) || !IsBlank(States.Text) || !IsBlank(ZipCode.Text),\n    SubmitForm(Form1),\n    UpdateContext({error1: true})\n)")]
+        [InlineData("If(!IsBlank(Address.Text) && !IsBlank(City.Text) && !IsBlank(States.Text) && !IsBlank(ZipCode.Text),SubmitForm(Form1),UpdateContext({error1:true}))", "If(\n    !IsBlank(Address.Text) && !IsBlank(City.Text) && !IsBlank(States.Text) && !IsBlank(ZipCode.Text),\n    SubmitForm(Form1),\n    UpdateContext({error1: true})\n)")]
+        [InlineData("If(CountRows(Filter('Time Off Requests','Created On'>=Today()&&Owner=LookUp(Users_1,'User Name'=User().Email,User)))>0,Navigate([@'Attendance Already Submitted'],ScreenTransition.Cover),NewForm(AttendanceForm));Navigate('Save Attendance',Fade)", "If(\n    CountRows(\n        Filter(\n            'Time Off Requests',\n            'Created On' >= Today() && Owner = LookUp(\n                Users_1,\n                'User Name' = User().Email,\n                User\n            )\n        )\n    ) > 0,\n    Navigate(\n        [@'Attendance Already Submitted'],\n        ScreenTransition.Cover\n    ),\n    NewForm(AttendanceForm)\n);\nNavigate(\n    'Save Attendance',\n    Fade\n)")]
+        [InlineData("[1]", "[1]")]
+        [InlineData("[1, 2, 3]", "[\n    1,\n    2,\n    3\n]")]
+        [InlineData("If(true, [1, 2, 3], [3])", "If(\n    true,\n    [\n        1,\n        2,\n        3\n    ],\n    [3]\n)")]
+        [InlineData("((((1 + 2))))", "((((1 + 2))))")]
+        [InlineData("((1 + 2) + 3)", "((1 + 2) + 3)")]
+        [InlineData("(1 + (2 + 3))", "(1 + (2 + 3))")]
+        [InlineData("(1 * 2) + 3)", "(1 * 2) + 3)")]
+        [InlineData("Namespace.Call(1, 2, 3)", "Namespace.Call(\n    1,\n    2,\n    3\n)")]
+        [InlineData("ColorFade(RGBA(56,96,178,1),-(1+3)%%)", "ColorFade(\n    RGBA(\n        56,\n        96,\n        178,\n        1\n    ),\n    -(1 + 3)%%\n)")]
+        [InlineData("/*jj*/\r\nRGBA(255, 255, 255, 1)\n//yes", "/*jj*/\r\nRGBA(\n    255,\n    255,\n    255,\n    1\n)\n//yes")]
+        [InlineData("/*jj*/\nRGBA(\n    /*j2*/\n    255,\n    255,\n    255,\n    1\n)\n//yes", "/*jj*/\nRGBA(\n    /*j2*/\n    255,\n    255,\n    255,\n    1\n)\n//yes")]
+        [InlineData("/*x*/Call(/*a*/1/*b*/;/*c*/2/*d*/;/*e*/3/*f*/, /*g*/4/*h*/)/*y*/", "/*x*/Call(/*a*/\n    1/*b*/;\n    /*c*/2/*d*/;\n    /*e*/3/*f*/,/*g*/\n    4/*h*/\n)/*y*/")]
+        [InlineData("/*a*/[/*b*/1/*c*/,/*d*/2/*e*/]/*f*/", "/*a*/[\n    /*b*/1/*c*/,\n    /*d*/2/*e*/\n]/*f*/")]
+        [InlineData("/*a*/{/*b*/name/*c*/:/*d*/1/*e*/,\n/*f*/name2/*g*/:/*h*/2/*i*/}/*j*/", "/*a*/{\n    /*b*/\n    name/*c*/: /*d*/1/*e*/,\n    /*f*/\n    name2/*g*/: /*h*/2/*i*/\n}/*j*/")]
+        //// Make sure there's no lost trivia
+        [InlineData("/*a*/foo/*b*/[/*c*/@/*d*/bar/*e*/]/*f*/", "/*a*/foo/*b*/[/*c*/@/*d*/bar/*e*/]/*f*/")]
+        [InlineData("1; /*a*/2/*b*/; 3", "1;\n/*a*/2/*b*/;\n3")]
+        [InlineData("/*a*/1/*b*/+/*c*/2/*d*/-/*e*/3/*f*/", "/*a*/1 /*b*/+/*c*/ 2 /*d*/-/*e*/ 3/*f*/")]
+        [InlineData("$\"Hello {\"World\"}\"", "$\"Hello {\"World\"}\"")]
+        [InlineData("$\"Hello { \"World\" }\"", "$\"Hello {\"World\"}\"")]
+        [InlineData("$\"Hello {/*a*/\"World\"}\"", "$\"Hello {/*a*/\"World\"}\"")]
+        [InlineData("/*a*/$\"Hello {\"World\"}\"", "/*a*/$\"Hello {\"World\"}\"")]
+        [InlineData("$\"Hello {\"World\"/*b*/}\"", "$\"Hello {\"World\"/*b*/}\"")]
+        [InlineData("$\"Hello {\"World\"}\"/*b*/", "$\"Hello {\"World\"}\"/*b*/")]
+        [InlineData("$\"{{}}\"", "$\"{{}}\"")]
+        [InlineData("This is not an interpolated {} {{{}}} string", "This is not an interpolated {} {{{}}} string")]
+        [InlineData("$\"{{{{1+1}}}}\"", "$\"{{{{1+1}}}}\"")]
+        [InlineData("Set(str, $\"{{}}\")", "Set(\n    str,\n    $\"{{}}\"\n)")]
+        [InlineData("Set(additionText, $\"The sum of 1 and 3 is {{{1 + 3}}})\")", "Set(\n    additionText,\n    $\"The sum of 1 and 3 is {{{1 + 3}}})\"\n)")]
+        [InlineData("$\"This is {{\"Another\"}} interpolated {{string}}\"", "$\"This is {{\"Another\"}} interpolated {{string}}\"")]
+        [InlineData("ParseJSON(\"[]\", Type([{Age: Number}]))", "ParseJSON(\n    \"[]\",\n    Type([{Age: Number}])\n)")]
+        [InlineData("Type([{Age: Number, Name: Text}])", "Type([\n    {\n        Age: Number,\n        Name: Text\n    }\n])")]
+        [InlineData("Type(RecordOf(Accounts))", "Type(RecordOf(Accounts))")]
+        [InlineData(
+            "If(\n  true,\n  1;\n  // Comment in the middle of a chain\n  2\n)",
+            "If(\n    true,\n    1;\n    // Comment in the middle of a chain\n    2\n)")]
+        [InlineData(
+            "If(\n  true,\n  1;\n  /* Block comment in the middle of a chain */\n  2\n)",
+            "If(\n    true,\n    1;\n    /* Block comment in the middle of a chain */2\n)")]
+        public void TestApplyFormat(string script, string expected)
+        {
+            var check = new CheckResult(new Engine(new PowerFxConfig()));
+            check.SetText(script);
+            var formatted = check.ApplyFormat();
+            Assert.NotNull(formatted);
+            Assert.Equal(expected, formatted);
+
+            // Ensure idempotence
+            check = new CheckResult(new Engine(new PowerFxConfig()));
+            check.SetText(formatted);
+            formatted = check.ApplyFormat();
+            Assert.Equal(expected, formatted);
+        }
+
         [Theory]
 
         // without colon
