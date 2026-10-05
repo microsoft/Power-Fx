@@ -765,7 +765,7 @@ namespace Microsoft.PowerFx.Connectors
 
                         if (settings.Settings.ReturnEnumsAsPrimitive)
                         {
-                            return new ConnectorType(schema, openApiParameter, isNumber ? FormulaType.Decimal : FormulaType.String, list: list, isNumber: isNumber);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.String, list: dic, isNumber: false);
                         }
 
                         return new ConnectorType(schema, openApiParameter, optionSet.FormulaType);
@@ -777,7 +777,7 @@ namespace Microsoft.PowerFx.Connectors
 
                         if (settings.Settings.ReturnEnumsAsPrimitive)
                         {
-                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal, list: list, isNumber: true);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal, list: dic, isNumber: true);
                         }
 
                         string optionSetName = settings.GetOptionSetName(enumName);
