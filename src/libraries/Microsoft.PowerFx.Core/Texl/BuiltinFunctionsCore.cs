@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Texl
             "Assert", "Back", "Choices", "ClearData", "Concurrent", "Confirm", "Copy", "DataSourceInfo", "Defaults", "Disable", "Distinct", "Download", "EditForm", "Enable", "Errors", "Exit",
             "GroupBy", "HashTags", "IsMatch", "IsType", "Join", "JSON", "Launch", "LoadData", "Match", "MatchAll", "Navigate", "NewForm", "Notify", "PDF", "Param", "Pending", "Print", "ReadNFC",
             "RecordInfo", "Relate", "RemoveAll", "RemoveIf", "RequestHide", "Reset", "ResetForm", "Revert", "SaveData", "ScanBarcode", "Select", "SetFocus",
-            "SetProperty", "ShowColumns", "State", "SubmitForm", "TraceValue", "Ungroup", "Unrelate", "Update", "UpdateContext", "UpdateIf", "User", "Validate", "ValidateRecord", "ViewForm",
+            "SetProperty", "ShowColumns", "State", "SubmitForm", "TraceValue", "Ungroup", "Unrelate", "UpdateContext", "UpdateIf", "User", "Validate", "ValidateRecord", "ViewForm",
             "Collect", "Clear", "Patch", "Remove", "ClearCollect", "Set"
         };
 
@@ -247,6 +247,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction UniCharT = _library.Add(new UniCharTFunction());
         public static readonly TexlFunction Upper = _library.Add(new LowerUpperFunction(isLower: false));
         public static readonly TexlFunction UpperT = _library.Add(new LowerUpperTFunction(isLower: false));
+        public static readonly TexlFunction Update = _library.Add(new UpdateFunction());
         public static readonly TexlFunction Value = _library.Add(new ValueFunction());
         public static readonly TexlFunction Value_UO = _library.Add(new ValueFunction_UO());
         public static readonly TexlFunction VarP = _library.Add(new VarPFunction());

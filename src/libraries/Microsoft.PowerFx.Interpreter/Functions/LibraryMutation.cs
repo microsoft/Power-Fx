@@ -423,4 +423,39 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return await new ClearCollectImpl().InvokeAsync(invokeInfo, cancellationToken).ConfigureAwait(false);
         }
     }
+
+    // Update(dataSource, oldRecord, newRecord)
+    internal class UpdateImpl : UpdateFunction, IFunctionInvoker
+    {
+        public async Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
+        {
+            var args = invokeInfo.Args;
+
+            var arg0 = args[0];
+
+            if (args[0] is LambdaFormulaValue arg0lazy)
+            {
+                arg0 = await arg0lazy.EvalAsync().ConfigureAwait(false);
+            }
+
+            if (arg0 is not TableValue tableValue)
+            {
+                return arg0;
+            }
+
+            if (args[1] is not RecordValue oldRecord)
+            {
+                return args[1];
+            }
+
+            if (args[2] is not RecordValue newRecord)
+            {
+                return args[2];
+            }
+
+            var result = await tableValue.UpdateAsync(oldRecord, newRecord, cancellationToken).ConfigureAwait(false);
+
+            return result.ToFormulaValue();
+        }
+    }
 }

@@ -262,6 +262,14 @@ namespace Microsoft.PowerFx.Types
         }
 
         /// <summary>
+        /// Update implementation for derived classes.
+        /// </summary>
+        protected virtual async Task<DValue<RecordValue>> UpdateCoreAsync(RecordValue baseRecord, RecordValue newRecord, CancellationToken cancellationToken)
+        {
+            return DValue<RecordValue>.Of(NotImplementedError(IRContext));
+        }
+
+        /// <summary>
         /// Patch single record implementation for derived classes.
         /// </summary>
         /// <returns></returns>
@@ -292,6 +300,19 @@ namespace Microsoft.PowerFx.Types
             // IR has already resolved to logical names because of 
             // RequiresDataSourceScope, ArgMatchesDatasourceType on function.
             return await PatchCoreAsync(baseRecord, changeRecord, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Replaces one record in a data source.
+        /// </summary>
+        /// <param name="baseRecord">A record to replace.</param>
+        /// <param name="newRecord">The replacement record.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>The updated record.</returns>
+        public async Task<DValue<RecordValue>> UpdateAsync(RecordValue baseRecord, RecordValue newRecord, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return await UpdateCoreAsync(baseRecord, newRecord, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

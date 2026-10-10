@@ -55,6 +55,7 @@ namespace Microsoft.PowerFx
             symbolTable.AddFunction(new ClearCollectScalarImpl());
             symbolTable.AddFunction(new CollectImpl());
             symbolTable.AddFunction(new CollectScalarImpl());
+            symbolTable.AddFunction(new UpdateImpl());
         }
 
         [Obsolete("FileFunctions are still in preview.")]
