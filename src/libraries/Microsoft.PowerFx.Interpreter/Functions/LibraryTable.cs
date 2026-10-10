@@ -894,7 +894,12 @@ namespace Microsoft.PowerFx.Functions
             {
                 var columnName = ((StringValue)args[i]).Value;
 
-                if (!arg0.Type.FieldNames.Contains(columnName))
+                // Use the compile-time result type (irContext.ResultType) rather than the
+                // actual runtime arg0.Type, which may be narrower when this function is
+                // called through a UDF with a table that omits optional columns.
+                // Missing columns are returned as Blank by RecordValue.GetFieldAsync.
+                // See https://github.com/microsoft/Power-Fx/issues/2973
+                if (!((TableType)irContext.ResultType).FieldNames.Contains(columnName))
                 {
                     return CreateInvalidSortColumnError(irContext, runner.CultureInfo, columnName);
                 }
@@ -961,7 +966,13 @@ namespace Microsoft.PowerFx.Functions
         {
             var arg0 = (TableValue)args[0];
             var columnName = ((StringValue)args[1]).Value;
-            if (!arg0.Type.FieldNames.Contains(columnName))
+
+            // Use the compile-time result type (irContext.ResultType) rather than the
+            // actual runtime arg0.Type, which may be narrower when this function is
+            // called through a UDF with a table that omits optional columns.
+            // Missing columns are returned as Blank by RecordValue.GetFieldAsync.
+            // See https://github.com/microsoft/Power-Fx/issues/2973
+            if (!((TableType)irContext.ResultType).FieldNames.Contains(columnName))
             {
                 return CreateInvalidSortColumnError(irContext, runner.CultureInfo, columnName);
             }
