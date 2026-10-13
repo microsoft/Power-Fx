@@ -1,0 +1,124 @@
+
+// WORKDAY basic tests
+
+// Basic forward workday calculations
+>> Workday(Date(2024,8,24),30)
+Date(2024,10,4)
+
+// Basic backward workday calculations  
+>> Workday(Date(2024,8,24),-10)
+Date(2024,8,12)
+
+// Zero days should return the start date
+>> Workday(Date(2024,8,24),0)
+Date(2024,8,24)
+
+// Starting on a Saturday (weekend)
+>> Workday(Date(2024,8,24),1)
+Date(2024,8,26)
+
+// Starting on a Sunday (weekend)
+>> Workday(Date(2024,8,25),1)
+Date(2024,8,26)
+
+// Starting on a Friday
+>> Workday(Date(2024,8,23),1)
+Date(2024,8,26)
+
+// Starting on a Monday
+>> Workday(Date(2024,8,26),1)
+Date(2024,8,27)
+
+// Multiple weeks forward
+>> Workday(Date(2024,1,15),20)
+Date(2024,2,12)
+
+// Multiple weeks backward
+>> Workday(Date(2024,2,15),-20)
+Date(2024,1,18)
+
+// Crossing year boundary forward
+>> Workday(Date(2024,12,20),10)
+Date(2025,1,3)
+
+// Crossing year boundary backward
+>> Workday(Date(2025,1,10),-10)
+Date(2024,12,27)
+
+// Fractional days should be truncated
+>> Workday(Date(2024,8,24),5.9)
+Date(2024,8,30)
+
+// Negative fractional days should be truncated
+>> Workday(Date(2024,8,24),-5.9)
+Date(2024,8,19)
+
+// WORKDAY with holidays
+
+// Single holiday
+>> Workday(Date(2024,8,24),5,Date(2024,8,28))
+Date(2024,9,2)
+
+// Single holiday as table (backward compatibility)
+>> Workday(Date(2024,8,24),5,Table({Date:Date(2024,8,28)}))
+Date(2024,9,2)
+
+// Multiple holidays
+>> Workday(Date(2024,8,24),10,Date(2024,8,28),Date(2024,9,2))
+Date(2024,9,6)
+
+// Multiple holidays as table (backward compatibility)
+>> Workday(Date(2024,8,24),10,Table({Date:Date(2024,8,28)},{Date:Date(2024,9,2)}))
+Date(2024,9,6)
+
+// Holiday on weekend should not affect result
+>> Workday(Date(2024,8,24),5,Date(2024,8,25))
+Date(2024,8,30)
+
+// Backward with holidays
+>> Workday(Date(2024,8,30),-5,Date(2024,8,26))
+Date(2024,8,21)
+
+// Holiday that is the start date
+>> Workday(Date(2024,8,26),5,Date(2024,8,26))
+Date(2024,9,2)
+
+// Multiple holidays in range
+>> Workday(Date(2024,12,20),10,Date(2024,12,25),Date(2025,1,1))
+Date(2025,1,7)
+
+// WORKDAY with DateTime inputs
+
+>> Workday(DateTime(2024,8,24,12,30,45),5)
+Date(2024,8,30)
+
+>> Workday(DateTime(2024,8,24,12,30,45),-5)
+Date(2024,8,19)
+
+// WORKDAY with Blank values
+
+>> Workday(Blank(),10)
+Date(1900,1,12)
+
+>> Workday(Date(2024,8,24),Blank())
+Date(2024,8,24)
+
+>> Workday(Blank(),Blank())
+Date(1899,12,30)
+
+// Edge cases
+
+// Large number of workdays forward
+>> Workday(Date(2024,1,1),250)
+Date(2024,12,16)
+
+// Large number of workdays backward
+>> Workday(Date(2024,12,31),-250)
+Date(2024,1,16)
+
+// Ensure date values are truncated and do not include time
+>> Text(Workday(DateTime(2024,8,24,12,34,56),5),"yyyy-mm-dd hh:mm:ss")
+"2024-08-30 00:00:00"
+
+>> Value(Workday(Date(2024,8,24),5))
+45535
