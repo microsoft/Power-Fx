@@ -302,5 +302,34 @@ Formulas: |
 
             var errorMsg = _output.Get(OutputKind.Error);
         }
+
+        // Imports within a module can refer to files in subdirectories.
+        [Fact]
+        public void ImportFromSubdirectory()
+        {
+            using var dir = new TempDirectoryHolder();
+            dir.WriteFile("lib/helpers.fx.yml", "Formulas: |", "  Triple(x: Number) : Number = x * 3;");
+            var main = dir.WriteFile("main.fx.yml", "Imports:", "- File: lib/helpers.fx.yml", string.Empty, "Formulas: |", "  Func(x: Number) : Number = Triple(x) + 1;");
+
+            HandleLine($"Import(\"{main}\")");
+
+            var log = HandleLine("Func(2)");
+            Assert.Equal("7", log);
+        }
+
+        // Imports within a module must stay within the module directory.
+        [Fact]
+        public void ImportOutsideModuleDirectory()
+        {
+            using var dir = new TempDirectoryHolder();
+            dir.WriteFile("shared.fx.yml", "Formulas: |", "  Triple(x: Number) : Number = x * 3;");
+            var main = dir.WriteFile("app/main.fx.yml", "Imports:", "- File: ../shared.fx.yml", string.Empty, "Formulas: |", "  Func(x: Number) : Number = Triple(x) + 1;");
+
+            HandleLine($"Import(\"{main}\")", expectErrors: true);
+
+            var errorMsg = _output.Get(OutputKind.Error);
+            Assert.Contains("Module '../shared.fx.yml' is outside the module directory.", errorMsg);
+            Assert.Empty(_repl.Modules);
+        }
     }
 }

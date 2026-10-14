@@ -10,6 +10,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyProperties2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileLoaderTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mocks\TempDirectoryHolder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mocks\TempFileHolder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ModuleIdentityTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ModuleTests.cs" />
