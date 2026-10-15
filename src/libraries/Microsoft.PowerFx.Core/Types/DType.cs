@@ -1063,7 +1063,7 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             // Both numeric types return "Number" which is coalesced if there could be more than one in an error message list with a .Distinct() call.
-            // Having them the same and coalescing both makes it easier for makers to read, emphasizes Number as the primary way to get a numeric type, 
+            // Having them the same and coalescing both makes it easier for makers to read, emphasizes Number as the primary way to get a numeric type,
             // and is easier for us to implement since we don't care which one is aliased to Number.
             if (Kind == DKind.Number || Kind == DKind.Decimal)
             {

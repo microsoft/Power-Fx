@@ -2,8 +2,10 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
@@ -164,16 +166,134 @@ namespace Microsoft.PowerFx.Connectors
             return authority;
         }
 
-        // connector gateway validates received x-ms-request-url, but short circuit client side
-        // reject "//" network-path prefix, and handle backslash variants as some URL parsers normalize it to '/'.
+        // Headers this client populates itself. The incoming request may carry the same names, so they
+        // are skipped when copying below: HttpHeaders.Add appends rather than replaces, which would
+        // otherwise emit two values for one header (and throws outright for Authorization).
+        private static readonly ISet<string> ReservedHeaderNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "authority",
+            "scheme",
+            "path",
+            "x-ms-client-session-id",
+            "x-ms-request-method",
+            "Authorization",
+            "x-ms-client-environment-id",
+            "x-ms-user-agent",
+            "x-ms-request-url",
+            "x-ms-enable-selects"
+        };
+
+        // Validate the relative URL before it is forwarded as x-ms-request-url. The gateway resolves
+        // this value, so it must be a plain relative path: no authority, no dot-segments.
+        // PowerPlatformConnectorClient2 gets the equivalent guarantee from Uri.IsBaseOf, which does not
+        // apply here because this client sends the path as a header rather than as the request URI.
         private static void ValidateRequestUrlHeaderValue(string url)
         {
-            if (url != null && url.Length >= 2 &&
+            if (string.IsNullOrEmpty(url))
+            {
+                return;
+            }
+
+            // A leading "//" makes the value a network-path reference, which names an authority
+            // rather than a path. Backslashes are treated the same, as some parsers normalize them to '/'.
+            if (url.Length >= 2 &&
                 (url[0] == '/' || url[0] == '\\') &&
                 (url[1] == '/' || url[1] == '\\'))
             {
                 throw new InvalidOperationException("x-ms-request-url header should not be a network-path reference");
             }
+
+            if (HasDotDotSegment(url))
+            {
+                throw new InvalidOperationException("x-ms-request-url header should not contain path traversal segments");
+            }
+        }
+
+        private static bool HasDotDotSegment(string url)
+        {
+            // Query and fragment are not resolved as path segments.
+            int query = url.IndexOf('?');
+            int fragment = url.IndexOf('#');
+            int end = query < 0 ? fragment : (fragment < 0 ? query : Math.Min(query, fragment));
+
+            string path = end < 0 ? url : url.Substring(0, end);
+
+            foreach (string segment in DecodeSeparators(path).Split('/', '\\'))
+            {
+                if (segment == "..")
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // Applies the single percent-decoding pass the gateway performs before resolving the path, and
+        // only for the characters that can form a dot-segment. Double-encoded sequences such as %252F
+        // survive one decode as literals and are used by real connectors, so they are left alone.
+        private static string DecodeSeparators(string path)
+        {
+            if (path.IndexOf('%') < 0)
+            {
+                return path;
+            }
+
+            var sb = new StringBuilder(path.Length);
+
+            for (int i = 0; i < path.Length; i++)
+            {
+                if (path[i] == '%' && i + 2 < path.Length &&
+                    TryDecodeHex(path[i + 1], path[i + 2], out char decoded) &&
+                    (decoded == '.' || decoded == '/' || decoded == '\\'))
+                {
+                    sb.Append(decoded);
+                    i += 2;
+                }
+                else
+                {
+                    sb.Append(path[i]);
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        private static bool TryDecodeHex(char high, char low, out char value)
+        {
+            value = default;
+
+            if (!TryHexValue(high, out int h) || !TryHexValue(low, out int l))
+            {
+                return false;
+            }
+
+            value = (char)((h << 4) | l);
+            return true;
+        }
+
+        private static bool TryHexValue(char c, out int value)
+        {
+            if (c >= '0' && c <= '9')
+            {
+                value = c - '0';
+                return true;
+            }
+
+            if (c >= 'a' && c <= 'f')
+            {
+                value = c - 'a' + 10;
+                return true;
+            }
+
+            if (c >= 'A' && c <= 'F')
+            {
+                value = c - 'A' + 10;
+                return true;
+            }
+
+            value = 0;
+            return false;
         }
 
         public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -216,6 +336,12 @@ namespace Microsoft.PowerFx.Connectors
 
             foreach (var header in request.Headers)
             {
+                // Skip headers this client already set; Add() would append a second value.
+                if (ReservedHeaderNames.Contains(header.Key))
+                {
+                    continue;
+                }
+
                 req.Headers.Add(header.Key, header.Value);
             }
 

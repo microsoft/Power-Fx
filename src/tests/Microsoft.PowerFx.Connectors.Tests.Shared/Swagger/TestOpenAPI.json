@@ -858,6 +858,12 @@
         ],
         "parameters": [
           {
+            "in": "header",
+            "name": "content-type",
+            "description": "Content type for the request body.",
+            "type": "string"
+          },
+          {
             "in": "body",
             "name": "body",
             "description": "",

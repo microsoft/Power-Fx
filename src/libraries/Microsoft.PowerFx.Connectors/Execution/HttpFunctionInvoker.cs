@@ -115,7 +115,7 @@ namespace Microsoft.PowerFx.Connectors
                             break;
 
                         case ParameterLocation.Header:
-                            if (param.Name == "Content-Type")
+                            if (string.Equals(param.Name, "Content-Type", StringComparison.OrdinalIgnoreCase))
                             {
                                 contentType = valueStr;
                             }

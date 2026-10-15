@@ -305,6 +305,27 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         [Fact]
+        public void GetContentTypeAndSchema_MixedCaseApplicationJson_ReturnsCorrectContentType()
+        {
+            var content = new Dictionary<string, OpenApiMediaType>
+            {
+                ["Application/JSON"] = new OpenApiMediaType
+                {
+                    Schema = new OpenApiSchema
+                    {
+                        Type = "object",
+                        Properties = new Dictionary<string, OpenApiSchema>()
+                    }
+                }
+            };
+
+            var (contentType, mediaType) = content.GetContentTypeAndSchema();
+
+            Assert.Equal(OpenApiExtensions.ContentType_ApplicationJson, contentType);
+            Assert.NotNull(mediaType);
+        }
+
+        [Fact]
         public void GetContentTypeAndSchema_UnknownContentType_ReturnsNull()
         {
             var content = new Dictionary<string, OpenApiMediaType>
