@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Repl
         /// <summary>
         /// Load a module poco from the given fulename. 
         /// </summary>
-        /// <param name="filename">a filename. Could be full path or relative. The loader will resolve.</param>
+        /// <param name="filename">a filename. Could be full path or relative. The loader will resolve, and may reject names outside its directory.</param>
         /// <returns>The loaded module contents and a new file loader for resolving any subsequent imports in this module.</returns>
         Task<(ModulePoco, IFileLoader)> LoadAsync(string filename);
     }

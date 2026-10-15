@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Repl
     internal class ImportPoco
     {
         /// <summary>
-        /// File path to import from. "foo.fx.yml" or ".\path\foo.fx.yml".
+        /// File path to import from, within the module directory. "foo.fx.yml" or ".\path\foo.fx.yml".
         /// </summary>
         public string File { get; set; }
 
