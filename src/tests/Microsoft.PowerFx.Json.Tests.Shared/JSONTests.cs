@@ -148,6 +148,30 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.Equal("[{\"a\":1},null,{\"a\":3}]", (evalResult as StringValue).Value);
         }
 
+        [Theory]
+        [InlineData("null")]
+        [InlineData(@"{""a"":1}")]
+        [InlineData(@"{""a"":null}")]
+        [InlineData(@"[1,null,""x""]")]
+        [InlineData(@"{""a"":{""b"":[null]}}")]
+        [InlineData("[null,null]")]
+        public void Json_Handles_Untyped_Nulls(string json)
+        {
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            config.EnableJsonFunctions();
+
+            var engine = new RecalcEngine(config);
+            var expression = "JSON(ParseJSON(\"" + json.Replace("\"", "\"\"") + "\"))";
+            Assert.Equal(json, Assert.IsType<StringValue>(engine.Eval(expression)).Value);
+
+            var untypedValue = FormulaValueJSON.FromJson(json, FormulaType.UntypedObject);
+            var parameters = FormulaValue.NewRecordFromFields(new NamedValue("untyped", untypedValue));
+
+            Assert.Equal(json, Assert.IsType<StringValue>(engine.Eval("JSON(untyped)", parameters)).Value);
+            Assert.Equal("{\"a\":" + json + "}", Assert.IsType<StringValue>(engine.Eval("JSON({a:untyped})", parameters)).Value);
+            Assert.Equal("[{\"a\":" + json + "}]", Assert.IsType<StringValue>(engine.Eval("JSON([{a:untyped}])", parameters)).Value);
+        }
+
         [Fact]
         public void Json_Handles_Error_Records()
         {
