@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
@@ -23,8 +24,14 @@ namespace Microsoft.PowerFx.Repl
 {
     internal class FileLoader : IFileLoader
     {
+        private static readonly StringComparison PathComparison =
+            RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
         // Root directory that we load from.
         private readonly string _root;
+
+        // Normalized root directory, ending with a directory separator.
+        private readonly string _rootPrefix;
 
         public FileLoader(string root)
         {
@@ -34,12 +41,18 @@ namespace Microsoft.PowerFx.Repl
             }
 
             _root = root;
+
+            var fullRoot = Path.GetFullPath(root);
+            var last = fullRoot[fullRoot.Length - 1];
+            _rootPrefix = (last == Path.DirectorySeparatorChar || last == Path.AltDirectorySeparatorChar) ?
+                fullRoot :
+                fullRoot + Path.DirectorySeparatorChar;
         }
 
         public async Task<(ModulePoco, IFileLoader)> LoadAsync(string name)
         {
             name = name.Trim();
-            var fullPath = Path.Combine(_root, name);
+            var fullPath = ResolvePath(name);
             
             var txt = File.ReadAllText(fullPath);
 
@@ -52,6 +65,19 @@ namespace Microsoft.PowerFx.Repl
             modulePoco.Src_Filename = fullPath;
 
             return (modulePoco, this);
+        }
+
+        // Resolve a module name to a full path. Module files must be within the root directory.
+        internal string ResolvePath(string name)
+        {
+            var fullPath = Path.GetFullPath(Path.Combine(_root, name));
+
+            if (!fullPath.StartsWith(_rootPrefix, PathComparison))
+            {
+                throw new InvalidOperationException($"Module '{name}' is outside the module directory.");
+            }
+
+            return fullPath;
         }
     }
 }
