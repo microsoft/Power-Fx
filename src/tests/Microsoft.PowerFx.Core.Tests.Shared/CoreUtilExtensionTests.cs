@@ -141,7 +141,11 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public async Task GetDetailedExceptionMessage_WebRequest()
         {
-            using HttpClient client = new HttpClient();
+            // Bypass any environment/system proxy (e.g. HTTPS_PROXY) so the direct socket error is observed.
+#pragma warning disable CA5399 // The connection fails before any TLS handshake.
+            using HttpClientHandler handler = new HttpClientHandler() { UseProxy = false };
+            using HttpClient client = new HttpClient(handler);
+#pragma warning restore CA5399
             using HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "https://0.1.2.3");
 
             try
