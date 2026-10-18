@@ -818,6 +818,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey WarnLiteralPredicate = new ErrorResourceKey("WarnLiteralPredicate");
         public static ErrorResourceKey WarnDynamicMetadata = new ErrorResourceKey("WarnDynamicMetadata");
         public static ErrorResourceKey WarnDeferredType = new ErrorResourceKey("WarnDeferredType");
+        public static ErrorResourceKey WarnImplicitGallerySelectedReference = new ErrorResourceKey("WarnImplicitGallerySelectedReference");
         public static ErrorResourceKey ErrColRenamedTwice_Name = new ErrorResourceKey("ErrColRenamedTwice_Name");
 
         public static ErrorResourceKey WrnCountRowsMayReturnCachedValue = new ErrorResourceKey("WrnCountRowsMayReturnCachedValue");
