@@ -1,0 +1,65 @@
+#SETUP: PowerFxV1CompatibilityRules
+// Test that demonstrates the difference between Map and ForAll
+// ForAll allows behavior functions (mutations), Map does not
+
+// ****************** ForAll allows mutations - Map does not ******************
+
+// Setup a collection for ForAll mutation tests
+>> Set(t, [1])
+Table({Value:1})
+
+// ForAll can use Collect (behavior function)
+>> ForAll(Sequence(3), Collect(t, {Value: Value * 10})); Concat(t, Value)
+"1102030"
+
+>> t // after *10 ForAll
+Table({Value:1},{Value:10},{Value:20},{Value:30})
+
+>> IfError(ForAll([1,2,4,2,6,2,10],Collect(t, 1/(Value-2));1/(Value-2)),[CountRows(AllErrors)])
+Table({Value:3})
+
+>> t // after error ForAll, should still execute all collects
+Table({Value:1},{Value:10},{Value:20},{Value:30},{Value:-1},{Value:Error({Kind:ErrorKind.Div0})},{Value:0.5},{Value:Error({Kind:ErrorKind.Div0})},{Value:0.25},{Value:Error({Kind:ErrorKind.Div0})},{Value:0.125})
+
+// **************** Map with mutation functions ******************
+
+>> Set(t, [1]) // reset table
+Table({Value:1})
+
+>> Map(Sequence(3), Collect(t, {Value: Value * 10}))
+Errors: Error 17-48: The second argument of Map cannot include behavior functions. Use ForAll instead for imperative logic.
+
+>> Map(Sequence(3), Patch(t, {Value:1}, {Value: Value * 10}))
+Errors: Error 17-57: The second argument of Map cannot include behavior functions. Use ForAll instead for imperative logic.
+
+>> ForAll(Sequence(3), Patch(t, {Value:1}, {Value: Value * 10}))
+Table({Value:10},{Value:20},{Value:30})
+
+>> Set(x,1);
+1
+
+>> Map(Sequence(3), Set(x,Value))
+Errors: Error 0-3: The function 'Map' has some invalid arguments.|Error 17-29: The second argument of Map cannot include behavior functions. Use ForAll instead for imperative logic.
+
+>> Map(Sequence(3), Set(x,Value); x)
+Errors: Error 29-30: The second argument of Map cannot include behavior functions. Use ForAll instead for imperative logic.
+
+// ************** Void lambda ******************
+
+>> ForAll(Sequence(5), Set(x,Value)) // return value is actually Void, testing infrastucture returns change to x
+5
+
+>> ForAll(Sequence(3), Set(x,Value); x)
+3
+
+>> x // after ForAll
+3
+
+>> Map([1,2,3],If(true,{a:1},[2])) // can't tolerate a Void value in second argument
+Errors: Error 0-3: The function 'Map' has some invalid arguments.
+
+>> Map([1,2,3],If(true,[1],[2]))
+Table({Value:Table({Value:1})},{Value:Table({Value:1})},{Value:Table({Value:1})})
+
+>> Map([1,2,3],If(true,{a:1},{a:2}))
+Table({a:1},{a:1},{a:1})

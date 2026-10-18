@@ -1146,6 +1146,34 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Lower)
             },
             {
+                BuiltinFunctionsCore.Map,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.Map.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<TableValue>,
+                        ExactValueTypeOrBlank<LambdaFormulaValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Map)
+            },
+            {
+                BuiltinFunctionsCore.Map_UO,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.Map_UO.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<UntypedObjectValue>,
+                        ExactValueTypeOrBlank<LambdaFormulaValue>),
+                    checkRuntimeValues: ExactSequence(
+                        UntypedObjectArrayChecker,
+                        DeferRuntimeValueChecking),
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Map_UO)
+            },
+            {
                 BuiltinFunctionsCore.Max,
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.Max.Name,
@@ -2739,6 +2767,35 @@ namespace Microsoft.PowerFx.Functions
 
                 yield return result;
             }
+        }
+
+        // Map([1,2,3,4,5], Value * Value)
+        // Unlike ForAll, Map keeps errors in the result table instead of combining them.
+        public static async ValueTask<FormulaValue> Map(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            // Streaming
+            var arg0 = (TableValue)args[0];
+            var arg1 = (LambdaFormulaValue)args[1];
+
+            var rowsAsync = LazyForAll(runner, context, arg0.Rows, arg1);
+
+            var rows = new List<FormulaValue>();
+
+            foreach (var row in rowsAsync)
+            {
+                runner.CheckCancel();
+                rows.Add(await row.ConfigureAwait(false));
+            }
+
+            // Unlike ForAll, Map does not combine errors - it keeps them in the result table
+            // This is the key difference: errors become error values in individual rows
+
+            if (irContext.ResultType is Types.Void)
+            {
+                return new VoidValue(irContext);
+            }
+
+            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
         }
 
         public static FormulaValue IsError(IRContext irContext, FormulaValue[] args)
