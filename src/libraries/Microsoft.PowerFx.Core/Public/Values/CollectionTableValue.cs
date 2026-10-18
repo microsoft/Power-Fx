@@ -255,6 +255,52 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
+        internal override async Task<DValue<BooleanValue>> UpdateAsync(RecordValue oldRecord, RecordValue replacementRecord, bool all, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (_sourceMutableIndex == null)
+            {
+                return await base.UpdateAsync(oldRecord, replacementRecord, all, cancellationToken).ConfigureAwait(false);
+            }
+
+            var found = false;
+
+            for (var index = 0; index < _sourceMutableIndex.Count; index++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var current = Marshal(_sourceMutableIndex[index]);
+                if (current.IsError)
+                {
+                    return DValue<BooleanValue>.Of(current.Error);
+                }
+
+                if (current.IsBlank)
+                {
+                    continue;
+                }
+
+                if (await MatchesAsync(current.Value, oldRecord, cancellationToken).ConfigureAwait(false))
+                {
+                    found = true;
+                    _sourceMutableIndex[index] = MarshalInverse((RecordValue)replacementRecord.MaybeShallowCopy());
+
+                    if (!all)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            if (!found)
+            {
+                return DValue<BooleanValue>.Of(FormulaValue.NewError(new ExpressionError() { Message = "The specified record was not found.", Kind = ErrorKind.NotFound }));
+            }
+
+            return DValue<BooleanValue>.Of(New(true));
+        }
+
         /// <summary>
         /// Execute a linear search for the matching record.
         /// </summary>

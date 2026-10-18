@@ -538,6 +538,35 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.IsType<ErrorValue>(result);
         }
 
+        [Fact]
+        public async Task UpdateAllUpdatesEachPrimaryKeyMatchOnce()
+        {
+            var rows = new List<TestDatabaseRecordValue>()
+            {
+                new TestDatabaseRecordValue(1, "first", "old"),
+                new TestDatabaseRecordValue(1, "second", "old"),
+                new TestDatabaseRecordValue(2, "third", "old")
+            };
+
+            var table = new KeyedCollectionTableValue(rows);
+            var oldRecord = new TestDatabaseRecordValue(1, "ignored", "ignored");
+            var replacementRecord = FormulaValue.NewRecordFromFields(
+                TestDatabaseRecordValue.CustomRecordType,
+                new NamedValue("Id", FormulaValue.New(1)),
+                new NamedValue("Name", FormulaValue.New("updated")),
+                new NamedValue("Val", FormulaValue.New("new")));
+
+            var result = await table.UpdateAsync(oldRecord, replacementRecord, all: true, CancellationToken.None);
+
+            Assert.True(result.IsValue);
+            Assert.Equal("updated", rows[0].Name);
+            Assert.Equal("new", rows[0].Val);
+            Assert.Equal("updated", rows[1].Name);
+            Assert.Equal("new", rows[1].Val);
+            Assert.Equal("third", rows[2].Name);
+            Assert.Equal("old", rows[2].Val);
+        }
+
         /// <summary>
         /// Meant to test PatchSingleRecordCoreAsync override. Only tables with primary key column are supported.
         /// </summary>
@@ -619,6 +648,28 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 }
 
                 return _inner.AppendAsync(FormulaValue.NewRecordFromFields(fields), cancellationToken);
+            }
+        }
+
+        internal class KeyedCollectionTableValue : CollectionTableValue<TestDatabaseRecordValue>
+        {
+            public KeyedCollectionTableValue(IList<TestDatabaseRecordValue> records)
+                : base(TestDatabaseRecordValue.CustomRecordType, records)
+            {
+            }
+
+            protected override DValue<RecordValue> Marshal(TestDatabaseRecordValue item)
+            {
+                return DValue<RecordValue>.Of(item);
+            }
+
+            protected override TestDatabaseRecordValue MarshalInverse(RecordValue row)
+            {
+                var id = Convert.ToInt32(((DecimalValue)row.GetField("Id")).Value);
+                var name = ((StringValue)row.GetField("Name")).Value;
+                var val = ((StringValue)row.GetField("Val")).Value;
+
+                return new TestDatabaseRecordValue(id, name, val);
             }
         }
 
