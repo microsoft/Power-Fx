@@ -473,3 +473,28 @@ Table({Fruit:"Grapes",Price:215},{Fruit:"Lemons",Price:30},{Fruit:"Bananas",Pric
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, Average( ShowColumns( ThisGroup, Price ), Price ) As Price )
 Table({Fruit:"Grapes",Price:215},{Fruit:"Lemons",Price:30},{Fruit:"Bananas",Price:12})
+
+// === Regression: issue #2876 - groupby key referenced directly inside aggregate expression ==
+
+// Dec2Hex over bare groupby key - was a runtime error before the fix.
+>> Summarize( [{Value:1,Sixteen:1}], Sixteen, Dec2Hex( Sixteen, 3 ) As LevelOne )
+Table({LevelOne:"001",Sixteen:1})
+
+// Same aggregate written the long way via First(ThisGroup).<field> - the pre-fix workaround.
+// Must produce an identical result to the bare-reference form above.
+>> Summarize( [{Value:1,Sixteen:1}], Sixteen, Dec2Hex( First(ThisGroup).Sixteen, 3 ) As LevelOne )
+Table({LevelOne:"001",Sixteen:1})
+
+// Text over bare groupby key - was a REPL hang before the fix.
+>> Summarize( [{Value:1,Sixteen:1}], Sixteen, Text( Sixteen ) As LevelOne )
+Table({LevelOne:"1",Sixteen:1})
+
+// Bare groupby reference must be equivalent to First(ThisGroup).<field> inside an arithmetic expression.
+>> Summarize( [{Value:1,Sixteen:1},{Value:2,Sixteen:16}], Sixteen, (Sixteen * 2) As Double )
+Table({Double:2,Sixteen:1},{Double:32,Sixteen:16})
+
+// Two-key groupby: each bare key must resolve to the correct scalar inside the aggregate.
+>> Summarize(
+  Table({A:1,B:10,V:100},{A:1,B:10,V:200},{A:2,B:20,V:300}),
+  A, B, (A + B) As Sum, Sum(ThisGroup, V) As Total)
+Table({A:1,B:10,Sum:11,Total:300},{A:2,B:20,Sum:22,Total:300})
