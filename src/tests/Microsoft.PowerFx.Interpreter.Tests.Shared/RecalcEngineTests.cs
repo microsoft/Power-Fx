@@ -1116,6 +1116,59 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(1, result.Errors.Count(x => x.Severity == ErrorSeverity.Warning));
         }
 
+        // Issue #2795: Filter should warn on compound constant predicates (not just bare literals)
+        [Fact]
+        public void FilterCompoundConstantPredicateWarning()
+        {
+            var engine = new RecalcEngine();
+
+            // "true && true" is a compound constant — no record fields are referenced.
+            // Currently produces NO warning; after the fix it MUST produce exactly one Warning.
+            var result = engine.Check("Filter([10,20,30], true && true)");
+
+            Assert.True(result.IsSuccess);
+            Assert.Equal(1, result.Errors.Count(x => x.Severity == ErrorSeverity.Warning));
+        }
+
+        // Issue #2795: Join should warn when the predicate references only one scope symbol
+        [Fact]
+        public void JoinOneSidedPredicateWarning()
+        {
+            var config = new PowerFxConfig(Features.PowerFxV1);
+#pragma warning disable CS0618 // Join is in preview
+            config.EnableJoinFunction();
+#pragma warning restore CS0618
+
+            var engine = new RecalcEngine(config);
+
+            // Predicate only uses LeftRecord (T1.a) — T2 is never referenced.
+            // Currently produces NO warning; after the fix it MUST produce exactly one Warning.
+            var result = engine.Check(
+                "Join([{a:1,b:2}] As T1, [{a:1,c:99}] As T2, T1.a > 0, JoinType.Left, T2.c As CC)");
+
+            Assert.True(result.IsSuccess);
+            Assert.Equal(1, result.Errors.Count(x => x.Severity == ErrorSeverity.Warning));
+        }
+
+        // Issue #2795: Join should NOT warn when predicate uses both LeftRecord and RightRecord
+        [Fact]
+        public void JoinBothSidesPredicateNoWarning()
+        {
+            var config = new PowerFxConfig(Features.PowerFxV1);
+#pragma warning disable CS0618 // Join is in preview
+            config.EnableJoinFunction();
+#pragma warning restore CS0618
+
+            var engine = new RecalcEngine(config);
+
+            // Predicate references both LeftRecord (T1) and RightRecord (T2) — no warning expected.
+            var result = engine.Check(
+                "Join([{a:1,b:2}] As T1, [{a:1,c:99}] As T2, T1.a = T2.a, JoinType.Inner, T2.c As CC)");
+
+            Assert.True(result.IsSuccess);
+            Assert.Equal(0, result.Errors.Count(x => x.Severity == ErrorSeverity.Warning));
+        }
+
         [Fact]
         public void CheckParseError()
         {
