@@ -375,6 +375,36 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
+    // Workday()
+    // Equivalent Excel function: WORKDAY
+    internal sealed class WorkdayFunction : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public WorkdayFunction()
+            : base("Workday", TexlStrings.AboutWorkday, FunctionCategories.DateTime, DType.Date, 0, 2, int.MaxValue, DType.DateTime, DType.Number)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.WorkdayArg1, TexlStrings.WorkdayArg2 };
+            yield return new[] { TexlStrings.WorkdayArg1, TexlStrings.WorkdayArg2, TexlStrings.WorkdayArg3 };
+            yield return new[] { TexlStrings.WorkdayArg1, TexlStrings.WorkdayArg2, TexlStrings.WorkdayArg3, TexlStrings.WorkdayArg3 };
+            yield return new[] { TexlStrings.WorkdayArg1, TexlStrings.WorkdayArg2, TexlStrings.WorkdayArg3, TexlStrings.WorkdayArg3, TexlStrings.WorkdayArg3 };
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
+        {
+            if (arity > 2)
+            {
+                return GetGenericSignatures(arity, TexlStrings.WorkdayArg1, TexlStrings.WorkdayArg2, TexlStrings.WorkdayArg3);
+            }
+
+            return base.GetSignatures(arity);
+        }
+    }
+
     internal abstract class DateTimeGenericFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
