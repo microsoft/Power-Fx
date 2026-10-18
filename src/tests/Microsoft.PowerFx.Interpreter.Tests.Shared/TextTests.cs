@@ -35,7 +35,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 _allSymbols = symbols,
                 _parameterSymbolTable = symbols,
                 _globals = values,
-                _additionalFunctions = new Dictionary<TexlFunction, IAsyncTexlFunction>(),
             };
 
             // This test 
