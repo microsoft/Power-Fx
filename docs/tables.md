@@ -115,7 +115,7 @@ Set( Products,
 )
 ```
 
-To determine whether any of any of these products had more requested than is available:
+To determine whether any of these products had more requested than is available:
 
 `Filter( Products, 'Quantity Requested' > 'Quantity Available' )`
 
@@ -278,4 +278,5 @@ You can create single-column tables by specifying values in square brackets. The
 For example, `[ 1, 2, 3, 4 ]` is equivalent to `Table( { Value: 1 }, { Value: 2 }, { Value: 3 }, { Value: 4 } )` and returns this table:
 
 ![](media/tables/inline-table.png)
+
 

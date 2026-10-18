@@ -19,7 +19,7 @@ The apps you create can be globally aware as well.  Use the **Language**, **Text
 
 When using the native studio or a native player, the language used is provided by the host operating system. For Windows, this setting can be controlled under "All Settings" and then "Time & language" settings.  Windows also allows you to specify the characters to use for the decimal separator, overriding the language setting.  
 
-When using the web experiences, the language used is provided by the browser.  Most browser default to the host operating system's setting with some also providing a way to set the language manually.
+When using the web experiences, the language used is provided by the browser.  Most browsers default to the host operating system's setting with some also providing a way to set the language manually.
 
 ## Authoring environment
 
@@ -119,7 +119,7 @@ For more information, see the documentation for the **Text** function.
 There are four functions for reading numbers, dates, and times provided by the user:
 
 * **Value**: Converts a number in a text string to a number value.
-* **DateValue**: Converts a date value in a text string to a date/time value.  Anytime specified in the text string is ignored.
+* **DateValue**: Converts a date value in a text string to a date/time value.  Any time specified in the text string is ignored.
 * **TimeValue**: Converts a time value in a text string to a date/time value.  Any date specified in the text string is ignored.
 * **DateTimeValue**: Converts a date and time value in a text string to a date/time value.  
 
@@ -127,7 +127,7 @@ If you have used Excel, all of these functions are combined in the single **Valu
 
 All of these functions have the same arguments:
 
-* *String, required*: A string from the user. For example, a string types into a **Text input** control and read from the control with the **Text** property.
+* *String, required*: A string from the user. For example, a string typed into a **Text input** control and read from the control with the **Text** property.
 * *Language, optional*: The language in which to interpret the *String*.  By default, the language setting of the user.
 
 For example:
@@ -145,4 +145,5 @@ The **Calendar** and **Clock** functions provide calendar and clock information 
 Among other things, use these functions to provide a **Dropdown** control with a list of choices.  
 
 For more information, see the documentation for the **Calendar** and **Clock**  functions.
+
 

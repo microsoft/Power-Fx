@@ -44,7 +44,7 @@ For example, a UI may only allow filtering on columns that are marked filterable
 `Transpiler` refers to converting from the incoming odata query to the datasource's native format.  For example, the SQL connector takes in odata queries and converts them to outgoing SQL statements. Connectors effectively must implement a query tree transformation. 
 
 Tables and Columns may have both:
-- `Logical Names` which are used in the API. This could be a guid or mangled form of the display name. Logical names are api-friendly and just alpahnumeric characeters.
+- `Logical Names` which are used in the API. This could be a guid or mangled form of the display name. Logical names are api-friendly and just alphanumeric characters.
 - `Display Names` which are shown to the user and can include any characters (including spaces, and special characters).
 
 
@@ -52,24 +52,24 @@ A connector is primarily  means having a `transpiler` that takes in an incoming 
 
 ## Power Fx and Delegation 
 
-Power Fx expressions provide an easy way to access Enhanced connectors.  `Delegation` refers to translating a Power Fx function into an efficieint server-side operation. The Power Fx engine will look at the connector capabilities and produce a query. 
+Power Fx expressions provide an easy way to access Enhanced connectors.  `Delegation` refers to translating a Power Fx function into an efficient server-side operation. The Power Fx engine will look at the connector capabilities and produce a query. 
 
 Power Fx will also present Display Names in the expressions but translate to logical names for the queries. 
 
 For example, 
 - if `MyTable` is a connection with dataset="default" and tableName="myTable512", 
 - and it has columns with display names Score and Age, and logical names new_score, new_age respectively
-- then that table capabilities suports filter and sort, then this expression:
+- then that table capabilities supports filter and sort, then this expression:
 
 `Sort(Filter(MyTable, Score > 100), Age)`
 
-Would get executed as a single query to the connector:
+would get executed as a single query to the connector:
 
 `GET /datasets/default/tables/myTable512/items?$filter=new_score+gt+100&$sort=new_age`
 
 Power Fx may also do column analysis and add a $select clause. 
 
-For operations that can't be delegated, Power Fx can  detect this statically via the metadata nd issue a warning. The host then has the option to fallback to downloading the rows and doing client-side execution. This is effective for small tables. 
+For operations that can't be delegated, Power Fx can  detect this statically via the metadata and issue a warning. The host then has the option to fallback to downloading the rows and doing client-side execution. This is effective for small tables. 
 
 See more: https://learn.microsoft.com/en-us/power-apps/maker/canvas-apps/delegation-overview 
 
@@ -92,7 +92,7 @@ Errors should follow a standard payload:
 ```
 
 ## Auth 
-An enhanced connector is "pass through". The connector will receive an auth token that was setup when the connection was created.  This could be an api key or auth token to the target datasource.   It could also be a property bag (like a base64 encoded JSON object) that contains multiple properties like an API Endpoint and API key for accessing the target data. 
+An enhanced connector is "pass through". The connector will receive an auth token that was set up when the connection was created.  This could be an api key or auth token to the target datasource.   It could also be a property bag (like a base64 encoded JSON object) that contains multiple properties like an API Endpoint and API key for accessing the target data. 
 
 
 ## Table Metadata
@@ -146,7 +146,7 @@ Sample 200 response:
 
 
 ### GET /$metadata.json/datasets/{datasetName}/tables/{tableName}
-Get metdata for a specific table. This includes:
+Get metadata for a specific table. This includes:
 - table capabilities 
 - column information 
 
@@ -167,17 +167,17 @@ Get metdata for a specific table. This includes:
 
 | <div style="width:230px">Extension</div> | Description |
 |--|--|
-| `x-ms-keyType` | Can only be `primary` or `none` <br> When set to `primary` defines the primary key or a part of it <br> <br> If primary keys are readonly and not required, they are server generated.<br>If they are writable and required, they are user provided.<br> Any other combination is invalid, except for `shared_dynamicsax`connector (FnO). <br><br> All `primary` keys appear FIRST in the list of columns, ordered by `x-ms-keyOrder` value. <br> All other columns appear in the order of the schema, as they appear in `properties` list, EXCEPT if `x-ms-DisplayFormat` is defined with `propertiesDisplayOrder`. |
+| `x-ms-keyType` | Can only be `primary` or `none` <br> When set to `primary` defines the primary key or a part of it <br> <br> If primary keys are readonly and not required, they are server generated.<br>If they are writable and required, they are user provided.<br> Any other combination is invalid, except for `shared_dynamicsax` connector (FnO). <br><br> All `primary` keys appear FIRST in the list of columns, ordered by `x-ms-keyOrder` value. <br> All other columns appear in the order of the schema, as they appear in `properties` list, EXCEPT if `x-ms-DisplayFormat` is defined with `propertiesDisplayOrder`. |
 | `x-ms-keyOrder` | Integer starting from 0 <br> When defined, `x-ms-keyType` must be set to `primary` <br> If multiple columns use `x-ms-keyOrder`, they all have to be different. "Missing" values are possible. <br> Defines the list of columns that represent the primary key and in which order they appear. |
 | `x-ms-permission` | Only 3 possible values <br><br>- `read-write` for non-primary keys, that support Create and Update <br> - `read-only` for primary keys, calculated columns <br> - `null` otherwise (equivalent to RW) |
-| `x-ms-sort` | Defines if ordering is supported <br> Comma separated list <br> `asc` when ascending order is supported <br> `desc`when descending order is supported  <br> `asc,desc` when both ascending and descending are supported (`desc,asc` is not valid) <br> `none` when ordering is not supported |
+| `x-ms-sort` | Defines if ordering is supported <br> Comma separated list <br> `asc` when ascending order is supported <br> `desc` when descending order is supported  <br> `asc,desc` when both ascending and descending are supported (`desc,asc` is not valid) <br> `none` when ordering is not supported |
 | `x-ms-visibility` | Defines how columns are displayed in the UI <br> Only 3 possible values: <br>`none` for regular properties, always visible <br>`advanced` for properties in 'Advanced' view  <br>`internal` for properties not visible to the end used |
 | `x-ms-dynamic-values` | Dynamic Intellisense <br> Documented [here](https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values)|
 | `x-ms-media-kind` | [INTERNAL] Type of media <br>- `image` (=WADL Image, default), <br>- `video` (WADL Media),<br>- `audio` (WADL Media)<br>- or null (=WADL Blob) <br><br> Used when type=`string` and <br>- format=`byte` (`byte`=Base 64 encoding) <br> - format=`uri` |
-| `x-ms-media-base-url` | [INTERNAL] A runtime url to the base path to a RESTful service implementation of the Blob Protocol (namely CDPBlob0). e.g. the base path to the same connector's Blob protocol implementation, base path to a dependent connector's Blob protocol implementation (e.g. the DropBox/OneDrive connector baseUrl <br><br> ONLY used when type=`string` and format=`uri` <br> &#x26A0; Unknown usage <br> |
+| `x-ms-media-base-url` | [INTERNAL] A runtime url to the base path to a RESTful service implementation of the Blob Protocol (namely CDPBlob0). e.g. the base path to the same connector's Blob protocol implementation, base path to a dependent connector's Blob protocol implementation (e.g. the DropBox/OneDrive connector baseUrl) <br><br> ONLY used when type=`string` and format=`uri` <br> &#x26A0; Unknown usage <br> |
 | `x-ms-media-default-folder-path` | [INTERNAL] `UploadFile` or `InlineDataUri` (not case sensitive)<br>At runtime, this folder path is given to the Blob protocol endpoints to identify where to place a new uploaded Blob. <br><br> ONLY used when type=`string` and format=`uri`. <br> MANDATORY when `x-ms-media-base-url` is defined.<br> |
 | `x-ms-media-upload-format` | [INTERNAL] &#x26A0; Unknown usage|
-| `x-ms-displayFormat` | [INTERNAL] This extension can be defined<br>- for properties of type=object<br>- at table level for the ordering of columns. <br><br> The schema of this extension varies depending on its location. <br> <br> For table level:<br>- `propertiesDisplayOrder` Ordering used for gallery on the web in Power Apps. <br>This is a string array with a list of propertie/colums of the tables. When defined, columns/properties defined in this list appear first, then primary keys not in this list and following `x-ms-keyOrder`, then all other columns not this list, based on their order of appearance in the list of properties. <br> - `propertiesCompactDisplayOrder`Ordering used for gallery on mobile device in Power Apps. <br> - `propertiesTabularDisplayOrder` Ordering used for grid/table in Power Apps<br><br>![image.png](/.attachments/image-ebe56358-37f0-4c37-8e61-591c6e7f25c8.png) <br><br>For column level:<br>- `titleProperty` &#x26A0; Unknown usage, <br>- `subtitleProperty` &#x26A0; Unknown usage, <br>- `thumbnailProperty` &#x26A0; Unknown usage <br><br>![image.png](/.attachments/image-033ede7c-29b6-4bd2-975a-7a619f8f7afd.png)|
+| `x-ms-displayFormat` | [INTERNAL] This extension can be defined<br>- for properties of type=object<br>- at table level for the ordering of columns. <br><br> The schema of this extension varies depending on its location. <br> <br> For table level:<br>- `propertiesDisplayOrder` Ordering used for gallery on the web in Power Apps. <br>This is a string array with a list of properties/columns of the tables. When defined, columns/properties defined in this list appear first, then primary keys not in this list and following `x-ms-keyOrder`, then all other columns not in this list, based on their order of appearance in the list of properties. <br> - `propertiesCompactDisplayOrder` Ordering used for gallery on mobile device in Power Apps. <br> - `propertiesTabularDisplayOrder` Ordering used for grid/table in Power Apps<br><br>![image.png](/.attachments/image-ebe56358-37f0-4c37-8e61-591c6e7f25c8.png) <br><br>For column level:<br>- `titleProperty` &#x26A0; Unknown usage, <br>- `subtitleProperty` &#x26A0; Unknown usage, <br>- `thumbnailProperty` &#x26A0; Unknown usage <br><br>![image.png](/.attachments/image-033ede7c-29b6-4bd2-975a-7a619f8f7afd.png)|
 | `x-ms-capabilities` | Column level capabilities (See Capabilities chapter below) |
 | `x-ms-navigation` | [INTERNAL] &#x26A0; Unknown usage <br> Has `targetTable` and `referentialConstraints` properties |
 | `x-ms-enable-selects` | [INTERNAL] SharePoint specific header for controlling $select. <br>Boolean value. Enables SPO ECS feature.<br> &#x26A0; Unclear usage|
@@ -204,7 +204,7 @@ Get metdata for a specific table. This includes:
 ```
 
 OptionSets have a name which is defined as `propertyName (tableName)` when no `x-ms-enum` extension is used.
-Otherwise, it will have `x-ms-enum.name (tableName)` name, where `x-ms-enum.name` is the value of `name` property in `x-ms-enum` (ie. there is no dot).
+Otherwise, it will have `x-ms-enum.name (tableName)` name, where `x-ms-enum.name` is the value of `name` property in `x-ms-enum` (i.e. there is no dot).
 
 [INTERNAL] Note: Excel connector defines `__PowerAppsId__` column which is hidden (by design)
 
@@ -240,7 +240,7 @@ Defined in `x-ms-capabilities`
 | `filterFunctionSupport` | FilterSupportedFunctions | List of supported functions by the table in a filter function<br> For CDS, defaults to `{ "eq", "ne", "gt", "ge", "lt", "le", "and", "or", "cdsin", "contains", "startswith", "endswith", "not", "null", "sum", "average", "min", "max", "count", "countdistinct", "top", "astype", "arraylookup" }`<br> Defines default column capabilities for all columns before any restriction would apply |
 | `serverPagingOptions` | (PagingCapabilities.ServerPagingOptions) | String array (enum) - List of supported server-driven paging capabilities <br>Only valid values `top` or `skiptoken` <br> &#x26A0; `skiptoken` seems never used|
 | `isOnlyServerPagable` | (PagingCapabilities.IsOnlyServerPagable) | Boolean, default `false` - Defines if a table is pageable even if it wouldn't be supporting delegation<br> Always `true` for CDS<br> In opposition with client paging<br>If set to `false` or server paging options contains `top`, $top OData will be used - [ref, line 934]( https://msazure.visualstudio.com/OneAgile/_git/PowerApps-Client?path=/src/AppMagic/js/AppMagic.Services/ConnectedData/CdpConnector.ts&_a=contents&version=GBmaster) <br>If set to `true`, `@odata.nextlink` URL is used instead of $skip and $top query parameters|
-| `isPageable` | | Defines is a table supports paging <br> This can be `true` with `isDelegable` = false. |
+| `isPageable` | | Defines if a table supports paging <br> This can be `true` with `isDelegable` = false. |
 | `odataVersion` | | Specified the OData version <br>Either 3 or 4. <br>No other version is supported. <br> See differences here [What's New in OData Version 4.0](https://docs.oasis-open.org/odata/new-in-odata/v4.0/cn01/new-in-odata-v4.0-cn01.html) |
 | `supportsRecordPermission` | (SupportsRecordPermission) | For supporting record level permissions. <br> Always true in CDS. <br> Used by [RecordInfo](https://learn.microsoft.com/en-us/power-platform/power-fx/reference/function-recordinfo) function |
 
