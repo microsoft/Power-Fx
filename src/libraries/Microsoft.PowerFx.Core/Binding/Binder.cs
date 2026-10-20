@@ -4438,7 +4438,14 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     if (funcNamespace.ToString() != string.Empty)
                     {
-                        _txb.ErrorContainer.Error(node, TexlStrings.ErrUnknownNamespaceFunction, node.Head.Name.Value, funcNamespace.ToString());
+                        if (_nameResolver?.LookupFunctionsInNamespace(funcNamespace).Any() == true)
+                        {
+                            _txb.ErrorContainer.Error(node, TexlStrings.ErrUnknownNamespaceFunction, node.Head.Name.Value, funcNamespace.ToString());
+                        }
+                        else
+                        {
+                            _txb.ErrorContainer.Error(node, TexlStrings.ErrUnknownNamespace, funcNamespace.ToString());
+                        }
                     }
                     else
                     {
