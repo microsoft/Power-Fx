@@ -1925,6 +1925,10 @@
     <value>{0} je neznáma alebo nepodporovaná funkcia v priestore názvov {1}.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrUnknownNamespace" xml:space="preserve">
+    <value>Namespace '{0}' does not exist.</value>
+    <comment>Error Message. {0} is the namespace name.</comment>
+  </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
     <value>Správanie súčasti je možné vyvolať iba priamo z danej súčasti.</value>
     <comment>Error Message.</comment>

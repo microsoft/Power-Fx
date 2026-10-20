@@ -1925,6 +1925,10 @@
     <value>Funkcija “{0}” ir nezināma vai netiek atbalstīta nosaukumvietā “{1}”.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrUnknownNamespace" xml:space="preserve">
+    <value>Namespace '{0}' does not exist.</value>
+    <comment>Error Message. {0} is the namespace name.</comment>
+  </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
     <value>Komponenta darbību var izsaukt tikai no komponenta.</value>
     <comment>Error Message.</comment>

@@ -1925,6 +1925,10 @@
     <value>'{0}' adalah fungsi yang tidak diketahui atau tidak didukung dalam ruang nama '{1}'.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrUnknownNamespace" xml:space="preserve">
+    <value>Namespace '{0}' does not exist.</value>
+    <comment>Error Message. {0} is the namespace name.</comment>
+  </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
     <value>Perilaku komponen hanya dapat dijalankan dari dalam komponen.</value>
     <comment>Error Message.</comment>

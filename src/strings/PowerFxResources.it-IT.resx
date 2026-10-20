@@ -1925,6 +1925,10 @@
     <value>"{0}" è una funzione sconosciuta o non supportata nello spazio dei nomi "{1}".</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrUnknownNamespace" xml:space="preserve">
+    <value>Namespace '{0}' does not exist.</value>
+    <comment>Error Message. {0} is the namespace name.</comment>
+  </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
     <value>Il comportamento dei componenti può essere richiamato solo dall'interno di un componente.</value>
     <comment>Error Message.</comment>

@@ -1925,6 +1925,10 @@
     <value>'{0}' नेमस्पेस '{1}' में एक अज्ञात या असमर्थित फ़ंक्शन है.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrUnknownNamespace" xml:space="preserve">
+    <value>Namespace '{0}' does not exist.</value>
+    <comment>Error Message. {0} is the namespace name.</comment>
+  </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
     <value>घटक व्यवहार केवल एक घटक के भीतर से लागू किया जा सकता है.</value>
     <comment>Error Message.</comment>

@@ -1925,6 +1925,10 @@
     <value>'{0}' は名前空間 '{1}' 内で不明またはサポートされていない関数です。</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrUnknownNamespace" xml:space="preserve">
+    <value>Namespace '{0}' does not exist.</value>
+    <comment>Error Message. {0} is the namespace name.</comment>
+  </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
     <value>コンポーネントの動作は、コンポーネント内からのみ呼び出すことができます。</value>
     <comment>Error Message.</comment>

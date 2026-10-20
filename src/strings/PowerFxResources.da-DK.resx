@@ -1925,6 +1925,10 @@
     <value>"{0}" er en ukendt eller ikke-understøttet funktion i navneområdet "{1}".</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrUnknownNamespace" xml:space="preserve">
+    <value>Namespace '{0}' does not exist.</value>
+    <comment>Error Message. {0} is the namespace name.</comment>
+  </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
     <value>Komponentens funktionsmåde kan kun aktiveres inde fra en komponent.</value>
     <comment>Error Message.</comment>
