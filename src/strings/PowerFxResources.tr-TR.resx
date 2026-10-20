@@ -1925,6 +1925,10 @@
     <value>'{0}', '{1}' ad alanı içinde bilinmeyen veya desteklenmeyen bir işlevdir.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrUnknownNamespace" xml:space="preserve">
+    <value>Namespace '{0}' does not exist.</value>
+    <comment>Error Message. {0} is the namespace name.</comment>
+  </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
     <value>Bileşen davranışı yalnızca bir bileşenin içinden çağrılabilir.</value>
     <comment>Error Message.</comment>

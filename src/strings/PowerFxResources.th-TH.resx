@@ -1925,6 +1925,10 @@
     <value>'{0}' เป็นฟังก์ชันที่ไม่รู้จักหรือไม่ได้รับการสนับสนุนใน namespace '{1}'</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrUnknownNamespace" xml:space="preserve">
+    <value>Namespace '{0}' does not exist.</value>
+    <comment>Error Message. {0} is the namespace name.</comment>
+  </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
     <value>ลักษณะการทำงานของคอมโพเนนต์จะสามารถเรียกได้จากภายในคอมโพเนนต์เท่านั้น</value>
     <comment>Error Message.</comment>

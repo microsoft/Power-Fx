@@ -1925,6 +1925,10 @@
     <value>'{0}' 為命名空間 '{1}' 中未知或不支援的函式。</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrUnknownNamespace" xml:space="preserve">
+    <value>Namespace '{0}' does not exist.</value>
+    <comment>Error Message. {0} is the namespace name.</comment>
+  </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
     <value>只能從元件內部叫用元件行為。</value>
     <comment>Error Message.</comment>
