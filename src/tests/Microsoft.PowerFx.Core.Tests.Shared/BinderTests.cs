@@ -109,6 +109,36 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void TestUnliftabilityPropagatesThroughAsSource()
+        {
+            var config = new PowerFxConfig();
+            config.SymbolTable.AddVariable(
+                "x",
+                TableType.Empty().Add("Value", FormulaType.Number),
+                mutable: true);
+            config.AddFunction(new ClearFunction());
+
+            var engine = new Engine(config);
+            var parserOptions = new ParserOptions { AllowsSideEffects = true };
+            var checkResult = engine.Check(
+                "Clear(x); ForAll(Filter([1,2,3], First(x).Value = 0) As Target, Target.Value)",
+                parserOptions);
+
+            Assert.True(checkResult.IsSuccess);
+
+            var binding = checkResult.Binding;
+            var chain = Assert.IsType<VariadicOpNode>(binding.Top);
+            var forAll = Assert.IsType<CallNode>(chain.Children[1]);
+            var alias = Assert.IsType<AsNode>(forAll.Args.Children[0]);
+            var filter = Assert.IsType<CallNode>(alias.Left);
+            var predicate = filter.Args.Children[1];
+
+            Assert.True(binding.IsUnliftable(predicate));
+            Assert.True(binding.IsUnliftable(alias));
+            Assert.True(binding.IsUnliftable(forAll));
+        }
+
+        [Fact]
         public void TestImmutableNodesWithScopeVariable()
         {
             var config = new PowerFxConfig();

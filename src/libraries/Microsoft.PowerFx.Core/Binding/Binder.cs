@@ -3455,6 +3455,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
             public override bool PreVisit(TableNode node) => PreVisitVariadicBase(node);
 
+            public override bool PreVisit(AsNode node)
+            {
+                Contracts.AssertValue(node);
+
+                _txb.AddVolatileVariables(node.Left, _txb.GetVolatileVariables(node));
+                return true;
+            }
+
             private bool PreVisitVariadicBase(VariadicBase node)
             {
                 Contracts.AssertValue(node);

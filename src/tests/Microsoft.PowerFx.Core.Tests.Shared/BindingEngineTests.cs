@@ -201,7 +201,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
-            AssertContainsError(result, "Error 0-12: 'def' is an unknown or unsupported function in namespace 'abc'.");
+            AssertContainsError(result, "Error 0-12: 'def' is an unknown or unsupported function, or namespace 'abc' does not exist.");
         }
 
         [Fact]
