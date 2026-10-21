@@ -160,7 +160,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             AggregateException ae = Assert.Throws<AggregateException>(() => engine.EvalAsync("X.SetV4(0)", CancellationToken.None, runtimeConfig: runtimeConfig).Result);
 
             // If we try using the function, it doesn't exist
-            Assert.Equal("Errors: Error 0-10: Namespace 'X' does not exist.", ae.InnerException.Message);
+            Assert.Equal("Errors: Error 0-10: 'SetV4' is an unknown or unsupported function, or namespace 'X' does not exist.", ae.InnerException.Message);
 
             // **** TEST 2: SDK level with default settings ****
             logger.WriteLine("-- OpenApiParser.GetFunctions, default settings");

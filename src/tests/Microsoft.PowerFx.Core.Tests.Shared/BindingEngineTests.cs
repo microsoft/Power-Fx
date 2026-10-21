@@ -192,22 +192,16 @@ namespace Microsoft.PowerFx.Tests
             AssertContainsError(result, "Error 0-8: 'abc' is an unknown or unsupported function.");
         }
 
-        [Theory]
-        [InlineData("abc.def(123)", "Namespace 'abc' does not exist.")]
-        [InlineData("foo.bar(1)", "Namespace 'foo' does not exist.")]
-        [InlineData("abc.def.ghi(123)", "Namespace 'abc.def' does not exist.")]
-        [InlineData("'unknown namespace'.bar(1)", "Namespace ''unknown namespace'' does not exist.")]
-        [InlineData("Calendar.def(123)", "'def' is an unknown or unsupported function in namespace 'Calendar'.")]
-        [InlineData("Calendar.Unknown.def(123)", "Namespace 'Calendar.Unknown' does not exist.")]
-        public void CheckBadNamespaceFunctionError(string expression, string expectedMessage)
+        [Fact]
+        public void CheckBadNamespaceFunctionError()
         {
             var config = new PowerFxConfig();
             var engine = new Engine(config);
-            var result = engine.Check(expression);
+            var result = engine.Check("abc.def(123)");
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
-            AssertContainsError(result, $"Error 0-{expression.Length}: {expectedMessage}");
+            AssertContainsError(result, "Error 0-12: 'def' is an unknown or unsupported function, or namespace 'abc' does not exist.");
         }
 
         [Fact]

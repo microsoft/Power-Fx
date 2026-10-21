@@ -646,7 +646,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUnimplementedFunction = new ErrorResourceKey("ErrUnimplementedFunction");
         public static ErrorResourceKey ErrKnownTypeHelperFunction = new ErrorResourceKey("ErrKnownTypeHelperFunction");
         public static ErrorResourceKey ErrUnknownNamespaceFunction = new ErrorResourceKey("ErrUnknownNamespaceFunction");
-        public static ErrorResourceKey ErrUnknownNamespace = new ErrorResourceKey("ErrUnknownNamespace");
         public static ErrorResourceKey ErrBadArity = new ErrorResourceKey("ErrBadArity");
         public static ErrorResourceKey ErrBadArityRange = new ErrorResourceKey("ErrBadArityRange");
         public static ErrorResourceKey ErrBadArityMinimum = new ErrorResourceKey("ErrBadArityMinimum");
