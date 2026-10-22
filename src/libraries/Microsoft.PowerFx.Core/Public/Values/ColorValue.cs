@@ -4,6 +4,7 @@
 using System;
 using System.Diagnostics.Contracts;
 using System.Drawing;
+using System.Globalization;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
 
@@ -24,7 +25,7 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
-            sb.Append($"RGBA({Value.R},{Value.G},{Value.B},{Math.Round(Value.A / 255.0, 3)})");
+            sb.Append(string.Format(CultureInfo.InvariantCulture, "RGBA({0},{1},{2},{3})", Value.R, Value.G, Value.B, Math.Round(Value.A / 255.0, 3)));
         }
     }
 }
