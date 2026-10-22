@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Tests;
@@ -33,6 +35,35 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var dateTimeValueDeserialized = (DateTimeValue)engine.Eval(dateTimeValue.ToExpression());
 
                 Assert.Equal(dateTimeValue.GetConvertedValue(null), dateTimeValueDeserialized.GetConvertedValue(null));
+            }
+        }
+
+        [Fact]
+        public void ColorSerializationTests()
+        {
+            var engine = new RecalcEngine(new PowerFxConfig());
+            var originalCulture = CultureInfo.CurrentCulture;
+
+            try
+            {
+                // Verify invariant serialization even under cultures with comma decimal separators
+                CultureInfo.CurrentCulture = new CultureInfo("fr-FR");
+
+                var color = Color.FromArgb(128, 255, 0, 0);
+                var colorValue = FormulaValue.New(color);
+                var expr = colorValue.ToExpression();
+
+                Assert.Equal("RGBA(255,0,0,0.502)", expr);
+
+                var colorValueDeserialized = (ColorValue)engine.Eval(expr, options: new ParserOptions { Culture = CultureInfo.InvariantCulture });
+                Assert.Equal(color.R, colorValueDeserialized.Value.R);
+                Assert.Equal(color.G, colorValueDeserialized.Value.G);
+                Assert.Equal(color.B, colorValueDeserialized.Value.B);
+                Assert.True(Math.Abs(color.A - colorValueDeserialized.Value.A) <= 1);
+            }
+            finally
+            {
+                CultureInfo.CurrentCulture = originalCulture;
             }
         }
 
