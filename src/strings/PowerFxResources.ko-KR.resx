@@ -1922,7 +1922,7 @@
     <comment>{Locked=Type} Error message shown when a type helper is used outside of Type function. Example of valid usage: "Type(RecordOf(Accounts))"</comment>
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
-    <value>'{0}' is an unknown or unsupported function, or namespace '{1}' does not exist.</value>
+    <value>'{0}'은(는) 알 수 없거나 지원되지 않는 함수이거나 네임스페이스 '{1}'이(가) 존재하지 않습니다.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
