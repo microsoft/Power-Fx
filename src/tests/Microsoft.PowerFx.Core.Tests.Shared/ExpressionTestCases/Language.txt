@@ -1,2 +1,14 @@
 >> Language()
 "en-US"
+
+>> Calendar.MonthsLong()
+Table({Value:"January"},{Value:"February"},{Value:"March"},{Value:"April"},{Value:"May"},{Value:"June"},{Value:"July"},{Value:"August"},{Value:"September"},{Value:"October"},{Value:"November"},{Value:"December"})
+
+>> Calendar.MonthsShort()
+Table({Value:"Jan"},{Value:"Feb"},{Value:"Mar"},{Value:"Apr"},{Value:"May"},{Value:"Jun"},{Value:"Jul"},{Value:"Aug"},{Value:"Sep"},{Value:"Oct"},{Value:"Nov"},{Value:"Dec"})
+
+>> Calendar.WeekdaysLong()
+Table({Value:"Sunday"},{Value:"Monday"},{Value:"Tuesday"},{Value:"Wednesday"},{Value:"Thursday"},{Value:"Friday"},{Value:"Saturday"})
+
+>> Calendar.WeekdaysShort()
+Table({Value:"Sun"},{Value:"Mon"},{Value:"Tue"},{Value:"Wed"},{Value:"Thu"},{Value:"Fri"},{Value:"Sat"})
