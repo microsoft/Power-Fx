@@ -531,6 +531,12 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter RemoveDataSourceArg = (b) => StringResources.Get("RemoveDataSourceArg", b);
         public static StringGetter RemoveRecordsArg = (b) => StringResources.Get("RemoveRecordsArg", b);
 
+        public static StringGetter AboutUpdate = (b) => StringResources.Get("AboutUpdate", b);
+        public static StringGetter UpdateArg_Source = (b) => StringResources.Get("UpdateArg_Source", b);
+        public static StringGetter UpdateArg_Record = (b) => StringResources.Get("UpdateArg_Record", b);
+        public static StringGetter UpdateArg_Update = (b) => StringResources.Get("UpdateArg_Update", b);
+        public static StringGetter UpdateArg_RemoveFlags = (b) => StringResources.Get("UpdateArg_RemoveFlags", b);
+
         public static StringGetter AboutDec2Hex = (b) => StringResources.Get("AboutDec2Hex", b);
         public static StringGetter Dec2HexArg1 = (b) => StringResources.Get("Dec2HexArg1", b);
         public static StringGetter Dec2HexArg2 = (b) => StringResources.Get("Dec2HexArg2", b);
