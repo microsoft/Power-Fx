@@ -707,22 +707,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     continue;
                 }
 
-                // Ensure that if the key in argument1 exists in the current record, their types match.
-                bool isSafeToUnion = true;
-                foreach (var typedName in curType.GetNames(DPath.Root))
-                {
-                    DName name = typedName.Name;
-                    if (recordType.TryGetType(name, out DType nameType) && !nameType.Accepts(typedName.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-                    {
-                        errors.EnsureError(args[i], TexlStrings.ErrTypeError_Arg_Expected_Found, name, nameType.GetKindString(), typedName.Type.GetKindString());
-                        isValid = isSafeToUnion = false;
-                    }
-                }
-
-                if (isSafeToUnion)
-                {
-                    retType = DType.Union(retType, curType, useLegacyDateTimeAccepts: false, context.Features);
-                }
+                retType = DType.Union(retType, curType, useLegacyDateTimeAccepts: false, context.Features);
             }
 
             returnType = retType;

@@ -4568,6 +4568,39 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("Patch({a:1}, {b:2})", "![a:n, b:n]")]
+        [InlineData("Patch({a:1}, {b:\"test\"})", "![a:n, b:s]")]
+        [InlineData("Patch({a:1, b:2}, {b:\"3\", c:4})", "![a:n, b:s, c:n]")]
+        [InlineData("Patch({x:true}, {y:Date(2020,1,1)})", "![x:b, y:D]")]
+        public void TestPatchRecordFunction(string script, string expectedType)
+        {
+            Assert.True(DType.TryParse(expectedType, out var type), script);
+            Assert.True(type.IsValid, script);
+
+            TestSimpleBindingSuccess(script, type);
+        }
+
+        [Theory]
+        [InlineData("Patch(rec1, {b:2})", "![a:n, b:n]", "![a:n]", "rec1")]
+        [InlineData("Patch(rec2, {c:\"new\"})", "![a:n, b:s, c:s]", "![a:n, b:s]", "rec2")]
+        [InlineData("Patch(rec3, {b:3, c:4})", "![a:n, b:n, c:n]", "![a:n, b:n]", "rec3")]
+        [InlineData("Patch(rec4, {y:Date(2020,1,1)})", "![x:b, y:D]", "![x:b]", "rec4")]
+        [InlineData("Patch(rec5, {x:123})", "![x:$]", "![x:$]", "rec5")]
+        public void TestPatchRecordFunctionWithVariable(string script, string expectedType, string variableType, string variableName)
+        {
+            Assert.True(DType.TryParse(expectedType, out var type), script);
+            Assert.True(type.IsValid, script);
+
+            Assert.True(DType.TryParse(variableType, out var varType), script);
+            Assert.True(varType.IsValid, script);
+
+            var symbol = new SymbolTable();
+            symbol.AddVariable(variableName, FormulaType.Build(varType));
+
+            TestSimpleBindingSuccess(script, type, symbol);
+        }
+
+        [Theory]
 
         // Exact type match: all arguments directly match the data source schema *[Name:s, Value:n]
         [InlineData("Patch(MyDataSource, MyRecord, { Name: \"Hello\", Value: 1 })", true)]
