@@ -162,6 +162,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction LookUp = _library.Add(new LookUpFunction());
         public static readonly TexlFunction Lower = _library.Add(new LowerUpperFunction(isLower: true));
         public static readonly TexlFunction LowerT = _library.Add(new LowerUpperTFunction(isLower: true));
+        public static readonly TexlFunction Map = _library.Add(new MapFunction());
+        public static readonly TexlFunction Map_UO = _library.Add(new MapFunction_UO());
         public static readonly TexlFunction Max = _library.Add(new MinMaxFunction(isMin: false));
         public static readonly TexlFunction MaxT = _library.Add(new MinMaxTableFunction(isMin: false));
         public static readonly TexlFunction Mid = _library.Add(new MidFunction());
