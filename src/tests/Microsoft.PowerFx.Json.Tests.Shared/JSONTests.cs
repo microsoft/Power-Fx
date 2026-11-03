@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -163,6 +165,26 @@ namespace Microsoft.PowerFx.Json.Tests
             var evalResult = checkResult.GetEvaluator().Eval();
             Assert.IsType<ErrorValue>(evalResult);
             Assert.Equal(ErrorKind.Div0, (evalResult as ErrorValue).Errors.First().Kind);
+        }
+
+        [Fact]
+        public void Json_Ignores_Unsupported_Type_In_Metadata_Field()
+        {
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            config.EnableJsonFunctions();
+
+            var controlType = new DType(DKind.Control);
+            var engine = new RecalcEngine(config);
+            var recordType = new KnownRecordType(DType.CreateRecord(
+                new TypedName(DType.Number, new DName("Value")),
+                new TypedName(controlType, new DName(DType.MetaFieldName))));
+
+            var symbolTable = new SymbolTable();
+            symbolTable.AddVariable("Var", recordType);
+
+            var result = engine.Check("JSON(Var)", symbolTable: symbolTable);
+
+            Assert.True(result.IsSuccess, string.Join(", ", result.Errors.Select(error => error.Message)));
         }
 
         public class LazyRecordValue : RecordValue
