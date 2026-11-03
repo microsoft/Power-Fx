@@ -225,7 +225,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (isLazyRecordOrTable || argType.Kind == DKind.Record || argType.Kind == DKind.Table)
             {
-                foreach (TypedName child in argType.GetAllNames(DPath.Root))
+                foreach (TypedName child in argType.GetNames(DPath.Root))
                 {
                     if (HasUnsupportedTypeInternal(child.Type, supportsLazyTypes, depth + 1, out unsupportedType, out unsupportedColumnName))
                     {
@@ -256,7 +256,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     return true;
                 case DKind.Record:
                 case DKind.Table:
-                    foreach (TypedName child in argType.GetAllNames(DPath.Root))
+                    foreach (TypedName child in argType.GetNames(DPath.Root))
                     {
                         if (DataHasMedia(child.Type))
                         {
