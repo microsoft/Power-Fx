@@ -286,6 +286,25 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(21m, result.ToObject());
         }
 
+        // Setting a record with incompatible fields on a typed record slot must fail.
+        // https://github.com/microsoft/Power-Fx/issues/3101
+        [Fact]
+        public void SetRecordSlotRejectsIncompatibleRecord()
+        {
+            var symTable = new SymbolTable();
+            var slot = symTable.AddVariable("r", RecordType.Empty().Add("a", FormulaType.Decimal), mutable: true);
+            var values = symTable.CreateValues();
+
+            // Compatible
+            values.Set(slot, FormulaValue.NewRecordFromFields(new NamedValue("a", FormulaValue.New(1m))));
+
+            // Wrong field type
+            Assert.Throws<InvalidOperationException>(() => values.Set(slot, FormulaValue.NewRecordFromFields(new NamedValue("a", FormulaValue.New("x")))));
+
+            // Missing field
+            Assert.Throws<InvalidOperationException>(() => values.Set(slot, FormulaValue.NewRecordFromFields(new NamedValue("b", FormulaValue.New(true)))));
+        }
+
         // Type to ensure we don't call Fields. 
         private class LazyType : RecordType
         {
