@@ -130,7 +130,7 @@ namespace Microsoft.PowerFx
         {
             var srcType = this.GetTypeFromSlot(slot);
 
-            if (newType is RecordType)
+            if (newType is RecordType && (newType._type.IsLazyType || srcType._type.IsLazyType || newType is not KnownRecordType))
             {
                 // Lazy RecordTypes don't validate. 
                 // https://github.com/microsoft/Power-Fx/issues/833
