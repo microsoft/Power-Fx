@@ -7,3 +7,13 @@ Errors: Error 9-16: Invalid argument type.|Error 0-8: The function 'Distinct' ha
 // Untyped blanks are not allowed in the argument that defines the row scope
 >> Distinct(Error("error"), true)
 Errors: Error 9-23: Invalid argument type.|Error 0-8: The function 'Distinct' has some invalid arguments.
+
+>> Distinct(Table({a:1,b:2},{a:3,b:4},{a:5,b:6}), Blank())
+Errors: Error 47-54: Expected a text, numeric, boolean, or date/time value.|Error 0-8: The function 'Distinct' has some invalid arguments.
+
+// Distinct only supports Primitive types.
+>> Distinct(Table({a:1,b:2},{a:3,b:4},{a:5,b:6}), Table({test: a * 2}))
+Errors: Error 47-67: Expected a text, numeric, boolean, or date/time value.|Error 0-8: The function 'Distinct' has some invalid arguments.
+
+>> Distinct(Table({x:1,y:2},{x:10,y:2}), ThisRecord)
+Errors: Error 38-48: Expected a text, numeric, boolean, or date/time value.|Error 0-8: The function 'Distinct' has some invalid arguments.
