@@ -408,6 +408,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         _writer.WriteBooleanValue(untypedObject.GetBoolean());
                     }
+                    else if (type is BlankType)
+                    {
+                        _writer.WriteNullValue();
+                    }
                     else if (type is ExternalType externalType)
                     {
                         if (externalType.Kind == ExternalTypeKind.Array || externalType.Kind == ExternalTypeKind.ArrayAndObject)
