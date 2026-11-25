@@ -36,6 +36,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
+        public async Task TestDecimalToDateTimeCoercion()
+        {
+            // Per expression.
+            var engine = new RecalcEngine();
+            var rc = new RuntimeConfig();
+            rc.SetTimeZone(TimeZoneInfo.Utc);
+
+            var res = await engine.EvalAsync("If(false, DateTime(1899, 12, 30, 0, 0, 0, 0), 0)", CancellationToken.None, runtimeConfig: rc);
+
+            var dt = res.ToObject();
+
+            Assert.Equal(DateTimeKind.Utc, ((DateTime)dt).Kind);
+        }
+
+        [Fact]
         public async Task BasicDirectEvalFunc()
         {
             // ReflectionFunctions are impls an interface for direct dispatch

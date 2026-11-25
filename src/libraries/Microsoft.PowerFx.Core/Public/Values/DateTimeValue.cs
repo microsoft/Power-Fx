@@ -39,37 +39,33 @@ namespace Microsoft.PowerFx.Types
 
         internal static DateTime GetConvertedDateTimeValue(DateTime value, TimeZoneInfo timeZoneInfo)
         {
-            // If timeZoneInfo is null and stored value is in UTC, we don't want to convert.
-            if (timeZoneInfo == null && value.Kind == DateTimeKind.Utc)
-            {
-                timeZoneInfo = TimeZoneInfo.Utc;
-            }
-            else if (timeZoneInfo == null)
+            // Ensure timeZoneInfo is not null; default to local time zone if it is.
+            if (timeZoneInfo == null)
             {
                 timeZoneInfo = TimeZoneInfo.Local;
             }
-            
-            // Since we can't convert LocalKind time to UTC, if the time was of kind local just change kind.
-            if (value.Kind == DateTimeKind.Local && timeZoneInfo.Equals(TimeZoneInfo.Utc))
+
+            DateTime result;
+
+            if (value.Kind == DateTimeKind.Local)
             {
-                return DateTime.SpecifyKind(value, DateTimeKind.Utc);
+                // Convert from local time to the specified time zone.
+                result = TimeZoneInfo.ConvertTime(value, TimeZoneInfo.Local, timeZoneInfo);
             }
-            else if (value.Kind == DateTimeKind.Local && !timeZoneInfo.Equals(TimeZoneInfo.Utc))
+            else if (value.Kind == DateTimeKind.Utc)
             {
-                // This code should be modified as we don't return a UTC time here
-                // https://github.com/microsoft/Power-Fx/issues/1931
-                return DateTime.SpecifyKind(value, DateTimeKind.Unspecified);
+                // Convert from UTC to the specified time zone.
+                result = TimeZoneInfo.ConvertTimeFromUtc(value, timeZoneInfo);
             }
-            else if (value.Kind == DateTimeKind.Unspecified && timeZoneInfo.Equals(TimeZoneInfo.Utc))
+            else 
             {
-                return TimeZoneInfo.ConvertTimeToUtc(value, timeZoneInfo);
-            }
-            else if (value.Kind == DateTimeKind.Utc && !timeZoneInfo.Equals(TimeZoneInfo.Utc))
-            {
-                return TimeZoneInfo.ConvertTime(value, timeZoneInfo);
+                // DateTimeKind.Unspecified
+                // Assume the unspecified DateTime is in the specified time zone.
+                // If you need to convert it to another time zone, specify the source time zone.
+                result = DateTime.SpecifyKind(value, DateTimeKind.Unspecified);
             }
 
-            return value;
+            return result;
         }
 
         internal DateTimeValue(IRContext irContext, DateTime value)
