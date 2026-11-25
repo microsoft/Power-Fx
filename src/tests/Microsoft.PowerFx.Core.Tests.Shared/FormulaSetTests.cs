@@ -2,9 +2,11 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -77,6 +79,65 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(indexMap["F"] < indexMap["G"]);
             Assert.True(indexMap["A"] < indexMap["H"]);
             Assert.True(indexMap["G"] < indexMap["H"]);
+        }
+
+        private class TestDependencyFinderVisitor2 : IdentityTexlVisitor
+        {
+            public readonly HashSet<string> _vars = new HashSet<string>();
+
+            // <identifier>
+            public override void Visit(FirstNameNode node)
+            {
+                var name = node.Ident.Name.Value;
+
+                _vars.Add(name);
+
+                base.Visit(node);
+            }
+
+            // <expr>.field
+            public override bool PreVisit(DottedNameNode node)
+            {
+                string fieldName = node.Right.Name.Value;
+
+                _vars.Add(fieldName);
+
+                return base.PreVisit(node);
+            }            
+        }
+
+        // Find identifiers in an expression 
+        [Fact]
+        public void DependencyTest()
+        {
+            var expr = "x+ 1 + rec.field1";
+
+            RecordType rec = RecordType.Empty()
+                .Add("field1", FormulaType.Number)
+                .Add("field2", FormulaType.Number);
+
+            var symbolTable = new SymbolTable();
+            symbolTable.AddVariable("x", FormulaType.Number);
+            symbolTable.AddVariable("y", FormulaType.Number);
+            symbolTable.AddVariable("rec", rec);
+
+            var engine = new Engine();
+
+            var check = new CheckResult(engine)
+                .SetText(expr)
+                .SetBindingInfo(symbolTable);
+
+            var parse = check.ApplyParse();
+            Assert.True(check.IsSuccess);
+
+            var vis = new TestDependencyFinderVisitor2();
+
+            parse.Root.Accept(vis);
+
+            var list = vis._vars.OrderBy(x => x).ToArray();
+            var listStr = string.Join(",", list);
+
+            Assert.Equal("field1,rec,x", listStr);
         }
     }
 }
