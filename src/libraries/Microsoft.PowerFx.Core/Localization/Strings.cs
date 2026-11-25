@@ -366,6 +366,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutEOMonth = (b) => StringResources.Get("AboutEOMonth", b);
         public static StringGetter EOMonthArg1 = (b) => StringResources.Get("EOMonthArg1", b);
         public static StringGetter EOMonthArg2 = (b) => StringResources.Get("EOMonthArg2", b);
+        public static StringGetter AboutWorkday = (b) => StringResources.Get("AboutWorkday", b);
+        public static StringGetter WorkdayArg1 = (b) => StringResources.Get("WorkdayArg1", b);
+        public static StringGetter WorkdayArg2 = (b) => StringResources.Get("WorkdayArg2", b);
+        public static StringGetter WorkdayArg3 = (b) => StringResources.Get("WorkdayArg3", b);
 
         public static StringGetter AboutCalendar__MonthsLong = (b) => StringResources.Get("AboutCalendar__MonthsLong", b);
         public static StringGetter AboutCalendar__MonthsShort = (b) => StringResources.Get("AboutCalendar__MonthsShort", b);
