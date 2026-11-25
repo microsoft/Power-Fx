@@ -16,6 +16,27 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class CoreUtilExtensionTests
     {
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void CheckNullPreservesParameterNameAndMessage(bool nullableValue)
+        {
+            var exception = Assert.Throws<ArgumentException>(() =>
+            {
+                if (nullableValue)
+                {
+                    Contracts.CheckNull<int>(1, "value", "Value must be null.");
+                }
+                else
+                {
+                    Contracts.CheckNull("present", "value", "Value must be null.");
+                }
+            });
+
+            Assert.Equal("value", exception.ParamName);
+            Assert.Equal(new ArgumentException("Value must be null.", "value").Message, exception.Message);
+        }
+
         [Fact]
         public void GetDetailedExceptionMessage_NullException_ReturnsNoExceptionProvided()
         {

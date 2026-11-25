@@ -1663,7 +1663,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
         public static Exception ExceptNull(string paramName, string sid)
         {
-            return Process(new ArgumentException(paramName, sid));
+            return Process(new ArgumentException(sid, paramName));
         }
 
         public static Exception ExceptEmpty(string paramName)
