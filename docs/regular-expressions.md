@@ -26,7 +26,7 @@ As a result, some regular expressions that may work in other environments will b
 
 ## Power Apps
 
-Note that Power Apps uses a pre-V1 regular expression engine and enums, more closely tied to what JavaScript supports. The information in this article will be similar, but different, than Power Apps behavior in some ways. With Power Fx V1 enabled, regular expressions in Power Apps will match the behavior described here.
+Note that Power Apps uses a pre-V1 regular expression engine and enums, more closely tied to what JavaScript supports. The information in this article will be similar to, but different from, Power Apps behavior in some ways. With Power Fx V1 enabled, regular expressions in Power Apps will match the behavior described here.
 
 ## Supported features
 
@@ -49,7 +49,7 @@ The regular expression must be a constant and not calculated or stored in a vari
 
 Octal codes for characters, such as `\044` or `\o{044}` are disallowed, as they can be ambiguous with numbered back references. Use `\x` or `\u` instead. 
 
-`\v` is not supported as it ambiguous across regular expression languages. Use `\x0b` for a vertical tab or `[\x0b\f\r\n\x85\u2028\u2029]` for vertical whitespace.
+`\v` is not supported as it is ambiguous across regular expression languages. Use `\x0b` for a vertical tab or `[\x0b\f\r\n\x85\u2028\u2029]` for vertical whitespace.
 
 ### Assertions
 
@@ -136,7 +136,7 @@ Two capture groups cannot share the same name, for example the regular expressio
 
 The name of a named submatch must begin with a `\p{L}` character or `_`, and can continue with those characters plus `\p{Nd}`. Names are limited in length to 62 UTF-16 code units.
 
-Backreferences to possibly empty submatches and to submatches within a look behind or look ahead are also not supported. 
+Backreferences to possibly empty submatches and to submatches within a look-behind or look-ahead are also not supported. 
 
 Some implementations offer an "explicit capture" option to improve performance which is unnecessary in Power Fx as it is effectively the default. **MatchOptions.NumberedSubMatches** disables it and enables implicitly numbered captures.
 
@@ -176,7 +176,7 @@ Enabled with **MatchOptions.Complete** or use `^` and `$` at the beginning and o
 
 ### BeginsWith
 
-Enabled with **MatchOptions.BeginsWith** or use `^` at the beginning and of the regular expression.
+Enabled with **MatchOptions.BeginsWith** or use `^` at the beginning of the regular expression.
 
 ### EndsWith
 
@@ -264,7 +264,7 @@ IsMatch( "file://c:/temp/info.txt", "^FILE://", MatchOptions.IgnoreCase )
 // returns true
 ```
 
-Most parts or Power Fx are culture aware, but not here. Using culture invariant matching is the industry standard for regular expressions, including in JavaScript and Perl. It is particularly useful in the second example where a system resource is being matched, in for example the `tr-TR` culture where `I` is not the uppercase equivalent of `i`.
+Most parts of Power Fx are culture aware, but not here. Using culture invariant matching is the industry standard for regular expressions, including in JavaScript and Perl. It is particularly useful in the second example where a system resource is being matched, in for example the `tr-TR` culture where `I` is not the uppercase equivalent of `i`.
 
 If a culture aware, case insensitive match is needed, use characters class with the matching characters instead, for example `[Hh][Ee][Ll][Ll][Oo]` for the first example.
 
@@ -272,7 +272,7 @@ If a culture aware, case insensitive match is needed, use characters class with 
 
 Enabled with **MatchOptions.Multiline** or `(?m)` at the start of a regular expression.
 
-Normally, `^` and `$` anchors match the beginning and of the input text. With the **Multiline** modifier, these anchors will match the beginning and end of lines in the input text, where each line ends with `\r`, `\n`, `\r\n`, or the end of the input.  For example:
+Normally, `^` and `$` anchors match the beginning and end of the input text. With the **Multiline** modifier, these anchors will match the beginning and end of lines in the input text, where each line ends with `\r`, `\n`, `\r\n`, or the end of the input.  For example:
 
 ```powerapps-dot
 MatchAll( "Hello" & Char(13) & Char(10) & "World", "^.+$" )
@@ -309,9 +309,9 @@ Predefined patterns provide a simple way to match either one of a set of charact
 
 For example, the pattern **"A" & Match.MultipleDigits** will match the letter "A" followed by one or more digits.
 
-The **Match.Email** is more complicated than the rest. It is designed to detect and extract common email address of the form **local@hostname.tld**, possibly from a long passages of text, supporting international characters and emojis. Use it to validate a form that takes an email address as an input, as a quick test that the input is in an email form. If not extracting, use **MatchOptions.Complete** to detect an email address in for example a text input control.
+The **Match.Email** is more complicated than the rest. It is designed to detect and extract common email address of the form **local@hostname.tld**, possibly from a long passage of text, supporting international characters and emojis. Use it to validate a form that takes an email address as an input, as a quick test that the input is in an email form. If not extracting, use **MatchOptions.Complete** to detect an email address in for example a text input control.
 
-However, **Match.Email** does not validate that the email address conforms to all of the many evolving standards for email addresses, domain names, and top-level-domains. That would require a very complicated regular expression that would need to be updated from time to time. Although the vast majority of email address will be treated as one would expect, **Match.Email** will match some things which are not legal, for example an underscore in the hostname, and not match some that are legal, for example quoted email addresses or IP addresses. If needed, there are many regular expressions on the web for detecting a truly legal email address. Always test your regular expression for your specific needs before using in production.
+However, **Match.Email** does not validate that the email address conforms to all of the many evolving standards for email addresses, domain names, and top-level-domains. That would require a very complicated regular expression that would need to be updated from time to time. Although the vast majority of email addresses will be treated as one would expect, **Match.Email** will match some things which are not legal, for example an underscore in the hostname, and not match some that are legal, for example quoted email addresses or IP addresses. If needed, there are many regular expressions on the web for detecting a truly legal email address. Always test your regular expression for your specific needs before using in production.
 
 If you want to see the regular expression used, evaluate the formula `Text( Match.Email )`. The first part matches the characters before the `@` and excludes common ASCII punctuation as per RFC 822 and Unicode beginning and ending punctuation for easier extraction, such as `(`, `[`, `“`, `«`, and `「`. It does not support the uncommon and discouraged use of quoted strings or comments. Following the `@`, the second and third parts of the regular expression are the same and separated by a `.`, ensuring that there is always at least one `.` in the address. These parts exclude all Unicode punctuation except for `.`, `-`, and `_`. IP addresses are not supported. Throughout the entire email address, international characters and emojis are supported.
 
@@ -342,7 +342,7 @@ To avoid different results across Power Fx implementations, submatches that coul
 | `(?<submatch>a|b*)+` | Alternation within the submatch with something that could be empty could result in the entire submatch being empty. |
 | `((?<submatch>a)|b)+` | Alternation outside the submatch could match `b` in which case the submatch would be empty.|
 
-Note that the submatch in `(?<submatch>a+)+` cannot be empty, as there must be at least one `a` in he submatch, and is supported.
+Note that the submatch in `(?<submatch>a+)+` cannot be empty, as there must be at least one `a` in the submatch, and is supported.
 
 ## Unicode
 
