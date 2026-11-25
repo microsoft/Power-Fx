@@ -205,15 +205,51 @@ namespace Microsoft.PowerFx.Core.Functions
                 {
                     if (_function.IsLambdaParam(args[i], i))
                     {
-                        if (args[i].Kind == NodeKind.BoolLit ||
-                            args[i].Kind == NodeKind.NumLit ||
-                            args[i].Kind == NodeKind.DecLit ||
-                            args[i].Kind == NodeKind.StrLit)
+                        if (IsConstantExpression(args[i]))
                         {
                             errors.EnsureError(DocumentErrorSeverity.Warning, args[i], TexlStrings.WarnLiteralPredicate);
                         }
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the given node is a constant expression — i.e. the entire subtree
+        /// contains no FirstName or DottedName references that could point to a scope symbol
+        /// or any other named value.  Bare literals, and unary/binary ops whose operands are
+        /// all constant, are considered constant.  Call nodes are conservatively treated as
+        /// non-constant to avoid false positives on functions with external state.
+        /// </summary>
+        internal static bool IsConstantExpression(TexlNode node)
+        {
+            Contracts.AssertValue(node);
+
+            switch (node.Kind)
+            {
+                case NodeKind.BoolLit:
+                case NodeKind.NumLit:
+                case NodeKind.DecLit:
+                case NodeKind.StrLit:
+                case NodeKind.Blank:
+                    return true;
+
+                case NodeKind.UnaryOp:
+                    var unary = node.AsUnaryOpLit();
+                    return unary != null && IsConstantExpression(unary.Child);
+
+                case NodeKind.BinaryOp:
+                    var binary = node.AsBinaryOp();
+                    return binary != null && IsConstantExpression(binary.Left) && IsConstantExpression(binary.Right);
+
+                // FirstName / DottedName always reference a symbol — not constant.
+                case NodeKind.FirstName:
+                case NodeKind.DottedName:
+                    return false;
+
+                default:
+                    // All other node kinds (Call, Record, Table, etc.) are not constant.
+                    return false;
             }
         }
 
