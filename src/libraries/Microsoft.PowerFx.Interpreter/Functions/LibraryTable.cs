@@ -1001,6 +1001,11 @@ namespace Microsoft.PowerFx.Functions
                     return CommonErrors.RuntimeTypeMismatch(irContext);
                 }
 
+                // Normalize numeric types so that Number (double) and Decimal can be compared
+                // interchangeably. Without this, Float column values would never match Decimal
+                // order-table values via IndexOf because double != decimal in object.Equals.
+                primitiveValue = NormalizeNumericPrimitive(primitiveValue);
+
                 if (orderTableValues.Contains(primitiveValue))
                 {
                     return new ErrorValue(irContext, new ExpressionError()
@@ -1054,6 +1059,9 @@ namespace Microsoft.PowerFx.Functions
                         return int.MaxValue;
                     }
 
+                    // Normalize numeric types to match the normalization applied to orderTableValues.
+                    primitiveValue = NormalizeNumericPrimitive(primitiveValue);
+
                     var indexOnTable = orderTableValues.IndexOf(primitiveValue);
                     if (indexOnTable < 0)
                     {
@@ -1069,6 +1077,18 @@ namespace Microsoft.PowerFx.Functions
 
             var orderedRows = sortedList.Select(pair => pair.row).ToList();
             return new InMemoryTableValue(irContext, orderedRows);
+        }
+
+        // Normalizes numeric primitive values so that Number (double) and Decimal values
+        // can be compared interchangeably. Both are represented as double for lookup purposes.
+        private static object NormalizeNumericPrimitive(object value)
+        {
+            if (value is decimal d)
+            {
+                return (double)d;
+            }
+
+            return value;
         }
 
         private class FormulaValueComparer : IComparer<FormulaValue>
