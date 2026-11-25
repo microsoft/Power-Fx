@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Functions
         /// <param name="regexTimeout">Timeout duration for regular expression execution. Default is 1 second.</param>
         /// <param name="regexCache">Regular expression type cache.</param>        
         /// <returns></returns>
-        internal static Dictionary<TexlFunction, IAsyncTexlFunction> RegexFunctions(TimeSpan regexTimeout, RegexTypeCache regexCache)
+        internal static IEnumerable<TexlFunction> RegexFunctions(TimeSpan regexTimeout, RegexTypeCache regexCache)
         {
             if (regexTimeout == TimeSpan.Zero)
             {
@@ -43,12 +43,45 @@ namespace Microsoft.PowerFx.Functions
                 throw new ArgumentOutOfRangeException(nameof(regexTimeout), "Timeout duration for regular expression execution must be positive.");
             }
 
-            return new Dictionary<TexlFunction, IAsyncTexlFunction>()
+            return new TexlFunction[]
             {
-                { new IsMatchFunction(regexCache), new IsMatchImplementation(regexTimeout) },
-                { new MatchFunction(regexCache), new MatchImplementation(regexTimeout) },
-                { new MatchAllFunction(regexCache), new MatchAllImplementation(regexTimeout) }
+                new IsMatchImpl(regexCache, new IsMatchImplementation(regexTimeout)),
+                new MatchImpl(regexCache, new MatchImplementation(regexTimeout)),
+                new MatchAllImpl(regexCache, new MatchAllImplementation(regexTimeout)),
             };
+        }
+
+        internal sealed class IsMatchImpl : IsMatchFunction, IAsyncTexlFunction
+        {
+            private readonly IAsyncTexlFunction _inner;
+
+            public IsMatchImpl(RegexTypeCache regexCache, IAsyncTexlFunction inner)
+                : base(regexCache) => _inner = inner;
+
+            public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+                => _inner.InvokeAsync(args, cancellationToken);
+        }
+
+        internal sealed class MatchImpl : MatchFunction, IAsyncTexlFunction
+        {
+            private readonly IAsyncTexlFunction _inner;
+
+            public MatchImpl(RegexTypeCache regexCache, IAsyncTexlFunction inner)
+                : base(regexCache) => _inner = inner;
+
+            public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+                => _inner.InvokeAsync(args, cancellationToken);
+        }
+
+        internal sealed class MatchAllImpl : MatchAllFunction, IAsyncTexlFunction
+        {
+            private readonly IAsyncTexlFunction _inner;
+
+            public MatchAllImpl(RegexTypeCache regexCache, IAsyncTexlFunction inner)
+                : base(regexCache) => _inner = inner;
+
+            public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+                => _inner.InvokeAsync(args, cancellationToken);
         }
 
         internal class IsMatchImplementation : RegexCommonImplementation

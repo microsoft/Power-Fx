@@ -25,19 +25,18 @@ namespace Microsoft.PowerFx.Functions
         {
             RegexTypeCache regexTypeCache = new (regexCacheSize);
 
-            foreach (KeyValuePair<TexlFunction, IAsyncTexlFunction> func in RegexFunctions(regExTimeout, regexTypeCache, includeDotNet, includeNode, includePCRE2))
+            foreach (TexlFunction func in RegexFunctions(regExTimeout, regexTypeCache, includeDotNet, includeNode, includePCRE2))
             {
-                if (config.ComposedConfigSymbols.Functions.AnyWithName(func.Key.Name))
+                if (config.ComposedConfigSymbols.Functions.AnyWithName(func.Name))
                 {
                     throw new InvalidOperationException("Cannot add RegEx functions more than once.");
                 }
 
-                config.InternalConfigSymbols.AddFunction(func.Key);
-                config.AdditionalFunctions.Add(func.Key, func.Value);
+                config.InternalConfigSymbols.AddFunction(func);
             }
         }
 
-        internal static Dictionary<TexlFunction, IAsyncTexlFunction> RegexFunctions(TimeSpan regexTimeout, RegexTypeCache regexCache, bool includeDotNet, bool includeNode, bool includePCRE2)
+        internal static IEnumerable<TexlFunction> RegexFunctions(TimeSpan regexTimeout, RegexTypeCache regexCache, bool includeDotNet, bool includeNode, bool includePCRE2)
         {
             if (regexTimeout == TimeSpan.Zero)
             {
@@ -49,11 +48,11 @@ namespace Microsoft.PowerFx.Functions
                 throw new ArgumentOutOfRangeException(nameof(regexTimeout), "Timeout duration for regular expression execution must be positive.");
             }
 
-            return new Dictionary<TexlFunction, IAsyncTexlFunction>()
+            return new TexlFunction[]
             {
-                { new IsMatchFunction(regexCache), new Compare_IsMatchImplementation(regexTimeout, includeDotNet, includeNode, includePCRE2) },
-                { new MatchFunction(regexCache), new Compare_MatchImplementation(regexTimeout, includeDotNet, includeNode, includePCRE2) },
-                { new MatchAllFunction(regexCache), new Compare_MatchAllImplementation(regexTimeout, includeDotNet, includeNode, includePCRE2) }
+                new Library.IsMatchImpl(regexCache, new Compare_IsMatchImplementation(regexTimeout, includeDotNet, includeNode, includePCRE2)),
+                new Library.MatchImpl(regexCache, new Compare_MatchImplementation(regexTimeout, includeDotNet, includeNode, includePCRE2)),
+                new Library.MatchAllImpl(regexCache, new Compare_MatchAllImplementation(regexTimeout, includeDotNet, includeNode, includePCRE2)),
             };
         }
 
