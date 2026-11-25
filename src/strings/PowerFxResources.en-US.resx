@@ -3322,6 +3322,26 @@
     <value>If provided, last argument must be 'RemoveFlags.All'. Is there a typo?</value>
     <comment>{Locked=RemoveFlags.All} Error Message, RemoveFlags.All is an enum value that does not get localized.</comment>
   </data>
+  <data name="AboutUpdate" xml:space="preserve">
+    <value>Replaces a record in a data source.</value>
+    <comment>Description of 'Update' function.</comment>
+  </data>
+  <data name="UpdateDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    <comment>function_parameter - First parameter for the Update function. The data source that contains the record that you want to replace. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
+  </data>
+  <data name="UpdateOldRecordArg" xml:space="preserve">
+    <value>old_record</value>
+    <comment>function_parameter - Second parameter for the Update function. The record to replace. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
+  </data>
+  <data name="UpdateNewRecordArg" xml:space="preserve">
+    <value>new_record</value>
+    <comment>function_parameter - Third parameter for the Update function. The replacement record. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
+  </data>
+  <data name="UpdateAllArg" xml:space="preserve">
+    <value>all</value>
+    <comment>function_parameter - Optional fourth parameter for the Update function. Indicates all matching records should be updated. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
+  </data>
   <data name="NotificationType_Error_DisplayName" xml:space="preserve">
     <value>Error</value>
     <comment>Display text representing the Error value of NotificationType enum (NotificationType_Error_Name). This describes showing an error notification. The possible values for this enumeration are: Error, Warning, Success, Information.</comment>

@@ -249,6 +249,18 @@ namespace Microsoft.PowerFx.Types
             return DValue<BooleanValue>.Of(NotImplementedError(IRContext));
         }
 
+        internal virtual async Task<DValue<BooleanValue>> UpdateAsync(RecordValue oldRecord, RecordValue replacementRecord, bool all, CancellationToken cancellationToken)
+        {
+            var result = await PatchAsync(oldRecord, replacementRecord, cancellationToken).ConfigureAwait(false);
+
+            if (result.IsError)
+            {
+                return DValue<BooleanValue>.Of(result.Error);
+            }
+
+            return DValue<BooleanValue>.Of(FormulaValue.New(true));
+        }
+
         /// <summary>
         /// Patch implementation for derived classes.
         /// </summary>
